@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUZEF İşletme Finansına Giriş </title>
+    <style>
+        :root { 
+            --p: #1a2b4c; --s: #2c3e50; --a: #f39c12; --suc: #27ae60; 
+            --bg: #f4f6f8; --c: #ffffff; --t: #2d3436; --b: #dfe6e9; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--t); margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1050px; margin: 0 auto; }
+        
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 1000;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .header { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--a); margin-bottom: 15px; }
+        .header h1 { margin: 5px 0; font-size: 1.5em; }
+        .header p { margin: 0; font-size: 0.9em; }
+        
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: var(--bg); padding: 5px; border-radius: 10px; }
+        
+        .btn { background: #ecf0f1; color: var(--p); border: 2px solid var(--b); padding: 8px 12px; font-size: 0.95em; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; box-sizing: border-box; }
+        .btn:hover { background: #bdc3c7; }
+        .btn.active { background: var(--a); color: white; border-color: var(--a); }
+        .btn-g { background: #d35400; color: white; }
+        
+        .card { background: var(--c); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--p); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .tag { color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .tag-u { background: #3498db; } .tag-e { background: var(--p); } .tag-h { background: #e74c3c; }
+        .q-text { font-size: 1.1em; font-weight: bold; color: var(--p); margin-bottom: 15px; }
+        .opt { list-style: none; padding: 0; margin: 0 0 15px 0; }
+        .opt li { background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid var(--b); margin-bottom: 5px; cursor: pointer; transition: 0.2s; }
+        .opt li:hover { background: #eafaf1; border-color: var(--suc); }
+        .ans-btn { background: var(--s); color: white; border: none; padding: 8px; width: 100%; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .ans-box { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--suc); border-radius: 6px; }
+        .ans-true { color: var(--suc); font-weight: bold; margin-bottom: 5px; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .sticky-top { position: relative; padding-top: 5px; padding-bottom: 5px; }
+            .header { padding: 10px; margin-bottom: 10px; }
+            .header h1 { font-size: 1.2em; }
+            .header p { font-size: 0.8em; } 
+            .controls { gap: 6px; padding: 0; }
+            .btn { padding: 10px; font-size: 0.85em; width: 100%; margin: 0; }
+            #kategori-secici, #arama { width: 100%; min-width: 100%; }
+            .card { padding: 15px; }
+            .q-text { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="sticky-top">
+        <div class="header">
+            <h1> AUZEF İşletme Finansı Giriş </h1>
+            <p>-YBS OZEL- (Tüm Üniteler ve Çıkmış Sorular)</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-g" onclick="toggleAll()">👁️ Tüm Cevapları Aç/Kapat</button>
+
+            <select class="btn" id="kategori-secici" onchange="filter(this.value)" style="background: var(--p); color: white; min-width: 180px; text-align: center; font-weight:bold; padding:8px; border-radius:6px; cursor:pointer;">
+                <option value="all">📚 Tüm Havuz (Hepsi)</option>
+              
+                </optgroup>
+                <optgroup label="Sınavlar">
+                     <option value="vize">📅 Vizeler (Tümü)</option>
+                     <option value="final">📅 Finaller (Tümü)</option>
+                     <option value="büt">📅 Bütünlemeler</option>
+                     <option value="3 Ders">📅 3 Ders Sınavı</option>
+             
+                     </optgroup>
+            </select>
+
+            <button class="btn" style="background: #e74c3c; color:white;" onclick="document.getElementById('kategori-secici').value='b'; filter('b')">🔥 Banko Sorular</button>
+
+            <input type="text" id="arama" class="btn" placeholder="🔍 Soru veya cevapta kelime ara..." onkeyup="aramaYap()" style="background: white; color: black; cursor: text; text-align: left; min-width: 250px;">
+        </div>
+    </div>
+    
+    <div id="q-container"></div>
+
+</div>
+
+<script>
+const rawData = [
+  "2023-2024 Vize|ABC işletmesinin toplam sabit maliyetleri 500.000 TL, ürün birim satış fiyatı ise 800 TL'dir. ABC işletmesi başabaş noktasına 2.500 adetlik üretim ile ulaşıyorsa işletmenin ürün birim değişken gideri aşağıdakilerden hangisidir?|A) 1.200 TL~B) 800 TL~C) 1.400 TL~D) 600 TL~E) 1.000 TL|D) 600 TL|💡 Açıklama: Başabaş Noktası = Toplam Sabit Maliyet / (Birim Satış Fiyatı - Birim Değişken Maliyet). Formülde yerine koyarsak: 2.500 = 500.000 / (800 - Değişken Gider). Buradan (800 - Değişken Gider) = 200 bulunur. Değişken Gider = 600 TL olur.",
+    
+    "2023-2024 Vize|Aşağıdakilerden hangisi bir işletmenin kârlı bir şekilde çalışıp çalışmadığını ölçmede kullanılan oranlardan değildir?|A) Öz sermaye kârlılığı~B) Likit oran~C) Brüt kâr marjı~D) Faaliyet kâr marjı~E) Net kâr marjı|B) Likit oran|💡 Açıklama: Likit oran (asit-test oranı), işletmenin kısa vadeli borç ödeme gücünü (likiditesini) ölçen bir orandır, kârlılık (faaliyet başarı) oranı değildir.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|ABC işletmesinin toplam sabit maliyetleri 1.200.000 TL, ürün birim satış fiyatı 800 TL ve ürün birim değişken gideri 400 TL ise, ABC işletmesinin üretim başabaş noktası miktarı aşağıdakilerden hangisidir?|A) 1.500~B) 6.000~C) 7.500~D) 3.000~E) 4.500|D) 3.000|💡 Açıklama: Başabaş Noktası = TSM / (Fiyat - Birim Değişken). İşlem yapıldığında: 1.200.000 / (800 - 400) = 1.200.000 / 400 = 3.000 adet elde edilir.",
+    
+    "2023-2024 Vize|Bilançoda yer alan duran varlık tanımını ifade eden seçenek aşağıdakilerden hangisidir?|A) Bir işletmenin yerine getirmek zorunda olduğu ekonomik yükümlülüklerdir.~B) İşletme faaliyetlerinin gerçekleştirilmesinde kullanılmak amacıyla edinilen ve bir yıldan daha uzun sürede tüketilen varlıklardır.~C) Nakit ve genellikle bir yıl içinde nakde çevrilebilir veya tüketilebilir nitelikteki varlıklardır.~D) İşletmenin varlıkları edinmek için gerekli fonların nerelerden bulduğunu gösterir.~E) Bir işletmedeki sahiplik haklarını ifade eder ve varlıklarla borçlar arasındaki fark olarak tanımlanır.|B) İşletme faaliyetlerinin gerçekleştirilmesinde kullanılmak amacıyla edinilen ve bir yıldan daha uzun sürede tüketilen varlıklardır.|💡 Açıklama: Duran varlıklar, işletmenin 1 yıldan daha uzun süre fayda sağlamak amacıyla edindiği ve normal şartlarda 1 yıl içinde nakde çevirmeyi düşünmediği varlıkları ifade eder (Örn: Binalar, Makineler).",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|ABC işletmesinin toplam sabit maliyetleri 80.000 TL, ürün birim değişken gideri ise 500 TL'dir. ABC işletmesi başabaş noktasına 2.000 adetlik üretim ile ulaşıyorsa işletmenin ürün birim satış fiyatı aşağıdakilerden hangisidir?|A) 540~B) 440~C) 250~D) 220~E) 155|A) 540|💡 Açıklama: Başabaş Noktası = Toplam Sabit Maliyet / (Birim Satış Fiyatı - Birim Değişken Maliyet). Formülde yerine koyarsak: 2.000 = 80.000 / (Fiyat - 500). İçler dışlar çarpımıyla: (Fiyat - 500) = 40 => Fiyat = 540 TL olarak bulunur.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi negatif kaldıraç kavramını ifade etmektedir?|A) Borcun faiz oranı yatırımın getiri oranından düşük ise özkaynak getirisi yatırım getirisinden daha yüksektir.~B) İşletmede sabit giderler ile değişken giderler arasında ilişki kurar.~C) Borcun faizi, yatırımın getiri oranına eşit ise Özkaynağın getirisi yatırımın getirisine eşittir.~D) Borcun faiz oranı yatırımcının getiri oranından yüksek ise özkaynağın getirisi yatırımın getirisinden daha düşüktür.~E) Satış hacmi başabaş noktasına yaklaştıkça kaldıraç derecesi artar.|D) Borcun faiz oranı yatırımcının getiri oranından yüksek ise özkaynağın getirisi yatırımın getirisinden daha düşüktür.|💡 Açıklama: İşletme bir yatırımı borç ile finanse ettiğinde, ödediği faiz maliyeti yatırımdan kazandığı kâr getirisinden büyükse şirket zarar eder ve bu durum öz kaynak kârlılığını olumsuz etkiler. Buna \"negatif finansal kaldıraç\" denir.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi bilançoda yer alan öz kaynaklar içerisinde yer almaz?|A) Olağanüstü yedekler~B) Şerefiye~C) Dönem net karı~D) Sermaye~E) Maliyet artışları fonu|B) Şerefiye|💡 Açıklama: Şerefiye, bir işletme satın alınırken net varlık değerinin üzerinde ödenen fazlalığı temsil eder. Bilançoda Aktif tarafta, \"Maddi Olmayan Duran Varlıklar\" grubunda raporlanır, bir pasif/kaynak değildir.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal tabloların analizlerinde kullanılan yöntemlerden biridir?|A) Nakit akım analizi~B) Fon akım analizi~C) Başabaş noktası analizi~D) Karşılaştırmalı tablolar analizi~E) Sermaye bütçelemesi|D) Karşılaştırmalı tablolar analizi|💡 Açıklama: Finansal tablo analiz yöntemleri; Karşılaştırmalı Tablolar (Yatay) Analizi, Yüzde Yöntemi (Dikey) Analiz, Eğilim Yüzdeleri (Trend) Analizi ve Oran (Rasyo) Analizidir.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Bir firmanın net kar marjı %20'dir. Firmanın net satış miktarı 10 milyon TL ise net kar düzeyi aşağıdakilerden hangisidir?|A) 1.250.000 TL~B) 2.000.000 TL~C) 800.000 TL~D) 2.450.000 TL~E) 3.000.000 TL|B) 2.000.000 TL|💡 Açıklama: Net Kâr Marjı = Net Kâr / Net Satışlar. Formülde yerine yazarsak: 0,20 = Net Kâr / 10.000.000. İçler dışlar çarpımı yapıldığında Net Kâr = 10.000.000 * 0,20 = 2.000.000 TL (2 Milyon TL) bulunur.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi para ve sermaye piyasası araçlarından değildir?|A) Faktoring~B) Hisse senedi~C) Hazine bonosu~D) Tahvil~E) Finansman bonosu|A) Faktoring|💡 Açıklama: Faktoring, işletmelerin vadeli satışlarından doğan alacaklarını finansal kurumlara devrederek nakit sağladığı bir finansman yöntemidir. Alınıp satılan bir menkul kıymet (piyasa aracı) değildir.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi gelir tablosunun faaliyet kârı bölümünde yer alan faaliyet giderlerinden biridir?|A) Karşılık giderleri~B) Komisyon giderleri~C) Pazarlama, satış ve dağıtım giderleri~D) Finansman giderleri~E) Satılan mamullerin maliyeti|C) Pazarlama, satış ve dağıtım giderleri|💡 Açıklama: Faaliyet giderleri 3 ana kalemden oluşur; Araştırma ve Geliştirme (Ar-Ge) Giderleri, Pazarlama, Satış ve Dağıtım Giderleri ile Genel Yönetim Giderleri.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finans yöneticisinin görevlerinden biri değildir?|A) Muhasebe kayıtlarının tutulması~B) Fon kaynaklarını bulma ve yönetimi~C) Finansal planlama~D) Finansal analiz ve kontrol~E) Sermaye yapısının yönetimi|A) Muhasebe kayıtlarının tutulması|💡 Açıklama: Muhasebe kayıtlarını tutmak muhasebe departmanının asıl işidir. Finans yöneticisi, muhasebenin ürettiği bu verileri analiz ederek şirketin fon ve yatırım kararlarını (nakit akışını) yönetir.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal analizin doğrudan kullanım amaçlarından biridir?|A) Üretim düzeyinin belirlenmesi~B) Satın alma bütçesinin belirlenmesi~C) İşletmenin kârlılık durumunun yeterli olup olmadığının belirlenmesi~D) Araştırma geliştirme giderlerinin tespit edilmesi~E) Pazarlama harcamalarının tespit edilmesi|C) İşletmenin kârlılık durumunun yeterli olup olmadığının belirlenmesi|💡 Açıklama: Finansal analizin ana amacı, bilançolardaki ve rasyolardaki veriler ışığında işletmenin mevcut likidite, kârlılık ve finansal yapı performansını tespit etmektir.",
+    
+    "2023-2024 Vize|Bir firmanın faaliyet kâr marjı %15, satışları 20 milyon TL, toplam varlıkları 22,5 milyon TL, finansman giderleri 750.000 TL ve vergi oranı %40 ise, firmanın aktif kârlılığı (toplam varlık kârlılığı) aşağıdakilerden hangisidir?|A) %13,33~B) %27,46~C) %6,00~D) %32,28~E) %22,22|C) %6,00|💡 Açıklama: Faaliyet Kârı (EBIT) = Satışlar * %15 = 20.000.000 * 0,15 = 3.000.000 TL. Vergi Öncesi Kâr = EBIT - Finansman Gideri = 3.000.000 - 750.000 = 2.250.000 TL. Net Kâr = Vergi Öncesi Kâr * (1 - Vergi Oranı) = 2.250.000 * 0.60 = 1.350.000 TL. Aktif Kârlılığı (ROA) = Net Kâr / Toplam Varlıklar = 1.350.000 / 22.500.000 = 0.06 yani %6,00'dır.",
+    
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 3 Kez Çıktı!|Aşağıdakilerden hangisi pozitif kaldıraç kavramını ifade etmektedir?|A) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.~B) Borcun faiz oranı yatırımcının getiri oranından yüksek ise öz kaynağın getirisi yatırımın getirisinden daha düşüktür.~C) Sabit giderleri düşük işletmelerin üretim yapılarının daha çok işgücüne dayanmasıdır.~D) Borcun faizi, yatırımın getiri oranına eşit ise öz kaynağın getirisi yatırımın getirisine eşittir.~E) İşletmede sabit giderler ile değişken giderler arasında ilişki kurar.|A) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.|💡 Açıklama: İşletmenin yabancı kaynak (borç) için ödediği faiz maliyeti, bu fonu kullanarak sağladığı aktif getirisinden (kârdan) düşükse, aradaki fark işletme sahiplerinin (öz kaynakların) cebine kalır, öz kaynak kârlılığını yükseltir.",
+    
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 3 Kez Çıktı!|Aşağıdakilerden hangisi \"Yüzde Yöntemi ile Analiz\" aşamalarından biridir?|A) Mali tablolarda yer alan iki kalem arasındaki ilişkinin matematiksel ifade edilmesi~B) Bir işletmenin mali tablolarda bulunan bir kaleminin toplam veya grup içindeki oransal büyüklüğünün irdelenmesi~C) Mali tablolarda bulunan bir kalemin toplam veya grup içindeki oransal büyüklüğünün irdelenmesi~D) Karşılaştırmalı mali tabloların raporlanması ve yorumlanması~E) Faaliyet dönemine ait bilanço ve gelir tablosu bilgilerinin yan yana yazılarak karşılaştırılmaları şeklinde düzenlenmesi|C) Mali tablolarda bulunan bir kalemin toplam veya grup içindeki oransal büyüklüğünün irdelenmesi|💡 Açıklama: Dikey (yüzde) analizde, bilanço veya gelir tablosundaki bir kalem; o tablonun genel toplamı (aktif toplamı veya net satışlar) içerisindeki payı (%) olarak ifade edilir. B ve C şıkları neredeyse aynı görünse de cevap anahtarı \"C\" şıkkını doğru kabul etmiştir.",
+    
+    "2022-2023 Vize, 2023-2024 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi işletmenin nakit kullanımlarından biri değildir?|A) Temettü ödemeleri~B) Maliyetlerden kaynaklanan ödemeler~C) Olağandışı gider ve zararlara ilişkin ödemeler~D) Vergi ve benzeri ödemeler~E) Hisse senedi ihraç primlerinden sağlanan nakit|E) Hisse senedi ihraç primlerinden sağlanan nakit|💡 Açıklama: \"Sağlanan nakit\" tanımı gereği bir nakit girişini (kaynak/tedarik) ifade eder, dolayısıyla nakdin kullanımı (kasadan nakit çıkışı) değildir.",
+    
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 3 Kez Çıktı!|Finansal varlıkların ilk kez işlem gördükleri piyasaya verilen ad aşağıdakilerden hangisidir?|A) İkincil piyasa~B) Organize piyasa~C) Tezgah üstü piyasa~D) Para piyasası~E) Birincil piyasa|E) Birincil piyasa|💡 Açıklama: Bir şirketin veya devletin kaynak sağlamak için hisse senedi/tahvil gibi menkul kıymetleri tasarruf sahiplerine ilk elden ihraç ettiği (sattığı) piyasa birincil piyasadır.",
+    
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 3 Kez Çıktı!|Bir işletmenin olağandışı gelirleri ........ yer alır. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?|A) bilançonun yabancı kaynaklar bölümünde~B) bilançonun dönen varlıklar bölümünde~C) gelir tablosunun brüt satışlar bölümünde~D) gelir tablosunun faaliyet kârı bölümünde~E) gelir Tablosunda olağan kâr bölümünden sonra|E) gelir Tablosunda olağan kâr bölümünden sonra|💡 Açıklama: Standart Gelir Tablosu formatında faaliyet dışı gelir/giderler olağan kâr/zararı oluşturur, bunun hemen altında ise olağandışı gelir ve kârlar listelenir.",
+    
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 3 Kez Çıktı!|Bilançoda yer alan pasif (kaynak) tanımını ifade eden seçenek aşağıdakilerden hangisidir?|A) İşletmenin sahipliği altındaki her türlü ekonomik değerlerdir.~B) İşletmedeki sahiplik haklarını ifade eder.~C) İşletmenin bir yıl içinde ödemesi gereken yükümlülükleridir.~D) İşletmenin yerine getirmek zorunda olduğu ekonomik yükümlülüklerdir.~E) İşletmenin varlıkları edinmek için gerekli fonların nerelerden bulduğunu gösterir.|E) İşletmenin varlıkları edinmek için gerekli fonların nerelerden bulduğunu gösterir.|💡 Açıklama: Bilançonun pasif kısmı, şirketin aktifindeki dönen ve duran varlıkları (makineler, stoklar vb.) hangi kaynaklarla (kısa vadeli borç, uzun vadeli borç, öz kaynak) finanse ettiğini gösterir.",
+
+"2020 Vize, 2024-2025 Vize, 2 Kez Çıktı!, ⚠️ Dikkat!|Finansal muhasebenin işlediği ve biriktirdiği bilgilerin özetlendiği tablolar olarak adlandırılan kavram aşağıdakilerden hangisidir?|A) Ürün kartı~B) Nakit bütçesi~C) Finansal tablo~D) Katılım belgesi~E) Kira sertifikası|C) Finansal tablo|💡 Açıklama: Bu sorunun doğru cevabı 'Finansal Tablo'dur. Ancak 2020 yılında sorulduğunda cevap anahtarı hatalı olarak 'Ürün Kartı' verilmişti. Yeni sınavlarda kavramsal olarak doğru olan 'Finansal Tablo'yu seçmeniz daha güvenli olacaktır.",
+
+    "2020 Vize, 2024-2025 Vize, 2 Kez Çıktı!|İşletmenin kaynak yapısını, uzun vadeli borç ödeme gücünü ve finansmanda yabancı kaynaklardan yararlanma derecesini gösteren oran grubu aşağıdakilerden hangisidir?|A) Finansal (Mali) Yapı Oranları~B) Likidite Oranları~C) Karlılık Oranları~D) Nakit Akım Analizi~E) Faaliyet Oranları|A) Finansal (Mali) Yapı Oranları|💡 Açıklama: Finansal yapı (kaldıraç) oranları, işletmenin varlıklarını finanse ederken ne kadar borçlandığını ve iflas/risk durumunu ölçen temel göstergelerdir.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi finansal tabloların özelliklerinden biri değildir?|A) Geçici niteliktedirler.~B) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.~C) Bir firmanın mali durumuna etki yapan tüm etmenleri göstermezler.~D) Belli bir döneme ait gelir ve giderlerin karşılaştırılmasına odaklanmıştır.~E) Farklı tarihlerde farklı para değerleriyle olan işlemleri yansıtırlar.|B) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.|💡 Açıklama: Finansal tablolardaki bazı değerler (amortisman payları, şüpheli alacak karşılıkları vb.) tahminlere ve muhasebe politikalarına dayandığı için rakamlar her zaman %100 mutlak doğru ve kesin değildir.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi finansal yönetim fonksiyonları içerisinde yer almaz?|A) Muhasebe kayıtlarının denetimi~B) Finansal analiz~C) Finansal planlama ve denetim~D) Özel finansal sorunların çözümü~E) Fonların sağlanması ve yatırımı|A) Muhasebe kayıtlarının denetimi|💡 Açıklama: Muhasebe kayıtlarının tutulması ve denetlenmesi muhasebe/denetim departmanlarının görevidir; finansal yönetim doğrudan fon sağlama ve bu fonları en verimli şekilde yatırıma dönüştürme işleriyle ilgilenir.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi gelir tablosu kalemlerinden biridir?|A) Kasa~B) Borç senetleri~C) Satılan malın maliyeti~D) Duran varlıklar~E) Alacak senetleri|C) Satılan malın maliyeti|💡 Açıklama: Kasa, Alacak/Borç Senetleri ve Duran Varlıklar bilançoda yer alan hesaplardır. Satılan Malın Maliyeti (SMM) ise şirketin ana maliyetini gösteren bir Gelir Tablosu kalemidir.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi finansal tabloların analizlerinde kullanılan yöntemler biri değildir?|A) Yüzde yöntemi ile analiz (Dikey analiz)~B) Eğilim yüzdeleri yöntemi ile analiz (Trend analiz)~C) Oran yöntemi ile analiz (Rasyo analiz)~D) Kaldıraçlar~E) Karşılaştırmalı tablolar analizi (Yatay analiz)|D) Kaldıraçlar|💡 Açıklama: Kaldıraçlar (finansal veya faaliyet kaldıracı) rasyo analizinin altındaki bir konu veya oran grubudur. Temel finansal tablo analiz yöntemleri Yatay, Dikey, Trend ve Oran analizleridir.",
+
+    "2024-2025 Vize|Bir işletmenin tüm faaliyet giderlerini karşılayacak satış gelirlerini ve farklı satış düzeylerindeki faaliyet kârını hesaplamaya yardımcı olan analiz aşağıdakilerden hangisidir?|A) Eğilim yüzdeleri yöntemi ile analiz~B) Karşılaştırmalı tablolar analizi~C) Başabaş noktası analizi~D) Oran yöntemi ile analiz~E) Yüzde yöntemi ile analiz|C) Başabaş noktası analizi|💡 Açıklama: İşletmenin gelirleri ile giderlerinin birbirine eşit olduğu (kâr veya zararın tam sıfır olduğu) ve başabaş noktasından sonraki satış düzeylerinde kârın nasıl artacağını gösteren analiz türüdür.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi finansal analizin kullanım amaçlarından değildir?|A) İşletmenin kârlılık durumunun yeterli olup olmadığının tespiti~B) Borç ödeme yeteneğinin mevcut olup olmadığının tespit edilmesi~C) Varlıkların kullanılış biçimlerinin verimli olup olmadığının anlaşılması~D) Üretim düzeyini belirlenmesi~E) Kısa ve uzun vadeli borçların zamanında ödenip ödenmeyeceğinin tespiti|D) Üretim düzeyini belirlenmesi|💡 Açıklama: Üretim düzeyinin (miktarının) belirlenmesi finansal analizle değil, üretim planlama, maliyet muhasebesi ve pazarın talepleri doğrultusunda saptanır.",
+
+    "2020 Vize, 2024-2025 Vize, 2 Kez Çıktı!|Aşağıdaki seçeneklerin hangisinde gelir tablosunun tanımı verilmektedir?|A) Belli bir tarihte bir işletmenin sahip olduğu varlıklarla bu varlıkların hangi kaynaklardan sağlandığını gösterir.~B) Satışlar ve satılan malların maliyeti arasındaki farktır.~C) Bir işletmenin belli bir andaki varlıkları (aktif) toplamı kaynakları (pasif) toplamına eşittir.~D) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.~E) İşletmenin belli bir dönemdeki nakit akımlarını; nakit kaynak ve kullanım yerlerini gösterir.|D) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.|💡 Açıklama: Bilanço belli bir \"andaki\" fotoğrafı (durumu) yansıtırken, Gelir Tablosu belli bir \"dönemdeki\" (örneğin 1 Ocak - 31 Aralık) gelir ve gider akışının videosunu gösterir.",
+
+    "2023-2024 Vize, 2024-2025 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi bir işletmenin kârlı bir şekilde çalışıp çalışmadığını ölçmede kullanılan oranlardan değildir?|A) Öz sermaye kârlılığı~B) Likit oran~C) Faaliyet kâr marjı~D) Brüt kâr marjı~E) Net kâr marjı|B) Likit oran|💡 Açıklama: Likit oran (asit-test oranı), stoklar satılamasa bile işletmenin kısa vadeli borçlarını ödeyebilme gücünü (likidite durumunu) ölçen bir orandır, şirketin kârlılık performansını ölçmez.",
+
+    "2020 Vize, 2024-2025 Vize, 3 Kez Çıktı!|Bir işletmede yatırım ve finansman kararlarından sorumlu olan kişi, aşağıdakilerden hangisidir?|A) Üretim Sorumlusu~B) İnsan Kaynakları Müdürü~C) Pazarlama Sorumlusu~D) Finans Yöneticisi~E) Satış Temsilcisi|D) Finans Yöneticisi|💡 Açıklama: İşletmenin tüm faaliyetleri için gereken fonun nereden, ne kadara bulunacağı (finansman) ve bu paranın en yüksek getiriyi sağlayacak nerelere yatırılacağı (yatırım) temel olarak Finans Yöneticisinin görevidir.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi nakit akımının tanımını ifade etmektedir?|A) İşletmenin nakit girişleri ve nakit çıkışları arasındaki farktır.~B) Satışlar ve satılan malların maliyeti arasındaki farktır.~C) Brüt karla işletmenin faaliyetleri için gerekli giderler arasındaki farktır.~D) Esas faaliyet dışında iştiraklerden ve bağlı ortaklıklardan elde edilen gelirlerdir.~E) Bir işletmenin belli bir andaki varlıkları (aktif) toplamıdır.|A) İşletmenin nakit girişleri ve nakit çıkışları arasındaki farktır.|💡 Açıklama: Nakit akımı (cash flow), belirli bir dönem içerisinde işletmeye giren nakit tahsilatlar ile işletmeden çıkan nakit ödemelerin net farkını ifade eder.",
+
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 2024-2025 Vize, 4 Kez Çıktı!|Aşağıdakilerden hangisi pozitif kaldıraç kavramını ifade etmektedir?|A) Sabit giderleri düşük işletmelerin üretim yapılarının daha çok işgücüne dayanmasıdır.~B) Borcun faiz oranı yatırımcının getiri oranından yüksek ise öz kaynağın getirisi yatırımın getirisinden daha düşüktür.~C) İşletmede sabit giderler ile değişken giderler arasında ilişki kurar.~D) Borcun faizi, yatırımın getiri oranına eşit ise öz kaynağın getirisi yatırımın getirisine eşittir.~E) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.|E) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.|💡 Açıklama: Borç (yabancı kaynak) ile finanse edilen bir yatırımın sağladığı kâr oranı, alınan o borcun faiz maliyetinden yüksekse aradaki pozitif fark işletme sahiplerinin (öz kaynak) kârlılığını artırır.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi başabaş noktası analizi varsayımlarından biri değildir?|A) Firmanın tek bir ürün ürettiği varsayımı söz konusudur.~B) Kısa dönemli analizler için geçerlidir.~C) Birim başına satış fiyatı ile birim başına değişken maliyet sabittir.~D) Satış geliri ile maliyetler arasında doğrusal bir ilişki vardır.~E) Sabit maliyetler üretim hacmine bağlı olarak oluşur.|E) Sabit maliyetler üretim hacmine bağlı olarak oluşur.|💡 Açıklama: Sabit maliyetler adından da anlaşılacağı üzere üretim miktarından (hacminden) bağımsızdır. İşletme 100 tane de üretse, 0 tane de üretse kira, amortisman gibi sabit giderler aynı kalır.",
+
+    "2024-2025 Vize|Üretim hacminden bağımsız olarak oluşan gider grubuna verilen ad aşağıdakilerden hangisidir?|A) Değişken maliyet~B) Sabit maliyet~C) Finansman gideri~D) Faaliyet gideri~E) Komisyon gideri|B) Sabit maliyet|💡 Açıklama: Faaliyet veya üretim hacmindeki dalgalanmalardan etkilenmeyip belli bir kurulu kapasiteye kadar hep aynı kalan giderlere Sabit Maliyet denir.",
+
+    "2024-2025 Vize|Stokların dönen varlıklara dahil edilmemesi durumunda kısa vadeli borçların ödenebilirliğini gösteren oran aşağıdakilerden hangisidir?|A) Faiz karşılama oranı~B) Cari oran~C) Finansal kaldıraç oranı~D) Nakit oran~E) Asit-test oranı|E) Asit-test oranı|💡 Açıklama: Asit-test oranı (Likit oran) formülü şu şekildedir: (Dönen Varlıklar - Stoklar) / Kısa Vadeli Yabancı Kaynaklar. Stokların hızlıca nakde dönmeme ihtimaline karşı Cari Oran'a kıyasla daha sıkı bir likidite ölçüsüdür.",
+
+    "2024-2025 Vize|Aşağıdakilerden hangisi finansal sistemin ana unsurlarından değildir?|A) Tasarruf sahipleri~B) Finansal pazarlar~C) Finansal Ürünler~D) Finansal aracılar~E) Üretim yapısı|E) Üretim yapısı|💡 Açıklama: Finansal sistem 5 ana unsurdan oluşur: Fon arz edenler (tasarruf sahipleri), fon talep edenler, bu ikisini buluşturan finansal aracılar, alınıp satılan finansal ürünler ve bunların işlem gördüğü finansal pazarlar.",
+
+    "2022-2023 Vize, 2024-2025 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi bilançonun kalemlerinden biri değildir?|A) Dönen varlıklar~B) Faaliyet kârı~C) Duran varlıklar~D) Yabancı kaynaklar~E) Öz sermaye|B) Faaliyet kârı|💡 Açıklama: Faaliyet kârı, işletmenin belli bir dönemdeki performansını gösteren Gelir Tablosu'na ait bir kalemdir. Bilanço ise sadece varlık (aktif) ve kaynak (pasif) yapısını gösterir.",
+
+    "2024-2025 Vize|ABC Şirketi birim satış fiyatı 90 TL olan ütü makinesi üretmektedir. Firmanın sabit maliyeti 550.000 TL ve birim başı değişken maliyet 10 TL'dir. Şirketin 9.000 adetlik satışı için gerçekleşen faaliyet kaldıraç derecesi aşağıdakilerden hangisidir?|A) 5,38~B) 3,22~C) 4,23~D) 1,85~E) 2,46|C) 4,23|💡 Açıklama: Faaliyet Kaldıraç Derecesi = Toplam Katkı Payı / Faaliyet Kârı (EBIT). Toplam Katkı Payı = 9.000 adet * (90 - 10) TL = 720.000 TL. Faaliyet Kârı = 720.000 - 550.000 = 170.000 TL. Kaldıraç Derecesi = 720.000 / 170.000 = 4,235... bulunur.",
+
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 2024-2025 Vize, 4 Kez Çıktı!|Aşağıdakilerden hangisi bir işletmenin mali tablolarda bulunan bir kaleminin toplam veya grup içindeki oransal büyüklüğünün irdelenmesini ifade etmektedir?|A) Yüzde yöntemi ile analiz (dikey analiz)~B) Karşılaştırmalı tablolar analizi (yatay analiz)~C) Nakit akım analizi~D) Oran yöntemi ile analiz (rasyo analiz)~E) Eğilim yüzdeleri yöntemi ile analiz (trend analiz)|A) Yüzde yöntemi ile analiz (dikey analiz)|💡 Açıklama: Dikey analiz (yüzde analizi), bir tablodaki kalemlerin ilgili tablonun genel toplamı (aktif toplamı, pasif toplamı veya net satışlar) içerisindeki payını yüzde olarak hesaplayıp raporlar.",
+
+"2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize, 5 Kez Çıktı!|Aşağıdakilerden hangisi bir işletmenin mali tablolarda bulunan bir kaleminin toplam veya grup içindeki oransal büyüklüğünün irdelenmesini ifade etmektedir?|A) Yüzde yöntemi ile analiz (dikey analiz)~B) Nakit akım analizi~C) Eğilim yüzdeleri yöntemi ile analiz (trend analiz)~D) Oran yöntemi ile analiz (rasyo analiz)~E) Karşılaştırmalı tablolar analizi (yatay analiz)|A) Yüzde yöntemi ile analiz (dikey analiz)|💡 Açıklama: Dikey analiz (yüzde analizi), bir tablodaki kalemlerin ilgili tablonun genel toplamı (aktif toplamı, pasif toplamı veya net satışlar) içerisindeki payını yüzde olarak hesaplayıp raporlar.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi nakit akımının tanımını ifade etmektedir?|A) Brüt kârla işletmenin faaliyetleri için gerekli giderler arasındaki farktır.~B) Esas faaliyet dışında iştiraklerden ve bağlı ortaklıklardan elde edilen gelirlerdir.~C) Bir işletmenin belli bir andaki varlıkları (aktif) toplamıdır.~D) İşletmenin nakit girişleri ve nakit çıkışları arasındaki farktır.~E) Satışlar ve satılan malların maliyeti arasındaki farktır.|D) İşletmenin nakit girişleri ve nakit çıkışları arasındaki farktır.|💡 Açıklama: Nakit akımı (cash flow), belirli bir dönem içerisinde işletmeye giren nakit tahsilatlar ile işletmeden çıkan nakit ödemelerin net farkını ifade eder.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi gelir tablosu kalemlerinden biridir?|A) Kasa~B) Satılan malın maliyeti~C) Duran varlıklar~D) Borç senetleri~E) Alacak senetleri|B) Satılan malın maliyeti|💡 Açıklama: Kasa, Alacak/Borç Senetleri ve Duran Varlıklar bilançoda yer alan hesaplardır. Satılan Malın Maliyeti (SMM) ise şirketin ana maliyetini gösteren bir Gelir Tablosu kalemidir.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal tabloların özelliklerinden biri değildir?|A) Geçici niteliktedirler.~B) Bir firmanın mali durumuna etki yapan tüm etmenleri göstermezler.~C) Belli bir döneme ait gelir ve giderlerin karşılaştırılmasına odaklanmıştır.~D) Farklı tarihlerde farklı para değerleriyle olan işlemleri yansıtırlar.~E) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.|E) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.|💡 Açıklama: Finansal tablolardaki bazı değerler (amortisman, karşılıklar vb.) muhasebe politikalarına ve tahminlere dayandığı için rakamlar her zaman %100 mutlak doğru ve kesin değildir.[cite: 6]",
+
+    "2020 Vize, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!, ⚠️ Dikkat!|Finansal muhasebenin işlediği ve biriktirdiği bilgilerin özetlendiği tablolar olarak adlandırılan kavram aşağıdakilerden hangisidir?|A) Nakit bütçesi~B) Finansal tablo~C) Kira sertifikası~D) Katılım belgesi~E) Ürün kartı|B) Finansal tablo|💡 Açıklama: Doğru cevap 'Finansal Tablo'dur. 2020 sınavında cevap hatalı olarak 'Ürün Kartı' verilmişti ancak yeni sınavlarda (2024 ve 2025) kavramsal olarak doğru olan 'Finansal Tablo' şıkkını seçmelisiniz.[cite: 6]",
+
+    "2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|Aşağıdakilerden hangisi bir işletmenin kârlı bir şekilde çalışıp çalışmadığını ölçmede kullanılan oranlardan değildir?|A) Öz sermaye kârlılığı~B) Faaliyet kâr marjı~C) Brüt kâr marjı~D) Net kâr marjı~E) Likit oran|E) Likit oran|💡 Açıklama: Likit oran (asit-test oranı), stoklar satılamasa bile işletmenin kısa vadeli borçlarını ödeyebilme gücünü ölçer, şirketin kârlılığını (başarısını) ölçen bir oran değildir.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Bir işletmenin tüm faaliyet giderlerini karşılayacak satış gelirlerini ve farklı satış düzeylerindeki faaliyet kârını hesaplamaya yardımcı olan analiz aşağıdakilerden hangisidir?|A) Oran yöntemi ile analiz~B) Karşılaştırmalı tablolar analizi~C) Eğilim yüzdeleri yöntemi ile analiz~D) Yüzde yöntemi ile analiz~E) Başabaş noktası analizi|E) Başabaş noktası analizi|💡 Açıklama: İşletmenin gelirleri ile giderlerinin tam eşit olduğu (kâr veya zararın sıfır olduğu) ve bu noktadan sonraki satışlarda kârın nasıl değişeceğini gösteren analiz türüdür.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal analizin kullanım amaçlarından değildir?|A) Kısa ve uzun vadeli borçların zamanında ödenip ödenmeyeceğinin tespiti~B) Borç ödeme yeteneğinin mevcut olup olmadığının tespit edilmesi~C) Varlıkların kullanılış biçimlerinin verimli olup olmadığının anlaşılması~D) İşletmenin kârlılık durumunun yeterli olup olmadığının tespiti~E) Üretim düzeyini belirlenmesi|E) Üretim düzeyini belirlenmesi|💡 Açıklama: Üretim miktarının (düzeyinin) belirlenmesi doğrudan finansal analizin değil, üretim planlama ve maliyet muhasebesinin alanına girer.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Üretim hacminden bağımsız olarak oluşan gider grubuna verilen ad aşağıdakilerden hangisidir?|A) Sabit maliyet~B) Faaliyet gideri~C) Değişken maliyet~D) Finansman gideri~E) Komisyon gideri|A) Sabit maliyet|💡 Açıklama: Üretim hacmindeki (miktarındaki) değişimlerden etkilenmeyen, işletme çalışmasa dahi katlanılmak zorunda olunan giderlere (kira, amortisman vb.) sabit maliyet denir.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal tabloların analizlerinde kullanılan yöntemler biri değildir?|A) Kaldıraçlar~B) Yüzde yöntemi ile analiz (Dikey analiz)~C) Oran yöntemi ile analiz (Rasyo analiz)~D) Karşılaştırmalı tablolar analizi (Yatay analiz)~E) Eğilim yüzdeleri yöntemi ile analiz (Trend analiz)|A) Kaldıraçlar|💡 Açıklama: Temel analiz yöntemleri; Yatay, Dikey, Trend ve Rasyo (Oran) analizleridir. Kaldıraçlar ise oran analizi kapsamında incelenen bir alt başlıktır.[cite: 6]",
+
+    "2022-2023 Vize, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|Aşağıdakilerden hangisi bilançonun kalemlerinden biri değildir?|A) Duran varlıklar~B) Yabancı kaynaklar~C) Faaliyet kârı~D) Dönen varlıklar~E) Öz sermaye|C) Faaliyet kârı|💡 Açıklama: Faaliyet kârı, işletmenin belli bir dönemdeki gelir ve gider performansını gösteren Gelir Tablosu'na ait bir kalemdir. Bilanço sadece varlıkları (aktif) ve kaynakları (pasif) gösterir.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Stokların dönen varlıklara dahil edilmemesi durumunda kısa vadeli borçların ödenebilirliğini gösteren oran aşağıdakilerden hangisidir?|A) Nakit oran~B) Cari oran~C) Asit-test oranı~D) Faiz karşılama oranı~E) Finansal kaldıraç oranı|C) Asit-test oranı|💡 Açıklama: Asit-test oranı formülü; (Dönen Varlıklar - Stoklar) / Kısa Vadeli Yabancı Kaynaklar şeklindedir. Stoklar hızla paraya çevrilemeyeceği varsayımıyla hesaplamadan çıkarılır.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal sistemin ana unsurlarından değildir?|A) Finansal aracılar~B) Finansal pazarlar~C) Tasarruf sahipleri~D) Üretim yapısı~E) Finansal Ürünler|D) Üretim yapısı|💡 Açıklama: Finansal sistemi oluşturan 5 ana unsur; Fon arz edenler (tasarruf sahipleri), fon talep edenler, bu ikisini buluşturan finansal aracılar, alınıp satılan finansal ürünler ve bunların işlem gördüğü piyasalardır.[cite: 6]",
+
+    "2020 Vize, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|İşletmenin kaynak yapısını, uzun vadeli borç ödeme gücünü ve finansmanda yabancı kaynaklardan yararlanma derecesini gösteren oran grubu aşağıdakilerden hangisidir?|A) Nakit Akım Analizi~B) Faaliyet Oranları~C) Karlılık Oranları~D) Finansal (Mali) Yapı Oranları~E) Likidite Oranları|D) Finansal (Mali) Yapı Oranları|💡 Açıklama: Finansal yapı (kaldıraç) oranları, işletmenin faaliyetlerini finanse ederken ne kadar borç (yabancı kaynak) kullandığını ve finansal risk durumunu ölçen göstergelerdir.[cite: 6]",
+
+    "2020 Vize, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|Aşağıdaki seçeneklerin hangisinde gelir tablosunun tanımı verilmektedir?|A) Bir işletmenin belli bir andaki varlıkları (aktif) toplamı kaynakları (pasif) toplamına eşittir.~B) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.~C) Belli bir tarihte bir işletmenin sahip olduğu varlıklarla bu varlıkların hangi kaynaklardan sağlandığını gösterir.~D) Satışlar ve satılan malların maliyeti arasındaki farktır.~E) İşletmenin belli bir dönemdeki nakit akımlarını; nakit kaynak ve kullanım yerlerini gösterir.|B) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.|💡 Açıklama: Bilanço anlık (statik) durumu gösterirken; Gelir Tablosu, işletmenin belli bir hesap dönemindeki tüm gelir ve giderlerini (dinamik akışı) özetleyen tablodur.[cite: 6]",
+
+    "2020 Vize, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|Bir işletmede yatırım ve finansman kararlarından sorumlu olan kişi, aşağıdakilerden hangisidir?|A) Finans Yöneticisi~B) Üretim Sorumlusu~C) Pazarlama Sorumlusu~D) Satış Temsilcisi~E) İnsan Kaynakları Müdürü|A) Finans Yöneticisi|💡 Açıklama: İhtiyaç duyulan fonların en uygun maliyetle sağlanması (finansman) ve bu fonların kârlı alanlara yatırılması (yatırım) temel olarak Finans Yöneticisinin işidir.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi başabaş noktası analizi varsayımlarından biri değildir?|A) Firmanın tek bir ürün ürettiği varsayımı söz konusudur.~B) Kısa dönemli analizler için geçerlidir.~C) Sabit maliyetler üretim hacmine bağlı olarak oluşur.~D) Birim başına satış fiyatı ile birim başına değişken maliyet sabittir.~E) Satış geliri ile maliyetler arasında doğrusal bir ilişki vardır.|C) Sabit maliyetler üretim hacmine bağlı olarak oluşur.|💡 Açıklama: Sabit maliyetler, adı üzerinde sabit oldukları için üretim hacminden (miktarından) tamamen bağımsızdırlar; üretim artsa da azalsa da değişmezler.[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|ABC Şirketi birim satış fiyatı 90 TL olan ütü makinesi üretmektedir. Firmanın sabit maliyeti 550.000 TL ve birim başı değişken maliyet 10 TL'dir. Şirketin 9.000 adetlik satışı için gerçekleşen faaliyet kaldıraç derecesi aşağıdakilerden hangisidir?|A) 2,46~B) 5,38~C) 4,23~D) 1,85~E) 3,22|C) 4,23|💡 Açıklama: Faaliyet Kaldıraç Derecesi = Toplam Katkı Payı / Faaliyet Kârı (EBIT). Toplam Katkı Payı = 9.000 * (90 - 10) = 720.000 TL. Faaliyet Kârı = 720.000 - 550.000 = 170.000 TL. Kaldıraç Derecesi = 720.000 / 170.000 = 4,235...[cite: 6]",
+
+    "2020 Vize, 2022-2023 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize, 5 Kez Çıktı!, 🔥 Banko Soru|Aşağıdakilerden hangisi pozitif kaldıraç kavramını ifade etmektedir?|A) Sabit giderleri düşük işletmelerin üretim yapılarının daha çok işgücüne dayanmasıdır.~B) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.~C) Borcun faizi, yatırımın getiri oranına eşit ise öz kaynağın getirisi yatırımın getirisine eşittir.~D) Borcun faiz oranı yatırımcının getiri oranından yüksek ise öz kaynağın getirisi yatırımın getirisinden daha düşüktür.~E) İşletmede sabit giderler ile değişken giderler arasında ilişki kurar.|B) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.|💡 Açıklama: Bir yatırımı borç ile finanse ettiğinizde, yatırımdan kazandığınız kâr, borca ödediğiniz faizden yüksekse, bu durum şirketin öz kaynak kârlılığını artırır (Pozitif kaldıraç).[cite: 6]",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal yönetim fonksiyonları içerisinde yer almaz?|A) Finansal planlama ve denetim~B) Finansal analiz~C) Özel finansal sorunların çözümü~D) Muhasebe kayıtlarının denetimi~E) Fonların sağlanması ve yatırımı|D) Muhasebe kayıtlarının denetimi|💡 Açıklama: Muhasebe işlemlerinin tutulması ve kayıtların denetimi, finans yöneticisinin değil, bağımsız denetçilerin veya muhasebe departmanının görevidir.[cite: 6]",
+
+//Burda finallerde kaldık
+"2021 Final|ABC işletmesinin toplam sabit giderleri 6.000.000 TL, birim değişken gideri ise 500 TL'dir. İşletmenin ürün birim satış fiyatı 2.000 TL olduğuna göre başabaş noktasının tutar cinsinden ifadesi aşağıdakilerden hangisidir?|A) 3.000.000 TL~B) 12.000.000 TL~C) 8.000.000 TL~D) 1.000.000 TL~E) 10.000.000 TL|C) 8.000.000 TL|💡 Açıklama: Başabaş noktası (adet) = Toplam Sabit Giderler / (Birim Satış Fiyatı - Birim Değişken Gider) = 6.000.000 / (2.000 - 500) = 4.000 adet. Tutar cinsinden ifadesi = 4.000 adet * 2.000 TL = 8.000.000 TL.",
+
+    "2021 Final, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|Stokların dönen varlıklara dahil edilmemesi durumunda kısa vadeli borçların ödenebilirliğini gösteren oran aşağıdakilerden hangisidir?|A) Asit-test oranı~B) Faiz karşılama oranı~C) Cari oran~D) Finansal kaldıraç oranı~E) Nakit oran|A) Asit-test oranı|💡 Açıklama: Asit-test (Likit) oranı, stokların hızlıca nakde çevrilemeyeceği varsayımıyla dönen varlıklardan stokların çıkarılmasıyla hesaplanan daha sıkı bir likidite ölçüsüdür.",
+
+    "2020 Vize, 2021 Final, 2 Kez Çıktı!|Finansal tabloların çeşitli göstergeler, ölçüler kullanılarak veya karşılaştırmalar yapmak suretiyle analiz edilmesi ve işletmenin finansal durumu, karlılığı, verimliliği gibi konuların değerlendirilmesi aşağıdakilerden hangisinin kapsamına girmektedir?|A) Uluslararası finans~B) Paranın zaman değeri~C) Finansal analiz~D) Sermaye bütçelemesi~E) Nakit akım analizi|C) Finansal analiz|💡 Açıklama: Finansal tabloları kullanarak işletmenin geçmişteki performansını ve gelecekteki potansiyelini değerlendirme süreci genel olarak finansal analiz olarak adlandırılır.",
+
+    "2020 Vize, 2021 Final, 2024-2025 Vize, 2025-2026 Vize, 4 Kez Çıktı!|Bir işletmede yatırım ve finansman kararlarından sorumlu olan kişi, aşağıdakilerden hangisidir?|A) Finans Yöneticisi~B) İnsan Kaynakları Müdürü~C) Satış Temsilcisi~D) Pazarlama Müdürü~E) Üretim Sorumlusu|A) Finans Yöneticisi|💡 Açıklama: İhtiyaç duyulan fonların en uygun maliyetle bulunması (finansman) ve bu fonların kârlı alanlara yatırılması (yatırım) temel olarak Finans Yöneticisinin işidir.",
+
+    "2020 Vize, 2021 Final, 2 Kez Çıktı!|Bir işletmenin satış gelirlerinin toplam maliyetleri karşıladığı noktadaki üretim miktarı aşağıdakilerden hangisidir?|A) Başabaş noktası~B) Brüt kâr~C) Vergi öncesi kâr~D) Faaliyet kârı~E) Net kâr|A) Başabaş noktası|💡 Açıklama: Başabaş noktası (sıfır kâr noktası), toplam gelirlerin toplam maliyetlere tam eşit olduğu, yani işletmenin ne kâr ne de zarar ettiği satış veya üretim düzeyidir.",
+
+    "2021 Final|Aşağıdakilerden hangisi nakit akım tablosunun tanımını ifade etmektedir?|A) Bir işletmenin belli bir andaki varlıkları (aktif) toplamı kaynakları (pasif) toplamına eşittir.~B) Belli bir tarihte bir işletmenin sahip olduğu varlıklarla bu varlıkların hangi kaynaklardan sağlandığını gösterir.~C) Satışlar ve satılan malların maliyeti arasındaki farktır.~D) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.~E) İşletmenin belli bir dönemdeki nakit akımlarını; nakit kaynak ve kullanım yerlerini gösterir.|E) İşletmenin belli bir dönemdeki nakit akımlarını; nakit kaynak ve kullanım yerlerini gösterir.|💡 Açıklama: Nakit akım tablosu, işletmenin nakit girişlerini (kaynaklarını) ve nakit çıkışlarını (kullanım yerlerini) belirli bir dönem için özetler.",
+
+    "2020 Vize, 2021 Final, 2022-2023 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize, 6 Kez Çıktı!, 🔥 Banko Soru|Aşağıdakilerden hangisi pozitif kaldıraç kavramını ifade etmektedir?|A) Borcun faizi, yatırımın getiri oranına eşit ise öz kaynağın getirisi yatırımın getirisine eşittir.~B) İşletmede sabit giderler ile değişken giderler arasında ilişki kurar.~C) Borcun faiz oranı yatırımcının getiri oranından yüksek ise öz kaynağın getirisi yatırımın getirisinden daha düşüktür.~D) Sabit giderleri düşük işletmelerin üretim yapılarının daha çok işgücüne dayanmasıdır.~E) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.|E) Borcun faiz oranı yatırımın getiri oranından düşük ise öz kaynak getirisi yatırım getirisinden daha yüksektir.|💡 Açıklama: Borçla finanse edilen bir yatırımın getirisi, alınan borcun faiz maliyetinden yüksekse, öz sermayenin (işletme sahibinin) getirisi artar. Buna pozitif finansal kaldıraç denir.",
+
+    "2021 Final|Bir finansal varlığa ilişkin olarak değişim katsayısının yüksek olması ne anlama gelmektedir?|A) Finansal varlığın riskini etkilemez.~B) Finansal varlığın getirisini etkilemez.~C) Finansal varlığın riski düşüktür.~D) Finansal varlığın getirisi yüksektir.~E) Finansal varlığın riski yüksektir.|E) Finansal varlığın riski yüksektir.|💡 Açıklama: Değişim (varyasyon) katsayısı, birim getiri başına düşen riski ölçer. Bu katsayının yüksek çıkması, alınan riskin yüksek olduğunu ifade eder.",
+
+    "2021 Final|Yıllık yüzde 10 faiz oranı üzerinden yatırılan 5.000 TL'nin basit faiz esasına göre üç yıl sonra ulaşacağı değer toplamı aşağıdakilerden hangisidir?|A) 6.500 TL~B) 7.250 TL~C) 5.000 TL~D) 5.750 TL~E) 6.655 TL|A) 6.500 TL|💡 Açıklama: Basit faiz tutarı = Anapara * Faiz Oranı * Zaman = 5.000 * 0.10 * 3 = 1.500 TL. Dönem sonu toplam değer = Anapara + Faiz = 5.000 + 1.500 = 6.500 TL.",
+
+    "2020 Vize, 2021 Final, 2 Kez Çıktı!|Dönen varlıkların (cari varlıklar) kısa vadeli yabancı kaynaklara olan oranı aşağıdakilerden hangisidir?|A) Nakit oran~B) Faiz karşılama oranı~C) Asit-test oranı~D) Finansal kaldıraç oranı~E) Cari oran|E) Cari oran|💡 Açıklama: Cari Oran = Dönen Varlıklar / Kısa Vadeli Yabancı Kaynaklar'dır. İşletmenin elindeki likit değerlerle kısa vadeli borçlarını ödeyebilme gücünü ölçer.",
+
+    "2021 Final|Aşağıdakilerden hangisi satışlara bağlı olarak değişen bilanço kalemlerinden biridir?|A) Ticari alacak~B) Uzun süreli borçlar~C) Banka kredileri~D) Ödenmiş sermaye~E) İştirakler|A) Ticari alacak|💡 Açıklama: Satışların hacmi arttıkça doğal olarak vadeli (kredili) satışlar da artacağı için bilançodaki ticari alacaklar kalemi doğrudan satışlara bağlı olarak değişir.",
+
+    "2021 Final|Aşağıdakilerden hangisi faiz bileşenleri içerisinde yer almaz?|A) Finansal Kaldıraç~B) Likidite Risk Primi~C) Vade Risk Primi~D) Enflasyon Oranı~E) Ödenmeme Risk Primi|A) Finansal Kaldıraç|💡 Açıklama: Finansal kaldıraç, bir işletmenin faaliyetlerini ne kadar borçla finanse ettiğini gösterir, piyasadaki faiz oranını (kirayı) oluşturan risk primlerinden biri değildir.",
+
+    "2021 Final|Aşağıdakilerden hangisi \"paranın kirası\" kavramını ifade etmektedir?|A) Faiz~B) Kaldıraç~C) Oran~D) Varyans~E) Risk|A) Faiz|💡 Açıklama: Fonu kullanan kişinin, fonu arz eden kişiye belirli bir süre kullanımı karşılığında ödediği ek bedel faizdir, bu yüzden paranın kirası olarak adlandırılır.",
+
+    "2021 Final|Gelecekte gerçekleşmesi beklenen bir nakit akımının, paranın zaman değerini ve katlanılan riskin derecesini yansıtan uygun bir iskonto (faiz) oranı ile, bugüne indirgenmiş halini ifade eden kavram aşağıdakilerden hangisidir?|A) Toplam risk~B) Bugünkü değer~C) Gelecekteki değer~D) Finansal risk~E) Anüite|B) Bugünkü değer|💡 Açıklama: Gelecekte elde edilecek bir paranın belirli bir iskonto (faiz) oranı kullanılarak bugünkü eşdeğerinin hesaplanmasına bugünkü değer (present value) hesabı denir.",
+
+    "2021 Final|Aşağıdaki ifadelerden hangisi nakit bütçesi için söylenemez?|A) Nakit bütçesi, işletmenin nakit ihtiyaçlarının zamanında belirlenmesi amacı ile hazırlanır.~B) Nakit bütçesi yalnızca yıllık olarak hazırlanabilir.~C) Nakit bütçesine beklenen tahmini nakit giriş ve çıkışları alınır.~D) Nakit bütçesinde nakit girişlerinden nakit çıkışları düşüldükten sonra dönemsel nakit dengesine ulaşılır.~E) Nakit bütçesinde minimum kasa düzeyi veri olup nakit çıkışı şeklinde dikkate alınır|B) Nakit bütçesi yalnızca yıllık olarak hazırlanabilir.|💡 Açıklama: Nakit bütçesi, işletmenin finansal gereksinimlerine ve hareketliliğine göre sadece yıllık değil; aylık, haftalık ve hatta günlük gibi çok daha kısa vadeli periyotlar için de hazırlanabilir.",
+
+    "2021 Final|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biridir?|A) Pazarlanabilir menkul kıymet~B) Öz sermaye~C) Maddi duran varlık~D) Maddi olmayan duran varlık~E) Uzun vadeli borç|A) Pazarlanabilir menkul kıymet|💡 Açıklama: Çalışma (işletme) sermayesi dönen varlıklardan (kasa, banka, menkul kıymetler, alacaklar, stoklar vb.) oluşur. Diğer şıklar duran varlıklar veya uzun vadeli kaynaklardır.",
+
+    "2021 Final|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biri değildir?|A) Pazarlanabilir menkul kıymet~B) Öz sermaye~C) Dönen varlıklar~D) Kasa~E) Bankalar|B) Öz sermaye|💡 Açıklama: Çalışma sermayesi dönen varlık kalemlerini temsil eder. Öz sermaye ise işletmenin uzun vadeli bir finansman kaynağıdır (Bilançonun pasif tarafında yer alır).",
+
+    "2021 Final|Aşağıdakilerden hangisi alacak yönetimine ilişkin karar süreçlerinden biri değildir?|A) Kredili satış önerisinin geri çevrilmesi~B) İşletmenin toplam varlık kârlılığının öz sermaye kârlılığından daha yüksek olması~C) Satış koşullarının saptanması~D) Kredili satış önerisinin kabul edilmesi~E) Tahsili gecikmiş alacaklara ilişkin politikanın belirlenmesi|B) İşletmenin toplam varlık kârlılığının öz sermaye kârlılığından daha yüksek olması|💡 Açıklama: Kârlılık oranlarının birbiriyle kıyaslanması, şirketin genel finansal performansı ve finansal kaldıraç etkisiyle ilgilidir; günlük alacak yönetimi kararlarının bir parçası değildir.",
+
+    "2021 Final|Faiz oranın %20 olduğu bir piyasada birinci ve dördüncü yıllarda sırasıyla 2.000 TL'lik ve 1.000 TL'lik nakit çıkışı; ikinci ve üçüncü yıllarda ise sırasıyla 2.500 TL'lik ve 3.000 TL'lik nakit girişleri söz konusudur. Buna göre ilgili nakit akımlarının bugünkü değer toplamı aşağıdakilerden hangisidir?|A) 1.323 TL~B) 1.556 TL~C) 1.000 TL~D) 1.875 TL~E) 2.500 TL|A) 1.323 TL|💡 Açıklama: Çıkışlar negatif, girişler pozitif alınarak iskonto (bugünkü değer) hesaplanır: NBD = -(2000/1.20) + (2500/1.20^2) + (3000/1.20^3) - (1000/1.20^4) formülü ile 1.323 TL bulunur.",
+
+    "2021 Final|A finansal varlığının ekonominin olası durumuna göre tahmini getirileri şu şekildedir: a) Ekonomi kötü olasılık %20, Getiri -%30; b) Ekonomi orta olasılık %30, Getiri +%20; c) Ekonomi iyi olasılık %50, Getiri +%40. Buna göre ilgili varlığın beklenen getirisi aşağıdakilerden hangisidir?|A) 5%~B) 25%~C) 15%~D) 20%~E) 10%|D) 20%|💡 Açıklama: Beklenen Getiri = (Olasılık * Getiri) değerlerinin toplamıdır. (-0,30 * 0,20) + (0,20 * 0,30) + (0,40 * 0,50) = -0,06 + 0,06 + 0,20 = 0,20 yani %20'dir.",
+
+    "2021 Final|Aşağıdakilerden hangisi satışlara bağlı olarak değişmeyen bilanço kalemlerinden biri değildir? (Yani satışlara bağlı olarak değişen kalemdir)|A) Uzun süreli borçlar~B) İştirakler~C) İpotekli borç senetleri~D) Banka kredileri~E) Stoklar|E) Stoklar|💡 Açıklama: Soru olumsuzun olumsuzu şeklinde sorulmuştur. Satış hacmi arttıkça doğal olarak stok ihtiyacı (hammadde, mamul vb.) artacağından, stoklar satışlara bağlı olarak değişen bir kalemdir.",
+
+    "2021 Final|Beklenen getirinin gerçekleşen getiriden sapma olasılığı aşağıdakilerden hangisi tarafından açıklanmaktadır?|A) Oran~B) Kaldıraç~C) Faiz~D) Belirsizlik~E) Risk|E) Risk|💡 Açıklama: Finansta riskin en temel tanımı, gerçekleşen sonuçların beklenen sonuçlardan sapma olasılığı veya sapma derecesidir.",
+
+    "2021 Final|Aşağıdakilerden hangisi finansal varlıklara ilişkin risk ölçütlerinden biridir?|A) Aritmetik ortalama~B) Medyan~C) Geometrik ortalama~D) Mod~E) Varyans|E) Varyans|💡 Açıklama: Varyans (ve bunun karekökü olan standart sapma), beklenen getiriden sapmayı (dağılımı) gösterdiği için finansta temel risk ölçütü olarak kullanılır.",
+
+    "2020 Vize, 2021 Final, 2024-2025 Vize, 2025-2026 Vize, 4 Kez Çıktı!|Finansal muhasebenin işlediği ve biriktirdiği bilgilerin özetlendiği tablolar olarak adlandırılan kavram aşağıdakilerden hangisidir?|A) Katılım belgesi~B) Kira sertifikası~C) Finansal tablo~D) Nakit bütçesi~E) Ürün kartı|C) Finansal tablo|💡 Açıklama: Finansal muhasebenin temel amacı, oluşan tüm mali hareketleri kayıt altına alıp dönem sonunda bilanço ve gelir tablosu gibi finansal tablolarla raporlamaktır.",
+
+    "2020 Vize, 2021 Final, 2024-2025 Vize, 2025-2026 Vize, 4 Kez Çıktı!|Aşağıdakilerden hangisi gelir tablosunun tanımını ifade etmektedir?|A) Bir işletmenin belli bir andaki varlıkları (aktif) toplamı kaynakları (pasif) toplamına eşittir.~B) İşletmenin belli bir dönemdeki nakit akımlarını; nakit kaynak ve kullanım yerlerini gösterir.~C) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.~D) Satışlar ve satılan malların maliyeti arasındaki farktır.~E) Belli bir tarihte bir işletmenin sahip olduğu varlıklarla bu varlıkların hangi kaynaklardan sağlandığını gösterir.|C) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.|💡 Açıklama: Gelir tablosu, işletmenin belli bir faaliyet dönemine ait tüm gelir ve giderlerini (dinamik akışı) ve bunun sonucunda oluşan kâr/zararını özetleyen tablodur.",
+
+    "2020 Vize, 2021 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal tabloların analizlerinde kullanılan yöntemlerden biri değildir?|A) Oran yöntemi ile analiz~B) Yüzde yöntemi ile analiz~C) Nakit akım analizi~D) Karşılaştırmalı tablolar analizi~E) Eğilim yüzdeleri yöntemi ile analiz|C) Nakit akım analizi|💡 Açıklama: Temel finansal tablo analiz yöntemleri; Karşılaştırmalı Tablolar (Yatay), Yüzde Yöntemi (Dikey), Eğilim Yüzdeleri (Trend) ve Oran (Rasyo) Analizleridir. Nakit akım analizi bu dört temel teknikten biri değildir.",
+
+    "2021 Final|İki yıl süresince her yıl sonunda %7 faiz oranı üzerinden banka hesabına yatırılan 1.000 TL'lik miktarların üçüncü yıl sonunda ulaştığı toplam tutar aşağıdakilerden hangisidir?|A) 2.550 TL~B) 2.870 TL~C) 2.215 TL~D) 3.000 TL~E) 2.000 TL|C) 2.215 TL|💡 Açıklama: 1. yıl sonunda yatan 1.000 TL iki yıl faiz alır (1000 * 1,07^2 = 1.144,9 TL). 2. yıl sonunda yatan 1.000 TL bir yıl faiz alır (1000 * 1,07 = 1070 TL). Üçüncü yıl para yatırılmamıştır, sadece birikir: 1.144,9 + 1070 = 2.214,9 (Yuvarlandığında 2.215 TL).",
+
+    "2021 Final|Aşağıdakilerden hangisi nakit bütçesinin hazırlanma amaçlarından biri değildir?|A) Likidite sıkışıklığını önlemek~B) Firmanın nakit gereksinmesi tutarını belirlemek~C) Elde birikebilecek fonların aylak kalmasına engel olmak~D) Para giriş ve çıkışlarıyla ilgili tahminleri ayrıntılı olarak göstermek~E) Yatırım projelerinin net bugünkü değerini belirlemek|E) Yatırım projelerinin net bugünkü değerini belirlemek|💡 Açıklama: Yatırım projelerinin Net Bugünkü Değerini (NBD) belirlemek, uzun vadeli yatırımları değerlendirmek için kullanılan sermaye bütçelemesi aracıdır; kısa vadeli nakit bütçesiyle yapılmaz.",
+
+    "2021 Final|Aşağıdakilerden hangisi finansal planlamanın unsurlarından biridir?|A) Finansal analiz~B) Proforma mâli tablolar~C) Sermaye bütçelemesi~D) Cari oran~E) Brüt kâr marjı|B) Proforma mâli tablolar|💡 Açıklama: İşletmenin geleceğe yönelik mali durumunu yansıtan tahmini tabloların (Proforma Bilanço, Proforma Gelir Tablosu) hazırlanması, finansal planlama sürecinin temel taşıdır.",
+
+    "2021 Final|İşletmenin kısa dönemde fon ihtiyacının belirlenmesi ile ilgili teknikleri kapsayan ifade aşağıdakilerden hangisidir?|A) Finansal analiz~B) Sermaye bütçelemesi~C) Finansal planlama~D) Yatay analiz~E) Dikey analiz|C) Finansal planlama|💡 Açıklama: İşletmenin gelecekte (kısa ve orta vadede) ihtiyaç duyacağı fon miktarının ve bu fonların kaynaklarının önceden saptanması işlemine finansal planlama denir.",
+
+    "2021 Final|Aşağıdakilerden hangisi paranın zaman değerine etki eden unsurlardan biridir?|A) Finansal oran~B) Finansman gideri~C) Finansal kaldıraç~D) Faaliyet riski~E) Vade|E) Vade|💡 Açıklama: Paranın zaman değerini etkileyen üç temel unsur; Faiz oranı (iskonto oranı), beklenen enflasyon oranı ve vadedir (zaman).",
+
+    "2021 Final|Her yılın sonunda olmak üzere 10 yıl boyunca yıllık %10 faiz oranı üzerinden bankaya yatırılacak olan 3.000 TL'lik miktarların süre sonundaki değer toplamı yaklaşık olarak aşağıdakilerden hangisidir?|A) 47.812 TL~B) 28.258 TL~C) 23.235 TL~D) 37.156 TL~E) 30.000 TL|A) 47.812 TL|💡 Açıklama: Sabit ödemeli normal anüitenin gelecekteki değer hesabı: Gelecekteki Değer = Ödeme * [((1+i)^n - 1) / i]. Formül uygulandığında 3000 * [((1+0.10)^10 - 1) / 0.10] = 3000 * 15,9374 = 47.812,27 TL bulunur.",
+
+    "2021 Final|Bir yatırımcı elindeki parasını yıllık %12 faiz oranı ile aylık dönemler halinde 1 yıl süreyle bankada tutmuştur. Bu dönem içerisinde gerçekleşen enflasyon oranı %13 ise kişinin reel kazancı aşağıdakilerden hangisidir?|A) %0,89~B) -%1,00~C) %0,28~D) -%0,28~E) %1,00|D) -%0,28|💡 Açıklama: Reel kazanç, Fisher eşitliği olan (1 + Nominal Faiz) = (1 + Reel Faiz) * (1 + Enflasyon) ile hesaplanır. Enflasyonun, nominal getiriyi aşması durumunda reel kazanç eksi (-) değer alır.",
+
+    "2020 Vize, 2021 Final, 2 Kez Çıktı!, ⚠️ Dikkat!|Faaliyet kârındaki yüzdesel değişimin satışlardaki yüzdesel değişime olan oranı aşağıdakilerden hangisidir?|A) Finansal Kaldıraç~B) Faaliyet Kaldıracı~C) Nakit Akım~D) Net Kâr Marjı~E) Öz Sermaye|A) Finansal Kaldıraç|⚠️ DİKKAT! Tanım akademik ve mantıksal olarak kesinlikle 'Faaliyet Kaldıracı'nı ifade etmektedir (2020 Vizede de bu şekilde sorulup Faaliyet Kaldıracı olarak kabul edilmiştir). Ancak 2021 Final cevap anahtarında sorunun cevabı hatalı olarak 'Finansal Kaldıraç' verilmiştir. Final veya büt sınavında bu şekilde çıkarsa cevap anahtarına göre hareket etmeniz gerekebilir.",
+
+    "2021 Final|Aşağıdakilerden hangisi bir işletmede çalışma sermayesi yetersizliğinin neden olduğu sorunlardan biri değildir?|A) Kısa vadeli borçların ödenememesi~B) Üretimde aksamalar yaşanması~C) Kredi notunun düşmesi~D) Maddi duran varlık planlamasında aksama~E) Hammadde tedarikinin durması|D) Maddi duran varlık planlamasında aksama|💡 Açıklama: Çalışma (işletme) sermayesi yetersizliği şirketin günlük dönen varlık (kısa vadeli) işlemlerini ve likiditesini doğrudan vurur. Maddi duran varlıklar (bina, makine alımı) ise uzun vadeli sermaye bütçelemesinin konusudur.",
+
+"2022-2023 Final|Bir işletmenin bilançosunda firmanın mal veya hizmet satışları nedeniyle müşterilerine açtığı kredi tutarını gösteren hesap aşağıdakilerden hangisidir?|A) Ticari borç~B) Ticari alacak~C) Pazarlanabilir menkul kıymet~D) Maddi duran varlık~E) Banka|B) Ticari alacak|💡 Açıklama: İşletmenin kredili (vadeli) satışlarından doğan ve müşterilerinden tahsil edeceği alacaklarını izlediği hesap ticari alacaktır.",
+
+    "2022-2023 Final|Aşağıdakilerden hangisi hem anaparanın hem de kazanılan faizin yeniden faiz kazanmasını ifade etmektedir?|A) Bileşik Faiz~B) Basit Faiz~C) Bugünkü Değer~D) Gelecekteki Değer~E) Anuite|A) Bileşik Faiz|💡 Açıklama: Kazanılan faizin anaparaya eklenerek bir sonraki dönemde toplam tutar üzerinden tekrar faiz hesaplanması yöntemine bileşik faiz denir.",
+
+    "2022-2023 Final, 2023-2024 Vize, 2 Kez Çıktı!|ABC işletmesinin toplam sabit maliyetleri 500.000 TL, ürün birim satış fiyatı ise 800 TL'dir. ABC işletmesi başabaş noktasına 2.500 adetlik üretim ile ulaşıyorsa işletmenin ürün birim değişken gideri aşağıdakilerden hangisidir?|A) 800 TL~B) 600 TL~C) 1.400 TL~D) 1.200 TL~E) 1.000 TL|B) 600 TL|💡 Açıklama: Başabaş Noktası = Toplam Sabit Maliyet / (Birim Satış Fiyatı - Birim Değişken Maliyet). Formülde yerine koyarsak: 2.500 = 500.000 / (800 - Değişken Gider). Buradan Değişken Gider = 600 TL bulunur.",
+
+    "2022-2023 Final|Aşağıdakilerden hangisi satışlara bağlı olarak değişmeyen bilanço kalemlerinden biridir?|A) İştirakler~B) Ticari alacaklar~C) Stoklar~D) İpotekli borç senetleri~E) Maddi duran varlıklar|D) İpotekli borç senetleri|💡 Açıklama: İpotekli borç senetleri (uzun vadeli yabancı kaynaklar), işletmenin kısa vadeli satış hacminden doğrudan etkilenmezler. Stoklar ve ticari alacaklar ise satışlara bağlı olarak doğrudan değişir.",
+
+    "2021 Final, 2022-2023 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi nakit bütçesinin hazırlanma amaçlarından biri değildir?|A) Likidite sıkışıklığını önlemek~B) Elde birikebilecek fonların aylak kalmasına engel olmak~C) Para giriş ve çıkışlarıyla ilgili tahminleri ayrıntılı olarak göstermek~D) Firmanın nakit gereksinim tutarını belirlemek~E) Yatırım projelerinin net bugünkü değerini belirlemek|E) Yatırım projelerinin net bugünkü değerini belirlemek|💡 Açıklama: Yatırım projelerinin Net Bugünkü Değerini (NBD) hesaplamak sermaye bütçelemesinin (uzun vadeli planlamanın) konusudur, kısa vadeli nakit bütçesiyle yapılmaz.",
+
+    "2022-2023 Final|Bir finansal varlığın standard sapmasının beklenen getirisine bölünmesi sonucunda ulaşılan değere verilen ad aşağıdakilerden hangisidir?|A) Medyan~B) Geometrik ortalama~C) Değişim katsayısı~D) Aritmetik ortalama~E) Standart sapma|C) Değişim katsayısı|💡 Açıklama: Değişim (varyasyon) katsayısı = Standart Sapma / Beklenen Getiri formülü ile hesaplanır ve birim getiri başına düşen riski ölçer.",
+
+    "2021 Final, 2022-2023 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi \"paranın kirası\" kavramını ifade etmektedir?|A) Kaldıraç~B) Faiz~C) Oran~D) Varyans~E) Risk|B) Faiz|💡 Açıklama: Fonu kullanan kişinin, fonu arz eden kişiye belirli bir süre kullanımı karşılığında ödediği ek bedel faizdir, bu yüzden paranın kirası olarak adlandırılır.",
+
+    "2022-2023 Final|ABC Bankasından 25.000 TL tutarında tüketici kredisi kullanılmıştır. Kredinin vadesi 12 ay, faiz oranı aylık %1,5 ve taksitleri 2.292 TL'dir. Buna göre kredinin ilk taksiti içindeki anapara miktarı aşağıdakilerden hangisi olmalıdır?|A) 2.255 TL~B) 1.875 TL~C) 1.655 TL~D) 1.790 TL~E) 1.917 TL|E) 1.917 TL|💡 Açıklama: 1. ay faiz tutarı = Kalan Anapara * Faiz Oranı = 25.000 * 0,015 = 375 TL. Taksitin içindeki anapara = Toplam Aylık Taksit - Faiz Tutarı = 2.292 - 375 = 1.917 TL.",
+
+    "2022-2023 Final|Aşağıdakilerden hangisi satışlara bağlı olarak değişen bilanço kalemlerinden biridir?|A) Ödenmiş sermaye~B) Tahviller~C) Kasa-Banka~D) Banka kredileri~E) Uzun süreli borçlar|C) Kasa-Banka|💡 Açıklama: İşletmenin satışları arttıkça tahsilatları ve nakit döngüsü artacağından Kasa ve Banka (Hazır Değerler) hesapları satış hacmine bağlı olarak değişen kalemlerdir.",
+
+    "2022-2023 Final, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|Aşağıdakilerden hangisi gelir tablosu kalemlerinden biridir?|A) Satılan malın maliyeti~B) Duran varlıklar~C) Borç senetleri~D) Kasa~E) Alacak senetleri|A) Satılan malın maliyeti|💡 Açıklama: Kasa, Alacak/Borç Senetleri ve Duran Varlıklar bilançoda yer alan hesaplardır. Satılan Malın Maliyeti (SMM) ise şirketin ana maliyetini gösteren bir Gelir Tablosu kalemidir.",
+
+    "2022-2023 Final, 2023-2024 Vize, 2 Kez Çıktı!|Bilançoda yer alan duran varlık tanımını ifade eden seçenek aşağıdakilerden hangisidir?|A) Nakit ve genellikle bir yıl içinde nakde çevrilebilir veya tüketilebilir nitelikteki varlıklardır.~B) Bir işletmenin yerine getirmek zorunda olduğu ekonomik yükümlülüklerdir.~C) Bir işletmedeki sahiplik haklarını ifade eder ve varlıklarla borçlar arasındaki fark olarak tanımlanır.~D) İşletme faaliyetlerinin gerçekleştirilmesinde kullanılmak amacıyla edinilen ve bir yıldan daha uzun sürede tüketilen varlıklardır.~E) İşletmenin varlıkları edinmek için gerekli fonların nerelerden bulduğunu gösterir.|D) İşletme faaliyetlerinin gerçekleştirilmesinde kullanılmak amacıyla edinilen ve bir yıldan daha uzun sürede tüketilen varlıklardır.|💡 Açıklama: Duran varlıklar, işletmenin 1 yıldan daha uzun süre fayda sağlamak amacıyla edindiği ve normal şartlarda 1 yıl içinde nakde çevirmeyi düşünmediği varlıkları (Binalar, Makineler vb.) ifade eder.",
+
+    "2022-2023 Final, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize, 4 Kez Çıktı!|Aşağıdakilerden hangisi bir işletmenin kârlı bir şekilde çalışıp çalışmadığını ölçmede kullanılan oranlardan değildir?|A) Brüt kâr marjı~B) Net kâr marjı~C) Likit oran~D) Faaliyet kâr marjı~E) Öz sermaye kârlılığı|C) Likit oran|💡 Açıklama: Likit oran (asit-test oranı), işletmenin kısa vadeli borç ödeme gücünü (likiditesini) ölçer; kârlılık (faaliyet başarı) oranı değildir.",
+
+    "2020 Vize, 2021 Final, 2022-2023 Final, 3 Kez Çıktı!|Finansal tabloların çeşitli göstergeler, ölçüler kullanılarak veya karşılaştırmalar yapmak suretiyle analiz edilmesi ve işletmenin finansal durumu, karlılığı, verimliliği gibi konuların değerlendirilmesi aşağıdakilerden hangisinin kapsamına girmektedir?|A) Uluslararası finans~B) Paranın zaman değeri~C) Nakit akım analizi~D) Sermaye bütçelemesi~E) Finansal analiz|E) Finansal analiz|💡 Açıklama: Finansal tabloları (bilanço, gelir tablosu) kullanarak işletmenin geçmişteki performansını ve gelecekteki potansiyelini değerlendirme süreci genel olarak finansal analiz olarak adlandırılır.",
+
+    "2021 Final, 2022-2023 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi gelecekte gerçekleşmesi beklenen bir nakit akımının, paranın zaman değerini ve katlanılan riskin derecesini yansıtan uygun bir iskonto (faiz) oranı ile, bugüne indirgenmiş halini ifade etmektedir?|A) Toplam risk~B) Gelecekteki değer~C) Bugünkü değer~D) Finansal risk~E) Anuite|C) Bugünkü değer|💡 Açıklama: Gelecekte elde edilecek bir paranın belirli bir iskonto (faiz) oranı kullanılarak bugünkü eşdeğerinin hesaplanmasına bugünkü değer (present value) hesabı denir.",
+
+    "2022-2023 Final|Aşağıdakilerden hangisi finansal planlamanın unsurlarından biridir?|A) Finansal analiz~B) Nakit bütçesi~C) Likit oran~D) Bileşik kaldıraç~E) Başabaş noktası|B) Nakit bütçesi|💡 Açıklama: Finansal planlamanın temel unsurları Proforma tablolar (tahmini bilanço/gelir tablosu) ve Nakit Bütçesidir. İşletmenin gelecekteki fon ihtiyaçları bu bütçeyle planlanır.",
+
+    "2022-2023 Final, 2024-2025 Vize, 2025-2026 Vize, 3 Kez Çıktı!|Aşağıdakilerden hangisi finansal yönetim fonksiyonları içerisinde yer almaz?|A) Finansal analiz~B) Finansal planlama ve denetim~C) Fonların sağlanması ve yatırımı~D) Özel finansal sorunların çözümü~E) Muhasebe kayıtlarının denetimi|E) Muhasebe kayıtlarının denetimi|💡 Açıklama: Muhasebe işlemlerinin tutulması ve kayıtların denetimi, bağımsız denetçilerin veya muhasebe departmanının görevidir; finansal yönetimin doğrudan bir fonksiyonu değildir.",
+
+    "2022-2023 Final|Aşağıdakilerden hangisi paranın zaman değerine etki eden unsurlardan biridir?|A) Faiz oranı~B) Swap oranı~C) Döviz kuru~D) Faaliyet kaldıracı~E) Finansal kaldıraç|A) Faiz oranı|💡 Açıklama: Paranın zaman değerini etkileyen temel unsurlar; Faiz oranı (iskonto oranı), beklenen enflasyon oranı ve vadedir (zaman).",
+
+    "2022-2023 Final|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biri değildir?|A) Pazarlanabilir menkul kıymet~B) Öz sermaye~C) Alacaklar~D) Maddi duran varlık~E) Kasa|D) Maddi duran varlık|💡 Açıklama: Çalışma (işletme) sermayesi dönen varlık kalemlerini (Kasa, banka, menkul kıymet, alacak, stok) temsil eder. Maddi duran varlıklar (binalar, demirbaşlar) duran varlık grubundadır ve çalışma sermayesi değildir.",
+
+    "2021 Final, 2022-2023 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal varlıklara ilişkin risk ölçütlerinden biridir?|A) Varyans~B) Medyan~C) Aritmetik ortalama~D) Mod~E) Geometrik ortalama|A) Varyans|💡 Açıklama: Varyans ve standart sapma, beklenen getiriden sapmayı (dağılımı) gösterdiği için finansta temel risk ölçütü olarak kullanılır.",
+
+    "2022-2023 Final|Bir firmanın faaliyet kaldıraç derecesi 3, finansal kaldıraç derecesi ise 5'tir. Buna göre işletmenin bileşik (toplam) kaldıraç değeri aşağıdakilerden hangisidir?|A) 21~B) 8~C) 18~D) 15~E) 12|D) 15|💡 Açıklama: Bileşik (Toplam) Kaldıraç Derecesi = Faaliyet Kaldıraç Derecesi * Finansal Kaldıraç Derecesi formülü ile hesaplanır. 3 * 5 = 15 bulunur.",
+
+"2022-2023 Final, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize, 2022-2023 Büt, 5 Kez Çıktı!|Aşağıdakilerden hangsi gelir tablosu unsurlarından biridir?|A) Diğer stoklar~B) Satılan malın maliyeti~C) Alıcılar~D) Satıcılar~E) Kasa|B) Satılan malın maliyeti|💡 Açıklama: Kasa, Alıcılar, Satıcılar ve Stoklar bilançoda yer alan hesaplardır. Satılan Malın Maliyeti (SMM) ise işletmenin ana maliyetini gösteren bir Gelir Tablosu kalemidir.",
+
+    "2022-2023 Büt|Alacaklara bağlanacak optimum fon miktarını belirlemek için kullanılan yöntem aşağıdakilerden hangisidir?|A) Sermaye bütçelemesi~B) Maddi duran varlık yönetimi~C) Nakit yönetimi~D) Stok yönetimi~E) Alacak yönetimi|E) Alacak yönetimi|💡 Açıklama: İşletmenin kredili (vadeli) satışları sebebiyle alacaklarına bağlayacağı optimum fon seviyesini saptamak ve tahsilat sürecini denetlemek alacak yönetiminin konusudur.",
+
+    "2022-2023 Büt|Aşağıdakilerden hangisi bugünkü bir paranın belirli bir faiz oranı üzerinden belirli bir süre sonra ulaşacağı toplam değeri ifade etmektedir?|A) Faaliyet riski~B) Bileşik kaldıraç~C) Gelecekteki değer~D) Bugünkü değer~E) Anuite|C) Gelecekteki değer|💡 Açıklama: Elimizdeki mevcut bir fonun, belirli bir faiz oranıyla belirli bir vade sonunda ulaşacağı nihai değere 'Gelecekteki Değer' adı verilir.",
+
+    "2022-2023 Büt|Bir işletmenin finansal durumunu yansıtan tablo aşağıdakilerden hangisidir?|A) Nakit akım tablosu~B) Gelir tablosu~C) Kar dağıtım tablosu~D) Bilanço~E) Fon akım tablosu|D) Bilanço|💡 Açıklama: Bir işletmenin belli bir tarihteki anlık varlıklarını (aktiflerini) ve bu varlıkların sağlandığı kaynakları (pasiflerini) göstererek finansal durumunu yansıtan tablo Bilançodur.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi paranın zaman değerine etki eden unsurlardan biridir?|A) Finansal oran~B) Vade~C) Finansman gideri~D) Finansal kaldıraç~E) Faaliyet riski|B) Vade|💡 Açıklama: Paranın zaman değerini etkileyen üç temel unsur; Faiz oranı (iskonto oranı), beklenen enflasyon oranı ve vadedir (zaman).",
+
+    "2021 Final, 2022-2023 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi satışlara bağlı olarak değişen bilanço kalemlerinden biridir?|A) Ödenmiş sermaye~B) Ticari alacak~C) Uzun süreli borçlar~D) Banka kredileri~E) İştirakler|B) Ticari alacak|💡 Açıklama: Satışların artması kredili satış miktarını doğrudan etkileyeceğinden, dönen varlıklardaki 'Ticari Alacaklar' hesabı satış hacmine bağlı olarak değişir.",
+
+    "2021 Final, 2022-2023 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi faiz bileşenleri içerisinde yer almaz?|A) Likidite Risk Primi~B) Finansal Kaldıraç~C) Enflasyon Oranı~D) Ödenmeme Risk Primi~E) Vade Risk Primi|B) Finansal Kaldıraç|💡 Açıklama: Finansal kaldıraç, bir işletmenin borç kullanım oranını ifade eder. Piyasada belirlenen faiz (iskonto) oranını oluşturan risk primlerinden biri değildir.",
+
+    "2022-2023 Büt|Aşağıdakilerden hangisi nakit bütçesinin hazırlanma amaçlarından biridir?|A) Elde birikebilecek fonların aylak kalmasına engel olmak.~B) Bir işletmenin mali tablolarda bulunan bir kaleminin toplam veya grup içindeki oransal büyüklüğünü irdelemek.~C) Bir işletmenin iki veya daha fazla dönemine ilişkin finansal tablolarını, birbirini izleyen dönemler bakımından karşılaştırmalı olarak düzenlemek.~D) Mali tablolarda yer alan iki kalem arasındaki ilişkiyi oranlayarak hesaplamak.~E) Finansal tablolarda yer alan kalemlerin dönemler arasında göstermiş olduğu artış veya azalışlarını tespit edip bu değişikliklerin esas alınan yıla göre oransal önemlerini ortaya koymak.|A) Elde birikebilecek fonların aylak kalmasına engel olmak.|💡 Açıklama: Nakit bütçesi yapılarak işletmenin nakit fazlası vereceği dönemler önceden öngörülür ve bu paranın aylak kalması önlenerek kârlı kısa vadeli yatırımlara yönlendirilmesi sağlanır.",
+
+    "2022-2023 Büt|Her ayın sonunda olmak üzere 3 yıl boyunca yıllık %18 faiz oranı üzerinden bankaya yatırılacak olan aylık 5.000 TL'lik miktarların bugünkü değeri yaklaşık kaç TL'dir?|A) 140.000 TL~B) 125.250 TL~C) 144.874 TL~D) 160.000 TL~E) 138.303 TL|E) 138.303 TL|💡 Açıklama: Aylık faiz = %18 / 12 = %1.5 (0.015). Dönem = 3 * 12 = 36 ay. Bugünkü Değer (Anüite) = Taksit * [(1 - (1 + i)^-n) / i] formülüyle: 5000 * [(1 - (1.015)^-36) / 0.015] = 5000 * 27.66068... ≈ 138.303 TL.",
+
+    "2022-2023 Büt|Aşağıdakilerden hangisi nakit bütçesinin bir işletmeye sağladığı bilgilerden biri değildir?|A) Tahmini nakit açığı veya fazlası~B) Ek finansman gerekirse bunun zamanı ve nereden sağlanabileceği~C) Her bütçe dönemi sonundaki tahmini para mevcudu~D) Ek finansman sağlanmasının gerekli olup olmadığı~E) Firmanın finansal riski|E) Firmanın finansal riski|💡 Açıklama: Firmanın genel finansal (iflas) riskini ölçmek için bilanço verileriyle kaldıraç oranlarına (finansal yapı oranlarına) bakılır; kısa vadeli nakit bütçesi finansal riski ölçmek için tasarlanmamıştır.",
+
+    "2022-2023 Büt|Aşağıdakilerden hangisi finansal tabloların analizlerinde kullanılan yöntemlerden biridir?|A) Ekonomik katma değer analizi~B) Bütçeleme~C) Yatırım projelerinin değerlendirilmesi~D) Nakit akım analizi~E) Oran yöntemi ile analiz|E) Oran yöntemi ile analiz|💡 Açıklama: Temel finansal tablo analiz yöntemleri; Karşılaştırmalı Tablolar (Yatay), Yüzde Yöntemi (Dikey), Eğilim Yüzdeleri (Trend) ve Oran (Rasyo) Analizidir.",
+
+    "2021 Final, 2022-2023 Büt, 2 Kez Çıktı!|Beklenen getirinin gerçekleşen getiriden sapma olasılığı ..... kavramıyla açıklanmaktadır. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?|A) faiz~B) kaldıraç~C) risk~D) oran~E) belirsizlik|C) risk|💡 Açıklama: Finansta riskin en temel tanımı, gerçekleşen sonuçların beklenen sonuçlardan sapma olasılığı veya derecesidir.",
+
+    "2022-2023 Büt|Bir yıl vadeli %9 faizli mevduat hesabı açtırılmıştır. Bir yılın sonunda, yıllık enflasyon %7 seviyesinde gerçekleşir ise reel faiz oranı aşağıdakilerden hangisi olur?|A) -%2,18~B) %0,98~C) %1,86~D) %2,00~E) -%2,00|C) %1,86|💡 Açıklama: Reel faiz Fisher denklemiyle bulunur: (1 + Nominal) = (1 + Reel) * (1 + Enflasyon). Buradan: 1.09 = (1 + Reel) * 1.07 => (1 + Reel) = 1.09 / 1.07 = 1.01869... Reel faiz = 0.01869 yani %1,86.",
+
+    "2021 Final, 2022-2023 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi satışlara bağlı olarak değişmeyen bilanço kalemlerinden biri değildir? (Yani değişen kalemdir)|A) Banka kredileri~B) İpotekli borç senetleri~C) Stoklar~D) Uzun süreli borçlar~E) İştirakler|C) Stoklar|💡 Açıklama: Soru olumsuzun olumsuzu şeklinde sorulmuştur. Satış hacmi arttıkça doğal olarak stok ihtiyacı (hammadde, mamul vb.) artacağından, stoklar satışlara bağlı olarak değişen bir kalemdir.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 3 Kez Çıktı!|Finansal varlıklara ilişkin olarak her bir birim getiri için katlanılan riski ölçen yöntem aşağıdakilerden hangisidir?|A) Medyan~B) Varyans~C) Mod~D) Değişim katsayısı~E) Standart sapma|D) Değişim katsayısı|💡 Açıklama: Standart sapmanın beklenen getiriye bölünmesiyle bulunan değişim (varyasyon) katsayısı, birim getiri başına ne kadar risk alındığını gösterir.",
+
+    "2020 Vize, 2022-2023 Büt, 2 Kez Çıktı!|Bir işletmede gereksinim duyulan fonların en uygun koşullarda elde edilmesini ve elde edilen bu fonların en etkin kullanımını sağlayan departman aşağıdakilerden hangisidir?|A) Finans~B) İnsan Kaynakları~C) Muhasebe~D) Üretim~E) Pazarlama|A) Finans|💡 Açıklama: Fonların en uygun maliyetle sağlanması (finansman) ve bu fonların kârlı alanlara yatırılması (yatırım) temel olarak Finans departmanının görev tanımıdır.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biridir?|A) Pazarlanabilir menkul kıymet~B) Maddi duran varlık~C) Maddi olmayan duran varlık~D) Uzun vadeli borç~E) Öz sermaye|A) Pazarlanabilir menkul kıymet|💡 Açıklama: Çalışma (işletme) sermayesi dönen varlıklardan (kasa, banka, menkul kıymetler, alacaklar, stoklar vb.) oluşur. Diğer şıklar duran varlıklar veya uzun vadeli kaynaklardır.",
+
+    "2023-2024 Vize, 2022-2023 Büt, 2 Kez Çıktı!|Bir firmanın faaliyet kâr marjı %15, satışları 20 milyon TL, toplam varlıkları 22,5 milyon TL, finansman giderleri 750.000 TL ve vergi oranı %40 ise, firmanın aktif kârlılığı (toplam varlık kârlılığı) aşağıdakilerden hangisidir?|A) %6,00~B) %13,33~C) %27,46~D) %32,28~E) %22,22|A) %6,00|💡 Açıklama: Faaliyet Kârı (EBIT) = 20M * %15 = 3.000.000 TL. Vergi Öncesi Kâr = 3.000.000 - 750.000 = 2.250.000 TL. Net Kâr = 2.250.000 * (1 - 0.40) = 1.350.000 TL. Aktif Kârlılığı = 1.350.000 / 22.500.000 = 0.06 (%6,00).",
+
+    "2020 Vize, 2022-2023 Büt, 2 Kez Çıktı!|ABC işletmesinin ürün birim değişken gideri 1.500 TL, ürün birim satış fiyatı da 3.000 TL'dir. ABC işletmesi başabaş noktasına 5.000 adetlik üretim ile ulaşıyorsa işletmenin toplam sabit maliyeti aşağıdakilerden hangisidir?|A) 3.500.000 TL~B) 4.500.000 TL~C) 5.500.000 TL~D) 7.500.000 TL~E) 6.500.000 TL|D) 7.500.000 TL|💡 Açıklama: Başabaş (Miktar) = Sabit Maliyet / (Fiyat - Değişken). Formülde yerine koyarsak: 5.000 = Sabit Maliyet / (3.000 - 1.500). İçler dışlar çarpımı ile: Sabit Maliyet = 5.000 * 1.500 = 7.500.000 TL.",
+
+    "2022-2023 Büt|ABC Şirketi birim satış fiyatı 80 TL olan kumaş pantolon üretmektedir. Firmanın sabit maliyeti 250.000 TL; faiz gideri 100.000 TL ve birim başı değişken maliyet 30 TL'dir. Şirketin 20.000 adetlik satışı için gerçekleşen finansal kaldıraç derecesi aşağıdakilerden hangisidir?|A) 2,25~B) 3,55~C) 4,76~D) 1,15~E) 1,46|D) 1,15|💡 Açıklama: Faaliyet Kârı (EBIT) = Toplam Katkı Payı - Sabit Maliyet = [20.000 * (80 - 30)] - 250.000 = 1.000.000 - 250.000 = 750.000 TL. Finansal Kaldıraç Derecesi = EBIT / (EBIT - Faiz) = 750.000 / (750.000 - 100.000) = 750.000 / 650.000 = 1,1538... (1,15).",
+
+
+"2021 Final, 2022-2023 Büt, 2024 Final, 3 Kez Çıktı!|Aşağıdakilerden hangisi satışlara bağlı olarak değişmeyen bilanço kalemlerinden biri degildir?|A) Uzun süreli borçlar~B) Banka kredileri~C) İştirakler~D) Stoklar~E) İpotekli borç senetleri|D) Stoklar|💡 Açıklama: Soru olumsuzun olumsuzu şeklinde sorulmuştur (değişmeyen değildir = değişendir). Satış hacmi arttıkça stok ihtiyacı da artacağı için, stoklar satışlara bağlı olarak doğrudan değişen bir kalemdir.",
+
+    "2022-2023 Büt, 2024 Final, 2 Kez Çıktı!|Bir işletmenin finansal durumunu yansıtan tablo aşağıdakilerden hangisidir?|A) Gelir tablosu~B) Bilanço~C) Nakit akım tablosu~D) Kar dağıtım tablosu~E) Fon akım tablosu|B) Bilanço|💡 Açıklama: Bir işletmenin belli bir tarihteki varlıklarını (aktiflerini) ve bu varlıkların sağlandığı kaynakları (pasiflerini) göstererek finansal durumunu yansıtan tablo Bilançodur.",
+
+    "2024 Final|Aşağıdakilerden hangisi işletmenin varlıklarını ne derece etkin ve verimli kullanıldığını ölçen oranlardan değildir?|A) Öz sermaye devir hızı~B) Stok devir hızı~C) Finansal kaldıraç oranı~D) Alacak devir hızı~E) Toplam varlık devir hızı|C) Finansal kaldıraç oranı|💡 Açıklama: Devir hızları (stok, alacak, aktif devir hızı) varlıkların ne kadar verimli/etkin kullanıldığını ölçen faaliyet (verimlilik) oranlarıdır. Finansal kaldıraç oranı ise şirketin borçluluk/finansal yapı durumunu ölçer.",
+
+    "2021 Final, 2024 Final, 2 Kez Çıktı!|Yılık yüzde 10 faiz oranı üzerinden yatırılan 5.000 TL'nin basit faiz esasına göre üç yıl sonra ulaşacağı değer toplamı aşağıdakilerden hangisidir?|A) 5.000 TL~B) 7.250 TL~C) 5.750 TL~D) 6.655 TL~E) 6.500 TL|E) 6.500 TL|💡 Açıklama: Basit faiz tutarı = Anapara * Faiz Oranı * Zaman = 5.000 * 0.10 * 3 = 1.500 TL. Dönem sonu toplam değer = Anapara + Faiz = 5.000 + 1.500 = 6.500 TL.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 2024 Final, 4 Kez Çıktı!|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biri değildir?|A) Ticari alacak~B) Stokalar~C) Banka hesapları~D) Kasa~E) Maddi duran varlık|E) Maddi duran varlık|💡 Açıklama: Çalışma (işletme) sermayesi, dönen varlık kalemlerini (Kasa, Banka, Alacaklar, Stoklar vb.) ifade eder. Maddi duran varlıklar (binalar, makineler vb.) ise duran varlıklar grubundadır.",
+
+    "2022-2023 Final, 2024 Final, 2 Kez Çıktı!|Bir finansal varlığın standard sapmasının beklenen getirisine bölünmesi sonucunda ulaşılan değere verilen ad aşağıdakilerden hangisidir?|A) Değişim katsayısı~B) Medyan~C) Geometrik ortalama~D) Aritmetik ortalama~E) Standart sapma|A) Değişim katsayısı|💡 Açıklama: Değişim (varyasyon) katsayısı, birim getiri başına ne kadar risk alındığını gösteren bir ölçüttür ve standart sapmanın beklenen getiriye bölünmesiyle bulunur.",
+
+    "2024 Final|Aşağıdakilerden hangisi çalışma sermayesinin özelliklerinden biridir?|A) En çok bir yıl içerisinde nakde dönüştürülmeleri~B) Bir yıldan daha uzun süre içerisinde nakde dönüştürülmeleri~C) Finansal riskin ölçütü olması~D) Sermaye bütçelemesinin bir unsuru olması~E) Faaliyet riskinin ölçütü olması|A) En çok bir yıl içerisinde nakde dönüştürülmeleri|💡 Açıklama: Çalışma sermayesi (dönen varlıklar), normal faaliyet dönemi içinde veya en geç 1 yıl içinde paraya çevrilmesi, tüketilmesi veya satılması beklenen varlıklardır.",
+
+    "2024 Final|3.000 TL'nin, yıllık %8 faiz oram üzerinden 4'üncü yıl sonunda ulaştığı toplam tutar aşağıdakilerden hangisidir?|A) 4.081 TL~B) 4.258 TL~C) 1.551 TL~D) 6.376 TL~E) 2.975 TL|A) 4.081 TL|💡 Açıklama: Bileşik faiz kullanılarak Gelecekteki Değer (FV) = Anapara * (1 + i)^n formülüyle hesaplanır: 3.000 * (1.08)^4 = 3.000 * 1,36048... = 4.081,46 TL (Yuvarlandığında 4.081 TL).",
+
+    "2024 Final|Bugün alınan X TL tutarındaki, 10 yıl vadeli bir banka kredisi için yıllık %12 faiz uygulanmaktadır. İlk iki yıl ödeme yapılmayacağı varsayımıyla hesaplanan geri ödeme planında kalan 8 yıl boyunca yıl sonlarında ödenecek her bir taksitin tutarı 20.000 TL ise verilen kredi miktarı yaklaşık ne kadar olmalıdır?|A) 79.204 TL~B) 85.250 TL~C) 99.353 TL~D) 55.500 TL~E) 65.280 TL|A) 79.204 TL|💡 Açıklama: Önce 8 yıllık anüitenin 2. yıl sonundaki bugünkü değeri (P8) bulunur: P8 = 20.000 * [1 - (1.12)^-8] / 0.12 = 99.352,5 TL. Daha sonra bu tutar 0. yıla (bugüne) 2 yıllık iskonto edilir: 99.352,5 / (1.12)^2 = 79.203,8 (Yuvarlandığında 79.204 TL).",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 2024 Final, 4 Kez Çıktı!|Aşağıdakilerden hangisi paranın zaman değerine etki eden unsurlardan biridir?|A) Finansman gideri~B) Faaliyet riski~C) Finansal kaldıraç~D) Finansal oran~E) Vade|E) Vade|💡 Açıklama: Paranın zaman değerini etkileyen temel unsurlar; Faiz oranı (iskonto oranı), beklenen enflasyon ve vadedir (zaman).",
+
+    "2024 Final|Her bir değerin (Ri) ortalamadan (Rort) olan farklarının kareleri toplamının toplam gözlem sayısına (N) bölünmesi sonucunda ulaşılan değere verilen ad aşağıdakilerden hangisidir?|A) Mod~B) Varyans~C) Geometrik ortalama~D) Medyan~E) Standart sapma|B) Varyans|💡 Açıklama: Varyans, serideki gözlem değerlerinin aritmetik ortalamadan sapmalarının kareleri toplamının gözlem sayısına bölünmesi ile bulunan (getirinin riskini hesaplamada kullanılan) bir istatistiksel ölçüttür.",
+
+    "2022-2023 Final, 2024 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi hem anaparanın hem de kazanılan faizin yeniden faiz kazanmasını ifade etmektedir?|A) Basit Faiz~B) Anuite~C) Bugünkü Değer~D) Gelecekteki Değer~E) Bileşik Faiz|E) Bileşik Faiz|💡 Açıklama: Bir dönem kazanılan faizin anaparaya eklenerek bir sonraki dönemde elde edilen bu daha büyük toplam tutar üzerinden yeniden faiz hesaplanması yöntemine bileşik faiz denir.",
+
+    "2024 Final|Bir firmanın bileşik (toplam) kaldıraç derecesi 12'dir; ayı firmanın faaliyet kaldıraç derecesi ise 4'tür. Buna göre ilgili firmanın finansal kaldıraç derecesi aşağıdakilerden hangisidir?|A) 2,2~B) 3~C) 4~D) 1,5~E) 6|B) 3|💡 Açıklama: Toplam (Bileşik) Kaldıraç Derecesi = Faaliyet Kaldıraç Derecesi * Finansal Kaldıraç Derecesi formülü ile hesaplanır. 12 = 4 * Finansal Kaldıraç -> Finansal Kaldıraç = 12 / 4 = 3'tür.",
+
+    "2021 Final, 2024 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi nakit bütçesi için söylenemez?|A) Nakit bütçesine beklenen tahmini nakit giriş ve çıkışları alınır.~B) Nakit bütçesi sadece aylık dönemler için hazırlanır.~C) Nakit bütçesi, işletmenin nakit ihtiyaçlarının zamanında belirlenmesi amacı ile hazırlanır.~D) Nakit bütçesinde minimum kasa düzeyi veri olup nakit çıkışı şeklinde dikkate alınır.~E) Nakit bütçesinde nakit girişlerinden nakit çıkışları düşüldükten sonra dönemsel nakit dengesine ulaşılır.|B) Nakit bütçesi sadece aylık dönemler için hazırlanır.|💡 Açıklama: Nakit bütçesi işletmenin finansal gereksinimlerine ve faaliyet hızına göre aylık olabileceği gibi 3 aylık, haftalık veya günlük gibi daha farklı periyotlar için de hazırlanabilir.",
+
+    "2024 Final, ⚠️ Dikkat!|Aşağıdakilerden hangisi satışlara bağlı olarak değişmeyen bilanço kalemlerinden biri değildir? (Yani değişen kalemdir)|A) Banka kredileri~B) İpotekli borç senetleri~C) Ödenmiş sermaye~D) Maddi duran varlıklar~E) Tahviller|A) Banka kredileri|⚠️ DİKKAT! Bu sorunun kurgusunda bir hata olabilir. Soru 'değişmeyen biri değildir' (yani değişen kalemdir) diye soruyor. Şıklardakilerin tamamı aslında doğrudan satış hacmiyle otomatik (spontane) olarak değişmeyen kalemlerdir. Ancak işletme, artan satışları finanse etmek için ek işletme sermayesine ihtiyaç duyduğunda genellikle ilk olarak kısa vadeli 'Banka Kredilerine' başvurur. Eğer sınavda çıkarsa olası kabul gören en mantıklı cevap (A) olacaktır.",
+
+    "2022-2023 Vize, 2023-2024 Vize, 2024 Final, 3 Kez Çıktı!|ABC işletmesinin toplam sabit maliyetleri 1.200.000 TL, ürün birim satış fiyatı 800 TL ve ürün birim değişken gideri 400 TL ise, ABC işletmesinin üretim başabaş noktası miktarı aşağıdakilerden hangisidir?|A) 1.500~B) 4.500~C) 7.500~D) 3.000~E) 6.000|D) 3.000|💡 Açıklama: Başabaş Noktası = Toplam Sabit Maliyet / (Birim Satış Fiyatı - Birim Değişken Maliyet). Formülde yerine koyduğumuzda: 1.200.000 / (800 - 400) = 1.200.000 / 400 = 3.000 adet elde edilir.",
+
+    "2020 Vize, 2024 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi gelir tablosu unsurlarından biri değildir?|A) Satılan malın maliyeti~B) Satışlar~C) Bankalar~D) Brüt kâr~E) Faaliyet kârı|C) Bankalar|💡 Açıklama: Bankalar (mevduatlar) hesabı, işletmenin hazır değerlerini gösteren bir Bilanço (Dönen Varlık) hesabıdır, gelir tablosunda yeri yoktur.",
+
+    "2024 Final|Aşağıdakilerden hangisi nakit bütçesi hazırlanma süreci içerisinde değerlendirilmez?|A) Nakit çıkışlarının tahmini~B) Net nakit akışı veya nakit dengesinin bulunması~C) Sistematik ve sistematik olmayan risk unsurlarının tahmini~D) Bütçenin kapsayacağı süre~E) Nakit girişlerinin tahmini|C) Sistematik ve sistematik olmayan risk unsurlarının tahmini|💡 Açıklama: Sistematik ve sistematik olmayan risk tahmini yatırım analizinde ve portföy yönetiminde kullanılan risk analiz yöntemleridir. Kısa vadeli nakit giriş çıkışlarını izleyen nakit bütçesi sürecinde değerlendirilmezler.",
+
+    "2024 Final|Üç iş teklifiyle karşı karşıyasınız: I. Bugün size 20.000 TL nakden ödenecektir; II. Bugünden itibaren tam bir yıl sonra 11.524,06 TL ve iki yıl sonra da bir 11.524,06 TL daha ödenecektir; III. Bugünden itibaren tam bir yıl sonra başlamak üzere yıl sonlarında birbirine eşit tam 12 taksit olarak ödenecektir. Her üç teklif arasında kayıtsız kalabilmeniz için üçüncü iş teklifinin birbirine eşit olan ödemeleri..... olmalıdır.|A) 1.750,00 TL~B) 1.892,45TL~C) 2.946,55 TL~D) 2.935,26 TL~E) 3.226,42 TL|D) 2.935,26 TL|💡 Açıklama: 1. ve 2. seçeneklerin bugünkü değerleri (20.000 TL) eşit olmalıdır ki kayıtsız kalınabilsin. Bu denklemden piyasa faiz oranı (iskonto oranı) %10 (0.10) bulunur. 3. seçenek için (n=12, PV=20.000, r=0.10) anüite formülü (Taksit Tutarı = PV * [i / (1 - (1+i)^-n)]) hesaplandığında: Taksit = 20.000 * [0.10 / (1 - (1.10)^-12)] = 20.000 / 6.81369 = 2.935,26 TL çıkar.",
+
+    "2020 Vize, 2024 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi karşılaştırmalı tablolar analizi (yatay analiz) tanımını ifade etmektedir?|A) Bir işletmenin mali tablolarda bulunan bir kaleminin toplam veya grup içindeki oransal büyüklüğünün irdelenmesidir.~B) Mali tablolarda yer alan iki kalem arasındaki ilişkinin oranlanarak hesaplanmasıdır.~C) Bir işletmenin iki veya daha fazla dönemlerine ilişkin finansal tablolarının, birbirini izleyen dönemler bakımından karşılaştırmalı olarak düzenlemesi ve bu tablolarda yer alan kalemlerin zaman içinde göstermiş olduğu değişikliklerin incelenerek değerlendirilmesidir.~D) Finansal tablolarda yer alan kalemlerin dönemler arasında göstermiş olduğu artış veya azalışların tespit edilerek bu değişikliklerin esas alınan yıla göre oransal önemlerinin ortaya konulmasıdır.~E) Bir işletmenin sahip olduğu varlıklarla bu varlıkların hangi kaynaklardan sağlandığını göstermesidir.|C) Bir işletmenin iki veya daha fazla dönemlerine ilişkin finansal tablolarının, birbirini izleyen dönemler bakımından karşılaştırmalı olarak düzenlemesi ve bu tablolarda yer alan kalemlerin zaman içinde göstermiş olduğu değişikliklerin incelenerek değerlendirilmesidir.|💡 Açıklama: Yatay analiz; finansal tabloların birden fazla döneme ait verilerinin yan yana getirilerek zaman içindeki mutlak ve oransal değişim (artış/azalış) eğilimlerinin incelenmesidir.",
+
+"2021 Final, 2024 Final, 2023-2024 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi nakit bütçesi için söylenemez?|A) Nakit bütçesine beklenen tahmini nakit giriş ve çıkışları alınır.~B) Nakit bütçesi, işletmenin nakit ihtiyaçlarının zamanında belirlenmesi amacı ile hazırlanır.~C) Nakit bütçesinde minimum kasa düzeyi veri olup nakit çıkışı şeklinde dikkate alınır.~D) Nakit bütçesi sadece aylık dönemler için hazırlanır.~E) Nakit bütçesinde nakit girişlerinden nakit çıkışları düşüldükten sonra dönemsel nakit dengesine ulaşılır.|D) Nakit bütçesi sadece aylık dönemler için hazırlanır.|💡 Açıklama: Nakit bütçesi, işletmenin finansal döngüsüne ve ihtiyacına göre aylık olabileceği gibi günlük, haftalık veya üç aylık dönemler için de hazırlanabilir.",
+
+    "2023-2024 Büt|Aşağıdakilerden hangisi nakit bütçesinin bir işletmeye sağladığı bilgilerden biridir?|A) Firmanın tahmini nakit açığı veya fazlası~B) Firmanın üretim karar süreci~C) Firmanın ortak sayısı~D) Firmanın kredibilitesi~E) Firmanın piyasa değeri|A) Firmanın tahmini nakit açığı veya fazlası|💡 Açıklama: Nakit bütçesinin temel amacı işletmenin gelecekteki tahmini nakit giriş ve çıkışlarını karşılaştırarak nakit açığı veya nakit fazlası vereceği dönemleri önceden saptamaktır.",
+
+    "2023-2024 Büt|Aşağıdakilerden hangisi karşılaştırmalı tablolar analizi aşamalarından biridir?|A) Mali tablolarda yer alan tutarların nispi ilişkileri incelenerek işletmenin mali durumu konusunda bilgi edinilmesi~B) Mali tablolarda yer alan iki kalem arasındaki ilişkinin matematiksel ifade edilmesi~C) Mali tablolarda incelenecek dönemlere ait bir yıl esas alınır ve ilgili yıla ait tutarlar 100'e eşit kabul edilerek, diğer dönemlere ait değerler esas alınan yılın aynı değerleri ile karşılaştırılarak yüzde yöntemine göre oranlanması~D) Bir işletmenin mali tablolarda bulunan bir kaleminin toplam veya grup içindeki oransal büyüklüğünün irdelenmesi~E) Faaliyet dönemine ait bilanço ve gelir tablosu bilgilerinin yanyana yazılarak karşılaştırılmaları şeklinde düzenlenmesi|E) Faaliyet dönemine ait bilanço ve gelir tablosu bilgilerinin yanyana yazılarak karşılaştırılmaları şeklinde düzenlenmesi|💡 Açıklama: Karşılaştırmalı tablolar (yatay) analizinin ilk ve en temel aşaması, birden fazla faaliyet dönemine ait finansal tabloların yan yana konularak artış ve azalışların hesaplanabilir hale getirilmesidir.",
+
+    "2024 Final, 2023-2024 Büt, 2 Kez Çıktı!|Her bir değerin (Ri) ortalamadan (Rort) olan farklarının kareleri toplamının toplam gözlem sayısına (N) bölünmesi sonucunda ulaşılan değere verilen ad aşağıdakilerden hangisidir?|A) Geometrik ortalama~B) Medyan~C) Standart sapma~D) Mod~E) Varyans|E) Varyans|💡 Açıklama: İstatistiksel bir risk ölçütü olan varyansın tanımıdır. Serideki her bir değerin aritmetik ortalamadan farkının karelerinin alınıp gözlem sayısına bölünmesiyle bulunur.",
+
+    "2021 Final, 2024 Final, 2023-2024 Büt, 3 Kez Çıktı!|Yılık yüzde 10 faiz oranı üzerinden yatırılan 5.000 TL'nin basit faiz esasına göre üç yıl sonra ulaşacağı değer toplamı aşağıdakilerden hangisidir?|A) 5.750 TL~B) 6.500 TL~C) 5.000 TL~D) 6.655 TL~E) 7.250 TL|B) 6.500 TL|💡 Açıklama: Basit faiz hesabı (I = P * r * t) formülü ile Faiz = 5.000 * 0.10 * 3 = 1.500 TL. Dönem sonu ulaşacağı toplam değer (Anapara + Faiz) = 5.000 + 1.500 = 6.500 TL.",
+
+    "2023-2024 Büt|...... kredi yapısı tercih edilirse yıllık kredi maliyeti en düşük olur. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?|A) Yıl sonu faiz ödemeli, yıllık yüzde 9 faizli~B) 3 ayda bir faiz ödemeli, yıllık yüzde 8 faizli~C) Ayda bir faiz ödemeli, yıllık yüzde 8 faizli~D) 6 ayda bir faiz ödemeli, yıllık yüzde 8,5 faizli~E) 4 ayda bir faiz ödemeli, yıllık yüzde 9 faizli|B) 3 ayda bir faiz ödemeli, yıllık yüzde 8 faizli|💡 Açıklama: Efektif (gerçek) faiz oranlarını hesapladığımızda, (1+0.08/4)^4 - 1 formülüyle 3 ayda bir %8 faizli kredinin yıllık bileşik maliyeti %8,24 ile seçenekler arasındaki en düşük maliyettir.",
+
+    "2021 Final, 2024-2025 Vize, 2025-2026 Vize, 2023-2024 Büt, 4 Kez Çıktı!|Stokların dönen varlıklara dahil edilmemesi durumunda kısa vadeli borçların ödenebilirliğini gösteren oran aşağıdakilerden hangisidir?|A) Cari oran~B) Asit-test oranı~C) Finansal kaldıraç oranı~D) Faiz karşılama oranı~E) Nakit oran|B) Asit-test oranı|💡 Açıklama: Asit-test (Likit) oranı, stokların hızlı bir şekilde paraya çevrilemeyeceği (likit olmadığı) varsayımıyla dönen varlıklardan stokların düşülmesiyle hesaplanan likidite oranıdır.",
+
+    "2023-2024 Büt|Her ayın sonunda olmak üzere 5 yıl boyunca yıllık %12 faiz oranı üzerinden bankaya yatırılacak olan 1.000 TL'lik miktarların bugünkü değeri yaklaşık olarak aşağıdakilerden hangisidir?|A) 65.250 TL~B) 60.000 TL~C) 44.874 TL~D) 25.250 TL~E) 40.000 TL|C) 44.874 TL|💡 Açıklama: 5 yıl = 60 ay. Aylık faiz oranı = %12 / 12 = %1. Anüite bugünkü değer formülü: PV = PMT * [(1 - (1+i)^-n) / i] -> 1000 * [(1 - (1.01)^-60) / 0.01] = 1000 * 44.955. Soru kitapçığında 44.874 TL verilmiştir ve doğru kabul edilmektedir.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 2024 Final, 2023-2024 Büt, 5 Kez Çıktı!|Aşağıdakilerden hangisi paranın zaman değerine etki eden unsurlardan biridir?|A) Faaliyet riski~B) Finansal oran~C) Finansman gideri~D) Vade~E) Finansal kaldıraç|D) Vade|💡 Açıklama: Paranın zaman değerini etkileyen üç ana unsur vardır: Enflasyon, Faiz oranı (iskonto oranı) ve Vadedir (zaman).",
+
+    "2023-2024 Büt|Bay A 500.000 TL değerinde olan bir evi satın almak için bedelin %40'ını peşin, kalan tutarı da kredi kullanarak karşılayacaktır. 7 yıl vadeli kredinin taksitleri ay sonlarında ödenecek olup kredinin aylık faiz oranı %0,88'dir. Buna göre kredinin aylık eşit taksitleri ne kadar olmalıdır?|A) 4.875,56 TL~B) 5.685,76 TL~C) 5.067,59 TL~D) 3.852,25 TL~E) 4.150,85 TL|C) 5.067,59 TL|💡 Açıklama: Kredi tutarı = 500.000 * %60 = 300.000 TL. Vade (n) = 7 * 12 = 84 ay. Aylık faiz = %0.88 (0.0088). Taksit (PMT) = PV * [i / (1 - (1+i)^-n)] -> 300.000 * [0.0088 / (1 - 1.0088^-84)] = 5.067,59 TL.",
+
+    "2021 Final, 2023-2024 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi bir işletmede çalışma sermayesi yetersizliğinin neden olduğu sorunlardan biri değildir?|A) Yetersiz yardımcı madde stoku nedeniyle üretimde kesinti~B) Düşük kapasite kullanım oranı~C) Yetersiz hammadde stoku nedeniyle üretimde kesinti~D) Maddi duran varlık planlamasında aksama~E) Yetersiz nakit nedeniyle üretimde kesinti|D) Maddi duran varlık planlamasında aksama|💡 Açıklama: Çalışma (işletme) sermayesi yetersizliği işletmenin kısa vadeli ve günlük operasyonlarını (hammadde, nakit vb.) etkiler. Maddi duran varlık yatırımları uzun vadeli sermaye bütçelemesi kararlarıdır.",
+
+    "2023-2024 Büt|Aşağıdakilerden hangisi satışlara bağlı olarak değişen bilanço kalemlerinden biri değildir?|A) Ödenmiş sermaye~B) Ödenecek giderler~C) Stoklar~D) Ticari alacak~E) Maddi duran varlıklar|A) Ödenmiş sermaye|💡 Açıklama: İşletmenin günlük satış hacmi arttıkça stoklar, alacaklar ve ticari borçlar otomatik (spontane) olarak artar. Ödenmiş sermaye ise satışlara bağlı olarak kendiliğinden değişmez, genel kurul kararıyla değiştirilebilir.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 2023-2024 Büt, 4 Kez Çıktı!|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biridir?|A) Maddi duran varlık~B) Öz sermaye~C) Uzun vadeli borç~D) Maddi olmayan duran varlık~E) Pazarlanabilir menkul kıymet|E) Pazarlanabilir menkul kıymet|💡 Açıklama: Çalışma sermayesi, işletmenin dönen varlıklarını (kasa, banka, stoklar, alacaklar ve pazarlanabilir menkul kıymetler) ifade eder. Diğerleri duran varlıklar veya uzun vadeli kaynaklardır.",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2023-2024 Büt, 3 Kez Çıktı!|ABC Şirketi birim satış fiyatı 90 TL olan ütü makinesi üretmektedir. Firmanın sabit maliyeti 550.000 TL ve birim başı değişken maliyet 10 TL'dir. Şirketin 9.000 adetlik satışı için gerçekleşen faaliyet kaldıraç derecesi aşağıdakilerden hangisidir?|A) 5,38~B) 2,46~C) 4,23~D) 1,85~E) 3,22|C) 4,23|💡 Açıklama: Faaliyet Kaldıraç Derecesi = Toplam Katkı Payı / Faaliyet Kârı (EBIT). Katkı payı = 9.000 * (90 - 10) = 720.000 TL. EBIT = 720.000 - 550.000 = 170.000 TL. 720.000 / 170.000 = 4,235...",
+
+    "2020 Vize, 2023-2024 Büt, 2 Kez Çıktı!|Üretim hacmine bağlı olarak oluşan gider grubuna verilen ad aşağıdakilerden hangisidir?|A) Reskont Faiz Gideri~B) Değişken Maliyet~C) Olağandışı Giderler~D) Sabit Maliyet~E) Karşılık Gideri|B) Değişken Maliyet|💡 Açıklama: Üretim veya faaliyet hacmindeki artışa paralel olarak toplamı artan, üretim sıfır olduğunda sıfır olan maliyetlere değişken maliyet denir.",
+
+    "2023-2024 Büt|Aşağıdakilerin hangisinde faaliyet kârı tanımı verilmektedir?|A) Olağan dışı olay ve gelişmeler nedeniyle ortaya çıkan gelirlerdir.~B) Satışlar ve satılan malların maliyeti (SMM) arasındaki farktır.~C) Brüt kârla işletmenin faaliyetleri için gerekli giderler arasındaki farktır.~D) Esas faaliyet dışında iştiraklerden ve bağlı ortaklıklardan elde edilen gelirlerdir.~E) Faaliyet kârından faaliyet dışı gelir ve giderler, finansman giderleri ve olağandışı gelir ve giderler ile dönemin vergisi düşüldükten sonra kalan kısımdır.|C) Brüt kârla işletmenin faaliyetleri için gerekli giderler arasındaki farktır.|💡 Açıklama: İşletmenin esas faaliyetiyle ilgili olan Brüt Satış Kârından, Faaliyet Giderlerinin (Ar-Ge, Pazarlama, Genel Yönetim Giderleri) düşülmesiyle ulaşılan değere Faaliyet Kârı (EBIT) denir.",
+
+    "2021 Final, 2023-2024 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi işletmenin kısa dönemde fon ihtiyacının belirlenmesi ile ilgili teknikleri kapsamaktadır?|A) Finansal planlama~B) Yatay analiz~C) Dikey analiz~D) Sermaye bütçelemesi~E) Finansal analiz|A) Finansal planlama|💡 Açıklama: İşletmenin gelecekte (özellikle kısa ve orta vadede) faaliyetlerini sürdürebilmek için ne kadar fona ihtiyaç duyacağını ve bu fonun nasıl sağlanacağını tahmin etmesi finansal planlamanın temelidir.",
+
+    "2023-2024 Büt|Finansal varlıklara ilişkin olarak bir yatırımdan beklenen getirilerin belirsizlik koşullarındaki dağılımının genişliğini gösteren yöntem aşağıdakilerden hangisidir?|A) Mod~B) Medyan~C) Aritmetik ortalama~D) Geometrik ortalama~E) Varyans|E) Varyans|💡 Açıklama: Varyans (ve dolayısıyla standart sapma), beklenen getirilerin ortalamadan ne kadar uzaklaştığını (dağılımın genişliğini) yani yatırımın içerdiği belirsizlik/risk seviyesini ölçen temel istatistiksel araçtır.",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2023-2024 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi finansal tabloların özelliklerinden biri değildir?|A) Bir firmanın mali durumuna etki yapan tüm etmenleri göstermezler.~B) Belli bir döneme ait gelir ve giderlerin karşılaştırılmasına odaklanmıştır.~C) Geçici niteliktedirler.~D) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.~E) Farklı tarihlerde farklı para değerleriyle olan işlemleri yansıtırlar.|D) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.|💡 Açıklama: Finansal tablolarda yer alan amortisman, karşılıklar ve şüpheli alacaklar gibi kalemler işletme yönetiminin politikalarına ve tahminlerine dayandığı için rakamlar her zaman %100 mutlak doğru değildir.",
+
+    "2022-2023 Büt, 2023-2024 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi bugünkü bir paranın belirli bir faiz oranı üzerinden belirli bir süre sonra ulaşacağı toplam değeri ifade etmektedir?|A) Gelecekteki değer~B) Bugünkü değer~C) Bileşik kaldıraç~D) Faaliyet riski~E) Anuite|A) Gelecekteki değer|💡 Açıklama: Elimizde bugün bulunan mevcut bir paranın, belli bir faiz veya getiri oranıyla (bileşik faiz ile) belli bir vade sonrasında ulaşacağı değere Gelecekteki Değer (Future Value) denir.",
+
+"2022-2023 Final, 2024-2025 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi finansal planlamanın unsurlarından biridir?|A) Likit oran~B) Başabaş noktası~C) Finansal analiz~D) Nakit bütçesi~E) Bileşik kaldıraç|D) Nakit bütçesi|💡 Açıklama: Finansal planlamanın temel unsurları Proforma tablolar (tahmini bilanço/gelir tablosu) ve Nakit Bütçesidir. İşletmenin gelecekteki fon ihtiyaçları bu bütçeyle planlanır.",
+
+    "2021 Final, 2024-2025 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi alacak yönetimine ilişkin karar süreçlerinden biri değildir?|A) Kredili satış önerisinin kabul edilmesi~B) Tahsili gecikmiş alacaklara ilişkin politikanın belirlenmesi~C) İşletmenin toplam varlık kärlılığının öz sermaye kärlılığından daha yüksek olması~D) Satış koşullarının saptanması~E) Kredili satış önerisinin geri çevrilmesi|C) İşletmenin toplam varlık kärlılığının öz sermaye kärlılığından daha yüksek olması|💡 Açıklama: Kârlılık oranlarının birbiriyle kıyaslanması, şirketin genel finansal performansı ve kaldıraç etkisiyle ilgilidir, günlük alacak yönetimi kararlarının bir parçası değildir.",
+
+    "2020 Vize, 2022-2023 Final, 2023-2024 Büt, 2024-2025 Vize, 2025-2026 Vize, 2024-2025 Büt, 6 Kez Çıktı!, 🔥 Banko Soru|Aşağıdakilerden hangsi gelir tablosu unsurlarından biridir?|A) Diğer stoklar~B) Satıcılar~C) Satılan malın maliyeti~D) Alıcılar~E) Kasa|C) Satılan malın maliyeti|💡 Açıklama: Kasa, Alıcılar, Satıcılar ve Stoklar bilançoda yer alan hesaplardır. Satılan Malın Maliyeti (SMM) ise işletmenin ana faaliyet maliyetini gösteren bir Gelir Tablosu kalemidir.",
+
+    "2020 Vize, 2021 Final, 2024-2025 Büt, 3 Kez Çıktı!|Bir işletmenin satış gelirlerinin toplam maliyetleri karşıladığı noktadaki üretim miktarına verilen ad aşağıdakilerden hangisidir?|A) Net kår~B) Başabaş noktası~C) Vergi öncesi kâr~D) Faaliyet kârı~E) Brüt kâr|B) Başabaş noktası|💡 Açıklama: Başabaş noktası (sıfır kâr noktası), toplam gelirlerin toplam maliyetlere tam eşit olduğu, yani işletmenin ne kâr ne de zarar ettiği üretim veya satış miktarıdır.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 2024-2025 Büt, 4 Kez Çıktı!|Finansal varlıklara ilişkin olarak her bir birim getiri için katlanılan riski ölçen yöntem aşağıdakilerden hangisidir?|A) Mod~B) Varyans~C) Değişim katsayısı~D) Standart sapma~E) Medyan|C) Değişim katsayısı|💡 Açıklama: Standart sapmanın beklenen getiriye bölünmesiyle bulunan değişim (varyasyon) katsayısı, yatırımdaki birim getiri başına ne kadar risk alındığını gösterir.",
+
+    "2023-2024 Büt, 2024-2025 Büt, 2 Kez Çıktı!|Bay A 500.000 TL değerinde olan bir evi satın almak için bedelin %40'ını peşin, kalan tutarı da kredi kullanarak karşılayacaktır. 7 yıl vadeli kredinin taksitleri ay sonlarında ödenecek olup kredinin aylık faiz oram %0,88'dir. Buna göre kredinin aylık eşit taksitleri ne kadar olmalıdır?|A) 5.067,59 TL~B) 5.685,76 TL~C) 4.875,56 TL~D) 3.852,25 TL~E) 4.150,85 TL|A) 5.067,59 TL|💡 Açıklama: Kullanılacak kredi = 500.000 * %60 = 300.000 TL. Vade (n) = 7 * 12 = 84 ay. Taksit tutarı = 300.000 * [0.0088 / (1 - (1.0088)^-84)] = 5.067,59 TL'dir.",
+
+    "2024-2025 Büt|Nakit bütçesi ile ilgili aşağıdakilerden hangisi yanıştır?|A) Nakit bütçesinde nakit girişlerinden nakit çıkışları düşüldükten sonra dönemsel nakit dengesine ulaşılır.~B) Nakit bütçesine sadece gerçekleşen nakit giriş ve çıkışları alınır.~C) Nakit bütçesi, işletmenin nakit ihtiyaçlarının zamanında belirlenmesi amacı ile hazırlanır.~D) Nakit bütçesinde minimum kasa düzeyi veri olup nakit çıkışı şeklinde dikkate alınır.~E) Nakit bütçesi belirli bir süre için hazırlanabilir.|B) Nakit bütçesine sadece gerçekleşen nakit giriş ve çıkışları alınır.|💡 Açıklama: Bütçeler geleceğe dönük planlama araçlarıdır; bu nedenle nakit bütçesine geçmişte gerçekleşenler değil, gelecekte \"beklenen/tahmini\" nakit giriş ve çıkışları alınır.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 2024-2025 Büt, 4 Kez Çıktı!|Aşağıdakilerden hangisi finansal varlıklara ilişkin risk ölçütlerinden biridir?|A) Aritmetik ortalama~B) Geometrik ortalama~C) Medyan~D) Varyans~E) Mod|D) Varyans|💡 Açıklama: Varyans ve bunun karekökü olan standart sapma, finansal analizde beklenen getiriden sapmayı gösterdiği için en temel risk ölçütü olarak kullanılır.",
+
+    "2024-2025 Büt|Sahip olduğunuz arabayı 7 yıl sonra yeni modeli ile degiştirmeyi planıyorsunuz ve arabanızı yenilerken 2.000 TL ilave bir ödeme yapmanız gerekeceğini tahmin ediyorsunuz. Buna göre arabanızı 7 yıl sonra yenileyebilmek için bankada açacağınız bir hesaba her yıl eşit miktarda para yatıracaksınız. Eğer banka hesabınıza %12 faiz uyguluyor ise gerekli parayı sağlayabilmek için her yıl bankaya yatırmanız gereken miktar aşağıdakilerden hangisidir?|A) 250,75 TL~B) 216,48 TL~C) 285.45 TL~D) 198,23 TL~E) 325,50 TL|D) 198,23 TL|💡 Açıklama: Gelecekteki Değer (Anüite) formülü üzerinden Taksit tutarı bulunur. FV = 2.000 TL. Taksit (PMT) = FV * [i / ((1+i)^n - 1)] = 2.000 * [0.12 / ((1.12)^7 - 1)] = 2000 / 10.089 = 198,23 TL'dir.",
+
+    "2023-2024 Büt, 2024-2025 Büt, 2 Kez Çıktı!, ⚠️ Dikkat!|Aşağıdakilerden hangisi satışlara bağlı olarak değişen bilanço kalemlerinden biri değildir?|A) Stoklar~B) Ödenecek giderler~C) Ödenmiş sermaye~D) Ticari alacak~E) Maddi duran varlıklar|C) Ödenmiş sermaye|⚠️ DİKKAT! Hem \"Ödenmiş Sermaye\" hem de \"Maddi Duran Varlıklar\" satış hacmindeki günlük değişimlerden spontane (otomatik) olarak etkilenmeyen kalemlerdir. Şıklarda teknik olarak iki doğru cevap var ancak AUZEF sisteminde genellikle ilk değişmez kaynak olan \"Ödenmiş Sermaye\" cevabı esas alınır.",
+
+    "2024-2025 Büt|Bir firmanın net satışları 2.000.000 TL'dir. Firmanın stok devir hızı 5, cari oram 3 ve brüt kâr marjı %50'dir. Firmanın stok miktarı aşağıdakilerden hangisidir?|A) 500.000 TL~B) 400.000 TL~C) 100.000 TL~D) 200.000 TL~E) 300.000 TL|D) 200.000 TL|💡 Açıklama: Brüt kâr %50 ise Satışların Maliyeti (SMM) de kalan %50'dir. SMM = 2.000.000 * 0.50 = 1.000.000 TL. Stok Devir Hızı = SMM / Stok -> 5 = 1.000.000 / Stok -> Stok = 200.000 TL'dir.",
+
+    "2024-2025 Büt|Aşağıdakilerden hangisi bilançonun aktif kısmı içinde yer almaz?|A) Ticari Alacak~B) Ticari Borç~C) Maddi Olmayan Duran Varlıklar~D) Stoklar~E) Maddi Duran Varlıklar|B) Ticari Borç|💡 Açıklama: Bilançonun aktif (varlıklar) kısmında dönen ve duran varlıklar yer alır. Ticari Borçlar ise işletmenin yükümlülükleridir ve pasif (kaynaklar) tarafında yer alır.",
+
+    "2024-2025 Büt|Aşağıdakilerden hangisi finansal tabloların analizlerinde kullanılan yöntemlerden biridir?|A) Nakit akım analizi~B) Yüzde yöntemi ile analiz~C) Sermaye bütçelemesi~D) Fon akım analizi~E) Paranın zaman değeri|B) Yüzde yöntemi ile analiz|💡 Açıklama: Finansal tablo analiz teknikleri 4 adettir: Karşılaştırmalı Tablolar (Yatay) Analizi, Yüzde Yöntemi (Dikey) Analiz, Eğilim Yüzdeleri (Trend) Analizi ve Oran (Rasyo) Analizidir.",
+
+    "2024-2025 Büt|Yıllık % 10 faiz oranı üzerinden yatırılan 5.000 TL'nin \"bileşik\" faiz esasına göre üç yıl sonra ulaşacağı değer toplamı aşağıdakilerden hangisidir?|A) 6.655 TL~B) 6.500 TL~C) 7.250 TL~D) 5.750 TL~E) 5.000 TL|A) 6.655 TL|💡 Açıklama: Bileşik faiz hesaplama formülü: Gelecekteki Değer = Anapara * (1 + i)^n = 5.000 * (1.10)^3 = 5.000 * 1,331 = 6.655 TL'dir. (Basit faiz deseydi 6.500 TL olurdu).",
+
+    "2024-2025 Büt|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biridir?|A) Öz sermaye~B) Maddi duran varlık~C) Uzun vadeli borç~D) Maddi olmayan duran varlık~E) Stoklar|E) Stoklar|💡 Açıklama: Çalışma (işletme) sermayesi, işletmenin dönen varlıklarını (Kasa, Banka, Alacaklar, Stoklar) ifade eder. Diğer seçenekler duran varlık veya uzun vadeli kaynak grubudur.",
+
+    "2024-2025 Büt|Aşağıdakilerden hangisi faaliyet kaldıracına ilişkin unsurlardan biri değildir?|A) Faaliyet kaldıracı yüksek işletmelerin risk derecesi düşüktür.~B) İşletmede sabit giderlerin nereye kadar kabul edilebileceğini araştırır.~C) Faaliyet kârındaki yüzdesel değişimin satışlardaki yüzdesel değişime olan oranıdır.~D) Sabit giderler ile değişken giderler arasında ilişki kurar.~E) Kısa süreli bir analiz tekniğidir.|A) Faaliyet kaldıracı yüksek işletmelerin risk derecesi düşüktür.|💡 Açıklama: Faaliyet kaldıracı, işletmenin katlandığı sabit maliyetlerin seviyesini gösterir. Sabit maliyetlerin yüksek olması şirketi satış dalgalanmalarına karşı kırılgan hale getirdiği için işletme (faaliyet) riskini yükseltir.",
+
+    "2024-2025 Büt|100.000 TL'nin, yıllık %5 faiz oranı üzerinden 4'üncü yıl sonunda ulaştığı toplam tutar aşağıdakilerden hangisidir?|A) 120.236 TL~B) 118.975 TL~C) 125.376 TL~D) 128.258 TL~E) 121.551 TL|E) 121.551 TL|💡 Açıklama: Gelecekteki Değer (Bileşik faiz) = Anapara * (1 + i)^n formülü ile 100.000 * (1.05)^4 = 100.000 * 1.215506 = 121.550,6 (Yuvarlandığında 121.551 TL) bulunur.",
+
+    "2024-2025 Büt|10.000 TL nakdi bulunan bir yatırımcı söz konusu nakdini aylık mevduatta değerlendirmek istemektedir. Aylık mevduat faizlerinin yüzde 1,5 olduğu düşünüldüğünde yatırıncının 5 ay sonra elde edeceği toplam faiz geliri yaklaşık olarak aşağıdakilerden hangisidir?|A) 773 TL~B) 1.773 TL~C) 2.000 TL~D) 1.000 TL~E) 1.200 TL|A) 773 TL|💡 Açıklama: Bileşik faiz kullanıldığında toplam biriken para = 10.000 * (1.015)^5 = 10.772,84 TL olur. Sadece faiz geliri isteniyor: 10.772,84 - 10.000 = 772,84 TL (Yaklaşık 773 TL).",
+
+    "2024-2025 Büt|Aylık mevduata uygulanan yıllık nominal faiz oranı %12'dir. Söz konusu faizin yıllık bileşik getirisi aşağıdakilerden hangisidir?|A) %9,56~B) %8,43~C) %12,00~D) %7,21~E) %12,68|E) %12,68|💡 Açıklama: Yıllık nominal faiz %12 ise aylık faiz %1 (0.01) olur. Yıllık efektif (bileşik) oran = (1 + aylık faiz)^12 - 1 = (1.01)^12 - 1 = 1.1268 - 1 = %12,68 olur.",
+
+    "2024-2025 Büt, ⚠️ Dikkat!|Aşağıdakilerden hangisi satışlara bağlı olarak değişen bilanço kalemlerinden biridir?|A) İpotekli borç senetleri~B) Tahviller~C) Ödenmiş sermaye~D) Uzun süreli borçlar~E) İştirakler|Yok (Hatalı Soru)|⚠️ DİKKAT! Bu soru bilimsel olarak tamamen hatalıdır. Şıklarda yer alan kalemlerin hepsi uzun vadeli yabancı kaynaklar, özkaynak veya duran varlık niteliğinde olup satış hacmi ile otomatik/spontane DEĞİŞMEYEN kalemlerdir. \"Değişmeyen biridir?\" şeklinde sorulmak istenmiş olması veya cevap anahtarına rastgele bir harf atanmış olması kuvvetle muhtemeldir. Sınavda karşınıza gelirse muhtemelen iptal edilecek türden bir sorudur.",
+"2024 Final, 2024-2025 Büt, 2025-2026 Final, 3 Kez Çıktı!|Yıllık % 10 faiz oranı üzerinden yatırılan 5.000 TL'nin \"bileşik\" faiz esasına göre üç yıl sonra ulaşacağı değer toplamı aşağıdakilerden hangisidir?|A) 5.750 TL~B) 6.655 TL~C) 6.500 TL~D) 5.000 TL~E) 7.250 TL|B) 6.655 TL|💡 Açıklama: Bileşik faiz hesaplama formülü: Gelecekteki Değer = Anapara * (1 + i)^n = 5.000 * (1.10)^3 = 5.000 * 1,331 = 6.655 TL'dir. (Basit faiz olsaydı 6.500 TL olurdu).",
+
+    "2024 Final, 2025-2026 Final, 2 Kez Çıktı!|Üç iş teklifiyle karşı karşıyasınız: I. Bugün size 20.000 TL nakden ödenecektir; II. Bugünden itibaren tam bir yıl sonra 11.524,06 TL ve iki yıl sonra da bir 11.524,06 TL daha ödenecektir; III. Bugünden itibaren tam bir yıl sonra başlamak üzere yıl sonlarında birbirine eşit tam 12 taksit olarak ödenecektir. Her üç teklif arasında kayıtsız kalabilmeniz için üçüncü iş teklifinin birbirine eşit olan ödemeleri ..... olmalıdır.|A) 1.892,45TL~B) 2.935,26 TL~C) 2.946,55 TL~D) 1.750,00 TL~E) 3.226,42 TL|B) 2.935,26 TL|💡 Açıklama: Önce 1. ve 2. seçeneği birbirine eşitleyerek piyasa faiz oranını (iskonto oranı) %10 (0.10) olarak buluruz. Ardından 3. seçenek için anüite formülünü (Taksit = PV * [i / (1 - (1+i)^-n)]) kullanırız: 20.000 * [0.10 / (1 - (1.10)^-12)] = 20.000 / 6,81369 = 2.935,26 TL bulunur.",
+
+    "2021 Final, 2023-2024 Büt, 2025-2026 Final, 3 Kez Çıktı!|Aşağıdakilerden hangisi işletmenin kısa dönemde fon ihtiyacının belirlenmesi ile ilgili teknikleri kapsamaktadır?|A) Sermaye bütçelemesi~B) Finansal planlama~C) Dikey analiz~D) Finansal analiz~E) Yatay analiz|B) Finansal planlama|💡 Açıklama: İşletmenin gelecekte (özellikle kısa ve orta vadede) faaliyetlerini sürdürebilmek için ne kadar fona ihtiyaç duyacağını ve bu fonların hangi kaynaklardan sağlanacağını önceden saptaması işlemine finansal planlama denir.",
+
+    "2021 Final, 2024-2025 Büt, 2025-2026 Final, 3 Kez Çıktı!|Aşağıdakilerden hangisi alacak yönetimine ilişkin karar süreçlerinden biri değildir?|A) Satış koşullarının saptanması~B) Tahsili gecikmiş alacaklara ilişkin politikanın belirlenmesi~C) İşletmenin toplam varlık kârlılığının öz sermaye kârlılığından daha yüksek olması~D) Kredili satış önerisinin geri çevrilmesi~E) Kredili satış önerisinin kabul edilmesi|C) İşletmenin toplam varlık kârlılığının öz sermaye kârlılığından daha yüksek olması|💡 Açıklama: Varlık kârlılığının öz sermaye kârlılığından yüksek olup olmaması, işletmenin genel finansal performansı ve kaldıraç etkisi ile ilgilidir, şirketin günlük alacak yönetimi kararlarından bağımsızdır.",
+
+    "2024 Final, 2025-2026 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biri değildir?|A) Stokalar~B) Kasa~C) Ticari alacak~D) Banka hesapları~E) Maddi duran varlık|E) Maddi duran varlık|💡 Açıklama: Çalışma (işletme) sermayesi, bilançoda dönen varlık kalemlerini (Kasa, Banka, Alacaklar, Stoklar vb.) ifade eder. Maddi duran varlıklar ise uzun vadeli yatırımlar olup duran varlıklar grubunda raporlanır.",
+
+    "2024-2025 Büt, 2025-2026 Final, 2 Kez Çıktı!|Nakit bütçesi ile ilgili aşağıdakilerden hangisi yanlıştır?|A) Nakit bütçesine sadece gerçekleşen nakit giriş ve çıkışları alınır.~B) Nakit bütçesinde nakit girişlerinden nakit çıkışları düşüldükten sonra dönemsel nakit dengesine ulaşılır.~C) Nakit bütçesi, işletmenin nakit ihtiyaçlarının zamanında belirlenmesi amacı ile hazırlanır.~D) Nakit bütçesi belirli bir süre için hazırlanabilir.~E) Nakit bütçesinde minimum kasa düzeyi veri olup nakit çıkışı şeklinde dikkate alınır.|A) Nakit bütçesine sadece gerçekleşen nakit giriş ve çıkışları alınır.|💡 Açıklama: Bütçeler geçmişi değil, planlanan geleceği ifade eder; bu nedenle nakit bütçesine geçmişte gerçekleşenler değil, gelecekte olması 'beklenen/tahmin edilen' nakit giriş ve çıkışları alınır.",
+
+    "2022-2023 Vize, 2023-2024 Vize, 2025-2026 Final, 3 Kez Çıktı!|Aşağıdakilerden hangisi finansal analizin doğrudan kullanım amaçlarından biridir?|A) Araştırma geliştirme giderlerinin tespit edilmesi~B) Pazarlama harcamalarının tespit edilmesi~C) Satın alma bütçesinin belirlenmesi~D) İşletmenin kârlılık durumunun yeterli olup olmadığının belirlenmesi~E) Üretim düzeyinin belirlenmesi|D) İşletmenin kârlılık durumunun yeterli olup olmadığının belirlenmesi|💡 Açıklama: Finansal analizin ana amacı, finansal tablolardaki ve rasyolardaki veriler ışığında işletmenin mevcut likidite, kârlılık ve finansal yapı performansını (başarısını) tespit etmektir.",
+
+    "2020 Vize, 2024-2025 Vize, 2025-2026 Vize, 2025-2026 Final, 4 Kez Çıktı!|İşletmenin kaynak yapısını, uzun vadeli borç ödeme gücünü ve finansmanda yabancı kaynaklardan yararlanma derecesini gösteren oran grubu aşağıdakilerden hangisidir?|A) Likidite Oranları~B) Faaliyet Oranları~C) Finansal (Mali) Yapı Oranları~D) Nakit Akım Analizi~E) Karılık Oranları|C) Finansal (Mali) Yapı Oranları|💡 Açıklama: Finansal yapı (kaldıraç) oranları, işletmenin faaliyetlerini finanse ederken ne oranda borç (yabancı kaynak) kullandığını ve dolayısıyla iflas/finansal risk durumunu ölçen temel göstergelerdir.",
+
+    "2020 Vize, 2021 Final, 2024-2025 Vize, 2025-2026 Vize, 2025-2026 Final, 5 Kez Çıktı!, 🔥 Banko Soru|Aşağıdakilerden hangisinde gelir tablosunun tanımı verilmektedir?|A) Belli bir tarihte bir işletmenin sahip olduğu varlıklarla bu varlıkların hangi kaynaklardan sağlandığını gösterir.~B) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.~C) Satışlar ve satılan malların maliyeti arasındaki farktır.~D) İşletmenin belli bir dönemdeki nakit akımlarını nakit kaynak ve kullanım yerlerini gösterir.~E) Bir işletmenin belli bir andaki varlıkları (aktif) toplamı kaynakları (pasif) toplamına eşittir.|B) Belli bir dönemde elde edilen gelirlerle katlanılan giderleri düzenli bir şekilde gösterir.|💡 Açıklama: Gelir tablosu, işletmenin belli bir hesap dönemine (örneğin 1 Ocak - 31 Aralık) ait tüm gelir ve giderlerini (dinamik akışını) özetleyerek o dönemin net kârını veya zararını gösteren tablodur.",
+
+    "2021 Final, 2022-2023 Büt, 2024 Final, 2025-2026 Final, 4 Kez Çıktı!|Aşağıdakilerden hangisi satışlara bağlı olarak değişmeyen bilanço kalemlerinden biri değildir? (Yani değişen kalemdir)|A) Banka kredileri~B) Uzun süreli borçlar~C) İpotekli borç senetleri~D) Stoklar~E) İştirakler|D) Stoklar|💡 Açıklama: Soru 'değişmeyen biri değildir' diyerek satışlara bağlı olarak 'değişen' kalemi sormaktadır. Satış hacmi arttıkça doğal olarak üretim ve stok tutma ihtiyacı da artacağı için stoklar satışlara bağlı olarak doğrudan değişir.",
+
+    "2024-2025 Büt, 2025-2026 Final, 2 Kez Çıktı!|100.000 TL'nin, yıllık %5 faiz oranı üzerinden 4'üncü yıl sonunda ulaştığı toplam tutar aşağıdakilerden hangisidir?|A) 125.376 TL~B) 128.258 TL~C) 121.551 TL~D) 120.236 TL~E) 118.975 TL|C) 121.551 TL|💡 Açıklama: Gelecekteki Değer (Bileşik faiz) = Anapara * (1 + i)^n formülü ile 100.000 * (1.05)^4 = 100.000 * 1.215506 = 121.550,6 TL bulunur (Yuvarlandığında 121.551 TL).",
+
+    "2022-2023 Vize, 2023-2024 Vize, 2025-2026 Final, 3 Kez Çıktı!|ABC işletmesinin toplam sabit maliyetleri 80.000 TL, ürün birim değişken gideri ise 500 TL'dir. ABC işletmesi başabaş noktasına 2.000 adetlik üretim ile ulaşıyorsa işletmenin ürün birim satış fiyatı aşağıdakilerden hangisidir?|A) 155~B) 440~C) 250~D) 220~E) 540|E) 540|💡 Açıklama: Başabaş Noktası = Toplam Sabit Maliyet / (Birim Satış Fiyatı - Birim Değişken Maliyet). Formülde yerine koyarsak: 2.000 = 80.000 / (Fiyat - 500) -> İçler dışlar çarpımıyla (Fiyat - 500) = 40 -> Fiyat = 540 TL elde edilir.",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2023-2024 Büt, 2025-2026 Final, 4 Kez Çıktı!|ABC Şirketi birim satış fiyatı 90 TL olan ütü makinesi üretmektedir. Firmanın sabit maliyeti 550.000 TL ve birim başı değişken maliyet 10 TL'dir. Şirketin 9.000 adetlik satışı için gerçekleşen faaliyet kaldıraç derecesi aşağıdakilerden hangisidir?|A) 3,22~B) 1,85~C) 2,46~D) 5,38~E) 4,23|E) 4,23|💡 Açıklama: Faaliyet Kaldıraç Derecesi = Toplam Katkı Payı / Faaliyet Kârı (EBIT). Toplam Katkı Payı = 9.000 adet * (90 - 10) = 720.000 TL. Faaliyet Kârı = 720.000 - 550.000 = 170.000 TL. Kaldıraç Derecesi = 720.000 / 170.000 = 4,235...",
+
+    "2022-2023 Vize, 2024-2025 Vize, 2025-2026 Vize, 2025-2026 Final, 4 Kez Çıktı!|Aşağıdakilerden hangisi bilançonun kalemlerinden biri değildir?|A) Duran varlıklar~B) Öz sermaye~C) Faaliyet karı~D) Yabancı kaynaklar~E) Dönen varlıklar|C) Faaliyet karı|💡 Açıklama: Faaliyet kârı, işletmenin belli bir dönemdeki performansını ve kârlılığını gösteren Gelir Tablosu'na ait bir kalemdir. Bilanço sadece varlıkları (aktif) ve kaynakları (pasif) gösterir.",
+
+    "2024 Final, 2025-2026 Final, 2 Kez Çıktı!|Aşağıdakilerden hangisi nakit bütçesi hazırlanma süreci içerisinde değerlendirilmez?|A) Nakit çıkışlarının tahmini~B) Bütçenin kapsayacağı süre~C) Net nakit akışı veya nakit dengesinin bulunması~D) Nakit girişlerinin tahmini~E) Sistematik ve sistematik olmayan risk unsurlarının tahmini|E) Sistematik ve sistematik olmayan risk unsurlarının tahmini|💡 Açıklama: Sistematik ve sistematik olmayan risklerin tahmini, yatırım analizinde ve menkul kıymet/portföy yönetiminde kullanılan risk analiz yöntemleridir. Kısa vadeli nakit giriş çıkışlarını izleyen nakit bütçesi sürecinde kullanılmazlar.",
+
+    "2025-2026 Final|Yıllık %20 faiz oranı ile 3 yıl sonra hesapta oluşacak 1.150 TL'nin bugünkü değeri aşağıdakilerden hangisidir?|A) 665 TL~B) 750 TL~C) 832 TL~D) 682 TL~E) 800 TL|A) 665 TL|💡 Açıklama: Bugünkü Değer (PV) = Gelecekteki Değer (FV) / (1 + i)^n formülü ile hesaplanır. PV = 1.150 / (1.20)^3 = 1.150 / 1,728 = 665,50 TL (Yuvarlandığında 665 TL bulunur).",
+
+    "2025-2026 Final|Nominal faiz oranının enflasyon oranından yüksek olması aşağıdakilerden hangisini ortaya çıkartır?|A) Pozitif reel getiri~B) Negatif reel getiri~C) Reel getirinin sıfıra eşit olma durumu~D) Deflasyon~E) Likidite risk primi|A) Pozitif reel getiri|💡 Açıklama: Kazanılan nominal (görünür) faiz, paranın satın alma gücünü eriten enflasyon oranından daha yüksek seviyedeyse, yatırımcı enflasyonun üzerinde gerçek bir kazanç sağlamış olur. Buna pozitif reel getiri denir.",
+
+    "2022-2023 Final, 2022-2023 Büt, 2024-2025 Büt, 2025-2026 Final, 4 Kez Çıktı!|Finansal varlıklara ilişkin olarak her bir birim getiri için katlanılan riski ölçen yöntem aşağıdakilerden hangisidir?|A) Değişim katsayısı~B) Mod~C) Varyans~D) Medyan~E) Standart sapma|A) Değişim katsayısı|💡 Açıklama: Standart sapmanın beklenen getiriye bölünmesiyle bulunan değişim (varyasyon) katsayısı, yatırımdaki her bir birim getiri başına ne kadar risk alındığını gösteren nispi (oransal) bir risk ölçütüdür.",
+
+    "2021 Final, 2025-2026 Final, 2 Kez Çıktı!|Her yılın sonunda olmak üzere 10 yıl boyunca yıllık %10 faiz oranı üzerinden bankaya yatırılacak olan 3.000 TL'lik miktarların süre sonundaki değer toplamı yaklaşık olarak aşağıdakilerden hangisidir?|A) 37.156 TL~B) 23.235 TL~C) 28.258 TL~D) 47.812 TL~E) 30.000 TL|D) 47.812 TL|💡 Açıklama: Sabit ödemeli normal anüitenin gelecekteki değer hesabı: Gelecekteki Değer = Ödeme * [((1+i)^n - 1) / i]. Formül uygulandığında 3000 * [((1+0.10)^10 - 1) / 0.10] = 3000 * 15,9374 = 47.812,27 TL bulunur.",
+
+    "2023-2024 Büt, 2025-2026 Final, 2 Kez Çıktı!|Finansal varhklara ilişkin olarak bir yatırımdan beklenen getirilerin belirsizlik koşullarındaki dağılımının genişliğini gösteren yöntem aşağıdakilerden hangisidir?|A) Mod~B) Geometrik ortalama~C) Medyan~D) Varyans~E) Aritmetik ortalama|D) Varyans|💡 Açıklama: Varyans (ve bunun karekökü olan standart sapma), beklenen getirilerin ortalamadan ne kadar saptığını, yani olası sonuçların dağılım genişliğini (belirsizlik/risk seviyesini) ölçen temel istatistiksel araçtır.",
+
+"2024 Final, 2025-2026 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi çalışma sermayesinin özelliklerinden biridir?|A) Faaliyet riskinin ölçütü olması~B) En çok bir yıl içerisinde nakde dönüştürülmeleri~C) Sermaye bütçelemesinin bir unsuru olması~D) Finansal riskin ölçütü olması~E) Bir yıldan daha uzun süre içerisinde nakde dönüştürülmeleri|B) En çok bir yıl içerisinde nakde dönüştürülmeleri|💡 Açıklama: Çalışma sermayesi (dönen varlıklar), normal faaliyet dönemi içinde veya en geç 1 yıl içinde paraya çevrilmesi, tüketilmesi veya satılması beklenen varlıklardır.",
+
+    "2022-2023 Final, 2024 Final, 2025-2026 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi hem anaparanın hem de kazanılan faizin yeniden faiz kazanmasını ifade etmektedir?|A) Bileşik Faiz~B) Anuite~C) Bugünkü Değer~D) Basit Faiz~E) Gelecekteki Değer|A) Bileşik Faiz|💡 Açıklama: Kazanılan faizin anaparaya eklenerek bir sonraki dönemde elde edilen bu daha büyük toplam tutar üzerinden yeniden faiz hesaplanması yöntemine bileşik faiz denir.",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2025-2026 Büt, 3 Kez Çıktı!|Üretim hacminden bağımsız olarak oluşan gider grubuna verilen ad aşağıdakilerden hangisidir?|A) Finansman gideri~B) Sabit maliyet~C) Değişken maliyet~D) Komisyon gideri~E) Faaliyet gideri|B) Sabit maliyet|💡 Açıklama: Üretim hacmindeki (miktarındaki) değişimlerden etkilenmeyen, işletme çalışmasa dahi katlanılmak zorunda olunan giderlere (kira, amortisman vb.) sabit maliyet denir.",
+
+    "2022-2023 Vize, 2023-2024 Vize, 2025-2026 Final, 2025-2026 Büt, 4 Kez Çıktı!|Aşağıdakilerden hangisi finansal analizin doğrudan kullanım amaçlarından biridir?|A) Satın alma bütçesinin belirlenmesi~B) Üretim düzeyinin belirlenmesi~C) Araştırma geliştirme giderlerinin tespit edilmesi~D) İşletmenin kärlılık durumunun yeterli olup olmadığının belirlenmesi~E) Pazarlama harcamalarının tespit edilmesi|D) İşletmenin kärlılık durumunun yeterli olup olmadığının belirlenmesi|💡 Açıklama: Finansal analizin ana amacı, finansal tablolardaki ve rasyolardaki veriler ışığında işletmenin mevcut likidite, kârlılık ve finansal yapı performansını (başarısını) tespit etmektir.",
+
+    "2021 Final, 2023-2024 Büt, 2025-2026 Final, 2025-2026 Büt, 4 Kez Çıktı!|Aşağıdakilerden hangisi işletmenin kısa dönemde fon ihtiyacının belirlenmesi ile ilgili teknikleri kapsamaktadır?|A) Dikey analiz~B) Yatay analiz~C) Sermaye bütçelemesi~D) Finansal analiz~E) Finansal planlama|E) Finansal planlama|💡 Açıklama: İşletmenin gelecekte (özellikle kısa ve orta vadede) faaliyetlerini sürdürebilmek için ne kadar fona ihtiyaç duyacağını ve bu fonların hangi kaynaklardan sağlanacağını önceden saptaması işlemine finansal planlama denir.",
+
+    "2022-2023 Büt, 2023-2024 Büt, 2025-2026 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi bugünkü bir paranın belirli bir faiz oranı üzerinden belirli bir süre sonra ulaşacağı toplam değeri ifade etmektedir?|A) Bugünkü değer~B) Anuite~C) Faaliyet riski~D) Bileşik kaldıraç~E) Gelecekteki değer|E) Gelecekteki değer|💡 Açıklama: Elimizde bugün bulunan mevcut bir paranın, belli bir faiz veya getiri oranıyla belli bir vade sonrasında ulaşacağı değere Gelecekteki Değer (Future Value) denir.",
+
+    "2022-2023 Vize, 2023-2024 Vize, 2025-2026 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi işletmenin nakit kullanımlarından biri değildir?|A) Vergi ve benzeri ödemeler~B) Olağandışı gider ve zararlara ilişkin ödemeler~C) Hisse senedi ihraç primlerinden sağlanan nakit~D) Temettü ödemeleri~E) Maliyetlerden kaynaklanan ödemeler|C) Hisse senedi ihraç primlerinden sağlanan nakit|💡 Açıklama: \"Sağlanan nakit\" tanımı gereği bir nakit girişini (kaynak/tedarik) ifade eder, dolayısıyla nakdin kullanımı (kasadan nakit çıkışı) değildir.",
+
+    "2024 Final, 2025-2026 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi işletmenin varlıklarını ne derece etkin ve verimli kullanıldığını ölçen oranlardan değildir?|A) Öz sermaye devir hızı~B) Alacak devir hızı~C) Stok devir hızı~D) Finansal kaldıraç oranı~E) Toplam varlık devir hızı|D) Finansal kaldıraç oranı|💡 Açıklama: Devir hızları (stok, alacak, aktif devir hızı vb.) varlıkların ne kadar verimli kullanıldığını ölçen faaliyet oranlarıdır. Finansal kaldıraç oranı ise şirketin borçluluk/finansal yapı durumunu ölçer.",
+
+    "2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt, 3 Kez Çıktı!|Nakit bütçesi ile ilgili aşağıdakilerden hangisi yanlıştır?|A) Nakit bütçesinde minimum kasa düzeyi veri olup nakit çıkışı şeklinde dikkate alınır.~B) Nakit bütçesi belirli bir süre için hazırlanabilir.~C) Nakit bütçesinde nakit girişlerinden nakit çıkışları düşüldükten sonra dönemsel nakit dengesine ulaşılır.~D) Nakit bütçesi, işletmenin nakit ihtiyaçlarının zamanında belirlenmesi amacı ile hazırlanır.~E) Nakit bütçesine sadece gerçekleşen nakit giriş ve çıkışları alınır.|E) Nakit bütçesine sadece gerçekleşen nakit giriş ve çıkışları alınır.|💡 Açıklama: Bütçeler geçmişi değil, planlanan geleceği ifade eder; bu nedenle nakit bütçesine geçmişte gerçekleşenler değil, gelecekte olması 'beklenen/tahmin edilen' nakit giriş ve çıkışları alınır.",
+
+    "2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt, 3 Kez Çıktı!|100.000 TL'nin, yıllık %5 faiz oranı üzerinden 4'üncü yıl sonunda ulaştığı toplam tutar aşağıdakilerden hangisidir?|A) 128.258 TL~B) 125.376 TL~C) 118.975 TL~D) 120.236 TL~E) 121.551 TL|E) 121.551 TL|💡 Açıklama: Gelecekteki Değer (Bileşik faiz) = Anapara * (1 + i)^n formülü ile 100.000 * (1.05)^4 = 100.000 * 1.215506 = 121.550,6 TL bulunur (Yuvarlandığında 121.551 TL).",
+
+    "2022-2023 Final, 2024-2025 Büt, 2025-2026 Büt, 3 Kez Çıktı!|Aşağıdakilerden hangisi finansal planlamanın unsurlarından biridir?|A) Başabaş noktası~B) Nakit bütçesi~C) Likit oran~D) Bileşik kaldıraç~E) Finansal analiz|B) Nakit bütçesi|💡 Açıklama: Finansal planlamanın temel unsurları Proforma tablolar (tahmini bilanço/gelir tablosu) ve Nakit Bütçesidir. İşletmenin gelecekteki fon ihtiyaçları bu bütçeyle planlanır.",
+
+    "2024-2025 Büt, 2025-2026 Büt, 2 Kez Çıktı!|Aşağıdakilerden hangisi çalışma sermayesinin unsurlarından biridir?|A) Maddi olmayan duran varlık~B) Maddi duran varlık~C) Stoklar~D) Uzun vadeli borç~E) Öz sermaye|C) Stoklar|💡 Açıklama: Çalışma (işletme) sermayesi, işletmenin dönen varlıklarını (Kasa, Banka, Alacaklar, Stoklar) ifade eder. Diğer seçenekler duran varlık veya uzun vadeli kaynak grubudur.",
+
+    "2021 Final, 2022-2023 Final, 2022-2023 Büt, 2024-2025 Büt, 2025-2026 Büt, 5 Kez Çıktı!, 🔥 Banko Soru|Aşağıdakilerden hangisi finansal varlıklara ilişkin risk ölçütlerinden biridir?|A) Mod~B) Varyans~C) Aritmetik ortalama~D) Medyan~E) Geometrik ortalama|B) Varyans|💡 Açıklama: Varyans ve standart sapma, beklenen getiriden sapmayı (dağılımı) gösterdiği için finansta temel risk ölçütü olarak kullanılır.",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2023-2024 Büt, 2025-2026 Final, 2025-2026 Büt, 5 Kez Çıktı!, 🔥 Banko Soru|ABC Şirketi birim satış fiyatı 90 TL olan ütü makinesi üretmektedir. Firmanın sabit maliyeti 550.000 TL ve birim başı değişken maliyet 10 TL'dir. Şirketin 9.000 adetlik satışı için gerçekleşen faaliyet kaldıraç derecesi aşağıdakilerden hangisidir?|A) 3,22~B) 5,38~C) 1,85~D) 4,23~E) 2,46|D) 4,23|💡 Açıklama: Faaliyet Kaldıraç Derecesi = Toplam Katkı Payı / Faaliyet Kârı (EBIT). Toplam Katkı Payı = 9.000 adet * (90 - 10) = 720.000 TL. Faaliyet Kârı = 720.000 - 550.000 = 170.000 TL. Kaldıraç Derecesi = 720.000 / 170.000 = 4,235...",
+
+    "2024-2025 Büt, 2025-2026 Büt, 2 Kez Çıktı!|Kişi sahip olduğu arabayı 7 yıl sonra yeni modeli ile değiştirmeyi planlıyor ve arabayı yenilerken 2.000 TL ilave bir ödeme yapması gerekeceğini tahmin ediyor. Buna göre arabayı 7 yıl sonra yenileyebilmek için bankada açacağı bir hesaba her yıl eşit miktarda para yatıracak. Eğer banka hesaba %12 faiz uyguluyor ise gerekli parayı sağlayabilmek için her yıl bankaya yatırması gereken miktar aşağıdakilerden hangisidir?|A) 325,50 TL~B) 216,48 TL~C) 250,75 TL~D) 198,23 TL~E) 285,45 TL|D) 198,23 TL|💡 Açıklama: Gelecekteki Değer (Anüite) formülü üzerinden Taksit tutarı bulunur. FV = 2.000 TL. Taksit (PMT) = FV * [i / ((1+i)^n - 1)] = 2.000 * [0.12 / ((1.12)^7 - 1)] = 2000 / 10.089 = 198,23 TL'dir.",
+
+    "2025-2026 Büt|Bir bölümü peşin geri kalanı ise 60 ayda eşit taksitlerle geri ödemeli banka kredisi kullanılarak 450.000 TL'ye bir ev satın alınmıştır. Kredinin faiz oram aylık %0,6 ve aylık taksit tutarı 4.000 TL ise ev satın alınırken ödenen peşinat miktarı aşağıdakilerden hangisidir?|A) 207.318,48 TL~B) 234.456,91 TL~C) 248.951,48 TL~D) 198.756,45 TL~E) 225.326,82 TL|C) 248.951,48 TL|💡 Açıklama: Önce ödenen taksitlerin bugünkü değeri bulunarak çekilen kredi miktarı hesaplanır. PV = 4000 * [(1 - (1.006)^-60) / 0.006] = 201.048,52 TL kredi çekilmiştir. Evin toplam değeri 450.000 TL olduğuna göre Peşinat = 450.000 - 201.048,52 = 248.951,48 TL'dir.",
+
+    "2025-2026 Büt|Aşağıdakilerden hangisi proforma bilanço ve gelir tablosu hazırlanması sırasında kullanılan yöntemlerden biridir?|A) Satışların yüzdesi yöntemi~B) Karşılaştırmalı tablolar analizi~C) Eğilim yüzdeleri yöntemi~D) Yüzde analizi yöntemi~E) Oran analizi yöntemi|A) Satışların yüzdesi yöntemi|💡 Açıklama: Proforma (tahmini) tabloların oluşturulmasında gelecekteki finansal kalemleri satış hacminin bir fonksiyonu olarak belirleyen Satışların Yüzdesi yöntemi yaygın olarak kullanılır. (Diğerleri analiz teknikleridir).",
+
+    "2023-2024 Büt, 2025-2026 Büt, 2 Kez Çıktı!|..... faiz ödemeli, yıllık yüzde ...... faizli kredi yapısı tercih edilirse yıllık kredi maliyeti en düşük olur. Yukarıdaki cümlede boş bırakılan yerlere sırasıyla aşağıdakilerden hangisi getirilmelidir?|A) 3 ayda bir - 8~B) Yıl sonu-9~C) 6 ayda bir- 8,5~D) 4 ayda bir - 9~E) Ayda bir-8|A) 3 ayda bir - 8|💡 Açıklama: Efektif (gerçek) faiz oranlarını hesapladığımızda, (1+0.08/4)^4 - 1 formülüyle 3 ayda bir %8 faizli kredinin yıllık bileşik maliyeti %8,24 ile seçenekler arasındaki en düşük maliyettir.",
+
+    "2023-2024 Büt, 2025-2026 Final, 2025-2026 Büt, 3 Kez Çıktı!|Finansal varlıklara ilişkin olarak bir yatırımdan beklenen getirilerin belirsizlik koşullarındaki dağılımının genişliğini gösteren yöntem aşağıdakilerden hangisidir?|A) Varyans~B) Aritmetik ortalama~C) Medyan~D) Geometrik ortalama~E) Mod|A) Varyans|💡 Açıklama: Varyans (ve bunun karekökü olan standart sapma), beklenen getirilerin ortalamadan ne kadar saptığını, yani olası sonuçların dağılım genişliğini (belirsizlik/risk seviyesini) ölçen temel istatistiksel araçtır.",
+
+    "2024-2025 Vize, 2025-2026 Vize, 2023-2024 Büt, 2025-2026 Büt, 4 Kez Çıktı!|Aşağıdakilerden hangisi finansal tabloların özelliklerinden biri değildir?|A) Farklı tarihlerde farklı para değerleriyle olan işlemleri yansıtırlar.~B) Geçici niteliktedirler.~C) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.~D) Belli bir döneme ait gelir ve giderlerin karşılaştırılmasına odaklanmıştır.~E) Bir firmanın mali durumuna etki yapan tüm etmenleri göstermezler.|C) Finansal tablolarda yer alan rakamlar mutlak doğru ve kesindir.|💡 Açıklama: Finansal tablolarda yer alan amortisman, karşılıklar ve şüpheli alacaklar gibi kalemler işletme yönetiminin politikalarına ve tahminlerine dayandığı için rakamlar her zaman %100 mutlak doğru değildir.",
+
+
+
+];
+
+    // --- BURADAN İTİBAREN KOPYALAYIN ---
+    let isAllOpen = false;
+    let temizlenmisData = []; // Birleştirilmiş verileri global tutalım ki arama/filtreleme yapabilelim
+
+    // 1. SORULARI BİRLEŞTİREN FONKSİYON
+    function sorulariBirlestir(dataArray) {
+        const soruMap = new Map();
+
+        dataArray.forEach(item => {
+            if (!item || item.trim() === '') return;
+            
+            const parts = item.split('|');
+            if (parts.length < 4) return; 
+            
+            let tagsRaw = parts[0];
+            const question = parts[1].trim(); 
+            const options = parts[2];
+            const correctAnswer = parts[3];
+            const explanation = parts[4] ? parts[4] : '';
+
+            let tagsList = tagsRaw.split(',').map(t => t.trim());
+            let mevcutSayi = 1;
+
+            tagsList = tagsList.filter(t => {
+                const match = t.match(/(\d+)\s*Kez Çıktı/i);
+                if (match) {
+                    mevcutSayi = parseInt(match[1]);
+                    return false; 
+                }
+                return true;
+            });
+
+            if (soruMap.has(question)) {
+                let kayit = soruMap.get(question);
+                kayit.count += mevcutSayi; 
+                
+                tagsList.forEach(t => {
+                    if (!kayit.tags.includes(t)) {
+                        kayit.tags.push(t);
+                    }
+                });
+            } else {
+                soruMap.set(question, {
+                    tags: tagsList,
+                    options: options,
+                    correctAnswer: correctAnswer,
+                    explanation: explanation,
+                    count: mevcutSayi
+                });
+            }
+        });
+
+        const birlestirilmisData = [];
+        for (let [qText, data] of soruMap.entries()) {
+            let finalTags = [...data.tags];
+            if (data.count > 1) {
+                finalTags.push(`${data.count} Kez Çıktı!`);
+            }
+            
+            const itemString = `${finalTags.join(',')}|${qText}|${data.options}|${data.correctAnswer}|${data.explanation}`;
+            birlestirilmisData.push(itemString);
+        }
+
+        return birlestirilmisData;
+    }
+
+   // 2. EKRANA BASTIRMA FONKSİYONU (Renklendirme Geliştirilmiş Versiyon)
+    function renderQuestions(data) {
+        const container = document.getElementById('q-container');
+        container.innerHTML = '';
+        
+        if(data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px;">Kriterlerinize uygun soru bulunamadı.</p>';
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const parts = item.split('|');
+            const tagsRaw = parts[0];
+            const question = parts[1];
+            const options = parts[2].split('~');
+            const correctAnswer = parts[3];
+            const explanation = parts[4] || '';
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const tagsDiv = document.createElement('div');
+            tagsDiv.className = 'tags';
+            
+            tagsRaw.split(',').forEach(tag => {
+                tag = tag.trim();
+                if(!tag) return;
+                const span = document.createElement('span');
+                span.className = 'tag';
+                
+                let lowerTag = tag.toLowerCase();
+                if(lowerTag.includes('ünite') || lowerTag.match(/^u\d+/)) {
+                    span.classList.add('tag-u');
+                } else if(lowerTag.includes('banko') || lowerTag.includes('kez çıktı')) {
+                    span.classList.add('tag-h');
+                } else {
+                    span.classList.add('tag-e');
+                }
+                
+                span.textContent = tag;
+                tagsDiv.appendChild(span);
+            });
+
+            const qDiv = document.createElement('div');
+            qDiv.className = 'q-text';
+            qDiv.textContent = (index + 1) + ". " + question;
+
+            const optUl = document.createElement('ul');
+            optUl.className = 'opt';
+            
+            options.forEach(opt => {
+                const li = document.createElement('li');
+                li.textContent = opt;
+                li.onclick = function() {
+                    // Önce bu sorudaki tüm şıkları varsayılan (gri) haline getirerek sıfırla
+                    Array.from(optUl.children).forEach(child => {
+                        child.style.backgroundColor = '#f8f9fa';
+                        child.style.borderColor = 'var(--b)';
+                        child.style.color = 'var(--t)';
+                        child.style.fontWeight = 'normal';
+                    });
+                    
+                    // Cevap kontrolü
+                    if(opt.trim() === correctAnswer.trim()) {
+                        // DOĞRU ŞIKKA TIKLANDIYSA: Canlı Yeşil Yap
+                        this.style.backgroundColor = '#d4edda';
+                        this.style.borderColor = '#28a745';
+                        this.style.color = '#155724';
+                        this.style.fontWeight = 'bold';
+                    } else {
+                        // YANLIŞ ŞIKKA TIKLANDIYSA: Canlı Kırmızı Yap
+                        this.style.backgroundColor = '#f8d7da';
+                        this.style.borderColor = '#dc3545';
+                        this.style.color = '#721c24';
+                        this.style.fontWeight = 'bold';
+                        
+                        // KULLANICIYA YARDIM: Aynı esnada doğru olan şıkkı da otomatik yeşile boya
+                        Array.from(optUl.children).forEach(child => {
+                            if(child.textContent.trim() === correctAnswer.trim()) {
+                                child.style.backgroundColor = '#d4edda';
+                                child.style.borderColor = '#28a745';
+                                child.style.color = '#155724';
+                                child.style.fontWeight = 'bold';
+                            }
+                        });
+                    }
+                };
+                optUl.appendChild(li);
+            });
+
+            const btn = document.createElement('button');
+            btn.className = 'ans-btn';
+            btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster';
+            
+            const ansBox = document.createElement('div');
+            ansBox.className = 'ans-box';
+            ansBox.style.display = isAllOpen ? 'block' : 'none';
+            ansBox.innerHTML = `<div class="ans-true">Cevap: ${correctAnswer}</div>${explanation ? `<div><em>Açıklama:</em> ${explanation}</div>` : ''}`;
+
+            btn.onclick = () => {
+                if (ansBox.style.display === 'block') {
+                    ansBox.style.display = 'none';
+                    btn.textContent = 'Cevabı Göster';
+                } else {
+                    ansBox.style.display = 'block';
+                    btn.textContent = 'Cevabı Gizle';
+                }
+            };
+
+            card.appendChild(tagsDiv);
+            card.appendChild(qDiv);
+            card.appendChild(optUl);
+            card.appendChild(btn);
+            card.appendChild(ansBox);
+
+            container.appendChild(card);
+        });
+    }
+//buraya kadar 
+    // 3. BUTON VE ARAMA FONKSİYONLARI
+    function toggleAll() {
+        isAllOpen = !isAllOpen;
+        const boxes = document.querySelectorAll('.ans-box');
+        const btns = document.querySelectorAll('.ans-btn');
+        boxes.forEach(box => box.style.display = isAllOpen ? 'block' : 'none');
+        btns.forEach(btn => btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster');
+    }
+
+    function filter(val) {
+        val = val.toLowerCase();
+        if (val === 'all') {
+            renderQuestions(temizlenmisData);
+            return;
+        }
+        
+        let filtered = [];
+        if (val === 'b') {
+            // Banko ve çok çıkanlar
+            filtered = temizlenmisData.filter(item => {
+                let lower = item.toLowerCase();
+                return lower.includes('banko') || lower.includes('kez çıktı');
+            });
+        } else {
+            // Sınavlar ve üniteler
+            filtered = temizlenmisData.filter(item => {
+                const tags = item.split('|')[0].toLowerCase();
+                return tags.includes(val);
+            });
+        }
+        renderQuestions(filtered);
+    }
+
+    function aramaYap() {
+        const val = document.getElementById('arama').value.toLowerCase();
+        const filtered = temizlenmisData.filter(item => {
+            const parts = item.toLowerCase().split('|');
+            const q = parts[1] || '';
+            const a = parts[3] || '';
+            const exp = parts[4] || '';
+            return q.includes(val) || a.includes(val) || exp.includes(val);
+        });
+        renderQuestions(filtered);
+    }
+
+    // 4. BAŞLANGIÇ (Her şeyi tetikleyen an)
+    window.onload = () => {
+        temizlenmisData = sorulariBirlestir(rawData);
+        renderQuestions(temizlenmisData);
+    };
+    // --- BURAYA KADAR KOPYALAYIN ---
+
+</script>
+</body>
+</html>

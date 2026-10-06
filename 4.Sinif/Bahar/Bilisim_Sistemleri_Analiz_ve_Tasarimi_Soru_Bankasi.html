@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUZEF · Bilişim Sistemleri Analiz ve Tasarımı — Çıkmış Soru Bankası</title>
+<style>
+:root{
+  --paper: #f4f6f8;
+  --card: #ffffff;
+  --raise: #f8f9fa;
+  --ink: #2d3436;
+  --ink-2: #4a5568;
+  --ink-3: #718096;
+  --line: #dfe6e9;
+  --line-2: #ecf0f1;
+  --blue: #1a2b4c;
+  --blue-soft: #ecf0f1;
+  --ok: #27ae60;
+  --ok-soft: #eafaf1;
+  --no: #e74c3c;
+  --no-soft: #fde8e7;
+  --amber: #d35400;
+  --amber-soft: #fbf0e9;
+  --shadow: 0 4px 6px rgba(0,0,0,0.05);
+  --gutter: #f4f6f8;
+  --on-accent: #ffffff;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 18px 80px; }
+
+.mast { padding: 30px 0 20px; }
+.eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); font-weight: 700; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+h1 { font-size: 28px; line-height: 1.2; font-weight: 700; margin: 0 0 10px; color: var(--blue); }
+.lede { color: var(--ink-2); margin: 0 0 20px; font-size: 15px; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; min-width: 96px; box-shadow: var(--shadow); }
+.stat b { display: block; font-size: 20px; font-weight: 700; color: var(--blue); }
+.stat span { font-size: 11px; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+
+.bar { position: sticky; top: 0; z-index: 40; margin: 0 -18px; padding: 15px 18px; background: var(--paper); border-bottom: 2px solid var(--line); }
+.bar-in { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; }
+.search { position: relative; flex: 1 1 240px; min-width: 0; }
+.search input { width: 100%; padding: 10px 12px 10px 34px; border-radius: 6px; font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-3); }
+.kbd { display: none; }
+.chip { font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--ink); transition: .15s; display: inline-flex; align-items: center; gap: 7px; }
+.chip:hover { background: var(--line); }
+.chip[aria-pressed="true"], .chip.on { background: var(--blue); border-color: var(--blue); color: var(--on-accent); }
+#toggle { background: var(--amber); border-color: var(--amber); color: white; }
+#toggle:hover { background: #ba4a00; border-color: #ba4a00; }
+#rep { background: var(--no); border-color: var(--no); color: white; }
+#rep:hover { background: #c0392b; border-color: #c0392b; }
+#rep[aria-pressed="true"] { background: #a93226; border-color: #a93226; }
+select.chip { appearance: none; padding-right: 28px; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+.spacer { flex: 1; }
+.count { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; font-weight: 600; }
+.count b { color: var(--ink); }
+
+.score { display: none; align-items: center; gap: 14px; flex-wrap: wrap; margin: 18px 0 0; padding: 11px 15px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); font-size: 13px; font-weight: 600; }
+.score.show { display: flex; }
+.score .t { color: var(--ok); }
+.score .f { color: var(--no); }
+.score .rate { margin-left: auto; color: var(--ink-2); }
+.linkbtn { background: none; border: none; font: inherit; font-size: 12.5px; color: var(--blue); cursor: pointer; text-decoration: underline; padding: 0; font-weight: 700; }
+
+.list { margin-top: 26px; display: flex; flex-direction: column; gap: 16px; }
+.cell { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 5px solid var(--blue); display: flex; flex-direction: column; }
+.gut { display: none; }
+.body { padding: 20px; min-width: 0; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tag { font-size: 11.5px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: var(--blue); color: var(--on-accent); white-space: nowrap; }
+.tag.rep { background: var(--no); }
+.tag.konu { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--line); }
+.q { font-size: 17px; font-weight: 700; margin: 0 0 16px; line-height: 1.4; color: var(--blue); }
+.opts { list-style: none; padding: 0; margin: 0 0 15px; display: flex; flex-direction: column; gap: 6px; }
+.opt { width: 100%; text-align: left; font: inherit; cursor: pointer; font-size: 14px; line-height: 1.5; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--line); background: #f8f9fa; color: var(--ink); transition: .13s; }
+.opt:hover:not(.locked) { background: #eafaf1; border-color: var(--ok); }
+.opt.locked { cursor: default; }
+.opt.correct { background: #d4edda; border-color: #28a745; color: #155724; font-weight: 700; }
+.opt.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; font-weight: 700; }
+.acts { display: flex; margin-top: 5px; }
+.reveal { width: 100%; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; padding: 10px; border-radius: 6px; border: none; background: var(--blue); color: var(--on-accent); transition: background 0.2s; text-align: center; }
+.reveal:hover { background: #111d33; }
+.out { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--ok); border-radius: 6px; }
+.out.show { display: block; animation: fade .18s ease-out; }
+@keyframes fade { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+.out .lbl { display: none; }
+.ans { font-size: 14px; font-weight: 700; color: #155724; margin-bottom: 5px; }
+.ans::before { content: "Doğru cevap: "; }
+.exp { font-size: 14px; color: #155724; margin: 0; }
+.exp::before { content: "Açıklama: "; font-weight: 700; font-style: italic; }
+.note { font-size: 13.5px; color: #7a4a00; background: var(--amber-soft); border-left: 4px solid var(--amber); border-radius: 6px; padding: 10px 12px; margin: 12px 0 0; }
+.note::before { content: "⚠️ Dikkat — "; font-weight: 700; }
+.cell.flagged { border-left-color: var(--amber); }
+.tag.flag { background: var(--amber); }
+#flag[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: #fff; }
+
+.assets { margin: 0 0 15px; display: flex; flex-direction: column; gap: 10px; }
+.asset { margin: 0; max-width: 100%; overflow-x: auto; }
+.asset svg { max-width: 100%; height: auto; display: block; }
+.asset figcaption { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; font-style: italic; }
+table.df { width: 100%; border-collapse: collapse; font-size: 13.5px; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+table.df caption { caption-side: top; text-align: left; padding: 0 0 8px; font-weight: 700; color: var(--blue); }
+table.df th, table.df td { padding: 8px 10px; text-align: center; border: 1px solid var(--line); }
+table.df thead th { background: var(--blue); color: white; font-weight: 700; border-color: #111d33; }
+table.df tbody tr:nth-child(even) { background-color: #f8f9fa; }
+table.df tbody th { background: transparent; color: var(--ink); font-weight: 700; }
+.formula { background: #fff; border: 1px dashed var(--blue); border-radius: 6px; padding: 12px 14px; font-size: 15px; text-align: center; color: var(--blue); font-weight: 700; }
+.formula small { display: block; font-weight: 600; color: var(--ink-3); font-size: 12px; margin-top: 6px; }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-3); border: 1px dashed var(--line); border-radius: 8px; margin-top: 26px; background: var(--card); }
+.empty b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 5px; }
+.foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); text-align: center; }
+.top { position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--blue); color: white; cursor: pointer; box-shadow: var(--shadow); display: none; align-items: center; justify-content: center; font-size: 20px; }
+.top.show { display: flex; }
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 12px 70px; }
+  .bar { margin: 0 -12px; padding: 10px 12px; }
+  .body { padding: 15px; }
+  .chip { width: 100%; justify-content: center; }
+  .search { flex: 1 1 100%; }
+  .count { width: 100%; text-align: center; }
+  #rep { margin-top: 5px; }
+}
+@media print {
+  .bar, .top, .acts, .score { display: none !important; }
+  body { background: #fff; }
+  .out { display: block !important; }
+  .note { border-left: 2px solid #000; }
+  .cell { break-inside: avoid; box-shadow: none; border-left: 2px solid #000; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">AUZEF · Yönetim Bilişim Sistemleri</p>
+    <h1>Bilişim Sistemleri Analiz ve Tasarımı<br>Çıkmış Soru Bankası</h1>
+    <p class="lede">2022'den 2026'ya kadar Vize, Final, Bütünleme ve Tek Ders sınavlarından derlenen soru havuzu (13 kaynak). Her sorunun cevabı resmî <b>CEVAPLI</b> anahtarlarla çapraz doğrulandı, açıklama + kendi yorumum eklendi, konuya göre etiketlendi. Cevap anahtarları arasında çelişen ya da tartışmalı sorulara <b>⚠️ Dikkat</b> notu düşüldü. Bazı sorulara tablo/şema/formül görseli eklendi.</p>
+    <div class="stats">
+      <div class="stat"><b id="s-all">0</b><span>Benzersiz soru</span></div>
+      <div class="stat"><b id="s-vize">0</b><span>Vize</span></div>
+      <div class="stat"><b id="s-final">0</b><span>Final</span></div>
+      <div class="stat"><b id="s-but">0</b><span>Büt. / Tek Ders</span></div>
+      <div class="stat"><b id="s-rep">0</b><span>Tekrar eden (banko)</span></div>
+      <div class="stat"><b id="s-flag">0</b><span>Tartışmalı / notlu</span></div>
+    </div>
+  </header>
+
+  <nav class="bar" aria-label="Filtreler">
+    <div class="bar-in">
+      <div class="row">
+        <label class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="Soru, şık veya açıklamada ara…" autocomplete="off" aria-label="Ara">
+          <span class="kbd">/</span>
+        </label>
+      </div>
+      <div class="row" id="kinds" role="group" aria-label="Sınav türü">
+        <button class="chip" data-k="all" aria-pressed="true">Tümü <span class="n" id="c-all"></span></button>
+        <button class="chip" data-k="vize" aria-pressed="false">Vize <span class="n" id="c-vize"></span></button>
+        <button class="chip" data-k="final" aria-pressed="false">Final <span class="n" id="c-final"></span></button>
+        <button class="chip" data-k="but" aria-pressed="false">Büt./Tek Ders <span class="n" id="c-but"></span></button>
+        <button class="chip amber" id="rep" aria-pressed="false">🔥 Banko / Tekrar edenler</button>
+        <button class="chip" id="flag" aria-pressed="false">⚠️ Tartışmalı / notlu</button>
+        <select class="chip" id="konu" aria-label="Konuya göre filtrele"><option value="">Tüm konular</option></select>
+        <select class="chip" id="year" aria-label="Döneme göre filtrele"><option value="">Tüm dönemler</option></select>
+      </div>
+      <div class="row">
+        <button class="chip" id="toggle">Cevapları göster</button>
+        <button class="chip" id="shuffle">Karıştır</button>
+        <button class="chip" id="reset-order" hidden>Sıraya dön</button>
+        <span class="spacer"></span>
+        <span class="count"><b id="shown">0</b> soru görüntüleniyor</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="score" id="score">
+    <span>Doğru <span class="t" id="sc-t">0</span></span>
+    <span>Yanlış <span class="f" id="sc-f">0</span></span>
+    <span class="rate" id="sc-r"></span>
+    <button class="linkbtn" id="sc-reset">sıfırla</button>
+  </div>
+
+  <main class="list" id="list"></main>
+  <div class="empty" id="empty" hidden><b>Eşleşen soru yok</b>Aramayı sadeleştirin ya da filtreleri temizleyin.</div>
+
+  <footer class="foot">
+    Kaynaklar: AUZEF Bilişim Sistemleri Analiz ve Tasarımı — 2022-2023 / 2023-2024 Final, 2023 & 2024 & 2025 & 2025-2026 Vize/Final/Bütünleme, Tek Ders 2024, resmî CEVAPLI çıktılar ve @sakkarit derlemesi.<br>
+    ⚠️ notu taşıyan sorularda ya cevap anahtarları birbiriyle çelişiyor ya da klasik kaynak farklı işaretlemiş. Bu sorularda çoğunluğun ve pedagojik olarak doğru olanın cevabı verildi, çelişki notta açıklandı.<br>
+    Cevaplar bilgilendirme amaçlıdır; sınavda kendi formunuzdaki şık sırasına dikkat edin.
+  </footer>
+</div>
+
+<button class="top" id="top" aria-label="Başa dön">↑</button>
+
+<script>
+// --- ASSETS (TABLO / ŞEMA / FORMÜL GÖRSELLERİ) ---
+const ASSETS = {
+  "t_kararseviye": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Karar Seviyesi ↔ Bilişim Sistemi Piramidi</caption>
+        <thead><tr><th>Yönetim Seviyesi</th><th>Tipik Bilişim Sistemi</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Stratejik (üst)</th><td>Üst Yönetici Destek Sistemi (ÜYDS/EIS)</td></tr>
+          <tr><th scope="row">Taktiksel / Orta</th><td>Yönetim Bilişim Sistemi (YBS), Karar Destek Sistemi (KDS), Bilgi Çalışanı Sistemi</td></tr>
+          <tr><th scope="row">Operasyonel (alt)</th><td>Hareket İşleme Sistemi (HİS/TPS), Süreç Kontrol</td></tr>
+        </tbody>
+      </table>
+      <figcaption>Sık sorulan tuzak: KDS operasyonel değil, taktiksel/yönetim seviyesindedir.</figcaption>
+    </figure>`,
+
+  "t_kritikyol": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Faaliyet Öncül Tablosu</caption>
+        <thead><tr><th>Faaliyet</th><th>Öncül(ler)</th><th>Süre</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1</th><td>—</td><td>5</td></tr>
+          <tr><th scope="row">2</th><td>—</td><td>7</td></tr>
+          <tr><th scope="row">3</th><td>1, 2</td><td>8</td></tr>
+          <tr><th scope="row">4</th><td>1, 2, 3</td><td>10</td></tr>
+        </tbody>
+      </table>
+      <svg viewBox="0 0 460 150" role="img" aria-label="Faaliyet ağ diyagramı">
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1a2b4c"/></marker></defs>
+        <g font-family="Segoe UI" font-size="12" font-weight="700">
+          <circle cx="40" cy="40" r="20" fill="#eafaf1" stroke="#27ae60"/><text x="40" y="44" text-anchor="middle">1(5)</text>
+          <circle cx="40" cy="110" r="20" fill="#fff" stroke="#1a2b4c"/><text x="40" y="114" text-anchor="middle">2(7)</text>
+          <circle cx="230" cy="75" r="20" fill="#eafaf1" stroke="#27ae60"/><text x="230" y="79" text-anchor="middle">3(8)</text>
+          <circle cx="410" cy="75" r="24" fill="#d4edda" stroke="#27ae60" stroke-width="2"/><text x="410" y="79" text-anchor="middle">4(10)</text>
+          <line x1="59" y1="46" x2="211" y2="70" stroke="#1a2b4c" marker-end="url(#ar)"/>
+          <line x1="59" y1="104" x2="211" y2="80" stroke="#1a2b4c" marker-end="url(#ar)"/>
+          <line x1="253" y1="75" x2="384" y2="75" stroke="#27ae60" stroke-width="2.5" marker-end="url(#ar)"/>
+        </g>
+      </svg>
+      <figcaption>En uzun (kritik) yol: 2 → 3 → 4 = 7 + 8 + 10 = 25 birim.</figcaption>
+    </figure>`,
+
+  "t_karartablosu": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Karar Tablosu — Sipariş Teslim / Onay</caption>
+        <thead><tr><th>Koşullar</th><th>K1</th><th>K2</th><th>K3</th><th>K4</th><th>K5</th><th>K6</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Teslim (zamanında/geç)</th><td>Z</td><td>Z</td><td>Z</td><td>G</td><td>G</td><td>G</td></tr>
+          <tr><th scope="row">Onay (zamanında/geç/yok)</th><td>Z</td><td>G</td><td>Yok</td><td>Z</td><td>G</td><td>Yok</td></tr>
+        </tbody>
+      </table>
+      <figcaption>2 durumlu teslim × 3 durumlu onay = 2 × 3 = <b>6</b> olası kural.</figcaption>
+    </figure>`,
+
+  "t_fmea": `
+    <figure class="asset">
+      <div class="formula">RÖS = Şiddet × Olasılık × Tespit<br>= 7 × 8 × 10 = <span style="color:#27ae60">560</span>
+        <small>Risk Öncelik Skoru (RPN) — üç faktörün çarpımıdır (toplamı değil).</small>
+      </div>
+    </figure>`,
+
+  "t_er": `
+    <figure class="asset">
+      <svg viewBox="0 0 460 190" role="img" aria-label="Varlık ilişki türleri">
+        <g font-family="Segoe UI" font-size="12" font-weight="700" text-anchor="middle">
+          <rect x="20" y="20" width="90" height="34" rx="4" fill="#eafaf1" stroke="#27ae60"/><text x="65" y="42">Vatandaş</text>
+          <rect x="350" y="20" width="90" height="34" rx="4" fill="#eafaf1" stroke="#27ae60"/><text x="395" y="42">Kimlik No</text>
+          <line x1="110" y1="37" x2="350" y2="37" stroke="#1a2b4c"/>
+          <text x="130" y="30" font-size="13">1</text><text x="330" y="30" font-size="13">1</text>
+          <text x="230" y="30" fill="#27ae60">Bire-Bir (1:1)</text>
+
+          <rect x="20" y="90" width="90" height="34" rx="4" fill="#fff" stroke="#1a2b4c"/><text x="65" y="112">Müşteri</text>
+          <rect x="350" y="90" width="90" height="34" rx="4" fill="#fff" stroke="#1a2b4c"/><text x="395" y="112">Sipariş</text>
+          <line x1="110" y1="107" x2="350" y2="107" stroke="#1a2b4c"/>
+          <text x="130" y="100" font-size="13">1</text><text x="330" y="100" font-size="13">N</text>
+          <text x="230" y="100">Bire-Çok (1:N)</text>
+
+          <rect x="20" y="150" width="90" height="30" rx="4" fill="#fbf0e9" stroke="#d35400"/><text x="65" y="170">Yazar</text>
+          <rect x="350" y="150" width="90" height="30" rx="4" fill="#fbf0e9" stroke="#d35400"/><text x="395" y="170">Kitap</text>
+          <line x1="110" y1="165" x2="350" y2="165" stroke="#d35400"/>
+          <text x="130" y="158" font-size="13">N</text><text x="330" y="158" font-size="13">M</text>
+          <text x="230" y="158" fill="#d35400">Çoka-Çok (N:M)</text>
+        </g>
+      </svg>
+      <figcaption>Bir vatandaşın tek kimlik numarası → 1:1. Bir yazar çok kitap, bir kitabın çok yazarı olabilir → N:M.</figcaption>
+    </figure>`,
+
+  "t_dikw": `
+    <figure class="asset">
+      <svg viewBox="0 0 420 170" role="img" aria-label="Veri Bilgi Bilgelik piramidi">
+        <g font-family="Segoe UI" font-size="12" font-weight="700" text-anchor="middle">
+          <polygon points="210,10 260,55 160,55" fill="#1a2b4c"/><text x="210" y="42" fill="#fff" font-size="11">Bilgelik</text>
+          <polygon points="160,55 260,55 285,100 135,100" fill="#2f4a7c"/><text x="210" y="85" fill="#fff">Bilgi</text>
+          <polygon points="135,100 285,100 315,150 105,150" fill="#7a94c4"/><text x="210" y="130" fill="#fff">Bilişim (işlenmiş)</text>
+          <text x="210" y="167" fill="#1a2b4c">Veri (ham sayı: 2,7)</text>
+        </g>
+      </svg>
+      <figcaption>Ham 2,7 rakamı ver[i], hesaplanıp anlam kazanınca resmî anahtarda 'Bilişim' kabul edilir.</figcaption>
+    </figure>`,
+
+  "t_topoloji": `
+    <figure class="asset">
+      <svg viewBox="0 0 300 150" role="img" aria-label="Ağaç (hiyerarşik) topoloji">
+        <g font-family="Segoe UI" font-size="11" stroke="#1a2b4c">
+          <line x1="150" y1="30" x2="80" y2="80"/><line x1="150" y1="30" x2="220" y2="80"/>
+          <line x1="80" y1="80" x2="45" y2="125"/><line x1="80" y1="80" x2="115" y2="125"/>
+          <line x1="220" y1="80" x2="185" y2="125"/><line x1="220" y1="80" x2="255" y2="125"/>
+          <g fill="#eafaf1"><circle cx="150" cy="30" r="14"/><circle cx="80" cy="80" r="12"/><circle cx="220" cy="80" r="12"/><circle cx="45" cy="125" r="10"/><circle cx="115" cy="125" r="10"/><circle cx="185" cy="125" r="10"/><circle cx="255" cy="125" r="10"/></g>
+        </g>
+      </svg>
+      <figcaption>Dallanan bu yapı ağaç / hiyerarşik topolojidir (yıldızların birbirine bağlanmış hâli).</figcaption>
+    </figure>`
+};
+
+// --- HAM VERİ (13 kaynaktan derlenip tekilleştirildi) ---
+// Biçim: "dönemler | soru (${asset}<br> ops) | şık~şık | doğru şık | ACIKLAMA::açıklama | not"
+const rawData = [
+  // ---- Bilişim sistemi türleri ----
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025-2026 Bütünleme, 2025-2026 Final, Tek Ders 2024|${t_kararseviye}<br>Aşağıda verilen karar seviyesi ve bilişim sistemi eşleştirmelerinden hangisi yanlıştır?|A) Hareket işleme sistemleri – Operasyonel seviye~B) Karar destek sistemleri – Operasyonel seviye~C) Bilgi çalışanı sistemleri – Orta (Taktiksel) seviye~D) Üst yönetici destek sistemleri – Stratejik seviye~E) Yönetim bilişim sistemleri – Orta (Taktiksel) seviye|B) Karar destek sistemleri – Operasyonel seviye|ACIKLAMA::KDS yarı-yapısal kararları destekler ve orta/taktiksel–yönetim seviyesindedir; operasyonel seviye Hareket İşleme Sistemlerinindir. Kendi görüşüm: piramidi bir kez ezberleyin (operasyonel→HİS, taktiksel→YBS/KDS/Bilgi çalışanı, stratejik→ÜYDS), bu soru garanti puandır ve neredeyse her dönem geliyor.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, Tek Ders 2024|Gösterge panelleri (dashboard) genelde hangi bilişim sisteminde tercih edilir?|A) Üst Yönetici Destek Sistemi~B) Hareket İşleme Sistemi~C) Bilgi Çalışanı Sistemi~D) Ofis Otomasyon Sistemleri~E) Süreç Kontrol Sistemleri|A) Üst Yönetici Destek Sistemi|ACIKLAMA::Gösterge panelleri özet, görsel ve stratejik göstergeler sunar; bu da üst yönetime hitap eden ÜYDS'nin işidir. Püf noktası: 'özet + görsel + üst düzey' gördüğünüzde ÜYDS deyin.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|Bir bilişim sistemi içerisindeki bütün fiziksel cihaz ve ekipmanları anlatan kavram aşağıdakilerden hangisidir?|A) Donanım~B) Yazılım~C) Prosedür~D) Veri tabanı~E) Ağ|A) Donanım|ACIKLAMA::Fiziksel, elle tutulan her cihaz = donanım (hardware). Yazılım soyut programlardır. Basit ama bedava puan.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025 Final|Kütüphaneden alınan bir kitabın, çıkarken öğrenci tarafından kendi üzerine alındığı bilişim sistemi hangisine örnektir?|A) Hareket İşleme Sistemi~B) Bilgi Çalışanı Sistemi~C) Karar Destek Sistemi~D) Yönetim Bilişim Sistemi~E) Üst Yönetici Destek Sistemi|A) Hareket İşleme Sistemi|ACIKLAMA::Ödünç verme günlük, rutin, kayıt tutan bir işlemdir → Hareket İşleme Sistemi (TPS). Yorumum: 'tek tek işlem/kayıt' anahtar kelimesi HİS'i işaret eder.|",
+  "2023 Vize, 2024 Bütünleme|Bir ürünün fiyatındaki değişimlerin satış miktarı üzerinde nasıl etki oluşturduğu aşağıdaki hangi bilişim sistemi ile belirlenebilir?|A) Karar Destek Sistemi~B) Bilgi Çalışanı Sistemi~C) Coğrafi Bilgi Sistemi~D) Hareket İşleme Sistemi~E) Yönetim Bilişim Sistemi|A) Karar Destek Sistemi|ACIKLAMA::'Ne olursa ne olur' (what-if) analizleri KDS'nin uzmanlık alanıdır. Senaryo/duyarlılık analizi → KDS.|",
+  "2023 Final, 2023-2024 Final, 2024 Final|Aşağıdakilerden hangisi taktik seviye bir bilişim sistemi değildir?|A) Coğrafi Bilgi Sistemi~B) Yönetim Bilişim Sistemi~C) Karar Destek Sistemi~D) Üst Yönetici Destek Sistemi~E) Bilgi Çalışanı Sistemi|A) Coğrafi Bilgi Sistemi|ACIKLAMA::Resmî anahtar Coğrafi Bilgi Sistemi'ni işaretliyor (klasik taktiksel üçlü YBS-KDS-Bilgi Çalışanı dışında kalır).|Bu soru tartışmalı: Üst Yönetici Destek Sistemi de STRATEJİK seviyedir, yani o da 'taktik değildir'. @sakkarit 2023 Final derlemesinde cevap ÜYDS işaretlenmiş. Tek net cevaplı bir soru değil; formunuzda hangi seçenekler varsa ona göre değerlendirin.",
+  // ---- Proje yönetimi & Risk ----
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025-2026 Final, Tek Ders 2024|Scrum yönteminde proje yönetimi görevini hangi takım elemanı üstlenir?|A) Scrum Ustası~B) Ürün Sahibi~C) Lider~D) Patron~E) Ustabaşı|A) Scrum Ustası|ACIKLAMA::Scrum Master (Scrum Ustası) süreci kolaylaştırır ve engelleri kaldırır; Ürün Sahibi ise 'ne yapılacağına' karar verir. Banko soru.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025-2026 Bütünleme, Tek Ders 2024|Proje yürütme sürecindeki iş kırılımda yer alan her bir göreve ilgili personelin atanması için kullanılan matris yöntem aşağıdakilerden hangisidir?|A) RACI~B) RAD~C) JAD~D) CRUD~E) SIMPLEX|A) RACI|ACIKLAMA::RACI = Responsible, Accountable, Consulted, Informed; görev–kişi sorumluluk matrisidir. RAD/JAD geliştirme yöntemi, CRUD veri işlemi, SIMPLEX doğrusal programlamadır. Banko.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|Hangi yapısal metodolojide tasarım prototipleri kullanılır?|A) Spiral Model~B) Şelale Modeli~C) Paralel Geliştirme~D) v Modeli~E) Aşamalı Geliştirme|A) Spiral Model|ACIKLAMA::Spiral model her turda risk analizi + prototip üretir. Şelale ve v modeli prototipsiz, doğrusal ilerler.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025 Final, 2025-2026 Final, Tek Ders 2024|Eğer bir sistemde kullanıcı gereksinimleri net değilse aşağıdaki hangi sistem geliştirme metodolojisini kullanmak uygun olmaz?|A) Şelale Modeli~B) Çevik Modeller~C) Evrimsel Prototipleme~D) Aşamalı Geliştirme~E) Spiral Model|A) Şelale Modeli|ACIKLAMA::Şelale, gereksinimlerin baştan tam ve sabit olmasını şart koşar; belirsizlik varsa uygun DEĞİLDİR. Çevik/spiral/prototip ise belirsizlikle başa çıkmak için idealdir. 2023-2024 Vize ve Tek Ders anahtarları Şelale'yi doğruluyor.|2024 Vize (A form) anahtarı yanlışlıkla 'Çevik Modeller'i işaretlemiş, @sakkarit ise 'Spiral' demiş. İkisi de mantıken hatalı: çevik ve spiral belirsizlikte tam da tercih edilenlerdir. Doğru cevap Şelale Modeli'dir.",
+  "2023 Vize, 2024 Bütünleme|Farklı teknolojilerin kullanılmasının zorunlu olduğu projeler için en doğru sistem geliştirme metodolojisi aşağıdakilerden hangisidir?|A) Tasarım prototipleme~B) Şelale modeli~C) Sistem prototipleme~D) Paralel geliştirme~E) v modeli|A) Tasarım prototipleme|ACIKLAMA::Farklı/yeni teknolojilerin denenmesi gereken durumda prototipleme, teknik belirsizliği erken azaltır. Resmî anahtar 'Tasarım prototipleme'yi işaretliyor.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|En fazla emek ve süre gerektiren proje yönetimi aşaması hangisidir?|A) Planlama~B) Uygulama~C) Başlama~D) Bakım~E) Sonlandırma|A) Planlama|ACIKLAMA::Ders anlatımında fizibilite, WBS, çizelgeleme ve risk analizinin toplandığı Planlama, en emek-yoğun aşama olarak veriliyor. 2023 Vize, 2023-2024 Vize ve @sakkarit Planlama diyor.|2024 Vize (A form) anahtarı bu soruda 'Uygulama'yı işaretlemiş. Çoğunluk ve klasik kaynak 'Planlama' yönünde; formunuzun anahtarına dikkat edin.",
+  "2023 Vize, 2025-2026 Final|Prince II proje sertifikasyonunda iş paketleri hangi aşamada belirlenir?|A) Yönlendirme~B) Seçme~C) Aşamaları Yönetme~D) Sonlandırma~E) Teslimatı Yönetme|A) Yönlendirme|ACIKLAMA::PRINCE2'de iş paketleri (work packages) yönlendirme/aşama yönetimi kapsamında tanımlanır; anahtar 'Yönlendirme'yi veriyor.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|Gerekli olan bir sunucunun satın alınmasına hangi fizibilite aşamasında karar verilir?|A) Teknik~B) Operasyonel~C) Organizasyonel~D) Yasal~E) Çizelge|A) Teknik|ACIKLAMA::Donanım/altyapı (sunucu) ihtiyacı teknik fizibilitede değerlendirilir. Maliyet ekonomik, süre çizelge fizibilitesidir.|",
+  "2023 Vize, 2023-2024 Final, 2024 Final, 2025-2026 Final|Nispeten kısa süreli projeler için toplam proje süresi aşağıdaki yöntemlerin hangisi ile belirlenir?|A) Gantt~B) İş Kırılımı~C) Fizibilite~D) Risk analizi~E) Tornado grafiği|A) Gantt|ACIKLAMA::Gantt çizelgesi, faaliyetleri zamana yayarak toplam süreyi görselleştirir; kısa/orta projeler için pratiktir. Uzun-karmaşık projelerde CPM/PERT tercih edilir.|",
+  "2023 Vize, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme|Aşağıdakilerden hangisi ekstrem programlama (XP) değerlerinden birisi değildir?|A) Test~B) İletişim~C) Sadelik~D) Geri bildirim~E) Saygı|A) Test|ACIKLAMA::XP değerleri: iletişim, sadelik, geri bildirim, cesaret ve saygı. Test bir DEĞER değil, bir uygulamadır (pratik). Banko.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025 Final, Tek Ders 2024|Aşağıdakilerden hangisi çevik metotlar için yanlıştır?|A) Değişim yönetimi ile kapsam kaymasına neden olur.~B) Paydaşlar ile iletişimi artırır.~C) Müşteri katılımını yükseltir.~D) Ürünün kabul görme ihtimalini artırır.~E) Dokümantasyonu düşürür.|A) Değişim yönetimi ile kapsam kaymasına neden olur.|ACIKLAMA::Çevik yaklaşım değişimi YÖNETEREK kapsam kaymasını (scope creep) önlemeye çalışır; 'neden olur' demek yanlıştır. Banko soru.|",
+  "2022-2023 Final, 2023 Vize, 2023 Final, 2023-2024 Final, 2024 Final|Hızlı uygulama geliştirme (RAD) ile ilgili aşağıdakilerden hangisi yanlıştır?|A) Çok uzun projelerde kullanılır.~B) Tasarım prototipleri ile gereksinimleri toplayabilir.~C) Son ürüne en erken ulaşım esastır.~D) Zaman kısıtlı projelerde tercih edilir.~E) Gereksinimlerin tamamının başlangıçta belirli olmasına gerek yoktur.|A) Çok uzun projelerde kullanılır.|ACIKLAMA::RAD tam tersine kısa, zaman-kısıtlı projeler içindir; 'çok uzun projeler' ifadesi yanlıştır. Banko.|",
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025 Final|Bir iş kırılımında (WBS) en üst seviye aşağıdakilerden hangisidir?|A) Proje~B) Aşama~C) İş Paketi~D) Aktivite~E) Güncelleme|A) Proje|ACIKLAMA::WBS hiyerarşisi: Proje → Aşama → İş Paketi → Aktivite/Görev. En tepe = Proje.|",
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme|Proje beyanı (proje bildirgesi) ile ilgili aşağıdakilerden hangisi yanlıştır?|A) İş paketi ile ekip elemanlarının eşleştirmelerini içerir.~B) Son ürün ile ilgili tahminleri içerir.~C) Maksimum izin verilen süre tahminlerini içerir.~D) Ana amaç ve alt amaçları içerir.~E) Proje riskleri ile ilgili bir liste içerir.|A) İş paketi ile ekip elemanlarının eşleştirmelerini içerir.|ACIKLAMA::Görev–kişi ataması (RACI) yürütme/planlama detayıdır, proje beyanının işi değildir. Beyan; amaç, kapsam, tahmin ve riskleri özetler.|",
+  "2023 Vize, 2023-2024 Final, 2024 Final, 2025 Final, 2025-2026 Bütünleme, Tek Ders 2024|Proje beyanlarında aşağıdaki soruların hangisinin cevabı yer almaz?|A) Son kullanıcılar kimlerdir?~B) Projenin kapsamı nedir?~C) Tahmini bütçe nedir?~D) Projenin beklenen çıktıları nedir?~E) Proje gereksinimleri nelerdir?|A) Son kullanıcılar kimlerdir?|ACIKLAMA::Proje beyanı kapsam, bütçe, çıktı ve gereksinimleri özetler; 'son kullanıcılar kimlerdir' detay analiz sorusudur, beyanda yer almaz. Banko.|",
+  "2023 Vize, 2025 Final, 2025-2026 Final|Aşağıdakilerden hangisi proje planlama ve kontrol riski değildir?|A) Eksik veya yanlış gereksinimlerin oluşturulması~B) Çıktı tahminlerinin gerçekçi olmaması~C) Planlama faaliyetlerine yeteri kadar önem verilmemesi~D) Sürenin yanlış belirlenmesi~E) Bütçenin yanlış modellenmesi|A) Eksik veya yanlış gereksinimlerin oluşturulması|ACIKLAMA::Eksik/yanlış gereksinim bir ANALIZ (gereksinim) riskidir; diğerleri süre, bütçe, tahmin gibi planlama-kontrol riskleridir.|",
+  "2023 Vize|Aşağıdakilerden hangisi projelerin bütünleşik değerlendirmesinde kullanılmaz?|A) Pazar dengesi analizi~B) Çok kriterli karar verme~C) Nominal grup tekniği~D) Delphi~E) Ağırlıklı ortalama|A) Pazar dengesi analizi|ACIKLAMA::Bütünleşik değerlendirmede ÇKKV, nominal grup, Delphi ve ağırlıklı ortalama kullanılır. 'Pazar dengesi analizi' bu grupta değildir.|@sakkarit derlemesi bu soruya 'Çok kriterli karar verme' cevabını vermiş; ancak ÇKKV klasik bir bütünleşik değerlendirme aracıdır. Standart/kabul gören cevap 'Pazar dengesi analizi'dir.",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize, Tek Ders 2024|Mantık modelleme hangi sistem geliştirme aşamasında yürütülen bir faaliyettir?|A) Analiz~B) Tasarım~C) Planlama~D) İzleme~E) Uygulama|A) Analiz|ACIKLAMA::Mantıksal (fiziksel olmayan) modelleme 'ne' sorusunu yanıtlar; bu analiz aşamasının işidir. Dikkat: RİSK analizi ise Planlama aşamasındadır (bir sonraki soruyla karıştırmayın).|",
+  "2023 Vize, 2024 Bütünleme|Risk analizi aşağıdaki hangi sistem geliştirme aşamasında yürütülen bir faaliyettir?|A) Planlama~B) Analiz~C) Uygulama~D) İzleme~E) Tasarım|A) Planlama|ACIKLAMA::Risklerin belirlenip yanıtlanması Planlama aşamasında yapılır. İncelik: 'mantık modelleme = Analiz' ama 'risk analizi = Planlama'. Sınav bu ikisini yan yana sorup şaşırtıyor.|",
+  "2022-2023 Final, 2023 Vize, 2023 Final, 2025-2026 Bütünleme|Risk yanıtı geliştirme faaliyetinin çıktısı hangi dokümandır?|A) Risk kütüğü~B) Yeni riskler~C) Bilinen riskler~D) Risk analizi~E) Risk yönetim planı|A) Risk kütüğü|ACIKLAMA::Risk yanıtları geliştirilince güncellenen ve tüm riskleri/planları tutan belge Risk Kütüğü'dür (risk register).|",
+  "2023-2024 Vize, 2024 Vize, Tek Ders 2024|Bilgisayarların hızlarını ve işlem yapma kapasitelerini (iş yüklerini) belirleyen donanım parçası nedir?|A) Merkezi İşlem Birimi (CPU)~B) Birincil Saklama Ünitesi (RAM)~C) İkincil Saklama Ünitesi (Sabit Disk)~D) Anakart~E) Ekran kartı|A) Merkezi İşlem Birimi (CPU)|ACIKLAMA::İşlem hızı/kapasitesi CPU ile belirlenir. RAM geçici bellek, disk kalıcı depolamadır.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|Bir risk meydana geldiğinde; riske verilecek yanıt, olası B planı ve B planını tetikleyen faaliyet hangi risk yanıtlama belgesinde tablolar halinde verilir?|A) Acil durum planı~B) Gereksinim listesi~C) Risk şiddeti matrisi~D) Yedekleme ve kurtarma beyanı~E) Geri bildirim beyanı|A) Acil durum planı|ACIKLAMA::'B planı + onu tetikleyen olay' tanımı acil durum (contingency) planına aittir.|",
+  "2023-2024 Vize, 2024 Vize, Tek Ders 2024|Aşağıdakilerden hangisi sistem isteğini tetikleyebilecek unsurlar arasında sayılamaz?|A) Devamsızlık oranlarındaki düşüşler~B) Hiçbir şekilde yerine getirilemeyen görevler~C) Son üründe meydana gelen hatalar~D) Sürekli yanlış çıktı veren raporlar~E) Süreç içerisindeki görevlerin eksik sonlanması|A) Devamsızlık oranlarındaki düşüşler|ACIKLAMA::Sistem isteğini SORUNLAR tetikler. Devamsızlığın DÜŞMESİ olumlu bir gelişmedir, sorun değildir; dolayısıyla tetikleyici sayılmaz.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|Aşağıdakilerden hangisi projeler için doğru değildir?|A) Projeler kesin süreçlerdir, belirsizlik içermez.~B) Kaynak yönetimi projeler için temel görevlerdendir.~C) Her proje çıktısı değer yaratmalıdır.~D) Projelerin benzersiz bir amacı vardır.~E) Projelerin kesin bir başlangıcı ve sonu vardır.|A) Projeler kesin süreçlerdir, belirsizlik içermez.|ACIKLAMA::Projeler doğası gereği belirsizlik ve risk içerir; 'belirsizlik içermez' ifadesi yanlıştır.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|Firmaların günlük faaliyetlerini etkileyen belirsizlikler hangi risk kalemi altında değerlendirilir?|A) Süreç riski~B) Kullanıcı riski~C) Proje riski~D) Günlük risk~E) Ürün riski|A) Süreç riski|ACIKLAMA::Günlük operasyon/işleyişe ait belirsizlikler süreç riski başlığındadır.|",
+  "2023 Vize, 2023-2024 Vize, 2024 Vize|Bir işlem, ürün veya sürecin israflardan arındırılarak sadece değer katan unsurlarla yapılması ifadesi hangi kavramı karşılamaktadır?|A) Yalınlık~B) Gereksinim~C) Geçerlilik~D) Ölçeklenebilirlik~E) Planlama|A) Yalınlık|ACIKLAMA::İsrafın (waste) elenip yalnızca değer katan işlerin bırakılması yalın (lean) düşüncenin özüdür → Yalınlık.|",
+  "2023-2024 Vize, 2024 Vize, Tek Ders 2024|${t_kritikyol}<br>Bir projede 1. ve 2. faaliyetin öncülü yoktur. 3 numaralı faaliyetin öncülleri 1 ve 2 dir. 4 numaralı faaliyet için 1, 2 ve 3 öncüldür. Süreler sırasıyla 5, 7, 8 ve 10 olduğuna göre kritik yol hangisidir?|A) 2 - 3 - 4~B) 1 - 2~C) 1 - 2 - 3~D) 1 - 2 - 4~E) 3 - 4|A) 2 - 3 - 4|ACIKLAMA::4 bitmesi için 3, 3 bitmesi için 1 ve 2 tamamlanmalı. Paralel giren 1(5) ve 2(7)'den daha uzun olan 2 kritiktir. Kritik yol = en uzun süreli yol: 2 → 3 → 4 = 7 + 8 + 10 = 25.|",
+  "2024 Bütünleme, Tek Ders 2024|Aşağıdakilerden hangisi pozitif risk stratejilerinden birisi değildir?|A) Riski devretme~B) Riski geliştirme~C) Riski paylaşma~D) Riskten yararlanma~E) Riski kabul etme|A) Riski devretme|ACIKLAMA::Pozitif (fırsat) stratejileri: yararlanma, paylaşma, geliştirme, kabul. 'Devretme (transfer)' bir NEGATİF/tehdit stratejisidir.|",
+  // ---- Veritabanı tasarımı ----
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme|Hangi veri tabanı modeli tarihsel sıralamada daha önce kullanılmıştır?|A) Hiyerarşik~B) Ağ~C) Dosya tabanları~D) İlişkisel~E) Nesne Yönelimi|A) Hiyerarşik|ACIKLAMA::Veri tabanı MODELLERİ içinde en eskisi hiyerarşiktir (sonra ağ → ilişkisel → nesne). 2022-2023 Final ve 2024 Bütünleme anahtarları Hiyerarşik'i işaretliyor.|@sakkarit derlemesinde cevap 'Dosya tabanları' verilmiş. Bu tartışmalıdır: dosya tabanlı sistem bir veri tabanı 'modeli' sayılmaz; soru 'model' dediği için resmî cevap Hiyerarşik'tir.",
+  "2022-2023 Final, 2023 Final, 2023-2024 Final, 2025-2026 Bütünleme, Tek Ders 2024|${t_er}<br>Bir vatandaş ile kimlik numarası arasındaki ilişki hangi tür ilişkiye örnek gösterilebilir?|A) Bire-Bir~B) Çoka-Bir~C) Çoka-Çok~D) Bire-Çok~E) Tekli ilişki|A) Bire-Bir|ACIKLAMA::Her vatandaşın tek bir kimlik numarası, her kimlik numarasının tek bir vatandaşı vardır → 1:1. Banko.|",
+  "2023-2024 Final, 2024 Final|${t_er}<br>Yazar ve kitap varlıkları arasındaki ilişki aşağıdaki ilişki türlerinden hangisine örnektir?|A) Çoka-Çok~B) Bire-Çok~C) Çoka-Bir~D) Bire-Bir~E) Tekli İlişki|A) Çoka-Çok|ACIKLAMA::Bir yazarın birden çok kitabı, bir kitabın birden çok yazarı olabilir → N:M (çoka-çok). Çözümü için bir bağlantı (ara) tablosu gerekir.|",
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme|Eğer bir tabloda benzersiz kayıt içeren tek bir sütun yoksa, birden fazla sütunun birlikte benzersiz bir birleşik grup oluşturduğu anahtar türü aşağıdakilerden hangisidir?|A) Bileşik~B) İkincil~C) Süper~D) Yabancı~E) Aday|A) Bileşik|ACIKLAMA::Tek başına yetmeyip birlikte benzersizliği sağlayan çoklu sütun = bileşik (composite) anahtar.|",
+  "2025 Final, 2025-2026 Bütünleme|Tek bir boş değere (null) müsaade eden, tamamen benzersiz değerler içeren anahtar türü aşağıdakilerden hangisidir?|A) Tekil~B) Aday~C) Yabancı~D) Birincil~E) Süper|A) Tekil|ACIKLAMA::Tekil (unique) anahtar benzersizliği sağlar ama tek bir null'a izin verir. Birincil anahtar ise null kabul etmez. Ayrım tam da burada.|",
+  "2025-2026 Bütünleme, 2025-2026 Final|Aşağıdakilerden hangisi sadece fiziksel veri tabanlarında yer alır?|A) Tablo isimleri~B) Varlık adı~C) Varlık İlişkisi~D) Yabancı anahtar~E) Birincil anahtar|A) Tablo isimleri|ACIKLAMA::Mantıksal modelde 'varlık', fiziksel modelde 'tablo' konuşulur. 'Tablo isimleri' fiziksel tasarıma özgüdür.|Not: Yabancı/birincil anahtar da fiziksel tasarımda somutlaşır; soru 'yalnızca fiziksel' vurgusuyla tablo isimlerini bekliyor.",
+  "2022-2023 Final, 2023 Final, 2025-2026 Final|Veri sözlüklerinde veri depoları ile ilgili tablolarda hangi sütun yer almaz?|A) Mantık modeli~B) Birincil anahtar~C) Veri deposu açıklaması~D) Veri deposu adı~E) Veri deposu numarası|A) Mantık modeli|ACIKLAMA::Veri deposu kaydında ad, numara, açıklama, birincil anahtar bulunur; 'mantık modeli' ise bir sütun değildir.|",
+  "2025 Final|${t_er}<br>İlişkisel veri tabanındaki bir tabloda 2, 3, 4. sütunların işçi; 5, 6, 7. sütunların ise iş bilgilerini içerdiği görülmektedir. Bu tablonun iki farklı tabloya ayrılmasını zorlayan normalizasyon formu aşağıdakilerden hangisidir?|A) 2NF~B) 1NF~C) 0NF~D) 3NF~E) 4NF|A) 2NF|ACIKLAMA::Kısmi bağımlılığı (bir alt kümenin başka alanları belirlemesi) gidermek ve işçi/iş verisini ayrı tablolara koymak 2. Normal Form'un (2NF) gereğidir.|",
+  // ---- Analiz & Gereksinim, Mantık modelleme ----
+  "2024 Bütünleme, 2025 Final, 2025-2026 Final|Aşağıdakilerden hangisi mantık modellemede kullanılan görsel araçtır?|A) Karar ağaçları~B) Yapısal dil~C) Çok kriterli karar verme~D) Karar tabloları~E) Doğal dil işleme|A) Karar ağaçları|ACIKLAMA::Karar ağaçları dallanan görsel bir gösterimdir. Yapısal dil ve karar tabloları metin/tablo tabanlıdır → görsel değildir.|",
+  "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme|Karmaşık kural yapıları ve çokça kombinasyon olduğu durumlarda hangi mantık modelleme yapısı tercih edilmelidir?|A) Karar tabloları~B) Yapısal dil~C) Doğal dil işleme~D) Karar ağaçları~E) Çok kriterli karar verme|A) Karar tabloları|ACIKLAMA::Çok sayıda koşul-kombinasyonu düzenli biçimde ele almak için karar tabloları idealdir (tüm kombinasyonları kural sütunlarıyla kapsar). Banko.|Not: Bazı formlarda 'Karar ağaçları' da makul görülmüş; sınav 'çokça kombinasyon' vurgusuyla tabloları bekliyor.",
+  "2023-2024 Final, 2024 Final, 2025-2026 Bütünleme, Tek Ders 2024|Aşağıdakilerden hangisi gereksinimlerin doğrulanması sürecindeki gözden geçirme yöntemindeki aşamalardan değildir?|A) Ön değerlendirme~B) Planlama~C) Toplantı~D) Dağıtım~E) Hazırlık|A) Ön değerlendirme|ACIKLAMA::Gözden geçirme (review) aşamaları planlama, hazırlık, toplantı ve dağıtımdır. 'Ön değerlendirme' bu listede yer almaz. Dört ayrı kaynak bu cevabı doğruluyor.|",
+  "2024 Bütünleme, 2025 Final, 2025-2026 Final|Etnografi (gözlem) süreci ile ilgili aşağıdakilerden hangisi doğrudur?|A) Gözlem yapılırken ön plana çıkılmamalıdır.~B) Gözlem yapılacak kişilere gözlem yapıldığı hissettirilmelidir.~C) Gözlem özellikle iş anındaki bireyler ile etkileşimli olarak yapılmalıdır.~D) Gözlem yapılırken önemsiz faaliyetlere odaklanılması gerekir.~E) Gözlem yapılırken mümkün olduğu kadar not almaktan kaçınılmalıdır.|A) Gözlem yapılırken ön plana çıkılmamalıdır.|ACIKLAMA::Etnografide gözlemci doğal davranışı bozmamak için ön plana çıkmadan, müdahalesiz izler (Hawthorne etkisini azaltmak için).|",
+  // ---- Tasarım: DFD / Diyagram ----
+  "2022-2023 Final, 2023-2024 Final, 2025 Final, 2025-2026 Final|Bağlam diyagramı ile alakalı aşağıdakilerden hangisi yanlıştır?|A) Bağlam diyagramında harici varlıklar arasındaki akışa izin verilir.~B) Sadece 1 süreç içerir.~C) Kullanılan süreç, son ürün olan yazılım ile adlandırılır.~D) Her bir yazılım projesinden tek bir defa çizilir.~E) Sistem ile harici varlıklar arasındaki veri akışını gösterir.|A) Bağlam diyagramında harici varlıklar arasındaki akışa izin verilir.|ACIKLAMA::Bağlam diyagramı tek süreç + harici varlıklar gösterir; harici varlıklar ARASINDA akışa izin verilmez (sistem dışıdırlar). Banko.|",
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Bütünleme, Tek Ders 2024|Veri akış diyagramlarında (DFD) harici varlık bileşeninin kullanımı ile ilgili aşağıdakilerden hangisi yanlıştır?|A) Bir harici varlık birden fazla süreçle etkileşime girmez.~B) Harici varlıklar ile veri depoları arasında akış olmaz.~C) Harici varlıklar arasında akışa izin verilmez.~D) Harici varlıklar birden fazla tekrar edilebilir.~E) Bütün veri akış diyagramı seviyelerinde kullanılabilir.|A) Bir harici varlık birden fazla süreçle etkileşime girmez.|ACIKLAMA::Bir harici varlık BİRDEN FAZLA süreçle etkileşebilir; 'girmez' demek yanlıştır. Diğer maddeler (varlıklar-depolar arası akış yok, varlıklar arası akış yok) doğrudur.|@sakkarit 2023 Final derlemesi bu soruda yanlışlıkla 'Harici varlıklar arasında akışa izin verilmez'i işaretlemiş; oysa o ifade DOĞRUDUR. Yanlış olan A şıkkıdır.",
+  "2024 Bütünleme, 2025 Final|Ebeveyn (level-0) diyagramı çizimleri için aşağıdakilerden hangisi yanlıştır?|A) Veri depolarına diyagram içerisinde yer verilmez.~B) Diyagramda temel fonksiyonlar süreç olarak verilir.~C) Bağlam diyagramındaki akışlar ile dengeli olarak çizilir.~D) Harici varlıklar diyagram içerisinde tekrar edilebilir.~E) Süreçler birden fazla girdi alıp birden fazla çıktı üretebilir.|A) Veri depolarına diyagram içerisinde yer verilmez.|ACIKLAMA::Ebeveyn/0-seviye diyagramda veri depoları GÖSTERİLİR; 'yer verilmez' ifadesi yanlıştır.|",
+  "2023-2024 Final, 2024 Final, 2025-2026 Bütünleme, 2025-2026 Final|Aşağıdakilerden hangisi ebeveyn diyagramındaki süreçlere verilen isimlerden olamaz?|A) Geciken sipariş kontrolü~B) İlan yönetimi~C) Sistem yönetimi~D) Raporlama~E) Değerlendirme|A) Geciken sipariş kontrolü|ACIKLAMA::Süreç isimleri genel/işlevsel olmalı (yönetim, raporlama). 'Geciken sipariş kontrolü' bir istisna/koşula özgü olduğu için üst düzey süreç adı olamaz.|",
+  "2024 Bütünleme, Tek Ders 2024|Mantık modelleri aşağıdaki hangi veri akış elemanının iç yapısını açıklar?|A) Süreç~B) Veri deposu~C) Harici varlık~D) İç varlık~E) Veri akışı|A) Süreç|ACIKLAMA::Mantık modelleme (yapısal dil, karar tablosu/ağacı) bir SÜRECİN içindeki kural/mantığı ayrıntılandırır.|",
+  // ---- Güvenlik & Ağ ----
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Final|Aşağıdakilerden hangisi sahte DNS yardımıyla hassas bilgilerin çalınmasını amaçlayan güvenlik tehdidir?|A) Balık tutma (Yemleme)~B) IP sahteciliği~C) Ara kapı~D) Araya girme~E) Hizmet reddi|A) Balık tutma (Yemleme)|ACIKLAMA::Sahte DNS ile kullanıcıyı taklit siteye yönlendirip bilgi çalma = pharming/phishing (balık tutma/yemleme).|",
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Final|Aşağıdakilerden hangisi mimari tasarımların güvenlik gereksinimleri arasında sayılabilir?|A) Erişim kontrolü~B) Sistem entegrasyonu~C) Kapasite~D) Çok dillilik~E) Özelleştirme|A) Erişim kontrolü|ACIKLAMA::Erişim kontrolü (yetkilendirme) doğrudan güvenlik gereksinimidir. Kapasite performans, çok dillilik kullanılabilirlik başlığındadır.|",
+  "2024 Bütünleme, Tek Ders 2024|OSI referans modelinde aşağıdaki hangi aşama yer almaz?|A) Dokümantasyon~B) İletişim~C) Fiziksel bağlantı~D) Aktarım~E) Servisler|A) Dokümantasyon|ACIKLAMA::OSI katmanları veri iletişimiyle ilgilidir; 'Dokümantasyon' bir OSI katmanı/aşaması değildir.|",
+  "2025 Final, 2025-2026 Bütünleme|${t_topoloji}<br>Ağaç yapısındaki temel ağ topolojisi aşağıdakilerden hangisidir?|A) Hiyerarşik~B) Veri Yolu~C) Halka~D) Örgü~E) Yıldız|A) Hiyerarşik|ACIKLAMA::Dallanan ağaç yapısı = hiyerarşik topoloji (birden çok yıldızın bir omurgaya bağlanmış hâli).|",
+  "2023-2024 Final, 2024 Final, 2025-2026 Bütünleme|Bir işletme verilerini arşivleyecek yeterli depolama cihazına sahip değilse dışarıdan bu hizmeti kiralamayı tercih edebilir. Bu durumda başvurulacak bulut hizmet modeli aşağıdakilerden hangisidir?|A) Altyapı sağlama hizmet modeli~B) Yazılım sağlama hizmet modeli~C) Platform sağlama hizmet modeli~D) Analitik sağlama hizmet modeli~E) Veri sağlama hizmet modeli|A) Altyapı sağlama hizmet modeli|ACIKLAMA::Depolama/sunucu gibi donanım altyapısını kiralamak IaaS (Altyapı Hizmeti) modelidir.|",
+  // ---- Bakım, Test, Kalite ----
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Bütünleme, 2025-2026 Final|Aşağıdakilerden hangisi sistemin hayata geçirilmesi sürecindeki sürdürülebilirlik faaliyetleri arasında sayılabilir?|A) Bakım~B) Test~C) Kodlama~D) Kurulum~E) Güvenirlik|A) Bakım|ACIKLAMA::Sistem devreye alındıktan SONRA süregelen (sürdürülebilirlik) faaliyet Bakımdır. Test/kodlama/kurulum devreye alma öncesi geliştirme adımlarıdır. Banko.|",
+  "2024 Bütünleme, 2025 Final|Bir yazılım sistemi içerisindeki farklı modüller arası entegrasyonu bütüncül olarak değerlendiren test türü aşağıdakilerden hangisidir?|A) Sistem~B) Günlük~C) Birim~D) Yönetim~E) Kabul|A) Sistem|ACIKLAMA::Tüm modüllerin bir araya gelmiş hâlini bütüncül değerlendiren sistem testidir. Birim testi tek modülü, kabul testi kullanıcı gereksinimini ölçer.|Not: 'Modüller arası' ifadesi entegrasyon testini de çağrıştırır; sınav 'bütüncül' vurgusuyla Sistem testini beklemiş.",
+  "2023 Vize, 2023-2024 Final, 2024 Final|${t_fmea}<br>Hata türleri ve etkileri analizinde (FMEA) gereksinimlerin eksik belirlenmesi riski için şiddet 7, olasılık 8, tespit ihtimali 10 belirlenmiştir. Bu durumda risk öncelik skoru (RÖS) kaçtır?|A) 560~B) 66~C) 25~D) 121~E) 8,33|A) 560|ACIKLAMA::RÖS = Şiddet × Olasılık × Tespit = 7 × 8 × 10 = 560. Toplama değil, çarpım.|",
+  "2025 Final|Bir yazılım dilinde aşağıdaki özelliklerden hangisinin olması beklenmez?|A) Genelleştirilebilirlik~B) Okunabilirlik~C) Çevrilebilirlik~D) Yalınlık~E) Bağımsızlık|A) Genelleştirilebilirlik|ACIKLAMA::Yazılım dilinden beklenen nitelikler okunabilirlik, çevrilebilirlik, yalınlık ve bağımsızlıktır; 'genelleştirilebilirlik' bu listede beklenen bir özellik değildir.|",
+  "2025 Final|Sürücü güncelleme faaliyeti aşağıdaki bakım türlerinden hangisi içerisinde değerlendirilir?|A) Uyarlayıcı~B) Düzeltici~C) Önleyici~D) Denetleyici~E) İyileştirici|A) Uyarlayıcı|ACIKLAMA::Sistemi değişen ortama/donanıma uydurmak (sürücü güncelleme) uyarlayıcı (adaptive) bakımdır.|",
+  // ---- Arayüz & Çıktı tasarımı ----
+  "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final|Farklı sistem parçalarının benzer girdilere karşı aynı şekilde tepki üretmesi girdi tasarımının hangi kriteri ile alakalıdır?|A) Kararlılık~B) Yalınlık~C) Etkililik~D) Kullanılabilirlik~E) Erişilebilirlik|A) Kararlılık|ACIKLAMA::Benzer girdiye her yerde aynı/tutarlı tepki = kararlılık (tutarlılık) kriteridir. Banko.|",
+  "2022-2023 Final, 2023 Final, 2025 Final|Bir sistemin periyodik bakımlar dışında sürekli çalışabilir halde olması hangi mimari gereksinim ile açıklanabilir?|A) Güvenirlik~B) Esneklik~C) Hız~D) Kapasite~E) Erişim kontrolü|A) Güvenirlik|ACIKLAMA::Kesintisiz/sürekli çalışabilirlik güvenirlik (reliability/availability) gereksinimidir.|",
+  "2022-2023 Final, 2023 Final, 2025 Final|Aşağıdaki çıktı türlerinden hangisi interaktiftir?|A) Gösterge paneli~B) Podcast~C) Sunumlar~D) İnfografik~E) Basılı materyal|A) Gösterge paneli|ACIKLAMA::Gösterge paneli kullanıcının filtreleyip etkileşebildiği dinamik/interaktif çıktıdır. Diğerleri tek yönlü/durağandır.|",
+  "2023-2024 Final, 2024 Final, 2025-2026 Bütünleme, 2025-2026 Final|Gösterge paneli tasarımlarında grafikerin geleceği tahmin edebilme yeteneğini sağlamaları aşağıdaki hangi bileşen sayesindedir?|A) Görsel analitik~B) Erişilebilirlik~C) Senaryo tasarımı~D) Metin madenciliği~E) Kullanılabilirlik|A) Görsel analitik|ACIKLAMA::Görsel analitik (visual analytics), veriden örüntü çıkarıp öngörü/tahmin üretmeyi görsel araçlarla mümkün kılar.|",
+  "2023-2024 Final, 2025-2026 Bütünleme, Tek Ders 2024|Belirli bir zaman aralığında tamamlanan iş sayısı, aşağıdaki iş yükü yöntemlerinden hangi metriği açıklamaktadır?|A) Verim~B) Bant genişliği~C) Bekleme süresi~D) Tepki süresi~E) Geri dönüş süresi|A) Verim|ACIKLAMA::Birim zamanda tamamlanan iş sayısı verim (throughput) metriğidir.|",
+  "2023-2024 Final, 2025 Final, 2025-2026 Bütünleme|${t_karartablosu}<br>Bir sipariş geç veya zamanında teslim edilebilir. Müşteri zamanında veya geç onay verebilir veya hiç onay vermez. Bu koşulları karşılamak için oluşturulan karar tablosu için aşağıdakilerden hangisi doğrudur?|A) En fazla 6 adet kural olabilir.~B) En az 5 kural vardır.~C) 5 sütundan oluşur.~D) En fazla 2 kural oluşturulabilir.~E) Sütun sayısı en az 7 olmalıdır.|A) En fazla 6 adet kural olabilir.|ACIKLAMA::Teslim 2 durum (zamanında/geç), onay 3 durum (zamanında/geç/yok). Kombinasyon = 2 × 3 = 6 → en fazla 6 kural (sütun).|",
+  "2025-2026 Bütünleme|Yapısal metodolojiler ile ilgili aşağıdakilerden hangisi yanlıştır?|A) Genel olarak çok hızlı son ürüne ulaşılır.~B) Sadece spiral modelde prototip kullanılır.~C) b modeli bakım faaliyetlerine özellikle önem verir.~D) v modelinde her aşamada testler geçirilir.~E) Şelale modelinde gereksinimler önceden belirli olmalıdır.|A) Genel olarak çok hızlı son ürüne ulaşılır.|ACIKLAMA::Yapısal (şelale/v vb.) yaklaşımlar aşama aşama ve YAVAŞ ilerler; hızlı son ürün RAD/çevik yöntemlerin özelliğidir. 'çok hızlı son ürün' ifadesi yanlıştır.|",
+  "2024 Bütünleme, 2025-2026 Bütünleme|Web sayfaları için mutlaka bir ana sayfa tasarlanması gerekliliğini ifade eden tasarım faktörü aşağıdakilerden hangisidir?|A) Sunum Tipleri~B) Metin~C) Promosyon~D) Grafikler~E) İçerik|A) Sunum Tipleri|ACIKLAMA::Sayfaların düzeni/hiyerarşisi ve zorunlu ana sayfa, sunum tipleri (presentation) tasarım faktörü kapsamındadır.|",
+  "2025 Final, 2025-2026 Final|Aşağıdakilerden hangisi üç tıklama kuralını en iyi anlatan tanımlamadır?|A) Sistemde herhangi bir ekrana en fazla üç tıkla ulaşılmalıdır.~B) Sistem en fazla 3 fare tıklamasına müsaade etmelidir.~C) Sistem 3. fare tıklamasında ana sayfaya dönmelidir.~D) Sistem 3 tıklama ile arayüzleri kapatmaya müsaade etmelidir.~E) Sistemi çok kısa süre içerisinde üç tıklama yapılmasına müsaade etmemelidir.|A) Sistemde herhangi bir ekrana en fazla üç tıkla ulaşılmalıdır.|ACIKLAMA::Üç tıklama kuralı: kullanıcı istediği içeriğe en çok üç tıklamada erişebilmeli (kullanılabilirlik/navigasyon ilkesi).|",
+  // ---- Temel kavramlar / DIKW ----
+  "2023 Vize, 2024 Vize, Tek Ders 2024|${t_dikw}<br>Bir web sitesinin bir saatteki ortalama çökme sayısı 2,7 olarak hesaplanmıştır. Bu ifadedeki 2,7 değeri aşağıdakilerden hangisine tekabül etmektedir?|A) Bilişim~B) Veri~C) Bilgi~D) İhsan~E) Bilgelik|A) Bilişim|ACIKLAMA::Resmî CEVAPLI formların çoğu (2024 Vize, Tek Ders 2024) 'işlenmiş/hesaplanmış' olduğu için bu değeri 'Bilişim' kabul ediyor.|Tartışmalı: DIKW hiyerarşisinde ham 2,7 rakamı aslında VERİ, hesaplanınca BİLGİ olur. @sakkarit derlemesi 'Veri' demiş. Resmî anahtar 'Bilişim' işaretlediğinden burada onu esas aldım; formunuzun anahtarına göre değerlendirin.",
+  // ---- Diğer Final soruları ----
+  "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final, 2025 Final|Bir sosyal ağ tasarımı yapılıyor ise, terör, kadına şiddet ve ırkçılık gibi unsurlarla ilgili paylaşımların sistem tarafından kısıtlanması hangi tür gereksinime örnektir?|A) Etik~B) Güvenirlik~C) Çevresel~D) Yasal~E) Kullanılabilirlik|A) Etik|ACIKLAMA::Zararlı/ayrımcı içeriğin engellenmesi topluma karşı sorumluluk taşıyan ETİK gereksinimdir. (Bazı bağlamlarda yasal ile örtüşse de anahtar Etik'i veriyor.)|",
+  "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final, 2025-2026 Final|Yığın (batch) ve çevrimiçi (online) veri işleme süreçleri ile ilgili aşağıdakilerden hangisi doğrudur?|A) Yığın işlemede kurtarma ve yeniden başlatma kolaydır.~B) Yığın işlemede işlem sırası tahmin edilemez.~C) Çevrimiçi işleme nispeten daha az donanım ve programlama gerektirir.~D) Yığın işlemede olayın olduğu anda verinin işlenmesi esastır.~E) Çevrimiçi işleme tek seferde daha fazla veri işler.|A) Yığın işlemede kurtarma ve yeniden başlatma kolaydır.|ACIKLAMA::Yığın işleme gruplar/kontrol noktaları hâlinde çalıştığından hata sonrası kurtarma/yeniden başlatma kolaydır. 'Anlık işleme' çevrimiçinin (online) özelliğidir. Banko.|",
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025 Final, 2025-2026 Bütünleme, 2025-2026 Final|Fonksiyonel olmayan gereksinimler ile alakalı aşağıdakilerden hangisi yanlıştır?|A) Bir sistemin 'ne' yapması gerektiğini ifade eder.~B) Ölçümü kolay değildir.~C) Başarısızlık durumunda sistem bir bütün olarak kullanışsız hale gelir.~D) İşlevleri destekleyen gereksinimlerdir.~E) Performans ile alakalıdır.|A) Bir sistemin 'ne' yapması gerektiğini ifade eder.|ACIKLAMA::'Ne' yapılacağını FONKSİYONEL gereksinim söyler. Fonksiyonel olmayan gereksinim 'nasıl/ne kadar iyi' (performans, güvenlik, kullanılabilirlik) ile ilgilenir. Banko.|",
+  "2022-2023 Final, 2023 Final|En kısa sürede tamamlanan Scrum toplantısı aşağıdakilerden hangisidir?|A) Günlük Scrum~B) Açılış grafikleri~C) Sprint Planlama~D) Sprint Retrospektif~E) Sprint Değerlendirme|A) Günlük Scrum|ACIKLAMA::Günlük Scrum (daily stand-up) tipik olarak 15 dakikayı geçmeyen, en kısa Scrum etkinliğidir.|",
+  "2022-2023 Final, 2023 Final, 2024 Bütünleme|Yaş bilgisinin girilmesi gereken bir ekranda 120 sayısından daha büyük bir değerin girişine müsaade edilmemesi hangi girdi kontrolü ile alakalıdır?|A) Aralık~B) Tutarlılık~C) Veri tabanı~D) Biçim~E) Tamlık|A) Aralık|ACIKLAMA::Belirli alt-üst sınırlar arasında değer kabulü aralık (range) kontrolüdür.|"
+];
+
+// --- PARSE ---
+const DATA = [];
+const soruMap = new Map();
+let id_cnt = 0;
+
+rawData.forEach(item => {
+  const parts = item.split('|');
+  if (parts.length < 4) return;
+
+  let tagsRaw = parts[0];
+  let qRaw = parts[1].trim();
+  let options = parts[2].split('~').map(o => o.trim());
+  let correctAnswer = parts[3].trim();
+  let explanation = (parts[4] || '').replace('ACIKLAMA::', '').trim();
+  let note = (parts[5] || '').trim();
+
+  // Görselleri çıkar
+  let as = [];
+  qRaw = qRaw.replace(/\$\{(t_[a-zA-Z0-9_]+)\}(<br>)?/g, (m, p1) => { as.push(p1); return ''; }).trim();
+
+  const _t = (qRaw + ' ' + as.join(' ')).toLocaleLowerCase('tr');
+  let konu = 'Diğer';
+  if (as.includes('t_kararseviye') || /karar seviyesi|gösterge panel|hareket işleme|karar destek|üst yönetici|yönetim bilişim|bilgi çalışanı|coğrafi bilgi|taktik seviye|fiziksel cihaz|donanım|cpu|merkezi işlem|çökme sayısı/.test(_t)) konu = 'Bilişim sistemi türleri & Temel kavramlar';
+  else if (/scrum|raci|iş kırılım|prince|gantt|proje beyan|kritik yol|proje yönetimi aşama|bütünleşik değerlendir|fizibilite|pozitif risk|risk yanıt|risk analiz|sistem isteği|belirsizlik|risk kalem|proje/.test(_t)) konu = 'Proje Yönetimi & Risk';
+  else if (/şelale|spiral|çevik|hızlı uygulama|prototip|metodoloji|v model|ekstrem programlama|aşamalı geliştirme|yapısal metodoloji/.test(_t)) konu = 'Sistem Geliştirme Metodolojileri';
+  else if (/anahtar|ilişki|normalizasyon|veri taban|çoka|bire-|veri sözlü|veri deposu|fiziksel veri|vatandaş|yazar ve kitap/.test(_t)) konu = 'Veritabanı Tasarımı';
+  else if (/bağlam diyagram|veri akış|ebeveyn|harici varlık|mantık model|karar tablo|karar ağac|yapısal dil|süreç.*iç yapı/.test(_t)) konu = 'Analiz & DFD / Diyagram';
+  else if (/arayüz|tıklama|çıktı|web sayfa|ana sayfa|görsel analitik|interaktif|gösterge paneli tasar|verim|sunum tip|girdi/.test(_t)) konu = 'Arayüz & Çıktı Tasarımı';
+  else if (/güvenlik|dns|osi|topoloji|ağaç|bulut|balık tutma|erişim kontrol/.test(_t)) konu = 'Güvenlik & Ağ';
+  else if (/gereksinim|etnografi|gözlem|doğrulanması|gözden geçirme|fonksiyonel/.test(_t)) konu = 'Gereksinim & Doğrulama';
+  else if (/bakım|test|yazılım dili|sürdürülebilirlik|güvenirlik|fmea|hata tür/.test(_t)) konu = 'Bakım, Test & Kalite';
+
+  let tagsList = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+  // Bir soru birden çok sınav türünde çıkmış olabilir; hepsini işaretle
+  const kindSet = new Set();
+  tagsList.forEach(t => {
+    const lt = t.toLocaleLowerCase('tr');
+    if (lt.includes('büt') || lt.includes('but') || lt.includes('tek ders')) kindSet.add('but');
+    else if (lt.includes('final')) kindSet.add('final');
+    else if (lt.includes('vize')) kindSet.add('vize');
+  });
+  const kinds = [...kindSet];
+  const k = kinds.includes('vize') ? 'vize' : (kinds.includes('final') ? 'final' : 'but');
+
+  soruMap.set('id' + (id_cnt), {
+    id: id_cnt++, k, kinds, tags: tagsList, q: qRaw, o: options,
+    a: correctAnswer, e: explanation, n: note, konu, as
+  });
+});
+soruMap.forEach(val => DATA.push(val));
+
+const KIND_LABEL = {vize:'Vize', final:'Final', but:'Büt./Tek Ders'};
+let state = {kind:'all', year:'', rep:false, flag:false, konu:'', q:'', allOpen:false, order:null};
+let score = {t:0, f:0};
+
+const $ = s => document.querySelector(s);
+const listEl = $('#list'), emptyEl = $('#empty');
+
+const counts = {all:DATA.length, vize:0, final:0, but:0, rep:0, flag:0};
+const years = new Set(), konular = new Set();
+DATA.forEach(d => {
+  d.kinds.forEach(kk => counts[kk]++);
+  if (d.tags.length > 1) counts.rep++;
+  if (d.n) counts.flag++;
+  konular.add(d.konu);
+  d.tags.forEach(t => years.add(t));
+  d._s = (d.q + ' ' + d.o.join(' ') + ' ' + d.e + ' ' + d.n + ' ' + d.tags.join(' ')).toLocaleLowerCase('tr');
+});
+$('#s-all').textContent = counts.all; $('#s-vize').textContent = counts.vize;
+$('#s-final').textContent = counts.final; $('#s-but').textContent = counts.but;
+$('#s-rep').textContent = counts.rep;
+if ($('#s-flag')) $('#s-flag').textContent = counts.flag;
+['all','vize','final','but'].forEach(k => $('#c-' + k).textContent = counts[k]);
+
+const konuSel = $('#konu');
+if (konuSel) [...konular].sort().forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = k; konuSel.appendChild(o); });
+const yearSel = $('#year');
+[...years].sort().forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
+
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hl(text, term){
+  const safe = esc(text);
+  if (!term) return safe;
+  const t = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return safe.replace(new RegExp('(' + t + ')', 'gi'), '<mark>$1</mark>');
+}
+const letter = s => (s.trim()[0] || '').toUpperCase();
+const br = h => h.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
+function visible(){
+  const q = state.q.toLocaleLowerCase('tr').trim();
+  let rows = DATA.filter(d =>
+    (state.kind === 'all' || d.kinds.includes(state.kind)) &&
+    (!state.year || d.tags.includes(state.year)) &&
+    (!state.rep || d.tags.length > 1) &&
+    (!state.flag || !!d.n) &&
+    (!state.konu || d.konu === state.konu) &&
+    (!q || d._s.includes(q))
+  );
+  if (state.order) rows = rows.slice().sort((a,b) => state.order.indexOf(a.id) - state.order.indexOf(b.id));
+  return rows;
+}
+
+function render(){
+  const rows = visible();
+  $('#shown').textContent = rows.length;
+  emptyEl.hidden = rows.length > 0;
+  const term = state.q.trim();
+
+  listEl.innerHTML = rows.map((d, i) => {
+    const correct = letter(d.a);
+    return `
+    <article class="cell${d.n ? ' flagged' : ''}" data-id="${d.id}">
+      <div class="body">
+        <div class="tags">
+          ${d.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+          ${d.tags.length > 1 ? '<span class="tag rep">🔥 tekrar</span>' : ''}
+          ${d.konu ? `<span class="tag konu">${esc(d.konu)}</span>` : ''}
+          ${d.n ? '<span class="tag flag">⚠️ not var</span>' : ''}
+        </div>
+        <p class="q">${i + 1}. ${br(hl(d.q, term))}</p>
+        ${d.as && d.as.length ? '<div class="assets">' + d.as.map(k => ASSETS[k] || '').join('') + '</div>' : ''}
+        <ul class="opts">
+          ${d.o.map(o => `<li><button class="opt" data-l="${letter(o)}" data-c="${correct}">${hl(o, term)}</button></li>`).join('')}
+        </ul>
+        <div class="acts"><button class="reveal">Cevabı göster</button></div>
+        <div class="out">
+          <div class="ans">${hl(d.a, term)}</div>
+          <p class="exp">${hl(d.e, term)}</p>
+          ${d.n ? `<p class="note">${hl(d.n, term)}</p>` : ''}
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  if (state.allOpen) listEl.querySelectorAll('.out').forEach(o => o.classList.add('show'));
+}
+
+listEl.addEventListener('click', e => {
+  const rev = e.target.closest('.reveal');
+  if (rev){
+    const out = rev.closest('.body').querySelector('.out');
+    out.classList.toggle('show');
+    rev.textContent = out.classList.contains('show') ? 'Cevabı gizle' : 'Cevabı göster';
+    return;
+  }
+  const opt = e.target.closest('.opt');
+  if (!opt || opt.classList.contains('locked')) return;
+  const list = opt.closest('.opts');
+  const correct = opt.dataset.c, picked = opt.dataset.l;
+  list.querySelectorAll('.opt').forEach(b => { b.classList.add('locked'); if (b.dataset.l === correct) b.classList.add('correct'); });
+  if (picked !== correct) opt.classList.add('wrong');
+  picked === correct ? score.t++ : score.f++;
+  updateScore();
+  const out = opt.closest('.body').querySelector('.out');
+  out.classList.add('show');
+  opt.closest('.body').querySelector('.reveal').textContent = 'Cevabı gizle';
+});
+
+function updateScore(){
+  const tot = score.t + score.f;
+  $('#score').classList.toggle('show', tot > 0);
+  $('#sc-t').textContent = score.t;
+  $('#sc-f').textContent = score.f;
+  $('#sc-r').textContent = tot ? Math.round(score.t / tot * 100) + '% · ' + tot + ' soru cevaplandı' : '';
+}
+$('#sc-reset').addEventListener('click', () => { score = {t:0, f:0}; updateScore(); render(); });
+$('#kinds').addEventListener('click', e => {
+  const b = e.target.closest('.chip[data-k]'); if (!b) return;
+  state.kind = b.dataset.k;
+  document.querySelectorAll('.chip[data-k]').forEach(c => c.setAttribute('aria-pressed', c === b));
+  render();
+});
+$('#flag').addEventListener('click', e => { state.flag = !state.flag; e.currentTarget.setAttribute('aria-pressed', state.flag); render(); });
+$('#konu').addEventListener('change', e => { state.konu = e.target.value; render(); });
+$('#rep').addEventListener('click', e => { state.rep = !state.rep; e.currentTarget.setAttribute('aria-pressed', state.rep); render(); });
+yearSel.addEventListener('change', e => { state.year = e.target.value; render(); });
+$('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
+$('#toggle').addEventListener('click', e => {
+  state.allOpen = !state.allOpen;
+  e.currentTarget.textContent = state.allOpen ? 'Cevapları gizle' : 'Cevapları göster';
+  e.currentTarget.classList.toggle('on', state.allOpen);
+  listEl.querySelectorAll('.out').forEach(o => o.classList.toggle('show', state.allOpen));
+  listEl.querySelectorAll('.reveal').forEach(r => r.textContent = state.allOpen ? 'Cevabı gizle' : 'Cevabı göster');
+});
+$('#shuffle').addEventListener('click', () => {
+  const ids = visible().map(d => d.id);
+  for (let i = ids.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }
+  state.order = ids; $('#reset-order').hidden = false; render(); window.scrollTo({top:0});
+});
+$('#reset-order').addEventListener('click', e => { state.order = null; e.currentTarget.hidden = true; render(); });
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== $('#q')){ e.preventDefault(); $('#q').focus(); }
+  if (e.key === 'Escape' && document.activeElement === $('#q')){ $('#q').value = ''; state.q = ''; render(); $('#q').blur(); }
+});
+const topBtn = $('#top');
+topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+addEventListener('scroll', () => topBtn.classList.toggle('show', scrollY > 700), {passive:true});
+
+render();
+</script>
+</body>
+</html>

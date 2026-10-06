@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUZEF Yöneylem</title>
+    <style>
+        :root { 
+            --p: #1a2b4c; --s: #2c3e50; --a: #f39c12; --suc: #27ae60; 
+            --bg: #f4f6f8; --c: #ffffff; --t: #2d3436; --b: #dfe6e9; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--t); margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1050px; margin: 0 auto; }
+        
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 1000;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .header { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--a); margin-bottom: 15px; }
+        .header h1 { margin: 5px 0; font-size: 1.5em; }
+        .header p { margin: 0; font-size: 0.9em; }
+        
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: var(--bg); padding: 5px; border-radius: 10px; }
+        
+        .btn { background: #ecf0f1; color: var(--p); border: 2px solid var(--b); padding: 8px 12px; font-size: 0.95em; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; box-sizing: border-box; }
+        .btn:hover { background: #bdc3c7; }
+        .btn.active { background: var(--a); color: white; border-color: var(--a); }
+        .btn-g { background: #d35400; color: white; }
+        
+        .card { background: var(--c); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--p); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .tag { color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .tag-u { background: #3498db; } .tag-e { background: var(--p); } .tag-h { background: #e74c3c; }
+        .q-text { font-size: 1.1em; font-weight: bold; color: var(--p); margin-bottom: 15px; }
+        .opt { list-style: none; padding: 0; margin: 0 0 15px 0; }
+        .opt li { background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid var(--b); margin-bottom: 5px; cursor: pointer; transition: 0.2s; }
+        .opt li:hover { background: #eafaf1; border-color: var(--suc); }
+        .ans-btn { background: var(--s); color: white; border: none; padding: 8px; width: 100%; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .ans-box { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--suc); border-radius: 6px; }
+        .ans-true { color: var(--suc); font-weight: bold; margin-bottom: 5px; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .sticky-top { position: relative; padding-top: 5px; padding-bottom: 5px; }
+            .header { padding: 10px; margin-bottom: 10px; }
+            .header h1 { font-size: 1.2em; }
+            .header p { font-size: 0.8em; } 
+            .controls { gap: 6px; padding: 0; }
+            .btn { padding: 10px; font-size: 0.85em; width: 100%; margin: 0; }
+            #kategori-secici, #arama { width: 100%; min-width: 100%; }
+            .card { padding: 15px; }
+            .q-text { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="sticky-top">
+        <div class="header">
+            <h1>AUZEF Yöneylem</h1>
+            <p>YBS OZEL (Tüm Sorular)</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-g" onclick="toggleAll()">👁️ Tüm Cevapları Aç/Kapat</button>
+
+            <select class="btn" id="kategori-secici" onchange="filter(this.value)" style="background: var(--p); color: white; min-width: 180px; text-align: center; font-weight:bold; padding:8px; border-radius:6px; cursor:pointer;">
+                <option value="all">📚 Tüm Havuz (Hepsi)</option>
+                <optgroup label="Sınavlar">
+                     <option value="vize">📅 Vizeler (Tümü)</option>
+                     <option value="final">📅 Finaller (Tümü)</option>
+                     <option value="büt">📅 Bütünlemeler</option>
+                     
+                </optgroup>
+            </select>
+
+            <button class="btn" style="background: #e74c3c; color:white;" onclick="document.getElementById('kategori-secici').value='b'; filter('b')">🔥 Banko Sorular</button>
+
+            <input type="text" id="arama" class="btn" placeholder="🔍 Soru veya cevapta kelime ara..." onkeyup="aramaYap()" style="background: white; color: black; cursor: text; text-align: left; min-width: 250px;">
+        </div>
+    </div>
+    
+    <div id="q-container"></div>
+
+</div>
+
+<script>
+const rawData = [
+    `2023-2024 Vize, 2025-2026 Büt|Aşağıdakilerden hangisi belirsizlik halinde karar vermede kullanılan yaklaşımlardan biri değildir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Sezgisel olasılık kriteri~E) Pişmanlık kriteri|D) Sezgisel olasılık kriteri| Belirsizlik hali, sonuçların olasılıklarının bilinmediği durumdur. Bu durumda matematiksel olarak tanımlanmış standart kriterler (Laplace, Wald, Hurwicz, Savage) kullanılır. Literatürde "Sezgisel olasılık kriteri" adında standart bir belirsizlik kriteri bulunmamaktadır.`,
+    `2023-2024 Vize, 2022-2023 Büt|Aşağıdakilerden hangisi Yöneylem Araştırması'nın ilk olarak kullanıldığı alandır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Askeri faaliyetler~D) Diğer Seçenek~E) Diğer Seçenek|C) Askeri faaliyetler| Yöneylem Araştırması (YA), II. Dünya Savaşı sırasında İngiliz ve Amerikan ordularının sınırlı kaynakları en etkin şekilde kullanma ihtiyacından doğmuştur.`,
+    `2023-2024 Vize, 2025-2026 Büt|Aşağıdaki ifadelerden hangisi Doğrusal Programlama Gevşetmesini (Relaxation) açıklamaktadır?|A) Karar değişkenleri üzerinde tüm tamsayı veya 0-1 kısıtlarının atılarak, elde edilen doğrusal programlama problemidir.~B) Karar değişkenleri üzerinde tüm tamsayı veya 0-1 kısıtlarının~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|A) Karar değişkenleri üzerinde tüm tamsayı veya 0-1 kısıtlarının atılarak, elde edilen doğrusal programlama problemidir.| "Gevşetme" (Relaxation), zor bir problemin kısıtlarını hafifleterek daha kolay çözülebilir bir hale getirmektir.`,
+    `2023-2024 Vize|Aşağıdakilerden hangisi Yöneylem Araştırması'nın kullandığı bilimsel yöntem aşamaları arasında sayılamaz?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) Modelin tersine incelenmesi|E) Modelin tersine incelenmesi| Yöneylem Araştırması süreci standart bilimsel adımları izler: Problemin tanımlanması, Modelin kurulması, vb. "Modelin tersine incelenmesi" diye bir adım yoktur.`,
+    `2023-2024 Vize|Aşağıdaki karar değişkeni birimlerinden hangisi kesinlikle tamsayıdır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Adet~D) Diğer Seçenek~E) Diğer Seçenek|C) Adet| Tamsayılı programlamada değişkenlerin kesirli olamaması gerekir. "Adet" fiziksel doğası gereği bölünemez.`,
+    `2023-2024 Vize|(Grafik sorusu: (4,0) ve (0,3) noktalarından geçen doğru ve altı taranmış) Grafikte renklendirilmiş alanı gösteren kısıt hangisidir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) 3x_1+ 4x_2 <= 12|E) 3x_1+ 4x_2 <= 12| Paydalar 12'de eşitlenirse 3x1+4x2=12 elde edilir. Taralı alan doğrunun alt tarafı olduğu için eşitsizlik "küçük eşit" (<=) olmalıdır.`,
+    `2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|Hangi karar probleminde her seçime ilişkin tam bir bilgi var olup ortaya çıkacak olan olayın gerçekleşme olasılığı 1'dir?|A) Sezgisel Karar Verme~B) Çok Kriterli Karar Verme~C) Belirlilik Halinde Karar Verme~D) Belirsizlik Halinde Karar Verme~E) Risk Halinde Karar Verme|C) Belirlilik Halinde Karar Verme| Olasılığın 1 (%100) olması, sonucun kesin olarak bilindiği anlamına gelir. Hiçbir risk veya belirsizlik içermeyen bu duruma "Belirlilik" denir.`,
+    `2023-2024 Vize, 2025-2026 Vize|Aşağıdakilerden hangisi karar tipleri ile ilgili olarak kullanılan sınıflandırmalardan biri değildir?|A) Gerçek veya simüle kararlar~B) Alt ve üst kademe kararları~C) Kişi ve grup kararları~D) Stratejik ve operasyonel kararlar~E) Belirlilik ve belirsizlik şartları altında verilen kararlar|A) Gerçek veya simüle kararlar| Literatürde "Gerçek veya simüle" diye temel bir karar sınıflandırması yoktur; simülasyon bir yöntemdir, karar tipi değildir.`,
+    `2024-2025 Vize|Aşağıdakilerden hangisi karar tiplerine ilişkin yapılan sınıflamalardan biri değildir?|A) Alt ve üst kademe kararları~B) Stratejik ve operasyonel kararlar~C) Kişi ve grup kararları~D) Limitli ve limitsiz kararlar~E) Programlanabilen ve programlanamayan kararlar|D) Limitli ve limitsiz kararlar| Karar tipleri literatürde stratejik/operasyonel, kişi/grup, programlanabilen/programlanamayan gibi sınıflandırılır.`,
+    `2023-2024 Vize, 2022-2023 Final|Aşağıdakilerden hangisi karar değişkenlerinin sıfır ya da pozitif olması gerekliliğini ifade eden Doğrusal Programlama varsayımıdır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Negatif olmama~E) Diğer Seçenek|D) Negatif olmama| Matematiksel modelde X_j >= 0 ifadesi ile gösterilir. Gerçek hayatta negatif değerlerin anlamsız olduğunu ifade eder.`,
+    `2022-2023 Büt, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|y=12+3x Verilen denklem sistemine göre çizilecek doğrunun Y eksenini kestiği nokta aşağıdakilerden hangisidir?|A) 12~B) 0~C) 1~D) 4~E) 3|A) 12| Bir doğrunun Y eksenini kestiği noktayı bulmak için denklemde x yerine 0 yazılır. y = 12 + 3(0) => y = 12.`,
+    `2023-2024 Vize|Yöneylem Araştırması incelenen problemi, içinde bulunduğu sistemin bütün unsurlarıyla... incelemeyi esas alır. Hangi özellik açıklanmaktadır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Bütünleşik yaklaşım~D) Diğer Seçenek~E) Diğer Seçenek|C) Bütünleşik yaklaşım| Sistemin alt parçalarını tek tek optimize etmek yerine, parçaların birbirleriyle olan etkileşimini ve sistemin tamamını bir bütün olarak ele alma ilkesine "Bütünleşik Yaklaşım" denir.`,
+    `2022-2023 Vize, 2023-2024 Vize, 2024-2025 Büt, 2025-2026 Final|Aşağıdakilerden hangisi Yöneylem Araştırması'nın uygulama alanlarından biri değildir?|A) Bulut teknolojisi~B) Karar destek ve uzman sistemler~C) Yatırım planlama~D) Üretim planlama~E) Benzetim|A) Bulut teknolojisi| Yöneylem Araştırması; üretim, stok, yatırım gibi karar verme problemlerinde kullanılır. "Bulut teknolojisi" bir optimizasyon problemi türü değildir.`,
+    `2022-2023 Final, 2023-2024 Vize|Aşağıdakilerden hangisi karar verme süreci aşamalarından biri değildir?|A) Duyarlılık analiz yapılması~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|A) Duyarlılık analiz yapılması| Duyarlılık analizi, karar yapıldıktan sonra, parametre değişimlerinin etkisini ölçmek için yapılan ilave bir testtir, zorunlu bir adım değildir.`,
+    `2023-2024 Vize|(Grafik sorusu: (6,0) ve (0,2) noktaları, üst taraf taranmış) Kısıtları hangisidir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) 2x_1+x_2 <= 12 ve 3x_1 + 6x_2 >= 12|E) 2x_1+x_2 <= 12 ve 3x_1 + 6x_2 >= 12| Grafikteki doğrulardan biri (6,0) ve (0,2)'den geçer.`,
+    `2023-2024 Vize, 2025-2026 Büt|Aşağıdakilerden hangisi primal bir problemin dualinin alınmasının nedenlerinden biri değildir?|A) Duyarlılık analizinde kullanabilmek~B) Ekonomik açıdan yorumlar yapabilmek~C) Problemi daha basit hale dönüştürüp kolaylıkla çözmek~D) Diğer Seçenek~E) Dejenere modeli çözmek için|E) Dejenere modeli çözmek için| Dejenerasyon, simpleks algoritmasının kendi iç kurallarıyla çözülür, dualite alma sebebi değildir.`,
+    `2023-2024 Vize, 2025-2026 Vize|Karar değişkenlerinin tamamının ikili (binary) formda olması koşulunun bulunduğu karar modeline verilen isimdir?|A) Saf Sıfır-Bir Tamsayılı Programlama~B) Karma Tamsayılı Programlama~C) Saf Tamsayılı Programlama~D) Doğrusal Tamsayılı Programlama~E) Karma Sıfır-Bir Tamsayılı Programlama|A) Saf Sıfır-Bir Tamsayılı Programlama| "Saf" kelimesi değişkenlerin tamamını, "Sıfır-Bir" ise değişkenlerin sadece 0 veya 1 değerini (binary) alabileceğini belirtir.`,
+    `2023-2024 Vize|(Primal model veriliyor: Min 2x_1+x_2+6x_3...) Hangisi dual modelde yer alan kısıtlardan biri değildir?|A) Diğer Seçenek~B) 2u_1 + u_2 + 6u_3 <= 7~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|B) 2u_1 + u_2 + 6u_3 <= 7| B şıkkındaki katsayılar (2, 1, 6) Primal Amaç Fonksiyonunun katsayılarıdır; bu değerler Dual modelin kısıtlarının sağ taraf sabitleri olmalıdır.`,
+    `2023-2024 Vize|Aşağıdakilerden hangisi bir Doğrusal Programlama Modelinde yer alan karar değişkenlerinin bazılarının tamsayı olması koşulunun bulunduğu karar modelidir?|A) Diğer Seçenek~B) Karma Tamsayılı Programlama~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|B) Karma Tamsayılı Programlama| Modeldeki değişkenlerin bir kısmı sürekli (virgüllü), bir kısmı tamsayı ise bu modele "Karma" (Mixed) model denir.`,
+    `2023-2024 Vize|Aşağıda dualite ile ilgili verilen ifadelerden hangisi yanlıştır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Primal problemde n tane karar değişkeni olduğunda, dual problemde n tane değişken olur.~E) Diğer Seçenek|D) Primal problemde n tane karar değişkeni olduğunda, dual problemde n tane değişken olur.| Primal problemdeki karar değişkeni sayısı (n), dual problemdeki kısıt sayısına eşit olur.`,
+    `2022-2023 Final, 2023-2024 Vize, 2025-2026 Vize|Primal: Min x_1+x_2+6x_3, Sağ taraflar: 10, 3, 7. Dual amaç fonksiyonu nedir?|A) maks 10u_1+9u_2+7u_3~B) maks 10u_1+3u_2+7u_3~C) min 10u_1+3u_2+7u_3~D) maks 1u_1+1u_2+6u_3~E) Diğer Seçenek|B) maks 10u_1+3u_2+7u_3| 1. Primal Min olduğu için Dual Maks olur. 2. Primal kısıtların sağ taraf değerleri Dual amaç fonksiyonunun katsayıları olur.`,
+    `2022-2023 Final, 2025 Final|Verilen geçiş matrisine göre iki adım sonraki periyotta B seçeneğinden B seçeneğine geçme olasılığı aşağıdakilerden hangisidir?|A) 0,61~B) 0,444~C) 0,556~D) 0,984~E) Diğer Seçenek|A) 0,61| B durumundan başlayıp iki adım sonra tekrar B'de olmak için iki olası yol vardır. Toplam Olasılık: 0,61`,
+    `2022-2023 Final|Maks X_1-X_2+3X_3 (Kısıt Sağ Tarafları: 10, 2, 6). Primali verilen modelin dual amaç fonksiyonu aşağıdakilerden hangisidir?|A) Diğer Seçenek~B) min 10u_1+2u_2 + 6u_3~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|B) min 10u_1+2u_2 + 6u_3| Primal problem "Maksimum" ise Dual problem "Minimum" olur.`,
+    `2022-2023 Final, 2025-2026 Büt|Aşağıdakilerden hangisi bireyin başarısının diğer bireylerin seçimlerine dayalı olduğu ve seçimler esnasında bazı stratejik durumların matematiksel olarak davranış biçimlerini yakalamaya çalışan yöneylem araştırması yaklaşımıdır?|A) Benzetim~B) Karar Ağaçları~C) Oyun Teorisi~D) Analitik Hiyerarşi Prosesi~E) Markov Zinciri|C) Oyun Teorisi| Birden fazla karar vericinin (oyuncunun) birbirlerinin sonucunu etkilediği stratejik etkileşim durumlarını matematiksel olarak oyun teorisi inceler.`,
+    `2022-2023 Final|"Kullanılacak kriter sayısı... asgari sayıda olması gerektiği gibi azami bir sayıyı da geçmemesi beklenmektedir." ifadesi hangi özelliği tanımlar?|A) Diğer Seçenek~B) Yeterlilik~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|B) Yeterlilik|`,
+    `2022-2023 Final|Aşağıdakilerden hangisi karar vericinin kontrolü altında olmayan faktörlerden olup seçimi etkileyen çevreyi yansıtır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Doğa Durumu~D) Diğer Seçenek~E) Diğer Seçenek|C) Doğa Durumu|`,
+    `2022-2023 Final, 2024-2025 Büt|Aşağıdakilerden hangisi tipik bir oyunda bulunması gereken kavramlardan biri değildir?|A) Strateji~B) Hakem~C) Kazanç~D) Denge durumu~E) Oyuncular|B) Hakem| Oyun teorisi modellerinde Oyuncular, Stratejiler, Kazançlar ve Denge durumu temel kavramlardır. "Hakem" matematiksel modelin zorunlu bir parçası değildir.`,
+    `2022-2023 Final|Aşağıdaki ifadelerden hangisi Saf Sıfır-Bir Tamsayılı Programlama modelini tanımlamaktadır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) Karar probleminde yer alacak karar değişkenlerinin tamamının 0 ya da 1 değerlerinden oluşması gerektiği durumunda kullanılan modeldir.|E) Karar probleminde yer alacak karar değişkenlerinin tamamının 0 ya da 1 değerlerinden oluşması gerektiği durumunda kullanılan modeldir.|`,
+    `2022-2023 Final|Aşağıdakilerden hangisi Hedef Programlama türleri arasında sayılamaz?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Tartılı hedef programlama~E) Diğer Seçenek|D) Tartılı hedef programlama|`,
+    `2022-2023 Final|Analitik Hiyerarşi Prosesi (AHP) ile incelenen bir karar probleminde oluşturulan karar matrisinin köşegen elemanları aşağıdakilerden hangisidir?|A) Diğer Seçenek~B) Diğer Seçenek~C) 1~D) Diğer Seçenek~E) Diğer Seçenek|C) 1|`,
+    `2022-2023 Final|Aşağıdakilerden hangisi tamsayılı programlama problemlerinin çözümünde kullanılan yöntemlerdendir?|A) Diğer Seçenek~B) Dal-Sınır yöntemi~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|B) Dal-Sınır yöntemi|`,
+    `2022-2023 Final, 2023-2024 Final|Aşağıdakilerden hangisi Çok Nitelikli Karar Verme (ÇNKV) yöntemlerinden biri değildir?|A) TOPSIS~B) VIKOR~C) Hedef Programlama~D) Analitik Ağ Prosesi~E) Analitik Hiyerarşi Prosesi|C) Hedef Programlama| TOPSIS, VIKOR, AHP çok nitelikli karar verme yöntemleridir. Hedef Programlama ise çok amaçlı (MODM) bir yöntemdir.`,
+    `2022-2023 Final|Aşağıdakilerden hangisi Analitik Hiyerarşi Prosesi'nde izlenen aşamalardan biri değildir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Çok amaçlı karar probleminin tasarımı~D) Diğer Seçenek~E) Diğer Seçenek|C) Çok amaçlı karar probleminin tasarımı|`,
+    `2022-2023 Final, Dosya 2, 2022-2023 Büt, 2023-2024 Final|Aşağıdakilerden hangisi bir hedef programlama modelinde istenilen hedefin aşılması ve altında kalınması durumlarını gösteren kavramdır?|A) Sapma Değişkenleri~B) Hedef Kısıtları~C) Hedef~D) Sistem Kısıtları~E) Amaç|A) Sapma Değişkenleri| İstenilen hedefin üzerine çıkılması pozitif sapma (d+), altında kalınması ise negatif sapma (d-) değişkenleri ile gösterilir.`,
+    `2022-2023 Final, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt|Hedef programlamada kullanılan kavramlar ile ilgili aşağıdakilerden hangisi yanlıştır?|A) Sistem kısıtları çok katı olmayıp hedeflenen değerlerden (sağ taraf değerleri) sapmaların açıklanmasıyla ortaya çıkar.~B) Sistem kısıtları tam olarak sağlanması gereken ve sapmaya izin verilmeyen kısıtlardır.~C) Sistem kısıtları doğrusal programlamada kullanılan kısıtlara karşılık gelir.~D) Karar vericinin ulaşmayı istediği veya gerekli gördüğü hedefler, hedef programlama modeline hedef kısıtları olarak aktarılır.~E) Sistem kısıtları aynı zamanda fonksiyonel kısıt olarak da adlandırılır.|A) Sistem kısıtları çok katı olmayıp hedeflenen değerlerden (sağ taraf değerleri) sapmaların açıklanmasıyla ortaya çıkar.| Sistem kısıtları (hammadde limiti, makine kapasitesi vb.) katıdır ve sapma içermezler. Esneyebilen kısıtlar "Hedef Kısıtları"dır.`,
+    `2022-2023 Final, Dosya 2, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final|Aşağıdaki Analitik Hiyerarşi prosesi aksiyomlarından hangisi karşılaştırılan elemanların birbirinden çok fazla farklı olmaması gerektiğini, farklı olması durumunda yargılarda hataların ortaya çıkabileceğini ifade eder?|A) Homojenlik~B) Doğrusallık~C) Bağımlılık~D) İki taraflı olma~E) Bağımsızlık|A) Homojenlik| AHP'de birbirleriyle kıyaslanan öğelerin değer ve büyüklük olarak aynı hiyerarşik düzlemde, birbirine yakın ölçeklerde (homojen) olması gerekir.`,
+    `2022-2023 Final, 2025 Final, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt|Aşağıdaki yöneylem araştırması konularından hangisi başlangıç durumu verildiğinde izleyen aşamada hangi olasılıkla hangi durumda olunacağını ve buna karşı oluşacak olan katkıyı ölçmek ve en iyi stratejiyi belirlemek için başvurulan analiz türüdür? (veya stokastik süreçleri modelleyen yöntemdir?)|A) Hedef Programlama~B) Doğrusal Programlama~C) Markov Analizi~D) Tam Sayılı Programlama~E) AHP|C) Markov Analizi| Bir sistemin içinde bulunduğu güncel durumu (başlangıç durumu) baz alarak sistemin gelecekteki durumlarda nerede olacağını olasılıksal olarak hesaplamaya yarayan yöntem Markov analizidir.`,
+    `2022-2023 Final, 2023-2024 Final, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt|Aşağıdakilerden hangisi çok kriterli karar verme süreçlerinde izlenen adımlardan biri değildir?|A) Alternatiflerin belirlenmesi~B) Amaç ya da amaçların belirlenmesi~C) Genel değerlendirme ve karar verme~D) Alternatif ve kriterlerin ikili karşılaştırılması~E) Kriterlerin belirlenmesi|D) Alternatif ve kriterlerin ikili karşılaştırılması| İkili karşılaştırmalar, tüm çok kriterli yöntemlerde bulunmaz; yalnızca AHP ve ANP gibi spesifik yöntemlere özgü bir adımdır.`,
+    `2022-2023 Büt, 2024-2025 Vize, 2025-2026 Vize|Aşağıdakilerden hangisi ülkemizde Yöneylem Araştırması çalışmalarına ilk olarak ev sahipliği yapan birimdir? (veya Yöneylem Araştırması faaliyetlerinin yürütüldüğü ilk kurumdur?)|A) Genel Kurmay Başkanlığı İlmi İstişare Müdürlüğü (Türk Silahlı Kuvvetleri)~B) Kara Harp Okulu~C) Orta Doğu Teknik Üniversitesi~D) Yöneylem Araştırması Derneği~E) TÜBİTAK|A) Genel Kurmay Başkanlığı İlmi İstişare Müdürlüğü (Türk Silahlı Kuvvetleri)| Yöneylem araştırması Türkiye'de ilk defa 1950'li yıllarda Türk Silahlı Kuvvetleri bünyesindeki Genelkurmay Başkanlığı İlmi İstişare Kurulu çatısı altında ele alınmıştır.`,
+    `2022-2023 Büt, Dosya 3, 2023-2024 Büt, 2025-2026 Büt|Aşağıdakilerden hangisi bir karar probleminde kriterlerin karara etkisinin hesaplanabilmesi için sahip olması gereken özelliktir?|A) Kapsayıcılık özelliği~B) Yeterlilik özelliği~C) Ölçülebilirlik özelliği~D) Geçerlilik özelliği~E) Doğrusallık özelliği|C) Ölçülebilirlik özelliği| Kriterin karar problemindeki ağırlığını veya etkisini nicel ya da nitel olarak matematiksel modele dâhil edebilmek için mutlaka bir ölçülebilirlik (ölçeklendirilebilme) özelliğine sahip olması gerekir.`,
+    `2022-2023 Büt, 2023-2024 Final|Aşağıdakilerden hangisi karar probleminde incelenen alternatiflerin sonlu sayıda olduğu ve açıkça tanımlandığı kesikli durumlarda kullanılabilecek yöntemlerden birisi değildir (veya birisidir)?|A) MABAC~B) EDAS~C) ARAS~D) MARCOS~E) SEMOPS / AHP|E) SEMOPS (değildir) / AHP (kullanılabilir yöntemdir)| AHP, TOPSIS, MABAC vb. çok nitelikli (kesikli) karar verme yöntemleridir. SEMOPS ise sürekli (Çok Amaçlı Karar Verme - MODM) uzayda kullanılan bir yöntemdir.`,
+    `2022-2023 Büt|Aşağıdakilerden hangisi tamsayılı programlama (TP) türlerinden biri değildir?|A) Diğer Seçenek~B) Doğrusal TP~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|B) Doğrusal TP|`,
+    `2022-2023 Büt|Aşağıdaki doğrusal programlama varsayımlarından hangisi tamsayılı programlama modelleri ile çelişmektedir?|A) Bölünebilirlik~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|A) Bölünebilirlik|`,
+    `2022-2023 Büt, 2024-2025 Büt, 2025-2026 Final|Aşağıdakilerden hangisi Markov analizinde geçiş matrisi üzerinde her bir durumdan diğer her bir duruma geçiş doğrudan veya dolaylı olarak yapılabildiğinde kullanılan kavramdır?|A) Sıfır toplamlı zincir~B) Ergodik zincir~C) Beklenen değer~D) Denge durumu~E) Başlangıç olasılıkları|B) Ergodik zincir| Bir Markov zincirinde, tüm durumlar birbiriyle doğrudan veya dolaylı yoldan iletişim kurabiliyorsa, bu zincir türüne "Ergodik Zincir" denir.`,
+    `2022-2023 Büt, 2023-2024 Final|Verilen geçiş matrisine göre iki adım sonraki periyotta A seçeneğinden A seçeneğine geçme olasılığı aşağıdakilerden hangisidir?|A) 1,00~B) 0,61~C) 0,52~D) 0,48~E) 0,39|D) 0,48| İki adımda A'dan A'ya geçiş için iki yol vardır: (A->A->A = 0.6 * 0.6 = 0.36) ve (A->B->A = 0.4 * 0.3 = 0.12). Toplamları 0.36 + 0.12 = 0.48 olur.`,
+    `2022-2023 Büt, 2024-2025 Büt, 2025-2026 Büt|Aşağıdaki oyun teorisinde kullanılan kavramlardan hangisi oyuncuların strateji seçimlerinin türlü bileşiminden sonuçlanan kazanç veya kayıpları gösterir?|A) Beklenen Değer~B) Ödemeler Matrisi~C) Tam Strateji~D) Arı Strateji~E) Oyunlar|B) Ödemeler Matrisi| Oyun teorisinde oyuncuların olası tüm strateji eşleşmelerinin sonuçlarını gösteren tabloya ödemeler matrisi denir.`,
+    `2022-2023 Büt, 2025 Final, 2023-2024 Büt|Aşağıdakilerden hangisi Oyun Teorisi incelenen bir oyunun analiz edilmesi için karar vericinin sahip olması gereken bilgilerden biri değildir?|A) Her bir oyuncu için hangi eylemlerin mevcut olduğu~B) Her bir oyuncunun duygu durumu~C) Oyuncuların kimler olduğu~D) Her bir oyuncunun her bir sonuç için ne kadar değer belirlediği~E) Her bir oyuncunun ne bildiği|B) Her bir oyuncunun duygu durumu| Oyun teorisi; oyuncuların rasyonel varlıklar olduğunu varsayar. Anlık hissiyatlar "duygu durumu" analize dâhil edilen bir bilgi faktörü değildir.`,
+    `2022-2023 Büt, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt|Aşağıdakilerden hangisi Analitik Hiyerarşi Prosesi modellerinde tutarlılık incelemesinde kullanılan kavramlardan biri değildir?|A) Rasgele indeksi~B) Tutarlılık oranı~C) Tutarlılık indeksi~D) Özdeğer~E) Duyarlılık|E) Duyarlılık| AHP'de tutarlılık incelemesi için Tutarlılık İndeksi (CI), Tutarlılık Oranı (CR), Temel Özdeğer (Lambda max) ve Rasgele İndeks (RI) kullanılır. Duyarlılık analizi ise sonuçların değişen parametrelere karşı direnciyle ilgilidir.`,
+    `2022-2023 Büt|Aşağıdaki Belirsizlik Halinde Karar Verme yaklaşımlarından hangisi iyimserlik ve kötümserlik kriterlerinin belirli bir ağırlıklandırma ile bütünleşik kullanılması esasına dayanır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Hurwicz Kriteri~E) Diğer Seçenek|D) Hurwicz Kriteri|`,
+    `2022-2023 Büt, 2023-2024 Final|Aşağıdakilerden hangisi bir karar ağaçlarında karar düğümlerini göstermek üzere kullanılan semboldür? (veya doğa durumlarını...)|A) Kare~B) Dörtgen~C) Çember yada Daire~D) Beşgen~E) Üçgen|A) Kare (Karar düğümleri) / C) Çember yada Daire (Doğa durumları)| Karar ağaçlarında karar düğümleri kare ile, olasılıklara bağlı şans (doğa durumu) düğümleri ise daire/çember ile gösterilir.`,
+    `2022-2023 Büt, 2023-2024 Final|Aşağıdakilerden hangisi bir Hedef Programlama modelinde sağ taraf sabitlerinden sapmalara müsaade eden kısıt türüdür?|A) Doğrusal kısıtlar~B) Sistem kısıtları~C) İşlevsel kısıtlar~D) Hedef kısıtları~E) Fonksiyonel kısıtlar|D) Hedef kısıtları| Hedef programlamada kesin ve esnemeyen kısıtlara "sistem kısıtları", sapmalara müsaade eden esnek kısıtlara ise "hedef kısıtları" denir.`,
+    `2022-2023 Büt|Aşağıdakilerden hangisi bir Hedef Programlama modelinde istenilen hedefin aşılması durumunu gösteren kavramdır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Pozitif sapma~D) Diğer Seçenek~E) Diğer Seçenek|C) Pozitif sapma|`,
+    `2022-2023 Büt, 2024-2025 Büt, 2025-2026 Büt|Aşağıdakilerden hangisi Analitik Hiyerarşi Prosesinde gerçekleştirilen Sentezleme işleminin tanımıdır?|A) En küçük özdeğerin hesaplandığı adımdır.~B) En büyük özdeğerin hesaplandığı adımdır.~C) En büyük özdeğer ve bu özdeğere karşılık gelen özvektörün hesaplandığı ve normalize edildiği adımdır.~D) En küçük özdeğer ve bu özdeğere karşılık gelen özvektörün hesaplandığı ve normalize edildiği adımdır.~E) En büyük özdeğerin hesaplandığı ve normalize edildiği adımdır.|C) En büyük özdeğer ve bu özdeğere karşılık gelen özvektörün hesaplandığı ve normalize edildiği adımdır.| Sentezleme (önceliklerin/ağırlıkların hesaplanması) aşaması, ikili karşılaştırma matrisinin en büyük özdeğerinin ve ona karşılık gelen özvektörün bulunup nihai ağırlıkların elde edildiği adımdır.`,
+    `2022-2023 Büt, 2025-2026 Büt|Aşağıdakilerden hangisi hedef programlama modelindeki sapmaların önem dereceleri birbirinden farklı olduğunda kullanılan yaklaşımdır?|A) Ağırlıklandırma~B) Doğrusallık~C) Eşit önemli kabul etme~D) Önceliklendirme~E) Negatif olmama|A) Ağırlıklandırma| Önem derecesi katsayıları farklıysa ağırlıklandırma (katsayı atama) yapılır.`,
+    `2022-2023 Büt|Primali verilen modelin dual kısıtlarından biri değildir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) 2u_1 + 1u_2 + 6u_3 <= 10|E) 2u_1 + 1u_2 + 6u_3 <= 10|`,
+    `2022-2023 Büt, 2024-2025 Büt, 2025-2026 Final|Aşağıdakilerden hangisi amaçlara ulaşmada alternatiflerin değerlendirilmesinde kullanılan karar bileşenleridir?|A) Ağırlıklar~B) Karar Verici~C) Kriter~D) Alternatif~E) Amaç|C) Kriter| Karar vermede alternatiflerin fayda/başarı durumları, amaca uygunluk seviyelerini gösteren "kriterler" kullanılarak ölçülür.`,
+    `2025 Final, 2023-2024 Büt|Aşağıdaki kavramlardan hangisi Analitik Hiyerarşi Prosesi yönteminin temelini oluşturmaktadır?|A) Doğrusallık~B) Alternatifler~C) Kriterler~D) Çok amaçlılık~E) İkili karşılaştırmalar|E) İkili karşılaştırmalar| Thomas L. Saaty tarafından geliştirilen AHP'nin çekirdeğinde, karar vericinin alternatifleri ve kriterleri ikişer ikişer (ikili) şekilde birbirleriyle kıyaslayarak (1-9 ölçeğiyle) matrisler oluşturması yatar.`,
+    `2025 Final|Bir hedef programlama modelinde, aylık işgücü kullanımının en fazla 400 saat olarak belirlendiği bir hedefe ilişkin çözüm sonucunda, aylık işgücü kullanımının 450 saat olarak gerçekleşmiş olduğu görülmüştür. Bu ifadeye göre hangisi kesinlikle doğrudur?|A) Diğer Seçenek~B) Pozitif sapma değişkeni değeri 50'dir.~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|B) Pozitif sapma değişkeni değeri 50'dir.|`,
+    `2025 Final, 2025-2026 Büt|Verilen geçiş matrisine göre 3 adım sonraki periyotta A seçeneğinden A seçeneğine geçme olasılığı aşağıdakilerden hangisidir? (Matris: A->A: 0.6, A->B: 0.4, B->A: 0.3, B->B: 0.7)|A) 0,556~B) 0,583~C) 0,984~D) 0,417~E) 0,444|E) 0,444| Matrisin kendiyle 3 kere çarpılması sonucu A satırı A sütunu elemanıdır.`,
+    `2025 Final|I. Analitik Hiyerarşi Prosesi (AHP) II. TOPSIS III. Hedef Programlama. Hangileri Çok Amaçlı Karar Verme (MODM) yöntemleri arasında sayılabilir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Yalnız III~D) Diğer Seçenek~E) Diğer Seçenek|C) Yalnız III|`,
+    `2025 Final|AHP'de tutarlılık kontrolünde kullanılan parametrelerden hangisi belirli bir formülasyonu olmaksızın tablo değerinin okunması ile belirlenmektedir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Rasgele İndeksi RI~D) Diğer Seçenek~E) Diğer Seçenek|C) Rasgele İndeksi RI|`,
+    `2025 Final, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt|Tedarikçi seçim sürecinde (veya Depo satın alma probleminde) kullanılan kriterlerden hangisi maliyet yönlü olup daha düşük bir skora sahip olduğunda daha yüksek bir fayda sağlar?|A) Depo önü araç park alanı genişliği (m2)~B) Depo alanı (m2)~C) Depo araç yanaşma slot (kapı) adedi~D) Depo satış bedeli (milyon TL)~E) Depo hacmi (m3)|D) Depo satış bedeli (milyon TL)| Alan, hacim, kapı sayısı gibi özelliklerin büyük olması istenirken, maliyet veya fiyatı temsil eden "satış bedeli"nin düşük olması istenir.`,
+    `2025 Final|Bir dual modelin kısıtlarının katsayılarına eşittir?|A) Primal problemin kısıtlarının katsayılarının oluşturduğu matrisin transpozu~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|A) Primal problemin kısıtlarının katsayılarının oluşturduğu matrisin transpozu|`,
+    `2025 Final|(Grafik Sorusu: Z_min=5x+4y) Amaç fonksiyonuna göre optimal çözüm noktası hangisidir?|A) I~B) Diğer Seçenek~C) Diğer Seçenek~D) Diğer Seçenek~E) Diğer Seçenek|A) I|`,
+    `2025 Final|Bir işletmenin üretim hattı için Hedef Programlama modelinde depolama alanının 500m^2'yi aşmaması istenmektedir. Hedef kısıtı nasıl yazılır?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) <= 500~E) Diğer Seçenek|D) <= 500|`,
+    `2025 Final, 2022-2023 Final, 2024-2025 Büt, 2025-2026 Final|Aşağıdakilerden hangisi oyun sınıflandırmasında kullanılan kavramlardan biri değildir?|A) Beklenen Oyun~B) Sıfır Toplamlı Olmayan Oyun~C) Sabit Toplamlı Olmayan Oyun~D) İki Kişilik Oyun~E) Sıfır Toplamlı Oyun|A) Beklenen Oyun| Oyunlar sıfır toplamlı, sabit toplamlı, iki kişilik, n-kişilik gibi türlere ayrılır ancak "beklenen oyun" şeklinde bir sınıflandırma literatürde yoktur.`,
+    `2025 Final, 2024-2025 Büt, 2025-2026 Final|Aşağıdakilerden hangisi Laplace Karar Kriterini açıklayan ifadedir?|A) Belirli sayıda olayın gerçekleşme olasılıklarının bilinmediği kötümser bakış açısı ile alternatiflerin değerlendirilmesi gerektiği varsayımına dayanan karar kriteridir.~B) Belirli sayıda olayın gerçekleşme olasılıklarının bilindiği durumda kullanılan karar kriteridir.~C) Belirli sayıda olayın gerçekleşme olasılıklarının bilinmediği ancak gerçekleşme olasılıklarının birbirine eşit olduğu varsayımına dayanan karar kriteridir~D) Diğer Seçenek~E) Diğer Seçenek|C) Belirli sayıda olayın gerçekleşme olasılıklarının bilinmediği ancak gerçekleşme olasılıklarının birbirine eşit olduğu varsayımına dayanan karar kriteridir| Laplace karar kriteri (eş olasılık kriteri), doğa durumlarının olasılıkları bilinmediğinde, her bir doğa durumunun eşit olasılıkla gerçekleşeceğini varsayar.`,
+    `2025 Final, 2022-2023 Final, 2023-2024 Büt, 2025-2026 Büt|Oyun teorisinde kullanılan aşağıdaki kavramlardan hangisi her bir oyuncunun sahip olduğu eylem seçeneklerini ve kombine edilmiş kararlar dizisini ifade etmektedir? (veya oyunun başından sonuna dek...)|A) Oyun~B) Strateji~C) Kazanç~D) Denge Noktası~E) Beklenen Değer|B) Strateji| Oyuncuların oyun boyunca uygulayacakları hamlelerin veya tercihler dizisinin önceden tasarlanmış bütününe oyun teorisinde "Strateji" denir.`,
+    `2025 Final|Tamsayılı Programlama çözüm yöntemlerinden hangisinde... çözümün tamsayı olmaması durumunda en yakın tamsayıya indirgenir?|A) Diğer Seçenek~B) Diğer Seçenek~C) Diğer Seçenek~D) Yuvarlama Yöntemi~E) Diğer Seçenek|D) Yuvarlama Yöntemi|`,
+    `2024-2025 Vize, 2025-2026 Vize|Z min 2x1+3x2+2x3+4x4+3x5 (Tüm kısıtlar >=) ... Aşağıdakilerden hangisi primal formda verilen doğrusal programlama modelinin dualidir?|A) Z max 6u1+7u2+8u3 (bazı kısıtlar >=)~B) Z min 6u1+7u2+8u3 (tüm kısıtlar >=)~C) Z min 16u1+...~D) Z max 6u1+7u2+8u3 (tüm kısıtlar >=)~E) Z max 6u1+7u2+8u3 (tüm kısıtlar <=)|E) Z max 6u1+7u2+8u3 (tüm kısıtlar <=)| Primal model minimizasyon (Min) yönlü ve kısıtları büyük eşit (>=) ise, dual model maksimizasyon (Max) yönlü ve kısıtları küçük eşit (<=) olmalıdır.`,
+    `2024-2025 Vize|Bir işletmenin üç yatırım seçeneğinden net bugünkü değerini en fazla kılan yatırımı seçmeyi amaçladığı bir karar problemi aşağıdaki Tam Sayılı Programlama modellerinden hangisine uygundur?|A) Dinamik Tamsayılı Progralama~B) Sıfır-Bir Tamsayılı Programlama~C) Kompleks Tamsayılı Programlama~D) Karma Sıfır-Bir Tamsayılı Programlama~E) Karma Tamsayılı Programlama|B) Sıfır-Bir Tamsayılı Programlama| Bir yatırımın seçilip seçilmemesi durumu (evet=1, hayır=0) ikili kararları gerektirir.`,
+    `2024-2025 Vize, 2025-2026 Vize|min Z=8x1+7x2+x3+11x4 (Tüm kısıtlar >=) Yukarıda primal formda verilen doğrusal programlama modelinin duali için aşağıdaki ifadelerden hangisi yanlıştır?|A) Negatif olmama kısıtı dahil toplam 5 kısıtı vardır.~B) Karar değişkeni sayısı 3'tür.~C) Negatif olmama kısıtı dışındaki tüm kısıtlar "<" yönlüdür.~D) Sınırlandırılmamış kısıtları mevcuttur.~E) Amaç fonksiyonu maksimizasyon yönlüdür.|D) Sınırlandırılmamış kısıtları mevcuttur.| Primal modeldeki değişkenlerin hepsi pozitif tanımlı (xj >= 0) olduğu için, dual modelin kısıtları kesin yönlüdür (<=). Dolayısıyla sınırlandırılmamış (serbest) kısıt veya değişken bulunmaz.`,
+    `2024-2025 Vize|Aşağıdaki Belirsizlik Halinde Karar Verme yaklaşımlarından hangisi seçimlerden kaynaklı oluşan fırsat maliyetlerini dikkate alan yaklaşımdır?|A) İyimserlik Kriteri~B) Kötümserlik Kriteri~C) Pişmanlık Kriteri~D) Eş Olasılık Kriteri~E) Hurwicz Kriteri|C) Pişmanlık Kriteri| Pişmanlık (Savage) Kriteri, en iyi kararı vermemiş olmaktan kaynaklanan fırsat kayıplarını bir pişmanlık matrisi oluşturarak minimize etmeyi hedefler.`,
+    `2024-2025 Vize, 2025-2026 Vize|Bir fabrikada üretilen 2 farklı ürünün belirli kısıtlar altında optimal üretim miktarlarını belirlemek üzere incelenen karar problemi aşağıdakilerden hangisi olamaz?|A) Karma Tamsayılı Programlama Problemi~B) Saf Sıfır-Bir Tamsayılı Programlama Problemi~C) Doğrusal Programlama Problemi~D) Tamsayılı Programlama Problemi~E) Saf Tamsayılı Programlama Problemi|B) Saf Sıfır-Bir Tamsayılı Programlama Problemi| Üretim miktarları genellikle tamsayı (adet) veya kesirli (kg, litre) değerler alabilir. Ancak sadece 0 veya 1 (hiç üretme veya sadece 1 birim üret) değerini alan "Saf Sıfır-Bir" modeli, üretim miktarı belirleme problemine uygun değildir.`,
+    `2024-2025 Vize, 2025-2026 Vize|Yukarıda verilen Doğrusal Programlama modeline ait grafikte aşağıdaki kısıtlardan hangisi yer almaz? (Kritik x1 noktaları: 1, 4, 5)|A) x2<=6~B) x1>=6~C) x1>=1~D) -x1+2x2>=6~E) x1+2x2>=12|B) x1>=6| Grafikte x1 ekseni üzerindeki kritik noktalar 1, 4, 5 şeklindedir. x1 ekseninde 6 noktasını kesen ve oradan büyük olan bir kısıt doğrusu (x1 >= 6) grafikte bulunmamaktadır.`,
+    `2024-2025 Vize, 2025-2026 Final|Z max x1+2x2+3x3+4x4 (3 adet <= kısıt var) ... Aşağıdakilerden hangisi primal formda verilen doğrusal programlama modelinin dual kısıtlarından biri değildir?|A) 4u1+2u2+u3 >= 3~B) 4u1+u2+2u3 >= 1~C) 3u1+2u2+4u3 >= 2~D) -u1+3u2+5u3 >= 4~E) 2u1+4u2+u3 >= 3|E) 2u1+4u2+u3 >= 3| Dual kısıtlar, primal modelin sütunlarındaki katsayıların transpozu alınarak oluşturulur.`,
+    `2024-2025 Vize|Z max 2x1+5x2 (x1+3x2<=6, 2x1+5x2<=10, x1+x2>=2) ... Aşağıdakilerden hangisi Primal formda verilen Doğrusal Programlama modelinin dualidir?|A) Z min 6u1+10u2-2u3 (u1+2u2-u3>=2, 3u1+5u2-u3>=5)~B) Z max...~C) Z max...~D) Z min 6u1+10u2+2u3...~E) Z min 16u1...|A) Z min 6u1+10u2-2u3 (u1+2u2-u3>=2, 3u1+5u2-u3>=5)| Maksimizasyon modelinin duali minimizasyondur.`,
+    `2024-2025 Vize, 2025-2026 Vize, 2023-2024 Final|Aşağıdakilerden hangisi yöneylem araştırmasında kullanılan modellerden biri değildir?|A) Hedef Programlama~B) Karar Analizi~C) Doğrusal Programlama~D) Simülasyon~E) Zaman Serileri Analizi|E) Zaman Serileri Analizi| Yöneylem Araştırması optimizasyon ve karar modelleri kullanır. Zaman Serileri Analizi ise daha çok istatistik ve ekonometrinin çalışma alanıdır.`,
+    `2024-2025 Vize|Aşağıdaki hangisi bir doğrusal programlama modelinde değişkenlerin kesirli/ondalıklı değerler almasına izin verilmediği durumda kullanılan yöntemdir?|A) Tam Sayılı Programlama~B) Doğrusal Olmayan Programlama~C) Dinamik Programlama~D) Hedef Programlama~E) Kuadratik Programlama|A) Tam Sayılı Programlama| Değişkenlerin doğası gereği bölünemediği (insan, makine sayısı vb.) durumlarda sürekli (kesirli) çözümler yerine tamsayılar arayan yaklaşıma Tam Sayılı Programlama denir.`,
+    `2024-2025 Vize, Dosya 2, 2025-2026 Büt|Aşağıdakilerden hangisi bir modelde kare, küp gibi üslü ifadeler ile temsil edilen değişkenlerin yer alması durumunda ihlal edilen Doğrusal Programlama varsayımıdır?|A) Değişkenler arasında kurulan bağıntılar doğrusal olmalıdır.~B) Karar değişkenlerinin sıfır ya da pozitif olması gerekir.~C) Değişkenler kantitatif olmalıdır.~D) Kullanılacak kaynaklar sınırlı olmalıdır.~E) Değişkenler kendi aralarında ilişkili olmalıdır.|A) Değişkenler arasında kurulan bağıntılar doğrusal olmalıdır.| Doğrusal Programlama (Linear Programming) sadece 1. dereceden denklemleri kabul eder. Kare, küp gibi üslü ifadeler doğrusallık varsayımını bozar.`,
+    `2024-2025 Vize, 2025-2026 Vize|Aşağıdakilerden hangisi Doğrusal Programlama modelinde yer alan Zmaks 3x1+2x2 amaç fonksiyonun eğimidir?|A) 2/3~B) -2/3~C) 3/2~D) -3~E) -3/2|E) -3/2| 3x1 + 2x2 = C doğrusunun eğimini bulmak için x2 yalnız bırakılır: 2x2 = -3x1 + C => x2 = (-3/2)x1 + C/2. Eğimi m = -3/2'dir.`,
+    `2024-2025 Vize, 2025-2026 Vize|Aşağıdakilerden hangisi Sıfır-Bir Tamsayılı Programlama problemine örnek gösterilemez?|A) Satış bölgelerine kişilerin tayini~B) İşlerin kişilere atanması~C) Araçların depolarla eşleştirilmesi~D) Kişilerin makinelere atanması~E) Satış miktarlarının belirlenmesi|E) Satış miktarlarının belirlenmesi| Atama, eşleştirme ve tayin problemleri karar değişkenlerinin 0 veya 1 değerini aldığı modellere uygundur. Ancak satış miktarları sürekli veya genel tamsayılardan oluşur, 0-1 şeklinde değerlendirilemez.`,
+    `2025-2026 Vize|Aşağıdakilerden hangisi gerçek hayattan kaynaklanan ve çoğunlukla sınırlı kaynakların paylaştırıldığı deterministik ve olasılıklı problemlerin modellenmesi ve optimal kararın verilmesi ile ilgilenen bilimsel yöntemler bütünüdür?|A) Yöneylem Araştırması~B) Ekonometri~C) Nitel Araştırma~D) İktisat~E) Pazarlama|A) Yöneylem Araştırması| Yöneylem Araştırması, gerçek hayattaki karmaşık problemlerin bilimsel ve matematiksel yöntemlerle modellenerek optimum (en iyi) çözümün bulunmasını sağlayan disiplindir.`,
+    `2025-2026 Vize|Yukarıda verilen Doğrusal Programlama modeline ait grafikte renkli alanı oluşturan kısıt seti aşağıdakilerden hangisidir? (Eksen kesişimleri x1: 2, 4 ve x2: 4, 6)|A) 3x1+2x2<=4, 2x1+x2>=12~B) 2x1+3x2>=4, 2x1+x2>=12~C) 3x1+2x2<=12, x1+2x2>=4~D) 2x1+3x2<=12, 2x1+x2>=4~E) 3x1+2x2<=12, 2x1+x2>4|E) 3x1+2x2<=12, 2x1+x2>4| Grafikteki iki doğrunun eksenleri kestiği noktalar (4,0)-(0,6) ve (2,0)-(0,4)'tür. Bunların denklemleri sırasıyla 3x1+2x2=12 ve 2x1+x2=4'tür.`,
+    `2025-2026 Vize|Aşağıdakilerden hangisi Yöneylem Araştırmasının ülkemizde ilk dönem çalışmalarında kullanılan ismidir?|A) Sistem Analizi~B) Yönetim Araştırmaları~C) Harekât Araştırması~D) Faaliyet Araştırmaları~E) Simülasyon Analizi|C) Harekât Araştırması| Yöneylem Araştırması (Operations Research), Türkiye'ye ilk girdiğinde askeri kökenli olmasının da etkisiyle "Harekât Araştırması" olarak isimlendirilmiştir.`,
+    `2022-2023 Final, 2025-2026 Vize|Aşağıdakilerden hangisi amaçların gerçekleştirilmesi yönünde alternatifler arasından birini seçme işidir?|A) Eleme~B) Rassal Seçim~C) Çözümleme~D) Karar Verme~E) Sıralama|D) Karar Verme| Belirli bir amaca veya amaçlar bütününe ulaşmak için mevcut alternatifler (seçenekler) arasından en uygun olanını seçme sürecine "Karar Verme" denir.`,
+    `2022-2023 Final, 2025-2026 Vize, 2023-2024 Final, 2024-2025 Büt, 2025-2026 Final|Bir fabrikada işlerin makinelere dağıtılması probleminin çözümünde kullanılacak en uygun karar modeli aşağıdakilerden hangisidir?|A) Hedef Programlama~B) Doğrusal Olmayan Programlama~C) Tamsayılı Programlama~D) Dinamik Programlama~E) Doğrusal Programlama|C) Tamsayılı Programlama| İşlerin makinelere atanması/dağıtılması işlemi, değişkenlerin 0 veya 1 değerini aldığı Sıfır-Bir Tamsayılı Programlama (Tamsayılı Programlamanın alt dalı) problemleridir.`,
+    `Genel Sınav Havuzu, 2022-2023 Final, 2023-2024 Final, 2024-2025 Büt|Markov analizinde kullanılan aşağıdaki kavramlardan hangisi bir sistemin olası tüm durumlarını içeren kümeyi ifade etmektedir?|A) Durum~B) Stokastik süreç~C) Başlangıç olasılıkları~D) Durum uzayı~E) Ergodik matris|D) Durum uzayı| Bir sistemde gerçekleşebilecek tüm olası durumların oluşturduğu kümeye durum uzayı adı verilir.`,
+    `Genel Sınav Havuzu, 2023-2024 Final|Analitik Hiyerarşi Prosesi'nde karar vericinin karşılaştırmalarının tutarlı olup olmadığının göstergesi olarak hesaplanan Tutarlık Oranı (CR) aşağıdaki hangi değerin üzerinde olmamalıdır?|A) 0,20~B) 0,25~C) 1~D) 0,10~E) 0,15|D) 0,10| AHP'de tutarlılık oranının (CR) 0.10 (%10) veya daha küçük olması, yapılan ikili karşılaştırmaların tutarlı kabul edilmesi için yeterlidir.`,
+    `Dosya 3, 2022-2023 Final, 2023-2024 Final, 2025-2026 Büt|Çok amaçlı karar verme yöntemleri içinde en sık kullanılan "Hedef Programlama Yöntemi" ile ilgili olarak aşağıdaki ifadelerden hangisi yanlıştır?|A) Hedef programlama modeli amaç fonksiyonunda karar değişkenleri yer almaz.~B) Hedef programlama modelinde birden fazla amaç için hedef değerleri belirlenir ve bu hedeflerin hepsi modele alınır.~C) Doğrusal programlama modelinde tek bir amaç en iyilenmeye çalışılır.~D) Hedef programlamada amaç fonksiyonu sadece maksimizasyon şeklindedir.~E) Doğrusal programlamada amaç en iyi çözümü elde etmek iken, doğrusal hedef programlamada amaç mümkün olduğunca en iyi çözümü elde etmektir.|D) Hedef programlamada amaç fonksiyonu sadece maksimizasyon şeklindedir.| Hedef programlamada amaç; hedeflerden sapmaları minimize etmektir. Dolayısıyla amaç fonksiyonu her zaman minimizasyon (Min) yönlüdür.`,
+    `2023-2024 Final|Dualite ile ilgili aşağıdaki ifadelerden hangisi yanlıştır?|A) Tüm primal modellerin dualleri alınarak grafik yöntem ile çözülebilir.~B) Dual problemin değişkenlerinin değerleri bulunduğu zaman, primal problemle olan ilişkisi yorumlanabilir.~C) Bir dual problemin duali alınırsa, tekrar primal problem elde edilir.~D) Dualite kavramı kullanılarak duyarlılık analizinde işlemlerde kolaylık sağlanabilir.~E) Doğrusal programlama problemlerinde önemli bir yere sahip olan duyarlılık analizinde dualite kavramı yer bulmaktadır.|A) Tüm primal modellerin dualleri alınarak grafik yöntem ile çözülebilir.| Grafik yöntem sadece iki (istisnai durumda üç) değişkenli problemler için çizilebilir.`,
+    `2023-2024 Final|Aşağıdakilerden hangisi yukarıda verilen doğrusal programlama modeli grafik gösteriminde gri renkli uygun çözüm alanının sınırlarını temsil etmektedir?|A) AOBC~B) AOCB~C) OBAC~D) OBCA~E) YOXB|B) AOCB| Orijinden (O) başlayıp sırasıyla A, C ve B köşe noktalarını çevreleyen kapalı çokgen alanı (AOCB) çözüm uzayını temsil eder.`,
+    `2022-2023 Final, 2023-2024 Final, 2024-2025 Büt, 2025-2026 Final|Oyun teorisinde kullanılan aşağıdaki kavramlardan hangisi her oyuncunun rasyonel olarak hareket ettikleri varsayımı altında, oyuncuların oyun bitimi sonucunda ulaştıkları noktayı ifade eder?|A) Beklenen değer~B) Strateji~C) Denge noktası~D) Ödemeler~E) Ödemeler matrisi|C) Denge noktası| Oyuncuların tek taraflı strateji değiştirerek kazançlarını artıramayacakları, rasyonel kararlar sonucu ulaşılan istikrar noktasına denge noktası (Nash dengesi) denir.`,
+    `2023-2024 Final|Aşağıdaki Çok Nitelikli Karar Verme yöntemlerinden hangisi kriter ve alternatiflerin ikili karşılaştırmalar esasına göre analiz edildiği yöntemdir?|A) COPRAS~B) AHP~C) VIKOR~D) TOPSIS~E) PROMETHEE|B) AHP| Analitik Hiyerarşi Prosesi (AHP) yönteminin temeli, kriterlerin ve alternatiflerin Saaty'nin 1-9 ölçeği kullanılarak ikili karşılaştırma matrisleri ile değerlendirilmesidir.`,
+    `2023-2024 Final|Verilen geçiş matrisine göre bir sonraki periyotta A seçeneğinden B seçeneğine geçme olasılığı aşağıdakilerden hangisidir?|A) 0,60~B) 0,40~C) 1,00~D) 0,70~E) 0,30|B) 0,40| Matriste A satırı ve B sütununun kesiştiği değer, bir adımdaki (sonraki periyottaki) A'dan B'ye geçiş olasılığıdır ve tabloda 0,4 olarak verilmiştir.`,
+    `2023-2024 Büt|Aşağıdakilerden hangisi bir oyunun tepe noktasını gösteren kavramdır?|A) Başabaş noktası~B) Dengeleme noktası~C) Beklenen Değer~D) Eyer noktası~E) Eğer noktası|D) Eyer noktası| Oyun teorisinde, bir oyuncunun maksimin değeri ile diğer oyuncunun minimaks değerinin birbirine eşit olduğu denge noktasına "Eyer (Tepe) Noktası" denir.`,
+    `2023-2024 Büt|Aşağıdaki olaylardan hangisi yöneylem araştırmasının başlangıcına dayanak gösterilen olaydır?|A) Fransız İhtilali~B) Rönesans~C) Ekim (Sovyet) Devrimi~D) İkinci Dünya Savaşı~E) Sanayi Devrimi|D) İkinci Dünya Savaşı| Yöneylem Araştırması, İkinci Dünya Savaşı sırasında kısıtlı askeri kaynakların en verimli şekilde kullanılabilmesi için yürüttüğü çalışmalarla (harekât araştırması) başlamıştır.`,
+    `2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final|Markov analizinde sistemin "t=0" (veya "f=0") zamanında "i" durumunda bulunma olasılığına karşılık gelen ifade aşağıdakilerden hangisidir?|A) Markov zinciri~B) Başlangıç olasılığı~C) Durum uzayı~D) Geçiş olasılığı~E) Yutan Markov Zinciri|B) Başlangıç olasılığı| Markov analizinde t=0 (sıfırıncı an veya başlangıç anı), sürecin başladığı andır. Bu andaki duruma ilişkin ihtimallere başlangıç (initial) olasılıkları denir.`,
+    `Dosya 2, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final|Bir Hedef Programlama modelinde yer alan kısıta ait pozitif ve negatif sapmaların olmaması istendiğinde kısıtın temsil edileceği eşitlik durumu aşağıdakilerden hangisidir?|A) >= (Büyük Eşittir)~B) > (Büyüktür)~C) <= (Küçük Eşittir)~D) = (Eşittir)~E) < (Küçüktür)|D) = (Eşittir)| Sapma olmaması (d+ = 0 ve d- = 0), hedefin tam olarak tutturulması anlamına gelir. Bu nedenle model kısıtı kesin eşitlik (=) ile ifade edilir.`,
+    `2023-2024 Büt, 2024-2025 Büt|I. Doğrusal olmama II. Oransallık III. Toplanabilirlik Yukarıda verilen kavramlardan hangisi ya da hangileri Hedef Programlamanın varsayımlarından değildir?|A) I ve II~B) I ve III~C) I, II ve III~D) II ve III~E) Yalnız I|E) Yalnız I| Hedef Programlama, Doğrusal Programlamanın bir uzantısıdır. Dolayısıyla orantısallık (doğrusallık) ve toplanabilirlik varsayımları geçerlidir. "Doğrusal olmama" bu varsayımlara aykırıdır.`,
+    `2023-2024 Büt|Aşağıdakilerden hangisi "Bir iş veya sorun hakkında düşünülerek verilen kesin yargı" anlamına gelen kavramdır?|A) Olay~B) Kriter~C) Alternatif~D) Hedef~E) Karar|E) Karar| Alternatifler arasından bir değerlendirme (düşünme) süreci sonucunda varılan kesin yargı ve seçime "Karar" adı verilir.`,
+    `Dosya 2, 2023-2024 Büt|Aşağıda Hedef Programlama Modelleri ile ilgili verilen ifadelerden hangisi yanlıştır?|A) Negatif sapma değişkenleri 0 ya da negatif değerler alır.~B) Hedef Programlama Modelinde yer alan sistem kısıtları tam olarak sağlanması gereken ve sapmaya izin verilmeyen kısıtlardır.~C) Hedef programlamada amaç istenmeyen sapmaların minimize edilmesidir.~D) Negatif ve pozitif sapma değişkenlerinden biri daima sıfır değerini alır.~E) Pozitif sapma değişkenleri 0 ya da pozitif değerler alır.|A) Negatif sapma değişkenleri 0 ya da negatif değerler alır.| Doğrusal programlama varsayımları gereği tüm karar ve sapma değişkenleri pozitif tanımlıdır. Negatif sapma (d-) mutlak bir değer olduğu için kendisi negatif bir sayı olamaz (d- >= 0).`,
+    `2023-2024 Büt, 2024-2025 Büt|Aşağıdaki ifadelerden hangisi Markov özelliğini tanımlar?|A) Bir durumdan diğer duruma geçişin sistemin daha önceki durumlarına bağlı olması~B) Bir sistemin aynı anda iki durumda olamaması~C) Durumlar arası geçiş için geçiş olasılıklarının bulunmaması~D) Sonraki durumların belirlenebilmesi için halihazırdaki durum haricinde daha önceki durumların bilinmesine gerek olmaması~E) Bir sistemin olası tüm durumlarını içeren durum uzayına sahip olması|D) Sonraki durumların belirlenebilmesi için halihazırdaki durum haricinde daha önceki durumların bilinmesine gerek olmaması| Markov zincirlerinin en temel özelliği "hafızasızlık" (memoryless) özelliğidir. Gelecekteki durum, geçmişe değil sadece şu anki (mevcut) duruma bağlıdır.`,
+    `2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final|Doğrusal Programlama Modelinde amaç fonksiyonu, kâr ya da maliyet optimizasyonuna yönelik düzenlenmiş olabilir. Bu fonksiyona genel anlamda aşağıdakilerden hangisi ile tarif edilir?|A) Doğrusal Optimizasyon~B) Hedef Arama~C) Minimizasyon~D) Maksimizasyon~E) Fayda Optimizasyonu|E) Fayda Optimizasyonu| Amaç fonksiyonu, maliyeti en aza indirme veya kârı en yükseğe çıkarma çabasını matematiksel olarak modeller; bunların tamamı sistemin genel "faydasını" maksimize etme (Fayda Optimizasyonu) mantığına dayanır.`,
+    `2023-2024 Büt|maks X1-X2+3X3 (kısıtlar: X1+X2+X3<=5, 2X1-X2-X3<=3, 2X1-2X2-3X3<=4) Aşağıdakilerden hangisi verilen primal modelin dual amaç fonksiyonudur?|A) min 5U1+3U2+4U3~B) min 5U1-3U2+4U3~C) maks 5U1-3U2+4U2~D) min U1-U2+3U3~E) maks 5U1+3U2+4U3|A) min 5U1+3U2+4U3| Primal model maksimizasyon olduğu için duali minimizasyon (min) olur. Primal kısıtların sağ taraf sabitleri (5, 3 ve 4), dual modelin amaç fonksiyonundaki katsayılar (5U1, 3U2, 4U3) haline gelir.`,
+    `2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final|Analitik Hiyerarşi Prosesi ile incelenen bir karar probleminde 3x3 boyutlu ikili karşılaştırmalar matrisi oluşturulmuş ve lambda_max değeri 3,5 olarak hesaplanmıştır. Yukarıda verilen bilgiye göre Tutarlılık Indeksi (CI) değeri kaçtır?|A) 1~B) 1,25~C) 0,025~D) 3~E) 0,25|E) 0,25| Tutarlılık İndeksi (CI) formülü: (lambda_max - n) / (n - 1) şeklindedir. Verilenler: lambda_max = 3.5, n = 3 (matris boyutu). CI = (3.5 - 3) / (3 - 1) = 0.5 / 2 = 0.25 olarak bulunur.`,
+    `Dosya 3, 2023-2024 Büt|Aşağıdakilerden hangisi çok kriterli karar verme yöntemleri kullanılarak alınan bir kararın incelenmesinde kullanılan analizdir?|A) Verimlilik analizi~B) Etkinlik analizi~C) Duyarlılık analizi~D) Geçerlilik analizi~E) Güvenirlik analizi|C) Duyarlılık analizi| Karar modelinin çözülmesinin ardından, parametrelerde yapılacak ufak değişikliklerin sonucun istikrarını ne derece değiştirdiğini (kararın direncini) ölçmek için "Duyarlılık Analizi" yapılır.`,
+    `2022-2023 Büt, 2024-2025 Vize, 2023-2024 Büt|Aşağıdakilerden hangisi bölünebilirlik varsayımını karşılamayan değişkenlerden oluşan bir karar modelinin çözümünde kullanılan yöntemdir?|A) Doğrusal Olmayan Programlama~B) Hedef Programlama~C) Tam Sayılı Programlama~D) Doğrusal Programlama~E) Dinamik Programlama|C) Tam Sayılı Programlama| Karar değişkenlerinin niteliği gereği virgüllü / kesirli (bölünebilir) değerler alamadığı (1.5 insan olamaz) durumlarda Doğrusal Programlamaya ek olarak tamsayı kısıtı getiren Tam Sayılı Programlama kullanılır.`,
+    `2023-2024 Büt, 2025-2026 Büt|Aşağıdakilerden hangisi mevcut olasılıkları kullanarak, gelecekteki durum olasılıklarını hesaplamada kullanılan modelleme ve analiz tekniği olarak tanımlanabilir?|A) Doğrusal Programlama~B) Markov Analizi~C) Çok Kriterli Karar Verme~D) Oyun Teorisi~E) Hedef Programlama|B) Markov Analizi| Bir sistemin içinde bulunduğu güncel durumu baz alarak sistemin sonraki periyotlardaki / gelecekteki durumlarını istatistiksel ve olasılıksal olarak tahmin etmeye yarayan yöntem Markov analizidir.`,
+    `2024-2025 Büt|I. Ölçütler II. Doğa Durumu Olasılıkları III. Düğümler IV. Karar noktaları Yukarıda verilen öğelerden hangisi ya da hangileri karar ağacı üzerinde gösterilmektedir?|A) II, III ve IV~B) I, II ve III~C) II ve IV~D) I, III ve IV~E) I, II ve IV|A) II, III ve IV| Karar ağaçlarında karar noktaları (kare düğümler), doğa durumu olasılıkları (daire düğümler/şans düğümleri) ve düğümler arası dallar bulunur. Ölçütler ise ÇNKV (Çok Nitelikli Karar Verme) modellerine ait bir kavramdır.`,
+    `2024-2025 Büt|x1, x2, x3 karar değişkenlerinden oluşan bir modelde yer alan aşağıdaki kısıtlardan hangisi modelin tam sayılı programlama modeli olarak anılması için yeterli değildir?|A) x1, x2>=0, x3 tamsayı~B) x1, x2 tamsayı, x3=0 yada 1~C) x1, x2, x3>=0~D) x1, x2, x3 tamsayı~E) x1, x2, x3=0 yada 1|C) x1, x2, x3>=0| x1, x2, x3 >= 0 kısıtı yalnızca negatif olmama varsayımıdır ve Doğrusal Programlama modelleri için geçerlidir. Tamsayılı model olabilmesi için değişkenlerin tamsayı (veya 0-1) olması gerektiği özel olarak belirtilmelidir.`,
+    `2024-2025 Büt|Aşağıdakilerden hangisi bir Çok Kriterli Karar Verme probleminde kriterlerin önem derecelerini ifade eden kavramdır?|A) Maliyet~B) Fayda~C) Ön değerlendirme~D) Uzunluk~E) Ağırlık|E) Ağırlık| Çok kriterli karar verme (ÇNKV) yöntemlerinde, kriterlerin birbirlerine göre sahip oldukları nispi (göreceli) önem derecelerine "Ağırlık" denir (örneğin AHP ile bulunan kriter ağırlıkları).`,
+    `2024-2025 Büt, 2025-2026 Final|Bir Hedef Programlama modelinde yer alan işgücü kullanımı tam olarak 40 saat belirlenmiştir. Buna göre aşağıdaki ifadelerden en doğrusu hangisidir?|A) İşgücü kullanımında hem pozitif hem de negatif yönlü sapma istenmemektedir.~B) İşgücü kullanımında pozitif yönlü sapma istenmemektedir.~C) İşgücü kullanımı hedef kısıtı > formunda yazılmalıdır.~D) İşgücü kullanımında negatif yönlü sapma istenmemektedir.~E) İşgücü kullanımı hedef kısıtı >= formunda yazılmalıdır.|A) İşgücü kullanımında hem pozitif hem de negatif yönlü sapma istenmemektedir.| Hedefin "tam olarak" (ne az ne fazla, sapmasız) tutturulması istendiğinde, hedefin altında kalınması (negatif sapma, d-) veya hedefin aşılması (pozitif sapma, d+) istenmeyen durumlardır.`,
+    `2024-2025 Büt|Z max 2x1+4x2+3x3+x4 (kısıtlar: 1x1+2x2+5x3+3x4<=8, 2x1+1x2+4x3+2x4<=9, 3x1+3x2+2x3+5x4<=21, 4x1+4x2+x3+3x4<=18) Aşağıdakilerden hangisi primal formda verilen Doğrusal Programlama modelinin dualine ait amaç fonksiyonudur?|A) Z min 2y1+4y2+3y3+y4~B) Z min 8y1+9y2+21y3+18y4~C) Z min y1+2y2+3y3+4y4~D) Z min 3y1+2y2+5y3+3y4~E) Z min 5y1+4y2+2y3+y4|B) Z min 8y1+9y2+21y3+18y4| Primal maksimizasyon (max) olduğu için dual minimizasyon (min) olur. Primal kısıtların sağ taraf sabitleri (8, 9, 21, 18), dual amaç fonksiyonunun katsayıları (y değişkenleriyle birlikte) haline gelir.`,
+    `2024-2025 Büt|Aşağıdakilerden hangisi "bir oyunda amaçlarını optimize etmeye çalışan kişi ya da kurumlar" olarak tanımlanmaktadır?|A) Oyuncular~B) Yönetim~C) Ödemeler~D) Kazanç~E) Strateji|A) Oyuncular| Oyun teorisinde kararlar vererek kazancını maksimize etmeye veya kaybını minimize etmeye çalışan rasyonel karar vericilere "oyuncu" denir.`,
+    `2024-2025 Büt|3x+2y<=12 kısıtı kartezyen düzlemde gösterildiği durumda doğrunun y eksenini kestiği nokta aşağıdakilerden hangisidir?|A) 12~B) 2~C) 4~D) 3~E) 6|E) 6| Bir doğrunun y eksenini kestiği noktayı bulmak için x'e 0 (sıfır) değeri verilir. 3(0) + 2y = 12 denkleminden 2y = 12 ve y = 6 sonucu elde edilir.`,
+    `2025 Final, 2024-2025 Büt|Bir hedef programlama modelinde, X hammaddesi kullanımının en fazla 300 birim olarak belirlendiği bir hedefe ilişkin çözüm sonucunda, X hammaddesi kullanımının 320 birim olarak gerçekleşmiş olduğu saptanmıştır. Hedef Programlama modelinin çözümüne göre aşağıdakilerden hangisi kesinlikle doğrudur?|A) Pozitif yönlü sapma 20 birimdir.~B) Negatif yönlü sapma -20 birimdir.~C) Negatif yönlü sapma 20 birimdir.~D) Pozitif yönlü sapma -20 birimdir.~E) Pozitif yönlü sapma değeri O'dır.|A) Pozitif yönlü sapma 20 birimdir.| Hedeflenen 300 birim, gerçekleşen ise 320 birimdir. 320 - 300 = +20 birimlik bir hedef aşımı vardır ve bu durum pozitif sapma (d+) ile ifade edilir.`,
+    `2024-2025 Büt, 2025-2026 Büt|I. Bağımsızlık II. Bağımlılık III. Homojenlik Yukarıda verilen kavramlardan hangisi ya da hangileri Analitik Hiyerarşi Prosesinin aksiyomlarındandır?|A) I ve III~B) I, II ve III~C) II~D) I ve II~E) II ve III|A) I ve III| AHP'nin temel aksiyomları arasında Bağımsızlık (kriterlerin ve alternatiflerin yapı içinde bağımsız değerlendirilmesi) ve Homojenlik (karşılaştırılan elemanların büyüklüklerinin aşırı orantısız olmaması) bulunur.`,
+    `2024-2025 Büt|Aşağıdakiler Yöneylem Araştırmasında kullanılan tekniklerden hangisi optimizasyon tekniklerinden herhangi birisiyle çözülemeyecek kadar karmaşık yapıdaki modellerde, optimal çözüm yerine yaklaşık bir çözüm elde etmek için geliştirilmiş teknikleri ifade etmektedir?|A) Analitik Teknikler~B) Sayısal Teknikler~C) Sezgisel Teknikler~D) Olasılıksal Teknikler~E) Oyun Teorisi|C) Sezgisel Teknikler| Klasik optimizasyon yöntemlerinin (matematiksel analitik) çözemeyeceği kadar karmaşık/büyük problemlerde, kabul edilebilir makul bir sürede "yeterince iyi" veya "yaklaşık" çözüm veren yöntemlere "Sezgisel (Heuristic) Teknikler" denir.`,
+    `Dosya 2, 2024-2025 Büt, 2025-2026 Final|Bir oyunda ödemeler matrisindeki A stratejisi, B stratejisi ile karşılaştırıldığında, A stratejisinin B stratejisine bire bir karşılık gelen her değerinde daha üstün olduğu görülmüştür. Bu oyuna ilişkin aşağıda verilen ifadelerden hangisi yanlıştır?|A) B stratejisi kendisinden her açıdan daha üstün bir strateji olduğu için oyuncu tarafından asla seçilmeyecektir.~B) Baskınlık kuralı kullanılarak ödemeler matrisinin boyutu azaltılır.~C) A stratejisi ödemeler matrisinden silinebilir.~D) B stratejisi ödemeler matrisinden silinebilir.~E) A stratejisine üstün (baskın) strateji denir.|C) A stratejisi ödemeler matrisinden silinebilir.| Baskınlık (dominance) kuralında, oyuncu her zaman kendisi için daha üstün (baskın) olan stratejiyi seçer ve zayıf (baskın olunan) strateji matristen silinir. A stratejisi daha üstün (baskın) olduğuna göre silinecek olan A değil, zayıf olan B stratejisidir.`,
+    `2023-2024 Vize, 2025-2026 Büt|Aşağıdakilerden hangisi Yöneylem Araştırmasını matematik, istatistik, mühendislik ve bilgisayar bilimi gibi farklı disiplinler arasında konumlandıran yaklaşımdır?|A) Bilimsel Yöntem Yaklaşımı~B) Sistem Yaklaşımı~C) Kapsayıcı Yaklaşım~D) Bütünleşik Yaklaşım~E) Disiplinlerarası Yaklaşım|E) Disiplinlerarası Yaklaşım| Yöneylem araştırması, karmaşık problemleri çözmek için matematik, istatistik, mühendislik, vb. birçok farklı bilimin tekniklerini bir arada kullandığı için "Disiplinlerarası Yaklaşım" sergiler.`,
+]; 
+
+  // --- BURADAN İTİBAREN KOPYALAYIN ---
+    let isAllOpen = false;
+    let temizlenmisData = []; // Birleştirilmiş verileri global tutalım ki arama/filtreleme yapabilelim
+
+    // 1. SORULARI BİRLEŞTİREN FONKSİYON
+    function sorulariBirlestir(dataArray) {
+        const soruMap = new Map();
+
+        dataArray.forEach(item => {
+            if (!item || item.trim() === '') return;
+            
+            const parts = item.split('|');
+            if (parts.length < 4) return; 
+            
+            let tagsRaw = parts[0];
+            const question = parts[1].trim(); 
+            const options = parts[2];
+            const correctAnswer = parts[3];
+            const explanation = parts[4] ? parts[4] : '';
+
+            let tagsList = tagsRaw.split(',').map(t => t.trim());
+            let mevcutSayi = 1;
+
+            tagsList = tagsList.filter(t => {
+                const match = t.match(/(\d+)\s*Kez Çıktı/i);
+                if (match) {
+                    mevcutSayi = parseInt(match[1]);
+                    return false; 
+                }
+                return true;
+            });
+
+            if (soruMap.has(question)) {
+                let kayit = soruMap.get(question);
+                kayit.count += mevcutSayi; 
+                
+                tagsList.forEach(t => {
+                    if (!kayit.tags.includes(t)) {
+                        kayit.tags.push(t);
+                    }
+                });
+            } else {
+                soruMap.set(question, {
+                    tags: tagsList,
+                    options: options,
+                    correctAnswer: correctAnswer,
+                    explanation: explanation,
+                    count: mevcutSayi
+                });
+            }
+        });
+
+        const birlestirilmisData = [];
+        for (let [qText, data] of soruMap.entries()) {
+            let finalTags = [...data.tags];
+            if (data.count > 1) {
+                finalTags.push(`${data.count} Kez Çıktı!`);
+            }
+            
+            const itemString = `${finalTags.join(',')}|${qText}|${data.options}|${data.correctAnswer}|${data.explanation}`;
+            birlestirilmisData.push(itemString);
+        }
+
+        return birlestirilmisData;
+    }
+
+   // 2. EKRANA BASTIRMA FONKSİYONU (Renklendirme Geliştirilmiş Versiyon)
+    function renderQuestions(data) {
+        const container = document.getElementById('q-container');
+        container.innerHTML = '';
+        
+        if(data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px;">Kriterlerinize uygun soru bulunamadı.</p>';
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const parts = item.split('|');
+            const tagsRaw = parts[0];
+            const question = parts[1];
+            const options = parts[2].split('~');
+            const correctAnswer = parts[3];
+            const explanation = parts[4] || '';
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const tagsDiv = document.createElement('div');
+            tagsDiv.className = 'tags';
+            
+            tagsRaw.split(',').forEach(tag => {
+                tag = tag.trim();
+                if(!tag) return;
+                const span = document.createElement('span');
+                span.className = 'tag';
+                
+                let lowerTag = tag.toLowerCase();
+                if(lowerTag.includes('ünite') || lowerTag.match(/^u\d+/)) {
+                    span.classList.add('tag-u');
+                } else if(lowerTag.includes('banko') || lowerTag.includes('kez çıktı')) {
+                    span.classList.add('tag-h');
+                } else {
+                    span.classList.add('tag-e');
+                }
+                
+                span.textContent = tag;
+                tagsDiv.appendChild(span);
+            });
+
+            const qDiv = document.createElement('div');
+            qDiv.className = 'q-text';
+            qDiv.textContent = (index + 1) + ". " + question;
+
+            const optUl = document.createElement('ul');
+            optUl.className = 'opt';
+            
+            options.forEach(opt => {
+                const li = document.createElement('li');
+                li.textContent = opt;
+                li.onclick = function() {
+                    // Önce bu sorudaki tüm şıkları varsayılan (gri) haline getirerek sıfırla
+                    Array.from(optUl.children).forEach(child => {
+                        child.style.backgroundColor = '#f8f9fa';
+                        child.style.borderColor = 'var(--b)';
+                        child.style.color = 'var(--t)';
+                        child.style.fontWeight = 'normal';
+                    });
+                    
+                    // Cevap kontrolü
+                    if(opt.trim() === correctAnswer.trim()) {
+                        // DOĞRU ŞIKKA TIKLANDIYSA: Canlı Yeşil Yap
+                        this.style.backgroundColor = '#d4edda';
+                        this.style.borderColor = '#28a745';
+                        this.style.color = '#155724';
+                        this.style.fontWeight = 'bold';
+                    } else {
+                        // YANLIŞ ŞIKKA TIKLANDIYSA: Canlı Kırmızı Yap
+                        this.style.backgroundColor = '#f8d7da';
+                        this.style.borderColor = '#dc3545';
+                        this.style.color = '#721c24';
+                        this.style.fontWeight = 'bold';
+                        
+                        // KULLANICIYA YARDIM: Aynı esnada doğru olan şıkkı da otomatik yeşile boya
+                        Array.from(optUl.children).forEach(child => {
+                            if(child.textContent.trim() === correctAnswer.trim()) {
+                                child.style.backgroundColor = '#d4edda';
+                                child.style.borderColor = '#28a745';
+                                child.style.color = '#155724';
+                                child.style.fontWeight = 'bold';
+                            }
+                        });
+                    }
+                };
+                optUl.appendChild(li);
+            });
+
+            const btn = document.createElement('button');
+            btn.className = 'ans-btn';
+            btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster';
+            
+            const ansBox = document.createElement('div');
+            ansBox.className = 'ans-box';
+            ansBox.style.display = isAllOpen ? 'block' : 'none';
+            ansBox.innerHTML = `<div class="ans-true">Cevap: ${correctAnswer}</div>${explanation ? `<div><em>Açıklama:</em> ${explanation}</div>` : ''}`;
+
+            btn.onclick = () => {
+                if (ansBox.style.display === 'block') {
+                    ansBox.style.display = 'none';
+                    btn.textContent = 'Cevabı Göster';
+                } else {
+                    ansBox.style.display = 'block';
+                    btn.textContent = 'Cevabı Gizle';
+                }
+            };
+
+            card.appendChild(tagsDiv);
+            card.appendChild(qDiv);
+            card.appendChild(optUl);
+            card.appendChild(btn);
+            card.appendChild(ansBox);
+
+            container.appendChild(card);
+        });
+    }
+//buraya kadar 
+    // 3. BUTON VE ARAMA FONKSİYONLARI
+    function toggleAll() {
+        isAllOpen = !isAllOpen;
+        const boxes = document.querySelectorAll('.ans-box');
+        const btns = document.querySelectorAll('.ans-btn');
+        boxes.forEach(box => box.style.display = isAllOpen ? 'block' : 'none');
+        btns.forEach(btn => btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster');
+    }
+
+    function filter(val) {
+        val = val.toLowerCase();
+        if (val === 'all') {
+            renderQuestions(temizlenmisData);
+            return;
+        }
+        
+        let filtered = [];
+        if (val === 'b') {
+            // Banko ve çok çıkanlar
+            filtered = temizlenmisData.filter(item => {
+                let lower = item.toLowerCase();
+                return lower.includes('banko') || lower.includes('kez çıktı');
+            });
+        } else {
+            // Sınavlar ve üniteler
+            filtered = temizlenmisData.filter(item => {
+                const tags = item.split('|')[0].toLowerCase();
+                return tags.includes(val);
+            });
+        }
+        renderQuestions(filtered);
+    }
+
+    function aramaYap() {
+        const val = document.getElementById('arama').value.toLowerCase();
+        const filtered = temizlenmisData.filter(item => {
+            const parts = item.toLowerCase().split('|');
+            const q = parts[1] || '';
+            const a = parts[3] || '';
+            const exp = parts[4] || '';
+            return q.includes(val) || a.includes(val) || exp.includes(val);
+        });
+        renderQuestions(filtered);
+    }
+
+    // 4. BAŞLANGIÇ (Her şeyi tetikleyen an)
+    window.onload = () => {
+        temizlenmisData = sorulariBirlestir(rawData);
+        renderQuestions(temizlenmisData);
+    };
+    // --- BURAYA KADAR KOPYALAYIN ---
+
+</script>
+</body>
+</html>

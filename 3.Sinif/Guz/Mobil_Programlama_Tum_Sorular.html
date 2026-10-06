@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUZEF MOBİL PROGRAMLAMA </title>
+    <style>
+        :root { 
+            --p: #1a2b4c; --s: #2c3e50; --a: #f39c12; --suc: #27ae60; 
+            --bg: #f4f6f8; --c: #ffffff; --t: #2d3436; --b: #dfe6e9; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--t); margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1050px; margin: 0 auto; }
+        
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 1000;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .header { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--a); margin-bottom: 15px; }
+        .header h1 { margin: 5px 0; font-size: 1.5em; }
+        .header p { margin: 0; font-size: 0.9em; }
+        
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: var(--bg); padding: 5px; border-radius: 10px; }
+        
+        .btn { background: #ecf0f1; color: var(--p); border: 2px solid var(--b); padding: 8px 12px; font-size: 0.95em; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; box-sizing: border-box; }
+        .btn:hover { background: #bdc3c7; }
+        .btn.active { background: var(--a); color: white; border-color: var(--a); }
+        .btn-g { background: #d35400; color: white; }
+        
+        .card { background: var(--c); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--p); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .tag { color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .tag-u { background: #3498db; } .tag-e { background: var(--p); } .tag-h { background: #e74c3c; }
+        .q-text { font-size: 1.1em; font-weight: bold; color: var(--p); margin-bottom: 15px; }
+        .opt { list-style: none; padding: 0; margin: 0 0 15px 0; }
+        .opt li { background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid var(--b); margin-bottom: 5px; cursor: pointer; transition: 0.2s; }
+        .opt li:hover { background: #eafaf1; border-color: var(--suc); }
+        .ans-btn { background: var(--s); color: white; border: none; padding: 8px; width: 100%; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .ans-box { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--suc); border-radius: 6px; }
+        .ans-true { color: var(--suc); font-weight: bold; margin-bottom: 5px; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .sticky-top { position: relative; padding-top: 5px; padding-bottom: 5px; }
+            .header { padding: 10px; margin-bottom: 10px; }
+            .header h1 { font-size: 1.2em; }
+            .header p { font-size: 0.8em; } 
+            .controls { gap: 6px; padding: 0; }
+            .btn { padding: 10px; font-size: 0.85em; width: 100%; margin: 0; }
+            #kategori-secici, #arama { width: 100%; min-width: 100%; }
+            .card { padding: 15px; }
+            .q-text { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="sticky-top">
+        <div class="header">
+            <h1>AUZEF MOBİL PROGRAMLAMA</h1>
+            <p>YBS OZEL (TUM SORULAR)</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-g" onclick="toggleAll()">👁️ Tüm Cevapları Aç/Kapat</button>
+
+            <select class="btn" id="kategori-secici" onchange="filter(this.value)" style="background: var(--p); color: white; min-width: 180px; text-align: center; font-weight:bold; padding:8px; border-radius:6px; cursor:pointer;">
+                <option value="all">📚 Tüm Havuz (Hepsi)</option>
+                <optgroup label="Sınavlar">
+                     <option value="vize">📅 Vizeler (Tümü)</option>
+                     <option value="final">📅 Finaller (Tümü)</option>
+                     <option value="büt">📅 Bütünlemeler</option>
+                     
+                </optgroup>
+            </select>
+
+            <button class="btn" style="background: #e74c3c; color:white;" onclick="document.getElementById('kategori-secici').value='b'; filter('b')">🔥 Banko Sorular</button>
+
+            <input type="text" id="arama" class="btn" placeholder="🔍 Soru veya cevapta kelime ara..." onkeyup="aramaYap()" style="background: white; color: black; cursor: text; text-align: left; min-width: 250px;">
+        </div>
+    </div>
+    
+    <div id="q-container"></div>
+
+</div>
+
+<script>
+const rawData = [
+`2022 Vize|DartDevTools içerisinde uygulama arayüzüne yerleşen objelerin nasıl konumlandıklarını gördüğümüz arayüzün adı (başlığı) nedir?|A) Welcome Screen~B) Form Viewer~C) Gesture Detector~D) Layout Editor~E) Widget Inspector|E) Widget Inspector|💡 Açıklama: Widget Inspector, arayüz elemanlarının konumunu ve özelliklerini incelemek için kullanılan araçtır.`,
+`2022 Vize|Arayüzün yenilenmesi gerekiyorsa hazırlanan arayüz bileşeninin Stateful Widget türünde olması gerekir. Stateful Widget arayüz hiyerarşisinde performans açısından ele alınacak olursa, olması gereken yeri neresidir?|A) Arayüz ağacını oluşturan bileşenlerin en üst seviyesinde kök eleman olarak bulunmalıdır.~B) Arayüzde etkileşim sonucu güncellenmesi gereken tüm bileşenleri saracak en alt seviyede olmalıdır.~C) Scaffold arayüz bileşeninin hemen altında Container bileşenlerininse üstünde yer almalıdır.~D) SetState metodunun içerisinde çağrılacak şekilde yerleştirilmelidir.~E) Arayuzu oluşturan bileşenlerden en alt seviyede yaprak eleman olarak bulunmalıdır.|B) Arayüzde etkileşim sonucu güncellenmesi gereken tüm bileşenleri saracak en alt seviyede olmalıdır.|💡 Açıklama: Stateful Widget, gereksiz yeniden çizmeleri önlemek ve performansı artırmak için sadece güncellenmesi gereken alt bileşenleri sarmalıdır.`,
+`2022 Vize|Sabit tanımlama final ve const anahtar kelimeleri ile yapılabilmektedir. Bu hususta aşağıdaki ifadelerin hangisi yanlıştır?|A) Final çalışma zamanı (run time) bir sabit tanımlamak için kullanılır.~B) Final değeri ilk sefer atandıktan sonra kod içerisinde değiştirilemez.~C) Const derleme zamanı (compile time) bir sabit tanımlamak için kullanılır.~D) Const değerinin ilk ataması tanımlandığı satırdan daha sonra yapılabilir.~E) Const bir tanımlamaya başka bir const ifadenin işleme sokulmuş hali atanabilir.|D) Const değerinin ilk ataması tanımlandığı satırdan daha sonra yapılabilir.|💡 Açıklama: Const, derleme zamanında sabittir ve değeri tanımlandığı anda atanmalıdır. Atama daha sonra yapılamaz.`,
+`2022 Vize|Aşağıdaki değişken tanımlamalarından hangisi hem int hem de double türü değer saklayabilir?|A) double x;~B) var x=0~C) int x;~D) final double x;~E) num x;|E) num x;|💡 Açıklama: num veri türü, Dart dilinde hem int hem de double türünden sayısal değerleri kapsayan ebeveyn sınıftır.`,
+`2022 Vize|Aşağıda belirtilen ifadelerden hangisi mobil platformları için geliştirilen işletim sistemlerinin kendi sundukları API üzerinden yazılım geliştirmeyi ifade eden mobil programlama türüdür?|A) Katmanlı (Layered)~B) Mobil Web (Mobile Web)~C) Çekirdek (Kernel)~D) Doğal (Native)~E) Cross-Platform (Çok Ortam Destekli)|D) Doğal (Native)|💡 Açıklama: İşletim sisteminin kendi sunduğu API'ler ile o platforma özgü yazılım geliştirmeye Native (Doğal) mobil programlama adı verilir.`,
+`2022 Vize|Bir Flutter projesinde "lib" klasörü altında bulunan kod dosyasının hangisidir?|A) .yaml~B) .flutter~C) .dart~D) .bin~E)|C) .dart|💡 Açıklama: Flutter projelerinde yazılan uygulama kodları lib klasörü altında .dart uzantılı dosyalar içerisinde bulunur.`,
+`2022 Vize|Aşağıdakilerden hangisi Navigator API içerisinde bulunulan sayfadan bir önceki sayfaya dönmeyi sağlayan fonksiyon çağrısıdır?|A) Navigator.move~B) Navigator.back~C) Navigator.return~D) Navigator.pop~E) Navigator.push|D) Navigator.pop|💡 Açıklama: Navigator.pop fonksiyonu, mevcut sayfayı yığından çıkararak bir önceki sayfaya dönmeyi sağlar.`,
+`2022 Vize|Flutter'da sayfalar arası gezinti için temel kütüphanelerde gelen hangi arayüz bileşeni bize Navigator API'nın basit bir kullanımını sunmaktadır?|A) SizeArea~B) Container~C) MaterialApp~D) Scaffold~E) Material|C) MaterialApp|💡 Açıklama: MaterialApp bileşeni, Navigator ve uygulamanın genel teması gibi özellikleri barındırarak sayfalar arası gezintiyi kolaylaştırır.`,
+`2022 Vize|Flutter'da, "Center" isimli arayüz bileşeninin yapıcı(constructor) fonksiyonunun hangi parametresi Widget? türünde bir değer alır?|A) onTap~B) key~C) boxDecoration~D) child~E) children|D) child|💡 Açıklama: Center bileşeni, içerisine yerleştirilen tek bir alt bileşeni ortalamak için child parametresini kullanır.`,
+`2022 Vize|Arayüz bileşeni ağacında hiyerarşik olarak aşağıdakilerin hangisinin altında bir başka arayüz bileşeni görülemez?|A) Row~B) Scaffold~C) Icon~D) Column~E) Container|C) Icon|💡 Açıklama: Icon arayüz bileşeni salt görsel bir öğedir ve kendi içinde başka bir alt bileşen (child) barındıramaz.`,
+`2022 Vize|Dart programlama dilinde extends ile miras alma yoluyla türetilen bir sınıfta ebeveyn sınıfın özelliklerine ve metotlarına erişmek için hangi anahtar kelime kullanılır?|A) super~B) elder~C) this~D) parent~E) upper|A) super|💡 Açıklama: Miras alınan ebeveyn (üst) sınıfın özelliklerine ve metotlarına erişmek için super anahtar kelimesi kullanılır.`,
+`2022 Vize|Aşağıdakilerden hangisi Flutter projesinin hangi paketleri içerdiği gibi ayarlarının yapıldığı dosyanın adıdır?|A) pubspec.yaml~B) README.md~C) analysis options.yaml~D) main.dart~E) launch.json|A) pubspec.yaml|💡 Açıklama: pubspec.yaml dosyası, Flutter projelerinde kullanılacak bağımlılıkların (paketlerin) ve projenin genel ayarlarının tutulduğu yapılandırma dosyasıdır.`,
+`2022 Vize|Point bir sınıf ise sınıf tanımlaması içerisinde Point(this.x, this.y); gibi bir kod parçacığı hangi işlevi yerine getirmektedir?|A) Abstract (soyut) bir metot tanımlaması yapar.~B) Sınıfın üye değişkenlerine ilk değer atayan yapılandırıcı fonksiyon tanımlar.~C) Sınıfın '''(x)=y''' formunda bir fonksiyon gibi kullanılmasını sağlar.~D) Sınıfın x ve y adındaki iki örneğini birleştirerek yeni bir Point sınıfı tanımlar.~E) Sınıfın bir örneğini üretir.|B) Sınıfın üye değişkenlerine ilk değer atayan yapılandırıcı fonksiyon tanımlar.|💡 Açıklama: İlgili yazım, sınıfın örnek (instance) değişkenlerine ilk değer atamasını yapan kısa bir yapıcı (constructor) formudur.`,
+`2022 Vize|Dart'ta miras alma yolu ile aktarılan fonksiyonların ezilerek baştan tanımlanması gerekiyorsa kullanılan annotation hangisidir?|A) @supress~B) @deprecated~C) @override~D) @renew~E) @overload|C) @override|💡 Açıklama: Miras alınan bir metodun alt sınıfta yeniden tanımlanması (ezilmesi) durumunda @override annotasyonu kullanılır.`,
+`2022 Vize|Aşağıdakilerden hangisi kullanıcı etkileşimi yapabilen interaktif arayüz bileşenlerinden biri değildir?|A) FloatingActionButton~B) Switch~C) TextField~D) Slider~E) Container|E) Container|💡 Açıklama: Container, etkileşimli bir bileşen değildir.`,
+`2022 Vize|flutter doctor komutunun terminalde çalıştırılması sonucu "Connected device (3 available)" ifadesi çıktının son satırında veriliyorsa bu kurulum için ne söylenebilir?|A) Bilgisayarda çalışan üç adet Flutter uygulaması vardır.~B) Bilgisayara bağlı üç tane çevre birimi (klavye, fare, monitör) bulunmaktadır.~C) Bilgisayarda üç farklı işletim sistemi kuruludur.~D) Bilgisayarda uç farklı geliştirme ortamı (IDE) kuruludur.~E) Bilgisayarda Flutter projesini çalıştırabileceğimiz üç opsiyon bulunmaktadır.|E) Bilgisayarda Flutter projesini çalıştırabileceğimiz üç opsiyon bulunmaktadır.|💡 Açıklama: Connected device ifadesi, uygulamanın çalıştırılabileceği ve test edilebileceği opsiyon sayısını belirtir.`,
+`2022 Vize|class TapboxA extends StatefulWidget {...} şeklinde tanımlanan bir arayüz bileşeni için @override ile yeniden yazılması gereken createState() fonksiyonunun geri dönüş veri türü hangisi olmalıdır?|A) List<TapboxA>~B) State<TapboxA>~C) Function<void>~D) Widget~E) StatefulWidget|B) State<TapboxA>|💡 Açıklama: StatefulWidget'tan türetilen bir sınıfın createState metodu State sınıfını döndürmelidir.`,
+`2022 Vize|Aşağıdakilerden hangisi ile bir Flutter uygulaması çalıştırılamaz?|A) VSCode İçerisinde Run menüsü altında "Run Without Debugging" seçilerek~B) Terminalden proje klasöründeyken "flutter create" komutunu çalıştırarak~C) VSCode içerisinde Run menüsü altında "Start Debugging" seçilerek~D) VSCode İçerisinde main.dart dosyası açıkken "F5" kısayol tuşuna basılarak~E) Terminalden proje klasöründeyken "flutter run" komutunu çalıştırarak|B) Terminalden proje klasöründeyken "flutter create" komutunu çalıştırarak|💡 Açıklama: "flutter create" komutu yeni bir proje oluşturmak için kullanılır.`,
+`2022 Vize|Günümüzde mobil programlama neden daha çok önem kazanmıştır?|A) Internet erişiminin yoğun olarak mobil platformlardan sağlanması ve akıllı telefonların dijital asistan görevi görmesinden dolayı~B) Masaüstü uygulamalarının web sayfalarına dönüştürülmesinin zahmetli olmasından dolayı~C) Farklı yazılım geliştirme alanlarının doyuma ulaşmasından dolayı~D) Yazılım geliştiricisinin eğitiminin mobil platformlarda daha kolay olmasından dolayı~E) Akıllı telefonlarda çok farklı işletim sistemleri kullanılmasından dolayı|A) Internet erişiminin yoğun olarak mobil platformlardan sağlanması ve akıllı telefonların dijital asistan görevi görmesinden dolayı|💡 Açıklama: İnternet kullanımının ağırlıklı olarak akıllı telefonlara kayması bu alanın önemini artırmıştır.`,
+`2022 Vize|Dart programlama diline getirilen Null-Safety özelliği ne ifade etmektedir?|A) Bir değişkenin atama işleminin sağ tarafında yer almadan önce İçerisine bir atama yapılması gerektiğini.~B) Aynı isme sahip iki sınıf tanımlaması varsa bunlardan ikincisinin daima null değeri ile sembolize edildiğini.~C) Değişken tanımlamasının sadece sınıf içerisinde yapılabileceğini.~D) Tüm sınıfların tanımlanmasının Null sınıfından miras alarak yapıldığını.~E) Değişkenlerin oluşturulduklarında sadece null değeri alabileceklerini.|A) Bir değişkenin atama işleminin sağ tarafında yer almadan önce İçerisine bir atama yapılması gerektiğini.|💡 Açıklama: Null-Safety, değişkenlerin kullanımından veya işleme sokulmasından önce mutlaka bir değer atanmasını zorunlu kılar.`,
+
+`2023-2024 Vize, 2024 Tek Ders|void gorunum ({bool kalin = false, bool gizli = false}) {...} yukarıdaki şekilde tanımlanmış gorunum fonksiyonu gorunum (kalin: true); şeklinde çağrılırsa aşağıdakilerden hangisi doğrudur?|A) gizli parametresi null değeri alır.~B) gizli parametresi verilmediği için kod derlenemez, sentaks hatası verir.~C) gizli parametresinin değeri daha sonradan gorunum.gizli = true; şeklinde atanır.~D) gizli parametresi false değeri alır.~E) gizli parametresi true değeri alır.|D) gizli parametresi false değeri alır.|💡 Açıklama: Gizli parametresine varsayılan olarak false atandığı için değiştirilmediği sürece false kalır.`,
+`2023-2024 Vize, 2024 Tek Ders|Bir Flutter projesinde iç içe klasörlerde aynı isimli resim dosyası bulunuyorsa en dış klasördeki resim dosyasının konfigürasyon dosyasında gösterilmesi tamamını projeye dahil edecektir. Flutter diğer resim dosyalarını hangi amaçla projeye dahil etmiştir?|A) Farklı telefon modellerinde kullanmak~B) Dosyaların parçalı saklanmasından dolayı~C) İnternetten dosya indirmemek~D) Farklı işletim sistemlerinde kullanmak~E) Farklı temalarda kullanmak|E) Farklı temalarda kullanmak|💡 Açıklama: Klasör yapısındaki bu ayrım genelde farklı çözünürlük veya tema kullanımları içindir.`,
+`2023-2024 Vize|Resim dosyalarının Flutter projesine dahil edilmesi için hangi dosya altında bulunduğu klasör ve/veya dosya adının belirtilmesi gerekir?|A) main.dart~B) pubspec.yaml~C) assets.dart~D) launch.json~E) assets.yaml|B) pubspec.yaml|💡 Açıklama: Varlık (asset) tanımlamaları pubspec.yaml dosyasında yapılır.`,
+`2023-2024 Vize, 2025 Büt, 2025 Tek Ders|String sınıfı için genişletme metotları (Extention methods) yazmak istiyorsak bu methodları yazacağımız kod bloğunu aşağıdakilerden hangisi doğru tanımlamaktadır?|A) extension String mixin BenimBlogum {..~B) extension BenimBlogum with String {~C) extension BenimBlogum on String {~D) extension String with BenimBlogum {~E) extension ext BenimBlogum on String {|C) extension BenimBlogum on String {|💡 Açıklama: Dart dilinde extension yazımı 'extension [isim] on [tür]' formatındadır.`,
+`2023-2024 Vize, 2024 Tek Ders|Aşağıdaki ihtiyaçlardan hangisi için arayüz bileşenlerinizi bir Container widgetı içerisine toplamazsınız?|A) İç kenar boşluğu (padding) ayarlamak için~B) Dış kenar boşluğu (margin) ayarlamak için~C) Kenar özellikleri (border) ayarlamak için~D) İçerdiği objeleri yan yana (soldan sağa) sıralamak için~E) Arkaplan rengi (color) ayarlamak için|D) İçerdiği objeleri yan yana (soldan sağa) sıralamak için|💡 Açıklama: Yan yana sıralamak için Container değil Row widget'ı kullanılır.`,
+`2023-2024 Vize|Windows işletim sisteminde masaüstü Flutter uygulama geliştirme desteği sağlamak için aşağıdakilerden hangisinin kurulması gerekir?|A) Visual Studio 2019 Geliştirme Ortamı~B) Android Studio Geliştirme Ortamı~C) IntelliJ IDEA Geliştirme Ortamı~D) Firefox İnternet Tarayıcısı~E) Visual Studio Code Geliştrime Ortamı|A) Visual Studio 2019 Geliştirme Ortamı|💡 Açıklama: Windows masaüstü derlemeleri için C++ derleme araçlarını içeren Visual Studio ortamı gereklidir.`,
+`2023-2024 Vize, 2024 Tek Ders|flutter create namel Yukarıdaki komut çalıştırıldığında aşağıdakilerden hangisini gerçekleştirir?|A) namel adında bir sınıf oluşturur.~B) namel adında bir proje klasörü oluşturur.~C) namel adında bir dart dosyası oluşturur.~D) namel adında bir kütüphane oluşturur.~E) namel adında bir değişken oluşturur.|B) namel adında bir proje klasörü oluşturur.|💡 Açıklama: flutter create komutu yeni bir proje dizini (klasörü) başlatır.`,
+`2023-2024 Vize, 2025 Büt, 2025-2026 Final|Visual Studio Code IDE'si içerisinde aktif Flutter çalıştırma kipi IDE ana ekranı içerisinde nerede görüntülenmektedir?|A) Sağ üst köşede~B) Sol alt köşede~C) Sol üst köşede~D) Karşılama (Welcome) ekranında~E) Sağ alt köşede|E) Sağ alt köşede|💡 Açıklama: VSCode'da seçili cihaz ve çalışma kipi genellikle sağ alt köşede yer alır.`,
+`2023-2024 Vize|Flutter projeye dahil edilmiş resim dosyalarını temaya göre farklı klasörlerden seçebileceği gibi aşağıdaki gibi bir konfigürasyonda ........ göre de farklı klasörlerden uygun resmi seçebilir. Yukarıda boş bırakılan yere aşağıdaki seçeneklerden hangisi getirilmelidir? .../my_icon.png .../2.0x/my_icon.png .../3.0x/my_icon.png|A) Cihazdaki piksel yoğunluğuna~B) Cihazdaki ekran parlaklığına~C) Cihazdaki ekran tipine~D) Cihazdaki sensör sayısına~E) Cihazdaki kamera çözünürlüğüne|A) Cihazdaki piksel yoğunluğuna|💡 Açıklama: 2.0x, 3.0x gibi isimlendirmeler ekran piksel yoğunluğunu ifade eder.`,
+`2023-2024 Vize|Navigator.push(context, MaterialPageRoute<bool?>(.......).......}); Yukarıdaki gibi Navigator.push metodu çağrıldığında ikinci parametresinin dönüş değeri MaterialPageRoute<bool?> olan bir fonksiyon olması ne ifade etmektedir?|A) Açılan sayfanın bool? türünde bir geri dönüş yapacağı~B) Açılan sayfanın her zaman en üstte görüntüleneceği~C) Açılan sayfa kapatılınca bir önceki sayfanın gösterileceği~D) Açılan sayfanın bool? türünde bir parametre alacağı~E) Açılan sayfa kapatılınca uygulamanın kapatılacağı|A) Açılan sayfanın bool? türünde bir geri dönüş yapacağı|💡 Açıklama: Route'a verilen jenerik tür, sayfa kapatıldığında dönecek veri tipini belirtir.`,
+`2023-2024 Vize, 2024 Tek Ders|Aşağıdakilerden hangisi bir satırda sağdan sola birden fazla görsel arayüz bileşenini yerleştirmek için kullanılan düzenleyici arayüz bileşenidir?|A) Stack~B) Column~C) Text~D) Row~E) Container|D) Row|💡 Açıklama: Elemanları yatayda (satır halinde) yerleştirmek için Row kullanılır.`,
+`2023-2024 Vize|Dart'ta bir fonksiyonun asenkron olarak çalışması için ne yapılması gerekir?|A) Fonksiyonun bir sınıf içerisinde tanımlanmış olması~B) Fonksiyonun global olarak tanımlanması~C) Fonksiyonun static olarak tanımlanması~D) Fonksiyonun içerisinde await anahtar kelimesinin kullanılması~E) Fonksiyonun adından sonra async anahtar kelimesinin kullanılması|E) Fonksiyonun adından sonra async anahtar kelimesinin kullanılması|💡 Açıklama: Fonksiyonu asenkron yapmak için parametrelerden sonra async yazılır.`,
+`2023-2024 Vize|Stateful Widget'tan miras alarak oluşturacağımız bir arayüz bileşeni içerisinde setState() fonksiyonu nerede olmalıdır?|A) Arayüz güncellenmesinin gerektiği yerdeki kodu sarmalayacak yerde.~B) Sınıfın yapıcı fonksiyonunun içerisinde.~C) createState() metodu içerisinde.~D) build metodu içerisinde.~E) Sınıf içerisinde değil, runApp metodu içerisinde.|E) Sınıf içerisinde değil, runApp metodu içerisinde.|💡 Açıklama: (Cevap anahtarı referans alınmıştır)`,
+`2023-2024 Vize, 2025-2026 Vize|Container(width: 100, height: 100, color: red) Yukarıdaki kod satırında bir Container'ın genişlik ve yüksekliğinin 100 birim olması belirtilmiştir. Lakin bu Container sayfanın en üst bileşeni ise ekranın tamamını kapladığı görülür. Bunun sebebi nedir?|A) Container'ın color parametresinin tanımlanmış olması~B) Container'ın üst seviyesindeki kıstın kendisini buna zorlaması~C) Container'ın padding parametresinin tanımlanmamış olması~D) Container'ın decoration parametresinin tanımlanmamış olması~E) Container içerisinde başka bir widget olmaması, yani child parametresinin verilmemiş olması|B) Container'ın üst seviyesindeki kıstın kendisini buna zorlaması|💡 Açıklama: Üst bileşenin dayattığı kısıtlamalar (constraints) alt bileşenin isteklerini ezer.`,
+`2023-2024 Vize|Dart programlama dili özellikleri için aşağıdaki ifadelerden hangisi yanlıştır?|A) Dart'ta implements anahtar kelimesi ile birden fazla sınıftan, arayüz gibi miras alınır.~B) Dart'ta extends anahtar kelimesi ile tek bir sınıftan miras alınır.~C) Dart'ta abstract anahtar kelimesi ile tanımlanan sınıfların örnekleri oluşturulamaz.~D) Dart'ta tüm sınıflar Null sınıfından miras alınarak türetilir.~E) Dart'ta with anahtar kelimesi ile birden fazla mixin'den miras alınır.|D) Dart'ta tüm sınıflar Null sınıfından miras alınarak türetilir.|💡 Açıklama: Dart'ta tüm sınıflar Null sınıfından değil, Object sınıfından miras alır.`,
+`2023-2024 Vize|Navigator API'de Navigator.pushNamed() fonksiyonunun hangi parametresi ile açılan sayfaya veri gönderimi yapılabilmektedir?|A) key~B) title~C) parameters~D) home~E) arguments|E) arguments|💡 Açıklama: Geçiş yapılan sayfaya veri yollamak için arguments parametresi kullanılır.`,
+`2023-2024 Vize, 2025-2026 Vize|Aşağıdakilerden hangisi bellekte verileri key-value çiftleri şeklinde saklamak için kullanılan veri türünün adıdır?|A) Set~B) Cache~C) List~D) Container~E) Map|E) Map|💡 Açıklama: Anahtar-değer eşleşmesi Map koleksiyon türü ile sağlanır.`,
+`2023-2024 Vize, 2024 Tek Ders, 2025-2026 Vize|Akıllı telefonlarla, önceki dönem klasik cep telefonlarını ayıran belirgin özellik aşağıdakilerden hangisidir?|A) Destekledikleri donanımsal özellikler~B) Dünya pazarındaki yayılma şekli~C) 3G şebekesini kullanması~D) Sonradan uygulama yükleme imkânı~E) Yapay zekâ modülü içermeleri|D) Sonradan uygulama yükleme imkânı|💡 Açıklama: Akıllı telefonların ana felsefesi sonradan farklı uygulamalar yüklenip genişletilebilmesidir.`,
+`2023-2024 Vize, 2024 Büt, 2025-2026 Vize|Aşağıdakilerden hangisi Material düzenleyici arayüz bileşenlerinden biridir?|A) Icon~B) FlatButton~C) ListTile~D) Text~E) Asset|C) ListTile|💡 Açıklama: ListTile, material tasarım kurallarına uyan hazır düzenleyici bir bileşendir.`,
+`2023-2024 Vize, 2025 Tek Ders, 2025-2026 Büt|Aşağıdaki ifadelerden hangisi Flutter Çerçevesi (Framework) için yanlış bir bilgidir?|A) Dart programlama dilinde görebileceğiniz her şey bir objedir (object).~B) Dart programlama dilinde bir değişkenin herhangi türeden bir veri tutmasını istiyorsak "Object" türünde oluşturulabilir.~C) Dart programlama dili güçlü tip tanımlı (strongly typed) bir dildir.~D) Flutter, Dart'tan bağımsız ayrı bir programlama dilidir.~E) Dart; global, yerel ve static değişken tanımlamalarına izin vermektedir.|D) Flutter, Dart'tan bağımsız ayrı bir programlama dilidir.|💡 Açıklama: Flutter bir programlama dili değil, Dart dilini kullanan bir Framework'tür.`,
+
+`2024-2025 Vize, 2025-2026 Vize|Function islem(int? x) { return (int i) => x ?? i; } void main() { var nullli = islem (null); var nullsiz = islem (5); print (nullsiz (nullli(3))); } Yukarıdaki kod bloğunun ekran çıktısı aşağıdakilerden hangisidir?|A) NaN~B) 3~C) null~D) 5~E) 0|D) 5|💡 Açıklama: İşlem null-aware (??) operatörü kullanarak öncelikle x'i kontrol eder. Çıktı 5 olacaktır.`,
+`2024-2025 Vize|Flutter'daki arayüz bileşenlerinin (widget) nasıl çalıştıkları ve hangi parametreleri aldıklarını en detaylı şekilde öğrenme biçimi aşağıdakilerden hangisidir?|A) Dart dokümantasyonundan~B) Flutter API dokümantasyonundan~C) Android API dokümantasyonundan~D) GitHub Örneklerinden~E) Flutter Cookbook dokümantasyonundan|B) Flutter API dokümantasyonundan|💡 Açıklama: Detaylı bileşen parametreleri doğrudan Flutter API belgesinden öğrenilir.`,
+`2024-2025 Vize, 2025-2026 Vize, 2025 Tek Ders|"--enable-windows-desktop" ifadesi Windows bir işletim sistemi için Flutter projesi yazmayı mümkün kılmaktadır. Bu ifade hangi terminal komutuna parametre olarak yazılır?|A) flutter config~B) flutter platform~C) flutter create~D) flutter doctor~E) flutter enable|A) flutter config|💡 Açıklama: Özellikleri aktif etmek için flutter config komutu kullanılır.`,
+`2024-2025 Vize, 2025-2026 Vize|@override void noSuchMethod (Invocation invocation) { print('\${invocation.memberName}'); } Bir sınıf tanımlaması için yukarıdaki kod bloğu bulunmaktadır. Bu kod bloğunun çağrılma zamanı aşağıdakilerden hangisidir?|A) Sınıfın bellekte ilk örneği oluşturulurken~B) Sınıfın bellekten örneğinin silineceği zaman~C) Sınıf için tanımlı olmayan bir fonksiyon çağrılırsa~D) Sınıfın bellekte her örneği oluşturulurken~E) Sınıf için yapıcı fonksiyonlar çağrıldıktan sonra|C) Sınıf için tanımlı olmayan bir fonksiyon çağrılırsa|💡 Açıklama: noSuchMethod, bir sınıfta bulunmayan (tanımlanmamış) bir fonksiyona erişilmeye çalışıldığında tetiklenir.`,
+`2024-2025 Vize, 2023-2024 Final, 2025 Tek Ders|Kullanıcı etkileşimi olmayacak kendi arayüz bileşenimizi tasarlamak istiyorsak hangi sınıftan miras almamız uygun çözümdür?|A) Scaffold~B) Stateless Widget~C) Container~D) MaterialApp~E) Widget|B) Stateless Widget|💡 Açıklama: Durumu (state) değişmeyen statik bileşenler için StatelessWidget kullanılır.`,
+`2024-2025 Vize, 2025-2026 Vize, 2025 Büt, 2025 Tek Ders|Aşağıdakilerden hangisi Flutter Navigator API'ında bulunan temel bileşenlerden biri değildir?|A) Screen~B) Route~C) Router~D) Navigator~E) Page|A) Screen|💡 Açıklama: Navigator API yapısında Screen adında temel bir bileşen yoktur.`,
+`2024-2025 Vize, 2025 Tek Ders|2010-2020 yılları arasındaki istatistiklere göre 2020 civarında akıllı telefon pazarında en fazla kullanılan işletim sistemi hangisidir?|A) HarmonyOS~B) iOS~C) WindowsPhone~D) Android~E) SymbianOS|D) Android|💡 Açıklama: Android pazardaki en büyük dilime sahiptir.`,
+`2024-2025 Vize, 2025-2026 Vize|Flutter projesinin en hızlı güncellemelerini alacağımız kanalı aşağıdakilerden hangisidir?|A) Trouble~B) Master~C) Stable~D) Beta~E) Dev|B) Master|💡 Açıklama: Master kanalı en son yapılan commitleri (değişiklikleri) anında barındırır.`,
+`2024-2025 Vize, 2025-2026 Vize|Aşağıdaki veri türlerinden hangisi Jenerik (Generic) bir türdür?|A) double~B) List~C) Object~D) Null~E) Boolean|B) List|💡 Açıklama: List<T> şeklinde kullanıldığı için Jenerik bir türdür.`,
+`2024-2025 Vize|class TabboxA extends StatefulWidget {...} Yukarıdaki şekilde kodlaması başlayan bir Widget sınıfı için hangi seçenek her zaman doğrudur?|A) TobboxA içerisinde setState() metodu ile arayüz güncellemesi tetiklenir.~B) TobboxA Widget'ı kullanıcı ile etkileşimde bulunabilir.~C) TabboxA Widget'ı en dış katmandaki Widgettır.~D) TobboxA Widget'ı en iç katmandaki Widgettır.~E) TobboxA Widgetı bir Container içerisinde yer almalıdır.|B) TobboxA Widget'ı kullanıcı ile etkileşimde bulunabilir.|💡 Açıklama: StatefulWidget'lar etkileşim sonucu durum değiştirebilen bileşenlerdir.`,
+`2024-2025 Vize, 2025-2026 Final|Column widgetı içerisindeki crossAxsisAlignment parametresi aşağıdakilerden hangisi için düzenleme sağlar?|A) İçerdiği elemanların dikey taşma yapmaması için~B) İçerdiği elemanların yatay taşma yapmaması için~C) İçerdiği elemanların dikeyde yerleşimi için~D) İçereceği eleman sayısının çalışma zamanı tespiti için~E) İçerdiği elemanların yatayda yerleşimi için|E) İçerdiği elemanların yatayda yerleşimi için|💡 Açıklama: Column (Dikey) diziliminde crossAxis (çapraz eksen) yatay eksene denk gelir.`,
+`2024-2025 Vize, 2025 Büt|Aşağıdakilerden hangisi Flutter çerçevesinin arayüz düzenlemesi için koyduğu kısıtlardan biri değildir?|A) Widget ağacı her 4ms'de bir yenilenmek zorundadır. Eğer yenilenmezse ekranda titreme olacaktır.~B) Bir widget ekranda hangi konumda olacağını asla bilemez ve buna karar veremez.~C) Bir widget kendi boyutunu ancak üst seviye bileşenin verdiği kısıtlar arasında seçebilir.~D) Bir üst seviyedeki widgetın boyutu belirleyebilmesi de onun üstündeki widget'a bağlı olacağından tam widget ağacı işlenmeden arayüzün nasıl olacağı bilinemez.~E) Bir widget üst seviyeden daha fazla bir boyutta olmak ister ve üst seviyenin alttaki widgetları nasıl yerleştireceği ile ilgili bilgisi yoksa alttaki elemanın verdiği ölçü değerleri yok sayılır.|A) Widget ağacı her 4ms'de bir yenilenmek zorundadır. Eğer yenilenmezse ekranda titreme olacaktır.|💡 Açıklama: Flutter 60fps (16ms) hedefler, 4ms kuralı uydurulmuş bir seçenektir.`,
+`2024-2025 Vize, 2025-2026 Vize|MaterialApp arayüz bileşeninin routes parametresinin aldığı değer türü aşağıdakilerden hangisidir?|A) List<Widget>~B) Map<int, Widget>~C) Map<String, WidgetBuilder>~D) List<WidgetBuilder>~E) Map<String, Widget>|C) Map<String, WidgetBuilder>|💡 Açıklama: Routes, rotaların string (yol ismi) ve WidgetBuilder ile eşleştiği bir Map alır.`,
+`2024-2025 Vize|'package:flutter/services.dart' kütüphanesi üzerinden kullanabileceğimiz rootBundle yapısı kullanılma sebebi aşağıdakilerden hangisidir?|A) Telefonun kamera, mikrofon, GPS sensörü gibi donanımlarına erişmek için.~B) Widget (Arayüz bileşeni) ağacının en tepedeki elemanına erişmek için.~C) Uygulama içerisindeki tüm varlıklara(assets) erişmek için.~D) Telefonun temel konfigürasyon verilerine erişmek için.~E) RAM'de her tür key-value (anahtar-değer) veri çifti oluşturabilmek için.|C) Uygulama içerisindeki tüm varlıklara(assets) erişmek için.|💡 Açıklama: rootBundle projedeki asset dosyalarına erişimi sağlar.`,
+`2024-2025 Vize, 2025-2026 Vize, 2024 Final, 2024 Tek Ders, 2025-2026 Final|Aşağıdaki operatörlerden hangisi bir listedeki içeriği bir başka listeye kopyalamak için kullanılır?|A) ?? (iki soru işareti eşittir)~B) : (iki nokta üst üste)~C) => (eşittir büyüktür)~D) ...? (üç nokta soru işareti)~E) .. (iki nokta)|D) ...? (üç nokta soru işareti)|💡 Açıklama: Spread operatörü (...) ve null-aware spread (...?) kopyalama ve yayma işlemi yapar.`,
+`2024-2025 Vize|import 'package:flutter/material.dart'; Satırı ile Flutter projesine eklenecek Material Kütüphanesindeki bileşenler aşağıdaki hangi aşamada fayda sağlamaktadır?|A) Aynı anda birden fazla arayüz görüntüsünün hazırlanması ve bellekte saklanması.~B) Uygulama içerisinde kendi özel arayüz bileşeni çözümünün üretibilmesi.~C) Kullanıcı arayüzü etkileşimlerinin dokunmatik ekran üzerinde parmak ile gerçekleşmesi.~D) Uygulama geliştirirken Dart kodları içerisine Java, Kotlin kodlarını gömebilmek.~E) Arayüz bileşenlerinin Android uygulamalarında kullanılana benzer görsel şablona göre hazır bulunması.|E) Arayüz bileşenlerinin Android uygulamalarında kullanılana benzer görsel şablona göre hazır bulunması.|💡 Açıklama: Material kütüphanesi Android/Google tasarım standartlarına uygun hazır görsel bileşenler sunar.`,
+`2024-2025 Vize, 2025-2026 Vize, 2024 Final, 2025 Final|Kendi arayüz bileşenimizi üretmek istediğimizde, arayüz bileşeni sınıfının tanımlamasında, @override ile işaretleyip yazmak zorunda olduğumuz fonksiyon aşağıdakilerden hangisidir?|A) runApp~B) main~C) build~D) create~E) init|C) build|💡 Açıklama: Widget'ın ekrana ne çizeceğini belirten fonksiyon build metodudur.`,
+`2024-2025 Vize|names.addAll(['Seth', 'Kathy', 'Lars']) Yukarıdaki kod satırı hata vermeden çalışan bir uygulamanın parçası ise yaptığı işlemle ilgili olarak aşağıdaki yorumlardan hangisi doğrudur?|A) names bir Map örneğidir ve verilen liste bu Map objesine 0,1,2 indeksleri ile kaydedilir.~B) names bir Object örneğidir ve verine String ifadelerden sonuncusu names'e kaydedilir.~C) names bir String örneğidir ve 'Seth' ifadesi names'e kaydedilir.~D) names bir Set örneğidir ve verilen liste bu Set objesine çakışmasız kaydedilir.~E) names bir List örneğidir ve verilen liste bu List objesinin sonuna eklenir.|E) names bir List örneğidir ve verilen liste bu List objesinin sonuna eklenir.|💡 Açıklama: addAll fonksiyonu listenin sonuna yeni bir koleksiyonu (listeyi) ekler.`,
+`2024-2025 Vize, 2025 Tek Ders, 2025-2026 Büt|Aşağıdakilerden hangisi Navigator 2.0 API ile gelen bileşenlerden biri değildir?|A) Page~B) RouterInformationParser~C) Router~D) RouterDelegate~E) Scaffold|E) Scaffold|💡 Açıklama: Scaffold bir ekran düzenleyicisidir, Navigator 2.0 yönlendirme mantığının temel parçası değildir.`,
+`2024-2025 Vize, 2025 Tek Ders|Dart programlama dili için aşağıda verilen ifadelerden hangisi yanlıştır?|A) Fonksiyon tanımlamasında fonksiyona bir isim verilmesi zorunlu değildir.~B) Fonksiyon tanımlamasında geri dönüş türünün yazılması zorunlu değildir.~C) Fonksiyon tanımlamasında return ile geri dönüş yoksa fonksiyon null değer döner.~D) Fonksiyon çağrısında normal parametrelere değer girilmesi zorunlu değildir.~E) Fonksiyon tanımlamasında parametrelerin türünün belirtilmesi zorunlu değildir.|D) Fonksiyon çağrısında normal parametrelere değer girilmesi zorunlu değildir.|💡 Açıklama: İsimlendirilmemiş/opsiyonel olmayan (normal) parametrelere değer atamak zorunludur.`,
+
+`2025-2026 Vize, 2023-2024 Final, 2024 Tek Ders, 2025 Tek Ders|https:\\pub.dev internet adresi aşağıdaki tanımlardan hangisi için hizmet vermektedir?|A) Dart programlama dilinin dokümantasyonunun bulunduğu yer~B) Android ve iOS işletim sistemlerinin özelliklerinin anlatıldığı yer~C) Flutter ve Dart için açık kaynak kütüphanelerin paylaşıldığı yer~D) Flutter çerçevesi dokümantasyonunun bulunduğu yer~E) Flutter ve Dart uygulamalarının çevrimiçı yazılıp çalıştırılabileceği yer|C) Flutter ve Dart için açık kaynak kütüphanelerin paylaşıldığı yer|💡 Açıklama: pub.dev resmi paket (package/library) barındırma servisidir.`,
+`2025-2026 Vize, 2023-2024 Büt, 2025 Tek Ders|Aşağıdakilerden hangisi 2021 yılında Flutter'ın desteklemediği bir ortam (işletim sistemi) adıdır?|A) Linux~B) Android~C) HarmonyOS~D) Windows~E) iOS|C) HarmonyOS|💡 Açıklama: Huawei'nin HarmonyOS sistemi o dönemde resmi olarak desteklenen platformlar arasında değildi.`,
+`2025-2026 Vize|Kullanıcının ekrana tıklama etkileşimini yakalayacak bir arayüz bileşeninde GestureDetector kullanılıyorsa, GestureDetector yapıcı fonksiyonunun aşağıdaki parametrelerden hangisinin verilmesi gerekir?|A) build~B) onTap~C) builder~D) onCreate~E) onStart|B) onTap|💡 Açıklama: Dokunma etkileşimi onTap parametresi ile yakalanır.`,
+`2025-2026 Vize, 2024 Final|Flutter kod içerisinde projeye dahil edilmiş varlıklara(assets) erişmek için.......... kullanır. Yukarıdaki cümlede boş bırakılan alana aşağıdaki ifadelerden hangisi yazılmalıdır?|A) AssetBundle~B) AssetFolder~C) AssetStream~D) AssetMap~E) AssetString|A) AssetBundle|💡 Açıklama: Uygulama varlıklarına erişim rootBundle (AssetBundle) aracılığıyla sağlanır.`,
+`2025-2026 Vize, 2025 Tek Ders|Detayı bir navigasyon işlemi için tanımlanabilecek on GenerateRoute parametresi aşağıdaki bileşenlerden hangisinde vardır?|A) StatefulWidget~B) Scaffold~C) GestureDetector~D) CupertinoApp~E) Container|D) CupertinoApp|💡 Açıklama: MaterialApp veya CupertinoApp (uygulama kök bileşenleri) onGenerateRoute destekler.`,
+`2025-2026 Vize, 2023-2024 Vize|Resim dosyalarının Flutter projesine dahil edilmesi için hangi dosya altında bulunduğu klasör ve/veya dosya adının belirtilmesi gerekir?|A) main.dart~B) launch.json~C) assets.dart~D) assets.yaml~E) pubspec.yaml|E) pubspec.yaml|💡 Açıklama: Proje kaynak dosyaları pubspec.yaml içindeki assets sekmesinde tanıtılır.`,
+
+`2022 Final, 2025 Tek Ders|Bir Flutter uygulamasının çalışma zamanı davranışlarını takip etmek için kullanılan araç setinin adı nedir?|A) Virtual DeviceManager~B) DartDevTools~C) VisualStudioCode~D) Android SDK Manager~E) Development Tools|B) DartDevTools|💡 Açıklama: DartDevTools, çalışma zamanı (runtime) analizi ve hata ayıklama için temel araç setidir.`,
+`2022 Final, 2025 Final, 2025-2026 Final, 2025-2026 Büt|(value, 1); // value değerinin 1'e eşit olup olmadığını doğrular. Flutter'daki test paketi ile unit test işlemi yapıldığında yukarıdaki gibi bir test koşulunun sağlanması için boş bırakılan yere aşağıdakilerden hangisi gelmelidir?|A) assert~B) find~C) expect~D) search~E) lookup|C) expect|💡 Açıklama: Flutter test paketinde doğrulama işlemleri (assertion) expect(value, expected) metodu ile yapılır.`,
+`2022 Final|"Ephemeral State" tanımı bir widgetın kendi üzerinde değişim yapmasını tanımlamaktadır. Flutter'da bunun için gerçekleştirilen işlem hangisidir?|A) getState() metodunun kullanımı~B) setState() metodunun kullanımı~C) Provider.of<T> kullanımı ile~D) repaint() metodunun kullanımı~E) updateWidget() metodunun kullanımı|B) setState() metodunun kullanımı|💡 Açıklama: Geçici ve yerel arayüz durum yönetimi (ephemeral state) setState metodu ile halledilir.`,
+`2022 Final, 2025 Büt|Bir Flutter projesinde bir klasördeki tüm resimleri uygulamanın yükleme (setup) dosyasına eklemek için aşağıdakilerden hangisi yapılmalıdır?|A) İşletim sistemindeki Everyone kullanıcısına ilgili klasör için okuma/yazma izni verilmesi gerekir.~B) Resimlerin bulunduğu klasörü sürükle bırak (drag-drop) yöntemi ile geliştirme ortamı tasarım ekranına süruklenir.~C) pubspec.yami içerisinde assets satırı altında klasör İçin bir kayıt açılır.~D) Her resim dosyası için main.dart dosyası altında bir değişken oluşturulur.~E) Resimlerin hepsi "Android Assets Studio" uygulaması ile açılarak özel bir formatta kaydedilmesi gerekir.|C) pubspec.yami içerisinde assets satırı altında klasör İçin bir kayıt açılır.|💡 Açıklama: Klasörleri tamamen dahil etmek için dosya isimleri tek tek yazılmadan klasör sonuna / konularak pubspec.yaml'a eklenir.`,
+`2022 Final, 2025 Büt|Sqflite kütüphanesindeki openDatabase() fonksiyonu kullanılarak bir veritabanı bağlantısı kurulmak istenirse aşağıdaki parametrelerden hangisinin beslenmesi zorunludur?|A) onResume~B) onMigration~C) onLoad~D) onUpdate~E) onCreate|E) onCreate|💡 Açıklama: Veritabanı ilk kez açılırken tabloların oluşturulması için onCreate metodu zorunludur.`,
+`2022 Final|runApp( providers: [ Change (context) => CartModel()), erProvider(creato Provider(create: (context) => SomeOtherClass()), 1, child: const MyApp(), ), ); Flutter'da provider kütüphanesi ile sağlanan uygulama seviyesi durum yönetiminde, durum yönetimi birden fazla veri modeli üzerinden sağlanacaksa, widget ağacının hangi widget ile sarmalanması gerekir?|A) Custom Provider~B) Providers~C) Notifiers~D) MultiProvider~E) Consumers|D) MultiProvider|💡 Açıklama: Aynı anda birden fazla Provider kullanıldığında kod okunabilirliği için MultiProvider tercih edilir.`,
+`2022 Final|Aşağıdaki bilgilerden hangisi Flutter'da kalıcı veri kaydetme konusunda yanlış bir bilgidir?|A) Uygulamanın geçici dosyalarını, kullanıcı veya işletim sistemi herhangi bir anda silebilir.~B) Flutter'da dosya sistemine bir dosya kaydedilemez bunun yerine sqlite ve shared preferences kullanılması gerekir.~C) Android'de uygulamaların kendine ait alanına başka uygulamaların erişme hakkı yoktur.~D) Uygulamanın kendine ait dosyalarını kaydedeceği klasöre getApplication DocumentsDirectory() ile ulaşılır.~E) Flutter'da dosya sistemine erişimde path provider ile yollar belirlenmelidir.|B) Flutter'da dosya sistemine bir dosya kaydedilemez bunun yerine sqlite ve shared preferences kullanılması gerekir.|💡 Açıklama: Flutter'da yerel dosya sistemine (klasörlere) doğrudan veri kaydedilebilir.`,
+`2022 Final, 2024 Final|MaterialApp arayüz bileşeninin (widget) yapıcı fonksiyonu çağrılırken hangi parametresinde isimlendirilmiş yollar tanımlanır?|A) Theme~B) Title~C) Actions~D) Home~E) Routes|E) Routes|💡 Açıklama: İsimlendirilmiş rotalar routes parametresine Map türünde beslenir.`,
+`2022 Final|Aynı tanımlamalara sahip iki kütüphane projeye dahil edilecekse kod içerisindeki isim çakışmasını engellemek için bu kütüphanelerden bir tanesi takılanmalıdır. Aşağıdakilerden hangisi bu takılama işlemi için uygun kodlamayı içermektedir?|A) import 'package:lib2/lib2.dart' as lib2;~B) import package:lib2/lib2.dart' is lib2:~C) import 'package:lib2/lib2.dart' for lib2:~D) Import 'package:lib2/lib2.dart' with lib2,~E) import package:lib2/lib2.dart on lib2:|A) import 'package:lib2/lib2.dart' as lib2;|💡 Açıklama: Çakışmaları engellemek için import edilirken as kelimesiyle takma ad (alias) atanır.`,
+`2022 Final|Sayfaya yerleştirilen resimlerin sayfadaki boşluğu dolduracak şekilde kaplaması isteniyorsa Image objesinin hangi arayüz bileşeni içerisinde olması gerekir?|A) Expanded~B) Container~C) GestureDetector~D) Center~E) Stack|A) Expanded|💡 Açıklama: Row veya Column içinde mevcut boşluğun tamamını kaplamak için Expanded kullanılır.`,
+`2022 Final, 2024 Büt|Flutter ve Dart içerisinden Firebase özelliklerine erişmek için kullanılan kütüphaneler koleksiyonunun adı nedir?|A) FlutterFire~B) Firein TheHole~C) Provider~D) Inti~E) Destiny|A) FlutterFire|💡 Açıklama: Resmi kütüphanenin ve dokümantasyonun adı FlutterFire'dır.`,
+`2022 Final, 2025-2026 Final|Firebase özelliklerinin kullanıma başlamasından önce aşağıdaki fonksiyonlardan hangisi çağrılmalıdır?|A) connect()~B) firebase_core()~C) load()~D) init()~E) initializeApp()|E) initializeApp()|💡 Açıklama: Firebase.initializeApp() tetiklenmeden servisler kullanılamaz.`,
+`2022 Final, 2023-2024 Büt, 2025-2026 Büt|Flutter'da bir animasyonun zaman içerisindeki değişimindeki ivmelenmesini ayarladığımız bileşeni hangisidir?|A) Weight~B) Curve~C) Size~D) Tween~E) Velocity|B) Curve|💡 Açıklama: İvme ve hız eğrileri (ease in, ease out vb.) Curve bileşeni ile atanır.`,
+`2022 Final|Komut satırına code/ komutu girilirse aşağıdakilerden hangisi meydana gelir?|A) Bulunulan klasördeki dart dosyalarının bir dökümü alınır.~B) Bulunulan klasördeki Flutter projesi çalıştırılır.~C) Bulunulan klasördeki Flutter projesi derlenir.~D) Yeni bir Flutter projesi oluşturulur,~E) Bulunulan klasör hedeflenecek şekilde VSCode çalıştınlır.|E) Bulunulan klasör hedeflenecek şekilde VSCode çalıştınlır.|💡 Açıklama: 'code .' komutu aktif dizini Visual Studio Code ile açar.`,
+`2022 Final, 2025 Final, 2025-2026 Final|Aşağıdakilerden hangisi bir uygulamada yazılan kodların dağıtım sürümünde tersine mühendislikle çözülmesini engellemek adına derleme aşamasında kullanılacak bir etikettir?|A) --clear-code~B) --fix~C) --mix-code~D) --obfuscate~E) --refactor|D) --obfuscate|💡 Açıklama: Kod karmaşıklaştırma işlemi --obfuscate parametresi ile yapılır.`,
+`2022 Final, 2023-2024 Büt|Aşağıdakilerden hangisi Flutter'da animasyon yapmak için kullanılan temel mimari bileşenlerden biri değildir?|A) Curve~B) Simulation~C) Ticker~D) Ruler~E) Scheduler|D) Ruler|💡 Açıklama: Flutter animasyon mimarisinde Ruler diye bir temel bileşen yoktur.`,
+
+`2022 Büt, 2025 Büt|Bir Flutter uygulamasında aşağıdaki testlerden hangisi gerçekleştirilemez?|A) Integration Test: Uygulamanın tamamının bütüncül çalışma testi~B) Sandbox Test: Güvenlik ihlali testi~C) Unit Test: Fonksiyonların tek tek testi~D) Widget Test: Arayüz bileşenlerinin testi~E) Unit Test: Taklit veri kaynağı ile değişen veri için test|B) Sandbox Test: Güvenlik ihlali testi|💡 Açıklama: Flutter'ın kendi test yapısında Sandbox adında varsayılan bir güvenlik test katmanı yoktur.`,
+`2022 Büt|Flutter'da animasyonlar için varsayılan değişim eğrisi (Curve) hangisidir?|A) Curves.fastOutSlowIn~B) Curves.slowMiddle~C) Curves.linear~D) Curves.bouncein~E) Curves.ease|C) Curves.linear|💡 Açıklama: Ek parametre belirtilmezse animasyonlar doğrusal (linear) olarak çalışır.`,
+`2022 Büt, 2024 Final|flutter build apk --analyze-size Yukarıdaki komutun terminalde çalıştırılması durumunda hangi sonuç elde edilir?|A) Uygulamanın profile edilmesi için gerekli sürüm bilgileri terminal ekranına yazılır.~B) Farklı Android sürümlerinde uygulamanın yükleme dosyasının ne kadar yer kapladığının karşılaştırması terminal ekranına yazılır.~C) Android işletim sistemi için oluşturulur ve Release sürümünün dosya boyutları hakkında detay bilgileri terminal ekranına yazılır.~D) Flutter için dosya boyutu limitlerinin ne olduğu ve nasıl arttırılacağı bilgisi terminal ekranına yazılır.~E) iOS ile Android işletim sistemleri arasında dosya farkı oluşturan kısımlar terminal ekranına yazılır.|C) Android işletim sistemi için oluşturulur ve Release sürümünün dosya boyutları hakkında detay bilgileri terminal ekranına yazılır.|💡 Açıklama: analyze-size komutu dağıtım paketinin boyut dağılım analizini sunar.`,
+`2022 Büt, 2025 Büt|Http paketi kullanılarak http.get() ile bir web hizmetine bağlanıldığında, dönen cevap response adında bir değişkene kaydedildiyse; aşağıdaki if koşulu hangi kontrolü gerçekleştirir? if(response.statusCode == 200)|A) Erişilen web servisinin başarısız bir cevap döndüğünü teyit eder.~B) Dönen sonucun bir Json dosyası olup olmadığını teyit eder.~C) Dönen sonucun bir html sayfası olup olmadığını teyit eder.~D) Erişilen web servisinin getirdiği verinin 200'e eşit olup olmadığını kontrol eder.~E) Erişilen web servisinin başarılı bir cevap döndüğünü teyit eder.|E) Erişilen web servisinin başarılı bir cevap döndüğünü teyit eder.|💡 Açıklama: HTTP 200 istek ve cevabın başarılı olduğunu gösterir.`,
+`2022 Büt, 2024 Büt|Pubspec.yaml dosyasına yeni bir paket bağımlılığı tanımlandığında bunun kullanıma hazır olması için terminalde hangi komut çalıştırılır?|A) Flutter pub get~B) Flutter run~C) Flutter work~D) Flutter build apk~E) Flutter create packag|A) Flutter pub get|💡 Açıklama: Eklenen paketleri indirmek ve projeye tanıtmak için pub get kullanılır.`,
+`2022 Büt|Dart'ta sonuç döndürmeyecek bir asenkron fonksiyonun geri dönüş veri türü hangisi olmalıdır?|A) Future<int>~B) Object~C) void~D) int~E) Future<void>|E) Future<void>|💡 Açıklama: Asenkron işlemler veri dönmüyorsa void yerine Future<void> dönerler.`,
+`2022 Büt|Flutter'da provider kütüphanesindeki uygulama seviyesi durum yönetiminde, durum yönetimini sağlamaya yarayan ilgili widget ağacının sarmanlanması için aşağıdaki kod bloğunda boş bırakılan yere gelecek uygun seçenek hangisidir?|A) Consumer~B) ChangeNotifier~C) Provider~D) DataModel~E) ChangeNotifierProvider|E) ChangeNotifierProvider|💡 Açıklama: Modeli ağaca sunan ana sağlayıcı ChangeNotifierProvider'dır.`,
+`2022 Büt|Google'un tasarladığı, material.io İnternet adresinde paylaşılan ve uygulamaların görsellerinin nasıl olması gerektiğini anlattığı konseptin genel adı nedir?|A) Widget Design~B) Material Design~C) Design Basics~D) Material Components~E) Material Widgets|B) Material Design|💡 Açıklama: Google'ın standartlaştırdığı tasarım diline Material Design adı verilir.`,
+`2022 Büt, 2025 Büt, 2025-2026 Büt|Aşağıdakilerden hangisi Flutter'ın uygulamanın performansını incelemek için kullanılan derleme modelidir?|A) Profile~B) Release~C) Debug~D) Perform~E) Publish|A) Profile|💡 Açıklama: Gerçek cihaza en yakın performansı ölçecek loglamayı sunan kip Profile modudur.`,
+`2022 Büt, 2024 Final|Flutter'da provider kütüphanesindeki uygulama seviyesi durum yönetiminde veri modelindeki değişiklikleri takip edip widget ağacının belli bir bölgesini güncellemeye yarayan widget için aşağıdaki kod bloğunda boş bırakılan yere yazılması gereken seçenek aşağıdakilerden hangisidir?|A) Provider~B) Consumer~C) ChangeNotifierProvider~D) ChangeNotifier~E) DataModel|B) Consumer|💡 Açıklama: Sadece dinlenen veri değiştiğinde alt ağacı tetikleyen yapı Consumer'dır.`,
+`2022 Büt, 2025 Final|Flutter'da temel veritabanları işlemlerini yerine getirmek için kullanılan kütüphanenin adı nedir?|A) sqflite~B) okhttp~C) volley~D) provider~E) intl|A) sqflite|💡 Açıklama: Akıllı cihazlarda lokal SQL operasyonları sqflite pakedi ile yürütülür.`,
+`2022 Büt|Google firmasının sunduğu bir hizmet olan Firebase için hangi tanımlama daha uygundur?|A) Android işletim sisteminin Flutter uygulaması ile İletişim kurabilmesi için ara bir katman görevini üstlenir.~B) Flutter kodlarının yazılması için bir editördür.~C) Google firmasının ürünlerini çevrimiçi sattığı bir markettir.~D) Veritabanı, Kimlik Doğrulama, Yapay Zeka gibi hizmetlerin sunulduğu bir servistir.~E) Android işletim sisteminin iOS gibi davranmasını sağlayarak Apple Markete bağlantı imkanı sunar.|D) Veritabanı, Kimlik Doğrulama, Yapay Zeka gibi hizmetlerin sunulduğu bir servistir.|💡 Açıklama: Firebase Google tabanlı kapsamlı bir BaaS (Backend as a Service) çözümüdür.`,
+`2022 Büt|"Navigator API'de Navigator.pop() fonksiyon çağrısı ......" Yukarıdaki boşluğa uygun olan tamamlayıcı aşağıdakilerden hangisidir?|A) Uygulamanın ilk sayfasını ekrana getirir.~B) Uygulama içerisindeki tüm sayfaların bir listesini ekrana getirir.~C) Uygulamanın ayarlar sayfasını ekrana getirir.~D) Uygulama kullanılırken son kapatılan sayfayı ekrana getirir.~E) Uygulama içerisinde yeni açılacak sayfanın adını alarak onu ekrana getirir.|D) Uygulama kullanılırken son kapatılan sayfayı ekrana getirir.|💡 Açıklama: pop(), yığındaki en üst rotayı çıkarır ve kullanıcı bir önceki sayfaya geri döner.`,
+`2022 Büt|Aşağıdakilerden hangisi Dart programlama dilinde bir tamsayı dizisi tanımlama örneğidir?|A) int[] list = int[1,2,3];~B) var list<int> = <int>(1,2,3);~C) var list[]={1,2,3};~D) var list=[1,2,3];~E) int list=int[]{1,2,3};|D) var list=[1,2,3];|💡 Açıklama: Dart'ta listeler köşeli parantez ile pratik bir şekilde yaratılır.`,
+
+`2023-2024 Final, 2024 Büt, 2025-2026 Final|Flutter'da içeriği sürekli değişebilen veri tabanı ve web servisleri gibi veri kaynakları için unit test işleminin belli bir anlık görüntü üzerine uygulanabilmesi için kullanılan paketin adı nedir?|A) Filter~B) Expresso~C) Turkish Coffee~D) Mockito~E) Cappuccino|D) Mockito|💡 Açıklama: Ağ çağrılarını taklit (mock) etmek için Mockito kütüphanesi kullanılır.`,
+`2023-2024 Final, 2025-2026 Final|Dart programlama dilinde arkaplanda çalışacak bir iş parçacığı (multi-thread yaklaşımı) için kullanılan bileşenin adı nedir?|A) thread~B) channel~C) background~D) process~E) isolate|E) isolate|💡 Açıklama: Dart izole çalışır ve paralel işlemler Isolate yapıları ile gerçekleşir.`,
+`2023-2024 Final, 2024 Büt|Navigator.pushNamed (context, '/b'); Flutter'da yukarıdaki kod parçacığının işlevi nedir?|A) '/b' metni ile belirtilen içeriği RAM'de arar.~B) Bellekte bir Map içerisinde '/b' metnini saklar.~C) '/b' metni ile belirtilen içeriğin RAM'e yüklenmesini sağlar.~D) '/b' metni ile belirtilen sayfayı arayüze çizer.~E) Ekranda bir TextField içerisine '/b' metnini yazar.|D) '/b' metni ile belirtilen sayfayı arayüze çizer.|💡 Açıklama: Tanımlı '/b' rotasına geçiş yaparak hedefteki ekranı arayüze yansıtır.`,
+`2023-2024 Final, 2024 Büt|Aşağıdakilerden hangisi sınıfların hangi türden miras aldığını bulmak adına kullandığımız tür kontrol operatörüdür?|A) to~B) as~C) in~D) with~E) like|B) as|💡 Açıklama: Güvenli tür dönüşümü (type casting) ve kontrolü as ile sağlanır.`,
+`2023-2024 Final, 2024 Tek Ders|Flutter ekibinin kullanım için önerdiği kütüphaneleri sunduğu programın adı nedir?|A) Best Practice~B) Jet Pack~C) Flutter Favorite~D) Editors Choice~E) Flutter Best|C) Flutter Favorite|💡 Açıklama: Seçkin ve güvenli pakedler "Flutter Favorite" programıyla rozetlenir.`,
+`2023-2024 Final, 2024 Tek Ders|Flutter'ın animasyon oluşturmak için hazır sunduğu "Animated Container" gibi widgetların kullanımı ile gerçekleştirilen animasyon türü aşağıdakilerden hangisidir?|A) Hero Animations~B) AnimatedWidget~C) AnimationBuilder~D) Explicit Animations~E) Implicit Animations|E) Implicit Animations|💡 Açıklama: Ticker olmadan otomatik ara değer yaratan bu widgetlara Implicit Animation denir.`,
+`2023-2024 Final, 2025-2026 Final|Aşağıdaki satırlardan hangisi kalıcı depolama alanında uygulamaların kendine ait klasörüne erişmek için path_provider kütüphanesi aracılığı ile kullanılan kodlamadır?|A) Directory dir = await getTemporary Directory();~B) Directory dir = path("AppFolder/Module/Data");~C) Directory dir = await getApplication Documents Directory();~D) Directory dir = path("Data/Data");~E) Directory dir = getCacheDir();|C) Directory dir = await getApplication Documents Directory();|💡 Açıklama: Kullanıcı verisini saklamak için güvenli uygulama dizini getApplicationDocumentsDirectory ile çağrılır.`,
+`2023-2024 Final, 2024 Tek Ders|GridView düzenleyici arayüz bileşeni için aşağıdaki tanımlardan hangisi uygundur?|A) Kaydırılabilir bir ızgara (tablo) görünümü sağlar.~B) Önemli noktaları vurgulamak için köşeleri yuvarlatılmış ve gölge efekti olan bir çerçeve sağlar.~C) İç boşluk(padding), dış boşluk(margin), kenarlık(border), arkaplan rengi(background color) gibi özellikleri atamayı sağlar.~D) Kaydırılabilir bir liste görünümü sağlar.~E) İçeriğin üst üste bindirilmesini sağlar.|A) Kaydırılabilir bir ızgara (tablo) görünümü sağlar.|💡 Açıklama: GridView çok kolonlu tablo formatı yaratır.`,
+`2023-2024 Final, 2025-2026 Final|Aşağıdakilerden hangisi Flutter'ın durum tabanlı arayüz çizimi yaklaşımının genel tanımlamasıdır?|A) declarative~B) decorative~C) imperative~D) ilustrative~E) derivative|A) declarative|💡 Açıklama: Flutter emirsel değil, bildirimsel (declarative) şekilde arayüzü inşa eder.`,
+`2023-2024 Final, 2025-2026 Final, 2025-2026 Büt|Flutter'ın arayüz çizimi ile ilgili olarak aşağıdaki yorumlardan hangisi doğrudur?|A) Provider paketi bize internette sunulan ücretsiz webservislerinin bilgilerini getirmektedir.~B) Uygulama içerisindeki veri değişikliği arayüz güncellemesi gerektiriyorsa bu bir model olarak tanımlanmalı ve değişiklikler takip edilmelidir.~C) Bir butonun içerisinde bir widget oluşturularak bu widget ağacına dinamik olarak eklenebilir.~D) Bir verideki değişim arayüzün bağımsız bölgelerinde güncelleme gerektiriyorsa StatefulWidget kullanmak iyi çözümdür.~E) Yeni bir ekranın açılması için ikinci Ekran.show() tarzında bir çağrı yapılabilir.|B) Uygulama içerisindeki veri değişikliği arayüz güncellemesi gerektiriyorsa bu bir model olarak tanımlanmalı ve değişiklikler takip edilmelidir.|💡 Açıklama: Model/Durum yönetimi (State Management) mimarisi bu prensibe dayanır.`,
+`2023-2024 Final|Aşağıdakilerden hangisi Flutter'da bir animasyonun geçiş için kullanacağı aralığın 0.0 - 1.0 yerine verebileceğimiz başka herhangi iki obje şeklinde olmasını sağlamaktadır?|A) KeyValue~B) Pair~C) Couple~D) Tween~E) Range|D) Tween|💡 Açıklama: İki değer (örn: renkler veya boyutlar) arasında geçiş için interpolasyon Tween ile yapılır.`,
+`2023-2024 Final, 2024 Tek Ders|AssetImage('icons/heart.png', package: 'my_icons') Yukarıdaki kod parçacığının işlevi aşağıdakilerden hangisidir?|A) Projedeki icons klasörü altındaki heart.png dosyasına erişir ve kod içerisinde my_icons olarak kullanır.~B) my_icons adında yeni bir kütüphane oluşturur ve içerisine icons/heart.png dosyasını kopyalar.~C) heart.png dosyasını my_icons kütüphanesi içerisine yükler.~D) Resim dosyalarının uygulama içerisinde erişilebilmesi için bir kütüphane yolu tanımlar.~E) my_icons adındaki kütüphanede icons/heart.png yoluyla belirtilen resim dosyasını RAM'e çeker.|E) my_icons adındaki kütüphanede icons/heart.png yoluyla belirtilen resim dosyasını RAM'e çeker.|💡 Açıklama: Package parametresi, kaynağın dış bir kütüphane klasöründen çağrılmasını sağlar.`,
+
+`2023-2024 Büt, 2025-2026 Büt|dart:convert kütüphanesinde bir objeyi Json metnine çevirmek için kullanılan fonksiyon aşağıdakilerden hangisidir?|A) jsonEncode()~B) tojson()~C) jsonDecode()~D) serialize()~E) fromjson()|A) jsonEncode()|💡 Açıklama: Nesneyi JSON string formatına parse etmek için jsonEncode çağrılır.`,
+`2023-2024 Büt|Flutter'da kod üreten kütüphaneler kullanılırsa (örneğin json_serializable) her derleme işleminde kod üretiminin ilgili dosyadaki değişiklikleri takip ederek otomatik yapılması için terminale yazılması gereken komut aşağıdakilerden hangisidir?|A) flutter pub run json_serializable build~B) flutter pub run json_serializable watch~C) flutter pub run build_runner watch~D) flutter pub run build_runner build~E) flutter build run json_serializable watch|C) flutter pub run build_runner watch|💡 Açıklama: watch komutu dosyaları dinler ve değişince otomatik yeniden derler.`,
+`2023-2024 Büt|flutter_test paketi kullanarak bir widget testi yapılacaktır. Widgetın test ortamında oluşturulması için aşağıdaki hangi sınıf ve fonksiyon çifti kullanılır?|A) TestWidget - tester~B) Matcher findOneWidget~C) Tester - pump~D) WidgetTester - pumpWidget~E) Finder findWidget|D) WidgetTester - pumpWidget|💡 Açıklama: pumpWidget, test edilen ortamı hazırlayan ve widget'ı bağlayan fonksiyondur.`,
+`2023-2024 Büt|Aşağıda bir değişkene aktarılan metin örnekleri verilmektedir. Hangisinde String Interpolation tekniği kullanıldığını söyleyebiliriz?|A) "Merhaba Dünya &val"~B) 'Merhaba Dünya ![val]'~C) 'Merhaba Dünya \${val}'~D) "Merhaba Dünya #(val)"~E) 'Merhaba' + 'Dünya' + val|C) 'Merhaba Dünya \${val}'|💡 Açıklama: Dolar işareti (\$) ile string içine değişken gömme işlemine String Interpolation denir.`,
+`2023-2024 Büt, 2024 Final|Bir sınıf içerisindeki bir değişken, Floor kütüphanesi kullanılarak SQLite'da bir tablodaki PrimaryKey özelliği olan bir alanı (field) temsil ediyorsa, değişkenin içerisinde bulunduğu sınıf aşağıdaki dipnotlardan (annotation) hangisini kullanmaktadır?|A) @sqflite~B) @table~C) @dao~D) @database~E) @entity|E) @entity|💡 Açıklama: ORM kütüphanelerinde (Floor, Room vb.) veritabanı tabloları @entity sınıfı olarak işaretlenir.`,
+`2023-2024 Büt, 2025 Büt, 2025 Tek Ders|Flutter'daki provider kütüphanesi ile sağlanan uygulama seviyesi durum yönetiminde verideki değişiklikler hangi fonksiyon çağrısı ile bildirilir?|A) notify Providers()~B) notifyListeners()~C) dataProviders()~D) dataChanged()~E) notifyConsumers()|B) notifyListeners()|💡 Açıklama: Değişken güncellendiğinde dinleyicileri (consumer) tetiklemek için notifyListeners çağrılır.`,
+`2023-2024 Büt, 2024 Büt|dependencies: url_launcher: >=5.4.0 <6.0.0 pubspec.yaml dosyası içerisinde aşağıdaki gibi bir satır varsa bu paket projeye nasıl dahil olacaktır?|A) url launcher'ın 5.4.0 ile 6.0.0 arasındaki sürümleri görmezden gelinir.~B) url launcher'a bağımlı olan başka paketlerde bağımlılıklar 6.0.0'a yükseltilecektir.~C) url_launcher'a olan bağımlılıklar 5.4.0 ila 6.0.0 arasındaki bir sürümü kullanacaktır.~D) url launcher'ın son sürümü kullanılır.~E) url_launcher projeye dahil edilmeyecek sadece sürüm aralığı takip edilecektir.|C) url_launcher'a olan bağımlılıklar 5.4.0 ila 6.0.0 arasındaki bir sürümü kullanacaktır.|💡 Açıklama: Belirtilen operatörler sürüm kilitlemesi yerine sadece belli aralıktaki güvenli sürümlerin indirilmesini garanti eder.`,
+`2023-2024 Büt|Uygulamanıza bir paket eklemek istiyorsanız, bu paketin uygulamanıza nasıl dahil edileceği ..... sayfasında yazacaktır. Yukarıdaki boşluğa aşağıdaki seçeneklerden hangisi gelmelidir?|A) Material.io, design~B) Flutter.dev, development~C) GitHub.com, Flutter~D) Pub.dev, installing~E) Dart.dev, guides|D) Pub.dev, installing|💡 Açıklama: Pub.dev paket detaylarında 'installing' sekmesi kurum talimatlarını sunar.`,
+`2023-2024 Büt|"Lazy Loading" kavramı aşağıdakilerden hangisinde doğru bir karşılıkla ifade edilmiştir?|A) Yüklenen verinin sadece ekranda görüntülenecek kısmının çekilmesi~B) Yüklenen verinin sıra tabanlı değil rastgele bir sırada çekilmesi~C) Yüklenene verinin uygulama açılırken çekilmesi ve sonrasında aynı verinin kullanımı~D) Yüklenen verinin kullanıcıya özgü bir düzenleme içermeden herkes için aynı şekilde çekilmesi~E) Yüklenen verinin kullanıcıya özgü düzeltme içererek çekilmesi|A) Yüklenen verinin sadece ekranda görüntülenecek kısmının çekilmesi|💡 Açıklama: Performansı korumak için veri sadece kullanıcı kaydırdıkça (ihtiyaç anında) belleğe çekilir.`,
+`2023-2024 Büt|Dart'ta bir sınıf tanımlaması yapılırken mixin kullanarak miras alma yapılacaksa mixin adları hangi anahtar kelimeden sonra tanımlanırlar?|A) implements~B) parent~C) on~D) extends~E) with|E) with|💡 Açıklama: Çoklu kalıtım benzeri kod paylaşımı (mixin) with kelimesi ile uygulanır.`,
+
+`2024 Final, 2025-2026 Final|dart:convert kütüphanesinde Json metnini bir objeye çevirmek için kullanılan fonksiyon aşağıdakilerden hangisidir?|A) toJson()~B) jsonEncode()~C) serialize()~D) jsonDecode()~E) fromJson()|D) jsonDecode()|💡 Açıklama: JSON string yapısını koddaki dinamik Map'e çözmek (decode) için jsonDecode() kullanılır.`,
+`2024 Final|Aşağıdaki komutlardan hangisi bir Flutter uygulamasının Android dağıtımı oluşturmasını sağlar?|A) flutter make apk~B) flutter appbundle apk~C) flutter build apk~D) flutter profile appbundle~E) flutter create apk|C) flutter build apk|💡 Açıklama: Çıktı paketi (APK) doğrudan 'flutter build apk' komutuyla tetiklenir.`,
+`2024 Final|Navigator API'de ModalRoute.of() metodu ile ....... erişilir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?|A) Açılır ekran boyutuna~B) Sayfanın theme (şablon) özelliklerine~C) Sayfaya gönderilen argümanlara~D) Gezinti yapılan uygulamalar listesine~E) Cihaz konfigürasyon bilgilerine|C) Sayfaya gönderilen argümanlara|💡 Açıklama: Hedef sayfada gelen veriyi kapmak (arguments) için ModalRoute.of(context).settings.arguments kullanılır.`,
+`2024 Final, 2024 Büt|Aşağıdakilerden hangisi Flutter'da uygulama seviyesi durum yönetimi için kullanılan kütüphanenin adıdu?|A) intl~B) material~C) http~D) firebase~E) provider|E) provider|💡 Açıklama: Global stateleri izlemek ve dağıtmak için en standart paketlerden biri provider'dır.`,
+`2024 Final|Json Serializable paketi ile otomatik json dönüştürmesi yapılacak bir veri modeli sınıfı içerisinde @JsonKey() annotation'ı aşağıdaki amaçlardan hangisi için kullanılır?|A) Sayfanın yazı tipi kodlamasından (encoding) kaynaklı çevirme ihtiyacının belirtilmesi~B) Bir değişkene json çevriminde ek dönüşüm işlevleri sağlanması~C) Aynı ada sahip iki alanın birbirinde ayrılması~D) Sınıfin Json serializable tarafından dönüşüm için dikkate almması~E) Dosya sistemine kayıtlı veri ile bellekte kayıtlı verinin eşleştirilmesi|B) Bir değişkene json çevriminde ek dönüşüm işlevleri sağlanması|💡 Açıklama: İsimlerin değişken veya dönüşüm özel durumlarının belirtilmesi için alanlar @JsonKey() ile işaretlenir.`,
+`2024 Final, 2024 Tek Ders, 2025-2026 Final, 2025-2026 Büt|pubspec.yaml dosyasındaki gereksinimler (dependencies) kısmında paket yönetiminin en güncel sürümü bulması için versiyon numarası önüne aşağıdaki sembollerden hangisi gelmektedir?|A) ^~B) *~C) ~ ~D) =~E) >|A) ^|💡 Açıklama: Caret (^) sembolü uyumlu ve çakışmayan güncel aralıkları otomatik kurmak içindir.`,
+`2024 Final, 2025-2026 Final|Flutter'da her uygulama için varsayılan bir SharedPreferences dosyası oluşturulmaktadır. Bu dosyanın bir referansını elde etmek için aşağıdaki kodlamalardan hangisi kullanılır?|A) final prefs = await SharedPreferences.getInstance();~B) final prefs = File. SharedPreferences();~C) final prefs = new SharedPreferences();~D) final prefs = SharedPreferences.defaultInstance();~E) final prefs = await SharedPreferences. getValue();|A) final prefs = await SharedPreferences.getInstance();|💡 Açıklama: Cihaz hafızasındaki dosyayı asenkron açıp referansını döndüren metot getInstance()'tır.`,
+`2024 Final, 2025 Final|Flutter'da paket bağımlılıkları belirtmek için pubspec.yaml dosyasında kullanılan başlık aşağıdakilerden hangisidir?|A) resources:~B) packages:~C) requirements:~D) dependencies:~E) relations:|D) dependencies:|💡 Açıklama: Projeye entegre edilecek üçüncü taraf paketler dependencies düğümüne yazılır.`,
+`2024 Final, 2024 Tek Ders|Flutter'da tüm arayüz bileşenlerinin miras alarak oluşturuldukları kök sınıfın adı aşağıdakilerden hangisidir?|A) Component~B) Widget~C) Form~D) Frame~E) Field|B) Widget|💡 Açıklama: Ekranda yer kaplayan veya tasarımsal davranan her parça Widget sınıfının bir çocuğudur.`,
+`2024 Final|Aşağıdakilerden hangisi Flutter çerçevesi içerisinde gelen düzenleyici bir arayüz bileşeni adı değildir?|A) Palette~B) Container~C) ListView~D) Center~E) Align|A) Palette|💡 Açıklama: Container ve Center layout elementidir. Palette diye temel bir düzenleyici yoktur.`,
+
+`2024 Büt, 2025 Final|http paketindeki http.get() fonksiyonunun dönüş değeri aşağıdakilerden hangisidir?|A) http.Request~B) Future<http.Request>~C) Future<http.Response>~D) http.State~E) http.Response|C) Future<http.Response>|💡 Açıklama: Ağ üzerinden yapılan istek asenkron olduğu için Future ve Response türünde veriler döner.`,
+`2024 Büt|DartDev Tools içerisindeki "Performance View" aracı aşağıdaki işlevlerden hangisini yerine getirmek için vardır?|A) Uygulamanın dağıtım paketlerindeki eksikleri hesaplar ve dağıtıma uygun olması için gerekli bileşenleri listeler.~B) Uygulama içerisindeki varlıkların bir listesini gösterir.~C) Ekrandaki her bir widgetın kapladığı alanı ve yerleşim planını gösterir.~D) Uygulamanın ayarlar ekranını gösterir.~E) Uygulamanın ekran tazelemesi için geçen süreyi ve her bir olayın gerçekleşme süresini gösterir.|E) Uygulamanın ekran tazelemesi için geçen süreyi ve her bir olayın gerçekleşme süresini gösterir.|💡 Açıklama: Kare hızını ve UI/GPU işlem darboğazlarını ölçeklemek için kullanılır.`,
+`2024 Büt, 2025 Büt, 2025 Tek Ders, 2025-2026 Büt|double get right => left + width; Dart Programlama dilinde bir sınıf içerisinde yukarıdaki kodun işlevini aşağıdakilerden hangisi doğru ifade etmektedir?|A) get adında yeni bir değişken tanımlamaktadır.~B) right sınıf içinde sadece okunabilir bir tanımlama olarak eklenir.~C) right sınıf içinde sadce yazılabilir bir tanımlama olarak eklenir.~D) left ve width değerleri güncellenmek istendiğinde bu satır çalıştırılır.~E) right adında yeni bir değişken tanımlamaktadır.|B) right sınıf içinde sadece okunabilir bir tanımlama olarak eklenir.|💡 Açıklama: get bloğu ile oluşturulan değerler dışarıdan sadece okunabilir (read-only) özellik sunar.`,
+
+`2024 Tek Ders|Flutter'da bir Future objesinden dönen sonucun ekrana yansıtılması için kullanılan Widget aşağıdakilerden hangisidir?|A) FutureStream~B) Future Widget~C) FutureBuilder~D) Oracle~E) Back To The Future|C) FutureBuilder|💡 Açıklama: Asenkron değerin bekleme, yüklenme ve bitiş durumuna göre widget çizdirmek FutureBuilder ile yapılır.`,
+`2024 Tek Ders|Flutter'da sayfalar arası gezintiyi sağlayan mekanizma aşağıdaki isimlerden hangisi ile adlandırılır?|A) Router API~B) PathFinder API~C) Navigator API~D) PageProvider API~E) AppState|C) Navigator API|💡 Açıklama: Yönlendirme yığınını (stack) idare eden yapı Navigator API'dir.`,
+`2024 Tek Ders|Flutter'da provider kütüphanesindeki uygulama seviyesi durum yönetiminde kullanılan Consumer widgetının yapıcı fonksiyonunun builder parametresi, parametreleri context(BuildContext), value(Generic Data Type) ve child(Widget) şeklindedir. Yukarıdaki child parametresi aşağıdaki amaçlardan hangisi için kullanılmaktadır?|A) Consumer altında güncellenme işleminin başlayacağı noktayı ifade etmek için~B) Consumer altında güncellenmesine gerek olmayan ağacı ifade etmek için~C) Aynı bileşenden birden fazla varsa hangisinin Consumer widget'ı tarafından yönetildiğini bildirmek için~D) Widget ağacında güncellenmesi gereken yeri ifade etmek için~E) Kullanıcı etkileşimlerini yakalayacak widget bileşenlerinin çizilmesi için|B) Consumer altında güncellenmesine gerek olmayan ağacı ifade etmek için|💡 Açıklama: Performansı korumak adına, model değişse de yeniden çizilmesi gerekmeyen büyük, statik alt ağaçlar child'a atanır.`,
+
+`2025 Final|Hata yönetimi için kullanılan anahtar kelimelerden rethrow anahtar kelimesi aşağıdaki amaçlardan hangisini yerine getirmek için kullanılır?|A) Hata ayıklama işleminde hatanın oluştuğu kodu tekrar çalıştırmak~B) Aynı hatanın kodda ikinci kez oluşumunu engellemek~C) Yakalanmış bir hatanın tekrardan oluşturularak çağıran fonksiyona aktarılması~D) Yeni hata türlerinin tanımlanmasının yapılması~E) Hataların kullanıcı ekranında görüntülenmesini engellemek|C) Yakalanmış bir hatanın tekrardan oluşturularak çağıran fonksiyona aktarılması|💡 Açıklama: catch bloğunda hata ele alındıktan sonra üst çağıran (parent function) tarafına hatayı paslamak için rethrow kullanılır.`,
+`2025 Final|Terminalde bir Flutter uygulamasının klasöründe sadece flutter run komutu çalıştırılırsa uygulama aşağıdaki kiplerden hangisinde çalışmaya başlayacaktır?|A) Release~B) Integration~C) Test~D) Debug~E) Profile|D) Debug|💡 Açıklama: Parametresiz run komutu varsayılan olarak Debug kipinde çalıştırır.`,
+`2025 Final|await db.insert('dogs', dog.toMap(), conflictAlgorithm: ConflictAlgorithm.replace, Yukarıdaki kod parçası SQLite veritabanına yeni bir kayıt eklemede kullanılmaktadır. Bu koddaki conflictAlgorithm parametresinin kullanım amacı aşağıdakilerden hangisidir?|A) Kaydın birden fazla sütünü boş geçmesini engellemek~B) Dart dili ile SQLite arasında uyuşmayan veri türleri için yapılacak davranışı belirlemek~C) Kaydın çakışma durumunda çalışma şeklini belirlemek~D) Aynı anda birden fazla kayıt oluşturabilmek~E) Kaydın birden fazla tabloya aktarımını sağlamak|C) Kaydın çakışma durumunda çalışma şeklini belirlemek|💡 Açıklama: Aynı Primary Key ile kayıt geldiğinde (çakışma) verinin güncelleneceğini (replace) veya es geçileceğini belirler.`,
+`2025 Final, 2025-2026 Büt|Stateful Widget ile ilgili olarak aşağıdaki ifadelerden hangisi yanlıştır?|A) setState(), StatefulWidget'ta arayüz güncellemesinin tetiklenmesi gereken kodu sarmalamalıdır.~B) Bir Flutter projesinde birden fazla StatefulWidget tanımlanamaz.~C) Arayüz bileşenleri hiyerarşisinde bir StatefulWidget tanımlaması altında (içerisinde) Stateless Widget tanımlaması bulunabilir.~D) Stateless Widget arayüzün güncellenmesi için herhangi bir mekanizma sunmaz. Arayüz güncelleneceği zaman yeri geldiğinde sıfırdan oluşturulur.~E) Tüm Flutter arayüz bileşenlerinin oluşturacağı ağaç runApp() fonksiyonundaki parametreden başlar.|B) Bir Flutter projesinde birden fazla StatefulWidget tanımlanamaz.|💡 Açıklama: Bir projede sınırsız sayıda StatefulWidget bulunabilir ve içiçe kullanılabilir.`,
+
+`2025 Büt|Uygulamanın farklı cihazlarda test edilmesini otomatikleştirmek için aşağıdaki araçlardan hangisi kullanılır?|A) Mockito~B) Flutter Inspector~C) flutter test~D) Dart Analyzer~E) Firebase TestLab|E) Firebase TestLab|💡 Açıklama: Bulut tabanlı binlerce cihazda simülasyon testi için Firebase TestLab idealdir.`,
+`2025 Büt, 2025 Tek Ders|uses-permission android:name="android.permission.INTERNET" Android işletim sisteminde İnternet erişimine sahip olabilmemiz için yukarıdaki kod parçacığı aşağıdaki dosyalardan hangisine yazılmalıdır?|A) initialize.json~B) Configuration.xml~C) pubspec.yaml~D) AndroidManifest.xml~E) config.ini|D) AndroidManifest.xml|💡 Açıklama: Android özelindeki (native) izin gereksinimleri Manifest dosyasıyla karşılanır.`,
+`2025 Büt|Flutter'da uygulanacak bir animasyonun sürekli tekrar etmesi isteniyorsa oluşturulacak widgetın aşağıdaki sınıflardan hangisinden miras alması uygun olur?|A) AnimatedWidget~B) AnimatedContainer~C) Animated PhysicalModel~D) AnimatedAlign~E) Widget Transition|A) AnimatedWidget|💡 Açıklama: Özel ve sürekli kontrol gerektiren animasyonlar için AnimatedWidget ile AnimationController birbirine bağlanarak kullanılır.`,
+`2025 Büt|"App State" (Uygulama durumu) Flutter'da veri değişiminin bir durum ile uygulama genelinde takibini sağlayan yaklaşımdır. Aşağıdakilerden hangisi için "App State" yaklaşımını kullanmak gereksiz olacaktır?|A) Bir e-ticaret uygulamasında sepet kısmının inşasında~B) Kullanıcı oturum açma işlevinde~C) Bir sosyal ağ uygulamasının bildirim göstermesinde~D) Bir animasyonlu widgetın animasyonu oynatımında~E) Kullanıcı tercihlerinin değişiminde|D) Bir animasyonlu widgetın animasyonu oynatımında|💡 Açıklama: Animasyon durumu sadece o bileşeni ilgilendirir, global state modeline yansıtılması performansı boğar.`,
+
+`2025 Tek Ders, 2025-2026 Final|setState(() { active = !active; }) Yukarıdaki kod parçasında "setState" içerisinde "active" değeri güncellenmiş ve bu değere göre hiyerarşide içteki bir widget arkaplan rengini seçecektir. Hal böyle iken, setState metodu arayüz bileşenlerinin oluşturduğu ağaçta güncellenecek arayüz bileşeninden daha dış seviyede bulunuyorsa, arayüz güncellenmesinde değişen veri içteki arayüz bileşenlerine (widget) aktarılma yöntemi aşağıdakilerden hangisidir?|A) Stateful Widget'in yapıcı(constructor) fonksiyonuyla~B) Hiyerarşide içeride kalan widget'ın yapıcı fonksiyonuyla~C) Hiyerarşide içeride kalan widget'in build fonksiyonuyla~D) Scaffold widget'ının child parametresine beslenecek fonksiyonla~E) StatefulWidget'in createState fonksiyonuyla|B) Hiyerarşide içeride kalan widget'ın yapıcı fonksiyonuyla|💡 Açıklama: State değişikliği (değerler) yukarıdan aşağıya (parent to child) child bileşenin yapıcı metodu ile aktarılır.`,
+`2025 Tek Ders|Bir paketin belli bir sürümünün kullanımı zorunluluğu varsa bunu belirtmek için pubspec.yaml dosyasında aşağıdaki başlıklardan hangisi kullanılır?|A) dependency_must~B) dependency_overrides~C) dependency_mandatory~D) dependency_downgrade~E) dependency_chosen|B) dependency_overrides|💡 Açıklama: Diğer paketlerin gereksinimleri de olsa bu kuralı ezip zorla belirli sürümü kullanmak için dependency_overrides sekmesi kullanılır.`,
+
+`2025-2026 Final|Plugin (Eklenti) ile Package (Paket) arasındaki farklılık aşağıdakilerden hangisidir?|A) Package sadece Dart kodlarından oluşurken Plugin platform kodlaması ile bir köprü oluşturur.~B) Plugin her projeye uyarken package sadece Dart uygulamalarına eklenir.~C) Package boyutu daha büyüktür. Plugin ise küçük kütüphanelerdir.~D) Plugin'de Package'ye göre asset ve diğer bileşenler de bulunabilir.~E) Plugin sadece Dart kodlarından oluşurken Package platform kodlaması ile bir köprü oluşturur.|A) Package sadece Dart kodlarından oluşurken Plugin platform kodlaması ile bir köprü oluşturur.|💡 Açıklama: Plugin'ler Swift/Kotlin gibi native işletim sistemi kodları barındırırken, packageler sadece pure dart kodu taşır.`,
+
+`2025-2026 Büt|Aşağıdakilerden hangisi Flutter uygulama boyutunu azaltmak için kullanılacak yöntemlerden biri değildir?|A) Kütüphanelerden yüklenen kaynakların en aza indirilmesi~B) Android ve iOS SDK sürümlerinin düşük tutulması~C) PNG ye JPEG dosyalarını sıkıştırarak kullanma~D) Kullanılmayan kaynakların projeden çıkarılması~E) Dağıtım sürümü üretilirken --split-debug-info etiketinin kullanımı|B) Android ve iOS SDK sürümlerinin düşük tutulması|💡 Açıklama: SDK sürümlerini düşük tutmak doğrudan APK boyutuna bir avantaj veya optimizasyon sağlamaz.`,
+
+]; 
+
+  // --- BURADAN İTİBAREN KOPYALAYIN ---
+    let isAllOpen = false;
+    let temizlenmisData = []; // Birleştirilmiş verileri global tutalım ki arama/filtreleme yapabilelim
+
+    // 1. SORULARI BİRLEŞTİREN FONKSİYON
+    function sorulariBirlestir(dataArray) {
+        const soruMap = new Map();
+
+        dataArray.forEach(item => {
+            if (!item || item.trim() === '') return;
+            
+            const parts = item.split('|');
+            if (parts.length < 4) return; 
+            
+            let tagsRaw = parts[0];
+            const question = parts[1].trim(); 
+            const options = parts[2];
+            const correctAnswer = parts[3];
+            const explanation = parts[4] ? parts[4] : '';
+
+            let tagsList = tagsRaw.split(',').map(t => t.trim());
+            let mevcutSayi = 1;
+
+            tagsList = tagsList.filter(t => {
+                const match = t.match(/(\d+)\s*Kez Çıktı/i);
+                if (match) {
+                    mevcutSayi = parseInt(match[1]);
+                    return false; 
+                }
+                return true;
+            });
+
+            if (soruMap.has(question)) {
+                let kayit = soruMap.get(question);
+                kayit.count += mevcutSayi; 
+                
+                tagsList.forEach(t => {
+                    if (!kayit.tags.includes(t)) {
+                        kayit.tags.push(t);
+                    }
+                });
+            } else {
+                soruMap.set(question, {
+                    tags: tagsList,
+                    options: options,
+                    correctAnswer: correctAnswer,
+                    explanation: explanation,
+                    count: mevcutSayi
+                });
+            }
+        });
+
+        const birlestirilmisData = [];
+        for (let [qText, data] of soruMap.entries()) {
+            let finalTags = [...data.tags];
+            if (data.count > 1) {
+                finalTags.push(`${data.count} Kez Çıktı!`);
+            }
+            
+            const itemString = `${finalTags.join(',')}|${qText}|${data.options}|${data.correctAnswer}|${data.explanation}`;
+            birlestirilmisData.push(itemString);
+        }
+
+        return birlestirilmisData;
+    }
+
+   // 2. EKRANA BASTIRMA FONKSİYONU (Renklendirme Geliştirilmiş Versiyon)
+    function renderQuestions(data) {
+        const container = document.getElementById('q-container');
+        container.innerHTML = '';
+        
+        if(data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px;">Kriterlerinize uygun soru bulunamadı.</p>';
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const parts = item.split('|');
+            const tagsRaw = parts[0];
+            const question = parts[1];
+            const options = parts[2].split('~');
+            const correctAnswer = parts[3];
+            const explanation = parts[4] || '';
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const tagsDiv = document.createElement('div');
+            tagsDiv.className = 'tags';
+            
+            tagsRaw.split(',').forEach(tag => {
+                tag = tag.trim();
+                if(!tag) return;
+                const span = document.createElement('span');
+                span.className = 'tag';
+                
+                let lowerTag = tag.toLowerCase();
+                if(lowerTag.includes('ünite') || lowerTag.match(/^u\d+/)) {
+                    span.classList.add('tag-u');
+                } else if(lowerTag.includes('banko') || lowerTag.includes('kez çıktı')) {
+                    span.classList.add('tag-h');
+                } else {
+                    span.classList.add('tag-e');
+                }
+                
+                span.textContent = tag;
+                tagsDiv.appendChild(span);
+            });
+
+            const qDiv = document.createElement('div');
+            qDiv.className = 'q-text';
+            qDiv.textContent = (index + 1) + ". " + question;
+
+            const optUl = document.createElement('ul');
+            optUl.className = 'opt';
+            
+            options.forEach(opt => {
+                const li = document.createElement('li');
+                li.textContent = opt;
+                li.onclick = function() {
+                    // Önce bu sorudaki tüm şıkları varsayılan (gri) haline getirerek sıfırla
+                    Array.from(optUl.children).forEach(child => {
+                        child.style.backgroundColor = '#f8f9fa';
+                        child.style.borderColor = 'var(--b)';
+                        child.style.color = 'var(--t)';
+                        child.style.fontWeight = 'normal';
+                    });
+                    
+                    // Cevap kontrolü
+                    if(opt.trim() === correctAnswer.trim()) {
+                        // DOĞRU ŞIKKA TIKLANDIYSA: Canlı Yeşil Yap
+                        this.style.backgroundColor = '#d4edda';
+                        this.style.borderColor = '#28a745';
+                        this.style.color = '#155724';
+                        this.style.fontWeight = 'bold';
+                    } else {
+                        // YANLIŞ ŞIKKA TIKLANDIYSA: Canlı Kırmızı Yap
+                        this.style.backgroundColor = '#f8d7da';
+                        this.style.borderColor = '#dc3545';
+                        this.style.color = '#721c24';
+                        this.style.fontWeight = 'bold';
+                        
+                        // KULLANICIYA YARDIM: Aynı esnada doğru olan şıkkı da otomatik yeşile boya
+                        Array.from(optUl.children).forEach(child => {
+                            if(child.textContent.trim() === correctAnswer.trim()) {
+                                child.style.backgroundColor = '#d4edda';
+                                child.style.borderColor = '#28a745';
+                                child.style.color = '#155724';
+                                child.style.fontWeight = 'bold';
+                            }
+                        });
+                    }
+                };
+                optUl.appendChild(li);
+            });
+
+            const btn = document.createElement('button');
+            btn.className = 'ans-btn';
+            btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster';
+            
+            const ansBox = document.createElement('div');
+            ansBox.className = 'ans-box';
+            ansBox.style.display = isAllOpen ? 'block' : 'none';
+            ansBox.innerHTML = `<div class="ans-true">Cevap: ${correctAnswer}</div>${explanation ? `<div><em>Açıklama:</em> ${explanation}</div>` : ''}`;
+
+            btn.onclick = () => {
+                if (ansBox.style.display === 'block') {
+                    ansBox.style.display = 'none';
+                    btn.textContent = 'Cevabı Göster';
+                } else {
+                    ansBox.style.display = 'block';
+                    btn.textContent = 'Cevabı Gizle';
+                }
+            };
+
+            card.appendChild(tagsDiv);
+            card.appendChild(qDiv);
+            card.appendChild(optUl);
+            card.appendChild(btn);
+            card.appendChild(ansBox);
+
+            container.appendChild(card);
+        });
+    }
+//buraya kadar 
+    // 3. BUTON VE ARAMA FONKSİYONLARI
+    function toggleAll() {
+        isAllOpen = !isAllOpen;
+        const boxes = document.querySelectorAll('.ans-box');
+        const btns = document.querySelectorAll('.ans-btn');
+        boxes.forEach(box => box.style.display = isAllOpen ? 'block' : 'none');
+        btns.forEach(btn => btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster');
+    }
+
+    function filter(val) {
+        val = val.toLowerCase();
+        if (val === 'all') {
+            renderQuestions(temizlenmisData);
+            return;
+        }
+        
+        let filtered = [];
+        if (val === 'b') {
+            // Banko ve çok çıkanlar
+            filtered = temizlenmisData.filter(item => {
+                let lower = item.toLowerCase();
+                return lower.includes('banko') || lower.includes('kez çıktı');
+            });
+        } else {
+            // Sınavlar ve üniteler
+            filtered = temizlenmisData.filter(item => {
+                const tags = item.split('|')[0].toLowerCase();
+                return tags.includes(val);
+            });
+        }
+        renderQuestions(filtered);
+    }
+
+    function aramaYap() {
+        const val = document.getElementById('arama').value.toLowerCase();
+        const filtered = temizlenmisData.filter(item => {
+            const parts = item.toLowerCase().split('|');
+            const q = parts[1] || '';
+            const a = parts[3] || '';
+            const exp = parts[4] || '';
+            return q.includes(val) || a.includes(val) || exp.includes(val);
+        });
+        renderQuestions(filtered);
+    }
+
+    // 4. BAŞLANGIÇ (Her şeyi tetikleyen an)
+    window.onload = () => {
+        temizlenmisData = sorulariBirlestir(rawData);
+        renderQuestions(temizlenmisData);
+    };
+    // --- BURAYA KADAR KOPYALAYIN ---
+
+</script>
+</body>
+</html>

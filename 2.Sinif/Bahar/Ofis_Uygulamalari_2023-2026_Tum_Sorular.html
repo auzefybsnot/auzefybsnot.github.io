@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUZEF Ofis Uygulamaları - Eksiksiz Soru Bankası</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #0984e3;
+            --success: #00b894;
+            --warning: #f39c12;
+            --danger: #d63031;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --border: #dfe6e9;
+            --global-btn: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 { margin: 0 0 10px 0; font-size: 2.2em; }
+        .header p { margin: 0; font-size: 1.1em; color: #bdc3c7; }
+
+        .tips-card {
+            background-color: #fff3e0;
+            border-left: 6px solid var(--warning);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .tips-card h3 {
+            margin-top: 0;
+            color: #d35400;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .tips-card li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        /* Butonlar ve Kontroller */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #ecf0f1;
+            color: var(--primary);
+            border: 2px solid var(--border);
+            padding: 10px 20px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background-color: #dfe6e9; }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+        }
+
+        .global-toggle-btn {
+            background-color: var(--global-btn);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(225, 112, 85, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .global-toggle-btn:hover {
+            background-color: #d63031;
+            transform: translateY(-2px);
+        }
+
+        #quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Soru Kartları */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 25px;
+            border-left: 6px solid var(--accent);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .exam-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .exam-tag {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .exam-tag.freq-tag {
+            background-color: #ffeaa7;
+            color: var(--danger);
+        }
+
+        .question-text {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .options li {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 1em;
+        }
+
+        .btn-toggle {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-toggle:hover { background-color: var(--primary); }
+
+        .answer-area {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #eafaf1;
+            border-left: 5px solid var(--success);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .correct-ans {
+            font-size: 1.1em;
+            color: var(--success);
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .exp-text { margin: 0; color: var(--text); line-height: 1.5; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>AUZEF Ofis Uygulamaları</h1>
+            <p>Vize, Final ve Büt Eksiksiz Soru Havuzu (2026 Vize Eklenmiş Tam Sürüm)</p>
+        </div>
+
+        <div class="tips-card">
+       
+            <h3>⚠️ AUZEF Formatı: Dikkat Edilmesi Gerekenler</h3>
+            <ul>
+                <li><strong>Sabit Çeldiriciler:</strong> PowerPoint "Yapıştırma Seçenekleri" sorusunda <strong>"HTML resim yapıştır"</strong> şıkkı ve "Eylem Ayarları" sorusunda <strong>"Görüntülenen ilk slayta yönlendirme"</strong> şıkları AUZEF'in en çok kullandığı yanlış (olmayan özellik) şıklarıdır.</li>
+                <li><strong>Hata Mesajları Mantığı:</strong> Excel formülü yanlış yazılırsa (Örn: =MAKS) <strong>#AD?</strong> hatası verir. Başvurulan bir hücre tamamen silinirse formül <strong>#BAŞV!</strong> hatası verir.</li>
+                <li><strong>Açık Kaynak Kodlu Yazılım:</strong> AUZEF bu soruyu her yıl sorar. Cevap çoğunlukla <strong>Abiword</strong>, son yıllarda ise <strong>LibreOffice Writer</strong> olarak sorulmaktadır. Google Docs veya Microsoft Word kapalı kaynaklıdır.</li>
+                <li><strong>Stil Kullanımı:</strong> "Sürekli kullanılması düşünülen biçimsel özellikleri kolaylıkla uygulamak" cümlesini gördüğünüz an cevap <strong>"Yeni bir stil olarak kaydetmek"</strong>tir. (5 kez sorulmuş banko sorudur).</li>
+                <li><strong>Koşullu Biçimlendirme Tuzağı:</strong> Büyüktür/Küçüktür şartları -> <strong>Hücre Vurgulama Kuralları</strong> menüsünden yapılır. Ortalamanın üstü/altı şartları -> <strong>Üst/Alt Kuralları</strong> menüsünden yapılır. İkisini karıştırmayın.</li>
+            </ul>
+        </div>
+
+        <div class="controls-container">
+            <button id="globalToggleBtn" class="global-toggle-btn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterQuestions('all', this)">Tüm Sorular</button>
+                <button class="tab-btn" onclick="filterQuestions('Vize', this)">Vize Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Final', this)">Final Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Büt', this)">Bütünleme Soruları</button>
+                <button class="tab-btn" style="background-color: #ffeaa7; color: #d63031;" onclick="filterQuestions('Kez Çıktı', this)">🔥 Çok Çıkanlar</button>
+            </div>
+        </div>
+
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const sorular = [
+            // ================= 2026 VİZE YENİ EKLENENLER =================
+            {
+                q: "Aşağıdakilerden hangisi MS PowerPoint'te yer tutucuları ile içerik zenginleştirmede kullanılabilecek görselleştirme araçlarından biri değildir?",
+                options: ["A) SmartArt grafiği", "B) Infografik", "C) Dosyadan film (Video)", "D) Çevrimiçi resim", "E) Tablo"],
+                ans: "B) Infografik",
+                exp: "PowerPoint slaytlarındaki (başlık ve içerik düzenindeki) standart 6'lı yer tutucu ikonları şunlardır: Tablo, Grafik, SmartArt, Resim, Çevrimiçi Resim, Video. 'İnfografik' diye standart bir yer tutucu butonu yoktur.",
+                exams: ["2026 Bahar Vize"]
+            },
+            {
+                q: "Microsoft Word uygulamasında bir kavramın ya da sürecin zaman içerisindeki değişimini göstermek için kullanılabilecek diyagram türü aşağıdakilerden hangisidir?",
+                options: ["A) Liste", "B) Matris", "C) İşlem", "D) İlişki", "E) Hiyerarşi"],
+                ans: "C) İşlem",
+                exp: "SmartArt grafiklerinde adım adım ilerleyen süreçleri veya zaman içindeki değişimi (bir sürecin aşamalarını) göstermek için 'İşlem' (Process) diyagramları kullanılır.",
+                exams: ["2026 Bahar Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi açık kaynak kodlu ve ücretsiz bir kelime işlemci uygulamasıdır?",
+                options: ["A) LibreOffice Writer", "B) Microsoft Word", "C) Google Docs", "D) Dropbox Paper", "E) Apple iWork-Pages"],
+                ans: "A) LibreOffice Writer",
+                exp: "LibreOffice Writer ve Abiword gibi programlar açık kaynak kodlu ve ücretsizdir. Microsoft Word ve Google Docs ise şirketlere ait kapalı kaynak (ticari) yazılımlardır.",
+                exams: ["2026 Bahar Vize"]
+            },
+            {
+                q: "Microsoft Word'de bir belgenin otomatik kaydedilmesi için aşağıdaki hangi bulut hizmeti kullanılır?",
+                options: ["A) OneDrive", "B) Google Drive", "C) Yandex Drive", "D) Adobe Cloud", "E) Dropbox"],
+                ans: "A) OneDrive",
+                exp: "Microsoft Office programlarının (Word, Excel, PowerPoint) sol üst köşesindeki 'Otomatik Kaydet' özelliğinin çalışabilmesi için dosyanın Microsoft'un kendi bulut servisi olan 'OneDrive'a kaydedilmiş olması gerekir.",
+                exams: ["2026 Bahar Vize"]
+            },
+            {
+                q: "Microsoft Word'de bir metni kalın yazmak için aşağıdakilerden hangi kısayol tuşu kullanılır?",
+                options: ["A) Ctrl+U", "B) Ctrl+X", "C) Ctrl+I", "D) Ctrl+K", "E) Ctrl+C"],
+                ans: "D) Ctrl+K",
+                exp: "Türkçe Office sürümlerinde kalın (bold) yazma kısayolu Ctrl+K'dir. (İngilizce sürümlerde Ctrl+B'dir). Ctrl+I İtalik, Ctrl+U Altı Çizili, Ctrl+C Kopyala, Ctrl+X ise Kes kısayoludur.",
+                exams: ["2026 Bahar Vize"]
+            },
+            {
+                q: "Word'de paragraf aralığı ayarlarında kullanılan ölçü birimlerinden 1 cm kaç noktaya (nk) karşılık gelmektedir?",
+                options: ["A) 14.17", "B) 56,70", "C) 24", "D) 72", "E) 28,35"],
+                ans: "E) 28,35",
+                exp: "Tipografide 1 inç = 72 nokta (nk) olarak kabul edilir. 1 inç aynı zamanda 2.54 cm'dir. Dolayısıyla 1 cm = 72 / 2.54 = 28,346... (yaklaşık 28,35 nk) değerine denk gelir.",
+                exams: ["2026 Bahar Vize"]
+            },
+            {
+                q: "Bir Word belgesinde metni taşımak için aşağıdakilerden hangi kısayol tuşları kullanılır?",
+                options: ["A) Ctrl+F ve Ctrl+P", "B) Ctrl+X ve Ctrl+S", "C) Ctrl+N ve Ctrl+S", "D) Ctrl+X ve Ctrl+V", "E) Ctrl+C ve Ctrl+V"],
+                ans: "D) Ctrl+X ve Ctrl+V",
+                exp: "Metni 'taşımak', kopyalamaktan farklı olarak bulunduğu yerden silip başka yere koymak demektir. Bu yüzden önce KES (Ctrl+X) sonra YAPIŞTIR (Ctrl+V) işlemi sırasıyla yapılmalıdır.",
+                exams: ["2026 Bahar Vize"]
+            },
+
+            // ================= DİĞER VİZE KONULARI =================
+            { 
+                q: "Belgede sürekli kullanılması düşünülen biçimsel özellikleri, istenilen metinlere kolaylıkla uygulayabilmek için aşağıdakilerden hangisinin yapılması uygundur?", 
+                options: ["A) Font grubundaki araçları kullanmak", "B) Biçimlendirmeyi temizle butonunu kullanmak", "C) Düzen menüsünden biçimlendirmeyi hafızaya almak", "D) Biçimsel özellikleri yeni bir stil olarak kaydetmek", "E) Metni kopyalamak"], 
+                ans: "D) Biçimsel özellikleri yeni bir stil olarak kaydetmek", 
+                exp: "Office programlarındaki 'Stiller' özelliği, yazı tipi, punto, renk, paragraf aralığı gibi birden fazla biçimlendirme ayarını tek bir paket halinde kaydedip, daha sonra istenilen metne tek tıklamayla uygulamak için kullanılır. Bu işlem uzun belgelerde tutarlılık sağlar.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "2026 Bahar Vize", "5 Kez Çıktı!"] 
+            },
+            { 
+                q: "Aşağıdakilerden hangisi açık kaynak kodlu bir kelime işlemci uygulamasıdır?", 
+                options: ["A) Apple iWork-Pages", "B) Microsoft Word", "C) Abiword", "D) Google Docs", "E) Dropbox Paper"], 
+                ans: "C) Abiword", 
+                exp: "Açık kaynak kodlu yazılımlar, kaynak kodları herkesin erişimine açık olan yazılımlardır. AbiWord ücretsiz ve açık kaynak kodlu bir kelime işlemcidir. Diğerleri ticari şirketlerin mülkiyetindedir.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "2023 Bahar Final", "4 Kez Çıktı!"] 
+            },
+            { 
+                q: "Word uygulamasında bir metni kesmek için kullanılan kısayol tuşu aşağıdakilerden hangisidir?", 
+                options: ["A) Ctrl+V", "B) Ctrl+X", "C) Ctrl+Y", "D) Ctrl+K", "E) Ctrl+U"], 
+                ans: "B) Ctrl+X", 
+                exp: "İşletim sistemlerinde ve Office programlarında evrensel kesme kısayolu Ctrl+X'tir. Kopyalama Ctrl+C, Yapıştırma ise Ctrl+V'dir.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Word uygulamasında eklenen bir resim ile ilgili 'Gelişmiş Düzen' penceresinden aşağıdaki ayarlardan hangisi yapılamaz?", 
+                options: ["A) Metnin kaydırma stilini belirleme", "B) Resmi döndürme", "C) Resmi kırpma", "D) Resmin sayfadaki mutlak konumunu belirleme", "E) Resmin metinden uzaklığının belirleme"], 
+                ans: "C) Resmi kırpma", 
+                exp: "Gelişmiş Düzen iletişim kutusundan boyut, konum ve metin kaydırma ayarlanır. Kırpma (Crop) işlemi ise Şerit üzerindeki 'Resim Biçimi' sekmesinde yer alan 'Kırp' aracı ile doğrudan resim üzerinden yapılır.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Tabloda imleci bir sonraki sütuna taşımak için aşağıda verilen tuşlardan hangisi kullanılabilir?", 
+                options: ["A) Alt+End", "B) Alt+Home", "C) Ctrl+Tab", "D) Shift+Tab", "E) Tab"], 
+                ans: "E) Tab", 
+                exp: "Tablolarda hücreler arası gezinmenin en temel yolu 'Tab' tuşudur. Tab tuşuna basıldığında imleç sağdaki (bir sonraki) hücreye atlar. Shift+Tab ise imleci bir önceki (soldaki) hücreye geri götürür.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Microsoft Word uygulamasında orantılı ve hiyerarşik ilişkilerin sunulmasında kullanılabilecek diyagram türü aşağıdakilerden hangisidir?", 
+                options: ["A) İşlem", "B) Hiyerarşi", "C) Liste", "D) Piramit", "E) Matris"], 
+                ans: "D) Piramit", 
+                exp: "SmartArt grafiklerinde 'Orantılı' kelimesi doğrudan piramit modellerini işaret etmektedir. Temel veya hiyerarşik ilişkileri tabandan tepeye daralan oranlarla göstermek için kullanılır.", 
+                exams: ["2024 Bahar Vize", "2025 Bahar Vize", "2023 Bahar Final", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Aşağıdakilerden hangisi karakter biçimlendirme ayarlarından biri değildir?", 
+                options: ["A) Kalın yazma", "B) Sola hizalama", "C) Metni alt/üst simge şeklinde yazma", "D) Metni vurgulama", "E) Yazı tipini değiştirme"], 
+                ans: "B) Sola hizalama", 
+                exp: "Hizalama işlemleri (Sola, sağa, ortaya yaslama) karakteri (harfi) değil, metin bloğunu bütün olarak etkilediği için karakter değil, paragraf biçimlendirme grubunda yer alır.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "2026 Bahar Vize", "4 Kez Çıktı!"] 
+            },
+            { 
+                q: "Kelime işlemci uygulamasında kelimelerin altının kırmızı dalga ile çizili olmasının nedeni aşağıdakilerden hangisidir?", 
+                options: ["A) Metnin birleşik kelime olması", "B) Metnin sözlüğe yeni eklenmiş olması", "C) Metnin yanlış yazılmış olması", "D) Metnin seçilip Ctrl+K kısayol tuşuna basılmış olması", "E) Metnin tamamının büyük harfle yazılmış olması"], 
+                ans: "C) Metnin yanlış yazılmış olması", 
+                exp: "Word'ün yazım denetimi seçili dilin sözlüğünde bulamadığı kelimelerin (hatalı yazımların) altını kırmızı dalgalı çizgiyle işaretler. Dilbilgisi/gramer hataları ise mavi/yeşil çizgiyle gösterilir.", 
+                exams: ["2024 Bahar Vize", "2025 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "PowerPoint'te 'Eylem Ayarları' penceresinde yer alan 'Köprü' özelliğini kullanarak aşağıdakilerden hangisi yapılamaz?", 
+                options: ["A) Görüntülenen ilk slayda yönlendirme", "B) Sonraki slayda yönlendirme", "C) Özel bir gösteri başlatma", "D) Bir web sayfasına yönlendirme", "E) Bir Word belgesi açma"], 
+                ans: "A) Görüntülenen ilk slayda yönlendirme", 
+                exp: "Eylem ayarlarında 'İlk Slayt', 'Son Slayt' ve 'Görüntülenen Son Slayt' vardır. Ancak 'Görüntülenen ilk slayt' şeklinde teknik bir yönlendirme mantıken mevcut değildir.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Microsoft PowerPoint uygulamasında 'Yapıştırma Seçenekleri' penceresinde aşağıdakilerden hangisi bulunmaz?", 
+                options: ["A) Hedef temayı kullan", "B) Özel yapıştır", "C) Kaynak biçimlendirmesini koru", "D) HTML resim yapıştır", "E) Yalnızca metni koru"], 
+                ans: "D) HTML resim yapıştır", 
+                exp: "Yapıştırma seçeneklerinde standart olarak hedef temayı kullanma, kaynak biçimlendirmesini koruma veya resmi yapıştırma vardır ama AUZEF'in klasik çeldiricisi olan 'HTML resim yapıştır' adında bir etiket menüde bulunmaz.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Microsoft PowerPoint'te sunum tasarımının oluşturulduğu alanın adı nedir?", 
+                options: ["A) Sayfa", "B) Çalışma kitabı", "C) Slayt", "D) Notlar sayfası", "E) Tablo"], 
+                ans: "C) Slayt", 
+                exp: "PowerPoint'te sunumu oluşturan temel yapı taşına 'Slayt' denir. Word'de bu 'Sayfa', Excel'de ise 'Çalışma Kitabı / Sayfası'dır.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "2026 Bahar Vize", "4 Kez Çıktı!"] 
+            },
+            { 
+                q: "Aşağıdakilerden hangisi PowerPoint'e doğrudan eklenebilen zenginleştirme öğelerinden biri değildir?", 
+                options: ["A) Tarih ve Saat", "B) Makro içeren Microsoft Word belgesi", "C) Video", "D) Denklem", "E) Web 2.0 uygulaması"], 
+                ans: "E) Web 2.0 uygulaması", 
+                exp: "PowerPoint Ekle menüsünde Video, Denklem, Tarih eklenir. Başka Office belgeleri 'Nesne' olarak eklenebilir. Ancak 'Web 2.0 uygulaması' doğrudan yerleşik bir ekleme öğesi değildir.", 
+                exams: ["2023 Bahar Vize"] 
+            },
+            { 
+                q: "Word uygulamasında yer alan sol üstteki küçük araç çubuğunun adı nedir?", 
+                options: ["A) Hızlı erişim çubuğu", "B) Yakınlaştırma çubuğu", "C) Belge başlığı çubuğu", "D) Durum çubuğu", "E) Görünüm türleri çubuğu"], 
+                ans: "A) Hızlı erişim çubuğu", 
+                exp: "Office programlarının sol üst köşesinde yer alan, Kaydet, Geri Al gibi sık kullanılan işlemleri barındıran alana 'Hızlı Erişim Araç Çubuğu' denir.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Final", "2024 Bahar Büt", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Resmi kırpma menüsünde aşağıdakilerden hangisi bulunmaz?", 
+                options: ["A) Şekle Göre Kırp", "B) Doldur", "C) Sığdır", "D) Kare", "E) En Boy Oranı"], 
+                ans: "D) Kare", 
+                exp: "Resim Biçimi altındaki Kırp menüsünde Sığdır, Doldur, En Boy Oranı vardır. 'Kare' ise Metin Kaydırma menüsüne aittir.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Büt", "2026 Bahar Vize", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Nesneleri Döndür menüsünde yer alan dairesel/dönen ok şeklindeki aracın işlevi nedir?", 
+                options: ["A) Resmi sola 90 derece döndürür", "B) Resmi yatay ters çevirir", "C) Resmi dikey ters çevirir", "D) Resmi serbest şekilde döndürür", "E) Resmi sağa 90 derece döndürür"], 
+                ans: "D) Resmi serbest şekilde döndürür (Görsel ok daireselse)", 
+                exp: "Resmin tepesinde yer alan yeşil veya beyaz tekli dairesel ok, fareyle basılı tutarak nesneyi 360 derece serbest şekilde döndürmeye yarar.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2024 Bahar Final", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Bir metin üzerinde vurgulama dışındaki tüm stilleri ve biçimlendirmeyi kaldırmak için kullanılan araç aşağıdakilerden hangisidir?", 
+                options: ["A) Stilleri Temizle", "B) Biçim Boyacısı", "C) Biçimlendirmeyi Temizle", "D) Geri Al"], 
+                ans: "C) Biçimlendirmeyi Temizle", 
+                exp: "Giriş sekmesindeki büyük 'A' ve silgi ikonu. Tüm kalınlık/renk ayarlarını sıfırlar fakat Metin Vurgu Rengi ile atılan fosforlu boyayı temizlemez.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Büt", "2025 Bahar Final", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "Word uygulamasında bir metni 3 sütuna bölünmüş şekilde yazmak için kullanılan araç hangisidir?", 
+                options: ["A) Sütunlar aracı", "B) Tablo aracı", "C) Sayfa Düzeni aracı", "D) Kenarlıklar"], 
+                ans: "A) Sütunlar aracı", 
+                exp: "Gazete ve dergilerdeki gibi metni sütunlar halinde bölmeye yarayan araç Sayfa Düzeni sekmesindeki 'Sütunlar'dır.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Final", "2024 Bahar Büt", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "PowerPoint uygulamasında resim efektleri menüsünde aşağıdakilerden hangisi bulunmaz?", 
+                options: ["A) Yansıma", "B) Eğim", "C) Parlama", "D) Gölge", "E) Yumuşak geçişler"], 
+                ans: "E) Yumuşak geçişler", 
+                exp: "Resim efektleri menüsünde 'Yumuşak Kenarlar' vardır ancak 'Yumuşak Geçişler' yoktur. Geçişler slaytlar arasında kullanılan ayrı bir menüdür.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Vize", "2025 Bahar Vize", "2024 Bahar Final", "2026 Bahar Vize", "5 Kez Çıktı!"] 
+            },
+            { 
+                q: "PowerPoint'te bir şekle tıklayınca Microsoft Word programını çalıştırmak için aşağıdaki araçlardan hangisi kullanılması gerekmektedir?", 
+                options: ["A) Eylem butonu", "B) Makro butonu", "C) Bağlantı butonu", "D) Nesne", "E) Slayt Geçişi"], 
+                ans: "A) Eylem butonu", 
+                exp: "Şekillere 'Eylem' (Action) atanarak tıklandığında .exe programları (Word dahil) çalıştırılabilir.", 
+                exams: ["2023 Bahar Vize", "2024 Bahar Büt", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "Microsoft Word uygulamasında 'Sayfa sonu' veya 'Sütun sonu' ekleyerek metni bir sonraki bölüme/sayfaya aktaran aracın adı nedir?", 
+                options: ["A) Sayfa Sonu / Kesmeler", "B) Paragraf", "C) Hizalama", "D) Kenarlık", "E) Satır Aralığı"], 
+                ans: "A) Sayfa Sonu / Kesmeler", 
+                exp: "Sayfa Düzeni > Kesmeler menüsü ile sütun veya sayfa atlatmaları (break) yapılır.", 
+                exams: ["2024 Bahar Vize", "2025 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "Microsoft Word uygulamasında 'Öncü'ler ne işe yarar?", 
+                options: ["A) Tablo oluşturmaya yarar.", "B) Sekme tuşuna bastığınızda aradaki boşluğun nasıl doldurulacağını belirler.", "C) Belirlenen aralıkta sekme ekler.", "D) Metnin ilk satır girintisini belirler.", "E) Metinlerin başına madde imi ekler."], 
+                ans: "B) Sekme tuşuna bastığınızda aradaki boşluğun nasıl doldurulacağını belirler.", 
+                exp: "Sekmeler ayarındaki 'Öncü' (Leader) özelliği, Tab tuşuna bastığınızda boşluğun noktalar (...), tireler (---) ile doldurulmasını sağlar. İçindekiler tablosunda sık kullanılır.", 
+                exams: ["2025 Bahar Vize"] 
+            },
+            { 
+                q: "Aralık Önce: 0 nk Sonra: 0 nk ayarları görüntülenen bölümden hangi işlem gerçekleştirilir?", 
+                options: ["A) Satır aralarındaki boşluklar ayarlanır.", "B) Sekme durakları ayarlanır.", "C) Paragrafın soldan ve sağdan girintisi ayarlanır.", "D) Paragraflar arasındaki dikey boşluklar ayarlanır.", "E) Madde imlerinin soldan ve sağdan girintisi ayarlanır."], 
+                ans: "D) Paragraflar arasındaki dikey boşluklar ayarlanır.", 
+                exp: "Sayfa Düzeni sekmesinde yer alan 'Aralık' ayarları, seçili paragrafın üstündeki ve altındaki dikey mesafeyi belirler.", 
+                exams: ["2024 Bahar Vize", "2025 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "MS Word uygulamasında 'Resmi Sıfırla' butonunun işlevi aşağıdakilerden hangisidir?", 
+                options: ["A) Resmi belgenin sol kenarına yaslar.", "B) Resmin piksellerini temizler.", "C) Resmi belgenin sağ kenarına yaslar.", "D) Resimde yapılan tüm değişiklikleri silerek resmi ilk haline döndürür.", "E) Resmi tüm kenarlarından kırpar."], 
+                ans: "D) Resimde yapılan tüm değişiklikleri silerek resmi ilk haline döndürür.", 
+                exp: "Resmi Sıfırla (Reset Picture) aracı; kırpma, çerçeve, renk ve boyutlandırma gibi resme sonradan uygulanan tüm özellikleri temizleyip orijinal haline getirir.", 
+                exams: ["2025 Bahar Final", "2026 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "MS Word uygulamasında yukarıdaki silgi aracının görevi aşağıdakilerden hangisidir?", 
+                options: ["A) Tablodaki metinleri siler.", "B) Tablodaki sekmeleri siler.", "C) Tablonun dolgu rengini siler.", "D) Tablonun arka plan resmini siler.", "E) Tablodaki kenar çizgilerini siler."], 
+                ans: "E) Tablodaki kenar çizgilerini siler.", 
+                exp: "Tablo Tasarımı sekmesindeki 'Silgi' aracı, tablodaki çizgilere tıklayarak o çizgiyi (kenarlığı) kaldırmak ve hücreleri birleştirmek için kullanılır.", 
+                exams: ["2025 Bahar Vize", "2026 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "Bir MS Word belgesinde tüm metinlerin aynı biçimde görünmesini sağlamak için aşağıdaki özelliklerden hangisi kullanılır?", 
+                options: ["A) Filigran", "B) Stil Kümesi", "C) Kenarlıklar", "D) Bölüm Sonu", "E) Sütunlar"], 
+                ans: "B) Stil Kümesi", 
+                exp: "Tasarım sekmesindeki Stil Kümesi (Style Sets), belgedeki başlık ve gövde metinlerinin genel tasarımını tutarlı bir formata sokar.", 
+                exams: ["2025 Bahar Final", "2026 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "MS Word uygulamasında yazı tipi, renk gibi tüm özellikleri tek tıkla düzenleme imkânı sunan yapıya verilen ad aşağıdakilerden hangisidir?", 
+                options: ["A) Desen", "B) Tema", "C) SmartArt", "D) Biçim", "E) Filigran"], 
+                ans: "B) Tema", 
+                exp: "Temalar, belgenin renk paleti, yazı tipi seti ve efekt düzenini tek seferde topluca değiştirir.", 
+                exams: ["2024 Bahar Final", "2024 Bahar Büt", "2026 Bahar Vize", "3 Kez Çıktı!"] 
+            },
+            { 
+                q: "MS Word uygulamasında paragraf biçimlendirme işlemi aşağıdakilerden hangisini yapmanıza olanak sağlar?", 
+                options: ["A) Paragrafın metnini başka bir belgeye kopyalamak", "B) Paragraflar arasında boşluk ayarlamak", "C) Paragraf içindeki yazım hatalarını otomatik düzeltmek", "D) Paragrafın yazı tipi boyutunu değiştirmek", "E) Paragrafın üzerine resim eklemek"], 
+                ans: "B) Paragraflar arasında boşluk ayarlamak", 
+                exp: "Paragraf grubu; metin hizalama, satır aralığı, paragraf boşlukları ve girinti ayarlarını barındırır.", 
+                exams: ["2025 Bahar Final"] 
+            },
+            { 
+                q: "Aşağıdakilerden hangisi MS Word uygulamasında oluşturulabilecek sekme türlerinden biri değildir?", 
+                options: ["A) İki yana yasla", "B) Sağ sekme", "C) Sol sekme", "D) Ondalık", "E) Çubuk"], 
+                ans: "A) İki yana yasla", 
+                exp: "Sekme durakları (Tab) Sol, Orta, Sağ, Ondalık ve Çubuk türlerindedir. 'İki yana yasla' bir sekme durağı değil, paragraf hizalama seçeneğidir.", 
+                exams: ["2025 Bahar Final"] 
+            },
+            { 
+                q: "MS Word'de cetvel üzerindeki alt dik üçgen aracının görevi nedir?", 
+                options: ["A) Paragrafın son satırının başlangıç konumunu belirler.", "B) Paragrafın tamamının başlangıç konumunu belirler. (Asılı Girinti)", "C) İlk satır girintisini ayarlar.", "D) İmleci metnin sol kenarına hizalar.", "E) İmleci metnin sağ kenarına hizalar."], 
+                ans: "B) Paragrafın tamamının başlangıç konumunu belirler. (Asılı Girinti)", 
+                exp: "Cetveldeki üst üçgen 'İlk Satır' girintisini, alt üçgen ise ilk satır dışındaki diğer satırların (Asılı Girinti) içeriden başlamasını ayarlar.", 
+                exams: ["2024 Bahar Büt"] 
+            },
+            { 
+                q: "Microsoft Word'de bir metni taşırken mevcut biçimlendirmeyi korumak için aşağıdaki yapıştırma seçeneklerinden hangisi tercih edilir?", 
+                options: ["A) Normal Yapıştır", "B) Biçimlendirmeyi Eşleştir", "C) Kaynak Biçimlendirmesini Koru", "D) Gelişmiş Yapıştır", "E) Yalnızca Metni Koru"], 
+                ans: "C) Kaynak Biçimlendirmesini Koru", 
+                exp: "Kopyalanan verinin orijinal renk ve boyutunun yeni yerde bozulmaması için yapıştırma seçeneklerinden 'Kaynak Biçimlendirmesini Koru' seçilir.", 
+                exams: ["2025 Bahar Büt"] 
+            },
+            { 
+                q: "Microsoft Word'de sekme durakları oluşturmak için hangi klavye tuşu kullanılır?", 
+                options: ["A) Tab", "B) Enter", "C) Ctrl", "D) Shift", "E) Alt"], 
+                ans: "A) Tab", 
+                exp: "Cetveldeki sekmelere hızlıca atlamak için klavyeden 'Tab' tuşu kullanılır.", 
+                exams: ["2025 Bahar Büt"] 
+            },
+            { 
+                q: "Microsoft Word'de bir metin yazarken imlecin görevi aşağıdakilerden hangisidir?", 
+                options: ["A) Sayfa numarası eklemek", "B) Sayfayı bölmek", "C) Yazıyı taşımak", "D) Yazılacak konumu göstermek", "E) Metni silmek"], 
+                ans: "D) Yazılacak konumu göstermek", 
+                exp: "İmleç (yanıp sönen dikey çizgi), eklenecek harfin veya nesnenin belge üzerinde nereye yerleştirileceğini gösteren kılavuzdur.", 
+                exams: ["2025 Bahar Büt"] 
+            },
+            { 
+                q: "Microsoft Word uygulamasında tablo içerisindeki en geniş verinin sığacağı şekilde tablo sütunlarını genişletmek için aşağıdaki işlemlerden hangisi yapılmalıdır?", 
+                options: ["A) Hücreleri birleştir", "B) Pencereye Otomatik Sığdır", "C) Satırları Dağıt", "D) İçindekileri Otomatik Sığdır", "E) Sabit Sütun Genişliği"], 
+                ans: "D) İçindekileri Otomatik Sığdır", 
+                exp: "Tablo içindeki metnin uzunluğuna göre sütunun otomatik olarak daralıp genişlemesini sağlayan özellik 'İçindekilere Otomatik Sığdır'dır.", 
+                exams: ["2025 Bahar Büt", "2026 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "Microsoft Word uygulamasında tabloda imleci en üst satıra/sütuna göndermek için kullanılacak tuş kombinasyonu aşağıdakilerden hangisidir?", 
+                options: ["A) Alt+Home", "B) Alt+Page Down", "C) Alt+Page Up", "D) Shift+Tab", "E) Alt+End"], 
+                ans: "C) Alt+Page Up", 
+                exp: "Alt+Page Up bulunulan sütunun en üst hücresine gider. Alt+Home satırın en başına, Alt+End satırın en sonuna, Alt+Page Down sütunun en altına gider.", 
+                exams: ["2025 Bahar Büt"] 
+            },
+            { 
+                q: "MS Powerpoint'te sunum yaparken farklı ortamlara, uygulamalara erişmek için kullanılan araç aşağıdakilerden hangisidir?", 
+                options: ["A) Nesne aracı", "B) Eylem / Köprü butonu (Yıldızlı kutu veya Dünya-zincir ikonu)", "C) Formül aracı", "D) Animasyon aracı", "E) Geçiş aracı"], 
+                ans: "B) Eylem / Köprü butonu", 
+                exp: "Slayt gösterisi sırasında başka bir dosyaya, programa veya web sitesine gitmek için 'Eylem' (Action) düğmeleri veya 'Köprü' (Hyperlink) kullanılır.", 
+                exams: ["2025 Bahar Vize", "2026 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            { 
+                q: "MS Word uygulamasında aşağıdakilerden hangisi bir belgeyi kaydetme yöntemlerinden biri değildir?", 
+                options: ["A) Dosya menüsünden 'Farklı Kaydet' seçeneğine tıklamak", "B) Belge Başlığı bölümündeki Yer seçeneği", "C) Ctrl+S kısayol tuşu", "D) Düzen menüsünden 'Kaydet' seçeneğine tıklamak", "E) Hızlı erişim çubuğundan 'Kaydet'e tıklamak"], 
+                ans: "D) Düzen menüsünden 'Kaydet' seçeneğine tıklamak", 
+                exp: "Office arayüzünde (Ribbon) 'Düzen' adında bir sekme bulunmaz. Kaydet işlemleri her zaman 'Dosya' (File) sekmesi altındadır.", 
+                exams: ["2024 Bahar Final", "2026 Bahar Vize", "2 Kez Çıktı!"] 
+            },
+            
+            // ================= FİNAL / BÜT KONULARI =================
+            {
+                q: "Excel'de veri tablosu içerisinde vize notu 70'in üstünde olan öğrencileri yeşil renkte göstermek için kullanılan özellik aşağıdakilerden hangisidir?",
+                options: ["A) Gelişmiş filtre", "B) Pivotchart ekleme", "C) Koşullu biçimlendirme", "D) Veri seçme", "E) Durumu çözümleme"],
+                ans: "C) Koşullu biçimlendirme",
+                exp: "Excel'de hücrelerdeki değerlere bağlı olarak hücrenin rengini otomatik olarak değiştiren özelliğe 'Koşullu Biçimlendirme' denir.",
+                exams: ["Final", "Büt"]
+            },
+            {
+                q: "Slayttaki bir görseli kıvrımlı/zigzag bir çizgi üzerinde hareket ettirmek için kullanılacak animasyon türü aşağıdakilerden hangisidir?",
+                options: ["A) Çıkış animasyonu", "B) Vurgu animasyonu", "C) Yol animasyonu", "D) Karmaşık animasyon", "E) Giriş animasyonu"],
+                ans: "C) Yol animasyonu",
+                exp: "Bir nesnenin ekranda çizdiğiniz belirli bir güzergah (yol) üzerinde serbestçe hareket etmesini sağlayan tür 'Yol Animasyonu'dur.",
+                exams: ["2023 Bahar Final", "2024 Bahar Final", "2024 Bahar Büt", "2025 Bahar Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: "Excel'de belli bir koşula bağlı olarak işlem yapan fonksiyon aşağıdakilerden hangisidir?",
+                options: ["A) Say()", "B) Bağıl()", "C) =Koşul()", "D) =Eğer()", "E) =Şart()"],
+                ans: "D) =Eğer()",
+                exp: "Excel'in en temel mantıksal fonksiyonu 'EĞER' (IF) fonksiyonudur. Belirlenen koşulun doğru mu yanlış mı olduğuna bakarak iki farklı senaryoda sonuçlar döndürür.",
+                exams: ["2023 Bahar Final", "2024 Bahar Final", "2025 Bahar Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: "=5+4^2*5 formülü Excel'de hangi sonucu döndürür?",
+                options: ["A) 405", "B) 85", "C) 1048581", "D) 15", "E) 105"],
+                ans: "B) 85",
+                exp: "Matematiksel işlem önceliği geçerlidir. Önce üs alma işlemi yapılır (4^2 = 16). Ardından çarpma işlemi yapılır (16 * 5 = 80). Son olarak toplama işlemi yapılır (5 + 80 = 85).",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Excel'de formülün başvurduğu hücrelerin silinmesi veya üzerine başka bir şey yapıştırılması durumunda ortaya çıkan hata mesajı aşağıdakilerden hangisidir?",
+                options: ["A) #YOK", "B) #BOŞ!", "C) #BAŞV!", "D) #AD?", "E) #DEĞER!"],
+                ans: "C) #BAŞV!",
+                exp: "Bir formülde referans alınan hücre tamamen silinirse, formül nereye bakacağını bilemez ve Geçersiz Başvuru anlamına gelen #BAŞV! hatası verir.",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "MS Excel'de =MAKS(A2:A6) şeklinde bir hücreye yazılan formül aşağıdaki hangi hata mesajını döndürür?",
+                options: ["A) #YOK", "B) #BAŞV!", "C) #HATA!", "D) #BOŞ!", "E) #AD?"],
+                ans: "E) #AD?",
+                exp: "Türkçe Excel'de en büyük değeri bulma formülü =MAK() şeklindedir. Yanlış veya tanınmayan bir isim (=MAKS) yazıldığında Excel o formülü tanıyamadığı için #AD? (Name?) hatası döndürür.",
+                exams: ["2024 Bahar Final", "2025 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "MS Excel'de ortalamanın altında yer alan değerleri kırmızı dolgu rengi ile göstermek için aşağıdaki hangi kategorideki koşullu biçimlendirme kuralını seçmek uygun olacaktır?",
+                options: ["A) Veri çubukları", "B) Simge kümeleri", "C) Üst/Alt Kuralları", "D) Hücre vurgulama kuralları", "E) Renk ölçekleri"],
+                ans: "C) Üst/Alt Kuralları",
+                exp: "Ortalama otomatik hesaplanan bütünsel bir değerdir. 'Ortalamanın Üstünde' veya 'Altında' kuralları, Koşullu Biçimlendirmede 'Üst/Alt Kuralları' kategorisi içinde bulunur.",
+                exams: ["2024 Bahar Büt", "2025 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Gelişmiş Filtre ekranında, Ölçüt tablosunda Sınıf='6-A' ve Türkçe Notu='>70' aynı satırda, Sınıf='6-C' ise alt satırda yazılmıştır. Hangi veriler filtrelenir?",
+                options: ["A) 6-C ve 6-A sınıfında Türkçe notu 70'in üstünde olan tüm öğrenciler", "B) 6-C sınıfındaki tüm öğrenciler veya 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler", "C) 6-C sınıfındaki tüm öğrenciler ve 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler", "D) 6-C veya 6-A sınıfında Türkçe notu 70'in üstünde olan tüm öğrenciler"],
+                ans: "B) 6-C sınıfındaki tüm öğrenciler veya 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler",
+                exp: "Gelişmiş Filtre'de kural şudur: Yan yana (aynı satırda) yazılanlar 'VE' bağlacı ile, alt alta (farklı satırda) yazılanlar 'VEYA' bağlacı ile birbirine bağlanır.",
+                exams: ["2024 Bahar Final", "2025 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Powerpoint'te slaytlara yer tutucuların eklenebildiği görünüm türü aşağıdakilerden hangisidir?",
+                options: ["A) Slayt Sıralayıcısı", "B) Asıl Slayt", "C) Okuma Görünümü", "D) Notlar sayfası", "E) Ana Hat Görünümü"],
+                ans: "B) Asıl Slayt",
+                exp: "PowerPoint'te tüm sunumun tema, arka plan ve 'yer tutucu' tasarımlarının standart kalıp olarak topluca yapıldığı arka plana 'Asıl Slayt' (Slide Master) denir.",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2025 Bahar Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Powerpoint'te şekil galerisinin en altında yer alan özel şekillerin adı nedir?",
+                options: ["A) Denklem şekilleri", "B) Akış düğmeleri", "C) Eylem düğmeleri", "D) Tasarım düğmeleri", "E) Temel Şekiller"],
+                ans: "C) Eylem düğmeleri",
+                exp: "Ekle > Şekiller galerisinin en alt bölümünde, tıklandığında ileri gitme, ses çalma veya program açma gibi görevler atanabilen 'Eylem Düğmeleri' bulunur.",
+                exams: ["2023 Bahar Final", "2024 Bahar Final", "2024 Bahar Büt", "2026 Bahar Vize", "4 Kez Çıktı!"]
+            },
+            {
+                q: "PowerPoint'te 'Geçişler' sekmesinde yer alan 'Sonra: 00,00' butonunun görevi nedir?",
+                options: ["A) Saniye cinsinden belirtilen süre sonunda animasyon başlar.", "B) Saniye cinsinden belirtilen süre sonunda sonraki slayta gider.", "C) Milisaniye cinsinden sonraki slayta gider.", "D) Milisaniye cinsinden animasyon başlar.", "E) Saniye cinsinden animasyonun görüntülenmesini sağlar."],
+                ans: "B) Saniye cinsinden belirtilen süre sonunda sonraki slayta gider.",
+                exp: "Geçişler sekmesindeki 'Sonra' seçeneği, farenin tıklanmasını beklemeden slaytın saniye bazında bekleyip otomatik olarak bir sonraki slayta geçişini sağlar.",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2025 Bahar Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Excel'de sayfa sayısı, veri içeren hücre sayısı gibi çalışma kitabı istatistiklerinin görüntülendiği alan aşağıdakilerden hangisidir?",
+                options: ["A) Görüntüleme seçenekleri çubuğu", "B) Menü şeridi", "C) Kullanıcı bilgi ekranı", "D) Durum çubuğu", "E) Hızlı erişim çubuğu"],
+                ans: "D) Durum çubuğu",
+                exp: "Excel'in en altındaki yatay şeride Durum Çubuğu denir. Burada seçili hücrelerin toplamı, ortalaması, sayısı gibi anlık veriler görüntülenir.",
+                exams: ["2023 Bahar Final"]
+            },
+            {
+                q: "Excel'de büyük veri kümelerinde belirli bir ölçüte göre verileri ayıklamak için kullanılan özellik aşağıdakilerden hangisidir?",
+                options: ["A) Sorgulama", "B) Sıralama", "C) Filtreleme", "D) Çözümleme", "E) Analiz"],
+                ans: "C) Filtreleme",
+                exp: "Tablodaki verileri belirlenen koşullara göre (örneğin sadece 2022 verilerini) gösterip diğerlerini gizleme işlemine 'Filtreleme' denir.",
+                exams: ["2023 Bahar Final", "2024 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Powerpoint'te slayt geçişleri ile ilgili aşağıda verilenlerden hangisi yanlıştır?",
+                options: ["A) Kullanıcılar kendi tasarladıkları animasyonları slayt geçiş efekti olarak kullanabilmektedir.", "B) 'Tümüne uygula' seçeneği ile tüm slaytlara uygulanabilmektedir.", "C) Geçiş sırasında ses eklenebilmektedir.", "D) Efekt galerisinde kısa bilgiler görüntülenmektedir.", "E) Slayt geçişlerinin süresi saniye cinsinden ayarlanabilmektedir."],
+                ans: "A) Kullanıcılar kendi tasarladıkları animasyonları slayt geçiş efekti olarak kullanabilmektedir.",
+                exp: "Slayt geçişleri (Transitions) Office içine gömülü yerleşik efektlerdir. Kullanıcıların sıfırdan kendi geçiş animasyonlarını tasarlayıp ekleme özelliği yoktur.",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "B4, B5, B6, B7, B8 hücre aralığı nasıl yazılır?",
+                options: ["A) B4,B8", "B) B4:B8", "C) B4;B8", "D) B4 B8", "E) B4-B8"],
+                ans: "B) B4:B8",
+                exp: "Excel'de birbiri ardına gelen bir blok aralığı belirtmek için iki nokta üst üste (:) işareti kullanılır.",
+                exams: ["2023 Bahar Final"]
+            },
+            {
+                q: "=EĞER(A1<50;\"Başarısız\";EĞER(A1<75;\"İyi\";\"Pekiyi\")) formülü: A1 hücresinde 75 değeri varken hangi sonucu verir?",
+                options: ["A) Pekiyi", "B) #AD? hatası", "C) #BOŞ! hatası", "D) Başarısız", "E) İyi"],
+                ans: "A) Pekiyi",
+                exp: "75, 50'den küçük değildir. İkinci EĞER'e geçer. 75, 75'ten küçük müdür? Hayır (eşittir). Bu yüzden 'İyi' yerine sondaki 'Yanlışsa Değer' olan 'Pekiyi' sonucunu verir.",
+                exams: ["2023 Bahar Final", "2025 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Word uygulamasında resimdeki gibi sayfanın arka planına eklenen soluk renkli metne veya grafiğe ne ad verilir?",
+                options: ["A) Tema", "B) Filigran", "C) WordArt", "D) Öncü", "E) Stil"],
+                ans: "B) Filigran",
+                exp: "Sayfa arka planına kopyalanmayı önlemek veya taslak belirtmek için eklenen soluk görsellere 'Filigran' (Watermark) denir.",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Excel'de C1'den E4'e kadar seçim işlemi gerçekleştiğinde 'Ad Kutusu'nda aşağıdakilerden hangisi görüntülenir?",
+                options: ["A) C1", "B) C1-E1", "C) C1:E4", "D) E4", "E) C1-E4"],
+                ans: "A) C1",
+                exp: "Ad Kutusu, çok büyük bir hücre aralığı seçilse bile her zaman fareyle seçimin yapıldığı ilk başladığınız hücreyi (Aktif Hücre) gösterir.",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "'Büyüktür', 'Küçüktür', 'İlgili Tarih' gibi kurallar Koşullu Biçimlendirme'nin hangi kategorisinde yer almaktadır?",
+                options: ["A) Üst/alt Kuralları", "B) Veri çubukları", "C) Simge kümeleri", "D) Renk ölçekleri", "E) Hücre vurgulama kuralları"],
+                ans: "E) Hücre vurgulama kuralları",
+                exp: "Bu kurallar Koşullu Biçimlendirme > 'Hücre Vurgulama Kuralları'nın alt menüleridir.",
+                exams: ["2023 Bahar Final", "2024 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Excel'de C1 hücresindeki uzun metni hücre genişliğini bozmadan alt satıra atarak sığdırmak için aşağıdaki butonlardan hangisine tıklanmalıdır?",
+                options: ["A) Metni Kaydır (Wrap Text)", "B) Birleştir ve Ortala", "C) Hizalama"],
+                ans: "Metni Kaydır (Wrap Text)",
+                exp: "Uzun metinleri hücre sınırları içerisinde alt satıra atarak göstermeye yarayan özellik 'Metni Kaydır'dır.",
+                exams: ["2023 Bahar Final", "2024 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "A1 hücresinde yer alan 'Ofis Uygulamaları' yazısından 'Uygulama' kelimesini alıp B1 hücresine yazdıran formül aşağıdakilerden hangisidir?",
+                options: ["A) PARÇAAL(B1;6;8)", "B) PARÇAAL(B1;8;6)", "C) PARÇAAL(A1;6;8)", "D) PARÇAAL(A1;8;6)", "E) PARÇAAL(A1;19;8)"],
+                ans: "C) PARÇAAL(A1;6;8)",
+                exp: "PARÇAAL(Metin; Başlangıç Sırası; Kaç Karakter). Metin A1'de. Uygulamanın 'U' harfi boşlukla beraber 6. sıradadır. Kelimenin uzunluğu 8 harftir.",
+                exams: ["2024 Bahar Final"]
+            },
+            {
+                q: "MS PowerPoint'te aşağıdakilerden hangisi 'Animasyonlar' sekmesinden yapılamaz?",
+                options: ["A) Seçilen animasyonun farklı yönden gelmesini sağlamak", "B) Madde imlerini ayrı ayrı getirmek", "C) Slayt gösterisinin 'Esc' tuşuna basıncaya kadar sürekli dönmesini sağlamak", "D) Animasyon hareketini kendinden öncekiyle başlatmak", "E) Bir şekle giriş animasyonu eklemek"],
+                ans: "C) Slayt gösterisinin 'Esc' tuşuna basıncaya kadar sürekli dönmesini sağlamak",
+                exp: "Gösterinin sürekli kendi kendine dönmesi ayarı 'Slayt Gösterisi' sekmesindeki 'Slayt Gösterisi Ayarla' menüsünden yapılır, Animasyonlardan değil.",
+                exams: ["2024 Bahar Final"]
+            },
+            {
+                q: "MS PowerPoint'te animasyon galerisinde yer alan sarı renkli animasyon grubunun işlevi aşağıdakilerden hangisidir?",
+                options: ["A) Vurgu animasyonlarıdır.", "B) Çıkış animasyonlarıdır.", "C) Giriş animasyonlarıdır.", "D) Ek animasyonlardır.", "E) Yol animasyonlarıdır."],
+                ans: "A) Vurgu animasyonlarıdır.",
+                exp: "PowerPoint'te: Yeşil Yıldız = Giriş, Sarı Yıldız = Vurgu, Kırmızı Yıldız = Çıkış animasyonudur.",
+                exams: ["2024 Bahar Final"]
+            },
+            {
+                q: "MS Excel'de kategorilerin yanında +/- butonları olan daraltılıp genişletilebilen özet tablo görünümü elde etmek için aşağıdakilerden hangisidir?",
+                options: ["A) Mini Grafikler", "B) PivotChart", "C) Koşullu Biçimlendirme", "D) Pivot Table", "E) Hücre Stilleri"],
+                ans: "D) Pivot Table",
+                exp: "Büyük veri yığınlarını gruplandırmak ve +/- düğmeleriyle dinamik analizler yapmak için 'Pivot Table' (Özet Tablo) kullanılır.",
+                exams: ["2024 Bahar Final", "2025 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Sayfa1'e sağ tıklandığında aşağıdaki işlemlerden hangisi gerçekleştirilemez?",
+                options: ["A) Çalışma sayfasını taşıma", "B) Sayfayı yazdırma", "C) Sayfa ekleme", "D) Sayfanın adını değiştirme", "E) Çalışma sayfasına parola ekleme"],
+                ans: "B) Sayfayı yazdırma",
+                exp: "Sayfa (Sheet) sekmelerine sağ tıklandığında Ekle, Sil, İsim Değiştir, Taşı çıkar ancak yazdırma seçeneği çıkmaz.",
+                exams: ["2024 Bahar Final"]
+            },
+            {
+                q: "PowerPoint'te ortasında Kırmızı Kayıt Noktası İkonu olan butonun işlevi aşağıdakilerden hangisidir?",
+                options: ["A) Animasyonu kaydeder.", "B) Geçerli slayttan başlayarak sunumu kaydetmek için kullanılır.", "C) Kırmızı daire ekler.", "D) Ekran resmi çeker.", "E) Çıkış animasyonu ekler."],
+                ans: "B) Geçerli slayttan başlayarak sunumu kaydetmek için kullanılır.",
+                exp: "Bu ikon, sesinizi, görüntü kameranızı ve zamanlamaları kaydetmeye yarayan 'Slayt Gösterisini Kaydet' özelliğidir.",
+                exams: ["2024 Bahar Final", "2025 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "MS Excel çalışma sayfasında 'Süpürge' kelimesinin geçme sayısını veren formül aşağıdakilerden hangisidir?",
+                options: ["A) SAY(B2:B17;\"Süpürge\")", "B) =ÇOKEĞER(B2:B17;\"Süpürge\")", "C) =SAĞDAN(B2:B17;\"Süpürge\")", "D) UZUNLUK(B2:B17;\"Süpürge\")", "E) =EĞERSAY(B2:B17;\"Süpürge\")"],
+                ans: "E) =EĞERSAY(B2:B17;\"Süpürge\")",
+                exp: "Bir hücre aralığında sadece belirli bir şarta (kelimeye) uyan hücrelerin adetini saymak için EĞERSAY (COUNTIF) kullanılır.",
+                exams: ["2024 Bahar Final"]
+            },
+            {
+                q: "MS Excel'de bir hücre aralığını ifade eden A1:D5 yazımı ile aşağıdakilerden hangisi belirtilir?",
+                options: ["A) A sütunundaki 1. hücreyi", "B) A1 hücresi ile D5 hücresi arasındaki dikdörtgensel alanı", "C) A sütunu ile D sütunu arasındaki tüm hücreleri", "D) Tüm çalışma sayfasını", "E) 1. satırdan 5. satıra kadar tüm hücreleri"],
+                ans: "B) A1 hücresi ile D5 hücresi arasındaki dikdörtgensel alanı",
+                exp: "İki nokta üst üste (:), iki hücre arasındaki kesişen tüm dikdörtgensel bloğu (matrisi) belirtmek için kullanılır.",
+                exams: ["2025 Bahar Final", "2025 Bahar Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "MS Excel'de bir formülde A1 hücresindeki değerin sabit kalmasını sağlamak için aşağıdaki referanslardan hangisi kullanılır?",
+                options: ["A) A1$", "B) A$1", "C) A1", "D) $A1", "E) $A$1"],
+                ans: "E) $A$1",
+                exp: "Bir hücre adresinin formül kopyalandığında sağa/sola/aşağı kaymasını engellemek (Mutlak Başvuru yapmak) için hem sütun hem satır ibaresinin başına dolar işareti ($) konur.",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "MS Excel'de imleç iki sütun arasındayken çift tıklanıldığında aşağıdaki durumlardan hangisi gerçekleşir?",
+                options: ["A) Hücreye sığmayan veriler bir alt satıra kaydırılır.", "B) İki sütun arasına yeni bir sütun eklenir.", "C) Sütun genişliği metne göre en uygun olacak şekilde ayarlanır.", "D) Hücreye sığmayan veriler silinir.", "E) Seçili hücrenin altına yeni satır eklenir."],
+                ans: "C) Sütun genişliği metne göre en uygun olacak şekilde ayarlanır.",
+                exp: "Sütun başlıklarının arasındaki çizgiye çift tıklamak, o sütundaki en uzun metne göre genişliği tam ayarlayan 'Otomatik Sığdır' özelliğini devreye sokar.",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "MS Excel'de filtre uygulamak istediniz verilere karmaşık ölçütler (VEYA mantığı vb.) uygulamanız gerektiğinde hangi butona tıklamanız gerekmektedir?",
+                options: ["A) Sayfayı Hesapla", "B) Durum Çözümlemesi", "C) Gelişmiş", "D) Grubu Çöz", "E) Ad Tanımla"],
+                ans: "C) Gelişmiş",
+                exp: "Sütun başlıklarındaki standart filtrelerin yetersiz kaldığı durumlarda Veri sekmesindeki 'Gelişmiş Filtre' (Advanced Filter) aracı kullanılır.",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "MS Excel'de bir formül yazarken doğrudan sayılar (10+5) yerine hücre adreslerini (A1+B1) kullanmanın avantajı aşağıdakilerden hangisidir?",
+                options: ["A) Hata mesajlarını önler.", "B) Formülü sabit değerle değiştirir.", "C) Daha hızlı hesaplar.", "D) Formülün sabit kalmasını sağlar.", "E) Formülün dinamik olarak güncellenmesini sağlar."],
+                ans: "E) Formülün dinamik olarak güncellenmesini sağlar.",
+                exp: "Hücre adresi kullandığınızda, hücrenin içindeki veriyi değiştirdiğiniz an formül kendini yeni değere göre otomatik olarak günceller (dinamik hesaplama).",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "MS Excel'de hücreye veri girişi yapabilmek veya var olan veriyi düzenleyebilmek için aşağıdaki tuşlardan hangisi kullanılır?",
+                options: ["A) F2", "B) F1", "C) Shift", "D) Esc", "E) F3"],
+                ans: "A) F2",
+                exp: "Klavyeden F2 tuşuna basmak, imleci hücrenin içine sokar ve hücreyi düzenleme moduna alır.",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "MS PowerPoint'teki 'Animasyon Boyacısı' aracının görevi aşağıdakilerden hangisidir?",
+                options: ["A) Arka plan resmi eklemek", "B) Hızını değiştirmek", "C) Slayt geçiş efekti kopyalamak", "D) Tüm slaytlara otomatik eklemek", "E) Bir nesneye uygulanan animasyonu başka bir nesneye kopyalamak"],
+                ans: "E) Bir nesneye uygulanan animasyonu başka bir nesneye kopyalamak",
+                exp: "Word'deki 'Biçim Boyacısı'nın animasyon versiyonudur. Bir nesnedeki süre, tür ve gecikme gibi tüm animasyon ayarlarını kopyalayıp başka nesneye uygular.",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "MS Excel'de birden fazla ölçüte göre (örn: Önce şehir, sonra departman) sıralama işlemi yapılırken aşağıdaki araçlardan hangisi kullanılır?",
+                options: ["A) PivotTable", "B) Sıralama ve Filtreleme", "C) Koşullu Biçimlendirme", "D) Özel Sıralama", "E) Filtre Uygulama"],
+                ans: "D) Özel Sıralama",
+                exp: "Kademeli sıralama yapmak için Özel Sıralama (Custom Sort) penceresi açılır ve 'Düzey Ekle' (Add Level) butonu kullanılır.",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "MS PowerPoint'te slaytı 'Geniş Ekran' (16:9) olarak düzenlemek için aşağıdaki araçlardan hangisi kullanılmaktadır?",
+                options: ["A) Slayt düzeni", "B) Slayt boyutu", "C) Slayt sıralayıcısı", "D) Slayt tasarımı", "E) Slayt yönlendirme"],
+                ans: "B) Slayt boyutu",
+                exp: "Tasarım sekmesinde yer alan 'Slayt Boyutu' aracından standart 4:3 ve Geniş Ekran 16:9 oranları değiştirilir.",
+                exams: ["2025 Bahar Final"]
+            },
+            {
+                q: "Excel'de formül çubuğunun solunda yer alan, C1 vb. yazan bölümün adı aşağıdakilerden hangisidir?",
+                options: ["A) Durum çubuğu", "B) Yakınlaştırma bölmesi", "C) Giriş sekmesi", "D) Formül çubuğu (veya Ad Kutusu)"],
+                ans: "Ad Kutusu ve Formül çubuğu bağlamı",
+                exp: "Formüllerin yazıldığı uzun çubuğa Formül Çubuğu, sol tarafında hücre ismini gösteren kısa kutucuğa ise Ad Kutusu denir.",
+                exams: ["2024 Bahar Büt"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi PivotTable alan listesi içerisinde yer almaz?",
+                options: ["A) Filtreler", "B) Kümeler", "C) Satırlar", "D) Sütunlar", "E) Değerler"],
+                ans: "B) Kümeler",
+                exp: "Pivot Table (Özet Tablo) oluşturulduğunda açılan sağ panelde 4 alan bulunur: Filtreler, Sütunlar, Satırlar, Değerler. 'Kümeler' diye bir alan yoktur.",
+                exams: ["2024 Bahar Büt"]
+            },
+            {
+                q: "Microsoft Excel'de B1 hücresindeki =A1+$A$3 formülü aşağı doğru 4 satır sürüklenerek B5 hücresine kopyalandığında hangi sonuç formülüne ulaşılır?",
+                options: ["A) =A4+$A$3", "B) =A5+$A$3", "C) =A1+$A$5", "D) =A5+A3", "E) =A5+$A$5"],
+                ans: "B) =A5+$A$3",
+                exp: "A1 formülü görecelidir ve sürüklenince A5'e kayar. Fakat $A$3 mutlak (kilitli) bir başvuru olduğundan sürüklenmekle değişmez.",
+                exams: ["2025 Bahar Büt"]
+            },
+            {
+                q: "Microsoft Excel'de sütunların isimlendirilme biçimi aşağıdakilerden hangisidir?",
+                options: ["A) Sembollerle", "B) Harflerle", "C) Özel karakterlerle", "D) Rakamlar ve harflerle", "E) Sayılarla"],
+                ans: "B) Harflerle",
+                exp: "Sütunlar (A, B, C...) harflerle; satırlar ise (1, 2, 3...) sayılarla isimlendirilir.",
+                exams: ["2025 Bahar Büt"]
+            },
+            {
+                q: "Microsoft PowerPoint'teki 'Slayt Düzeni' özelliği aşağıdaki işlevlerden hangisini sağlar?",
+                options: ["A) Sunum temalarını değiştirmek", "B) Slayt içeriklerini düzenlemek ve yapılandırmak için hazır şablonlar sunmak", "C) Sunumun tamamını otomatik olarak oynatmak", "D) Slaytlara ses ve video dosyaları eklemek", "E) Slaytlara animasyon efektleri eklemek"],
+                ans: "B) Slayt içeriklerini düzenlemek ve yapılandırmak için hazır şablonlar sunmak",
+                exp: "Slayt Düzeni (Layout), metin ve resim gibi 'yer tutucuların' slayt üzerinde hangi hizada duracağını ayarlayan kalıplardır.",
+                exams: ["2025 Bahar Büt"]
+            },
+            {
+                q: "Microsoft PowerPoint'te bir slaytın arka planını düzenlerken aşağıdakilerden hangisi dolgu seçenekleri içerisinde yer almaz?",
+                options: ["A) Resim veya doku dolgusu", "B) Düz dolgu", "C) Gradyan dolgu", "D) Desen dolgusu", "E) Grafik dolgusu"],
+                ans: "E) Grafik dolgusu",
+                exp: "Arka Planı Biçimlendir panelinde Düz Dolgu, Gradyan Dolgu, Resim veya Doku Dolgusu ve Desen Dolgusu olmak üzere 4 temel dolgu vardır.",
+                exams: ["2025 Bahar Büt"]
+            },
+// ================= 2025-2026 FİNAL YENİ EKLENENLER =================
+            {
+                q: "Microsoft Word'de paragraflar arası boşlukların ayarlanmasında hangi ölçü birimi kullanılmaktadır?",
+                options: ["A) Piksel", "B) Milimetre", "C) Nokta", "D) İnç", "E) Santimetre"],
+                ans: "C) Nokta",
+                exp: "Word'de paragraf öncesi ve sonrası boşluklar ile satır aralıkları standart olarak 'Nokta (nk / pt)' cinsinden ifade edilir.",
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: "MS PowerPoint'te kadeh/perde şeklinde gösterilen (Baştan/Slayt Gösterisi) butonun işlevi aşağıdakilerden hangisidir?",
+                options: ["A) Slayt gösterisini kaydeder.", "B) Slayt gösterisini ilk slayttan başlayarak başlatır.", "C) Seçili görselin ekrana animasyonlu bir şekilde gelmesini sağlar.", "D) Seçili slaydı gizler.", "E) Slaytlara bölüm ekler."],
+                ans: "B) Slayt gösterisini ilk slayttan başlayarak başlatır.",
+                exp: "Slayt Gösterisi sekmesindeki veya durum çubuğundaki bu buton (kısayolu F5), sunumu her zaman birinci slayttan itibaren tam ekran başlatır.",
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: "Açık kaynak kodlu bir kelime işlemci uygulaması hangi temel özelliğe sahiptir?",
+                options: ["A) Yalnızca belirli bir işletim sisteminde çalışır ve kaynak kodu değiştirilemez.", "B) Sadece internet bağlantısı olan cihazlarda kullanılabilir.", "C) Belirli bir kullanıcı grubuna özel olarak geliştirilmiş olup, herkese açık değildir.", "D) Ticari bir şirket tarafından geliştirilir ve yalnızca ücretli sürümleri mevcuttur.", "E) Kullanıcıların kaynak koduna erişmesine ve değiştirmesine izin verir."],
+                ans: "E) Kullanıcıların kaynak koduna erişmesine ve değiştirmesine izin verir.",
+                exp: "Açık kaynak (Open Source) yazılımların en temel özelliği, kaynak kodlarının herkesin erişimine ve geliştirilmesine açık olmasıdır.",
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: "MS PowerPoint uygulamasının 'Geçişler' sekmesinde yer alan 'Efekt Seçenekleri' butonunun işlevi aşağıdakilerden hangisidir?",
+                options: ["A) Galeriden farklı animasyon efektleri seçilmesine izin verir.", "B) Seçilen slayt geçişleri ile ilgili ek animasyon ayarları yapılmasına izin verir.", "C) Seçilen slayt geçişine ses gibi ek özellikler ekler.", "D) Galeriden farklı slayt geçişleri seçilmesine izin verir.", "E) Seçilen efektin ekranda kalma süresini belirler."],
+                ans: "B) Seçilen slayt geçişleri ile ilgili ek animasyon ayarları yapılmasına izin verir.",
+                exp: "Geçişler sekmesindeki 'Efekt Seçenekleri', seçtiğiniz geçişin yönünü (örn. sağdan, soldan, yukarıdan) değiştirmek gibi ek özelleştirmeler sunar.",
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: "Microsoft Excel'de bir hücre aralığını ifade ederken hangi sembol kullanılır?",
+                options: ["A) Nokta (.)", "B) Virgül (,)", "C) Tire (-)", "D) Noktalı virgül (;)", "E) İki nokta üst üste (:)"],
+                ans: "E) İki nokta üst üste (:)",
+                exp: "A1:D5 örneğinde olduğu gibi, Excel'de başlangıç ve bitiş hücreleri arasındaki tüm blok aralığını ifade etmek için iki nokta üst üste (:) işareti kullanılır.",
+                exams: ["2025-2026 Final"]
+            },
+
+        ];
+
+        let allAnswersVisible = false;
+
+        function filterQuestions(type, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            let filtered = sorular;
+            if (type !== 'all') {
+                filtered = sorular.filter(soru => 
+                    soru.exams.some(exam => exam.toLowerCase().includes(type.toLowerCase()))
+                );
+            }
+
+            filtered.forEach((soru, index) => {
+                let tagsHtml = soru.exams.map(exam => {
+                    if(exam.includes("Kez Çıktı")) {
+                        return `<span class="exam-tag freq-tag">🔥 ${exam}</span>`;
+                    }
+                    return `<span class="exam-tag">${exam}</span>`;
+                }).join('');
+
+                let optionsHtml = soru.options.map(opt => `<li>${opt}</li>`).join('');
+                
+                let displayState = allAnswersVisible ? 'block' : 'none';
+                let btnText = allAnswersVisible ? 'Cevabı ve Açıklamayı Gizle' : 'Cevabı ve Açıklamayı Göster';
+                let btnColor = allAnswersVisible ? '#34495e' : '#0984e3';
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="exam-tags">${tagsHtml}</div>
+                    </div>
+                    <p class="question-text">${index + 1}. ${soru.q}</p>
+                    <ul class="options">${optionsHtml}</ul>
+                    <button class="btn-toggle" style="background-color: ${btnColor}" onclick="toggleSingleAnswer(this)">${btnText}</button>
+                    <div class="answer-area" style="display: ${displayState}">
+                        <p class="correct-ans">✔️ Doğru Cevap: ${soru.ans}</p>
+                        <p class="exp-text">💡 <strong>Açıklama:</strong> ${soru.exp}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleSingleAnswer(btn) {
+            const targetDiv = btn.nextElementSibling;
+            if (targetDiv.style.display === 'none' || targetDiv.style.display === '') {
+                targetDiv.style.display = 'block';
+                btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                btn.style.backgroundColor = '#34495e';
+            } else {
+                targetDiv.style.display = 'none';
+                btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                btn.style.backgroundColor = '#0984e3';
+            }
+        }
+
+        function toggleAllAnswers() {
+            allAnswersVisible = !allAnswersVisible;
+            const globalBtn = document.getElementById('globalToggleBtn');
+            const allAnswerAreas = document.querySelectorAll('.answer-area');
+            const allToggleBtns = document.querySelectorAll('.btn-toggle');
+
+            if (allAnswersVisible) {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Gizle';
+                globalBtn.style.backgroundColor = '#34495e';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'block');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                    btn.style.backgroundColor = '#34495e';
+                });
+            } else {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Göster';
+                globalBtn.style.backgroundColor = 'var(--global-btn)';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'none');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                    btn.style.backgroundColor = '#0984e3';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const allBtn = document.querySelector('.tab-btn.active');
+            filterQuestions('all', allBtn);
+        });
+    </script>
+</body>
+</html>

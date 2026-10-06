@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUZEF Maliyet Muhasebesi - MEGA ARŞİV PRO</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #0984e3;
+            --success: #00b894;
+            --warning: #f39c12;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --border: #dfe6e9;
+            --global-btn: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1050px; margin: 0 auto; }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-bottom: 5px solid var(--a);
+            margin-bottom: 20px;
+        }
+
+        .header h1 { margin: 0 0 10px 0; font-size: 2.2em; }
+        .header p { margin: 0; font-size: 1.1em; color: #bdc3c7; }
+
+       .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            z-index: 100;
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .tabs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+        .tab-btn {
+            background-color: #ecf0f1;
+            color: var(--primary);
+            border: 2px solid var(--border);
+            padding: 8px 16px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background-color: #dfe6e9; }
+        .tab-btn.active { background-color: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3); }
+
+        .global-toggle-btn {
+            background-color: var(--global-btn);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(225, 112, 85, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .global-toggle-btn:hover { background-color: #d63031; transform: translateY(-2px); }
+
+        #quiz-container { display: flex; flex-direction: column; gap: 20px; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 25px;
+            border-left: 6px solid var(--accent);
+        }
+
+        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .exam-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        
+        /* ÖZEL ETİKET RENKLENDİRMELERİ */
+        .exam-tag { padding: 5px 12px; border-radius: 6px; font-size: 0.85em; font-weight: bold; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid transparent; }
+        .tag-vize { background-color: #3498db; }
+        .tag-final { background-color: #9b59b6; }
+        .tag-but { background-color: #16a085; }
+        .tag-freq { background-color: #e74c3c; }
+        .tag-warn { background-color: #fcf3cf; color: #d35400; border-color: #d35400; }
+        .tag-other { background-color: var(--primary); }
+        /* İNTERAKTİF ŞIK RENKLENDİRMELERİ */
+        .option-item { cursor: pointer; transition: 0.2s; }
+        .option-item:hover { background-color: #e9ecef; }
+        .option-correct { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; font-weight: bold; }
+        .option-incorrect { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; text-decoration: line-through; }
+        .question-text { font-size: 1.15em; font-weight: 600; color: var(--primary); margin-top: 0; margin-bottom: 15px; white-space: pre-wrap; }
+        .options { list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; flex-direction: column; gap: 8px; }
+        .options li { background-color: #f8f9fa; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); font-size: 1em; }
+
+        .btn-toggle { background-color: var(--secondary); color: white; border: none; padding: 10px; width: 100%; font-size: 1.05em; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn-toggle:hover { background-color: var(--primary); }
+
+        .answer-area { display: none; margin-top: 15px; padding: 15px; background-color: #eafaf1; border-left: 5px solid var(--success); border-radius: 0 8px 8px 0; }
+        .correct-ans { font-size: 1.1em; color: var(--success); margin: 0 0 8px 0; font-weight: bold; }
+        .exp-text { margin: 0; color: var(--text); line-height: 1.5; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Maliyet Muhasebesi Mega Havuz v.13</h1>
+            <p>Vize, Final, Bütünleme ve Tüm Çıkmış Sorular (Tarih Etiketli Tam Liste)</p>
+        </div>
+
+        <div class="controls-container">
+            <button id="globalToggleBtn" class="global-toggle-btn" onclick="toggleAllAnswers()">Tüm Cevapları Aç / Kapat</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterQuestions('all', this)">📚 Tüm Havuz</button>
+                <button class="tab-btn" onclick="filterQuestions('Vize', this)">📘 Vize Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Final', this)">📕 Final Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Büt', this)">📗 Büt. Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Eski Yıllar', this)">📜 Eski Yıllar Soruları</button>
+                <button class="tab-btn" style="background-color: #ffeaa7; color: #d63031; border-color: #e17055;" onclick="filterQuestions('Kez Çıktı', this)">🔥 Banko Sorular</button>
+                <button class="tab-btn" style="background-color: #fcf3cf; color: #d35400; border-color: #d35400;" onclick="filterQuestions('Dikkat', this)">⚠️ Dikkat Gerekenler</button>
+            </div>
+            <input type="text" id="arama" class="btn" placeholder="🔍 Soru veya açıklama ara..." onkeyup="aramaYap()" style="background: white; color: black; cursor: text; text-align: left; min-width: 250px; width:100%; max-width:400px; margin-top:10px;">
+        </div>
+
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        // Orijinal Çalışan Dizi Mantığı
+        const sorular = [
+            {
+                q: `Sürekli Envanter yöntemi kullanan Almanya İşletmesinin Ocak ayı başında toplam maliyeti 324 TL olan 18 adet ABC hammaddesi bulunmaktaydı. Ocak ayında aşağıdaki alış ve satışlar gerçekleşmiştir.\n\nTarih | İşlem Türü | Miktar ve Birim Fiyat\n8 Ocak | Alış | 42 birim * 20 TL\n14 Ocak | Satış | 35 birim * 40 TL\n22 Ocak | Alış | 28 birim * 22,6 TL\n27 Ocak | Satış | 42 birim * 40 TL\n\nHareketli ağırlıklı stok değerleme yöntemine göre 14 Ocak tarihinde yapılan satışın maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 679 TL", "B) 582 TL", "C) 824 TL", "D) 1.079 TL", "E) 756 TL"],
+                ans: "A) 679 TL",
+                exp: `Dönem Başı: 18 adet, 324 TL. 8 Ocak Alışı: 42 adet * 20 TL = 840 TL.\nToplam: 60 adet, 1164 TL. Yeni Birim Maliyet: 1164 / 60 = 19,4 TL.\nSatış Maliyeti: 35 adet * 19,4 TL = 679 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2023 Final", "2024-2025 Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Azur İşletmesi 5.000 m² alana kurulu bir mağazada satış yapmaktadır. Kullanılan alan için ödenen yıllık kira 200.000 TL'dir.\nAlan (m²): A(100), B(100), C(300), D(500), ABİYE(2.500), SPOR(1.500).\n\nBirinci dağıtım sonucunda spor giyim bölümünün payına düşen kira gideri ne kadardır?`,
+                options: ["A) 90.000 TL", "B) 50.000 TL", "C) 80.000 TL", "D) 70.000 TL", "E) 60.000 TL"],
+                ans: "E) 60.000 TL",
+                exp: `Toplam Alan: 5.000 m².\nSpor Giyim Bölümü Alanı: 1.500 m².\nSpor Giyim'in Payı (Dağıtım Oranı): 1.500 / 5.000 = 0,30 (%30).\nDağıtılacak Tutar: 200.000 TL * 0,30 = 60.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2025-2026 Vize", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Bir fabrikadaki ustabaşı aylık üretim hacminden bağımsız olarak 8.500 TL ücret almaktadır. Bunun yanında üretilen her bir birim için 3 TL daha ücret almaktadır. Ustabaşının aldığı toplam ücret fabrika açısından ..... maliyettir.\nYukarıda boş bırakılan yere aşağıdakilerden hangisi gelmelidir?`,
+                options: ["A) sıçrayan", "B) yarı değişken", "C) yapışkan", "D) sabit", "E) değişken"],
+                ans: "B) yarı değişken",
+                exp: `İçerisinde hem sabit bir baz bedel (8.500 TL) hem de faaliyet hacmine bağlı olarak değişen bir birim bedel (3 TL) barındıran maliyet türlerine Karma Maliyetler veya Yarı Değişken Maliyetler denir.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Maraş İşletmesinde kalıp ve montaj olmak üzere iki adet esas üretim bölümü, yemekhane ve tamir bakım olmak üzere iki tane de destek bölümü bulunmaktadır. Yemekhane ile ilgili faaliyet ölçüsü çalışan sayısıdır.\nYemekhane Direkt Maliyeti: 360.000 TL. Çalışan sayıları: Tamir-bakım (30), Kalıp (35), Montaj (55).\n\nKademeli dağıtım yöntemi kullanıldığında yemekhane bölümünden montaj bölümüne dağıtılacak maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 220.000 TL", "B) 140.000 TL", "C) 105.000 TL", "D) 165.000 TL", "E) 181.000 TL"],
+                ans: "D) 165.000 TL",
+                exp: `Kademeli dağıtımda yemekhane dağıtılırken diğer tüm personeller hesaba katılır. Tamir-bakım (30) + Kalıp (35) + Montaj (55) = 120 kişi.\nKişi Başı: 360.000 / 120 = 3.000 TL.\nMontaj Payı: 55 * 3.000 TL = 165.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2025-2026 Vize", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Hariboğlu İşletmesi 6.000 m² alana kurulu bir mağazada jelibon şekerler satmaktadır. 150.000 TL tutarındaki aylık yemek maliyeti maliyet merkezlerine kişi sayısı ile orantılı olarak dağıtılmaktadır.\nÇalışan Sayısı: Temizlik (30), Tamir Bakım (10), Paketli Satış (70), Açık Satış (90).\n\nPaketli satış bölümüne dağıtılacak yemek maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 57.500 TL", "B) 52.500 TL", "C) 50.000 TL", "D) 47.500 TL", "E) 55.000 TL"],
+                ans: "B) 52.500 TL",
+                exp: `Toplam Çalışan Sayısı: 30 + 10 + 70 + 90 = 200 kişi.\nKişi Başına Düşen Yemek Maliyeti: 150.000 TL / 200 kişi = 750 TL / kişi.\nPaketli Satış Bölümü Payı: 70 * 750 TL = 52.500 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2025-2026 Vize", "2024-2025 Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Üretim yapan bir işletmenin genel merkezinde çalışan bir muhasebecinin aylık ücreti ile ilgili aşağıdakilerden hangisi doğrudur?`,
+                options: ["A) Sabit - İmalat Maliyeti", "B) Değişken - Yönetim Gideri", "C) Sabit - Yönetim Gideri", "D) Yarı Değişken - İmalat Maliyeti", "E) Değişken - İmalat Maliyeti"],
+                ans: "C) Sabit - Yönetim Gideri",
+                exp: `Genel merkezde çalışan bir muhasebecinin üretim (imalat) faaliyetiyle doğrudan bir ilgisi yoktur; bu nedenle ücreti "Genel Yönetim Gideri"dir. Aylık maaşla çalıştığı için "Sabit" karakterlidir.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024 Final", "2024-2025 Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Babadağ İşletmesinin Şubat ayı başında toplam maliyeti 266 TL olan 14 adet ABC hammaddesi bulunmaktaydı.\n8 Şubat | Alış | 42 birim * 20 TL\n14 Şubat | Satış | 35 birim * 40 TL\n\nSon giren ilk çıkar (LIFO) stok değerleme yöntemine göre 14 Şubat tarihinde satılan malın maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 686 TL", "B) 1.106 TL", "C) 700 TL", "D) 691,25 TL", "E) 800 TL"],
+                ans: "C) 700 TL",
+                exp: `LIFO (Son Giren İlk Çıkar) yönteminde, satış ambardan çıkışı yapılan en son partiden hesaplanır.\n14 Şubat Satışı (35 adet), 8 Şubat alımlarından (42 adet - 20 TL) karşılanır.\nSatışın Maliyeti: 35 adet * 20 TL = 700 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Mikro İşletmesi birleşik bir imalat süreci sonunda A ve B olmak üzere iki farklı ürün ortaya çıkarmaktadır. Net Satış Değeri yöntemi kullanıldığında A ürününe düşen birleşik imalat payı aşağıdakilerden hangisidir?\nBirleşik Maliyet: 329.000 TL\nA ürünü ayrım sonrası maliyet: 406.340 TL | Satış (kutu): 13.000 | Fiyat: 51 TL\nB ürünü ayrım sonrası maliyet: 97.060 TL | Satış (kutu): 5.900 | Fiyat: 26 TL`,
+                options: ["A) 269.780 TL", "B) 59.220 TL", "C) 256.660 TL", "D) 676.120 TL", "E) 156.280 TL"],
+                ans: "A) 269.780 TL",
+                exp: `A'nın Net Satış Değeri (NSD) = (13.000 * 51) - 406.340 = 256.660 TL.\nB'nin NSD = (5.900 * 26) - 97.060 = 56.340 TL.\nToplam NSD = 313.000 TL.\nA'nın Payı = 329.000 TL * (256.660 / 313.000) = 269.780 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Trabzon İşletmesi dönem içerisinde 5.000 adet üretmiş ve 4.000 adet satmıştır. \nDirekt malzeme: 60.000 TL | Direkt işçilik: 30.000 TL | Genel üretim maliyeti: 120.000 TL | Satış giderleri: 50.000 TL | Yönetim giderleri: 40.000 TL\n\nBirim üretim maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 25 TL", "B) 42 TL", "C) 18 TL", "D) 52 TL", "E) 60 TL"],
+                ans: "B) 42 TL",
+                exp: `⚠️ DİKKAT! Piyasada dolaşan bazı notlarda cevap 60 TL yazar, bu YANLIŞTIR. Üretim maliyetine sadece fabrikadaki maliyetler girer. Dönem giderleri (Satış/Yönetim) maliyete GİRMEZ.\nToplam Üretim Maliyeti: 60.000 + 30.000 + 120.000 = 210.000 TL.\nBirim Üretim Maliyeti: 210.000 / 5.000 adet = 42 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2021 Final", "2024-2025 Büt", "5 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Birleşik üretim maliyetlerini "net satış değeri yöntemine" göre dağıtan bir işletmede, belli bir üretim partisinden 10.000 kg. olarak üretilen ABC mamulünün birleşik maliyet dağıtımından aldığı pay 160.000 TL'dir. Eğer ABC mamulü ayrım noktasında satılacak olursa gelecek dönem 60 TL/kg fiyattan satılabilecektir. ABC mamulü ek işleme tabi tutulup, satılırsa fiyatı 80 TL/kg olacaktır. Ek işlemin maliyeti 200.000 TL olacaktır. \nBuna göre işletmenin ABC mamulünü ek işleme tabi tutması veya tutmaması arasındaki fark kâr-zarar tablosunu nasıl etkiler?`,
+                options: ["A) Ek işleme tabi tutulursa kâr 10.000 TL artar.", "B) Ek işleme tabi tutulursa kâr 20.000 TL azalır.", "C) Ek işleme tabi tutulursa kâr 20.000 TL artar.", "D) Ek işleme tabi tutulursa kâr değişmez.", "E) Ek işleme tabi tutulursa kâr 10.000 TL azalır."],
+                ans: "D) Ek İşleme tabi tutulursa kâr değişmez.",
+                exp: `İlave Gelir: (80 - 60) * 10.000 = 200.000 TL.\nEk İşlemin İlave Maliyeti: 200.000 TL.\nKarar: İlave gelir ile ilave maliyet eşittir. Kâr değişmez. Batık maliyet (160k) bu kararda dikkate alınmaz.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Otomobillerde kullanılan camlar otomobil üreticisi tarafından hangi stok kalemi içerisinde sınıflandırılır?`,
+                options: ["A) Yardımcı Malzeme Stoku", "B) Hammadde Stoku", "C) Yarı Mamul Stoku", "D) Ticari Mal Stoku", "E) Mamul Stoku"],
+                ans: "B) Hammadde Stoku",
+                exp: `Otomobil camı, ürünün bünyesine doğrudan giren, temel bir parçası olan ve maliyeti kolayca izlenebilen "Direkt İlk Madde ve Malzeme" yani Hammaddedir.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2023 Final", "2024 Final", "2024-2025 Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `Giresun İşletmesinin ürettiği bir ürüne ilişkin birim direkt malzeme maliyeti 20 TL, birim direkt işçilik maliyeti 10 TL ve birim genel üretim maliyeti 30 TL olarak gerçekleşmiştir. İşletme geçen dönem 2.000 adet üretim yapmış ve ürünlerin tamamını tanesi 80 TL'den satmıştır. Satış ve genel yönetim giderleri toplamı 20.000 TL olarak gerçekleşmiştir. \nDöneme ilişkin brüt kâr tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 10.000 TL", "B) 40.000 TL", "C) 30.000 TL", "D) 20.000 TL", "E) 50.000 TL"],
+                ans: "B) 40.000 TL",
+                exp: `Birim Üretim Maliyeti: DİMM(20) + DİG(10) + GÜG(30) = 60 TL.\nSatılan Mamul Maliyeti: 2.000 adet * 60 TL = 120.000 TL.\nSatış Hasılatı: 2.000 adet * 80 TL = 160.000 TL.\nBrüt Kâr: 160.000 - 120.000 = 40.000 TL.\n⚠️ DİKKAT! (20.000 TL'lik faaliyet gideri brüt kârdan DÜŞÜLMEZ.)`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024-2025 Büt", "4 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `I. Maliyet türlerinin maliyet yerlerine dağıtılması\nII. Yardımcı maliyet yerlerinde toplanan maliyetlerin esas maliyet yerlerine dağıtılması\nIII. Esas maliyet yerlerinde toplanan maliyetlerin o bölümlerdeki mamullere dağıtılması\n\nMercan İşletmesinin maliyet dağıtımında izlemesi gereken adımların doğru sıralaması aşağıdakilerden hangisidir?`,
+                options: ["A) III, I, II", "B) II, III, I", "C) II, I, III", "D) I, II, III", "E) III, II, I"],
+                ans: "D) I, II, III",
+                exp: `Maliyet dağıtımı hiyerarşisi: 1. Dağıtım (Ortak giderlerin yerlere dağıtımı), 2. Dağıtım (Yardımcı yerlerin esas yerlere aktarımı), 3. Dağıtım (Esas yerlerden doğrudan ürünlere yüklenmesi).`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024-2025 Bahar Final", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Can İşletmesinin Ocak ayı başında birim maliyeti 5 TL olan 8 adet ABC stoku mevcuttur. 12 Ocak tarihinde birim maliyeti 7 TL olan 10 adet daha ABC stoku alınmıştır. 25 Ocak tarihinde 12 adet ABC stoku tanesi 9 TL'den satılmıştır. İşletme stokları ile ilgili olarak ilk giren ilk çıkar yöntemini uyguluyorsa Ocak ayı için brüt kâr tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 28 TL", "B) 35 TL", "C) 108 TL", "D) 40 TL", "E) 54 TL"],
+                ans: "D) 40 TL",
+                exp: `Satış Hasılatı: 12 adet * 9 TL = 108 TL.\nSatılan Malın Maliyeti (FIFO): En eski 8 adet * 5 TL = 40 TL. Kalan 4 adet * 7 TL = 28 TL. Toplam Maliyet: 68 TL.\nBrüt Kâr: 108 - 68 = 40 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2024-2025 Bahar Final", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Maliyetlerle ilgili aşağıdakilerden hangisi doğrudur?`,
+                options: ["A) Toplam değişken maliyetler, faaliyet hacmi artarken azalırlar.", "B) Toplam sabit maliyetler, faaliyet hacmi artarken azalırlar.", "C) Birim değişken maliyetler, faaliyet hacmi artarken azalırlar.", "D) Birim değişken maliyetler, faaliyet hacmi artarken artarlar.", "E) Birim sabit maliyetler, faaliyet hacmi artarken azalırlar."],
+                ans: "E) Birim sabit maliyetler, faaliyet hacmi artarken azalırlar.",
+                exp: `Sabit Maliyetler: Toplamda sabittirler. Ancak faaliyet hacmi arttıkça, bu sabit toplam daha çok sayıdaki ürüne paylaştırılacağı için "ürün başına düşen (birim) sabit maliyet" azalır.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Maraş İşletmesi Direkt Dağıtım Yöntemi:\nYemekhane Maliyeti: 360.000 TL | Tamir-bakım: 300.000 TL\nKalıp Direkt Maliyeti: 244.000 TL\nÇalışan Sayısı: Kalıp(35), Montaj(55)\nTamir Saati: Kalıp(16.000), Montaj(4.000)\n\nDirekt dağıtım yöntemi kullanıldığında kalıp bölümünde biriken toplam maliyet tutarı ne kadardır?`,
+                options: ["A) 278.000 TL", "B) 424.000 TL", "C) 624.000 TL", "D) 661.000 TL", "E) 461.000 TL"],
+                ans: "C) 624.000 TL",
+                exp: `Yemekhaneden Kalıba: 360.000 * [35 / (35+55)] = 140.000 TL.\nTamir-Bakımdan Kalıba: 300.000 * [16.000 / (16.000+4.000)] = 240.000 TL.\nToplam: Kendi direkt maliyeti (244.000) + Yemekhane (140.000) + Tamir (240.000) = 624.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Trabzon İşletmesi 5.000 adet üretmiş ve 4.000 adet satmıştır. (Önceki sorulardan birim maliyeti 42 TL bulunmuştu).\nBirim satış fiyatı 80 TL ise brüt kâr tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 102.000 TL", "B) 152.000 TL", "C) 172.000 TL", "D) 62.000 TL", "E) 122.000 TL"],
+                ans: "B) 152.000 TL",
+                exp: `Satış Hasılatı: 4.000 adet * 80 TL = 320.000 TL.\nSatılan Mal Maliyeti: 4.000 adet * 42 TL = 168.000 TL.\nBrüt Kâr: 320.000 - 168.000 = 152.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `Amasya İşletmesinde Ocak ayı başında toplam maliyeti 266 TL olan 14 adet ABC hammaddesi bulunmaktaydı. \n8 Ocak Alış: 42 birim * 20 TL\n16 Ocak Satış: 35 birim * 40 TL\n\nİlk giren ilk çıkar (FIFO) stok değerleme yöntemine göre 16 Ocak tarihinde satılan malın maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 700 TL", "B) 1.106 TL", "C) 686 TL", "D) 1.200 TL", "E) 1.400 TL"],
+                ans: "C) 686 TL",
+                exp: `Satış maliyeti en eski stoktan başlar. 35 adetlik satışın 14 adedi en eski stoktan (266 TL). Kalan 21 adedi 8 Ocak alımlarından (21 * 20 TL = 420 TL).\nToplam Satış Maliyeti: 266 + 420 = 686 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2021 Final", "2024-2025 Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Bal İşletmesi toplam 200.000 TL üretim maliyetine katlanarak 50 adet kaykay üretmiştir. Kaykayların 35 tanesi 5.000 TL'den satılmıştır. İşletmenin döneme ilişkin brüt kârı aşağıdakilerden hangisidir?`,
+                options: ["A) 40.000 TL", "B) 50.000 TL", "C) 35.000 TL", "D) 45.000 TL", "E) 30.000 TL"],
+                ans: "C) 35.000 TL",
+                exp: `Birim Kaykay Maliyeti: 200.000 / 50 = 4.000 TL.\nSatış Hasılatı: 35 * 5.000 = 175.000 TL.\nSatılan Mamul Maliyeti: 35 * 4.000 = 140.000 TL.\nBrüt Kâr: 175.000 - 140.000 = 35.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2025-2026 Vize", "2024-2025 Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi endirekt maliyetlere örnek olarak verilemez?`,
+                options: ["A) Yemek üretiminde kullanılan tuz", "B) Fabrikada kullanılan taşıtların amortismanı", "C) Ayakkabı üretiminde çalışan ustabaşının maaşı", "D) Mobilya üretiminde kullanılan tutkal", "E) Mobilya üretiminde kullanılan kereste"],
+                ans: "E) Mobilya üretiminde kullanılan kereste",
+                exp: `⚠️ DİKKAT: Öğrenci notlarında hatalı olarak amortisman der. KANMAYIN! Soru endirekt "olmayan" yani "Direkt Maliyeti" sormaktadır. Kereste, mobilyanın doğrudan ana maddesidir ve Direkt İlk Madde Malzemedir.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2024-2025 Büt", "4 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Bir fabrikada 1.280.000 TL aydınlatma maliyeti yüzölçümü ile orantılı olarak dağıtılmaktadır. \nYemekhane: 400 m², Tamir-Bakım: 100 m², Kesim: 4.000 m², Montaj: 3.500 m², TOPLAM: 8.000 m².\n\n1. dağıtım sonucunda Yemekhane bölümüne dağıtılacak olan aydınlatma maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 640.000 TL", "B) 16.000 TL", "C) 128.000 TL", "D) 64.000 TL", "E) 560.000 TL"],
+                ans: "D) 64.000 TL",
+                exp: `Dağıtım Oranı: Yemekhanenin alanı (400 m²) / Toplam alan (8.000 m²) = 0,05 (%5).\nYemekhane Payı: 1.280.000 TL * 0,05 = 64.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2025-2026 Vize", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Maraş İşletmesi Kademeli Dağıtım Yöntemi:\nTamir-Bakım'ın kendi maliyeti 300.000 TL. Yemekhaneden Tamir-Bakım'a 90.000 TL pay gelmiştir.\nTamir-Bakım saatleri: Kalıp(16.000), Montaj(4.000). Toplam 20.000 saat.\n\nKademeli dağıtım yöntemi kullanıldığında tamir bakım bölümünden kalıp bölümüne dağıtılacak mali tutar aşağıdakilerden hangisidir?`,
+                options: ["A) 390.000 TL", "B) 336.000 TL", "C) 78.000 TL", "D) 312.000 TL", "E) 240.000 TL"],
+                ans: "D) 312.000 TL",
+                exp: `Tamir-Bakım'ın Yeni Toplam Maliyeti: 300.000 + 90.000 = 390.000 TL.\nKalıp Bölümü Payı: 390.000 TL * (16.000 / 20.000) = 312.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2025-2026 Vize", "2024 Final", "2024-2025 Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `Maraş İşletmesi Direkt Dağıtım Yöntemi:\nYemekhane Maliyeti: 360.000 TL.\nÇalışan Sayısı: Kalıp(35), Montaj(55). Toplam 90.\n\nDirekt dağıtım yöntemi kullanıldığında yemekhane bölümünden kalıp bölümüne dağıtılacak maliyet tutarı ne kadardır?`,
+                options: ["A) 78.000 TL", "B) 220.000 TL", "C) 105.000 TL", "D) 140.000 TL", "E) 165.000 TL"],
+                ans: "D) 140.000 TL",
+                exp: `Direkt yöntemde diğer destek bölümü (Tamir-Bakım) yok sayılır.\nKalıp Bölümünün Payı: 360.000 TL * (35 / 90) = 140.000 TL.`,
+                exams: ["2022-2023 Vize", "2024 Vize", "2025 Vize", "2025-2026 Vize", "4 Kez Çıktı!"]
+            },
+            {
+                q: `İstanbul/Samsun İşletmesinin ürettiği bir ürüne ilişkin birim direkt malzeme maliyeti 15 TL, birim direkt işçilik maliyeti 6 TL, ve birim genel üretim maliyeti 19 TL olarak gerçekleşmiştir. İşletme geçtiğimiz dönem tanesi 75 TL'den 2.000 adet üretmiş ve satmıştır. Satış ve genel yönetim giderleri 30.000 TL olarak gerçekleşmiştir. Döneme ilişkin brüt kâr tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 80.000 TL", "B) 40.000 TL", "C) 70.000 TL", "D) 100.000 TL", "E) 88.000 TL"],
+                ans: "C) 70.000 TL",
+                exp: `Birim Üretim Maliyeti: 15 (DİMM) + 6 (DİG) + 19 (GÜG) = 40 TL.\nToplam Satılan Mamul Maliyeti: 2.000 adet * 40 TL = 80.000 TL.\nToplam Satış Hasılatı: 2.000 adet * 75 TL = 150.000 TL.\nBrüt Kâr: 150.000 TL (Hasılat) - 80.000 TL (SMM) = 70.000 TL.`,
+                exams: ["2025 Vize", "2021 Final", "2023 Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Susurluk mobilya fabrikasında işçiler haftalık 40 saat çalışmaktadır ve saat başına 16 TL ücret almaktadırlar. Fazla mesai için saat ücretinin 1,5 katı ödenmektedir. İşçiler acil bir siparişin yetiştirilmesi için Nisan ayının ilk haftasında 44 saat çalışmış ise ilgili sipariş için hesaplanan direkt işçilik tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 736 TL", "B) 640 TL", "C) 704 TL", "D) 960 TL", "E) 1.056 TL"],
+                ans: "A) 736 TL",
+                exp: `Acil ve özel siparişlerde fazla mesai ücretinin tamamı direkt işçiliğe yazılır.\nNormal Ücret: 40 saat * 16 TL = 640 TL.\nFazla Mesai: 4 saat * (16 * 1,5) = 96 TL.\nToplam: 640 + 96 = 736 TL.`,
+                exams: ["2025 Vize", "2024 Final", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Hatay İşletmesinde Bakım ve Personel olmak üzere iki hizmet bölümü bulunmaktadır. Bakım bölümünün maliyetleri bakım saatleri ile, personel bölümünün maliyeleri ise personel sayısı ile orantılı olarak üretim bölümlerine (A ve B) dağıtılmaktadır. Direkt dağıtım yöntemi kullanıldığında Bakım bölümünden B bölümüne dağıtılacak maliyet aşağıdakilerden hangisidir? (Bakım maliyeti: 360.000 TL. Bakım saatleri: A bölümü 1.230, B bölümü 680)`,
+                options: ["A) 128.168", "B) 100.398", "C) 110.230", "D) 167.330", "E) 87.742"],
+                ans: "A) 128.168",
+                exp: `Direkt dağıtımda destek bölümleri birbirini yok sayar. Sadece A ve B arası dağıtılır.\nToplam: 1.230 + 680 = 1.910 saat.\nB Payı: 360.000 * (680 / 1.910) = 128.167,53 (Yuvarlandığında 128.168).`,
+                exams: ["2025 Vize", "2024 Final", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Bergen İşletmesi 6.800 m² alana kurulu bir mağazada satış yapmaktadır. A, B, C, D yardımcı hizmet bölümleri ile bayan giyim ve erkek giyim olmak üzere iki adet esas satış yeri bulunmaktadır. Bu bölümlerin kapsadıkları alanlara ilişkin bilgiler aşağıda sunulmuştur. Kullanılan alan için ödenen yıllık kira 170.000 TL'dir.\nAlan (m²): A(1000), B(500), C(900), D(800), BAYAN(2500), ERKEK(1100).\n\nBirinci dağıtım sonucunda erkek giyim bölümünün payına düşen kira gideri ne kadardır?`,
+                options: ["A) 12.500 TL", "B) 62.500 TL", "C) 27.500 TL", "D) 25.000 TL", "E) 15.000 TL"],
+                ans: "C) 27.500 TL",
+                exp: `Kira gideri toplam alana (m²) bölünerek dağıtılır.\nToplam Alan: 6.800 m².\nErkek Giyim: 1.100 m².\nDağıtım: (1.100 / 6.800) * 170.000 = 27.500 TL.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Su şişeleyen bir fabrikada aşağıdakilerden hangisi sabit maliyettir?`,
+                options: ["A) Makinelerin amortismanı", "B) Su", "C) Şişeler", "D) Direkt işçilik", "E) Makineleri çalıştırmak için kullanılan enerji"],
+                ans: "A) Makinelerin amortismanı",
+                exp: `Sabit maliyetler üretim hacminden etkilenmeyen maliyetlerdir. Makinelerin amortismanı zamana bağlıdır ve üretimden bağımsız sabittir. Su, şişe ve enerji değişkendir.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Bir süpermarkette satılan ürünler aşağıdaki hangi stok kalemi içerisinde sınıflandırılabilir?`,
+                options: ["A) Yardımcı malzeme stoku", "B) Ham madde stoku", "C) Yarı mamul stoku", "D) İşletme malzemesi stoku", "E) Mal stoku"],
+                ans: "E) Mal stoku (Ticari Mal)",
+                exp: `Süpermarketler ticaret işletmesidir. Sadece alıp satmak amacıyla, üzerinde değişiklik yapmadan elde tuttukları stoklara Ticari Mal (Mal Stoku) denir.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Muğla İşletmesinde kesme ve dikme olmak üzere iki adet esas üretim bölümü, yemekhane ve tamir bakım olmak üzere iki tane de destek bölümü bulunmaktadır.\nYemekhane Direkt Maliyet: 180.000 TL. Çalışan Sayısı: Kesme (35), Dikme (55).\n\nDirekt dağıtım yöntemi kullanıldığında yemekhane bölümünden kesme bölümüne dağıtılacak maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 39.000 TL", "B) 52.500 TL", "C) 82.500 TL", "D) 70.000 TL", "E) 110.000 TL"],
+                ans: "D) 70.000 TL",
+                exp: `Direkt dağıtımda destekler birbirini yok sayar. Yemekhane (180.000 TL) Kesme (35) ve Dikme (55) arasında dağıtılır.\nToplam: 90 kişi.\nKesme Payı = 180.000 * (35 / 90) = 70.000 TL.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Muğla İşletmesinde kesme ve dikme olmak üzere iki adet esas üretim bölümü, yemekhane ve tamir bakım olmak üzere iki tane de destek bölümü bulunmaktadır.\nYemekhane Direkt Maliyet: 180.000 TL. Tamir-Bakım Maliyet: 150.000 TL.\nÇalışan Sayısı: Kesme (35), Dikme (55).\nTamir Bakım Saati: Kesme (16.000), Dikme (4.000).\nKesme Direkt Maliyet: 122.000 TL.\n\nDirekt dağıtım yöntemi kullanıldığında kesme bölümünde biriken toplam maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 330.500 TL", "B) 312.000 TL", "C) 230.500 TL", "D) 212.000 TL", "E) 139.000 TL"],
+                ans: "B) 312.000 TL",
+                exp: `Kendi Maliyeti (122.000) + Yemekhane Payı (180.000 * 35/90 = 70.000) + Tamir Payı (150.000 * 16000/20000 = 120.000) = 312.000 TL.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Çınar İşletmesi 10.000 m² alana kurulu bir fabrikada kazak üretmektedir. X, Y, Z yardımcı hizmet yerleri ile A, B ve C olmak üzere üç adet esas üretim yeri bulunmaktadır. Kullanılan alan için ödenen yıllık kira 2.000.000 TL'dir. (A'nın alanı 2.000 m²).\n\nBirinci dağıtım sonucunda A bölümünün payına düşen kira ne kadardır?`,
+                options: ["A) 520.000 TL", "B) 250.000 TL", "C) 200.000 TL", "D) 480.000 TL", "E) 400.000 TL"],
+                ans: "E) 400.000 TL",
+                exp: `A'nın oranı: 2.000 / 10.000 = %20.\nA'nın Kira Payı: 2.000.000 TL * 0,20 = 400.000 TL.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Sinop İşletmesinin Nisan ayı başında toplam maliyeti 266 TL olan 14 adet X ham maddesi bulunmaktaydı. Nisan ayında aşağıdaki alış ve satışlar gerçekleşmiştir:\n8 Nisan Alış: 42 birim * 20 TL | 14 Nisan Satış: 35 birim * 40 TL | 22 Nisan Alış: 28 birim * 22 TL | 27 Nisan Satış: 42 birim * 40 TL\n\nİlk giren ilk çıkar (FIFO) stok değerleme yöntemine göre 14 Nisan tarihinde satılan malın maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 1.200 TL", "B) 1.400 TL", "C) 700 TL", "D) 686 TL", "E) 1.106 TL"],
+                ans: "D) 686 TL",
+                exp: `Dönem Başı 14 adet (266 TL). Kalan 21 adet 8 Nisan alımlarından (20 TL) = 420 TL.\nToplam: 266 + 420 = 686 TL. (Amasya İşletmesi sorusunun tamamen aynısıdır.)`,
+                exams: ["2021 Final", "Vize", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Bir imalat işletmesinin üç temel stok kalemi aşağıdaki şıklardan hangisinde doğru sayılmıştır?`,
+                options: ["A) Malzeme stoku, alışlar ve mamul stoku", "B) İlk madde ve malzeme (ham madde) stoku, yarı mamul stoku ve mamul stoku", "C) Malzeme, işçilik ve genel imalat maliyeti", "D) Malzeme stoku, kusurlu mallar stoku, hurda stoku", "E) Alımlar, ücretler ve mamul stoku"],
+                ans: "B) İlk madde ve malzeme (ham madde) stoku, yarı mamul stoku ve mamul stoku",
+                exp: `İmalat işletmelerinde stoklar bilançoda işlenme seviyelerine göre 3 ana grupta izlenir: Hammadde (hiç işlenmemiş), Yarı Mamul (kısmen işlenmiş), Mamul (tamamlanmış).`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Şişli İşletmesi ABC ve XYZ olmak üzere birbirine benzer iki ürün üretmektedir. Ürünler aynı makinede partiler halinde sıra ile üretilmektedir. 2.400 TL tutarındaki genel üretim maliyetlerinin ürünlerle ilişkilendirilmesinde direkt işçilik saatleri (DİS) dikkate alınmaktadır.\n\nABC: Hammadde+DİG 40 TL/br, DİS/br 2 saat, Parti Büyüklüğü 5 adet.\nXYZ: Hammadde+DİG 60 TL/br, DİS/br 1 saat, Parti Büyüklüğü 50 adet.\n\nYukarıda verilen tablodaki bilgiler dikkate alındığında bir birim ABC ürününün maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 100 TL/br", "B) 80 TL/br", "C) 40 TL/br", "D) 120 TL/br", "E) 60 TL/br"],
+                ans: "D) 120 TL/br",
+                exp: `Toplam DİS: (5 adet * 2) + (50 adet * 1) = 60 saat.\nYükleme Haddi = 2400 TL / 60 = 40 TL/saat.\nABC GÜM = 2 saat * 40 TL = 80 TL.\nToplam Birim Maliyet (ABC) = 40 TL (Hammadde+DİG) + 80 TL (GÜM) = 120 TL.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Şişli İşletmesi ABC ve XYZ olmak üzere birbirine benzer iki ürün üretmektedir. Ürünler aynı makinede partiler halinde sıra ile üretilmektedir. 2.400 TL tutarındaki genel üretim maliyetlerinin ürünlerle ilişkilendirilmesinde direkt işçilik saatleri dikkate alınmaktadır.\n\nABC: DİS/br 2 saat, Parti Büyüklüğü 5 adet.\nXYZ: DİS/br 1 saat, Parti Büyüklüğü 50 adet.\n\nYukarıda verilen tablodaki bilgiler dikkate alındığında direkt işçilik saati başına genel üretim maliyeti yükleme haddi aşağıdakilerden hangisidir?`,
+                options: ["A) 50 TL/dis", "B) 20 TL/dis", "C) 40 TL/dis", "D) 10 TL/dis", "E) 30 TL/dis"],
+                ans: "C) 40 TL/dis",
+                exp: `Toplam GÜM (2400 TL) / Toplam DİS (60 saat) = 40 TL/dis.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Bir hastanedeki aylık veriler kullanılarak aşağıdaki maliyet formülü hazırlanmıştır: \nToplam maliyet = 128.000.000 TL + (12.000 TL * Hasta gün sayısı) \n\nMaliyet formülündeki "Hasta gün sayısı" aşağıdakilerden hangisini ifade etmektedir?`,
+                options: ["A) Yarı değişken maliyet", "B) Birim sabit maliyet", "C) Birim değişken maliyet", "D) Maliyeti etkileyen faaliyet hacmi", "E) Toplam maliyet"],
+                ans: "D) Maliyeti etkileyen faaliyet hacmi",
+                exp: `Y = a + bX formülündeki X değişkeni, maliyeti etkileyen faaliyet hacmidir (maliyet etkeni). Burada toplam maliyeti artıran temel faktör hasta gün sayısıdır.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi maliyet muhasebesinin temel amaçlarından biri değildir?`,
+                options: ["A) Birim maliyetin hesaplanması", "B) İşletme kararlarına yardımcı olmak", "C) Finansal tabloların anlaşılırlığını artırmak", "D) Planlamaya yardımcı olmak", "E) Kontrol faaliyetine yardımcı olmak"],
+                ans: "C) Finansal tabloların anlaşılırlığını artırmak",
+                exp: `Finansal tabloların anlaşılırlığını artırmak, dışarıya rapor veren finansal (genel) muhasebenin amacıdır, yönetime rapor veren maliyet muhasebesinin değil.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Mine İşletmesinin mart ayında üretim hattının ikinci safhası olan montaj bölümünde üretime giren miktar 6.000 kg, üretimi tamamlanıp mamul ambarına gönderilen miktar 5.000 kg'dir. Montaj bölümünde gerçekleşen üretim esnasında herhangi bir fire gerçekleşmemektedir. \n\nMine İşletmesinin mart ayı sonunda montaj bölümünde üretimi tamamlanmayıp yarı mamul olarak kalan miktar aşağıdakilerden hangisidir?`,
+                options: ["A) 11.000 kg", "B) 0 kg", "C) 6.000 kg", "D) 1.000 kg", "E) 5.000 kg"],
+                ans: "D) 1.000 kg",
+                exp: `Safha maliyette miktar dengesi kuralı: Girenler = Çıkanlar.\nÜretime Giren (6.000) = Tamamlanan (5.000) + Kalan (X).\nKalan Yarı Mamul (X) = 1.000 kg.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Burgaz İşletmesinin kasım ayında üretim hattının birinci safhası olan Kesme bölümünde dönem başı yarı mamul stok miktarı 6.000 kg, üretime giren miktar 16.000 kg, üretimi tamamlanıp ikinci safha olan montaj bölümüne devredilen miktar 20.000 kg'dir. Kesme bölümünde gerçekleşen üretim esnasında herhangi bir fire gerçekleşmemektedir. \n\nBurgaz İşletmesinin kasım ayı sonunda Kesme bölümünde üretimi tamamlanmayıp yarı mamul olarak kalan miktar aşağıdakilerden hangisidir?`,
+                options: ["A) 22.000 kg", "B) 10.000 kg", "C) 0 kg", "D) 6.000 kg", "E) 2.000 kg"],
+                ans: "E) 2.000 kg",
+                exp: `Miktar Dengesi: Dönem Başı (6.000) + Üretime Giren (16.000) = 22.000 kg toplam işlenen.\nTamamlanıp devredilen 20.000 kg ise, geriye kalan 2.000 kg'dır.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Mersin İşletmesinin Nisan ayı başında toplam maliyeti 324 TL olan 18 adet Y ham maddesi bulunmaktaydı. Nisan ayında aşağıdaki alış ve satışlar gerçekleşmiştir. \n8 Nisan Alış: 42 birim * 20 TL\n14 Nisan Satış: 35 birim * 40 TL\n22 Nisan Alış: 25 birim * 22,6 TL\n27 Nisan Satış: 42 birim * 40 TL\n\nHareketli ağırlıklı stok değerleme yöntemine göre Nisan ayı sonunda işletmenin elinde kalan mal stoku tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 354 TL", "B) 168 TL", "C) 205 TL", "D) 452 TL", "E) 489 TL"],
+                ans: "B) 168 TL",
+                exp: `8 Nisan Sonrası: (324 + 840) = 1164 TL. Miktar = 60. Yeni Birim: 19,4 TL.\n14 Nisan Satış Sonrası: 60 - 35 = 25 adet kalır. Değeri: 485 TL.\n22 Nisan Alış Sonrası: (485 + 565) = 1050 TL. Miktar = 50. Yeni Birim: 21 TL.\n27 Nisan Satış Sonrası: 50 - 42 = 8 adet kalır.\nKalan Stok Tutarı = 8 adet * 21 TL = 168 TL.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Stil İşletmesinin nisan ayında dokuma safhasına ilişkin maliyet ve üretim bilgileri aşağıda verilmiştir. Malzeme imalata sürecin başında ilave edilmektedir. \nTamamlanan birimler: 32.600\nDönem sonu yarı mamul, %60 oranında tamamlanmış: 6.000\n\nDönüştürme maliyetleri açısından eşdeğer birim sayısı aşağıdakilerden hangisidir?`,
+                options: ["A) 41.200", "B) 43.600", "C) 38.700", "D) 36.200", "E) 38.600"],
+                ans: "D) 36.200",
+                exp: `Tamamlananlar tam kabul edilir (32.600).\nYarı mamuller eşdeğerine çevrilir: 6.000 * 0,60 = 3.600 tam birim.\nToplam Eşdeğer Birim = 32.600 + 3.600 = 36.200.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Arı İşletmesi toplam 100.000 TL üretim maliyetine katlanarak 50 adet motosiklet üretmiştir. Motosikletlerden 30 tanesi 3.000 TL'den satılmıştır. \n\nDönem sonu bilançoda raporlanacak mal stoku tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 20.000 TL", "B) 60.000 TL", "C) 50.000 TL", "D) 40.000 TL", "E) 70.000 TL"],
+                ans: "D) 40.000 TL",
+                exp: `Birim Üretim Maliyeti = 100.000 / 50 = 2.000 TL.\nElde Kalan Ürün = 50 - 30 = 20 adet.\nKalan Stok Değeri = 20 adet * 2.000 TL = 40.000 TL. (Stoklar maliyet bedeliyle değerlenir, satış fiyatıyla değil).`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Buldan İşletmesi bilgisayar üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati çalışmayı ve 93.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. Dönem içerisinde fiilî olarak 16.000 makine saati çalışılmıştır. \n\nİşletmenin genel üretim maliyeti yükleme haddi aşağıdakilerden hangisidir?`,
+                options: ["A) 5,19 TL/makine saati", "B) 6,85 TL/makine saati", "C) 5,81 TL/makine saati", "D) 7,75 TL/makine saati", "E) 6,92 TL/makine saati"],
+                ans: "D) 7,75 TL/makine saati",
+                exp: `Yükleme haddi fiili değil, BÜTÇELENEN (planlanan) veriler kullanılarak önceden hesaplanır.\nYükleme Haddi = Bütçelenen GÜM / Bütçelenen Saat = 93.000 / 12.000 = 7,75 TL/saat.`,
+                exams: ["2021 Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Mayıs ayında torna bölümünde 2.300 birim mamul tamamlanarak bir sonraki safhaya transfer edilmiş, torna bölümünde dönem sonu yarı mamul olarak %40 oranında tamamlanmış 500 birim kalmıştır. Torna bölümünde dönem başı yarı mamul bulunmamakta ise mayıs ayı çıktılarının toplam eşdeğer birim sayısı aşağıdakilerden hangisidir?`,
+                options: ["A) 2.300", "B) 2.400", "C) 2.000", "D) 2.500", "E) 2.800"],
+                ans: "D) 2.500",
+                exp: `Tamamlanan ve devredilenler tam (%100) sayılır: 2.300.\nDönem sonu yarı mamuller kendi tamamlanma yüzdeleriyle çarpılır: 500 adet * %40 = 200 tam birime denk.\nToplam Eşdeğer Birim Sayısı: 2.300 + 200 = 2.500.`,
+                exams: ["2024 Final", "2024-2025 Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Buldan İşletmesi bilgisayar üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati çalışmayı ve 93.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. Dönem içerisinde fiili olarak 16.000 makine saati çalışılmıştır ve yukarıdaki fiilî maliyetlere katlanılmıştır. (Tablo: Endirekt İşçilik 11.000, Fabrika Amortismanı 48.000, Makine Tamiri 11.000, Direkt İşçilik 75.000, Endirekt Malzeme 6.000, Su/elektrik 7.000, Reklam 35.000, Satış komisyonları 27.000)\nAşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) 41.000 TL tutarında eksik yükleme yapılmıştır.", "B) 41.000 TL tutarında fazla yükleme yapılmıştır.", "C) 14.000 TL tutarında eksik yükleme yapılmıştır.", "D) 14.000 TL tutarında fazla yükleme yapılmıştır.", "E) 21.000 TL tutarında fazla yükleme yapılmıştır."],
+                ans: "B) 41.000 TL tutarında fazla yükleme yapılmıştır.",
+                exp: `Yüklenen GÜM: 16.000 (fiili saat) * 7,75 (yükleme haddi) = 124.000 TL.\nFiili GÜM: Üretime ait endirektler toplanır -> 11k+48k+11k+6k+7k = 83.000 TL. (Direkt maliyetler ve satış giderleri GÜM'e girmez!).\nFark: Yüklenen(124k) - Fiili(83k) = +41.000 TL Fazla Yükleme.`,
+                exams: ["2024 Final", "2024-2025 Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Bir işletmenin üç farklı bölgesine ait veriler aşağıda tutulmuştur.\nSatışlar: Kuzey(2.000.000), Doğu(1.250.000), Batı(1.750.000).\nDirekt Maliyetler: Kuzey(800.000), Doğu(600.000), Batı(500.000).\n\nYukarıda yer almayan endirekt maliyetler toplamı: Genel(700.000) + Faaliyet(400.000) + Diğer(900.000) = 2.000.000 TL.\nİşletme endirekt maliyetleri, bölgesinin satışını toplam satışlara oranlayarak dağıtmaktadır. Her bir bölge için kârı sırasıyla (Kuzey, Doğu, Batı) aşağıdakilerden hangisidir?`,
+                options: [
+                    "A) 1.200.000, 650.000, 1.250.000",
+                    "B) Yukarıda verilen veriler ile hesaplanamaz",
+                    "C) 560.000, 250.000, 690.000",
+                    "D) 400.000, 150.000, 550.000",
+                    "E) 760.000, 375.000, 865.000"
+                ],
+                ans: "D) 400.000, 150.000, 550.000",
+                exp: `Toplam Satışlar = 5.000.000 TL. Endirekt Maliyetler = 2.000.000 TL.\nKuzey Kâr: 2M - 800k - (2M * 2M/5M) = 400.000 TL.\nDoğu Kâr: 1.25M - 600k - (2M * 1.25M/5M) = 150.000 TL.\nBatı Kâr: 1.75M - 500k - (2M * 1.75M/5M) = 550.000 TL.`,
+                exams: ["2023 Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Bu işletmenin toplam maliyetine ilişkin veriler aşağıda sunulmuştur. Makine saati başına değişken maliyeti aşağıdakilerden hangisidir?\n8.000 saat -> 10.000 TL\n20.000 saat -> 16.000 TL`,
+                options: ["A) 0,50 TL", "B) 0,80 TL", "C) 5,00 TL", "D) 2,50 TL", "E) 1,25 TL"],
+                ans: "A) 0,50 TL",
+                exp: `En Yüksek - En Düşük Hacim Yöntemi:\nMaliyet Farkı: 16.000 - 10.000 = 6.000 TL.\nSaat Farkı: 20.000 - 8.000 = 12.000 saat.\nBirim Değişken Maliyet = 6.000 / 12.000 = 0,50 TL/saat.`,
+                exams: ["2023 Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Eylül İşletmesinin haziran ayında Kesim safhasına ilişkin maliyet ve üretim bilgileri aşağıda verilmiştir. Malzeme imalata sürecin başında ilave edilmektedir. İşletme ağırlıklı ortalama yöntemini kullanmaktadır. Tamamlanıp bir sonraki safhaya aktarılan ürünlerin toplam maliyeti aşağıdakilerden hangisidir?\nTamamlanan birimler: 32.600 | Dönem sonu yarı mamul (%60 tamamlanmış): 6.000\nDönem Başı: Malzeme(20.000), Dönüştürme(15.000). \nDönem İçi: Malzeme(62.500), Dönüştürme(105.000).`,
+                options: ["A) 165.573 TL", "B) 147.352 TL", "C) 177.344 TL", "D) 158.968 TL", "E) 189.325 TL"],
+                ans: "C) 177.344 TL",
+                exp: `⚠️ DİKKAT: İşlem sonucu küsuratlıdır. Soruda 'Virgülden sonra 2 hane alınız' dediği için yuvarlama yapılır.\nMalzeme Birim Maliyeti: 82.500 / 38.600 = 2,137 TL (2,13 alınır).\nDönüştürme Birim Maliyeti: 120.000 / 36.200 = 3,314 TL (3,31 alınır).\nToplam Birim Maliyet = 5,44 TL.\nTamamlananların Maliyeti: 32.600 tam ürün * 5,44 TL = 177.344 TL.`,
+                exams: ["2023 Final", "2024-2025 Büt", "3 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Stil İşletmesinin nisan ayında dokuma sahasına ilişkin maliyet üretim bilgileri aşağıdaki gibidir. Malzeme imalat sürecin başına ilave edilmektedir. İşletme ağırlıklı ortalama yöntemi kullanmaktadır. Malzeme maliyetleri açısından eşdeğer birim maliyeti aşağıdakilerden hangisidir?\n(Veriler: Dönem Başı Malzeme 20.000, Dönem İçi Malzeme 62.500. Tamamlanan: 32.600, Yarı Mamul: 6.000)`,
+                options: ["A) 1,91 TL", "B) 1,61 TL", "C) 10,41 TL", "D) 2,13 TL", "E) 2,90 TL"],
+                ans: "D) 2,13 TL",
+                exp: `Toplam Malzeme Maliyeti (82.500 TL) / Toplam Eşdeğer Birim (38.600) = 2,137... TL. Yuvarlandığında 2,13 TL.`,
+                exams: ["2023 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Altın İşletmesinin bitirme safhasına ilişkin olarak aşağıdaki veriler sunulmuştur. İşletme ağırlıklı ortalama yöntemi uygulamaktadır. Bir sonraki safhaya aktarılan birimlerin toplam malileri aşağıdakilerden hangisidir?\nAktarılan: 60.000 birim\nEşdeğer Birimler -> Önceki Safha: 75.000, Malzeme: 75.000, Dönüştürme: 69.000\nToplam Maliyetler -> Önceki Safha: 32.100, Malzeme: 24.000, Dönüştürme: 48.300`,
+                options: ["A) 91.300 TL", "B) 87.000 TL", "C) 89.500 TL", "D) 82.900 TL", "E) Belirsiz"],
+                ans: "B) 87.000 TL",
+                exp: `Önceki Safha Birimi: 32.100 / 75.000 = 0,428.\nMalzeme Birimi: 24.000 / 75.000 = 0,32.\nDönüştürme Birimi: 48.300 / 69.000 = 0,70.\nToplam Birim Maliyet: 1,45 TL.\nAktarılan Maliyet: 60.000 birim * 1,45 = 87.000 TL.`,
+                exams: ["2023 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Paris işletmesi tablet üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati, 24.000 işçilik saati çalışmayı ve 186.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. Dönem içerisinde fiili olarak 14.000 makine saati çalıştırmıştır. Üretime yüklenen genel üretim maliyeti tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 186.000 TL", "B) 217.000 TL", "C) 15.500 TL", "D) 31.000 TL", "E) 108.500 TL"],
+                ans: "B) 217.000 TL",
+                exp: `Yükleme Haddi: Bütçelenen GÜM (186.000) / Bütçelenen Makine Saati (12.000) = 15,50 TL/saat. (İşçilik saati çeldiricidir).\nYüklenen GÜM: Fiili Saat (14.000) * Yükleme Haddi (15,50) = 217.000 TL.`,
+                exams: ["2023 Final", "2024 Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki tabloda 101, 102 ve 103 nolu siparişlere ilişkin Ocak ve Şubat aylarında gerçekleşen maliyetler sunulmuştur. 101 nolu sipariş ocak ayı sonunda tamamlanmış, Şubat ayında satılmıştır. 102 nolu sipariş Şubat ayında tamamlanmıştır fakat henüz satılmamıştır. 103 nolu sipariş ise Şubat ayı sonu itibariyle tamamlanmamıştır. (Tablo Dağılım: Sipariş 101 -> Ocak 8k, Şubat 5k | Sipariş 102 -> Ocak 9k, Şubat 4k | Sipariş 103 -> Şubat 7k, Mart 6k)\nŞubat ayı sonu itibariyle mamuller hesabının bakiyesi aşağıdakilerden hangisidir?`,
+                options: ["A) 39.000 TL", "B) 13.000 TL", "C) 33.000 TL", "D) 26.000 TL", "E) 30.000 TL"],
+                ans: "D) 26.000 TL",
+                exp: `⚠️ DİKKAT: 'Mamuller' hesabı, üretimi tamamlanmış ancak henüz satılmamış ürünleri kapsar.\n- 101 Nolu Sipariş: Şubat'ta tamamlandı, Mart'ta satıldı. Şubat sonunda Mamuldür (13.000 TL).\n- 102 Nolu Sipariş: Şubat'ta tamamlandı deniyor. O da Şubat sonunda Mamuldür (13.000 TL).\n- 103 Nolu Sipariş: Yarı Mamuldür.\nToplam Mamul: 13.000 + 13.000 = 26.000 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Yozgat İşletmesi Vasat ve Kaliteli olmak üzere iki ürün üretmektedir. Faaliyet tabanlı maliyetleme kullanıldığında bir birim Kaliteli ürünün toplam üretim maliyeti aşağıdakilerden hangisidir?\nKaliteli Üretim: 15.000 birim\nBirim Direkt Malzeme: 125 TL | Birim Direkt İşçilik: 30 TL\nÜretim için gerekli makine saati (Kaliteli): 60.000 saat (Toplam: 105.000 saat)\nParti Sayısı (Kaliteli): 1.000 (Toplam: 2.000 parti)\nMakine Toplam Maliyeti: 840.000 TL | Taşıma/Depolama Toplam Maliyeti: 510.000 TL`,
+                options: ["A) 49 TL", "B) 155 TL", "C) 224 TL", "D) 204 TL", "E) 174 TL"],
+                ans: "D) 204 TL",
+                exp: `Makine Maliyeti: 840.000 / 105.000 = 8 TL/saat. Kaliteli Payı: 60.000 * 8 = 480.000 TL.\nTaşıma: 510.000 / 2.000 = 255 TL/parti. Kaliteli Payı: 1.000 * 255 = 255.000 TL.\nToplam GÜM: 480.000 + 255.000 = 735.000 TL. Birim GÜM = 735.000 / 15.000 = 49 TL.\nToplam Birim Maliyet: 125 + 30 + 49 = 204 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi sipariş bazında (parti bazında) bir faaliyet olarak sınıflandırılabilir?`,
+                options: ["A) Üretimde kullanılacak malzemelerin sipariş edilmesi", "B) Teslimat için müşterilerin aranması", "C) Ürünlerin tasarlanması", "D) Yıllık bütçenin hazırlanması", "E) Ürünlere barkod yapıştırılması"],
+                ans: "A) Üretimde kullanılacak malzemelerin sipariş edilmesi",
+                exp: `Malzemelerin sipariş edilmesi veya makine hazırlıkları, bir üretim partisi (siparişi) için topluca yapılan eylemlerdir ve 'Parti (Sipariş) Bazında Faaliyet' olarak nitelendirilir.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Haziran ayında Kesme bölümünde 4.600 birim mamul tamamlanarak bir sonraki safhaya transfer edilmiştir. Kesme bölümünde dönem sonu yarı mamul olarak %50 oranında tamamlanmış 1.000 birim kalmıştır. Kesme bölümünde dönem başı yarı mamul bulunmamakta ise Haziran ayı çıktılarının toplam eşdeğer birim sayısı aşağıdakilerden hangisidir?`,
+                options: ["A) 1.000", "B) 500", "C) 5.600", "D) 5.100", "E) 4.600"],
+                ans: "D) 5.100",
+                exp: `Eşdeğer Birim = Tamamlananlar + (Dönem Sonu * Yüzde) = 4.600 + (1.000 * 0,50) = 5.100 birim.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Mikro İşletmesi birleşik bir imalat süreci sonunda A ve B olmak üzere iki farklı ürün ortaya çıkarmaktadır. Maliyetlerin dağıtılmasında Net Satış Değeri yöntemi kullanıldığında B ürününe ilişkin toplam maliyet aşağıdakilerden hangisidir? (Veriler: Birleşik Maliyet 329.000 TL | A'nın Ayrım Sonrası Maliyeti 406.340 TL, Satış Fiyatı 51 TL, Satış Miktarı 13.000 | B'nin Ayrım Sonrası Maliyeti 97.060 TL, Satış Fiyatı 26 TL, Satış Miktarı 5.900).`,
+                options: ["A) 156.280 TL", "B) 269.780 TL", "C) 256.660 TL", "D) 59.220 TL", "E) 676.120 TL"],
+                ans: "A) 156.280 TL",
+                exp: `A NSD = (13.000 * 51) - 406.340 = 256.660 TL.\nB NSD = (5.900 * 26) - 97.060 = 56.340 TL.\nToplam NSD = 313.000 TL.\nB'nin Ortak Payı = 329.000 * (56.340 / 313.000) = 59.220 TL.\nB'nin Toplam Maliyeti = Ortak Pay (59.220) + Kendi Ek Maliyeti (97.060) = 156.280 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi birim bazında bir faaliyet ölçüsüdür?`,
+                options: ["A) Her bir pakete etiketin yapıştırılması", "B) Malzemelerin sipariş edilmesi", "C) Depo çalışanlarının eğitilmesi", "D) Müşterilerle satış görüşmesi yapılması", "E) Yıllık bütçenin hazırlanması"],
+                ans: "A) Her bir pakete etiketin yapıştırılması",
+                exp: `Her bir 'adet' ürün için rutin olarak tekrarlanan, ürün sayısı arttıkça doğru orantılı olarak artan faaliyetler birim bazındadır.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Bir mağazada A ve B olmak üzere iki adet yardımcı maliyet merkezi, C ve D olmak üzere iki adet esas maliyet merkezi bulunmaktadır. Mağazada 2023 yılı Ocak ayında gerçekleşen 640.000 TL tutarındaki elektrik maliyetinin maliyet yerlerine dağıtılması gerekmektedir. Elektrik maliyeti yüzölçümü ile orantılı olarak dağıtılmaktadır. 1. dağıtım sonucunda A bölümüne dağıtılacak olan elektrik maliyeti aşağıdakilerden hangisidir? (Yüzölçümleri: A 400 m², Toplam 8.000 m²).`,
+                options: ["A) 280.000 TL", "B) 64.000 TL", "C) 32.000 TL", "D) 320.000 TL", "E) 8.000 TL"],
+                ans: "C) 32.000 TL",
+                exp: `Birinci dağıtım her zaman ilgili dağıtım anahtarına göre oran kurularak yapılır.\nDağıtım Oranı: 400 m² / 8.000 m² = 0,05\nA Bölümü Payı: 640.000 TL * 0,05 = 32.000 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi üretim hacmi temelli bir maliyet etkenidir?`,
+                options: ["A) Sipariş hazırlama sayısı", "B) Tasarım sayısı", "C) Makine saatleri", "D) Müşteri ziyareti sayısı", "E) Kalıp değiştirme adedi"],
+                ans: "C) Makine saatleri",
+                exp: `Üretim hacmini doğrudan yansıtan (Makine saatleri, Direkt işçilik saatleri vb.) etkenler hacim temelli etkenlerdir. Diğer şıklar faaliyete dayalı maliyetlemenin (parti veya ürün bazlı) etkenleridir.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Paris İşletmesi tablet üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati çalışmayı ve 186.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. İşletmenin genel üretim maliyeti yükleme haddi aşağıdakilerden hangisidir?`,
+                options: ["A) 186.000 TL", "B) 15,5 TL/makine saati", "C) 13,28 TL/makine saati", "D) 217.000 TL", "E) 7,75 TL/makine saati"],
+                ans: "B) 15,5 TL/makine saati",
+                exp: `Yükleme Haddi = Tahmini Bütçelenen GÜM / Tahmini Faaliyet Hacmi = 186.000 TL / 12.000 saat = 15,5 TL/makine saati.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Bir üretim işletmesinde direkt malzeme imalata sürecin sonunda ilave edilmektedir. Önceki safhadan devralınıp başlanan miktar 451.200, tamamlanan 401.000 ve dönem sonu yarı mamul 202.000 birimdir. Dönem sonu yarı mamuller dönüştürme maliyeti açısından %55 tamamlanmıştır. Direkt malzeme maliyetine ilişkin eşdeğer birim sayısı toplamı aşağıdakilerden hangisidir?`,
+                options: ["A) 151.400", "B) 603.000", "C) 202.000", "D) 401.000", "E) 653.200"],
+                ans: "D) 401.000",
+                exp: `Soru kökünde 'sürecin sonunda ilave edilmektedir' denmesi kritiktir. Yarı mamuller henüz sürecin sonuna gelmedikleri için malzeme açısından sıfır kabul edilirler.\nEşdeğer Birim = 401.000 (Tamamlanan) + 0 (Yarı Mamul) = 401.000 birim.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `İstanbul İşletmesi genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 24.000 makine saati çalışmayı ve 372.000 TL GÜM'e katlanmayı planlamıştır. Dönem içerisinde fiili olarak 32.000 makine saati çalışılmış ve fiili maliyetlere katlanılmıştır. (Fiili Tablo: Endirekt İşçilik 44k, Amortisman 192k, Makine Tamiri 44k, Direkt İşçilik 300k, End. Malzeme 24k, Su/Elk 28k, Reklam 140k, Satış 54k)\nAşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) 56.000 TL tutarında eksik yükleme yapılmıştır.", "B) 164.000 TL tutarında eksik yükleme yapılmıştır.", "C) 56.000 TL tutarında fazla yükleme yapılmıştır.", "D) 84.000 TL tutarında fazla yükleme yapılmıştır.", "E) 164.000 TL tutarında fazla yükleme yapılmıştır."],
+                ans: "E) 164.000 TL tutarında fazla yükleme yapılmıştır.",
+                exp: `Yükleme Haddi: 372.000 / 24.000 = 15,5 TL/saat.\nYüklenen GÜM: 32.000 saat * 15,5 = 496.000 TL.\nFiili GÜM (Üretimle alakasız reklam/satış ve direkt işçilik hariç): 44k+192k+44k+24k+28k = 332.000 TL.\nFark: 496.000 (Yüklenen) - 332.000 (Gerçekleşen) = 164.000 TL Fazla yüklenmiştir.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki işletmelerden hangisinde safha maliyetleme sisteminin uygulanması beklenir?`,
+                options: ["A) Düğün Davet Organizasyon Şirketi", "B) Finansal Danışmanlık Şirketi", "C) Gelinlik Atölyesi", "D) Mimarlık Ofisi", "E) Cep Telefonu Üreticisi"],
+                ans: "E) Cep Telefonu Üreticisi",
+                exp: `Sipariş maliyet sistemi müşteriye özel (A, B, C, D) işler içindir. Cep telefonu gibi seri ve birbirinin aynısı üretilen ürünler için Safha Maliyetleme sistemi kullanılır.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Faaliyet Tabanlı Maliyetleme (FTM) sisteminin geleneksel maliyetleme sistemine göre en önemli avantajı aşağıdakilerden hangisidir?`,
+                options: ["A) Ürünlerin satış fiyatlarını belirlemede kullanılmaması", "B) Dolaylı maliyetleri daha doğru bir şekilde ürünlere dağıtması", "C) Maliyetleri sadece doğrudan işçilik üzerinden dağıtması", "D) Üretim hacmine dayalı maliyet dağıtımını teşvik etmesi", "E) Sadece üretim sürecine odaklanması"],
+                ans: "B) Dolaylı maliyetleri daha doğru bir şekilde ürünlere dağıtması",
+                exp: `Geleneksel sistemler tüm genel üretim (dolaylı) giderlerini tek bir anahtar kullanarak kabaca dağıtır. FTM ise giderleri faaliyetlere, oradan da ürünlere çoklu dağıtım anahtarları ile dağıtarak çok daha hassas ve doğru bir maliyetleme sağlar.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Altın İşletmesinin bitirme safhasına ilişkin olarak yukarıdaki veriler sunulmuştur. İşletme ağırlıklı ortalama yöntemi kullanmaktadır. Dönüştürme maliyeti için eşdeğer birim maliyeti aşağıdakilerden hangisidir? (Veriler: Sonraki safhaya aktarılan 60.000. Dönüştürme eşdeğer birim 69.000. Dönem Başı Dönüştürme: 3.000 TL. Dönem İçi Dönüştürme: 45.300 TL).`,
+                options: ["A) 0,48 TL", "B) 0,70 TL", "C) 0,58 TL", "D) 0,65 TL", "E) 0,64 TL"],
+                ans: "B) 0,70 TL",
+                exp: `Toplam Dönüştürme Maliyeti: 3.000 TL (DB) + 45.300 TL (Dİ) = 48.300 TL.\nDönüştürme Eşdeğer Birimi: 69.000.\nBirim Maliyet: 48.300 / 69.000 = 0,70 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `İstanbul İşletmesi Ahşap ve Karton olmak üzere iki farklı sepet üretmekte ve satmaktadır. Yukarıdaki veriler genel üretim maliyetlerinin bir parçası olan 240.000 TL tutarındaki makine hazırlama maliyetine ilişkindir. Faaliyet tabanlı maliyetleme kullanıldığında bir birim karton sepete dağıtılacak makine hazırlama maliyeti aşağıdakilerden hangisidir? (Üretilen: Ahşap 1.500, Karton 1.500 | Hazırlama Sayısı: Ahşap 75, Karton 25)`,
+                options: ["A) 40 TL", "B) 30 TL", "C) 20 TL", "D) 60 TL", "E) 50 TL"],
+                ans: "A) 40 TL",
+                exp: `Toplam Hazırlama: 75 + 25 = 100.\nHazırlama Başına Maliyet: 240.000 / 100 = 2.400 TL.\nKarton Sepetin Toplam Payı: 25 hazırlama * 2.400 = 60.000 TL.\nBirim Karton Maliyeti: 60.000 TL / 1.500 adet = 40 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Bir fabrikada çalışan mühendislerin aldıkları ücret ile ilgili olarak aşağıdaki maliyet sınıflandırmalarından hangisi doğrudur?`,
+                options: ["A) Değişken - Direkt", "B) Değişken - Endirekt", "C) Sabit - Üretim dışı", "D) Sabit - Endirekt", "E) Sabit - Direkt"],
+                ans: "D) Sabit - Endirekt",
+                exp: `Fabrikada çalışan mühendis/ustabaşıların maaşları belirli bir ürüne doğrudan bağlanamadığı için 'Endirekt', maaşlı çalışan olup üretim miktarından etkilenmedikleri için 'Sabit'tir.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Altın İşletmesinin bitirme safhasına ilişkin olarak yukarıdaki veriler sunulmuştur. Malzeme maliyeti için eşdeğer birim maliyeti aşağıdakilerden hangisidir? (Veriler: Malzeme eşdeğer birim: 75.000 | Dönem Başı Malzeme Maliyeti: 1.500 TL | Dönem İçi Malzeme Maliyeti: 22.500 TL)`,
+                options: ["A) 0,30 TL", "B) 0,32 TL", "C) 0,37 TL", "D) 0,41 TL", "E) 0,42 TL"],
+                ans: "B) 0,32 TL",
+                exp: `Toplam Malzeme Maliyeti = Dönem Başı (1.500) + Dönem İçi (22.500) = 24.000 TL.\nBirim Eşdeğer Maliyeti = 24.000 / 75.000 = 0,32 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Faaliyet Tabanlı Maliyetleme (FTM) sisteminin temel amacı aşağıdakilerden hangisidir?`,
+                options: ["A) Geleneksel maliyet hesaplama yöntemlerini ortadan kaldırmak", "B) Yalnızca direkt maliyetleri analiz etmek", "C) Üretim maliyetlerini azaltmak", "D) Ürün maliyetlerini daha doğru bir şekilde hesaplamak", "E) Satış fiyatlarını belirlemek"],
+                ans: "D) Ürün maliyetlerini daha doğru bir şekilde hesaplamak",
+                exp: `FTM'nin varoluş amacı, geleneksel yöntemlerin endirekt giderleri tek bir anahtarla dağıtarak yarattığı 'çapraz sübvansiyon' hatasını çözmek ve maliyetleri çok daha hassas (doğru) bir şekilde hesaplamaktır.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Bir işletme, iki farklı ürün üretmektedir: Ürün A ve Ürün B. (Sipariş İşleme Havuzu: 60.000 TL / 120 Sipariş | Makine Ayarı Havuzu: 40.000 TL / 80 Ayar)\nÜrün A: 30 sipariş, 20 ayar. Ürün B: 90 sipariş, 60 ayar. Buna göre, Ürün A'ya yüklenmesi gereken toplam faaliyet maliyeti kaç TL'dir?`,
+                options: ["A) 35.000 TL", "B) 20.000 TL", "C) 25.000 TL", "D) 30.000 TL", "E) 15.000 TL"],
+                ans: "C) 25.000 TL",
+                exp: `Sipariş Haddi: 60.000 / 120 = 500 TL/sipariş.\nAyar Haddi: 40.000 / 80 = 500 TL/ayar.\nÜrün A Sipariş Yükü: 30 sipariş * 500 TL = 15.000 TL.\nÜrün A Ayar Yükü: 20 ayar * 500 TL = 10.000 TL.\nToplam: 15.000 + 10.000 = 25.000 TL.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "2024-2025 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi değer yaratmayan bir faaliyettir?\n(Not: Soru kökünde dizgi hatası vardır, aslında 'değer YARATAN' faaliyeti sormaktadır)`,
+                options: ["A) Tamamlanmış mamüllerin incelenmesi", "B) Malzemenin fabrika içerisinde taşınması", "C) Satın alınan malzemenin depolanması", "D) Hammaddenin mamüle dönüştürülmesi", "E) Kusurlu ürünler için yeniden çalışılması"],
+                ans: "D) Hammaddenin mamüle dönüştürülmesi",
+                exp: `⚠️ DİKKAT: Soruda 'değer yaratmayan' yazıyor ancak şıkların 4'ü değer yaratmayan israf faaliyetidir (taşıma, depolama, inceleme, tamir). Tek değer yaratan (faydalı) faaliyet D şıkkıdır. Sınavda bu hatalı soru gelirse D'yi işaretleyin.`,
+                exams: ["2024-2025 Bahar Final", "⚠️ Dikkat!"]
+            },
+            {
+                q: `İstanbul Şirketi yarı iletken çip üretmektedir. Direkt malzemeler üretim sürecinin başında eklenirken, dönüştürme maliyetleri eşit eklenmektedir. Başlangıç stoku yoktur.\nDirekt Malzeme Toplamı: 950.000 TL | Dönüştürme Toplamı: 4.625.000 TL\nBaşlanan Üretim: 475.000 çip | Tamamlanan: 425.000 çip\nDönem Sonu Yarı Mamul: Kalan çiplerin dönüştürme maliyeti %50. \nÜretimi tamamlanan çiplerin toplam maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 357.000 TL", "B) 3.217.000 TL", "C) 4.289.000 TL", "D) 3.856.000 TL", "E) 5.219.000 TL"],
+                ans: "E) 5.219.000 TL",
+                exp: `⚠️ DİKKAT: Yuvarlama Tuzağı!\nMalzeme Eşdeğeri: 475.000. Birim Mlyt: 950.000 / 475.000 = 2 TL.\nDönüştürme Eşdeğeri: 425.000 + (50.000 * 0,5) = 450.000. Birim Mlyt: 4.625.000 / 450.000 = 10,2777... TL (Soru hazırlayıcısı 10,28 TL olarak yuvarlamış!).\nTamamlanan Maliyet: 425.000 * (2 + 10,28) = 5.219.000 TL.`,
+                exams: ["2024-2025 Büt", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Dönem başı yarı mamüller 2.000 birim, dönem sonu yarı mamüller 1.000 birim ve hesabı yapılacak toplam birim sayısı 5.000 birimdir. Üretimi tamamlanan ve transfer edilen birim sayısı aşağıdakilerden hangisidir?`,
+                options: ["A) 4.000", "B) 7.000", "C) 1.000", "D) 2.000", "E) 6.000"],
+                ans: "A) 4.000",
+                exp: `Miktar Dengesi: Hesabı Yapılacak Toplam Üretim = Tamamlananlar + Dönem Sonu Yarı Mamul.\n5.000 = Tamamlananlar + 1.000\nTamamlananlar = 4.000 birim.`,
+                exams: ["2024-2025 Büt"]
+            },
+            {
+                q: `Genel üretim maliyetlerini imalata yüklemek için önceden belirlenmiş bir oran kullanan bir şirket, aşağıdaki durumların hangisinde her zaman 'fazla genel üretim maliyeti' yükleyecektir?`,
+                options: [
+                    "A) Üretimin bütçelenen kapasiteden fazla olması",
+                    "B) Fiili kapasitenin bütçelenen kapasiteden fazla olması",
+                    "C) Gerçekleşen genel üretim maliyetlerinin stoklara yüklenen genel üretim maliyetlerinden az olması",
+                    "D) Gerçekleşen genel üretim maliyetinin stoklara yüklenen genel üretim maliyetlerinden fazla olması",
+                    "E) Kapasitenin fiili üretimden fazla olması"
+                ],
+                ans: "C) Gerçekleşen genel üretim maliyetlerinin stoklara yüklenen genel üretim maliyetlerinden az olması",
+                exp: `Eğer üretim partilerine 'Yüklediğiniz' tutar, ay sonunda fiilen 'Gerçekleşen (katlanılan)' tutardan daha büyükse, ürünlere olması gerekenden fazlasını yüklemişsiniz demektir. Bu duruma 'Fazla Yükleme' denir.`,
+                exams: ["2024-2025 Büt"]
+            },
+            {
+                q: `50.000 makine saatinde toplam fabrika genel giderleri 230.000 TL ve 60.000 makine saatinde toplam fabrika genel giderleri 280.000 TL olarak bütçelenmiştir. Bütçelenen sabit maliyetler 60.000 saat için, 50.000 saat için bütçelenen 80.000 TL sabit maliyetten yüzde 25 daha fazladır. Birim çıktı başına bütçelenen değişken maliyet nedir?`,
+                options: ["A) 1,38 TL", "B) 2,30 TL", "C) 3,00 TL", "D) 3,33 TL", "E) 3,83 TL"],
+                ans: "C) 3,00 TL",
+                exp: `⚠️ DİKKAT: Sabit maliyet değiştiği için klasik formül uygulanmaz.\n50.000 Saat Durumu: Toplam Maliyet (230.000) = Sabit (80.000) + Toplam Değişken (150.000).\nBirim Değişken = 150.000 / 50.000 = 3 TL/saat.`,
+                exams: ["2024-2025 Büt", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Eylül ayında karıştırma safhasında 46.000 TL tutarında üretim maliyeti gerçekleşmiştir. Dönem içerisinde safha açısından 2.300 birimin üretimi tamamlanmış ve dönem sonu yarı mamul olarak %40 oranında tamamlanmış 500 birim kalmıştır. Karıştırma safhasında Eylül ayı başında yarı mamul bulunmamaktadır. Eşdeğer birim maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 16,43 TL", "B) 200,00 TL", "C) 18,40 TL", "D) 184,00 TL", "E) 20,00 TL"],
+                ans: "C) 18,40 TL",
+                exp: `⚠️ DİKKAT: Diğer sınavlarda D. Sonu Kalan Toplam Maliyet sorulurken burada sadece Eşdeğer Birim Maliyeti sorulmuş.\nEşdeğer Birim: 2.300 + (500 * %40) = 2.500 birim.\nEşdeğer Birim Maliyeti: 46.000 TL / 2.500 = 18,40 TL.`,
+                exams: ["2024-2025 Büt", "⚠️ Dikkat!"]
+            },
+            {
+                q: `İstanbul İşletmesinin Haziran ayı başında toplam maliyeti 324 TL olan 18 adet AGI hammaddesi bulunmaktaydı. Hareketli ağırlıklı stok değerleme yöntemine göre Haziran ayı satılan malın maliyeti tutarı aşağıdakilerden hangisidir? (Tablo: 8 Haz Alış: 42 x 20 | 14 Haz Satış: 35 x 40 | 22 Haz Alış: 25 x 22,6 | 27 Haz Satış: 42 x 40)`,
+                options: ["A) 1.648 TL", "B) 1.153 TL", "C) 1.079 TL", "D) 1.230 TL", "E) 1.561 TL"],
+                ans: "E) 1.561 TL",
+                exp: `⚠️ DİKKAT: Vize sınavlarında sadece ilk satışın maliyeti (679 TL) sorulurken, burada tüm ayın maliyeti sorulmuş!\nİlk Alış Sonrası Ortalama: (324+840)/(18+42) = 19,4 TL. 1. Satış Maliyeti = 35 * 19,4 = 679 TL.\nKalan: 25 birim (485 TL).\nİkinci Alış Sonrası Ortalama: (485+565)/(25+25) = 21 TL. 2. Satış Maliyeti = 42 * 21 = 882 TL.\nToplam Haziran Satış Maliyeti = 679 + 882 = 1.561 TL.`,
+                exams: ["2024-2025 Büt", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Önceki safha maliyetlerinin hesaplanması aşağıdakilerden hangisi ile benzerlik gösterir?`,
+                options: ["A) Safhanın başında eklenen direkt işçilik maliyetleri", "B) Safhanın başında eklenen dönüştürme maliyetleri", "C) Safhanın başında eklenen dönem başı stok maliyetleri", "D) Safhanın sonunda eklenen genel üretim maliyeti", "E) Safhanın başında eklenen ayrı bir direkt malzeme maliyeti"],
+                ans: "E) Safhanın başında eklenen ayrı bir direkt malzeme maliyeti",
+                exp: `Önceki safhadan devralınan maliyetler, ürün yeni safhaya girer girmez o ürünün temeli olduğu için sanki sürecin en başında eklenen yepyeni bir direkt malzeme gibi muamele görür.`,
+                exams: ["2024-2025 Büt"]
+            },
+            {
+                q: `Giresun İşletmesi birleşik bir imalat süreci sonunda mısır şurubu ve mısır nişastası olmak üzere iki farklı ürün ortaya çıkarmaktadır. Maliyetlerin dağıtılmasında Net Satış Değeri yöntemi kullanıldığında mısır şurubu üretimine ilişkin 'toplam maliyet' aşağıdakilerden hangisidir? (Ortak Maliyet 329.000. Mısır Şurubu Satış: 13.000 * 51. Ek İşlem: 406.340 | Nişasta Satış: 5.900 * 26. Ek İşlem: 97.060)`,
+                options: ["A) 269.780 TL", "B) 256.660 TL", "C) 676.120 TL", "D) 156.280 TL", "E) 59.220 TL"],
+                ans: "C) 676.120 TL",
+                exp: `⚠️ DİKKAT: Vize sınavında sadece 'ortak payı' (A Şıkkı) soruluyordu. Burada ise 'toplam maliyet' istenmiş.\nOrtak Maliyet Payı: 269.780 TL.\nKendi Ek Maliyeti: 406.340 TL.\nToplam Maliyet: 269.780 + 406.340 = 676.120 TL.`,
+                exams: ["2024-2025 Büt", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Bir gıda işleme tesisinde P, R ve S ürünleri ortak hammaddeden üretilmektedir. Toplam birleşik maliyet 240.000 TL'dir. Ayrıştırma noktasında ürünlerin fiziki miktarları aşağıdaki gibidir: P Ürünü: 6.000 kg, R Ürünü: 4.000 kg, S Ürünü: 2.000 kg. Şirket, birleşik maliyetleri Fiziksel Miktar Yöntemi ile dağıtmaktadır. Ancak S ürününün satış değeri çok düşük olduğu için yönetim, S ürününe toplam maliyetin sadece %10'unun yüklenmesine karar vermiştir. Kalan maliyet P ve R ürünlerine fiziksel miktarları oranında dağıtılacaktır. Buna göre R ürününe yüklenmesi gereken toplam birleşik maliyet payı kaç TL'dir?`,
+                options: ["A) 108.000", "B) 96.000", "C) 72.000", "D) 86.400", "E) 64.800"],
+                ans: "D) 86.400",
+                exp: `S ürününe 240.000 * %10 = 24.000 TL yüklenir. Kalan dağıtılacak maliyet: 240.000 - 24.000 = 216.000 TL. P ve R'nin toplam fiziksel miktarı: 6.000 + 4.000 = 10.000 kg. R'nin payı: 216.000 * (4.000 / 10.000) = 86.400 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Bir fabrikada tek bir üretim sürecinden geçen hammaddeden A, B ve C olmak üzere üç farklı ürün elde edilmektedir. Ayrıştırma noktasına kadar oluşan toplam birleşik maliyet 270.000 TL'dir. Üretim ve satış fiyatları: A: 2.000 br (40 TL), B: 3.000 br (30 TL), C: 5.000 br (20 TL). Net Satış Değeri Yöntemi ile C ürününe dağıtılması gereken birleşik maliyet kaç TL'dir?`,
+                options: ["A) 110.000 TL", "B) 100.000 TL", "C) 90.000 TL", "D) 70.000 TL", "E) 80.000 TL"],
+                ans: "B) 100.000 TL",
+                exp: `Toplam Net Satış Değeri (NSD) = (2000*40) + (3000*30) + (5000*20) = 80.000 + 90.000 + 100.000 = 270.000 TL. C'nin NSD oranı = 100.000 / 270.000. C'nin alacağı pay = 270.000 (Toplam Maliyet) * (100.000 / 270.000) = 100.000 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Fabrika binasında kullanılan enerji ile ilgili olarak aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) Yarı Sabit - Direkt", "B) Sabit Endirekt", "C) Değişken - Direkt", "D) Sabit Direkt", "E) Değişken-Endirekt"],
+                ans: "B) Sabit Endirekt",
+                exp: `Fabrika binasında kullanılan enerji (ısıtma, aydınlatma), üretime göre değişmediği için 'Sabit', doğrudan ürüne yüklenemediği için de 'Endirekt'tir.`,
+                exams: ["2025 Yeni", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Bir işletmenin stok kartında yer alan veriler şu şekildedir: Dönem Başı Mevcudu: 50 Adet, Birim Maliyeti 20 TL. Dönem İçi Alış: 150 Adet, Birim Maliyeti 24 TL. Dönem sonunda yapılan sayımda depoda 80 adet mal kaldığı tespit edilmiştir. İşletme Ağırlıklı Ortalama Maliyet yöntemini uyguladığına göre, 'Dönem Sonu Stok' değeri kaç TL'dir?`,
+                options: ["A) 1.920 TL", "B) 2.000 TL", "C) 2.760 TL", "D) 1.600 TL", "E) 1.840 TL"],
+                ans: "E) 1.840 TL",
+                exp: `Toplam Maliyet = (50 * 20) + (150 * 24) = 1.000 + 3.600 = 4.600 TL. Toplam Miktar = 50 + 150 = 200 adet. Ortalama Birim Maliyet = 4.600 / 200 = 23 TL. Dönem Sonu Stok Değeri = 80 adet * 23 TL = 1.840 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Bir üretim işletmesinin belirli bir döneme ait maliyet verileri aşağıdaki gibidir: DİMM Giderleri: 50.000 TL, DİG: 30.000 TL, GÜG: 20.000 TL. DB Yarı Mamul: 10.000 TL, DS Yarı Mamul: 15.000 TL. DB Mamul: 25.000 TL, DS Mamul: 20.000 TL. Satılan Mamul Maliyeti kaç TL'dir?`,
+                options: ["A) 95.000 TL", "B) 105.000 TL", "C) 120.000 TL", "D) 100.000 TL", "E) 110.000 TL"],
+                ans: "D) 100.000 TL",
+                exp: `1. Üretim Maliyeti = 50.000 + 30.000 + 20.000 = 100.000 TL. \n2. Üretilen Mamul Maliyeti = 100.000 + 10.000 (DB Yarı Mamul) - 15.000 (DS Yarı Mamul) = 95.000 TL. \n3. Satılan Mamul Maliyeti = 95.000 + 25.000 (DB Mamul) - 20.000 (DS Mamul) = 100.000 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `ABC Ticaret'in Mart ayı içindeki stok hareketleri tarih sırasına göre şöyledir: 01 Mart: DB 100 Adet (10 TL), 05 Mart: Alış 100 Adet (14 TL), 10 Mart: Satış 150 Adet, 15 Mart: Alış 100 Adet (18 TL). İşletme Hareketli Ortalama Maliyet yöntemini kullanmaktadır. Buna göre, 15 Mart tarihindeki alış işleminden hemen sonra hesaplanacak yeni 'Ortalama Birim Maliyet' kaç TL olur?`,
+                options: ["A) 18 TL", "B) 14 TL", "C) 15 TL", "D) 16 TL", "E) 12 TL"],
+                ans: "D) 16 TL",
+                exp: `05 Mart Alış Sonrası: (100*10 + 100*14) = 2.400 TL. Toplam Miktar = 200. Ortalama = 12 TL.\n10 Mart Satış Sonrası Kalan: 200 - 150 = 50 adet. Kalan Maliyet = 50 * 12 = 600 TL.\n15 Mart Alış Sonrası: 600 TL + (100 * 18 TL = 1.800 TL) = 2.400 TL. Yeni Miktar = 50 + 100 = 150 adet.\nYeni Ortalama = 2.400 / 150 = 16 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Dönem içinde 'Üretilen Mamul Maliyetine', 'Dönem Başı Mamul Stoku' eklenip, 'Dönem Sonu Mamul Stoku' çıkarıldığında gelir tablosundaki hangi kaleme ulaşılır?`,
+                options: ["A) Net Satışlar", "B) Satılan Mamul Maliyeti", "C) Dönem Net Karı", "D) Brüt Satış Karı", "E) Faaliyet Karı"],
+                ans: "B) Satılan Mamul Maliyeti",
+                exp: `Satılan Mamulün Maliyeti (SMM) = Dönem Başı Mamul Stoku + Üretilen Mamul Maliyeti - Dönem Sonu Mamul Stoku formülü ile hesaplanır.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `XYZ İşletmesinin bir ticari malına ait stok hareketleri sırasıyla aşağıdaki gibidir: Dönem Başı Mevcudu: 100 Adet (10 TL), 1. Alış: 200 Adet (12 TL), 2. Alış: 150 Adet (15 TL). İşletme bu dönem içinde toplam 250 adet ürün satmıştır. İşletme stok değerlemesinde FIFO (İlk Giren İlk Çıkar) yöntemini kullanıyorsa, 'Satılan Ticari Mallar Maliyeti' kaç TL'dir?`,
+                options: ["A) 2.800 TL", "B) 3.300 TL", "C) 3.500 TL", "D) 3.000 TL", "E) 3.100 TL"],
+                ans: "A) 2.800 TL",
+                exp: `FIFO'ya göre satışlar en eski stoktan başlar. 250 adet satışın 100 adedi Dönem Başı stoktan (100 * 10 = 1.000 TL), kalan 150 adedi 1. Alıştan (150 * 12 = 1.800 TL) karşılanır. Toplam SMM = 1.000 + 1.800 = 2.800 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Üretim işletmelerinde 'Satılan Mamul Maliyeti' hesaplanırken aşağıdaki kalemlerden hangisi dikkate alınmaz?`,
+                options: ["A) Dönem Başı Yarı Mamul Stoku", "B) Direkt İlk Madde ve Malzeme Giderleri", "C) Direkt İşçilik Giderleri", "D) Genel Üretim Giderleri", "E) Genel Yönetim Giderleri"],
+                ans: "E) Genel Yönetim Giderleri",
+                exp: `Genel Yönetim Giderleri bir 'Dönem Gideri'dir ve üretim (mamul) maliyetine dahil edilmez, doğrudan gelir tablosunda faaliyet gideri olarak raporlanır.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Yarı mamuller hesabının dönem başı bakiyesi 4.200 TL'dir. Dönem içerisinde 29.000 TL tutarında direkt malzeme, 3.000 TL tutarında direkt işçilik ve 3.600 TL tutarında genel üretim maliyetine katlanılmıştır. Üretimi tamamlanan mamul maliyeti 37.700 TL ise dönem sonu yarı mamuller hesabının bakiyesi aşağıdakilerden hangisidir?`,
+                options: ["A) 3.400 TL", "B) 2.100 TL", "C) 9.900 TL", "D) 5.700 TL", "E) 1.500 TL"],
+                ans: "B) 2.100 TL",
+                exp: `Miktar Dengesi: (DB Yarı Mamul + Dönem İçi Üretim Maliyetleri) - Tamamlananlar = DS Yarı Mamul.\n(4.200 + 29.000 + 3.000 + 3.600) - DS Yarı Mamul = 37.700\n39.800 - 37.700 = 2.100 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Yeni kurulan Avcılar İşletmesinde tek bir ürün üretilmektedir. Birim direkt malzeme maliyeti 20 TL, birim direkt işçilik maliyeti 40 TL ve birim genel üretim maliyeti 60 TL olarak gerçekleşmektedir. İşletme dönem içerisinde 1.000 birim üretmiş ve 500 birim satmıştır. Satış fiyatı birim başına 150 TL olduğuna göre dönem brüt kârı aşağıdakilerden hangisidir?`,
+                options: ["A) 15.000 TL", "B) 30.000 TL", "C) 45.000 TL", "D) 60.000 TL", "E) 90.000 TL"],
+                ans: "A) 15.000 TL",
+                exp: `Birim Maliyet: 20 + 40 + 60 = 120 TL.\nSatılan Malın Maliyeti (SMM): 500 adet * 120 TL = 60.000 TL.\nSatış Hasılatı: 500 adet * 150 TL = 75.000 TL.\nBrüt Kâr: 75.000 - 60.000 = 15.000 TL.`,
+                exams: ["2025 Yeni", "1 Kez Çıktı!"]
+            },
+// 2025-2026 FİNAL - YENİ EKLENEN SORULAR
+            {
+                q: `Maliyetlerin bir safhadan diğer safhaya aktarılmasında hangi kayıt yapılır?`,
+                options: ["A) Önceki safhaya ilişkin yarı mamuller borçlandırılır, bir sonraki safhaya ilişkin yarı mamuller alacaklandırılır.", "B) Bir sonraki safhaya ilişkin yarı mamuller borçlandırılır, hammadde alacaklandırılır.", "C) Mamuller hesabı alacaklandırılır, yarı mamuller hesabı borçlandırılır.", "D) Bir sonraki safhaya ilişkin yarı mamuller borçlandırılır, önceki safhaya ilişkin yarı mamuller alacaklandırılır.", "E) Mamuller borçlandırılır, yarı mamuller alacaklandırılır."],
+                ans: "D) Bir sonraki safhaya ilişkin yarı mamuller borçlandırılır, önceki safhaya ilişkin yarı mamuller alacaklandırılır.",
+                exp: `Safha maliyetlemede, maliyetler üretim akışına göre devredilir. Devralan (bir sonraki) safhanın yarı mamul hesabı borçlandırılırken, devreden (önceki) safhanın yarı mamul hesabı alacaklandırılarak kapatılır.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `Bir işletmede iki esas üretim gider yeri (A Üretim, B Üretim) ve iki yardımcı hizmet gider yeri (Bakım, Yemekhane) bulunmaktadır. İşletmede oluşan endirekt giderler ve dağıtım anahtarları aşağıdaki gibidir:\nKira: 120.000 TL (Alan m²)\nElektrik: 90.000 TL (Makine saati)\nPersonel gideri: 60.000 TL (Çalışan sayısı)\n\nGider Yerlerine Ait Dağıtım Ölçüleri:\nA Üretim: Alan 400, Makine 3.000, Çalışan 30\nB Üretim: Alan 300, Makine 2.000, Çalışan 20\nBakım: Alan 200, Makine 500, Çalışan 5\nYemekhane: Alan 100, Makine 500, Çalışan 5\n\nYukarıdaki bilgilere göre 1. dağıtım sonucunda A üretim gider yerinde toplanan toplam gider kaç TL olur?`,
+                options: ["A) 123.000 TL", "B) 118.000 TL", "C) 114.000 TL", "D) 105.000 TL", "E) 110.000 TL"],
+                ans: "A) 123.000 TL",
+                exp: `1. Dağıtımda tüm giderler ilgili anahtara göre dağıtılır.\nKira: Toplam 1000 m². A'nın payı = (400/1000) * 120.000 = 48.000 TL.\nElektrik: Toplam 6000 saat. A'nın payı = (3000/6000) * 90.000 = 45.000 TL.\nPersonel: Toplam 60 kişi. A'nın payı = (30/60) * 60.000 = 30.000 TL.\nA'nın Toplam Gideri = 48.000 + 45.000 + 30.000 = 123.000 TL.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `İstanbul İşletmesi bilgisayar üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati çalışmayı ve 93.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. Dönem içerisinde fiili olarak 16.000 makine saati çalışılmıştır. Dönem içerisinde yüklenen genel üretim maliyeti tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 83.000 TL", "B) 73.000 TL", "C) 220.000 TL", "D) 93.000 TL", "E) 124.000 TL"],
+                ans: "E) 124.000 TL",
+                exp: `Yükleme Haddi = Bütçelenen GÜM (93.000) / Bütçelenen Saat (12.000) = 7,75 TL/saat.\nYüklenen GÜM = Fiili Saat (16.000) * Yükleme Haddi (7,75) = 124.000 TL.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi safha maliyetleme sisteminin uygulanmasının en uygun olduğu üretim tipidir?`,
+                options: ["A) Sürekli ve homojen üretim yapan işletmeler", "B) Hizmet işletmeleri", "C) Perakende satış işletmeleri", "D) Özel siparişe dayalı üretim", "E) Proje bazlı üretim"],
+                ans: "A) Sürekli ve homojen üretim yapan işletmeler",
+                exp: `Safha maliyetleme sistemi, birbirinin aynısı olan (homojen) ürünlerin, kesintisiz ve kitleler halinde (sürekli) üretildiği fabrikalarda (örneğin çimento, un, petrol, şeker) uygulanır.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `Faaliyet tabanı maliyetleme ile ilgili olarak aşağıda verilen ifadelerden hangisi doğrudur?`,
+                options: ["A) Genel üretim maliyetlerinin ürünlere dağıtılmasında fabrika düzeyinde tek bir genel üretim maliyeti yükleme haddi kullanır.", "B) Genel üretim maliyetlerinin ürünlere dağıtılmasında üretim birimi düzeyindeki faaliyetleri dikkate alır.", "C) Genel üretim maliyetlerinin ürünlere dağıtılmasında birden çok faaliyet haddi (anahtarı) kullanır.", "D) Genel üretim maliyetlerini çoğunlukla direkt işçilik saatlerini dikkate alarak dağıtır.", "E) Uygulanması pahalı değildir."],
+                ans: "C) Genel üretim maliyetlerinin ürünlere dağıtılmasında birden çok faaliyet haddi (anahtarı) kullanır.",
+                exp: `Geleneksel sistemler tek bir yükleme haddi (ör: sadece direkt işçilik saati) kullanırken; FTM (Faaliyet Tabanlı Maliyetleme) giderleri önce faaliyet havuzlarında toplar ve her faaliyet için ayrı bir dağıtım anahtarı (haddi) kullanarak çok daha doğru bir dağıtım yapar.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `Safha maliyetleme sisteminde dönem sonunda bir safhadaki toplam maliyet, aşağıdakilerden hangisi esas alınarak birim maliyete dönüştürülür?`,
+                options: ["A) Eşdeğer birim sayısı", "B) Toplam satış geliri", "C) Birim başına doğrudan işçilik süresi", "D) Satın alınan hammadde miktarı", "E) Ürünlerin piyasa fiyatı"],
+                ans: "A) Eşdeğer birim sayısı",
+                exp: `Safha maliyetlemede sürece giren ancak henüz tamamlanmayan yarı mamuller bulunduğu için, safhanın toplam maliyeti fiziksel birim sayısına değil, tamamlanma derecelerine göre hesaplanan 'Eşdeğer Birim Sayısına' bölünerek birim maliyet bulunur.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `ABC Mobilya işletmesi, müşterisi için özel tasarım bir kütüphane dolabı üretmek üzere "Sipariş No: M-23"ü açmıştır. Sipariş ile ilgili dönem içinde gerçekleşen maliyetler aşağıdaki gibidir:\n• Direkt İlk Madde ve Malzeme: 8.000 TL\n• Direkt İşçilik: 120 saat (saatlik ücret: 50 TL)\n• Genel Üretim Maliyetleri (GÜM): Yıllık tahmini GÜM 400.000 TL, tahmini direkt işçilik saati ise 5.000 saattir. (GÜM direkt işçilik saatine göre dağıtılmaktadır).\n\nBuna göre, sipariş tamamlandığında "Sipariş No: M-23"ün toplam maliyeti kaç TL olarak hesaplanır?`,
+                options: ["A) 18.200 TL", "B) 27.400 TL", "C) 15.500 TL", "D) 23.600 TL", "E) 16.400 TL"],
+                ans: "D) 23.600 TL",
+                exp: `1. DİMM Maliyeti: 8.000 TL.\n2. DİG Maliyeti: 120 saat * 50 TL = 6.000 TL.\n3. GÜM Yükleme Haddi: 400.000 / 5.000 = 80 TL/saat.\n4. Siparişe Yüklenen GÜM: 120 saat * 80 TL = 9.600 TL.\nToplam Maliyet: 8.000 + 6.000 + 9.600 = 23.600 TL.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `Bir işletme A ve B olmak üzere iki ürün üretmektedir. Üretilen birim adedi: A(1.500), B(1.500).\nKalıp değiştirme sayısı: A(75), B(25).\n\nYukarıda genel üretim maliyetinin bir parçası olan makine kalıplarının değiştirilmesi maliyetine (120.000 TL) ilişkin veriler sunulmuştur. Faaliyet tabanlı maliyetleme sistemi uygulandığında her bir birime dağıtılacak genel üretim maliyeti (TL) sırasıyla (A ve B) aşağıdakilerden hangisidir?`,
+                options: ["A) 40, 40", "B) 30, 10", "C) 60, 20", "D) 20, 60", "E) 10, 30"],
+                ans: "C) 60, 20",
+                exp: `Toplam Kalıp Değiştirme Sayısı = 75 + 25 = 100.\nDeğiştirme Başına Maliyet = 120.000 / 100 = 1.200 TL.\nA'nın Toplam Payı = 75 * 1.200 = 90.000 TL -> Birim Payı = 90.000 / 1.500 adet = 60 TL.\nB'nin Toplam Payı = 25 * 1.200 = 30.000 TL -> Birim Payı = 30.000 / 1.500 adet = 20 TL.`,
+                exams: ["2025-2026 Final"]
+            },
+            {
+                q: `Alanya İşletmesi Ahşap ve Karton olmak üzere iki farklı sepet üretmekte ve satmaktadır. Genel üretim maliyetlerinin bir parçası olan 240.000 TL tutarındaki makine hazırlama maliyetine ilişkin veriler şöyledir:\nÜretilen birim: Ahşap(1.500), Karton(1.500)\nMakine hazırlama sayısı: Ahşap(75), Karton(25)\n\nFaaliyet tabanlı maliyetleme kullanıldığında bir birim ahşap sepete dağıtılacak makine hazırlama maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 40 TL", "B) 100 TL", "C) 60 TL", "D) 120 TL", "E) 80 TL"],
+                ans: "D) 120 TL",
+                exp: `⚠️ DİKKAT: Eski sorularda 'Karton' sepet sorulurken burada 'Ahşap' sepet sorulmuş.\nToplam Hazırlama: 75 + 25 = 100.\nHazırlama Başına Maliyet: 240.000 / 100 = 2.400 TL.\nAhşap Sepetin Toplam Payı: 75 hazırlama * 2.400 = 180.000 TL.\nBirim Ahşap Maliyeti: 180.000 TL / 1.500 adet = 120 TL.`,
+                exams: ["2025-2026 Final", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Sipariş maliyetleme sistemi uygulayan bir üretim işletmesinde aşağıdaki maliyetlerden hangisinin sipariş maliyet kartlarında yer alması beklenmez?`,
+                options: ["A) Üretilen birim miktarı", "B) Genel üretim maliyeti", "C) Direkt malzeme maliyeti", "D) Pazarlama maliyeti", "E) Direkt işçilik maliyeti"],
+                ans: "D) Pazarlama maliyeti",
+                exp: `Sipariş maliyet kartı, ürünün 'üretim' maliyetlerini toplamak için kullanılır. Üretim maliyetleri Direkt İlk Madde ve Malzeme, Direkt İşçilik ve Genel Üretim Maliyetleridir. Pazarlama maliyeti bir dönem gideridir ve üretim maliyet kartında yer almaz.`,
+                exams: ["2025-2026 Final"]
+            },
+//burda kaldık
+// --- 2024 FİNAL PDF EKLAMELERİ BAŞLANGICI ---
+{
+                q: `Aşağıdaki tabloda 101, 102 ve 103 nolu siparişlere ilişkin Ocak ve Şubat aylarında gerçekleşen maliyetler sunulmuştur.\n101 nolu sipariş ocak ayı sonunda tamamlanmış, Şubat ayında satılmıştır.\n102 nolu sipariş Şubat ayında tamamlanmıştır fakat henüz satılmamıştır.\n103 nolu sipariş ise Şubat ayı sonu itibariyle tamamlanmamıştır.\n\nSipariş 101: Ocak (DM: 100, Dİ: 200, GÜM: 300) | Şubat (-)\nSipariş 102: Ocak (DM: 50, Dİ: 100, GÜM: 150) | Şubat (DM: 50, Dİ: 100, GÜM: 300)\nSipariş 103: Ocak (DM: 200, Dİ: 400, GÜM: 300) | Şubat (DM: 20, Dİ: 40, GÜM: 80)\n\nŞubat ayı sonu itibariyle mamuller hesabının bakiyesi aşağıdakilerden hangisidir?`,
+                options: [
+                    "A) 1.040 TL",
+                    "B) 590 TL",
+                    "C) 1.790 TL",
+                    "D) 1.000 TL",
+                    "E) 2.390 TL"
+                ],
+                ans: "C) 1.790 TL",
+                exp: `⚠️ DİKKAT: Gerçek muhasebe kurallarına göre cevap 750 TL'dir (Sadece biten 102 nolu sipariş). Ancak okulun resmi cevap anahtarı, soruyu hazırlayan hocanın terim hatası yapıp "Toplam Stok" (Mamul + Yarı Mamul) hesaplaması nedeniyle 1.790 TL'yi doğru kabul etmektedir.\n(Sipariş 102: 750 TL) + (Sipariş 103: 1.040 TL) = 1.790 TL.\nSınavda çıkarsa tereddütsüz C şıkkını işaretleyin!`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "⚠️ Dikkat!"]
+            },            
+{
+                q: `Bir üretim işletmesinde direkt malzeme imalata sürecin sonunda ilave edilmektedir. Ağustos ayı 2021 yılına ilişkin veriler aşağıda sunulmuştur.\n\nDönem başı yarı mamuller: 151.400 birim\nÖnceki safhadan alınıp başlanan: 451.200 birim\nTamamlanan: 401.000 birim\nDönem sonu yarı mamuller: 202.000 birim (Dönüştürme maliyeti %55 tamamlanmış)\n\nÖnceki safha maliyetine ilişkin eşdeğer birim sayısı toplamı aşağıdakilerden hangisidir?`,
+                options: ["A) 353.400", "B) 603.000", "C) 202.000", "D) 401.000", "E) 653.200"],
+                ans: "B) 603.000",
+                exp: `Önceki safha maliyeti açısından, ürün safhaya girdiği an %100 tamamlanmış kabul edilir.\nEşdeğer Birim = Tamamlananlar (401.000) + (Dönem Sonu Yarı Mamul (202.000) * %100)\n= 401.000 + 202.000 = 603.000 birim.`,
+                exams: ["2024 Final", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Ocak ayında karıştırma safhasında 92.000 TL tutarında üretim maliyeti gerçekleşmiştir. Dönem içerisinde safha açısından 2.300 birimin üretimi tamamlanmış ve dönem sonu yarı mamul olarak %40 oranında tamamlanmış 500 birim kalmıştır. Karıştırma safhasında Ocak ayı başında yarı mamul bulunmamaktadır. \n\nDönem sonu yarı mamullerin toplam maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 18.400 TL", "B) 20.000 TL", "C) 11.740 TL", "D) 7.360 TL", "E) 6.572 TL"],
+                ans: "D) 7.360 TL",
+                exp: `1) Eşdeğer Birim = Tamamlanan (2.300) + [D.Sonu (500) * %40] = 2.500 birim.\n2) Eşdeğer Birim Maliyeti = Toplam Maliyet (92.000) / 2.500 = 36,8 TL/birim.\n3) D.Sonu Yarı Mamul Maliyeti = 200 eşdeğer birim * 36,8 TL = 7.360 TL.`,
+                exams: ["2024 Final"]
+            },
+            {
+                q: `Maraş İşletmesinde kalıp ve montaj olmak üzere iki adet esas üretim bölümü, yemekhane ve tamir bakım olmak üzere iki tane de destek bölümü bulunmaktadır. Yemekhane maliyetleri çalışan sayısına, tamir bakım maliyetleri tamir-bakım saatlerine göre dağıtılmaktadır.\nDirekt Maliyetler: Yemekhane 360.000 TL, Tamir-Bakım 300.000 TL\nÇalışan Sayısı: Tamir-Bakım 30, Kalıp 35, Montaj 55\nTamir Bakım Saatleri: Kalıp 16.000, Montaj 4.000\n\nKademeli dağıtım yöntemi kullanıldığında tamir bakım bölümünden kalıp bölümüne dağıtılacak maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 312.000 TL", "B) 336.000 TL", "C) 240.000 TL", "D) 390.000 TL", "E) 78.000 TL"],
+                ans: "A) 312.000 TL",
+                exp: `1) Önce Yemekhane Dağıtılır: 360.000 TL / 120 Kişi (30+35+55) = 3.000 TL/Kişi.\n2) Yemekhaneden Tamir-Bakıma Gelen: 30 kişi * 3.000 TL = 90.000 TL.\n3) Tamir-Bakımın Yeni Toplam Maliyeti: 300.000 + 90.000 = 390.000 TL.\n4) Tamir Bakımdan Kalıba: 390.000 TL * (16.000 / 20.000) = 312.000 TL.`,
+                exams: ["2024 Final", "Kez Çıktı"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi sipariş bazında bir faaliyet olarak sınıflandırılabilir?`,
+                options: ["A) Üretimde kullanılacak malzemelerin sipariş edilmesi", "B) Teslimat için müşterilerin aranması", "C) Ürünlerin tasarlanması", "D) Yıllık bütçenin hazırlanması", "E) Ürünlere barkod yapıştırılması"],
+                ans: "A) Üretimde kullanılacak malzemelerin sipariş edilmesi",
+                exp: `Malzemelerin sipariş edilmesi veya partiye özel makine ayarlarının yapılması, tek tek ürünler için değil bir 'parti' (sipariş) için yapıldığından parti (sipariş) bazında bir faaliyettir.`,
+                exams: ["2024 Final"]
+            },
+            {
+                q: `Mikro İşletmesi birleşik bir imalat süreci sonunda A ve B olmak üzere iki farklı ürün ortaya çıkarmaktadır. Ayrım noktasına kadar birleşik maliyet 329.000 TL'dir.\nA: Ayrım sonrası maliyet 406.340 TL | Üretim/Satış: 13.000 kutu | Fiyat: 51 TL\nB: Ayrım sonrası maliyet 97.060 TL | Üretim/Satış: 5.900 kutu | Fiyat: 26 TL\n\nMaliyetlerin dağıtılmasında Net Satış Değeri yöntemi kullanıldığında B ürününe ilişkin toplam maliyet aşağıdakilerden hangisidir?`,
+                options: ["A) 156.280 TL", "B) 269.780 TL", "C) 256.660 TL", "D) 59.220 TL", "E) 676.120 TL"],
+                ans: "A) 156.280 TL",
+                exp: `A'nın NSD: (13.000 * 51) - 406.340 = 256.660 TL.\nB'nin NSD: (5.900 * 26) - 97.060 = 56.340 TL. (Toplam NSD: 313.000 TL)\nB'nin Ortak Maliyet Payı: 329.000 * (56.340 / 313.000) = 59.220 TL.\nB'nin TOPLAM Maliyeti = Ortak Pay (59.220) + Kendi Ayrım Sonrası Maliyeti (97.060) = 156.280 TL.`,
+                exams: ["2024 Final"]
+            },
+            // --- 2024 FİNAL PDF EKLAMELERİ SONU ---
+// --- 2024-2025 BAHAR FİNAL PDF EKLAMELERİ BAŞLANGICI ---
+            {
+                q: `Trabzon İşletmesi dönem içerisinde aşağıdaki maliyetlere katlanmıştır. İşletme dönem içerisinde 5.000 adet üretmiş ve 4.000 adet satmıştır.\nDirekt malzeme: 60.000 TL\nDirekt işçilik: 30.000 TL\nGenel üretim maliyeti: 120.000 TL\nSatış giderleri: 50.000 TL\nYönetim giderleri: 40.000 TL\n\nBirim üretim maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 42 TL", "B) 52 TL", "C) 18 TL", "D) 60 TL", "E) 25 TL"],
+                ans: "A) 42 TL",
+                exp: `Üretim maliyetine sadece fabrikadaki maliyetler (DM + Dİ + GÜM) girer. Dönem giderleri (Satış/Yönetim) hesaba katılmaz.\nToplam Üretim Maliyeti: 60.000 + 30.000 + 120.000 = 210.000 TL.\nBirim Üretim Maliyeti: 210.000 / 5.000 adet = 42 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Altın İşletmesinin bitirme safhasına ilişkin olarak yukarıdaki veriler sunulmuştur. İşletme ağırlıklı ortalama yöntemi kullanmaktadır. Dönüştürme maliyeti için eşdeğer birim maliyeti aşağıdakilerden hangisidir?\nEşdeğer Birim (Dönüştürme): 69.000\nDB Dönüştürme Maliyeti: 3.000 TL\nDönem İçi Dönüştürme: 45.300 TL`,
+                options: ["A) 0,65 TL", "B) 0,64 TL", "C) 0,70 TL", "D) 0,58 TL", "E) 0,48 TL"],
+                ans: "C) 0,70 TL",
+                exp: `Toplam Dönüştürme Maliyeti: 3.000 TL (DB) + 45.300 TL (Dİ) = 48.300 TL.\nDönüştürme Eşdeğer Birimi: 69.000.\nBirim Maliyet: 48.300 / 69.000 = 0,70 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Paris İşletmesi tablet üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati, 24.000 işçilik saati çalışmayı ve 186.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. Dönem içerisinde fiili olarak 14.000 makine saati çalışılmıştır.\n\nİşletmenin genel üretim maliyeti yükleme haddi aşağıdakilerden hangisidir?`,
+                options: ["A) 186.000 TL", "B) 13,28 TL/makine saati", "C) 7,75 TL/makine saati", "D) 15,5 TL/makine saati", "E) 217.000 TL"],
+                ans: "D) 15,5 TL/makine saati",
+                exp: `Yükleme Haddi = Bütçelenen GÜM / Bütçelenen Dağıtım Anahtarı (Makine Saati).\n186.000 TL / 12.000 saat = 15,5 TL/makine saati. İşçilik saati ve fiili saatler burada sadece kafa karıştırmak için verilmiştir.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi üretim hacmi temelli bir maliyet etkenidir?`,
+                options: ["A) Makine saatleri", "B) Müşteri ziyareti sayısı", "C) Sipariş hazırlama sayısı", "D) Tasarım sayısı", "E) Kalıp değiştirme adedi"],
+                ans: "A) Makine saatleri",
+                exp: `Üretim hacmini doğrudan yansıtan (Makine saatleri, Direkt işçilik saatleri vb.) etkenler hacim temelli etkenlerdir. Diğer şıklar faaliyete dayalı maliyetlemenin parti veya ürün bazlı etkenleridir.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Maraş İşletmesinde kalıp ve montaj olmak üzere iki adet esas üretim bölümü, yemekhane ve tamir bakım olmak üzere iki tane de destek bölümü bulunmaktadır. Yemekhane ile ilgili faaliyet ölçüsü çalışan sayısı, tamir bakım bölümü ile ilgili faaliyet ölçüsü tamir bakım saatleridir.\nDirekt Maliyetler: Yemekhane 360.000, Tamir-Bakım 300.000\nÇalışan Sayısı: Tamir-Bakım 30, Kalıp 35, Montaj 55\nTamir-Bakım Saatleri: Kalıp 16.000, Montaj 4.000\n\nKademeli dağıtım yöntemi kullanıldığında tamir bakım bölümünden kalıp bölümüne dağıtılacak maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 78.000 TL", "B) 312.000 TL", "C) 240.000 TL", "D) 390.000 TL", "E) 336.000 TL"],
+                ans: "B) 312.000 TL",
+                exp: `1) Önce Yemekhane Dağıtılır: 360.000 TL / 120 Kişi (30+35+55) = 3.000 TL/Kişi.\n2) Yemekhaneden Tamir-Bakıma Gelen Pay: 30 kişi * 3.000 TL = 90.000 TL.\n3) Tamir-Bakımın Yeni Toplam Maliyeti: 300.000 (Kendi) + 90.000 (Gelen) = 390.000 TL.\n4) Tamir Bakımdan Kalıp Bölümüne: 390.000 TL * (16.000 / 20.000) = 312.000 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Ocak ayında karıştırma safhasında 92.000 TL tutarında üretim maliyeti gerçekleşmiştir. Dönem içerisinde safha açısından 2.300 birimin üretimi tamamlanmış ve dönem sonu yarı mamul olarak %40 oranında tamamlanmış 500 birim kalmıştır. Karıştırma safhasında Ocak ayı başında yarı mamul bulunmamaktadır. \n\nDönem sonu yarı mamullerin toplam maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 6.572 TL", "B) 20.000 TL", "C) 7.360 TL", "D) 11.740 TL", "E) 18.400 TL"],
+                ans: "C) 7.360 TL",
+                exp: `Eşdeğer Birim: Tamamlanan (2.300) + [D.Sonu (500) * %40] = 2.500 birim.\nEşdeğer Birim Maliyeti: 92.000 TL / 2.500 = 36,8 TL.\nDönem Sonu Yarı Mamul Maliyeti: 200 eşdeğer birim * 36,8 TL = 7.360 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir üretim işletmesinde Nisan ayında Torna bölümünde 2.300 birim mamul tamamlanarak bir sonraki safhaya transfer edilmiş, Torna bölümünde dönem sonu yarı mamul olarak %40 oranında tamamlanmış 500 birim kalmıştır. Torna bölümünde dönem başı yarı mamul bulunmamakta ise Nisan ayı çıktılarının toplam eşdeğer birim sayısı aşağıdakilerden hangisidir?`,
+                options: ["A) 2.400", "B) 2.800", "C) 2.000", "D) 2.500", "E) 2.300"],
+                ans: "D) 2.500",
+                exp: `Tamamlananlar tam (%100) sayılır: 2.300.\nDönem sonu yarı mamuller yüzdesiyle çarpılır: 500 * %40 = 200 tam birime denk.\nToplam Eşdeğer Birim Sayısı: 2.300 + 200 = 2.500.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir fabrikada çalışan mühendislerin aldıkları ücret ile ilgili olarak aşağıdaki maliyet sınıflandırmalarından hangisi doğrudur?`,
+                options: ["A) Sabit - Direkt", "B) Sabit - Üretim dışı", "C) Sabit - Endirekt", "D) Değişken - Direkt", "E) Değişken - Endirekt"],
+                ans: "C) Sabit - Endirekt",
+                exp: `Fabrikada çalışan mühendis ve ustabaşıların maaşları doğrudan belirli bir ürünün içine izlenemediği için 'Endirekt', maaşla çalıştıkları ve üretim miktarından etkilenmedikleri için 'Sabit'tir.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Can İşletmesinin Ocak ayı başında birim maliyeti 5 TL olan 8 adet ABC stoku mevcuttur. 12 Ocak tarihinde birim maliyeti 7 TL olan 10 adet daha ABC stoku alınmıştır. 25 Ocak tarihinde 12 adet ABC stoku tanesi 9 TL den satılmıştır. İşletme stokları ile ilgili olarak ilk giren ilk çıkar (FIFO) yöntemini uyguluyorsa Ocak ayı için brüt kâr tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 28 TL", "B) 54 TL", "C) 40 TL", "D) 35 TL", "E) 108 TL"],
+                ans: "C) 40 TL",
+                exp: `Satış Hasılatı: 12 adet * 9 TL = 108 TL.\nSatılan Malın Maliyeti (FIFO): Önce eski stok satılır (8 adet * 5 TL = 40 TL). Kalan 4 adet ise yeni stoktan verilir (4 adet * 7 TL = 28 TL). Toplam SMM = 68 TL.\nBrüt Kâr: 108 - 68 = 40 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir işletme A ve B olmak üzere iki ürün üretmektedir.\nÜretilen birim: A (1.500), B (1.500)\nKalıp değiştirme sayısı: A (75), B (25)\nYukarıda genel üretim maliyetinin bir parçası olan makine kalıplarının değiştirilmesi maliyetine (120.000 TL) ilişkin veriler sunulmuştur. Faaliyet tabanı maliyetleme sistemi uygulandığında her bir birime dağıtılacak genel üretim maliyeti (TL) sırasıyla (A ve B) aşağıdakilerden hangisidir?`,
+                options: ["A) 60, 20", "B) 20, 60", "C) 30, 10", "D) 10, 30", "E) 40, 40"],
+                ans: "A) 60, 20",
+                exp: `Toplam Kalıp Değiştirme Sayısı: 75 + 25 = 100.\nDeğiştirme Başına Maliyet: 120.000 / 100 = 1.200 TL.\nA Ürünü Toplam Payı: 75 * 1.200 = 90.000 TL. Birim Payı: 90.000 / 1.500 = 60 TL.\nB Ürünü Toplam Payı: 25 * 1.200 = 30.000 TL. Birim Payı: 30.000 / 1.500 = 20 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Faaliyet Tabanlı Maliyetleme (FTM) sisteminin geleneksel maliyetleme sistemine göre en önemli avantajı aşağıdakilerden hangisidir?`,
+                options: ["A) Ürünlerin satış fiyatlarını belirlemede kullanılmaması", "B) Sadece üretim sürecine odaklanması", "C) Maliyetleri sadece doğrudan işçilik üzerinden dağıtması", "D) Dolaylı maliyetleri daha doğru bir şekilde ürünlere dağıtması", "E) Üretim hacmine dayalı maliyet dağıtımını teşvik etmesi"],
+                ans: "D) Dolaylı maliyetleri daha doğru bir şekilde ürünlere dağıtması",
+                exp: `FTM, genel üretim (dolaylı) giderlerini tek bir kalemde eritmek yerine faaliyet havuzlarına bölerek ve çoklu dağıtım anahtarları kullanarak ürünlere çok daha isabetli ve doğru bir şekilde yansıtır.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Paris İşletmesi bilgisayar üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati çalışmayı ve 93.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. Dönem içerisinde fiili olarak 16.000 makine saati çalışılmıştır ve fiili maliyetlere katlanılmıştır. (Fiili Tablo: Endirekt İşçilik 11.000, Amortisman 48.000, Makine Tamiri 11.000, Direkt İşçilik 75.000, End. Malzeme 6.000, Su/Elk 7.000, Reklam 35.000, Satış 27.000)\n\nBuna göre; Paris İşletmesi ile ilgili aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) 41.000 TL tutarında fazla yükleme yapılmıştır.", "B) 14.000 TL tutarında eksik yükleme yapılmıştır.", "C) 21.000 TL tutarında fazla yükleme yapılmıştır.", "D) 14.000 TL tutarında fazla yükleme yapılmıştır.", "E) 41.000 TL tutarında eksik yükleme yapılmıştır."],
+                ans: "A) 41.000 TL tutarında fazla yükleme yapılmıştır.",
+                exp: `Yükleme Haddi: 93.000 / 12.000 = 7,75 TL/saat.\nYüklenen GÜM: 16.000 saat * 7,75 = 124.000 TL.\nFiili GÜM: (11k + 48k + 11k + 6k + 7k) = 83.000 TL. (Direkt işçilik, Reklam ve Satış hesaba katılmaz!)\nFark: Yüklenen(124.000) - Fiili(83.000) = 41.000 TL Fazla yüklenmiştir.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+ {
+                q: `Aşağıdaki tabloda 101, 102 ve 103 nolu siparişlere ilişkin Ocak ve Şubat aylarında gerçekleşen maliyetler sunulmuştur.\n101 nolu sipariş Ocak ayı sonunda tamamlanmış, Şubat ayında satılmıştır.\n102 nolu sipariş Şubat ayında tamamlanmıştır fakat henüz satılmamıştır.\n103 nolu sipariş ise Şubat ayı sonu itibariyle tamamlanmamıştır.\n\nSipariş 101: Ocak (DM: 100, Dİ: 200, GÜM: 300) | Şubat (-)\nSipariş 102: Ocak (DM: 50, Dİ: 100, GÜM: 150) | Şubat (DM: 50, Dİ: 100, GÜM: 300)\nSipariş 103: Ocak (DM: 200, Dİ: 400, GÜM: 300) | Şubat (DM: 20, Dİ: 40, GÜM: 80)\n\nŞubat ayı sonu itibariyle mamuller hesabının bakiyesi aşağıdakilerden hangisidir?`,
+                options: ["A) 590 TL", "B) 2.390 TL", "C) 1.000 TL", "D) 1.790 TL", "E) 1.040 TL"],
+                ans: "D) 1.790 TL",
+                exp: `⚠️ DİKKAT ŞAŞIRTMACA / HATALI SORU! Normal muhasebe kurallarına göre "Mamuller" hesabında sadece bitmiş ve satılmamış ürünler yer alır (Sipariş 102 = 300+450 = 750 TL). Sipariş 103 ise henüz bitmediği için "Yarı Mamul"dür (900+140 = 1.040 TL).\nAncak soruyu hazırlayan kişi şıklara 750 TL'yi koymamış ve aslında "Dönem Sonu Toplam Stok" (Mamul + Yarı Mamul) değerini sormak istemiştir.\nSınavın kabul ettiği cevap: 750 TL (Mamul) + 1.040 TL (Yarı Mamul) = 1.790 TL'dir.`,
+                exams: ["2024 Final", "2024-2025 Bahar Final", "⚠️ Dikkat!"]
+          
+            },
+            {
+                q: `Altın İşletmesinin bitirme safhasına ilişkin olarak yukarıdaki veriler sunulmuştur. Malzeme maliyeti için eşdeğer birim maliyeti aşağıdakilerden hangisidir?\nEşdeğer Birim (Malzeme): 75.000\nDB Malzeme Maliyeti: 1.500 TL\nDönem İçi Malzeme: 22.500 TL`,
+                options: ["A) 0,41 TL", "B) 0,30 TL", "C) 0,42 TL", "D) 0,37 TL", "E) 0,32 TL"],
+                ans: "E) 0,32 TL",
+                exp: `Toplam Malzeme Maliyeti = Dönem Başı (1.500) + Dönem İçi (22.500) = 24.000 TL.\nBirim Eşdeğer Maliyeti = 24.000 / 75.000 = 0,32 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi safha maliyetleme sisteminin uygulanmasının en uygun olduğu üretim tipidir?`,
+                options: ["A) Perakende satış işletmeleri", "B) Sürekli ve homojen üretim yapan işletmeler", "C) Özel siparişe dayalı üretim", "D) Hizmet işletmeleri", "E) Proje bazlı üretim"],
+                ans: "B) Sürekli ve homojen üretim yapan işletmeler",
+                exp: `Safha maliyetleme sistemi, ürünlerin birbirinin aynısı (homojen) olduğu ve kesintisiz (sürekli) kitleler halinde üretildiği fabrikalar (örneğin un, petrol, şeker fabrikaları) için en uygunudur.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `Paris İşletmesi tablet üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati, 24.000 İşçilik saati çalışmayı ve 186.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır. Dönem içerisinde fiili olarak 14.000 makine saati çalışılmıştır.\n\nÜretime yüklenen genel üretim maliyeti tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 108.500 TL", "B) 217.000 TL", "C) 186.000 TL", "D) 31.000 TL", "E) 15.500 TL"],
+                ans: "B) 217.000 TL",
+                exp: `Yükleme Haddi: Bütçelenen GÜM (186.000) / Bütçelenen Makine Saati (12.000) = 15,50 TL/saat.\nYüklenen GÜM: Fiili Saat (14.000) * Yükleme Haddi (15,50) = 217.000 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `İstanbul İşletmesi Ahşap ve Karton olmak üzere iki farklı sepet üretmekte ve satmaktadır. Yukarıdaki veriler genel üretim maliyetlerinin bir parçası olan 240.000 TL tutarındaki makine hazırlama maliyetine ilişkindir.\nÜretilen Birim: Ahşap (1.500), Karton (1.500)\nMakine Hazırlama Sayısı: Ahşap (75), Karton (25)\n\nFaaliyet tabanlı maliyetleme kullanıldığında bir birim karton sepete dağıtılacak makine hazırlama maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 60 TL", "B) 40 TL", "C) 20 TL", "D) 50 TL", "E) 30 TL"],
+                ans: "B) 40 TL",
+                exp: `Toplam Hazırlama: 75 + 25 = 100.\nHazırlama Başına Maliyet: 240.000 / 100 = 2.400 TL.\nKarton Sepetin Toplam Payı: 25 hazırlama * 2.400 = 60.000 TL.\nBirim Karton Maliyeti: 60.000 TL / 1.500 adet = 40 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+                q: `I. Maliyet türlerinin maliyet yerlerine dağıtılması\nII. Yardımcı maliyet yerlerinde toplanan maliyetlerin esas maliyet yerlerine dağıtılması\nIII. Esas maliyet yerlerinde toplanan maliyetlerin o bölümlerdeki mamullere dağıtılması\n\nMercan İşletmesinin maliyet dağıtımında izlemesi gereken adımların doğru sıralaması aşağıdakilerden hangisidir?`,
+                options: ["A) III, I, II", "B) III, I, II (Hatalı Şık Düzeltmesi)", "C) II, I, III", "D) III, II, I", "E) I, II, III"],
+                ans: "E) I, II, III",
+                exp: `Maliyet Dağıtım Hiyerarşisi:\n1. Dağıtım: Ortak giderlerin yerlere dağıtımı (I).\n2. Dağıtım: Yardımcı hizmet yerlerinin esas yerlere dağıtımı (II).\n3. Dağıtım: Esas yerlerden ürünlere yüklenmesi (III).`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            {
+
+                q: `Aşağıdaki üç ürüne ilişkin birleşik imalat maliyeti 250.000 TL'dir. Birleşik maliyetlerin dağıtılmasında net piyasa (satış) yöntemi kullanılıyorsa her bir ürüne ilişkin stok değeri sırasıyla (A, B, C) aşağıdakilerden hangisidir?\nA: Ek işlem sonrası satış (150.000), Ek işleme maliyeti (16.000)\nB: Ek işlem sonrası satış (160.000), Ek işleme maliyeti (9.000)\nC: Ek işlem sonrası satış (116.125), Ek işleme maliyeti (10.500)`,
+                options: ["A) 85.750, 96.650, 67.600", "B) 134.000, 151.000, 105.650", "C) 75.000, 105.000, 70.000", "D) 81.000, 114.000, 80.500", "E) 101.760, 105.640, 78.100"],
+                ans: "E) 101.760, 105.640, 78.100",
+                exp: `⚠️ DİKKAT: Okulun orijinal cevap anahtarı, stok değerini sormasına rağmen işlemi sadece birleşik maliyet paylarını dağıtarak bırakmış ve ufak yuvarlama hatalarıyla A şıkkını doğru kabul etmiştir. Ancak akademik ve matematiksel olarak DOĞRU olan E şıkkıdır (Ortak Pay + Ek Maliyet).\nA'nın Ortak Payı: 85.760 -> Stok Değeri: 85.760 + 16.000 = 101.760 TL.\nB'nin Ortak Payı: 96.640 -> Stok Değeri: 96.640 + 9.000 = 105.640 TL.\nC'nin Ortak Payı: 67.600 -> Stok Değeri: 67.600 + 10.500 = 78.100 TL.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+         
+     {
+                q: `Aşağıdaki işletmelerden hangisinde safha maliyetleme sisteminin uygulanması beklenir?`,
+                options: ["A) Gelinlik Atölyesi", "B) Finansal Danışmanlık Şirketi", "C) Mimarlık Ofisi", "D) Düğün Davet Organizasyon Şirketi", "E) Cep Telefonu Üreticisi"],
+                ans: "E) Cep Telefonu Üreticisi",
+                exp: `Mimarlık, organizasyon ve gelinlik atölyeleri müşteriye özel tekil ürün veya hizmet tasarladıkları için Sipariş Maliyetleme kullanırlar. Cep telefonu üretimi ise seri ve standart üretim olduğu için Safha Maliyetleme kullanır.`,
+                exams: ["2024-2025 Bahar Final", "Kez Çıktı!"]
+            },
+            // --- 2024-2025 BAHAR FİNAL PDF EKLAMELERİ SONU ---
+
+// --- 2024-2025 BÜTÜNLEME PDF EKLAMELERİ BAŞLANGICI ---
+            {
+                q: `İstanbul İşletmesi bilgisayar üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 24.000 makine saati çalışmayı ve 372.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır.\nDönem içerisinde fiili olarak 32.000 makine saati çalışılmıştır ve fiili maliyetlere katlanılmıştır.\n(Fiili Tablo: Endirekt İşçilik 44.000, Fabrika Amortismanı 192.000, Makine Tamiri 44.000, Direkt İşçilik 300.000, Endirekt Malzeme 24.000, Su/Elektrik 28.000, Reklam 140.000, Satış komisyonları 54.000)\n\nYukarıdaki bilgilere göre; aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) 56.000 TL tutarında fazla yükleme yapılmıştır.", "B) 164.000 TL tutarında eksik yükleme yapılmıştır.", "C) 84.000 TL tutarında fazla yükleme yapılmıştır.", "D) 56.000 TL tutarında eksik yükleme yapılmıştır.", "E) 164.000 TL tutarında fazla yükleme yapılmıştır."],
+                ans: "E) 164.000 TL tutarında fazla yükleme yapılmıştır.",
+                exp: `Yükleme Haddi: 372.000 / 24.000 = 15,5 TL/saat.\nYüklenen GÜM: 32.000 saat * 15,5 = 496.000 TL.\nFiili GÜM: Üretime ait endirektler toplanır (44k+192k+44k+24k+28k = 332.000 TL). Direkt işçilik, reklam ve satış giderleri GÜM'e dahil edilmez.\nFark: Yüklenen(496.000) - Fiili(332.000) = 164.000 TL Fazla yüklenmiştir.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Marmara İşletmesi sandalye üretmektedir ve genel üretim maliyetlerini işçilik saatlerini esas alarak ürünlere dağıtmaktadır.\nİşletme gelecek dönem için 20.000 işçilik saati çalışmayı ve 120.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır.\nDönem içerisinde fiili olarak 18.000 işçilik saati çalışılmıştır. Fiili olarak gerçekleşen genel üretim maliyeti 150.000 TL olmuştur.\n\nDönem içerisinde imalata yüklenen genel üretim maliyeti tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 108.000", "B) 150.000", "C) 120.000", "D) 135.000", "E) 30.000"],
+                ans: "A) 108.000",
+                exp: `Yükleme Haddi = Bütçelenen GÜM / Bütçelenen Dağıtım Anahtarı = 120.000 / 20.000 = 6 TL/saat.\nYüklenen GÜM = Fiili Saat * Yükleme Haddi = 18.000 * 6 = 108.000 TL.`,
+                exams: ["2024-2025 Bütünleme", "Yeni Soru Tipi"]
+            },
+            {
+                q: `Altın İşletmesinin bitirme safhasına ilişkin olarak yukarıdaki veriler sunulmuştur. İşletme ağırlıklı ortalama yöntemi uygulamaktadır.\n\nÖnceki safha maliyeti için eşdeğer birim maliyeti aşağıdakilerden hangisidir?\nEşdeğer Birim (Önceki Safha): 75.000\nDB Önceki Safha Maliyeti: 2.100 TL\nDönem İçi Önceki Safha Maliyeti: 30.900 TL`,
+                options: ["A) 0,76 TL", "B) 1,59 TL", "C) 0,41 TL", "D) 0,44 TL", "E) 0,55 TL"],
+                ans: "D) 0,44 TL",
+                exp: `Toplam Önceki Safha Maliyeti = Dönem Başı (2.100) + Dönem İçi (30.900) = 33.000 TL.\nBirim Eşdeğer Maliyeti = Toplam Maliyet / Eşdeğer Birim = 33.000 / 75.000 = 0,44 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Stil İşletmesinin Nisan ayında Dokuma safhasına ilişkin maliyet ve üretim bilgileri yukarıda verilmiştir. Malzeme imalata sürecin başında ilave edilmektedir. Dönüştürme maliyetleri açısından eşdeğer birim maliyeti aşağıdakilerden hangisidir? (Virgülden sonraki iki haneyi dikkate alınız)\n\nTamamlanan: 32.600\nDönem Sonu Yarı Mamul: 6.000 (%60 oranında tamamlanmış)\nDB Dönüştürme Maliyeti: 15.000 TL\nDönem İçi Dönüştürme: 105.000 TL`,
+                options: ["A) 2,91 TL", "B) 3,31 TL", "C) 2,90 TL", "D) 3,51 TL", "E) 3,10 TL"],
+                ans: "B) 3,31 TL",
+                exp: `1) Eşdeğer Birim (Dönüştürme) = Tamamlanan (32.600) + [Dönem Sonu (6.000) * %60] = 36.200 birim.\n2) Toplam Dönüştürme Maliyeti = 15.000 (DB) + 105.000 (Dİ) = 120.000 TL.\n3) Birim Maliyet = 120.000 / 36.200 = 3,3149... TL. Yuvarlandığında 3,31 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Mikro İşletmesi birleşik bir imalat süreci sonunda A ve B olmak üzere iki farklı ürün ortaya çıkarmaktadır. Maliyetlerin dağıtılmasında Net Satış Değeri yöntemi kullanıldığında B ürününe ilişkin toplam maliyet aşağıdakilerden hangisidir?\nBirleşik Maliyet: 329.000 TL\nA: Ek işlem sonrası maliyet 406.340 TL | Satış (kutu) 13.000 | Fiyat 51 TL\nB: Ek işlem sonrası maliyet 97.060 TL | Satış (kutu) 5.900 | Fiyat 26 TL`,
+                options: ["A) 676.120 TL", "B) 156.280 TL", "C) 59.220 TL", "D) 256.660 TL", "E) 269.780 TL"],
+                ans: "B) 156.280 TL",
+                exp: `A'nın Net Satış Değeri (NSD) = (13.000 * 51) - 406.340 = 256.660 TL.\nB'nin Net Satış Değeri (NSD) = (5.900 * 26) - 97.060 = 56.340 TL.\nToplam NSD = 313.000 TL.\nB'nin Ortak Payı = 329.000 * (56.340 / 313.000) = 59.220 TL.\nB'nin Toplam Maliyeti = Ortak Pay (59.220) + Ek İşlem Maliyeti (97.060) = 156.280 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Sürekli Envanter yöntemi kullanan Almanya İşletmesinin Ocak ayı başında toplam maliyeti 324 TL olan 18 adet ABC hammaddesi bulunmaktaydı. Ocak ayında yukarıdaki alış ve satışlar gerçekleşmiştir.\n(8 Ocak Alış: 42 x 20 TL | 14 Ocak Satış: 35 x 40 TL | 22 Ocak Alış: 25 x 22,6 TL | 27 Ocak Satış: 12 x 40 TL)\n\nHareketli ağırlıklı stok değerleme yöntemine göre 14 Ocak tarihinde yapılan satışın maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 679 TL", "B) 824 TL", "C) 756 TL", "D) 582 TL", "E) 1.079 TL"],
+                ans: "A) 679 TL",
+                exp: `Dönem Başı: 18 adet, Toplam 324 TL.\n8 Ocak Alış: 42 adet * 20 TL = 840 TL.\nToplam: 60 adet, 1.164 TL. Yeni Birim Ortalama Maliyet = 1.164 / 60 = 19,4 TL.\n14 Ocak Satış Maliyeti = 35 adet * 19,4 TL = 679 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki ifadelerden hangisi dönüştürme maliyetlerini en iyi şekilde açıklar?`,
+                options: ["A) Dönüştürme maliyetleri, tüm üretim ve üretim dışı maliyetlerdir.", "B) Dönüştürme maliyetleri, pazarlama maliyetleri de dahil olmak üzere tüm üretim dışı maliyetlerdir.", "C) Dönüştürme maliyetleri, direkt malzeme maliyetleri dışındaki tüm üretim maliyetleridir.", "D) Dönüştürme maliyetleri, sabit satış ve dağıtım maliyetleri dışındaki tüm üretim dışı maliyetlerdir.", "E) Dönüştürme maliyetleri, direkt malzeme maliyetleridir."],
+                ans: "C) Dönüştürme maliyetleri, direkt malzeme maliyetleri dışındaki tüm üretim maliyetleridir.",
+                exp: `Dönüştürme (şekillendirme) maliyeti, hammaddeyi mamule dönüştürmek için katlanılan maliyetlerdir ve Direkt İşçilik ile Genel Üretim Giderleri'nin toplamından oluşur. Direkt malzeme hariç tüm üretim maliyetlerini kapsar.`,
+                exams: ["2024-2025 Bütünleme"]
+            },
+            {
+                q: `Faaliyet Tabanlı Maliyetleme'nin geleneksel maliyetleme sistemlerinden farkı en çok hangi durumda ortaya çıkar?`,
+                options: ["A) Finansal raporlama yapan şirketlerde", "B) Üretim hattı sabit olan firmalarda", "C) Tek ürün üreten işletmelerde", "D) Çok sayıda farklı ürün üreten ve karmaşık faaliyetlere sahip işletmelerde", "E) Sadece hizmet sektöründe faaliyet gösteren firmalarda"],
+                ans: "D) Çok sayıda farklı ürün üreten ve karmaşık faaliyetlere sahip işletmelerde",
+                exp: `Geleneksel sistemler tek ve basit bir dağıtım anahtarı kullanır. İşletmenin ürün çeşitliliği ve faaliyet karmaşıklığı arttıkça, geleneksel sistemin yarattığı maliyet sapmaları büyür ve Faaliyet Tabanlı Maliyetleme'nin (FTM) hassas hesaplamaları çok daha belirgin/farklı bir tablo ortaya koyar.`,
+                exams: ["2024-2025 Bütünleme"]
+            },
+            {
+                q: `Alanya İşletmesi Ahşap ve Karton olmak üzere iki farklı sepet üretmekte ve satmaktadır. Yukarıdaki veriler genel üretim maliyetlerinin bir parçası olan 240.000 TL tutarındaki makine hazırlama maliyetine ilişkindir.\nÜretilen Birim: Ahşap 1.500 | Karton 1.500\nMakine Hazırlama Sayısı: Ahşap 75 | Karton 25\n\nFaaliyet tabanlı maliyetleme kullanıldığında bir birim ahşap sepete dağıtılacak makine hazırlama maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 40 TL", "B) 120 TL", "C) 100 TL", "D) 60 TL", "E) 80 TL"],
+                ans: "B) 120 TL",
+                exp: `Toplam Hazırlama: 75 + 25 = 100.\nHazırlama Başına Maliyet: 240.000 / 100 = 2.400 TL.\nAhşap Sepetin Toplam Payı: 75 hazırlama * 2.400 = 180.000 TL.\nBirim Ahşap Maliyeti: 180.000 TL / 1.500 adet = 120 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki tabloda verilen bilgiler doğrultusunda dönem içinde kullanılan direkt malzeme maliyeti aşağıdakilerden hangisidir?\nDirekt malzeme stoku Dönem Başı: 410 TL, Dönem Sonu: 320 TL\nSatın alınan direkt malzeme: 6.600 TL`,
+                options: ["A) 6.600 TL", "B) 6.690 TL", "C) 6.680 TL", "D) 6.510 TL", "E) 7.100 TL"],
+                ans: "B) 6.690 TL",
+                exp: `Kullanılan Direkt Malzeme = Dönem Başı Stok + Dönem İçi Alışlar - Dönem Sonu Stok.\nKullanılan Malzeme = 410 + 6.600 - 320 = 6.690 TL.`,
+                exams: ["2024-2025 Bütünleme"]
+            },
+            {
+                q: `Bir üretim işletmesinin siparişlerine ilişkin olarak yukarıdaki bilgiler sunulmuştur. 101 ve 102 nolu siparişin üretimine Ocak ayında başlanmıştır. 103 nolu siparişin üretimine Şubat ayında başlanmıştır. 101 nolu siparişin üretimi Şubat ayında tamamlanmıştır ve Mart ayında satılmıştır. 102 nolu sipariş Şubat ayında tamamlanmış fakat Mart ayı sonu itibariyle müşteriye satılmamıştır. 103 nolu sipariş Mart ayı sonu itibariyle henüz tamamlanmamıştır.\n\nSipariş 101 (Ocak: 8k, Şubat: 5k)\nSipariş 102 (Ocak: 9k, Şubat: 4k)\nSipariş 103 (Şubat: 7k, Mart: 6k)\n\nŞubat ayı sonu itibariyle mamuller hesabının bakiyesi aşağıdakilerden hangisidir?`,
+                options: ["A) 39.000 TL", "B) 13.000 TL", "C) 33.000 TL", "D) 26.000 TL", "E) 30.000 TL"],
+                ans: "D) 26.000 TL",
+                exp: `ŞUBAT ayı sonu için analiz:\n- 101 Numaralı Sipariş: Şubat'ta tamamlandı, Mart'ta satıldı. Şubat sonunda Mamuldür (8.000 + 5.000 = 13.000 TL).\n- 102 Numaralı Sipariş: Şubat'ta tamamlandı, henüz satılmadı. O da Şubat sonunda Mamuldür (9.000 + 4.000 = 13.000 TL).\n- 103 Numaralı Sipariş: Şubat'ta başladı ve bitmedi. Yarı Mamuldür (Mamul hesabına girmez).\nToplam Mamul Bakiyesi: 13.000 + 13.000 = 26.000 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Maraş İşletmesinde kalıp ve montaj olmak üzere iki adet esas üretim bölümü, yemekhane ve tamir bakım olmak üzere iki tane de destek bölümü bulunmaktadır. Yemekhane ile ilgili faaliyet ölçüsü çalışan sayısıdır.\nDirekt Maliyetler: Yemekhane 360.000 TL\nÇalışan Sayısı: Kalıp 35, Montaj 55 (Tamir bakım çalışanları dikkate alınmaz çünkü direkt dağıtım)\n\nDirekt dağıtım yöntemi kullanıldığında yemekhane bölümünden kalıp bölümüne dağıtılacak maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 220.000 TL", "B) 165.000 TL", "C) 105.000 TL", "D) 78.000 TL", "E) 140.000 TL"],
+                ans: "E) 140.000 TL",
+                exp: `Direkt dağıtım yönteminde destek bölümleri birbirlerine pay vermezler, sadece esas üretim yerlerine dağıtılırlar.\nToplam Üretim Çalışanı = 35 (Kalıp) + 55 (Montaj) = 90 kişi.\nKalıp Bölümü Payı = 360.000 * (35 / 90) = 140.000 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Faaliyet Tabanlı Maliyetleme (FTM) sisteminin temel amacı aşağıdakilerden hangisidir?`,
+                options: ["A) Geleneksel maliyet hesaplama yöntemlerini ortadan kaldırmak", "B) Yalnızca direkt maliyetleri analiz etmek", "C) Üretim maliyetlerini azaltmak", "D) Ürün maliyetlerini daha doğru bir şekilde hesaplamak", "E) Satış fiyatlarını belirlemek"],
+                ans: "D) Ürün maliyetlerini daha doğru bir şekilde hesaplamak",
+                exp: `FTM'nin asıl ortaya çıkış amacı, genel üretim giderlerini çoklu faaliyet havuzları ve anahtarları ile dağıtarak "çapraz sübvansiyon" hatalarını önlemek ve ürün maliyetlerini gerçeğe en yakın (doğru) şekilde hesaplamaktır.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir işletme, iki farklı ürün üretmektedir: Ürün A ve Ürün B. İşletmede belirlenen 2 faaliyet merkezi ve ilgili bilgiler yukarıdaki gibidir:\nSipariş İşleme: 60.000 TL / 120 sipariş\nMakine Ayarı: 40.000 TL / 80 ayar\n\nÜrün A: 30 sipariş, 20 ayar\nÜrün B: 90 sipariş, 60 ayar\n\nBuna göre, Ürün A'ya yüklenmesi gereken toplam faaliyet maliyeti kaç TL'dir?`,
+                options: ["A) 35.000 TL", "B) 20.000 TL", "C) 25.000 TL", "D) 30.000 TL", "E) 15.000 TL"],
+                ans: "C) 25.000 TL",
+                exp: `Sipariş Yükleme Haddi: 60.000 / 120 = 500 TL/sipariş.\nAyar Yükleme Haddi: 40.000 / 80 = 500 TL/ayar.\nÜrün A'ya yüklenen sipariş maliyeti: 30 * 500 = 15.000 TL.\nÜrün A'ya yüklenen ayar maliyeti: 20 * 500 = 10.000 TL.\nToplam Yüklenen = 15.000 + 10.000 = 25.000 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir üretim işletmesinde direkt malzeme imalata sürecin sonunda ilave edilmektedir. Ağustos ayı 2021 yılına ilişkin veriler yukarıda sunulmuştur.\nÖnceki safhadan alınıp başlanan: 451.200 birim\nTamamlanan: 401.000 birim\nDönem sonu yarı mamuller: 202.000 birim\n\nÖnceki safha maliyetine ilişkin eşdeğer birim sayısı toplamı aşağıdakilerden hangisidir?`,
+                options: ["A) 603.000", "B) 401.000", "C) 653.200", "D) 353.400", "E) 202.000"],
+                ans: "A) 603.000",
+                exp: `Ürünler bu safhaya girdiği anda, bir önceki safhanın işlemlerini %100 tamamlamış olarak gelirler.\nÖnceki Safha Eşdeğer Birimi = Tamamlanan (401.000) + [Dönem Sonu Yarı Mamul (202.000) * %100]\n= 603.000 birim.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir mağazada A ve B olmak üzere iki adet yardımcı maliyet merkezi, C ve D olmak üzere iki adet esas maliyet merkezi bulunmaktadır. Mağazada gerçekleşen 640.000 TL tutarındaki elektrik maliyeti maliyet yerlerine yüzölçümü ile orantılı olarak dağıtılmaktadır.\n(Yüzölçümleri: A 400 m², Toplam 8.000 m²)\n\n1. dağıtım sonucunda A bölümüne dağıtılacak olan elektrik maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 8.000 TL", "B) 320.000 TL", "C) 280.000 TL", "D) 64.000 TL", "E) 32.000 TL"],
+                ans: "E) 32.000 TL",
+                exp: `1. Dağıtımda maliyetler toplam anahtara bölünerek ilgili merkeze dağıtılır.\nDağıtım Oranı: 400 m² / 8.000 m² = 0,05.\nA Bölümü Payı: 640.000 TL * 0,05 = 32.000 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `İstanbul Şirketi, büyük bir şirket tarafından üretilen kişisel bilgisayarın önemli bir parçasını oluşturan yarı iletken bir çip üretmek üzere yeni kurulmuştur. Direkt malzemeler üretim sürecinin başında eklenirken, dönüştürme maliyetleri üretim süreci boyunca eşit olarak eklenmektedir. Başlangıç stoku yoktur.\nDirekt malzeme maliyeti 950.000 TL, dönüştürme maliyetleri 4.625.000 TL'dir.\nÜretime başlanan çip: 475.000. Tamamlanan çip: 425.000.\nDönem sonu yarı mamullerin dönüştürme maliyetleri %50 tamamlanmıştır.\n\nÜretimi tamamlanan çiplerin toplam maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 357.000 TL", "B) 3.217.000 TL", "C) 4.289.000 TL", "D) 3.856.000 TL", "E) 5.219.000 TL"],
+                ans: "E) 5.219.000 TL",
+                exp: `⚠️ DİKKAT: Yuvarlama Tuzağı!\n1) Malzeme Eşdeğeri: 475.000 birim. Malzeme Birim Maliyeti = 950.000 / 475.000 = 2 TL.\n2) Dönüştürme Eşdeğeri: 425.000 + (50.000 * 0,50) = 450.000 birim. Dönüştürme Birim Maliyeti = 4.625.000 / 450.000 = 10,2777... (Soruda 10,28 alınmıştır).\n3) Toplam Birim Maliyet = 2 + 10,28 = 12,28 TL.\n4) Tamamlanan Maliyet = 425.000 * 12,28 TL = 5.219.000 TL.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Dönem başı yarı mamüller 2.000 birim, dönem sonu yarı mamüller 1.000 birim ve hesabı yapılacak toplam birim sayısı 5.000 birimdir.\nÜretimi tamamlanan ve transfer edilen birim sayısı aşağıdakilerden hangisidir?`,
+                options: ["A) 4.000", "B) 7.000", "C) 1.000", "D) 2.000", "E) 6.000"],
+                ans: "A) 4.000",
+                exp: `Miktar Dengesi Kuralı: Hesabı Yapılacak Toplam = Tamamlanan + Dönem Sonu Yarı Mamul.\n5.000 = Tamamlanan + 1.000\nTamamlanan = 5.000 - 1.000 = 4.000 birim.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Genel üretim maliyetlerini imalata yüklemek için önceden belirlenmiş bir oran kullanan bir şirket, aşağıdaki durumların hangisinde her zaman fazla genel üretim maliyeti yükleyecektir?`,
+                options: ["A) Üretimin bütçelenen kapasiteden fazla olması", "B) Fiili kapasitenin bütçelenen kapasiteden fazla olması", "C) Gerçekleşen genel üretim maliyetlerinin stoklara yüklenen genel üretim maliyetlerinden az olması", "D) Gerçekleşen genel üretim maliyetinin stoklara yüklenen genel üretim maliyetlerinden fazla olması", "E) Kapasitenin fiili üreitmden fazla olması"],
+                ans: "C) Gerçekleşen genel üretim maliyetlerinin stoklara yüklenen genel üretim maliyetlerinden az olması",
+                exp: `Ürünlere önceden belirlediğiniz had (oran) ile yüklediğiniz tutar, dönem sonunda muhasebede fiilen 'gerçekleşen' maliyetten daha büyükse (yani gerçekleşen maliyet, yüklenenden az ise), bu duruma 'Fazla Yükleme' denir.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `50.000 makine saatinde toplam fabrika genel giderleri 230.000 TL ve 60.000 makine saatinde toplam fabrika genel giderleri 280.000 TL olarak bütçelenmiştir. Bütçelenen sabit maliyetler 60.000 saat için, 50.000 saat için bütçelenen 80.000 TL sabit maliyetten yüzde 25 daha fazladır.\n\nBirim çıktı başına bütçelenen değişken maliyet nedir?`,
+                options: ["A) 1,38 TL", "B) 2,30 TL", "C) 3,00 TL", "D) 3,33 TL", "E) 3,83 TL"],
+                ans: "C) 3,00 TL",
+                exp: `⚠️ DİKKAT: Sabit maliyet bir seviyeden sonra sıçrama yaptığı için klasik en yüksek-en düşük formülü doğrudan uygulanamaz. İçinden çekerek hesaplamalıyız.\n50.000 saat seviyesinde: Toplam Maliyet (230.000) = Sabit (80.000) + Toplam Değişken (150.000).\nBirim Değişken Maliyet = Toplam Değişken (150.000) / 50.000 saat = 3 TL/saat.`,
+                exams: ["2024-2025 Bütünleme", "Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            // --- 2024-2025 BÜTÜNLEME PDF EKLAMELERİ SONU ---
+// --- 2023-2024 BÜTÜNLEME PDF EKLAMELERİ BAŞLANGICI ---
+            {
+                q: `Paris İşletmesi tablet üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati, 24.000 işçilik saati çalışmayı ve 186.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır.\nDönem içerisinde fiili olarak 14.000 makine saati çalışılmıştır.\nÜretime yüklenen genel üretim maliyeti tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 108.500 TL", "B) 15.500 TL", "C) 217.000 TL", "D) 186.000 TL", "E) 31.000 TL"],
+                ans: "C) 217.000 TL",
+                exp: `Yükleme Haddi = Bütçelenen GÜM (186.000) / Bütçelenen Makine Saati (12.000) = 15,50 TL/saat.\nYüklenen GÜM = Fiili Çalışılan Saat (14.000) * Yükleme Haddi (15,50) = 217.000 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `İstanbul İşletmesi Ahşap ve Karton olmak üzere iki farklı sepet üretmekte ve satmaktadır. Aşağıdaki veriler genel üretim maliyetlerinin bir parçası olan 240.000 TL tutarındaki makine hazırlama maliyetine ilişkindir.\nÜretilen birim: Ahşap 1.500 | Karton 1.500\nMakine hazırlama sayısı: Ahşap 75 | Karton 25\n\nFaaliyet tabanlı maliyetleme kullanıldığında bir birim karton sepete dağıtılacak makine hazırlama maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 60 TL", "B) 40 TL", "C) 50 TL", "D) 30 TL", "E) 20 TL"],
+                ans: "B) 40 TL",
+                exp: `Toplam Hazırlama: 75 + 25 = 100.\nHazırlama Başına Maliyet: 240.000 / 100 = 2.400 TL.\nKarton Sepetin Toplam Payı: 25 hazırlama * 2.400 = 60.000 TL.\nBirim Karton Maliyeti: 60.000 TL / 1.500 adet = 40 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Eylül ayında karıştırma safhasında 46.000 TL tutarında üretim maliyeti gerçekleşmiştir. Dönem içerisinde safha açısından 2.300 birimin üretimi tamamlanmış ve dönem sonu yarı mamul olarak %40 oranında tamamlanmış 500 birim kalmıştır. Karıştırma safhasında Eylül ayı başında yarı mamul bulunmamaktadır. \n\nEşdeğer birim maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 16,43 TL", "B) 200,00 TL", "C) 18,40 TL", "D) 184,00 TL", "E) 20,00 TL"],
+                ans: "C) 18,40 TL",
+                exp: `Eşdeğer Birim: Tamamlanan (2.300) + [Dönem Sonu (500) * %40] = 2.500 birim.\nEşdeğer Birim Maliyeti: Toplam Maliyet (46.000 TL) / Eşdeğer Birim (2.500) = 18,40 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `İstanbul İşletmesinin Haziran ayı başında toplam maliyeti 324 TL olan 18 adet AGI hammaddesi bulunmaktaydı. Haziran ayında aşağıdaki alış ve satışlar gerçekleşmiştir.\n8 Haziran Alış: 42 x 20 TL\n14 Haziran Satış: 35 x 40 TL\n22 Haziran Alış: 25 x 22,6 TL\n27 Haziran Satış: 42 x 40 TL\n\nHareketli ağırlıklı stok değerleme yöntemine göre Haziran ayı satılan malın maliyeti tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 1.648 TL", "B) 1.153 TL", "C) 1.079 TL", "D) 1.230 TL", "E) 1.561 TL"],
+                ans: "E) 1.561 TL",
+                exp: `Dönem Başı: 18 adet (324 TL).\n1. Alış (8 Haz): 42 adet (840 TL). Toplam=60 adet, 1.164 TL -> Ortalama = 19,4 TL/br.\n1. Satış (14 Haz): 35 * 19,4 = 679 TL.\nKalan: 25 adet (485 TL).\n2. Alış (22 Haz): 25 adet (565 TL). Toplam=50 adet, 1.050 TL -> Ortalama = 21 TL/br.\n2. Satış (27 Haz): 42 * 21 = 882 TL.\nToplam Haziran Ayı Satış Maliyeti = 679 + 882 = 1.561 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Önceki safha maliyetlerinin hesaplanması aşağıdakilerden hangisi ile benzerlik gösterir?`,
+                options: ["A) Safhanın başında eklenen direkt işçilik maliyetleri", "B) Safhanın başında eklenen dönüştürme maliyetleri", "C) Safhanın başında eklenen dönem başı stok maliyetleri", "D) Safhanın sonunda eklenen genel üretim maliyeti", "E) Safhanın başında eklenen ayrı bir direkt malzeme maliyeti"],
+                ans: "E) Safhanın başında eklenen ayrı bir direkt malzeme maliyeti",
+                exp: `Önceki safhadan devralınan maliyetler, ürün yeni safhaya girer girmez (safhanın en başında) o ürünün bir parçası olduğu için sanki sürece baştan eklenen yepyeni bir direkt malzeme gibi muamele görür.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Muğla İşletmesi'nde kesme ve dikme olmak üzere iki adet esas üretim bölümü, yemekhane ve tamir bakım olmak üzere iki tane de destek bölümü bulunmaktadır. Yemekhane maliyetleri çalışan sayısına, tamir bakım ise saatlere göre dağıtılmaktadır.\nDirekt Maliyetler: Yemekhane 180.000 TL | Tamir Bakım 150.000 TL\nÇalışan Sayısı: Tamir Bakım 30 | Kesme 35 | Dikme 55\nTamir Bakım Saatleri: Kesme 16.000 | Dikme 4.000\n\nKademeli dağıtım yöntemi kullanıldığında tamir bakım bölümünden kesme bölümüne dağıtılacak maliyet tutarı aşağıdakilerden hangisidir?`,
+                options: ["A) 120.000 TL", "B) 156.000 TL", "C) 39.000 TL", "D) 195.000 TL", "E) 90.500 TL"],
+                ans: "B) 156.000 TL",
+                exp: `1) Önce Yemekhane dağıtılır: 180.000 / 120 Kişi (30+35+55) = 1.500 TL/Kişi.\n2) Yemekhaneden Tamir Bakıma Pay: 30 kişi * 1.500 = 45.000 TL.\n3) Tamir Bakımın Yeni Toplam Maliyeti: 150.000 + 45.000 = 195.000 TL.\n4) Tamir Bakımdan Kesme Bölümüne: 195.000 * (16.000 / 20.000) = 156.000 TL.`,
+                exams: ["2023-2024 Bütünleme"]
+            },
+            {
+                q: `Eylül ayında karıştırma safhasında 46.000 TL tutarında üretim maliyeti gerçekleşmiştir. Dönem içerisinde safha açısından 2.300 birimin üretimi tamamlanmış ve dönem sonu yarı mamul olarak %40 oranında tamamlanmış 500 birim kalmıştır. Karıştırma safhasında Eylül ayı başında yarı mamul bulunmamaktadır. \n\nDönem sonu yarı mamullerin toplam maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 3.680 TL", "B) 9.200 TL", "C) 5.870 TL", "D) 10.500 TL", "E) 3.286 TL"],
+                ans: "A) 3.680 TL",
+                exp: `1) Eşdeğer Birim: 2.300 + (500 * %40) = 2.500 birim.\n2) Birim Maliyet: 46.000 / 2.500 = 18,40 TL.\n3) Dönem Sonu Yarı Mamul Maliyeti: 200 eşdeğer birim * 18,40 TL = 3.680 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir işletmenin üç farklı bölgesine ait veriler aşağıda sunulmuştur.\nSatışlar: Kuzey (2.000.000), Doğu (1.250.000), Batı (1.750.000)\nDirekt Maliyetler: Kuzey (800.000), Doğu (600.000), Batı (500.000)\nYukarıda yer almayan endirekt maliyetler (Genel şirket 700k, End. faaliyet 400k, Diğer 900k) toplamı 2.000.000 TL'dir.\n\nİşletme endirekt maliyetleri bölgenin satışını toplam satışlara oranlayarak dağıtmaktadır. Her bir bölge için faaliyet kârı sırasıyla (Kuzey, Doğu, Batı) aşağıdakilerden hangisidir?`,
+                options: ["A) 400.000, 150.000, 550.000", "B) Yukarıda verilen veriler ile hesaplanamaz", "C) 760.000, 375.000, 865.000", "D) 560.000, 250.000, 690.000", "E) 1.200.000, 650.000, 1.250.000"],
+                ans: "A) 400.000, 150.000, 550.000",
+                exp: `Toplam Satış = 5.000.000 TL.\nKuzey Kâr: 2.000.000 - 800.000 (Direkt) - [2.000.000 * (2.000.000/5.000.000)] (Endirekt) = 400.000 TL.\nDoğu Kâr: 1.250.000 - 600.000 - [2.000.000 * (1.250.000/5.000.000)] = 150.000 TL.\nBatı Kâr: 1.750.000 - 500.000 - [2.000.000 * (1.750.000/5.000.000)] = 550.000 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Giresun İşletmesi birleşik bir imalat süreci sonunda mısır şurubu ve mısır nişastası olmak üzere iki farklı ürün ortaya çıkarmaktadır. Ayrım noktasına kadar birleşik maliyet 329.000 TL'dir.\nMısır Şurubu: Ayrım sonrası 406.340 TL | Satış: 13.000 kutu (Birim 51 TL)\nMısır Nişastası: Ayrım sonrası 97.060 TL | Satış: 5.900 kutu (Birim 26 TL)\n\nMaliyetlerin dağıtılmasında Net Satış Değeri yöntemi kullanıldığında mısır şurubu üretimine ilişkin "toplam maliyet" aşağıdakilerden hangisidir?`,
+                options: ["A) 269.780 TL", "B) 256.660 TL", "C) 676.120 TL", "D) 156.280 TL", "E) 59.220 TL"],
+                ans: "C) 676.120 TL",
+                exp: `Mısır Şurubu NSD = (13.000 * 51) - 406.340 = 256.660 TL.\nMısır Nişastası NSD = (5.900 * 26) - 97.060 = 56.340 TL.\nToplam NSD = 313.000 TL.\nMısır Şurubu Ortak Payı = 329.000 * (256.660 / 313.000) = 269.780 TL.\nMısır Şurubu Toplam Maliyeti = 269.780 (Ortak Pay) + 406.340 (Kendi Maliyeti) = 676.120 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Bir üretim işletmesinin siparişlerine ilişkin olarak aşağıdaki bilgiler sunulmuştur.\nSipariş 101: Ocak(8.000 TL), Şubat(5.000 TL)\nSipariş 102: Ocak(9.000 TL), Şubat(4.000 TL)\nSipariş 103: Şubat(7.000 TL), Mart(6.000 TL)\n101 nolu sipariş Şubat ayında tamamlanmış, Mart ayında satılmıştır.\n102 nolu sipariş Şubat ayında tamamlanmış fakat henüz satılmamıştır.\n103 nolu sipariş Mart sonu itibarıyla henüz tamamlanmamıştır.\n\nŞubat ayı sonu itibariyle mamuller hesabının bakiyesi aşağıdakilerden hangisidir?`,
+                options: ["A) 39.000 TL", "B) 30.000 TL", "C) 13.000 TL", "D) 26.000 TL", "E) 33.000 TL"],
+                ans: "D) 26.000 TL",
+                exp: `Şubat sonu durumu:\n101 nolu sipariş: Şubat'ta bitti, Mart'ta satıldı. Şubat sonunda Mamuldür (8.000 + 5.000 = 13.000 TL).\n102 nolu sipariş: Şubat'ta bitti, satılmadı. Şubat sonunda Mamuldür (9.000 + 4.000 = 13.000 TL).\n103 nolu sipariş: Üretimi sürüyor. Yarı Mamuldür (Mamul hesabında yer almaz).\nToplam Mamul: 13.000 + 13.000 = 26.000 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Fabrika binasında kullanılan enerji ile ilgili olarak aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) Sabit - Endirekt", "B) Değişken - Direkt", "C) Yarı Sabit - Direkt", "D) Sabit - Direkt", "E) Değişken - Endirekt"],
+                ans: "A) Sabit - Endirekt",
+                exp: `Fabrika binasında kullanılan enerji (ısınma vb.) üretime bağlı olarak değil zamana bağlı olarak tahakkuk ediyorsa 'Sabit', doğrudan ürünün bünyesine izlenemediği için de 'Endirekt' olarak sınıflandırılır.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Sipariş maliyetleme sistemi uygulayan bir üretim işletmesinde aşağıdaki maliyetlerden hangisinin sipariş maliyet kartlarında yer alması beklenmez?`,
+                options: ["A) Direkt malzeme maliyeti", "B) Genel üretim maliyeti", "C) Direkt işçilik maliyeti", "D) Pazarlama maliyeti", "E) Üretilen birim miktarı"],
+                ans: "D) Pazarlama maliyeti",
+                exp: `Sipariş maliyet kartı sadece üretim maliyetlerini (Direkt Malzeme, Direkt İşçilik, Genel Üretim Giderleri) kapsar. Pazarlama maliyeti bir dönem gideridir ve üretim kartında yer almaz.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Maslak İşletmesi RK ve YZ olmak üzere birbirine benzer iki ürün üretmektedir. 1.200 TL tutarındaki genel üretim maliyetlerinin ürünlerle ilişkilendirilmesinde direkt işçilik saatleri dikkate alınmaktadır.\nRK: Hammadde+DİG 20 TL/br | DİS 2 | Parti büyüklüğü 5 birim\nYZ: Hammadde+DİG 30 TL/br | DİS 1 | Parti büyüklüğü 50 birim\n\nYukarıda verilen tablodaki bilgiler dikkate alındığında bir birim RK ürününün maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 50 TL/birim", "B) 40 TL/birim", "C) 20 TL/birim", "D) 60 TL/birim", "E) 30 TL/birim"],
+                ans: "D) 60 TL/birim",
+                exp: `1) Toplam DİS: (5 adet * 2) + (50 adet * 1) = 60 saat.\n2) GÜM Yükleme Haddi = 1.200 TL / 60 = 20 TL/saat.\n3) RK Ürünü İçin Birim GÜM = 2 saat * 20 TL = 40 TL.\n4) RK Toplam Maliyet = 20 TL (Hammadde+DİG) + 40 TL (GÜM) = 60 TL/birim.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıda verilen bilgiler doğrultusunda dönem içinde kullanılan direkt malzeme maliyeti aşağıdakilerden hangisidir?\nDirekt Malzeme Stoku: DB 410 TL, DS 320 TL\nSatın alınan direkt malzeme: 6.600 TL`,
+                options: ["A) 6.690 TL", "B) 7.100 TL", "C) 6.510 TL", "D) 6.680 TL", "E) 6.600 TL"],
+                ans: "A) 6.690 TL",
+                exp: `Kullanılan Malzeme = Dönem Başı Stok + Dönem İçi Alışlar - Dönem Sonu Stok.\nKullanılan = 410 + 6.600 - 320 = 6.690 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Faaliyet tabanlı maliyetleme ile ilgili olarak aşağıda verilen ifadelerden hangisi doğrudur?`,
+                options: ["A) Genel üretim maliyetlerini çoğunlukla direkt işçilik saatlerini dikkate alarak dağıtır.", "B) Genel üretim maliyetlerinin ürünlere dağıtılmasında üretim birimi düzeyindeki faaliyetleri dikkate alır.", "C) Genel üretim maliyetlerinin ürünlere dağıtılmasında fabrika düzeyinde tek bir genel üretim maliyeti yükleme haddi kullanır.", "D) Uygulanması pahalı değildir.", "E) Genel üretim maliyetlerinin ürünlere dağıtılmasında birden çok faaliyet haddi (anahtarı) kullanır."],
+                ans: "E) Genel üretim maliyetlerinin ürünlere dağıtılmasında birden çok faaliyet haddi (anahtarı) kullanır.",
+                exp: `Faaliyet Tabanlı Maliyetlemenin (FTM) en temel özelliği, geleneksel sistemin aksine genel üretim giderlerini tek bir kalemde değil, her faaliyet havuzu için ayrı bir maliyet etkeni (dağıtım anahtarı) kullanarak dağıtmasıdır.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Stil İşletmesinin Nisan ayında dokuma safhasına ilişkin maliyet ve üretim bilgileri aşağıda verilmiştir. Malzeme imalata sürecin başında ilave edilmektedir. İşletme ağırlıklı ortalama yöntemini kullanmaktadır. \nDB Malzeme 20.000 TL, DB Dönüştürme 15.000 TL\nDönem İçi Malzeme 62.500 TL, Dönem İçi Dönüştürme 105.000 TL\nTamamlanan: 32.600, Dönem Sonu Yarı Mamul: 6.000 (%60 tamamlanmış)\n\nTamamlanıp bir sonraki safhaya aktarılan ürünlerin toplam maliyeti aşağıdakilerden hangisidir? (Virgülden sonraki iki haneyi dikkate alınız.)`,
+                options: ["A) 165.873 TL", "B) 177.344 TL", "C) 189.325 TL", "D) 158.968 TL", "E) 147.352 TL"],
+                ans: "B) 177.344 TL",
+                exp: `1) Malzeme Eşdeğeri: 32.600 + 6.000 = 38.600. Birim Maliyet: (20.000+62.500)/38.600 = 2,137 (2,13 alınır).\n2) Dönüştürme Eşdeğeri: 32.600 + (6.000 * %60) = 36.200. Birim Maliyet: (15.000+105.000)/36.200 = 3,314 (3,31 alınır).\n3) Toplam Birim Maliyet = 2,13 + 3,31 = 5,44 TL.\n4) Tamamlanan Maliyeti = 32.600 tam ürün * 5,44 = 177.344 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Zaman İşletmesi tek tip duvar saati üretmektedir. Her bir ürün öncelikle montaj ve arkasından kalite kontrol bölümlerinden geçmektedir. Direkt malzeme üretim sürecinin başında ilave edilmektedir. Dönüştürme maliyetleri zaman açısından eşit olarak gerçekleşmektedir. İşletme ağırlıklı ortalama yöntemini uygulamaktadır.\nMontaj bölümü: DB Yarı Mamul 370 | Üretimine başlanan 970 | DS Yarı Mamul 250\n(DS Yarı Mamuller direkt malzeme açısından %100, dönüştürme açısından %80 tamamlanmıştır)\n\nDirekt malzeme ve dönüştürme maliyetleri açısından eşdeğer birim sayıları sırasıyla aşağıdakilerden hangisidir?`,
+                options: ["A) 1340; 1050", "B) 1220; 1120", "C) 1220; 1220", "D) 1340; 1290", "E) 1248; 1120"],
+                ans: "D) 1340; 1290",
+                exp: `1) Miktar Dengesi: Toplam Üretim = 370 + 970 = 1.340 birim. \nTamamlanan = 1.340 - 250 = 1.090 birim.\n2) Malzeme Eşdeğer Birimi: 1.090 (Tamamlanan) + 250 (%100) = 1.340 birim.\n3) Dönüştürme Eşdeğer Birimi: 1.090 (Tamamlanan) + [250 * %80] = 1.290 birim.`,
+                exams: ["2023-2024 Bütünleme", "Yeni Soru Tipi"]
+            },
+            {
+                q: `Altın İşletmesinin bitirme safhasına ilişkin olarak aşağıdaki veriler sunulmuştur. İşletme ağırlıklı ortalama yöntemi uygulamaktadır.\nEşdeğer Birim (Önceki Safha): 75.000\nDB Önceki Safha Maliyeti: 2.100 TL\nDönem İçi Önceki Safha: 30.900 TL\n\nÖnceki safha maliyeti için eşdeğer birim maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 1,59 TL", "B) 0,41 TL", "C) 0,44 TL", "D) 0,76 TL", "E) 0,55 TL"],
+                ans: "C) 0,44 TL",
+                exp: `Toplam Önceki Safha Maliyeti = 2.100 + 30.900 = 33.000 TL.\nBirim Maliyet = 33.000 / 75.000 eşdeğer birim = 0,44 TL.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+            {
+                q: `Teksas İşletmesi C ve D olmak üzere iki farklı ürün üretmektedir. \nÜretim Adedi: D (30.000)\nBirim Direkt Malzeme: D (80 TL) | Birim Direkt İşçilik: D (10 TL)\nGerekli Makine Saati: C (60.000), D (45.000)\nParti Sayısı: C (1.000), D (1.000)\nGenel Üretim Maliyetleri: Makine 840.000 TL, Taşıma/Depolama 510.000 TL\n\nFaaliyet tabanlı maliyetleme yöntemine göre D ürününün birim üretim maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 615.000 TL", "B) 110.50 TL", "C) 125.50 TL", "D) 735.000 TL", "E) 20.50 TL"],
+                ans: "B) 110.50 TL",
+                exp: `1) Makine Maliyeti Yükleme Haddi: 840.000 / 105.000 saat = 8 TL/saat. \nD Ürünü Payı: 45.000 saat * 8 = 360.000 TL.\n2) Taşıma Maliyeti Yükleme Haddi: 510.000 / 2.000 parti = 255 TL/parti.\nD Ürünü Payı: 1.000 parti * 255 = 255.000 TL.\n3) D'ye Toplam GÜM = 615.000 TL. Birim GÜM = 615.000 / 30.000 adet = 20,5 TL.\n4) Toplam Birim Maliyet = 80 (DM) + 10 (Dİ) + 20,5 (GÜM) = 110,50 TL.`,
+                exams: ["2023-2024 Bütünleme", "Yeni Soru Tipi"]
+            },
+            {
+                q: `Paris İşletmesi bilgisayar üretmektedir ve genel üretim maliyetlerini makine saatlerini esas alarak ürünlere dağıtmaktadır. İşletme gelecek dönem için 12.000 makine saati çalışmayı ve 93.000 TL tutarında genel üretim maliyetine katlanmayı planlamıştır.\nDönem içerisinde fiili olarak 16.000 makine saati çalışılmıştır.\nFiili Tablo: Endirekt İşçilik 11.000 TL, Fabrika Amortismanı 48.000 TL, Makine Tamiri 11.000 TL, Direkt İşçilik 75.000 TL, Endirekt Malzeme 6.000 TL, Su, elektrik 7.000 TL, Reklam 35.000 TL, Satış komisyonları 27.000 TL.\n\nParis İşletmesi ile ilgili aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) 41.000 TL tutarında fazla yükleme yapılmıştır.", "B) 41.000 TL tutarında eksik yükleme yapılmıştır.", "C) 21.000 TL tutarında fazla yükleme yapılmıştır.", "D) 14.000 TL tutarında eksik yükleme yapılmıştır.", "E) 14.000 TL tutarında fazla yükleme yapılmıştır."],
+                ans: "A) 41.000 TL tutarında fazla yükleme yapılmıştır.",
+                exp: `1) Yükleme Haddi: 93.000 / 12.000 = 7,75 TL/saat.\n2) Yüklenen GÜM: 16.000 saat * 7,75 = 124.000 TL.\n3) Gerçekleşen (Fiili) GÜM: 11k (Eİ) + 48k (Amor) + 11k (Tamir) + 6k (EM) + 7k (Su) = 83.000 TL. (Reklam, Satış ve Direkt İşçilik GÜM'e girmez).\n4) Fark = 124.000 - 83.000 = 41.000 TL Fazla yüklenmiştir.`,
+                exams: ["2023-2024 Bütünleme", "Kez Çıktı!"]
+            },
+{
+                q: `Yozgat İşletmesi Vasat ve Kaliteli olmak üzere iki ürün üretmektedir. \nÜretim Adedi: Kaliteli (15.000)\nBirim Direkt Malzeme: Kaliteli (125 TL) | Birim Direkt İşçilik: Kaliteli (30 TL)\nMakine Saati: Kaliteli (60.000) | Vasat (45.000)\nParti Sayısı: Kaliteli (1.000) | Vasat (1.000)\nMakine Maliyeti (Toplam 840.000 TL), Taşıma/Depolama (Toplam 510.000 TL).\n\nFaaliyet tabanlı maliyetleme kullanıldığında bir birim Kaliteli ürünün toplam üretim maliyeti aşağıdakilerden hangisidir?`,
+                options: ["A) 155 TL", "B) 224 TL", "C) 49 TL", "D) 204 TL", "E) 174 TL"],
+                ans: "D) 204 TL",
+                exp: `1) Makine Haddi: 840.000 / 105.000 saat = 8 TL/saat. Kaliteli Payı = 60.000 * 8 = 480.000 TL.\n2) Taşıma Haddi: 510.000 / 2.000 parti = 255 TL/parti. Kaliteli Payı = 1.000 * 255 = 255.000 TL.\n3) Toplam Kaliteli GÜM = 480.000 + 255.000 = 735.000 TL.\n4) Birim GÜM = 735.000 / 15.000 adet = 49 TL.\n5) Toplam Birim Maliyet = 125 (DM) + 30 (Dİ) + 49 (GÜM) = 204 TL.`,
+                exams: ["2023-2024 Final Bahar", "Kez Çıktı!"]
+            },
+            // --- 2023-2024 BÜTÜNLEME PDF EKLAMELERİ SONU ---
+
+/// --- ESKİ YILLARA AİT SÖZEL SORULAR BAŞLANGICI ---
+            {
+                q: `Fabrikada çalışan ustabaşının maaşı ile ilgili aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) Değişken - endirekt maliyet", "B) Sabit - endirekt maliyet", "C) Yarı değişken - direkt maliyet", "D) Değişken - direkt maliyet", "E) Sabit - direkt maliyet"],
+                ans: "B) Sabit - endirekt maliyet",
+                exp: `Ustabaşı ve fabrika mühendislerinin maaşları üretilen ürüne doğrudan doğruya (parça başı olarak) yüklenemediği için 'Endirekt', maaşla çalıştıkları ve üretim miktarından bağımsız olduğu için 'Sabit' maliyettir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Gider hâline dönüşmüş stoklanabilir maliyetin gelir tablosunda görüldüğü kalem aşağıdakilerden hangisidir?`,
+                options: ["A) Pazarlama gideri", "B) Yönetim gideri", "C) Satış iade ve indirimleri", "D) Satılan mamul maliyeti", "E) Satış giderleri"],
+                ans: "D) Satılan mamul maliyeti",
+                exp: `Stoklanabilir (ürün) maliyetleri, ürün satılana kadar bilançoda stoklar hesabında bekler. Ürün satıldığı anda bilançodan çıkarak gelir tablosuna "Satılan Mamul Maliyeti" (SMM) adıyla gider olarak yansır.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Otomobil farlarında kullanılan ampuller otomotiv üreticisi için hangi stok kalemi içerisinde sınıflandırılır?`,
+                options: ["A) İşletme malzemesi stoku", "B) Ham madde stoku", "C) Yardımcı malzeme stoku", "D) Yarı mamul stoku", "E) Mamul stoku"],
+                ans: "B) Ham madde stoku",
+                exp: `Otomobil farındaki ampul, ürünün temel bir parçası olduğu, bünyesine doğrudan girdiği ve maliyeti kolayca izlenebildiği için "Direkt İlk Madde ve Malzeme" (Ham Madde) stokudur.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Hizmet sektöründe faaliyet gösteren işletmelerde genellikle aşağıdaki stok kalemlerinden hangisi bulunur?`,
+                options: ["A) Ticari mal stoku", "B) Mamul stoku", "C) Yarı mamul stoku", "D) Ham madde stoku", "E) İşletme malzemesi stoku"],
+                ans: "E) İşletme malzemesi stoku",
+                exp: `Hizmet işletmeleri (örneğin hastaneler, oteller, danışmanlık şirketleri) somut bir fiziksel ürün üretmedikleri için ham madde veya mamul stokları olmaz. Kendi hizmet süreçlerinde kullandıkları kırtasiye, temizlik vb. malzemeleri içeren "İşletme Malzemesi Stoku" bulundururlar.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Genel İmalat Maliyeti (GİM) yükleme oranı (haddi), bütçelenmiş genel imalat maliyetinin.......................oranıdır.\nYukarıdaki boşluğa uygun olan seçenek aşağıdakilerden hangisidir?`,
+                options: ["A) Fiilî genel imalat maliyetine", "B) Fiili üretim miktarına", "C) Bütçelenen fiilî kapasiteye", "D) Bütçelenmiş faaliyet hacmine (kapasiteye)", "E) Fiilî faaliyet hacmine (kapasiteye)"],
+                ans: "D) Bütçelenmiş faaliyet hacmine (kapasiteye)",
+                exp: `Genel üretim gideri (GİM) yükleme haddi, gelecekle ilgili planlama yaparken bütçelenen (tahmini) maliyetin, yine bütçelenen faaliyet hacmine (kapasiteye) bölünmesiyle bulunur. İkisi de 'bütçelenmiş' olmak zorundadır.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aşağıda bir üretim işletmesine ilişkin maliyet aşamaları verilmiştir.\n1. Ham maddenin satın alınması ve ham madde stoku hesabına kaydı\n2. Tamamlanan yarı mamullerin mamuller hesabına aktarılması\n3. Ham madde üzerinde çalışan işçilerin maliyetinin yarı mamuller hesabına eklenmesi\n4. Üretimde kullanılan ham maddenin yarı mamuller hesabına aktarılması\n5. Genel üretim maliyetlerinin yarı mamuller hesabına eklenmesi\n\nAşağıdaki seçeneklerden hangisi maliyet akışına ilişkin doğru sıralamayı vermektedir?`,
+                options: ["A) 1,2,3,4,5", "B) 1,5,3,2,4", "C) 3,2,5,1,4", "D) 1,3,5,2,4", "E) 1,4,3,5,2"],
+                ans: "E) 1,4,3,5,2",
+                exp: `Maliyet Akışı: 1) Malzeme alınır. 4) Malzeme üretime (yarı mamule) verilir. 3) İşçi çalışır (işçilik eklenir). 5) Genel üretim giderleri eklenir. 2) Üretimi bitenler mamul ambarına gider.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Bir işletmede dönem sonu yarı mamul stoku ile tamamlanan mamul maliyetinin toplamı aşağıdakilerden hangisine eşittir?`,
+                options: ["A) Dönem başı yarı mamul stoku ile dönemin imalat maliyetinin toplamına", "B) Tamamlanan mamul maliyetine", "C) Dönem sonu yarı mamul stokuna", "D) Dönem sonu yarı mamul stoku ile satılan mamul maliyetinin toplamına", "E) Satılan mamul maliyetine"],
+                ans: "A) Dönem başı yarı mamul stoku ile dönemin imalat maliyetinin toplamına",
+                exp: `Üretim hesabının mantığı şudur: (Dönem Başı Stok + Dönem İçi İmalat Maliyetleri) = (Tamamlanan Mamul Maliyeti + Dönem Sonu Kalan Yarı Mamul). Sol taraf "girenleri", sağ taraf "çıkan ve kalanları" temsil eder.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Bir imalat işletmesinin üç temel stok kalemi aşağıdaki şıklardan hangisinde doğru sayılmıştır?`,
+                options: [
+                    "A) Malzeme stoku, kusurlu mallar stoku, hurda stoku", 
+                    "B) Alımlar, ücretler ve mamul stoku", 
+                    "C) Malzeme stoku, alışlar ve mamul stoku", 
+                    "D) Malzeme, işçilik ve genel imalat maliyeti", 
+                    "E) İlk madde ve malzeme (ham madde) stoku, yarı mamul stoku ve mamul stoku"
+                ],
+                ans: "E) İlk madde ve malzeme (ham madde) stoku, yarı mamul stoku ve mamul stoku",
+                exp: `Üretim (imalat) işletmelerinde stoklar üretim sürecindeki aşamalarına göre üçe ayrılır: Hiç işlenmemişler (İlk Madde ve Malzeme), süreci devam edenler (Yarı Mamul) ve satılmaya hazır bitmiş ürünler (Mamul).`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi "maliyet" kavramının tanımıdır?`,
+                options: [
+                    "A) Faydası tükenmiş harcamalardır.", 
+                    "B) Fayda yaratmayan ve şu ana kadar da tüketilmiş varlıklardır.", 
+                    "C) Fayda yaratma potansiyeli olup şu anda bu potansiyeli tükenmiş varlıklardır.", 
+                    "D) Satılan mal ve hizmetin satış gelirleriyle karşılaştırılan üretim değeridir.", 
+                    "E) Mal ve hizmetleri üretmek/edinmek için katlanılan parasal fedakârlıklardır."
+                ],
+                ans: "E) Mal ve hizmetleri üretmek/edinmek için katlanılan parasal fedakârlıklardır.",
+                exp: `Maliyet, işletmenin belirli bir amaca ulaşmak (bir ürün veya hizmeti elde etmek) için katlandığı fedakârlıkların (harcamaların) parasal tutarıdır. Faydası tükenmiş maliyetlere ise "gider" denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `İşletmede çalışan üretim mühendisinin maaşı (aylığı) ile ilgili aşağıdaki seçeneklerden hangisi doğrudur?`,
+                options: ["A) Sabit yönetim gideri", "B) Yarı değişken - yönetim", "C) Değişken - yönetim gideri", "D) Sabit - imalat maliyeti", "E) Değişken - imalat maliyeti"],
+                ans: "D) Sabit - imalat maliyeti",
+                exp: `Üretim mühendisi doğrudan fabrikada çalıştığı için maliyeti bir "İmalat Maliyeti" (Genel Üretim Gideri)'dir. Aylık maaş aldığı ve üretim miktarından etkilenmediği için "Sabit" maliyettir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Maliyet yerlerini, maliyetlerin mamullere yüklenme olanağı açısından sınıflandırdığımızda aşağıdakilerden hangisi bir maliyet yeri olamaz?`,
+                options: ["A) Esas Üretim Maliyet Merkezi", "B) Yardımcı Hizmet Maliyet Merkezi", "C) Yönetim Yerleri Maliyet Merkezi", "D) Üretim Yerleri Yönetimi Maliyet Merkezi", "E) Yardımcı Üretim Maliyet Merkezi"],
+                ans: "C) Yönetim Yerleri Maliyet Merkezi",
+                exp: `Maliyet yerleri sadece üretim ve hizmet faaliyetlerinin gerçekleştiği fabrikaya ait alanlardır. "Yönetim yerleri" (Genel merkez, ofis) birer faaliyet gideri merkezidir, ürünün maliyetine giren bir maliyet yeri değildir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aşağıdaki ifadelerden hangisi yanlıştır?`,
+                options: [
+                    "A) Makinelerin temizlenmesi ve yağlanması nedeniyle boş geçen zamanlar endirekt işçilik maliyeti olarak kabul edilir.", 
+                    "B) Bir işletmede fazla mesai yapılması normal hâle gelmişse, ek çalışma farkının genel üretim maliyetlerine katılması ve üretime götürü bir şekilde dağıtılması gerekmektedir.", 
+                    "C) Fazla mesai ücret farkları genellikle direkt işçilik olarak sınıflandırılır.", 
+                    "D) Fazla mesai farkları kural olarak eğer iş özel ve acilse direkt işçilik olarak kabul edilir.", 
+                    "E) Bir imalat işletmesinde harcanan ücretin değerinin belirlenmesinde zaman temelli, akord temelli veya primli ücret sistemleri kullanılabilir."
+                ],
+                ans: "C) Fazla mesai ücret farkları genellikle direkt işçilik olarak sınıflandırılır.",
+                exp: `Yanlış olan budur. Fazla mesai ücret farkları genellikle tek bir ürüne mal edilemediği için "Genel Üretim Gideri" (Endirekt İşçilik) olarak sınıflandırılır. Sadece özel ve acil bir sipariş için yapıldıysa direkt işçilik olur.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Fiili maliyetler ile ilgili aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: ["A) Gelecekteki maliyetlerdir.", "B) Tahmin edilen maliyetlerdir.", "C) Bütçelenen maliyetlerdir.", "D) Beklenen maliyetlerdir.", "E) Gerçekleşen maliyetlerdir."],
+                ans: "E) Gerçekleşen maliyetlerdir.",
+                exp: `Muhasebede "fiili" (actual) terimi, tahmini veya bütçelenmişin aksine eyleme dökülmüş, faturası kesilmiş, kesinleşmiş ve "gerçekleşmiş" olan anlamına gelir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi dönem gideri (faaliyet gideri) değildir?`,
+                options: [
+                    "A) Yönetim danışmanlarına ödenen ücretler", 
+                    "B) Televizyona verilen reklam ücreti", 
+                    "C) Pazarlama bölümünde çalışanların maaşları", 
+                    "D) Pazarlama müdürünün maaşı", 
+                    "E) Fabrika binasının yangın sigortası"
+                ],
+                ans: "E) Fabrika binasının yangın sigortası",
+                exp: `Pazarlama, Satış ve Genel Yönetim giderleri birer "Dönem (Faaliyet) Gideridir" ve gelir tablosunda doğrudan düşülür. Ancak "Fabrika" kelimesinin geçtiği her türlü gider (sigorta, kira, amortisman) bir üretim maliyetidir (Genel Üretim Maliyeti).`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aşağıdaki ifadelerden hangisi doğrudur?`,
+                options: [
+                    "A) Birim değişken maliyetler, faaliyet hacmi artarken azalırlar.", 
+                    "B) Toplam değişken maliyetler, faaliyet hacmi artarken azalırlar.", 
+                    "C) Birim sabit maliyetler, faaliyet hacmi artarken azalırlar.", 
+                    "D) Birim değişken maliyetler, faaliyet hacmi artarken artarlar.", 
+                    "E) Toplam sabit maliyetler, faaliyet hacmi artarken azalırlar."
+                ],
+                ans: "C) Birim sabit maliyetler, faaliyet hacmi artarken azalırlar.",
+                exp: `Sabit Maliyetler: Toplamda sabittirler. Ancak üretim hacmi arttıkça, bu sabit toplam daha çok sayıdaki ürüne bölüneceği için "ürün başına düşen (birim) sabit maliyet" azalır.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aşağıdaki seçeneklerden hangisi "yarı değişken maliyet"e örnektir?`,
+                options: [
+                    "A) Ustabaşı maaşları", 
+                    "B) Makine ve teçhizata ilişkin amortisman", 
+                    "C) Makinelerin kullandığı enerji", 
+                    "D) Ham madde maliyeti", 
+                    "E) Satış elemanlarına maaşlarının yanı sıra satış primi de ödeniyor olması"
+                ],
+                ans: "E) Satış elemanlarına maaşlarının yanı sıra satış primi de ödeniyor olması",
+                exp: `İçinde hem sabit bir tutar (sabit maaş tabanı) hem de hacme bağlı değişken bir tutar (parça veya satış başına prim) barındıran maliyetlere Karma (Yarı Değişken) maliyetler denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi maliyet muhasebesinin temel amaçlarından biri değildir?`,
+                options: ["A) Birim maliyetin hesaplanması", "B) Kontrol faaliyetine yardımcı olmak", "C) Planlamaya yardımcı olmak", "D) Finansal tabloların anlaşılırlığını artırmak", "E) İşletme kararlarına yardımcı olmak"],
+                ans: "D) Finansal tabloların anlaşılırlığını artırmak",
+                exp: `Maliyet muhasebesi yönetime ve şirket içine bilgi sağlar (maliyet kontrolü, planlama, fiyatlama kararları). "Finansal tabloların anlaşılırlığını artırmak" ve dışarıya rapor sunmak Finansal (Genel) Muhasebenin görevidir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Her 10.000 birimlik kapasite artışında yeni bir makine alınması zorunlu olduğunda, makine amortismanı kapasite kullanımı (faaliyet hacmi) ile ilişkisi bakımından nasıl bir maliyettir?`,
+                options: ["A) Sabit maliyet", "B) Değişken maliyet", "C) Yarı sabit maliyet", "D) Yarı değişken maliyet", "E) Dönem gideri"],
+                ans: "C) Yarı sabit maliyet",
+                exp: `Belli bir kapasite (hacim) dilimine kadar sabit kalan, ancak o kapasite aşıldığında birdenbire yeni bir sabit tutara sıçrayan ve orada yine o dilim boyunca sabit kalan maliyetlere Yarı Sabit (Sıçrayan/Basamaklı) Maliyet denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Maliyetlenecek birime doğrudan doğruya yüklenemeyen maliyetlere ............................. maliyet adı verilir.\nYukarıdaki boşluğa uygun olan seçenek aşağıdakilerden hangisidir?`,
+                options: ["A) Hizmet", "B) Gider", "C) Endirekt", "D) Mamul", "E) Direkt"],
+                ans: "C) Endirekt",
+                exp: `Bir ürünün, hizmetin veya departmanın bünyesine doğrudan doğruya, kolayca ve ekonomik olarak izlenemeyen (bölüştürülmesi / dağıtılması gereken) maliyetlere "Endirekt Maliyet" denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Bir işletmede tamamlanan mamul maliyeti nasıl hesaplanır?`,
+                options: [
+                    "A) Dönem başı yarı mamul stoku + Dönem sonu yarı mamul stoku", 
+                    "B) Dönem başı yarı mamul stoku + Dönem sonu yarı mamul stoku - Dönemin imalat maliyeti", 
+                    "C) Dönem başı yarı mamul stoku + Dönemin imalat maliyeti - Dönem sonu yarı mamul stoku", 
+                    "D) Dönem başı yarı mamul stoku + Dönemin imalat maliyeti", 
+                    "E) Dönem sonu yarı mamul stoku + Dönemin imalat maliyeti"
+                ],
+                ans: "C) Dönem başı yarı mamul stoku + Dönemin imalat maliyeti - Dönem sonu yarı mamul stoku",
+                exp: `Üretim bandında hesabı yapılacak toplam maliyet: (Dönem Başı Yarı Mamuller) + (Dönem İçi Yeni Üretim Maliyetleri)'dir. Bu toplam maliyetten henüz tamamlanamayanları (Dönem Sonu Yarı Mamulleri) çıkartırsak, elimizde "Tamamlanan Mamul Maliyeti" kalır.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Fabrikada çalışan işçileri taşıyan minibüsün amortismanı ile ilgili olarak aşağıdaki seçeneklerden hangisi doğrudur?`,
+                options: ["A) Değişken-imalat maliyeti", "B) Değişken-yönetim gideri", "C) Sabit-yönetim gideri", "D) Sabit-imalat maliyeti", "E) Yarı değişken - imalat maliyeti"],
+                ans: "D) Sabit-imalat maliyeti",
+                exp: `Minibüs fabrika personeline hizmet ettiği için maliyeti üretime (imalata) atılır. Amortisman ise zaman bazlı olduğu ve üretim hacminden etkilenmediği için 'Sabit'tir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Hangisi birleşik sistemde kullanılan yöntem değildir?`,
+                options: ["A) Fiziki miktarları esas alan yöntem", "B) Nihai satış değerlerini esas alan yöntem", "C) Ayrım noktasındaki satış değerini esas alan yöntem", "D) Sabit brüt kar yöntemi", "E) Kar payını esas alan yöntem"],
+                ans: "E) Kar payını esas alan yöntem",
+                exp: `Birleşik maliyet dağıtımında kullanılan temel yöntemler; Fiziksel Miktar, Satış Değeri (ayrım noktasında), Net Satış Değeri ve Sabit Brüt Kâr yöntemleridir. "Kar payını esas alan" diye literatürde tanımlı bir yöntem yoktur.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Hangisi dönem gideridir?`,
+                options: ["A) Genel müdür maaşı", "B) Endirekt malzeme", "C) Direkt işçilik", "D) Fabrika sigortası", "E) Fabrika bakım - onarım"],
+                ans: "A) Genel müdür maaşı",
+                exp: `Genel müdür, pazarlama veya satış personeli maaşları, fabrika (üretim) süreciyle değil genel şirket yönetimiyle ilgili olduğu için ürün maliyetine girmez, 'Dönem (Faaliyet) Gideri' olarak muhasebeleştirilir. Diğer tüm şıklar ürün maliyetine (fabrika maliyeti) aittir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Hangisi maliyet bedeli ile değerlemede kullanılan stok değerleme yöntemlerden biri değildir?`,
+                options: ["A) Safha maliyet yöntemi", "B) Standart maliyet yöntemi", "C) Gerçek maliyet yöntemi", "D) LIFO", "E) FIFO"],
+                ans: "A) Safha maliyet yöntemi",
+                exp: `LIFO, FIFO, Standart, Gerçek Parti (Gerçek Maliyet) ve Ortalama Maliyet birer 'stok değerleme' yöntemidir. Safha ve Sipariş Maliyet ise stok değerleme değil, ürünlerin üretim hattındaki ilerleyişini kaydeden birer 'Maliyet Hesaplama (Toplama) Sistemidir'.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Hangisinde stoklanabilir maliyet bulunmaz?`,
+                options: ["A) Otomobil üreticisi", "B) Bilgisayar üreticisi", "C) Çanta üreticisi", "D) Yat üreticisi", "E) Hastane"],
+                ans: "E) Hastane",
+                exp: `Stoklanabilir maliyetler, fiziksel olarak depoya konabilen mallar (mamuller) üretildiğinde söz konusudur. Hastane ise bir üretim işletmesi değil, 'hizmet' işletmesidir. Hizmetler anında tüketilir ve stoklanamaz.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Aylık asgari 1.000 TL ücret garantisi verilmiş bir şirkette parça başına ödenen ücret 20 TL'dir. İmalat işçisi Ahmet Bey'in geçen ayki üretimi 43 birimde kalmış, parça başına 860 TL hak ettiği halde, asgari ücreti garantilediği için kendisine 1.000 TL ödeme yapılmıştır. Hangisi doğrudur?`,
+                options: [
+                    "A) Ödenen 1.000 TL direkt işçilik maliyetidir", 
+                    "B) Ödenen 1.000 TL'nin 860 TL'si direkt, 140 TL'si endirekt işçilik maliyetidir", 
+                    "C) Ödenen 1.000 TL'nin 860 TL'si direkt işçilik, 140 TL zarar olarak kaydedilmelidir", 
+                    "D) Ödenen 1.000 TL'nin tamamı endirekt işçilik maliyetidir",
+                    "E) Ödenen 1.000 TL'nin tamamı dönem gideridir"
+                ],
+                ans: "B) Ödenen 1.000 TL'nin 860 TL'si direkt, 140 TL'si endirekt işçilik maliyetidir",
+                exp: `İşçinin fiilen ürettiği ürünlerin parça başı karşılığı olan 860 TL doğrudan o ürünlere yüklenebildiği için "Direkt İşçilik"tir. İşletmenin garanti verdiği asgari ücret sebebiyle cebinden fazladan çıkan ve hiçbir ürüne özel olarak yüklenemeyen 140 TL'lik fark ise "Endirekt İşçilik" (Genel Üretim Gideri) olarak kaydedilir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Belirli bir dönemde, üretim miktarından bağımsız olarak hep aynı tutarda gerçekleşen maliyetlere "...................." denir.`,
+                options: ["A) Yarı Değişken", "B) Yarı Sabit", "C) Değişken", "D) Endirekt", "E) Sabit maliyet"],
+                ans: "E) Sabit maliyet",
+                exp: `Toplam tutarı üretim hacmindeki değişikliklerden etkilenmeyen, dönemsel ve zamana bağlı (kira, amortisman, vb.) maliyetlere sabit maliyet denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Bir işletmenin dönem sonu yarı mamul stoku ile tamamlanan mamul maliyetinin toplamı hangisine eşittir?`,
+                options: ["A) Dönem başı yarı mamul stoku ile dönemin imalat maliyetinin toplamına", "B) Dönem başı mamul stoku ile satılan mamul maliyetine", "C) Direkt ilk madde ve malzeme ile genel imalata", "D) Net satışlar ile satılan malın maliyetine", "E) Hiçbirine"],
+                ans: "A) Dönem başı yarı mamul stoku ile dönemin imalat maliyetinin toplamına",
+                exp: `Üretim hesabında: (Girenler = Çıkanlar ve Kalanlar). \nGirenler: Dönem başı yarı mamul + Dönem içi maliyetler.\nÇıkanlar ve Kalanlar: Tamamlanan (çıkan) mamul + Dönem sonu (kalan) yarı mamul.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Bir otomobil fabrikasındaki genel üretim maliyetleri hangisini içerir?`,
+                options: ["A) Boyama bölümündeki işçilik maliyetleri", "B) Makinelerde kullanılan yağlar", "C) Satış komisyonları", "D) Direksiyon bölümündeki maliyetler", "E) Otomobilin gövdesinde kullanılan çelik maliyetleri"],
+                ans: "B) Makinelerde kullanılan yağlar",
+                exp: `Makinelerde kullanılan yağlar üretimin işlemesi için gereklidir ancak doğrudan tek bir otomobile yüklenemez (Endirekt Malzeme). Boyama ve direksiyon bölümü işçilikleri direkt işçiliktir. Çelik direkt malzemedir. Satış komisyonu dönem gideridir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Bir üretim tesisinde direkt ham madde imalata verildiğinde hesaplardan hangisi çalıştırılır?`,
+                options: ["A) Mamuller", "B) Yarı Mamuller", "C) Satılan Mamul Maliyeti", "D) Genel Üretim Maliyetleri", "E) Kasa"],
+                ans: "B) Yarı Mamuller",
+                exp: `Hammadde depodan (İlk Madde ve Malzemeler hesabı) çıkartılıp üretime gönderildiğinde, üretim bandını temsil eden "Yarı Mamuller" (710 Direkt İlk Madde ve Malzeme Giderleri vasıtasıyla) hesabına borç kaydedilir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Bütçelenmiş maliyetler: "...................."`,
+                options: ["A) Geçmişte gerçekleşmiş maliyetlerdir", "B) Sadece faaliyet giderleridir", "C) Planlanan veya tahmin edilen maliyetlerdir", "D) Finansal tabloda kesinleşen rakamlardır", "E) Tamamı sabit maliyetlerdir"],
+                ans: "C) Planlanan veya tahmin edilen maliyetlerdir",
+                exp: `Bütçe kelimesi, muhasebede geleceğe yönelik planları, öngörüleri ve tahminleri ifade eder. Geçmişi gösteren rakamlara ise 'fiili maliyetler' denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Direkt işçilik ve genel üretim giderleri toplamına "...................." denir.`,
+                options: ["A) Dönüştürme maliyeti", "B) Esas maliyetler", "C) Satılan malın maliyeti", "D) Dönem gideri", "E) Yarı mamul"],
+                ans: "A) Dönüştürme maliyeti",
+                exp: `Hammaddeyi işleyip şekillendirerek mamul haline 'dönüştürmek' için katlanılan maliyetler (Direkt İşçilik + Genel Üretim Giderleri) dönüştürme maliyetini oluşturur.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Direkt malzeme + Direkt işçilik maliyeti = ?`,
+                options: ["A) Esas maliyetler", "B) Dönüştürme maliyeti", "C) Genel üretim giderleri", "D) Brüt kar", "E) Üretim maliyeti"],
+                ans: "A) Esas maliyetler",
+                exp: `Doğrudan ürünün bünyesine giren, gözle görülen ve ürüne kolayca yüklenebilen temel iki maliyet kalemine (DM + Dİ) "İlk (Esas) Maliyetler" denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `İşletmeler tarafından maliyeti hesaplanan herhangi bir şeye "...................." denir.`,
+                options: ["A) Gider", "B) Faaliyet", "C) Mamul (Maliyet objesi)", "D) Endirekt gider", "E) Vergi"],
+                ans: "C) Mamul (Maliyet objesi)",
+                exp: `Maliyeti hesaplanmak istenen, ölçülmeye çalışılan herhangi bir öğeye (bir ürün, bir departman, bir müşteri, bir proje) "maliyet objesi" (sorudaki şıkkıyla mamul/ürün) denir.`,
+                exams: ["Eski Yıllar"]
+            },
+            {
+                q: `Üretilen mamul ile doğrudan ilgisi olan, ne miktar ne tutarda kullanıldığı, doğru ve ekonomik olarak tespit edilebilen malzeme maliyetine "...................." denir?`,
+                options: ["A) Direkt malzeme maliyeti", "B) Endirekt malzeme", "C) Genel üretim maliyeti", "D) İşletme malzemesi", "E) Dönem gideri"],
+                ans: "A) Direkt malzeme maliyeti",
+                exp: `Tanımı verilen ifade tam olarak "Direkt İlk Madde ve Malzeme" (Ham Madde) kavramının karşılığıdır. Masanın odu, gömleğin kumaşı direkt malzemedir.`,
+                exams: ["Eski Yıllar"]
+            },
+// --- ESKİ YILLARA AİT SÖZEL SORULAR SONU ---
+     ];
+
+        let allAnswersVisible = false;
+
+        function filterQuestions(type, btnElement) {
+            // Aktif butonu değiştir
+            if(btnElement) {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            let filtered = sorular;
+            if (type !== 'all') {
+                filtered = sorular.filter(soru => 
+                    soru.exams.some(exam => exam.toLowerCase().includes(type.toLowerCase()))
+                );
+            }
+
+            if(filtered.length === 0) {
+                container.innerHTML = '<h3 style="text-align:center; color:#e74c3c;">Bu kategoriye ait soru bulunamadı.</h3>';
+                return;
+            }
+
+            filtered.forEach((soru, index) => {
+               let tagsHtml = soru.exams.map(exam => {
+                    let examUpper = exam.toUpperCase();
+                    if(examUpper.includes("KEZ ÇIKTI")) {
+                        return `<span class="exam-tag tag-freq">🔥 ${exam}</span>`;
+                    } else if(examUpper.includes("DİKKAT") || examUpper.includes("DIKKAT") || examUpper.includes("HATALI")) {
+                        return `<span class="exam-tag tag-warn">⚠️ ${exam}</span>`;
+                    } else if(examUpper.includes("ESKİ YILLAR") || examUpper.includes("ESKI YILLAR")) {
+                        return `<span class="exam-tag" style="background-color: #8e44ad; color: white;">📜 ${exam}</span>`;
+                    } else if(examUpper.includes("VİZE") || examUpper.includes("VIZE")) {
+                        return `<span class="exam-tag tag-vize">📘 ${exam}</span>`;
+                    } else if(examUpper.includes("FİNAL") || examUpper.includes("FINAL")) {
+                        return `<span class="exam-tag tag-final">📕 ${exam}</span>`;
+                    } else if(examUpper.includes("BÜT") || examUpper.includes("BUT")) {
+                        return `<span class="exam-tag tag-but">📗 ${exam}</span>`;
+                    }
+                    return `<span class="exam-tag tag-other">${exam}</span>`;
+                }).join('');
+               let optionsHtml = soru.options.map(opt => {
+                    let isCorrect = (opt === soru.ans);
+                    return `<li class="option-item" data-correct="${isCorrect}" onclick="checkAnswer(this)">${opt}</li>`;
+                }).join('');
+                
+                let displayState = allAnswersVisible ? 'block' : 'none';
+                let btnText = allAnswersVisible ? 'Cevabı ve Açıklamayı Gizle' : 'Cevabı ve Açıklamayı Göster';
+                let btnColor = allAnswersVisible ? '#34495e' : '#0984e3';
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="exam-tags">${tagsHtml}</div>
+                    </div>
+                    <p class="question-text">${index + 1}. ${soru.q}</p>
+                    <ul class="options">${optionsHtml}</ul>
+                    <button class="btn-toggle" style="background-color: ${btnColor}" onclick="toggleSingleAnswer(this)">${btnText}</button>
+                    <div class="answer-area" style="display: ${displayState}">
+                        <p class="correct-ans">✔️ Doğru Cevap: ${soru.ans}</p>
+                        <p class="exp-text">💡 <strong>Açıklama:</strong> ${soru.exp}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function aramaYap() {
+            let kelime = document.getElementById('arama').value.toLowerCase().trim();
+            
+            // Arama yapıldığında üstteki butonların aktifliğini kaldır
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            let filtered = kelime === '' ? sorular : sorular.filter(s => 
+                s.q.toLowerCase().includes(kelime) || 
+                s.exp.toLowerCase().includes(kelime) || 
+                s.ans.toLowerCase().includes(kelime)
+            );
+
+            if(filtered.length === 0) {
+                container.innerHTML = '<h3 style="text-align:center; color:#e74c3c;">Aramanızla eşleşen soru bulunamadı.</h3>';
+                return;
+            }
+
+            filtered.forEach((soru, index) => {
+                let tagsHtml = soru.exams.map(exam => {
+                    let examUpper = exam.toUpperCase();
+                    if(examUpper.includes("KEZ ÇIKTI")) {
+                        return `<span class="exam-tag tag-freq">🔥 ${exam}</span>`;
+                    } else if(examUpper.includes("DİKKAT") || examUpper.includes("DIKKAT") || examUpper.includes("HATALI")) {
+                        return `<span class="exam-tag tag-warn">⚠️ ${exam}</span>`;
+                    } else if(examUpper.includes("VİZE") || examUpper.includes("VIZE")) {
+                        return `<span class="exam-tag tag-vize">📘 ${exam}</span>`;
+                    } else if(examUpper.includes("FİNAL") || examUpper.includes("FINAL")) {
+                        return `<span class="exam-tag tag-final">📕 ${exam}</span>`;
+                    } else if(examUpper.includes("BÜT") || examUpper.includes("BUT")) {
+                        return `<span class="exam-tag tag-but">📗 ${exam}</span>`;
+                    }
+                    return `<span class="exam-tag tag-other">${exam}</span>`;
+                }).join('');
+
+                let optionsHtml = soru.options.map(opt => `<li>${opt}</li>`).join('');
+                
+                let displayState = allAnswersVisible ? 'block' : 'none';
+                let btnText = allAnswersVisible ? 'Cevabı ve Açıklamayı Gizle' : 'Cevabı ve Açıklamayı Göster';
+                let btnColor = allAnswersVisible ? '#34495e' : '#0984e3';
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="exam-tags">${tagsHtml}</div>
+                    </div>
+                    <p class="question-text">${index + 1}. ${soru.q}</p>
+                    <ul class="options">${optionsHtml}</ul>
+                    <button class="btn-toggle" style="background-color: ${btnColor}" onclick="toggleSingleAnswer(this)">${btnText}</button>
+                    <div class="answer-area" style="display: ${displayState}">
+                        <p class="correct-ans">✔️ Doğru Cevap: ${soru.ans}</p>
+                        <p class="exp-text">💡 <strong>Açıklama:</strong> ${soru.exp}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+// ŞIKKA TIKLANDIĞINDA ÇALIŞACAK FONKSİYON
+        function checkAnswer(selectedLi) {
+            let parentUl = selectedLi.parentElement;
+            
+            // Eğer soruya daha önce tıklandıysa (cevaplandıysa) hiçbir şey yapma
+            if(parentUl.getAttribute('data-answered') === 'true') return;
+            parentUl.setAttribute('data-answered', 'true'); // Soruyu cevaplandı olarak işaretle
+
+            let isCorrect = selectedLi.getAttribute('data-correct') === 'true';
+
+            // 1. Tıklanan şıkkı renklendir
+            if(isCorrect) {
+                selectedLi.classList.add('option-correct');
+            } else {
+                selectedLi.classList.add('option-incorrect');
+                // Yanlış bilindiyse doğru şıkkı bulup onu da yeşil yap
+                let allOptions = parentUl.querySelectorAll('li');
+                allOptions.forEach(li => {
+                    if(li.getAttribute('data-correct') === 'true') {
+                        li.classList.add('option-correct');
+                    }
+                });
+            }
+            
+            // 2. Cevaplandıktan sonra aşağıdaki "Açıklama" kutusunu otomatik aç
+            let toggleBtn = parentUl.nextElementSibling;
+            if(toggleBtn && toggleBtn.classList.contains('btn-toggle')) {
+                let answerArea = toggleBtn.nextElementSibling;
+                if(answerArea && answerArea.style.display !== 'block') {
+                    answerArea.style.display = 'block';
+                    toggleBtn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                    toggleBtn.style.backgroundColor = '#34495e';
+                }
+            }
+        }
+
+
+
+        function toggleSingleAnswer(btn) {
+            const targetDiv = btn.nextElementSibling;
+            if (targetDiv.style.display === 'none' || targetDiv.style.display === '') {
+                targetDiv.style.display = 'block';
+                btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                btn.style.backgroundColor = '#34495e';
+            } else {
+                targetDiv.style.display = 'none';
+                btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                btn.style.backgroundColor = '#0984e3';
+            }
+        }
+
+        function toggleAllAnswers() {
+            allAnswersVisible = !allAnswersVisible;
+            const globalBtn = document.getElementById('globalToggleBtn');
+            const allAnswerAreas = document.querySelectorAll('.answer-area');
+            const allToggleBtns = document.querySelectorAll('.btn-toggle');
+
+            if (allAnswersVisible) {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Gizle';
+                globalBtn.style.backgroundColor = '#34495e';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'block');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                    btn.style.backgroundColor = '#34495e';
+                });
+            } else {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Göster';
+                globalBtn.style.backgroundColor = 'var(--global-btn)';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'none');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                    btn.style.backgroundColor = '#0984e3';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const allBtn = document.querySelector('.tab-btn.active');
+            filterQuestions('all', allBtn);
+        });
+    </script>
+</body>
+</html>

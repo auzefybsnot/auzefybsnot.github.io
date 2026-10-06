@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUZEF · Sistem Yönetimi ve Bulut Bilişim — Çıkmış Soru Bankası</title>
+<style>
+
+/* ——— Özel Segoe UI / Aydınlık Tema (Görseldeki Tasarım) ——— */
+:root{
+  --paper: #f4f6f8;
+  --card: #ffffff;
+  --raise: #f8f9fa;
+  --ink: #2d3436; 
+  --ink-2: #4a5568;
+  --ink-3: #718096;
+  --line: #dfe6e9;
+  --line-2: #ecf0f1;
+  --blue: #1a2b4c; /* Görseldeki koyu lacivert */
+  --blue-soft: #ecf0f1;
+  --ok: #27ae60;
+  --ok-soft: #eafaf1;
+  --no: #e74c3c;
+  --no-soft: #fde8e7;
+  --amber: #d35400; /* Görseldeki turuncu/kiremit rengi */
+  --amber-soft: #fbf0e9;
+  --shadow: 0 4px 6px rgba(0,0,0,0.05);
+  --gutter: #f4f6f8;
+  --on-accent: #ffffff;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 18px 80px; }
+
+/* ---------- masthead ---------- */
+.mast { padding: 30px 0 20px; }
+.eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); font-weight: 700; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+h1 { font-size: 28px; line-height: 1.2; font-weight: 700; margin: 0 0 10px; color: var(--blue); }
+.lede { color: var(--ink-2); margin: 0 0 20px; font-size: 15px; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; min-width: 96px; box-shadow: var(--shadow); }
+.stat b { display: block; font-size: 20px; font-weight: 700; color: var(--blue); }
+.stat span { font-size: 11px; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+
+/* ---------- toolbar ---------- */
+.bar { position: sticky; top: 0; z-index: 40; margin: 0 -18px; padding: 15px 18px; background: var(--paper); border-bottom: 2px solid var(--line); }
+.bar-in { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; }
+
+.search { position: relative; flex: 1 1 240px; min-width: 0; }
+.search input { width: 100%; padding: 10px 12px 10px 34px; border-radius: 6px; font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-3); }
+.kbd { display: none; }
+
+.chip { font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--ink); transition: .15s; display: inline-flex; align-items: center; gap: 7px; }
+.chip:hover { background: var(--line); }
+.chip[aria-pressed="true"], .chip.on { background: var(--blue); border-color: var(--blue); color: var(--on-accent); }
+
+/* Görseldeki özel buton renkleri */
+#toggle { background: var(--amber); border-color: var(--amber); color: white; }
+#toggle:hover { background: #ba4a00; border-color: #ba4a00; }
+#rep { background: var(--no); border-color: var(--no); color: white; }
+#rep:hover { background: #c0392b; border-color: #c0392b; }
+#rep[aria-pressed="true"] { background: #a93226; border-color: #a93226; }
+select.chip { appearance: none; padding-right: 28px; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+
+.spacer { flex: 1; }
+.count { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; font-weight: 600; }
+.count b { color: var(--ink); }
+
+/* ---------- score strip ---------- */
+.score { display: none; align-items: center; gap: 14px; flex-wrap: wrap; margin: 18px 0 0; padding: 11px 15px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); font-size: 13px; font-weight: 600; }
+.score.show { display: flex; }
+.score .t { color: var(--ok); }
+.score .f { color: var(--no); }
+.score .rate { margin-left: auto; color: var(--ink-2); }
+.linkbtn { background: none; border: none; font: inherit; font-size: 12.5px; color: var(--blue); cursor: pointer; text-decoration: underline; padding: 0; font-weight: 700; }
+
+/* ---------- question cell ---------- */
+.list { margin-top: 26px; display: flex; flex-direction: column; gap: 16px; }
+.cell { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 5px solid var(--blue); display: flex; flex-direction: column; }
+.gut { display: none; } /* Sol menüyü (Soru 1 vs) tamamen gizleyip resimdeki gibi dümdüz yapıyoruz */
+.body { padding: 20px; min-width: 0; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tag { font-size: 11.5px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: var(--blue); color: var(--on-accent); white-space: nowrap; }
+.tag.rep { background: var(--no); }
+
+.q { font-size: 17px; font-weight: 700; margin: 0 0 16px; line-height: 1.4; color: var(--blue); }
+
+.opts { list-style: none; padding: 0; margin: 0 0 15px; display: flex; flex-direction: column; gap: 6px; }
+.opt { width: 100%; text-align: left; font: inherit; cursor: pointer; font-size: 14px; line-height: 1.5; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--line); background: #f8f9fa; color: var(--ink); transition: .13s; }
+.opt:hover:not(.locked) { background: #eafaf1; border-color: var(--ok); }
+.opt.locked { cursor: default; }
+.opt.correct { background: #d4edda; border-color: #28a745; color: #155724; font-weight: 700; }
+.opt.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; font-weight: 700; }
+
+.acts { display: flex; margin-top: 5px; }
+.reveal { width: 100%; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; padding: 10px; border-radius: 6px; border: none; background: var(--blue); color: var(--on-accent); transition: background 0.2s; text-align: center; }
+.reveal:hover { background: #111d33; }
+
+.out { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--ok); border-radius: 6px; }
+.out.show { display: block; animation: fade .18s ease-out; }
+@keyframes fade { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+.out .lbl { display: none; }
+.ans { font-size: 14px; font-weight: 700; color: #155724; margin-bottom: 5px; }
+.ans::before { content: "Cevap: "; }
+.exp { font-size: 14px; color: #155724; margin: 0; }
+.exp::before { content: "Açıklama: "; font-weight: 700; font-style: italic; }
+
+.note { font-size: 13.5px; color: #7a4a00; background: var(--amber-soft); border-left: 4px solid var(--amber); border-radius: 6px; padding: 10px 12px; margin: 12px 0 0; }
+.note::before { content: "⚠️ Dikkat — "; font-weight: 700; }
+.cell.flagged { border-left-color: var(--amber); }
+.tag.flag { background: var(--amber); }
+#flag[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: #fff; }
+
+/* ---------- tablo görselleri ---------- */
+.assets { margin: 0 0 15px; display: flex; flex-direction: column; gap: 10px; }
+.asset { margin: 0; max-width: 100%; overflow-x: auto; }
+table.df { width: 100%; border-collapse: collapse; font-size: 13.5px; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+table.df caption { caption-side: top; text-align: left; padding: 0 0 8px; font-weight: 700; color: var(--blue); }
+table.df th, table.df td { padding: 8px 10px; text-align: center; border: 1px solid var(--line); }
+table.df thead th { background: var(--blue); color: white; font-weight: 700; border-color: #111d33; }
+table.df tbody tr:nth-child(even) { background-color: #f8f9fa; }
+table.df tbody th { background: transparent; color: var(--ink); font-weight: 700; }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-3); border: 1px dashed var(--line); border-radius: 8px; margin-top: 26px; background: var(--card); }
+.empty b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 5px; }
+.foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); text-align: center; }
+.top { position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--blue); color: white; cursor: pointer; box-shadow: var(--shadow); display: none; align-items: center; justify-content: center; font-size: 20px; }
+.top.show { display: flex; }
+
+#theme { display: none; } /* Karanlık mod butonunu görseldeki gibi sabit tasarım için gizliyoruz */
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 12px 70px; }
+  .bar { margin: 0 -12px; padding: 10px 12px; }
+  .body { padding: 15px; }
+  .chip { width: 100%; justify-content: center; }
+  .search { flex: 1 1 100%; }
+  .count { width: 100%; text-align: center; }
+  #rep { margin-top: 5px; }
+}
+@media print {
+  .bar, .top, .acts, .score { display: none !important; }
+  body { background: #fff; }
+  .out { display: block !important; }
+  .note { border-left: 2px solid #000; }
+  .cell { break-inside: avoid; box-shadow: none; border-left: 2px solid #000; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">AUZEF · Yönetim Bilişim Sistemleri</p>
+    <h1>Sistem Yönetimi ve Bulut Bilişim<br>Çıkmış Soru Bankası</h1>
+    <p class="lede">Vize, Final ve Bütünleme sınavlarından derlenen çıkmış soru havuzu. Her soru PDF cevap anahtarına sadık kalınarak yanıtlandı, konuya göre etiketlendi ve kısa bir açıklamayla desteklendi; tartışmalı, hatalı ya da farklı kaynağa göre değişebilen sorulara <b>⚠️ Dikkat</b> notu eklendi.</p>
+    <div class="stats">
+      <div class="stat"><b id="s-all">0</b><span>Toplam soru</span></div>
+      <div class="stat"><b id="s-vize">0</b><span>Vize</span></div>
+      <div class="stat"><b id="s-final">0</b><span>Final</span></div>
+      <div class="stat"><b id="s-but">0</b><span>Bütünleme</span></div>
+      <div class="stat"><b id="s-rep">0</b><span>Tekrar eden</span></div>
+      <div class="stat"><b id="s-flag">0</b><span>Notlu / tartışmalı</span></div>
+    </div>
+  </header>
+
+  <nav class="bar" aria-label="Filtreler">
+    <div class="bar-in">
+      <div class="row">
+        <label class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="Soru, şık veya açıklamada ara…" autocomplete="off" aria-label="Ara">
+          <span class="kbd">/</span>
+        </label>
+      </div>
+      <div class="row" id="kinds" role="group" aria-label="Sınav türü">
+        <button class="chip" data-k="all" aria-pressed="true">Tümü <span class="n" id="c-all"></span></button>
+        <button class="chip" data-k="vize" aria-pressed="false">Vize <span class="n" id="c-vize"></span></button>
+        <button class="chip" data-k="final" aria-pressed="false">Final <span class="n" id="c-final"></span></button>
+        <button class="chip" data-k="but" aria-pressed="false">Bütünleme <span class="n" id="c-but"></span></button>
+        <button class="chip amber" id="rep" aria-pressed="false">🔥 Banko / Tekrar edenler</button>
+        <button class="chip" id="flag" aria-pressed="false">⚠️ Tartışmalı / notlu</button>
+        <select class="chip" id="konu" aria-label="Konuya göre filtrele"><option value="">Tüm konular</option></select>
+        <select class="chip" id="year" aria-label="Döneme göre filtrele"><option value="">Tüm dönemler</option></select>
+      </div>
+      <div class="row">
+        <button class="chip" id="toggle">Cevapları göster</button>
+        <button class="chip" id="shuffle">Karıştır</button>
+        <button class="chip" id="reset-order" hidden>Sıraya dön</button>
+        <span class="spacer"></span>
+        <span class="count"><b id="shown">0</b> soru görüntüleniyor</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="score" id="score">
+    <span>Doğru <span class="t" id="sc-t">0</span></span>
+    <span>Yanlış <span class="f" id="sc-f">0</span></span>
+    <span class="rate" id="sc-r"></span>
+    <button class="linkbtn" id="sc-reset">sıfırla</button>
+  </div>
+
+  <main class="list" id="list"></main>
+  <div class="empty" id="empty" hidden><b>Eşleşen soru yok</b>Aramayı sadeleştirin ya da filtreleri temizleyin.</div>
+
+  <footer class="foot">
+    Kaynak: AUZEF Sistem Yönetimi ve Bulut Bilişim dersi çıkmış sınav (vize/final/bütünleme) derlemesi.<br>
+    ⚠️ notu taşıyan sorular tartışmalı, hatalı ya da kaynağa göre değişebilen sorulardır; bu sorularda PDF cevap anahtarının şıkkı korunmuş, gerekçe ve olası doğru cevap notta ayrıca belirtilmiştir.
+  </footer>
+</div>
+
+<button class="top" id="top" aria-label="Başa dön">↑</button>
+
+<script>
+// --- ASSETS (TABLOLAR / KOD) ---
+const ASSETS = {
+  "t_enerji": `
+    <figure class="asset">
+      <table class="df">
+        <caption>İşlemci Hızına Göre Normalize Enerji ve Performans</caption>
+        <thead>
+          <tr><th>İşlemci Hızı (GHz)</th><th>Normalize Enerji (%)</th><th>Normalize Performans (%)</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">0.6</th><td>0.44</td><td>&mdash;</td></tr>
+          <tr><th scope="row">0.8</th><td>0.48</td><td>0.61</td></tr>
+          <tr><th scope="row">1.0</th><td>0.52</td><td>0.70</td></tr>
+          <tr><th scope="row">1.2</th><td>0.58</td><td>0.81</td></tr>
+          <tr><th scope="row">1.4</th><td>0.62</td><td>&mdash;</td></tr>
+          <tr><th scope="row">1.6</th><td>0.70</td><td>&mdash;</td></tr>
+          <tr><th scope="row">1.8</th><td>0.82</td><td>&mdash;</td></tr>
+          <tr><th scope="row">2.0</th><td>0.90</td><td>&mdash;</td></tr>
+          <tr><th scope="row">2.2</th><td>1.00</td><td>&mdash;</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_s3kod": `
+    <figure class="asset">
+      <pre style="margin:0;white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;color:var(--ink-1);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;overflow:auto">AmazonS3Client s3 = new AmazonS3Client(
+    new BasicAWSCredentials("access_key", "secret_key"));
+List allKeys = new ArrayList();
+ObjectListing listing = s3.listObjects("bucket_name");
+for (S3ObjectSummary summary : listing.getObjectSummaries())
+{
+    allKeys.add(summary.getKey());
+}</pre>
+    </figure>`,
+  "t_entropi": `
+    <figure class="asset">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 14px;box-shadow:0 2px 4px rgba(0,0,0,0.05)">
+        <div style="font-family:'Cambria Math','Times New Roman',Georgia,serif;font-size:30px;font-weight:600;color:var(--blue);letter-spacing:.5px">
+          S = k<sub style="font-size:.62em">B</sub>&thinsp;&middot;&thinsp;ln&thinsp;&Omega;
+        </div>
+        <div style="font-size:12.5px;color:var(--ink-2);text-align:center;line-height:1.6;max-width:460px">
+          <b>Boltzmann entropi formülü.</b>
+          S: entropi &nbsp;·&nbsp; k<sub>B</sub>: Boltzmann sabiti &nbsp;·&nbsp;
+          <b>&Omega;</b>: bir makro duruma karşılık gelen <b>mikro durum sayısı</b> (aranan büyüklük).
+        </div>
+      </div>
+    </figure>`
+};
+
+// --- RAW DATA FROM SOURCE ---
+const rawData = [
+  "2023 Vize|AMD firmasının kullandığı işlemci güç yönetim teknolojisinin ismi nedir?|A) Poweneise~B) PowerStep~C) Speedstep~D) PowerNow~E) AgnoPower|D) PowerNow|ACIKLAMA::AMD işlemcilerde saat hızını/voltajı iş yüküne göre dinamik ayarlayan teknoloji PowerNow!'dır. Intel muadili SpeedStep'tir.|",
+  "2023 Vize|Amazon AWS'de basit depolama sistemi adlandırması aşağıdakilerden hangisi için kullanılır?|A) SOAP~B) S3~C) EC2~D) İmaj~E) AMI|B) S3|ACIKLAMA::S3 = Simple Storage Service. EC2 hesaplama, AMI makine imajı, SOAP bir mesajlaşma protokolüdür.|",
+  "2023 Vize|S3'e yazılan her nesnenin MD5'ini hesapladıktan sonra hangi alana döndürür?|A) BeTag~B) CeTag~C) ATag~D) CTag~E) ETag|E) ETag|ACIKLAMA::S3 yüklenen her nesnenin bütünlük özeti (MD5) olarak ETag döndürür; istemci bununla yüklemenin bozulmadığını doğrular.|",
+  "2023 Vize|Fiber Kanal çerçevesinde aşağıdakilerden hangisi iletilmemektedir?|A) Hedef Port Adresi~B) DNF~C) EOF~D) Çerçeve Başlangıcı~E) CRC|B) DNF|ACIKLAMA::FC çerçevesinde SOF (başlangıç), EOF (bitiş), adres alanları ve CRC bulunur. 'DNF' diye bir alan yoktur.|",
+  "2023 Vize|Intel firmasının kullandığı işlemci güç yönetim teknolojisinin ismi nedir?|A) AgnoPower~B) Speedstep~C) Powerwise~D) PowerNow~E) PowerStep|B) Speedstep|ACIKLAMA::Intel'in dinamik frekans/voltaj ölçekleme teknolojisi SpeedStep'tir; AMD karşılığı PowerNow!'dır.|",
+  "2023 Vize|I. Bileşik koşul  II. İsim  III. Açıklama — Görev, iş akışı modellemede hangileri ile karakterize edilir?|A) Yalnız II~B) I ve III~C) II ve III~D) I ve II~E) Yalnız III|C) II ve III|ACIKLAMA::Bir 'görev' isim (ne olduğu) ve açıklama (ne yaptığı) ile tanımlanır. Bileşik koşul kontrol akışına aittir, görevin özelliği değildir.|",
+  "2023 Vize|I. Otonom  II. Dağıtık  III. Tümleşik — Hangileri Bulut Bilişim Altyapısı tiplerindendir?|A) I ve II~B) I ve III~C) Yalnız I~D) Yalnız III~E) II ve III|A) I ve II|ACIKLAMA::Bulut altyapıları otonom (kendini yöneten) ve dağıtık yapıdadır. 'Tümleşik' bir altyapı tipi değildir.|",
+  "2023 Vize|Sanal makine üzerinde koşan işletim sistemine ne denir?|A) Ana makine İS~B) Genel Makine İS~C) Yedek makine İS~D) Konuk İS~E) Yardımcı makine İS|D) Konuk İS|ACIKLAMA::VM içinde çalışan İS konuk (guest) İS'dir; fiziksel donanımdaki İS ana (host) İS'dir.|",
+  "2023 Vize|Fiber Kanal Çerçevesinde kaç adet kelimelik bilgi saklanmaktadır?|A) 5~B) 3~C) 6~D) 2~E) 4|C) 6|ACIKLAMA::Fiber Channel çerçeve başlığı 6 kelimelik (word) bilgi taşır.|",
+  "2023 Vize|I. VmWare  II. Bochs  III. Parallels — Hangileri bir yorumlayıcıdır?|A) I ve II~B) I ve III~C) Yalnız III~D) Yalnız II~E) Yalnız I|D) Yalnız II|ACIKLAMA::Bochs x86'yı komut komut öykünen (yorumlayıcı) yazılımdır. VMware ve Parallels donanım destekli sanallaştırma kullanır.|",
+  "2023 Vize|I. Kaynaklar ölçülebilir, kullanıcılar yalnızca kullandıkları için ücretlendirilir.  II. Özelleştirme+merkezileştirme ile sağlayıcılar daha etkin çalışır.  III. Uygulama verisi sağlayıcı ile uyumsuz geliştirilmiştir. — Hangileri bulut felsefesini tanımlar?|A) II ve III~B) I ve II~C) Yalnız I~D) I ve III~E) Yalnız II|B) I ve II|ACIKLAMA::Kullandıkça öde (I) ve merkezileştirmeyle verimlilik (II) bulut felsefesidir. III bir kusuru anlatır.|",
+  "2023 Vize|I. İşlem boru hatları  II. Masaüstü uygulamaları  III. Toplu işleme sistemleri — Hangileri mevcut bulut uygulaması kategorisidir?|A) Yalnız I~B) Yalnız II~C) I ve III~D) II ve III~E) I ve II|C) I ve III|ACIKLAMA::Bulut kategorileri arasında işlem boru hatları ve toplu (batch) işleme sayılır; masaüstü uygulamaları değildir.|",
+  "2023 Vize|I. Hard disk imajı  II. Ethernet imajı  III. Ana hafıza imajı — İS göçünde hangileri taşınırsa İS tamamen taşınmış olur?|A) Yalnız III~B) Yalnız I~C) I ve II~D) II ve III~E) I ve III|E) I ve III|ACIKLAMA::Eksiksiz göç için disk durumu (hard disk imajı) ve çalışan durum (RAM/ana hafıza imajı) birlikte taşınmalıdır. 'Ethernet imajı' yoktur.|",
+  "2023 Vize|Adil Kuyruklama algoritmasının kısaltması aşağıdakilerden hangisidir?|A) CBQ~B) HTB~C) FQ~D) WSC~E) SFO|C) FQ|ACIKLAMA::Adil Kuyruklama = Fair Queuing = FQ.|",
+  "2023 Vize|${t_enerji}Yukarıdaki tabloya göre bir işlemci saat hızını 0.8 GHz'e düşürürse elde edeceği enerji kazancı yüzde kaç olacaktır?|A) 56~B) 52~C) 40~D) 38~E) 48|B) 52|ACIKLAMA::0.8 GHz'de normalize enerji %48'dir. Enerji kazancı = 1 − 0,48 = 0,52 → %52.|",
+  "2023 Vize|I. Veritabanı yüklü  II. Web yüklü  III. Bölünemez iş yüklü  IV. İşlem tabanlı — Bazı uygulamalar bulutta gerçeklemeye uygun değildir; bu duruma hangisi uyar?|A) III ve IV~B) Yalnız III~C) I ve II~D) II ve III~E) Yalnız I|B) Yalnız III|ACIKLAMA::Bölünemez (paralelleştirilemeyen) iş yükü bulutun ölçeklenme avantajından yararlanamaz; buluta uygun değildir.|",
+  "2023 Vize|I. Bit düzeyinde serilik  II. Yönerge düzeyinde paralellik  III. Döngü paralelliği — Paralel bilgisayar mimarisi açısından hangileri doğrudur?|A) Yalnız III~B) Yalnız I~C) I ve II~D) I ve III~E) II ve III|E) II ve III|ACIKLAMA::Mimari açıdan yönerge (instruction) ve döngü (loop) düzeyi paralellik ele alınır. Bit düzeyi paralellik daha alt/donanımsal bir kavramdır.|",
+  "2023 Vize|Paralel programlamanın \"kutsal kâse\" seçilmesinin nedeni aşağıdakilerden hangisi DEĞİLDİR?|A) Güvenlik duvarı~B) Kayan nokta teknolojileri~C) Ara bağlantı ağları~D) Bilgisayar mimarisi~E) Performans izleme|A) Güvenlik duvarı|ACIKLAMA::Performans hedefini belirleyen etkenler mimari, ara bağlantı ağları ve performans izlemedir. Güvenlik duvarı bu bağlamla ilgisizdir.|",
+  "2023 Vize|I. Bir imajdan eşgörünüm önyükleme  II. Ekran konsolu çıktısı  III. Bir imajın kopyalanması — Bir kullanıcı hangi durumlarda SOAP mesajları ile EC2 eşgörünümlerini işleyebilir?|A) Yalnız I~B) II ve III~C) I ve III~D) I ve II~E) Yalnız II|D) I ve II|ACIKLAMA::EC2 SOAP API'si ile imajdan eşgörünüm başlatma (I) ve konsol çıktısı alma (II) yapılır. İmaj kopyalama bu çağrı ile yönetilmez.|",
+  "2023 Vize|I. Devasa Altyapı  II. İntranetten erişilebilme  III. Fayda Bilişim (kullanım başına ödeme) — Hangileri Bulut Bilişimi tanımlar?|A) Yalnız III~B) I ve II~C) I ve III~D) II ve III~E) Yalnız II|C) I ve III|ACIKLAMA::Bulut; devasa ölçeklenebilir altyapı ve kullandıkça öde modeliyle tanımlanır. Bulut internetten erişilir, yalnızca intranetten değil.|",
+  "2023 Vize|I. Eşgörünümü formatlar ortaya çıkarır.  II. Yeni bir imaj yaratır.  III. Mevcut bir AMI'den eşgörünüm başlatabilir. — Amazon'da kullanıcı hangilerini yapabilir?|A) I ve II~B) Yalnız II~C) Yalnız I~D) II ve III~E) I ve III|D) II ve III|ACIKLAMA::Kullanıcı yeni AMI oluşturabilir ve mevcut AMI'den eşgörünüm başlatabilir. 'Formatlar ortaya çıkarma' anlamlı bir işlem değildir.|",
+  "2023 Vize|Kaynak için rekabet eden süreçler diğerleri tarafından tutulur veya ek kaynak için beklemeye zorlanırsa aşağıdakilerden hangisi gerçekleşir?|A) Dairesel bekleme~B) Paralel döngü~C) Yarış koşulu~D) Ölümcül kilitlenme~E) Önbırakma|D) Ölümcül kilitlenme|ACIKLAMA::Karşılıklı kaynak bekleme deadlock (ölümcül kilitlenme) yaratır. Dairesel bekleme yalnızca deadlock'un koşullarından biridir.|",
+  "2023 Vize|I. Kabul Kontrolü  II. Yük Dengeleme  III. Kapasite Aşımı — Hangileri Bulut Kaynak Yönetimi ilkesidir?|A) I ve III~B) II ve III~C) Yalnız I~D) I ve II~E) Yalnız II|D) I ve II|ACIKLAMA::Kaynak yönetimi ilkeleri kabul kontrolü ve yük dengelemedir. 'Kapasite aşımı' kaçınılması gereken bir durumdur, ilke değildir.|",
+  "2023 Vize|I. Aylık/yıllık faaliyet raporları  II. Finans/sigorta/sağlık kuruluşları için günlük işlemlerin toplu işlenmesi/özeti  III. Veri Madenciliği — Toplu (batch) işleme örneği hangileridir?|A) I ve II~B) I ve III~C) Yalnız I~D) I ve II~E) Yalnız III|D) I ve II|ACIKLAMA::Periyodik raporlama (I) ve kurumların günlük işlem yığınlarının toplu işlenmesi (II) klasik batch örnekleridir.|Kaynakta A ve D şıkları aynı ('I ve II') basılmış; anahtar D'dir — baskı hatası.",
+  "2024 Vize|Her servisin farklı bilgisayarda yürütülmesi işlemine ne ad verilir?|A) Kum paketleme~B) Kaynak paylaşımı~C) Döngü sistemi~D) Zaman dağıtma~E) Dağıtık sistem|A) Kum paketleme|ACIKLAMA::Cevap anahtarı bu soruda A şıkkını işaretlemiştir.|Kavramsal olarak 'her servisin ayrı makinede koşması' daha çok dağıtık sistem (E) veya kaynak paylaşımı (B) ile ilişkilidir. Anahtar A demiş; sınavda A işaretlenmeli ama tanım tartışmalıdır.",
+  "2024 Vize|I. Gelen paketleri sınıflara eşlemek için başlık bilgisini kullanan sınıflandırıcı  II. Bağlantı atamasını aşan sınıfın göndermesine izin verildiğinde hesaplayan geciktirici  III. Sınıf dışı öncül tahmincisi — Hangileri CBQ algoritmasının işlevsel birimidir?|A) I ve II~B) Yalnız III~C) II ve III~D) Yalnız II~E) I ve III|A) I ve II|ACIKLAMA::CBQ'nun işlevsel birimleri sınıflandırıcı (I) ve geciktirici/scheduler (II)'dir. 'Sınıf dışı öncül tahmincisi' böyle bir birim değildir.|",
+  "2024 Vize|Microsoft firmasının bulut platformunun ismi nedir?|A) Azure~B) Ubuntu~C) AWS~D) Office 365~E) Red Hat|A) Azure|ACIKLAMA::Microsoft'un bulut platformu Azure'dur. AWS Amazon'a, Office 365 ise bir SaaS ürünüdür.|",
+  "2024 Vize|İletişim kanalları eşzamanlı etkinliklerin koordinasyonunu sağlar. İletişim ........, gürültülü ve güvenilmez kanalları mesajları sırayla ileten güvenilir kanallara dönüştürür. Boşluğa ne gelmelidir?|A) protokolleri~B) frekansları~C) paradigmaları~D) cihazları~E) ücretleri|A) protokolleri|ACIKLAMA::İletişim protokolleri, güvenilmez kanalları sıralı ve güvenilir iletişime dönüştürür (ör. TCP).|",
+  "2024 Vize|VoIP, video/ses akışı gibi bant genişliği garantisi gerektiren uygulamalar için esnek bağlantı paylaşımını destekleyen ağ kaynak yönetimi algoritması hangisidir?|A) FQ~B) CBQ~C) SFQ~D) SCQ~E) Basic Queue|B) CBQ|ACIKLAMA::CBQ (Class-Based Queuing) trafiği sınıflara ayırıp her sınıfa bant genişliği garantisi verir; gerçek zamanlı akışlar için uygundur.|",
+  "2024 Vize|I. Servis olarak yazılım  II. Servis olarak platform  III. Servis olarak altyapı  IV. Servis olarak özelleştirme — Hangileri bulut iletim yollarındandır?|A) I, III~B) I, IV~C) II, III, IV~D) I, II, III~E) II, IV|D) I, II, III|ACIKLAMA::Bulut iletim yolları SaaS (yazılım), PaaS (platform) ve IaaS (altyapı)'dır. 'Servis olarak özelleştirme' diye bir model yoktur.|",
+  "2024 Vize|Aşağıdakilerden hangisi açık kaynaklı bulut platformu DEĞİLDİR?|A) OpenStack~B) Nimbus~C) Microsoft~D) Open Nebula~E) Eucalyptus|C) Microsoft|ACIKLAMA::OpenStack, Nimbus, OpenNebula ve Eucalyptus açık kaynaklı bulut platformlarıdır. Microsoft (Azure) tescilli/ticaridir.|",
+  "2024 Vize|Bir sunucu işletim sistemi ne kadar süreyle çalışmalıdır?|A) Günde 5 saat~B) Haftada 3 gün~C) Günde 2 saat~D) Yılda 365 gün 24 saat~E) Ayda 3 hafta|D) Yılda 365 gün 24 saat|ACIKLAMA::Sunucu İS'leri kesintisiz hizmet için 7/24 (365 gün, günde 24 saat) çalışacak şekilde tasarlanır.|",
+  "2024 Vize|I. Eşgörünümü formatlar ortaya çıkarır.  II. Yeni bir imaj yaratır.  III. Mevcut bir AMI'den eşgörünüm başlatabilir. — Amazon'da kullanıcı hangilerini yapabilir?|A) I ve III~B) II ve III~C) Yalnız II~D) I ve II~E) Yalnız I|B) II ve III|ACIKLAMA::Kullanıcı yeni imaj (AMI) oluşturabilir ve mevcut AMI'den eşgörünüm başlatabilir.|",
+  "2024 Vize|Aşağıdakilerden hangisi Bulut İletim Yollarının kazandırdığı yeni felsefeyi tanımlayan özelliklerinden DEĞİLDİR?|A) İnternet altyapısı tarafından bakım ve güvenlik sağlanmaktadır.~B) Özelleştirme ile sağlayıcılar daha etkin çalışır.~C) Elastik sistemlerde kaynaklar ölçülebilir, kullanıcı yalnızca kullandığı için ödenir.~D) Merkezileştirme ile sağlayıcılar daha etkin çalışır.~E) Elastik servisler için Bulut Bilişim İnternet teknolojilerini kullanır.|A) İnternet altyapısı tarafından bakım ve güvenlik sağlanmaktadır.|ACIKLAMA::Bulut felsefesini tanımlayan özellikler elastiklik, kullandıkça öde, merkezileştirme ve internet teknolojileridir. Bakım/güvenliğin 'internet altyapısınca sağlandığı' ifadesi doğru bir tanım değildir.|",
+  "2024 Vize|Birçok bulut uygulamasında veri yoğundur ve aynı anda çalışan birkaç .......... kullanılır. Boşluğa ne gelmelidir?|A) bilgisayar~B) eşgörünüm~C) veri~D) ağ~E) damga|B) eşgörünüm|ACIKLAMA::Veri yoğun uygulamalar aynı anda birden çok eşgörünüm (instance) ile paralel çalıştırılır.|",
+  "2024 Vize|Ağ merkezli işlem dendiğinde aşağıdakilerden hangisi anlaşılmaktadır?|A) Ağın ortasında bir aktarım noktası olması~B) İşlem gücünün uzaktaki veri merkezinde olması~C) Uygulama arayüzünün istemci bilgisayarında çalışması~D) Servis olarak platform seçilmesi~E) Servis olarak yazılım seçilmesi|B) İşlem gücünün uzaktaki veri merkezinde olması|ACIKLAMA::Ağ merkezli (network-centric) işlem, hesaplamanın uzaktaki veri merkezinde yapılıp sonucun ağ üzerinden istemciye sunulmasıdır.|",
+  "2024 Vize|Yerel ve uzak bilgi nesnelerine aynı işlemler kullanılarak erişilir. Bu özellik aşağıdakilerden hangisini ifade eder?|A) Eşzamanlılık~B) Erişim Şeffaflığı~C) RAID~D) Eşzaman Şeffaflığı~E) Sanal Bellek Yöneticisi|B) Erişim Şeffaflığı|ACIKLAMA::Erişim şeffaflığı; yerel ve uzak nesnelere aynı işlemlerle, konum farkını gizleyerek erişebilmektir.|",
+  "2024 Vize|Aşağıdakilerden hangisi Fayda Bilişim (utility computing) sağlayıcısı DEĞİLDİR?|A) Google~B) HP~C) Amazon~D) Lenovo~E) Apple|D) Lenovo|ACIKLAMA::Google, HP, Amazon ve Apple bulut/fayda bilişim hizmeti sunar. Lenovo temelde bir donanım üreticisidir.|",
+  "2024 Vize|Önceden tanımlanmış bir AMI'den oluşturularak S3'te saklanan kavram hangisidir?|A) SOAP~B) Eşgörünüm~C) İmaj~D) Ara bağlantı~E) MAC Adresi|B) Eşgörünüm|ACIKLAMA::AMI'den oluşturulup çalıştırılan somut örnek eşgörünümdür (instance).|Kaynak anahtar B (Eşgörünüm) demiş. 'S3'te saklanan' ifadesi aslında imajı (AMI) çağrıştırır; ifade biraz muğlaktır ancak anahtar korunmuştur.",
+  "2024 Vize|Aşağıdakilerden hangisi hipervizör tiplerindendir?|A) Tip1~B) Tip4~C) Tip5~D) Tip3~E) Tip6|A) Tip1|ACIKLAMA::Hipervizörler Tip 1 (bare-metal, doğrudan donanım üstünde) ve Tip 2 (host İS üstünde) olmak üzere ikiye ayrılır. Şıklarda geçerli olan Tip1'dir.|",
+  "2024 Vize|Verimsiz bir kaynak yönetimi performans ve maliyet üzerinde doğrudan .......... bir etkiye ve işlevsellik üzerinde dolaylı etkiye sahiptir. Boşluğa ne gelmelidir?|A) gayri ihtiyari~B) düzensiz~C) olumlu~D) olumsuz~E) işlevsel|D) olumsuz|ACIKLAMA::Verimsiz kaynak yönetimi performans ve maliyeti doğrudan olumsuz etkiler.|",
+  "2024 Vize|I. Performans  II. Maliyet  III. Görecelik — Bir sistemin başarılı değerlendirilmesi için hangi kriterler değerlidir?|A) Yalnız III~B) II ve III~C) Yalnız I~D) I ve II~E) Yalnız II|D) I ve II|ACIKLAMA::Başarı değerlendirmesinde temel kriterler performans ve maliyettir. 'Görecelik' bir başarı kriteri değildir.|",
+  "2024 Vize|I. Performans garantisi olasılığının düşük olması  II. Talep üzerine tahsis edilebilen bir kaynak havuzu  III. Gerçek zamanlı tahsise izin veren izleme sistemi — Otomatik ölçeklendirme, planlanmamış ani yüklerde hangi durumlarda kullanılabilir?|A) I ve III~B) II ve III~C) Yalnız I~D) I ve II~E) Yalnız III|B) II ve III|ACIKLAMA::Otomatik ölçeklendirme için serbest bırakılabilen kaynak havuzu (II) ve gerçek zamanlı izleyen kontrol döngüsü (III) gerekir.|",
+  "2024 Vize|SLA'lar tarafından zorunlu kılınan gereksinimlerden hangisi aşağıda YANLIŞ verilmiştir?|A) gözlemlenebilirlik~B) ölçeklenebilirlik~C) güvenlik~D) güvenilirlik~E) servis kalitesi|A) gözlemlenebilirlik|ACIKLAMA::SLA gereksinimleri ölçeklenebilirlik, güvenlik, güvenilirlik ve servis kalitesidir. 'Gözlemlenebilirlik' bu zorunlu listede yanlış verilmiştir.|",
+  "2025 Vize|Sanallaştırmanın bulut bilişimdeki temel rolü aşağıdakilerden hangisidir?|A) İnternet bağlantısı olmadan çalışmak~B) Fiziksel donanımın tamamen ortadan kaldırılması~C) Yalnızca yazılım geliştirme süreçlerini desteklemek~D) Fiziksel kaynakların daha verimli kullanılmasını sağlamak~E) Kullanıcıların donanım yönetimini üstlenmesi|D) Fiziksel kaynakların daha verimli kullanılmasını sağlamak|ACIKLAMA::Sanallaştırma tek fiziksel sunucuyu birçok VM'e bölerek kaynakların (CPU, RAM, disk) verimli paylaşımını sağlar; bu bulutun temelidir.|",
+  "2025 Vize|Aşağıdakilerden hangisi ağ performansını iyileştirme yöntemlerinden biridir?|A) Yalnızca fiziksel sunuculara yatırım yapmak~B) Güvenlik gruplarını devre dışı bırakmak~C) Önbellekleme kullanmak~D) QoS'yi devre dışı bırakmak~E) Sanal makineleri kapatmak|C) Önbellekleme kullanmak|ACIKLAMA::Önbellekleme (caching), sık erişilen veriyi yakında tutarak gecikmeyi azaltır ve performansı artırır.|",
+  "2025 Vize|Aşağıdakilerden hangisi bulutta uygulama dağıtım yöntemlerinden biri DEĞİLDİR?|A) Sunucusuz bilişim~B) Hibrit bulut~C) Fiziksel sunucular~D) Sanal makineler~E) Konteynerler|C) Fiziksel sunucular|ACIKLAMA::Bulut dağıtımı sunucusuz, sanal makine ve konteyner ile yapılır. Fiziksel sunucu bulut dağıtım yöntemi değildir.|",
+  "2025 Vize|Yönlendiricilerin (router) temel işlevi aşağıdakilerden hangisidir?|A) Depolama alanlarını artırmak~B) Veri paketlerini şifrelemek~C) Veri trafiğini doğru hedeflere yönlendirmek~D) Yalnızca ağ kesintilerini önlemek~E) Kullanıcıların ağ erişimini engellemek|C) Veri trafiğini doğru hedeflere yönlendirmek|ACIKLAMA::Yönlendirici, paketleri IP adresine göre ağlar arasında doğru hedefe iletir.|",
+  "2025 Vize|Aşağıdakilerden hangisi bilgi işlem kaynaklarından biri DEĞİLDİR?|A) Ağ~B) CPU~C) Depolama~D) Bellek~E) Yazıcı|E) Yazıcı|ACIKLAMA::Bilgi işlem kaynakları CPU, bellek, depolama ve ağdır. Yazıcı bir çevre birimidir, temel bilgi işlem kaynağı değildir.|",
+  "2025 Vize|Bulut bilişimde \"erişilebilirlik\" kavramının tanımı aşağıdakilerden hangisidir?|A) Fiziksel donanımın sürekli güncellenmesi~B) Yalnızca yerel cihazlardan erişim~C) İnternet bağlantısı olan her yerden verilere erişim~D) Verilerin yalnızca bir cihazda saklanması~E) İnternet bağlantısının gereksiz olması|C) İnternet bağlantısı olan her yerden verilere erişim|ACIKLAMA::Erişilebilirlik, internet olan her yerden ve her cihazdan hizmete/veriye ulaşabilmektir.|",
+  "2025 Vize|Aşağıdakilerden hangisi sanallaştırmanın avantajlarından biri DEĞİLDİR?|A) Maliyet tasarrufu~B) Esneklik ve ölçeklenebilirlik~C) Kaynak verimliliği~D) Performans kaybı~E) Yedekleme ve felaket kurtarma|D) Performans kaybı|ACIKLAMA::Sanallaştırma maliyet, esneklik, kaynak verimliliği ve kurtarma avantajı sağlar. Performans kaybı bir dezavantajdır, avantaj değildir.|",
+  "2025 Vize|Blok depolamanın temel avantajı aşağıdakilerden hangisidir?|A) Kolay yönetim ve genişletilebilirlik~B) Daha az esneklik~C) Yalnızca dosya paylaşımı imkânı~D) Yüksek performans ve düşük gecikme~E) Yüksek gecikme ve düşük maliyet|D) Yüksek performans ve düşük gecikme|ACIKLAMA::Blok depolama, veritabanı gibi yoğun G/Ç isteyen yükler için yüksek performans ve düşük gecikme sunar.|",
+  "2025 Vize|Aşağıdakilerden hangisi sanallaştırma türlerinden biri DEĞİLDİR?|A) Ağ sanallaştırma~B) Depolama sanallaştırma~C) Sunucu sanallaştırma~D) İşletim sistemi sanallaştırma~E) Masaüstü sanallaştırma|D) İşletim sistemi sanallaştırma|ACIKLAMA::Ağ, depolama, sunucu ve masaüstü sanallaştırma temel türlerdir.|Kaynak anahtar D demiş; ancak 'İS/konteyner sanallaştırma' gerçek bir türdür. Bu soru tartışmalıdır — sınavda anahtar D korunur.",
+  "2025 Vize|Google Workspace'in temel araçlarından Google Drive'ın işlevi aşağıdakilerden hangisidir?|A) E-posta gönderip almak~B) Doküman düzenlemek~C) Elektronik tablo oluşturmak~D) Video konferans yapmak~E) Bulut depolama sağlamak|E) Bulut depolama sağlamak|ACIKLAMA::Google Drive bir bulut depolama hizmetidir. E-posta Gmail, doküman Docs, tablo Sheets, konferans Meet ile yapılır.|",
+  "2025 Vize|Bulut bilişim kavramının tanımı aşağıdakilerden hangisidir?|A) Yerel veri merkezlerinin yönetilmesi~B) İnternet üzerinden bilgi işlem hizmetlerinin sağlanması~C) Yalnızca yazılım geliştirme süreçlerini kapsar~D) Fiziksel donanım satın alma süreci~E) Bilgisayarların fiziksel olarak birleştirilmesi|B) İnternet üzerinden bilgi işlem hizmetlerinin sağlanması|ACIKLAMA::Bulut bilişim; hesaplama, depolama ve yazılımın internet üzerinden hizmet olarak sunulmasıdır.|",
+  "2025 Vize|Aşağıdakilerden hangisi yük dengeleme işleminin faydalarından biridir?|A) Fiziksel sunucuların manuel yönetimini zorunlu kılar.~B) Yalnızca web trafiğini izler.~C) Kullanıcıların bulut erişimini sınırlar.~D) Yalnızca depolama alanı artırır.~E) Ağ trafiğini/işlem yükünü birden fazla kaynağa dağıtarak dengeli çalışmayı sağlar.|E) Ağ trafiğini/işlem yükünü birden fazla kaynağa dağıtarak dengeli çalışmayı sağlar.|ACIKLAMA::Yük dengeleme, gelen isteği birden çok sunucuya dağıtarak tek noktanın aşırı yüklenmesini önler.|",
+  "2025 Vize|Güvenlik politikalarından \"erişim kontrolü\" ifadesinin faydası aşağıdakilerden hangisidir?|A) Verilerin test ortamında kullanılmasını sağlar.~B) Yetkisiz erişimi önlemek için kaynaklara erişim politikalarını düzenler.~C) Verilerin düzenli yedeklenmesini~D) Verilerin şifrelenmesini~E) Kullanıcıların kimliklerini doğrulamasını|B) Yetkisiz erişimi önlemek için kaynaklara erişim politikalarını düzenler.|ACIKLAMA::Erişim kontrolü, kimin hangi kaynağa erişebileceğini belirleyerek yetkisiz erişimi engeller.|",
+  "2025 Vize|Aşağıdakilerden hangisi ağ güvenliği yöntemlerinden biri DEĞİLDİR?|A) VPN~B) IDS/IPS~C) Güvenlik duvarları~D) Ağ segmentasyonu~E) CDN|E) CDN|ACIKLAMA::VPN, IDS/IPS, güvenlik duvarı ve ağ segmentasyonu güvenlik yöntemidir. CDN içerik dağıtımı/performans içindir, bir güvenlik yöntemi değildir.|",
+  "2025 Vize|Aşağıdakilerden hangisi ağ yapılarından biri DEĞİLDİR?|A) Fiziksel Depolama Ağı~B) İnternet~C) Bulut Ağı~D) Yerel Ağ (LAN)~E) Geniş Alan Ağı (WAN)|A) Fiziksel Depolama Ağı|ACIKLAMA::İnternet, bulut ağı, LAN ve WAN ağ yapılarıdır. 'Fiziksel Depolama Ağı' bir ağ yapısı olarak sayılmaz.|",
+  "2025 Vize|Aşağıdakilerden hangisi CPU'nun tanımıdır?|A) Veri iletişimini sağlayan altyapıdır.~B) Merkezi işlem birimi, bilgi işlem gücünü sağlar.~C) Yazılım yönetimini sağlayan birimdir.~D) Verilerin kalıcı saklandığı yerdir.~E) Verilerin geçici saklandığı yerdir.|B) Merkezi işlem birimi, bilgi işlem gücünü sağlar.|ACIKLAMA::CPU (Central Processing Unit) hesaplama gücünü sağlayan merkezi işlem birimidir.|",
+  "2025 Vize|Aşağıdakilerden hangisi bulut bilişimin avantajlarından biridir?|A) Kullanıcı yalnızca kullandığı kaynaklar için ödeme yapar.~B) Esneklik ve ölçeklenebilirlik sağlamaz.~C) Tüm verilerin yerel cihazda saklanmasını zorunlu kılar.~D) Yalnızca fiziksel donanım maliyetini artırır.~E) İnternet bağlantısı olmadan çalışabilir.|A) Kullanıcı yalnızca kullandığı kaynaklar için ödeme yapar.|ACIKLAMA::Kullandıkça öde modeli bulutun temel avantajıdır; sabit yatırım yerine tüketim bazlı ödeme yapılır.|",
+  "2025 Vize|Bulut güvenliğinin temel prensiplerinden \"gizlilik\" ile aşağıdakilerden hangisi kastedilir?|A) Verilerin yalnızca test ortamında kullanılması~B) Verilerin yetkisiz erişime karşı korunması~C) Verilerin sürekli erişilebilir olması~D) Verilerin düzenli yedeklenmesi~E) Verilerin şifrelenmesi|B) Verilerin yetkisiz erişime karşı korunması|ACIKLAMA::Gizlilik (confidentiality), verinin yalnızca yetkili kişilerce görülmesini, yetkisiz erişime karşı korunmasını ifade eder.|",
+  "2025 Vize|Bulut performans ölçütlerinden \"gecikme süresi\" ifadesi ile aşağıdakilerden hangisi temsil edilir?|A) İsteklerin yanıtlanma süresini~B) Uygulamaların kolay kullanılabilirliğini~C) Kaynakların artırılabilirliğini~D) Veri aktarım kapasitesini~E) Uygulamaların sürekli erişilebilirliğini|A) İsteklerin yanıtlanma süresini|ACIKLAMA::Gecikme (latency), bir isteğin gönderilip yanıtın alınması arasındaki süredir.|",
+  "2025 Vize|Bulut altyapısında sunucuların temel işlevi aşağıdakilerden hangisidir?|A) Uygulamaların çalıştırılmasını sağlamak~B) İnternet bağlantısını yönetmek~C) Yalnızca veri depolamak~D) Güvenlik duvarı işlevi görmek~E) Yedekleme işlemlerini gerçekleştirmek|A) Uygulamaların çalıştırılmasını sağlamak|ACIKLAMA::Sunucular, uygulama ve hizmetleri barındırıp çalıştıran temel bilgi işlem birimleridir.|",
+  "2026 Vize|Aşağıdaki araçlardan hangisi açık kaynaklı bir yük dengeleme ve ters proxy sunucusudur?|A) HAProxy~B) Google Cloud Load Balancing~C) NGINX~D) Azure Load Balancer~E) AWS Elastic Load Balancing|C) NGINX|ACIKLAMA::Cevap anahtarı NGINX'i işaretlemiştir; NGINX açık kaynaklı bir ters proxy ve yük dengeleyicidir.|HAProxy (A) de açık kaynaklı bir yük dengeleyici/ters proxy'dir ve 'ters proxy' vurgusuyla klasik cevaptır. İki şık da teknik olarak doğrudur; anahtar C'yi kabul etmiştir.",
+  "2026 Vize|Alt ağlar (subnets) ne işe yarar?|A) Fiziksel sunucuları birleştirir.~B) Sanal ağları daha küçük bölümlere ayırır.~C) Ağ trafiğini şifreler.~D) Kullanıcıların ağ erişimini sınırlar.~E) Yalnızca veri depolama işlemlerini optimize eder.|B) Sanal ağları daha küçük bölümlere ayırır.|ACIKLAMA::Subnet, bir ağı daha küçük mantıksal bölümlere ayırarak yönetim, güvenlik ve trafik izolasyonu sağlar.|",
+  "2026 Vize|Bulut bilişimin temel özelliği \"isteğe bağlı self-servis\" neyi ifade eder?|A) Verilerin yalnızca fiziksel sunucularda saklanmasını~B) Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını~C) Bulut hizmetlerinin performansını düşürmesini~D) Kullanıcıların kaynakları manuel olarak talep etmesini~E) Kullanıcıların ihtiyaç duydukları kaynakları otomatik olarak talep edebilmesini|E) Kullanıcıların ihtiyaç duydukları kaynakları otomatik olarak talep edebilmesini|ACIKLAMA::On-demand self-service; kullanıcının insan müdahalesi olmadan, otomatik olarak kaynak talep edip alabilmesidir.|",
+  "2026 Vize|Performans izleme aracı Dynatrace'in temel işlevi nedir?|A) Konteynerlerin dağıtımını yönetmek~B) Veri tabanı sorgularını optimize etmek~C) Uygulama performansını izlemek ve yönetmek~D) Sunucusuz bilgi işlem sağlamak~E) Elektronik tablo oluşturmak|C) Uygulama performansını izlemek ve yönetmek|ACIKLAMA::Dynatrace bir APM (Application Performance Monitoring) aracıdır; uygulama performansını izler ve yönetir.|",
+  "2026 Vize|Bulut bilişimde \"kullandıkça öde\" modeli neyi ifade eder?|A) Bulut hizmetlerinin performansını düşürmesini~B) Yalnızca yerel cihazlarda çalışmasını~C) Kullanıcıların sabit ücret ödemesini~D) Kullanıcıların yalnızca kullandıkları kaynaklar için ödeme yapmasını~E) Verilerin yalnızca fiziksel sunucularda saklanmasını|D) Kullanıcıların yalnızca kullandıkları kaynaklar için ödeme yapmasını|ACIKLAMA::Pay-as-you-go; sabit maliyet yerine yalnızca tüketilen kaynak kadar ödeme yapılmasıdır.|",
+  "2026 Vize|Aşağıdakilerden hangisi bulut ortamında karşılaşılan güvenlik risklerinden biridir?|A) Çok faktörlü kimlik doğrulama~B) Veri şifreleme~C) Güvenlik duvarları~D) Veri ihlalleri~E) Veri maskeleme|D) Veri ihlalleri|ACIKLAMA::Veri ihlali (data breach) bir güvenlik riskidir. Diğer şıklar (MFA, şifreleme, güvenlik duvarı, maskeleme) risk değil, koruma yöntemleridir.|",
+  "2026 Vize|Blok depolamanın temel avantajı aşağıdakilerden hangisidir?|A) Yüksek performans ve düşük gecikme~B) Kolay yönetim ve genişletilebilirlik~C) Daha az esneklik~D) Yalnızca dosya paylaşımı imkânı~E) Yüksek gecikme ve düşük maliyet|A) Yüksek performans ve düşük gecikme|ACIKLAMA::Blok depolama yoğun G/Ç isteyen iş yükleri için yüksek performans ve düşük gecikme sağlar.|",
+  "2026 Vize|Yük dengeleme (load balancing) neyi ifade eder?|A) Bulut hizmetlerinin performansını düşürmesi~B) Yalnızca yerel cihazlarda çalışması~C) İş yükünün birden fazla sunucuya dengeli dağıtılması~D) Verilerin yalnızca manuel işlenmesi~E) Verilerin yalnızca fiziksel sunucularda saklanması|C) İş yükünün birden fazla sunucuya dengeli dağıtılması|ACIKLAMA::Yük dengeleme, gelen isteği birden çok sunucuya dağıtarak sistemin dengeli ve kesintisiz çalışmasını sağlar.|",
+  "2026 Vize|Yönlendiricinin (router) temel işlevi aşağıdakilerden hangisidir?|A) Veri paketlerini ağlar arasında yönlendirmek~B) Dosya paylaşımını sağlamak~C) Sanal makineleri çalıştırmak~D) Güvenlik duvarı işlevi görmek~E) Verileri depolamak|A) Veri paketlerini ağlar arasında yönlendirmek|ACIKLAMA::Yönlendirici, paketleri farklı ağlar arasında hedefe göre iletir.|",
+  "2026 Vize|IaaS modelinde kullanıcılar aşağıdaki bileşenlerden hangisi ile yönetilir?|A) Sunucular~B) Sanallaştırma~C) Uygulamalar~D) Ağ~E) Depolama|C) Uygulamalar|ACIKLAMA::IaaS'te sağlayıcı donanım/sanallaştırma/ağ/depolamayı yönetir; kullanıcı ise İS ve uygulamalarını kendisi yönetir.|Soru ifadesi muğlak; anahtar 'Uygulamalar' (C)'yi kullanıcının yönettiği katman olarak kabul etmiştir.",
+  "2026 Vize|Bulut mimarisi katmanı PaaS ne sağlar?|A) Verilerin manuel işlenmesini~B) Yalnızca yerel cihazlarda çalışmayı~C) Yalnızca fiziksel sunucularda saklamayı~D) Geliştiricilere uygulama geliştirme ve dağıtım platformu sunar.~E) Yalnızca fiziksel sunucuların yönetimini|D) Geliştiricilere uygulama geliştirme ve dağıtım platformu sunar.|ACIKLAMA::PaaS, altyapı ayrıntılarıyla uğraşmadan uygulama geliştirip dağıtmak için hazır bir platform (çalışma zamanı, veri tabanı, araçlar) sağlar.|",
+  "2026 Vize|Aşağıdakilerden hangisi veri şifreleme yönteminin temel amacıdır?|A) Verilerin okunamaz hale getirilerek yetkisiz erişime karşı korunması~B) Verilerin test ortamında kullanılması~C) Yalnızca fiziksel sunucularda saklanması~D) Verilerin düzenli yedeklenmesi~E) Kullanıcıların kimliklerini doğrulamak|A) Verilerin okunamaz hale getirilerek yetkisiz erişime karşı korunması|ACIKLAMA::Şifreleme, veriyi anahtarsız okunamaz hale getirerek gizliliğini korur.|",
+  "2026 Vize|Ağ analiz aracı Wireshark'ın temel işlevi aşağıdakilerden hangisidir?|A) Veri paketlerinin rotasını izlemek~B) Gecikme süresini ölçmek~C) Yedekleme çözümleri oluşturmak~D) Bant genişliğini artırmak~E) Ağ trafiğini analiz etmek|E) Ağ trafiğini analiz etmek|ACIKLAMA::Wireshark bir paket yakalama/analiz aracıdır; ağdaki trafiği paket düzeyinde inceler.|",
+  "2026 Vize|QoS (Quality of Service)'nin kullanım amacı aşağıdakilerden hangisidir?|A) Fiziksel sunucuları birleştirir.~B) Ağ trafiğini önceliklendirir.~C) Depolama alanlarını artırır.~D) Yalnızca ağ kesintilerini önler.~E) Veri paketlerini şifreler.|B) Ağ trafiğini önceliklendirir.|ACIKLAMA::QoS, kritik trafiğe (ör. VoIP, video) öncelik vererek bant genişliği ve gecikme garantisi sağlar.|",
+  "2026 Vize|Sanallaştırmada \"hipervizör\" neyi ifade eder?|A) Verilerin yalnızca yerel cihazlarda saklanmasını sağlayan sistem~B) Sanal makineleri yöneten yazılım katmanı~C) Fiziksel sunucuların performansını düşüren yazılım~D) Verilerin manuel işlenmesini sağlayan araç~E) Bulut hizmetlerinin manuel güncellenmesini sağlayan araç|B) Sanal makineleri yöneten yazılım katmanı|ACIKLAMA::Hipervizör (VMM), fiziksel donanımı soyutlayarak birden çok sanal makineyi oluşturup yöneten yazılım katmanıdır.|",
+  "2026 Vize|Kaynak yönetimi ifadesinin tanımı aşağıdakilerden hangisidir?|A) Bilgi işlem kaynaklarının etkin ve verimli kullanılması sürecidir.~B) Kullanıcıların bulut erişimini engelleyen süreç~C) Yalnızca depolama artırımı~D) Yalnızca ağ trafiği izleme~E) Fiziksel sunucuların manuel yönetimi|A) Bilgi işlem kaynaklarının etkin ve verimli kullanılması sürecidir.|ACIKLAMA::Kaynak yönetimi; CPU, bellek, depolama ve ağın ihtiyaca göre etkin ve verimli tahsis edilmesidir.|",
+  "2026 Vize|Konteynerlerin sanal makinelere göre avantajı nedir?|A) Yalnızca fiziksel sunucularda çalışır~B) Daha az güvenlidir~C) Daha fazla donanım gerektirir~D) Daha hafif ve hızlıdır~E) Daha yavaş çalışır|D) Daha hafif ve hızlıdır|ACIKLAMA::Konteynerler İS çekirdeğini paylaşır, kendi İS'lerini taşımaz; bu yüzden VM'lerden daha hafif ve hızlı başlar.|",
+  "2026 Vize|Aşağıdakilerden hangisi bulut bilişimin avantajlarından biri DEĞİLDİR?|A) Maliyet tasarrufu~B) İnternet bağımlılığı~C) Esneklik~D) Yedekleme ve felaket kurtarma~E) Ölçeklenebilirlik|B) İnternet bağımlılığı|ACIKLAMA::Maliyet tasarrufu, esneklik, kurtarma ve ölçeklenebilirlik avantajdır. İnternete bağımlılık bir dezavantajdır.|",
+  "2026 Vize|Sanallaştırmada \"sanal makine\" neyi ifade eder?|A) Verilerin yalnızca fiziksel sunucularda saklanmasını sağlayan yazılım~B) Yalnızca yerel cihazlarda çalışmayı sağlayan sistem~C) Verilerin manuel işlenmesini sağlayan araç~D) Bulut hizmetlerinin performansını düşüren yazılım~E) Fiziksel bir sunucunun yazılım tabanlı bir kopyası|E) Fiziksel bir sunucunun yazılım tabanlı bir kopyası|ACIKLAMA::Sanal makine, gerçek bir bilgisayarın (CPU, bellek, disk, ağ) yazılımla taklit edilen kopyasıdır.|",
+  "2026 Vize|Bulut bilişimde değişen iş yüklerine hızlı uyum sağlamayı ifade eden özellik hangisidir?|A) Yedekleme~B) Fiziksel donanım yönetimi~C) Veri kaybı~D) Güvenlik~E) Otomatik ölçeklendirme|E) Otomatik ölçeklendirme|ACIKLAMA::Otomatik ölçeklendirme (auto-scaling), talebe göre kaynakları otomatik artırıp azaltarak değişen yüke uyum sağlar.|",
+  "2022-2023 Final|I. SISD  II. MIMD  III. KIMD — 1966'da Michael Flynn'in eşzamanlı kontrol/talimat ve veri akışları sayısına dayalı sınıflandırması hangilerini içerir?|A) II ve III~B) I ve II~C) I ve III~D) Yalnız I~E) Yalnız III|B) I ve II|ACIKLAMA::Flynn taksonomisi SISD, SIMD, MISD ve MIMD'dir. 'KIMD' diye bir sınıf yoktur; verilenlerden yalnızca SISD (I) ve MIMD (II) geçerlidir.|",
+  "2022-2023 Final|Güvenilir bir uygulamayı en düşük ayrıcalık düzeyiyle kısıtlamak için kullanılabilen zorunlu güvenlik mekanizmalarından biri hangisidir?|A) Tür değişimi~B) Tür zorlaması~C) Tür geliştirmesi~D) Tür salınımı~E) Tür atlaması|B) Tür zorlaması|ACIKLAMA::Tür zorlaması (Type Enforcement), zorunlu erişim kontrolünde özne ve nesneleri tiplere ayırarak en az ayrıcalık ilkesini uygular.|",
+  "2022-2023 Final|I. Geçici depolama  II. Örnek dışı bulut depolama  III. Monte edilebilir örnek dışı blok depolama — AWS'de Hadoop dosya sistemine benzer bir dosya sistemi kurmak için hangileri kullanılmalıdır?|A) I ve III~B) II ve III~C) I ve II~D) Yalnız III~E) Yalnız II|B) II ve III|ACIKLAMA::Kalıcı ve monte edilebilen depolama (örnek dışı S3/EBS türü) HDFS benzeri sistem için gerekir. Geçici (ephemeral) depolama eşgörünüm kapanınca silineceğinden uygun değildir.|",
+  "2022-2023 Final|Xen güvenlik açıklarının analizi yapıldığında saldırıların büyük çoğunluğu hangi bileşene yapılmaktadır?|A) Yardımcı sanal makinenin güvenlik bileşeni~B) Kontrol sanal makinesinin güvenlik bileşeni~C) Kontrol işletim sisteminin hizmet bileşeni~D) Kontrol sanal makinesinin hizmet bileşeni~E) Yardımcı sanal makinenin hizmet bileşeni|D) Kontrol sanal makinesinin hizmet bileşeni|ACIKLAMA::Xen'de saldırıların çoğu, ayrıcalıklı kontrol VM'inin (Dom0) hizmet bileşenlerini hedef alır; saldırı yüzeyinin en geniş olduğu yer burasıdır.|",
+  "2022-2023 Final|${t_s3kod}Yukarıdaki kod aşağıdakilerden hangisini gerçekleştirmektedir?|A) Belirli bir klasördeki tüm erişim anahtarlarının listesini oluşturur.~B) Belirli bir klasördeki tüm gizli anahtarların listesini oluşturur.~C) Belirli bir klasördeki tüm liste sonu anahtarlarının listesini oluşturur.~D) Belirli bir klasördeki tüm anahtarların bir listesini oluşturur.~E) Belirli bir klasördeki tüm öncü anahtarların listesini oluşturur.|D) Belirli bir klasördeki tüm anahtarların bir listesini oluşturur.|ACIKLAMA::listObjects + getObjectSummaries döngüsü, kovadaki (bucket) tüm nesne anahtarlarını (key) allKeys listesine toplar.|",
+  "2022-2023 Final|Bulut bilişim paradigmalarının piramit modeline göre yazılım hangi görevi görür?|A) Temel kaynakların kullanımını kolaylaştıracak bir ortam ekler.~B) Kaynakları kontrol eder.~C) Temel kaynaklar sağlar.~D) Hizmetlerin tasarımını yapar.~E) Hizmetlere doğrudan erişime izin verir.|E) Hizmetlere doğrudan erişime izin verir.|ACIKLAMA::Piramidin en üstündeki yazılım (SaaS) katmanı kullanıcıya hizmetlere doğrudan erişim sağlar.|",
+  "2022-2023 Final|I. Etkinlik  II. Görecelik  III. Sadakat — Hangi madde veya maddelerde hipervizörler iyi performans göstermelidir?|A) I ve III~B) II ve III~C) Yalnız II~D) I ve II~E) Yalnız I|A) I ve III|ACIKLAMA::Hipervizör etkinlik (verimlilik) ve sadakat (donanımı doğru öykünme) açısından ideali temsil etmelidir. Görecelik bir performans ölçütü değildir.|",
+  "2022-2023 Final|Her FC aygıtının sahip olduğu WorldWideName benzersiz kimliğinin adres uzunluğu kaç bittir?|A) 128~B) 48~C) 32~D) 16~E) 64|E) 64|ACIKLAMA::WWN (World Wide Name), Fiber Channel aygıtlarını benzersiz tanımlayan 64 bitlik bir adrestir.|",
+  "2022-2023 Final|Akıllı telefonlardaki \"ölüm tutuşu\" tabiri ne anlama gelmektedir?|A) Telefonu belli açıda tutunca internet performansının düşmesi~B) Telefonu belli açıda tutunca kamera görüntüsünde bozulmalar olması~C) Telefonu belli açıda tutunca çok yüksek elektromanyetik alana maruz kalma~D) Telefonu belli açıda tutunca ekran ömrünün azalması~E) Telefonu belli açıda tutunca anten kazancının çok düşmesi ve çekme problemleri yaşaması|E) Telefonu belli açıda tutunca anten kazancının çok düşmesi ve çekme problemleri yaşaması|ACIKLAMA::Elin anteni kapatacak şekilde kavraması anten kazancını düşürüp sinyal/çekim kaybına yol açar (death grip).|",
+  "2022-2023 Final|I. Simetri  II. Tamamlayıcılık  III. Düzenlilik — Hangileri sistem simülasyonunun karmaşıklığını azaltır?|A) I ve III~B) I ve II~C) Yalnız III~D) Yalnız I~E) II ve III|A) I ve III|ACIKLAMA::Simetri ve düzenlilik, tekrar eden yapıların bir kez modellenip yeniden kullanılmasını sağlayarak simülasyon karmaşıklığını azaltır.|",
+  "2022-2023 Final|Uygulama kodlamasını ve dağıtımını kolaylaştırmak için bir dizi araç ve hizmet sağlayan bulut iletim yolu hangisidir?|A) KaaS~B) SaaS~C) IaaS~D) PaaS~E) BaaS|D) PaaS|ACIKLAMA::PaaS (Platform as a Service) geliştiriciye hazır çalışma zamanı, araç ve hizmetler sunarak kodlama ve dağıtımı kolaylaştırır.|",
+  "2022-2023 Final|S3'ün varsayılan protokolü aşağıdakilerden hangisidir?|A) RTSP~B) HTTP~C) BitTorrent~D) RTP~E) UDP|B) HTTP|ACIKLAMA::S3 nesnelerine varsayılan olarak HTTP (REST) üzerinden erişilir; güvenli erişim HTTPS ile yapılır.|",
+  "2022-2023 Final|I. Sonraki eylemi nerede bulacağını söyleyen eylem referansı  II. Yorumlayıcının görselinde görülebilen referans  III. Gerçekleştirebileceği eylemler dizisini tanımlayan repertuar — Hangileri yorumlayıcı soyutlamasında tanınabilen ögelerdendir?|A) Yalnız I~B) I ve III~C) Yalnız II~D) II ve III~E) I ve II|B) I ve III|ACIKLAMA::Yorumlayıcı soyutlamasında eylem referansı (I) ve eylem repertuarı (III) tanımlıdır; görselde görülen referans bu soyutlamanın ögesi değildir.|",
+  "2022-2023 Final|Belirli bir S3 kovasındaki tüm nesnelerin anahtarlarını görüntülemek için aşağıdakilerden hangisi kullanılır?|A) ObjectSummary sum = s3.summaryObjects(\"bucket_name\");~B) ObjectSummary show = s3.sumObjects(\"bucket_name\");~C) Objectshowing show = s3.showObjects(\"bucket_name\");~D) ObjectListing listing = s3.listObjects(\"bucket_name\");~E) Objectpanel listing = s3.panelObjects(\"bucket_name\");|D) ObjectListing listing = s3.listObjects(\"bucket_name\");|ACIKLAMA::AWS SDK'da s3.listObjects(\"bucket_name\") çağrısı, kovadaki nesne anahtarlarını içeren bir ObjectListing döndürür.|",
+  "2022-2023 Final|Bağımsız olarak oluşturulmuş ve test edilmiş bir dizi bileşenden karmaşık bir sistem oluşturma tekniğine verilen ad hangisidir?|A) Görecelik~B) Modülerlik~C) Katmanlama~D) Erişimsellik~E) Hiyerarşi|B) Modülerlik|ACIKLAMA::Modülerlik; bağımsız geliştirilip test edilen modüllerin birleştirilmesiyle karmaşık sistem kurma yaklaşımıdır.|",
+  "2022-2023 Final|İşletim sistemi güvenliğiyle ilgili işlevleri gerçekleştiren özel ayrıcalıklara sahip uygulamalara ne ad verilir?|A) Garantili~B) Güvenlikli~C) Karmaşık~D) Kalifiye~E) Güvenilir|E) Güvenilir|ACIKLAMA::Güvenilir (trusted) uygulamalar, sistemin güvenlik işlevlerini yerine getirmek için özel ayrıcalıklara sahiptir.|",
+  "2022-2023 Final|\"Toplum giderek bilgi altyapısına ……. hale geldikçe, bilgi işlem ve iletişim sistemlerinin güvenliği yeni bir aciliyet kazanıyor.\" Boşluğa gelecek kavram hangisidir?|A) Saygılı~B) Bağımlı~C) Sorumlu~D) Karmaşık~E) Öngörülü|B) Bağımlı|ACIKLAMA::Toplumun bilgi altyapısına bağımlılığı arttıkça güvenlik daha kritik hale gelir.|",
+  "2022-2023 Final|Xen tabanlı bir ortamın yönetim işletim sistemi aşağıdakilerden hangisidir?|A) Dom0~B) DomZ~C) DomK~D) DomU~E) DomV|A) Dom0|ACIKLAMA::Dom0 (Domain 0), Xen açıldığında ilk başlatılan, donanım sürücülerini ve diğer VM'leri (DomU) yöneten ayrıcalıklı yönetim İS'idir.|",
+  "2022-2023 Final|Bir ulus devletin zarar verme veya kesintiye uğratma amacıyla başka bir ulusun bilgisayarına/ağlarına sızmaya yönelik eylemlerine verilen ad hangisidir?|A) Siber sınıflama~B) Siber savaş~C) Siber karşılama~D) Siber donanma~E) Siber dalaşma|B) Siber savaş|ACIKLAMA::Devlet destekli, başka bir ulusa zarar/kesinti amaçlı bilgisayar saldırıları siber savaş (cyber warfare) olarak adlandırılır.|",
+  "2022-2023 Final|${t_enerji}Yukarıdaki işlemcinin saat hızı 1.2 GHz'e düşürülürse performans kaybı yüzde kaçtır?|A) 19|A) 19|ACIKLAMA::Açık uçlu (klasik) soru. Tabloda 1.2 GHz için normalize performans %81'dir. Kayıp = 1 − 0,81 = 0,19 → yaklaşık %19.|",
+  "2022-2023 Final|Aşağıdakilerden hangisi Xen sanal makinesinin bir bileşeni DEĞİLDİR? (Cevap: Sanal x86 işlemcisi)|A) Sanal x86 işlemcisi|A) Sanal x86 işlemcisi|ACIKLAMA::Açık uçlu (klasik) soru. Xen paravirtualizasyon kullandığından konuğa 'sanal x86 işlemcisi' öykünmez; bileşenleri arasında yer almaz.|",
+  "2022-2023 Final|Optimum tasarım kararlarını engelleyen problemlerin ortaya çıkarılması gerektiğinde karmaşık sorunlarla başa çıkmaya yardımcı olan yapı hangisidir?|A) Katmanlama|A) Katmanlama|ACIKLAMA::Açık uçlu (klasik) soru. Katmanlama (layering), karmaşık sistemi bağımsız katmanlara bölerek her katmanı ayrı ele almayı ve karmaşıklığı yönetmeyi sağlar.|",
+  "2022-2023 Final|Amazon web hizmetlerine ulaşmak için tarayıcıya hangi URL girilmelidir?|A) http://aws.amazon.com/|A) http://aws.amazon.com/|ACIKLAMA::Açık uçlu (klasik) soru. Amazon Web Services'e erişim adresi aws.amazon.com'dur.|",
+  "2024 Final|Bir bulut sağlayıcı, güveni şüpheli bir sağlayıcıdan bazı kaynakları taşerona verebilir ve bu taşeronlar müşteri verisini doğru koruyamayabilir. Bu durumu engelleyecek yöntem hangisidir?|A) Üçüncü taraf ardışıllaması~B) Üçüncü taraf denetimi~C) Üçüncü taraf katışımı~D) Üçüncü taraf anlaşması~E) Üçüncü taraf globalleşmesi|B) Üçüncü taraf denetimi|ACIKLAMA::Bağımsız üçüncü taraf denetimi (third-party audit), taşeron sağlayıcıların veri koruma yükümlülüklerine uyduğunu doğrular.|",
+  "2024 Final|I. Aradan çıkartma  II. İnceleme  III. İzolasyon — Hangileri VM tabanlı izinsiz giriş tespit sistemlerinin özelliğidir?|A) Yalnız I~B) Yalnız II~C) I ve II~D) II ve III~E) I ve III|D) II ve III|ACIKLAMA::VM tabanlı IDS'ler introspeksiyonla inceleme (II) yapar ve izleyiciyi konuktan izolasyon (III) ile korur.|",
+  "2024 Final|Infiniband üzerinde FDR için bağlantı başına her yönde bant genişliği aşağıdakilerden hangisidir?|A) 10 Gbps~B) 2.5 Gbps~C) 14 Gbps~D) 5 Gbps~E) 25 Gbps|C) 14 Gbps|ACIKLAMA::InfiniBand FDR (Fourteen Data Rate) hat başına yönde yaklaşık 14 Gbps sağlar.|",
+  "2024 Final|Tüm sistemin ortalama arıza süresi aşağıdakilerden hangisidir?|A) MTAF~B) MTTF~C) MDAF~D) MDTF~E) MTAD|B) MTTF|ACIKLAMA::MTTF (Mean Time To Failure), onarılamayan bir sistemin ortalama arızaya kadar geçen süresidir.|",
+  "2024 Final|I. Bileşik koşul  II. İsim  III. Açıklama — İş akışı modellemede \"görev\" hangileri ile karakterize edilir?|A) Yalnız III~B) Yalnız II~C) I ve III~D) II ve III~E) I ve II|D) II ve III|ACIKLAMA::Bir görev isim (II) ve açıklama (III) ile tanımlanır; bileşik koşul kontrol akışına aittir.|",
+  "2024 Final|I. Otomatik Boyutlandırma  II. EC2  III. Cloudwatch — Hangileri Yönetim Konsolu tarafından erişilebilen servislerdir?|A) Yalnız II~B) I ve II~C) Yalnız III~D) II ve III~E) I, II ve III|E) I, II ve III|ACIKLAMA::AWS Management Console'dan Auto Scaling, EC2 ve CloudWatch servislerinin hepsine erişilebilir.|",
+  "2024 Final|Ubuntu üzerindeki Basit Bildirim Hizmeti ne olarak da bilinir?|A) WNS~B) CNS~C) SNS~D) ZNS~E) KNS|C) SNS|ACIKLAMA::SNS (Simple Notification Service), yayınla-abone ol (pub/sub) mantığıyla çalışan basit bildirim hizmetidir.|",
+  "2024 Final|Güvenilir Bilgi İşlem Tabanı aşağıdakilerden hangisi olarak bilinir?|A) TCB~B) GBIT~C) TKB~D) GBT~E) TKK|A) TCB|ACIKLAMA::TCB (Trusted Computing Base), bir sistemin güvenliğini sağlayan tüm donanım/yazılım/bileşenlerin bütünüdür.|",
+  "2024 Final|Proses bazlı sanallaştırma metodunu kullanan Tip 2 sanal makine aşağıdakilerden hangisidir?|A) Xen~B) Wine~C) Parallels~D) VmWare Workstation 1~E) KVM|B) Wine|ACIKLAMA::Wine, uygulama (proses) düzeyinde çalışan, Windows API çağrılarını çeviren bir Tip-2 (proses bazlı) çözümdür.|",
+  "2024 Final|I. Fayda Tabanlı  II. Makine Öğrenme  III. Sanal Odaklanma — Hangileri Kaynak Yönetimi politikalarının uygulanması için temel mekanizmalardır?|A) Yalnız III~B) II ve III~C) I ve III~D) Yalnız I~E) I ve II|E) I ve II|ACIKLAMA::Kaynak yönetiminde fayda tabanlı (utility-based) ve makine öğrenmesi temel mekanizmalardır. 'Sanal odaklanma' böyle bir mekanizma değildir.|",
+  "2024 Final|Ara katman yazılımının desteklemesi gereken \"sistemdeki bilgi nesneleri sistemi etkilemeden taşınır\" özelliği hangisidir?|A) Göç Şeffaflığı~B) Ölçeklendirme Şeffaflığı~C) Konum Şeffaflığı~D) Çoğaltma Şeffaflığı~E) Erişim Şeffaflığı|A) Göç Şeffaflığı|ACIKLAMA::Göç (migration) şeffaflığı, nesnelerin sistemi etkilemeden bir yerden başka yere taşınabilmesini gizler.|",
+  "2024 Final|Bir Web formuna girilen SQL komutunun veri tabanı içeriğini saldırgana açması/değiştirmesi durumuna ne ad verilir?|A) SQL normalizasyonu~B) SQL enjeksiyonu~C) SQL dezentegrasyonu~D) SQL sorgulaması~E) SQL ayrıştırılması|B) SQL enjeksiyonu|ACIKLAMA::SQL enjeksiyonu; kullanıcı girdisinin sorguya kod olarak enjekte edilerek veri tabanının ele geçirilmesidir.|",
+  "2024 Final|<pre>ReceiveMessageRequest r = new ReceiveMessageRequest();\nr.QueueUrl = myQueueUrl;\nReceiveMessageResponse resp = sqs.ReceiveMessage(r);</pre>Yukarıdaki kod SQS yoluyla hangi işlemi yerine getirir?|A) Bağlantı kimliğini doğrular.~B) Mesaj gönderir.~C) Mesaj alır.~D) Mesaj siler.~E) Kuyruk oluşturur.|C) Mesaj alır.|ACIKLAMA::Kod, SQS kuyruğundan ReceiveMessage çağrısıyla mesaj okur/alır.|",
+  "2024 Final|I. Performans  II. Açılım  III. Maliyet — Hangileri insan yapımı sistemlerin karmaşıklığını pratikte sınırlayan faktörlerdir?|A) II ve III~B) Yalnız III~C) I ve III~D) I ve II~E) Yalnız II|C) I ve III|ACIKLAMA::Karmaşıklığı pratikte sınırlayan faktörler performans ve maliyettir.|",
+  "2024 Final|Kendi kendine benzerliğin karmaşıklığını ölçmek için kullanılabilecek kavram aşağıdakilerden hangisidir?|A) Kritik yavaşlama~B) Kritik yaşlanma~C) Kritik durağanlık~D) Kritik hızlanma~E) Kritik gövde|A) Kritik yavaşlama|ACIKLAMA::Kritik yavaşlama (critical slowing down), sistemin kritik noktaya yaklaşırken kendine benzer davranış ve artan tepki süresiyle karmaşıklığını gösterir.|",
+  "2024 Final|I. Yönetim Araçları  II. Cihaz Öykünücüleri  III. Sanal Hafıza — Hangileri Yönetim İşletim Sistemi'nin (Dom0) elemanlarındandır?|A) I ve III~B) II ve III~C) Yalnız II~D) I ve II~E) Yalnız I|D) I ve II|ACIKLAMA::Yönetim İS'i (Dom0) yönetim araçlarını ve cihaz öykünücülerini (device emulators) içerir. Sanal hafıza konuk VM'e ait bir kaynaktır.|",
+  "2024 Final|Dom0'da taşıma katmanı güvenliği nasıl gösterilir?|A) TSL~B) TGK~C) TCM~D) TLS~E) TKG|D) TLS|ACIKLAMA::Taşıma katmanı güvenliği TLS (Transport Layer Security) ile sağlanır.|",
+  "2024 Final|Bulut bilişim paradigmalarının piramit modeline göre yazılım hangi görevi görür?|A) Kaynakları kontrol eder.~B) Temel kaynakları sağlar.~C) Kaynakların kullanımını kolaylaştıran ortam ekler.~D) Hizmetlerin tasarımını yapar.~E) Hizmetlere doğrudan erişime izin verir.|E) Hizmetlere doğrudan erişime izin verir.|ACIKLAMA::Piramidin tepesindeki yazılım (SaaS) katmanı kullanıcıya hizmetlere doğrudan erişim sağlar.|",
+  "2024 Final|I. Hizmet reddi olasılığı fazladır.  II. Paket filtreleme yapar.  III. Kabul kuralına uymayan bireysel paketleri atar. — Birinci nesil güvenlik duvarları için hangileri doğrudur?|A) I ve III~B) I ve II~C) Yalnız II~D) Yalnız I~E) II ve III|E) II ve III|ACIKLAMA::Birinci nesil güvenlik duvarları paket filtreleme (II) yapar ve kurala uymayan paketleri atar (III). Yüksek DoS olasılığı bunların bir özelliği olarak sayılmaz.|",
+  "2024 Final|Mikroskobik bir sistemin termodinamik entropisi S = kB ln Ω'dır. Buradaki kB ne olarak bilinir?|A) Boltzmann sabiti~B) Bormann sabiti~C) Birkin sabiti~D) Blatzmann sabiti~E) Blazkiewicz sabiti|A) Boltzmann sabiti|ACIKLAMA::kB, istatistiksel mekaniğin temel sabiti olan Boltzmann sabitidir.|",
+  "2022-2023 Vize|I. Devasa Altyapı  II. İntranetten erişilebilme  III. Fayda Bilişim (kullanım başına ödeme) — Hangileri Bulut Bilişimi tanımlayan özelliklerdendir?|A) Yalnız III~B) I ve II~C) I ve III~D) II ve III~E) Yalnız II|C) I ve III|ACIKLAMA::Bulut; devasa altyapı ve kullandıkça öde (fayda bilişim) modeliyle tanımlanır. Erişim İntranetten değil İnternet üzerindendir; II yanlıştır.|",
+  "2022-2023 Vize|I. Kabul Kontrolü  II. Yük Dengeleme  III. Kapasite Aşımı — Hangileri Bulut Kaynak Yönetimi ilkesi sınıfındandır?|A) I ve III~B) II ve III~C) Yalnız I~D) I ve II~E) Yalnız II|D) I ve II|ACIKLAMA::Kaynak yönetimi ilkeleri arasında kabul kontrolü ve yük dengeleme yer alır. 'Kapasite aşımı' bir ilke sınıfı değildir.|",
+  "2022-2023 Vize|I. İşlem boru hatları  II. Masaüstü uygulamaları  III. Toplu işleme sistemleri — Hangileri mevcut bulut uygulaması kategorilerindendir?|A) Yalnız I~B) Yalnız II~C) I ve III~D) II ve III~E) I ve II|C) I ve III|ACIKLAMA::Bulut uygulama kategorileri işlem boru hatları ve toplu (batch) işleme sistemlerini kapsar. Masaüstü uygulamaları bir bulut kategorisi değildir.|",
+  "2022-2023 Vize|Fiber Kanal Çerçevesinde kaç adet kelimelik bilgi saklanmaktadır?|A) 5~B) 3~C) 6~D) 2~E) 4|C) 6|ACIKLAMA::Fiber Channel çerçeve başlığı 24 bayt = 6 kelime uzunluğundadır (çıkmış sınav anahtarında da 6 olarak işaretli).|",
+  "2022-2023 Vize|I. Otonom  II. Dağıtık  III. Tümleşik — Hangileri Bulut Bilişim Altyapısı tiplerindendir?|A) I ve II~B) I ve III~C) Yalnız I~D) Yalnız II~E) II ve III|A) I ve II|ACIKLAMA::Bulut altyapıları otonom (kendi kendini yöneten) ve dağıtık yapıdadır (çıkmış sınav anahtarında da 'I ve II' işaretli).|",
+  "2022-2023 Vize|I. Eşgörünüm formatlar ortaya çıkarır.  II. Yeni bir imaj yaratır.  III. Mevcut bir AMI'den bir eşgörünüm başlatabilir. — Amazon Bulut Bilişim'de kullanıcı hangilerini gerçekleştirebilir?|A) I ve II~B) Yalnız II~C) Yalnız I~D) II ve III~E) I ve III|D) II ve III|ACIKLAMA::Kullanıcı yeni imaj (AMI) oluşturabilir ve mevcut bir AMI'den eşgörünüm başlatabilir.|",
+  "2022-2023 Vize|I. Bileşik koşul  II. İsim  III. Açıklama — İş akışı modellemede 'görev' hangileri ile karakterize edilir?|A) Yalnız II~B) I ve III~C) II ve III~D) I ve II~E) Yalnız III|C) II ve III|ACIKLAMA::Bir görev isim ve açıklama ile karakterize edilir; bileşik koşul kontrol akışına aittir.|",
+  "2022-2023 Vize|I. Bir imajdan eşgörünüm önyükleme  II. Ekran konsolu çıktısı  III. Bir imajın kopyalanması — Kullanıcı hangilerinde SOAP mesajlarıyla EC2 eşgörünümlerini işleyebilir?|A) Yalnız I~B) II ve III~C) I ve III~D) I ve II~E) Yalnız II|D) I ve II|ACIKLAMA::SOAP tabanlı EC2 API'siyle imajdan eşgörünüm başlatma (RunInstances) ve konsol çıktısı alma (GetConsoleOutput) yapılabilir.|",
+  "2022-2023 Vize|I. Veritabanı yüklü servisler  II. Web yüklü servisler  III. Bölünemez iş yüklü servisler  IV. İşlem tabanlı servisler — Bazı uygulamalar bulut için uygun değildir; hangileri bu duruma uyar?|A) III ve IV~B) Yalnız III~C) I ve II~D) II ve III~E) Yalnız I|B) Yalnız III|ACIKLAMA::Çıkmış sınav cevap anahtarında bu sorunun yanıtı 'Yalnız III' (bölünemez / paralelleştirilemeyen iş yüklü servisler) olarak işaretlenmiştir; bu tür yükler bulutun paralel ölçeklenme avantajından yararlanamaz.|",
+  "2022-2023 Vize|Adil Kuyruklama algoritmasının kısaltması aşağıdakilerden hangisidir?|A) CBQ~B) HTB~C) FQ~D) WSC~E) SFO|C) FQ|ACIKLAMA::Adil Kuyruklama = Fair Queuing (FQ); her akışa adil bant genişliği payı verir.|",
+  "2022-2023 Vize|I. Hard disk imajı  II. Ethernet imajı  III. Ana hafıza imajı — İşletim sistemi göçünde hangileri taşınırsa İS tamamen taşınmış olur?|A) Yalnız III~B) Yalnız I~C) I ve II~D) II ve III~E) I ve III|E) I ve III|ACIKLAMA::Diskin (kalıcı durum) ve ana hafızanın (çalışan durum) imajı taşınırsa İS eksiksiz göç eder.|",
+  "2022-2023 Vize|I. Bit düzeyinde serilik  II. Yönerge düzeyinde paralellik  III. Döngü paralelliği — Paralel bilgisayar mimarisi açısından hangileri doğrudur?|A) Yalnız III~B) Yalnız I~C) I ve II~D) I ve III~E) II ve III|E) II ve III|ACIKLAMA::Paralellik biçimleri yönerge düzeyi ve döngü düzeyi paralelliğini içerir. 'Bit düzeyinde serilik' bir paralellik türü değildir (paralelliğin karşıtıdır).|",
+  "2022-2023 Vize|Amazon AWS'de basit depolama sistemi adlandırması aşağıdakilerden hangisi için kullanılır?|A) SOAP~B) S3~C) EC2~D) İmaj~E) AMI|B) S3|ACIKLAMA::S3 (Simple Storage Service), AWS'nin basit nesne depolama hizmetidir.|",
+  "2022-2023 Vize|Intel firmasının kullandığı işlemci güç yönetim teknolojisinin ismi nedir?|A) AgnoPower~B) SpeedStep~C) Powerwise~D) PowerNow~E) PowerStep|B) SpeedStep|ACIKLAMA::Intel'in dinamik frekans/voltaj ölçekleme teknolojisi SpeedStep'tir. (AMD tarafı PowerNow'dır.)|",
+  "2022-2023 Vize|S3 yazılan her nesnenin MD5'ini hesapladıktan sonra hangi alana döndürür?|A) BeTag~B) CeTag~C) ATag~D) CTag~E) ETag|E) ETag|ACIKLAMA::S3, nesnenin MD5 özetini ETag alanında döndürür; bütünlük doğrulaması için kullanılır.|",
+  "2022-2023 Vize|Fiber Kanal çerçevesinde aşağıdakilerden hangisi iletilmemektedir?|A) Hedef Port Adresi~B) DNF~C) EOF~D) Çerçeve Başlangıcı (SOF)~E) CRC|B) DNF|ACIKLAMA::FC çerçevesi SOF (çerçeve başlangıcı), başlık, veri, CRC ve EOF içerir. 'DNF' geçerli bir çerçeve alanı değildir.|",
+  "2022-2023 Vize|AMD firmasının kullandığı işlemci güç yönetim teknolojisinin ismi nedir?|A) Powerwise~B) PowerStep~C) SpeedStep~D) PowerNow~E) AgnoPower|D) PowerNow|ACIKLAMA::AMD'nin dinamik güç yönetim teknolojisi PowerNow'dır (Cool'n'Quiet ile birlikte). Intel tarafı SpeedStep'tir.|",
+  "2022-2023 Vize|Paralel programlamanın 'kutsal kâse' seçilmesinin nedeni aşağıdakilerden hangisi DEĞİLDİR?|A) Güvenlik duvarı~B) Kanal teknolojileri~C) Ara bağlantı ağları~D) Bilgisayar mimarisi~E) Performans izleme|A) Güvenlik duvarı|ACIKLAMA::Paralel programlamanın önemi mimari, ara bağlantı ağları ve performansla ilgilidir. Güvenlik duvarı bu bağlamla ilgili değildir.|",
+  "2022-2023 Vize|I. VmWare  II. Bochs  III. Parallels — Yukarıdaki sanal makinelerden hangileri bir yorumlayıcıdır (interpreter)?|A) I ve II~B) I ve III~C) Yalnız III~D) Yalnız II~E) Yalnız I|D) Yalnız II|ACIKLAMA::Bochs, komutları yazılımsal olarak yorumlayan bir öykünücü/yorumlayıcıdır. VMware ve Parallels donanım destekli sanallaştırma kullanır.|",
+  "2022-2023 Vize|Sanal makine üzerinde koşan işletim sistemine ne denir?|A) Ana makine İS~B) Genel Makine İS~C) Yedek makine İS~D) Konuk İS~E) Yardımcı makine İS|D) Konuk İS|ACIKLAMA::Sanal makine içinde çalışan İS 'konuk (guest) İS'tir; alttaki fiziksel makinede çalışan 'ana (host) İS'tir.|",
+  "2022-2023 Vize|Kaynaklar için rekabet eden süreçler/iş parçacıkları başkalarınca tutulur veya ek kaynak için beklemeye zorlanırsa ne gerçekleşir?|A) Dairesel bekleme~B) Paralel döngü~C) Yarış koşulu~D) Ölümcül kilitlenme~E) Önbırakma|D) Ölümcül kilitlenme|ACIKLAMA::Süreçlerin birbirinin tuttuğu kaynakları karşılıklı beklemesi ölümcül kilitlenmedir (deadlock). Dairesel bekleme bunun dört koşulundan yalnızca biridir.|",
+  "2022-2023 Vize|I. Kaynaklar ölçülebilir, kullanıcı yalnızca kullandığı kadar öder.  II. Özelleştirme/merkezileştirme sayesinde sağlayıcılar daha etkin çalışır.  III. Uygulama verisi servis sağlayıcı ile uyumsuz geliştirilmiştir. — Hangileri bulut iletim yollarının felsefesini tanımlar?|A) II ve III~B) I ve II~C) Yalnız I~D) I ve III~E) Yalnız II|B) I ve II|ACIKLAMA::Bulut felsefesi kullandıkça öde ölçülebilirliği ve merkezileştirme/özelleştirme verimliliğine dayanır. III olumsuz/yanlış bir ifadedir.|",
+  "2022-2023 Vize|İşlem Süreç Sistemleri'nin (TPS) raporlama faaliyeti kapsamına aşağıdakilerden hangisi girer? I. Aylık/yıllık faaliyet raporları  II. Günlük işlemlerin işlenmesi/toplanması  III. Veri Madenciliği|A) Yalnız I~B) I ve III~C) Yalnız III~D) I ve II~E) Yalnız II|A) Yalnız I|ACIKLAMA::TPS'in raporlama çıktısı aylık/yıllık özet raporlardır. Günlük işlem toplama bir işlem faaliyetidir; veri madenciliği TPS kapsamı dışındadır.|",
+  "2023-2024 Vize|Önceden tanımlanmış bir Amazon Machine Image (AMI)'den oluşturularak S3'te saklanan kavram hangisidir?|A) SOAP~B) MAC Adresi~C) İmaj~D) Eşgörünüm~E) Ara bağlantı|D) Eşgörünüm|ACIKLAMA::Çıkmış sınav cevap anahtarında bu sorunun yanıtı 'Eşgörünüm' olarak işaretlenmiştir.|Kavramsal olarak 'İmaj' yanıtı daha uygun görünse de, resmî cevap anahtarında 'Eşgörünüm' işaretlidir; anahtara sadık kalınmıştır.",
+  "2023-2024 Vize|Ağ merkezli işlem dendiğinde aşağıdakilerden hangisi anlaşılmaktadır?|A) İşlem gücünün uzaktaki veri merkezinde olması~B) Servis olarak yazılım iletim yolunun seçilmesi~C) Uygulama arayüzünün istemci bilgisayarında çalışması~D) Servis olarak platform iletim yolunun seçilmesi~E) Ağın ortasında bir aktarım noktası olması|A) İşlem gücünün uzaktaki veri merkezinde olması|ACIKLAMA::Ağ merkezli (network-centric) işlemde hesaplama, uzaktaki veri merkezlerinde yapılır; istemci ağ üzerinden erişir.|",
+  "2023-2024 Vize|I. Servis olarak yazılım  II. Servis olarak platform  III. Servis olarak altyapı  IV. Servis olarak özelleştirme — Hangileri bulut iletim yollarındandır?|A) II, IV~B) I, IV~C) II, III, IV~D) I, III~E) I, II, III|E) I, II, III|ACIKLAMA::Bulut iletim yolları SaaS, PaaS ve IaaS'tır. 'Servis olarak özelleştirme' diye bir model yoktur.|",
+  "2023-2024 Vize|Bir sunucu işletim sistemi ne kadar süreyle çalışmalıdır?|A) Ayda 3 hafta~B) Günde 2 saat~C) Haftada 3 gün~D) Günde 5 saat~E) Yılda 365 gün 24 saat|E) Yılda 365 gün 24 saat|ACIKLAMA::Sunucu İS'leri kesintisiz (7/24, 365 gün) hizmet verecek şekilde çalışır.|",
+  "2023-2024 Vize|İletişim …………., gürültülü ve güvenilmez kanalları, mesajları sırayla ileten güvenilir kanallara dönüştürmemizi sağlar. Boşluğa ne gelmelidir?|A) protokolleri~B) ücretleri~C) cihazları~D) paradigmaları~E) frekansları|A) protokolleri|ACIKLAMA::İletişim protokolleri, güvenilmez kanalları sıralı ve güvenilir iletim sağlayan yapılar hâline getirir.|",
+  "2023-2024 Vize|Birçok bulut uygulamasında veri yoğundur ve aynı anda çalışan birkaç ……… kullanılır. Boşluğa ne gelmelidir?|A) damga~B) ağ~C) veri~D) bilgisayar~E) eşgörünüm|E) eşgörünüm|ACIKLAMA::Veri yoğun bulut işlerinde paralel çalışan birden çok eşgörünüm (instance) kullanılır.|",
+  "2023-2024 Vize|I. Performans garantisi olasılığının düşük olması  II. Talep üzerine bırakılıp tahsis edilebilen kaynak havuzu  III. Gerçek zamanlı tahsise izin veren kontrol döngüsü izleme sistemi — Otomatik ölçeklendirme hangi durum(lar)da kullanılabilir?|A) I ve III~B) Yalnız I~C) Yalnız III~D) I ve II~E) II ve III|E) II ve III|ACIKLAMA::Otomatik ölçeklendirme için esnek bir kaynak havuzu (II) ve gerçek zamanlı tahsis yapan izleme/kontrol döngüsü (III) gerekir.|",
+  "2023-2024 Vize|VoIP, video ve ses akışı gibi bant genişliği garantisi gerektiren uygulamalar için esnek bağlantı paylaşımını destekleyen ağ kaynak yönetimi algoritması hangisidir?|A) CBQ~B) SCQ~C) FQ~D) SFQ~E) Basic Queue|A) CBQ|ACIKLAMA::CBQ (Class-Based Queuing), sınıflara bant genişliği garantisi verip esnek bağlantı paylaşımı sağlar.|",
+  "2023-2024 Vize|Verimsiz bir kaynak yönetimi, performans ve maliyet üzerinde doğrudan ………. bir etkiye sahiptir. Boşluğa ne gelmelidir?|A) işlevsel~B) gayri ihtiyari~C) olumlu~D) düzensiz~E) olumsuz|E) olumsuz|ACIKLAMA::Verimsiz kaynak yönetimi performansı düşürüp maliyeti artırdığından doğrudan olumsuz etki yapar.|",
+  "2023-2024 Vize|I. Performans  II. Maliyet  III. Görecelik — Bir sistemin başarılı sayılması için hangi kriter(ler) değerlidir?|A) Yalnız I~B) Yalnız III~C) II ve III~D) Yalnız II~E) I ve II|E) I ve II|ACIKLAMA::Sistem başarısı performans ve maliyet ile değerlendirilir; görecelik bir başarı ölçütü değildir.|",
+  "2023-2024 Vize|Aşağıdakilerden hangisi Bulut İletim Yollarının kazandırdığı yeni felsefeyi tanımlayan özelliklerden DEĞİLDİR?|A) Merkezileştirme sayesinde sağlayıcılar daha etkin çalışır.~B) İnternet altyapısı tarafından bakım ve güvenlik sağlanmaktadır.~C) Özelleştirme sayesinde sağlayıcılar daha etkin çalışır.~D) Elastik sistemlerde kullanıcı yalnızca kullandığı kaynak için ücretlendirilir.~E) Bulut, elastik servisler için İnternet teknolojilerini kullanır.|B) İnternet altyapısı tarafından bakım ve güvenlik sağlanmaktadır.|ACIKLAMA::Bakım ve güvenlik, İnternet altyapısı tarafından değil bulut servis sağlayıcısı tarafından üstlenilir; bu ifade felsefeyi tanımlamaz.|",
+  "2023-2024 Vize|Aşağıdakilerden hangisi Fayda Bilişim (utility computing) sağlayıcısı DEĞİLDİR?|A) HP~B) Amazon~C) Google~D) Lenovo~E) Apple|D) Lenovo|ACIKLAMA::HP, Amazon ve Google fayda bilişim/bulut hizmeti sunmuştur. Lenovo donanım üreticisidir; fayda bilişim sağlayıcısı değildir.|Bu soruda Apple da tartışmalı bir seçenektir; çıkmış sınav anahtarı yönünde Lenovo işaretlenmiştir.",
+  "2023-2024 Vize|I. Eşgörünüm formatlar ortaya çıkarır.  II. Yeni bir imaj yaratır.  III. Mevcut bir AMI'den bir eşgörünüm başlatabilir. — Kullanıcı hangilerini gerçekleştirebilir?|A) I ve III~B) Yalnız I~C) I ve II~D) Yalnız II~E) II ve III|E) II ve III|ACIKLAMA::Kullanıcı yeni imaj oluşturabilir ve mevcut bir AMI'den eşgörünüm başlatabilir.|",
+  "2023-2024 Vize|Microsoft firmasının bulut platformunun ismi nedir?|A) Office 365~B) AWS~C) Azure~D) Ubuntu~E) Red Hat|C) Azure|ACIKLAMA::Microsoft'un bulut platformu Azure'dur. (AWS Amazon'a, Office 365 uygulama paketine aittir.)|",
+  "2023-2024 Vize|I. Paket başlığındaki bilgiyi sınıflara eşleyen bir sınıflandırıcı  II. Bağlantı atamasını aşan sınıfın gönderimini hesaplayan bir geciktirici (estimator)  III. Sınıf dışı öncül tahmincisi — Hangileri CBQ algoritmasının işlevsel birimidir?|A) II ve III~B) Yalnız III~C) Yalnız II~D) I ve III~E) I ve II|E) I ve II|ACIKLAMA::CBQ'nun temel işlevsel birimleri sınıflandırıcı (classifier) ve tahmin edici/geciktirici (estimator) ile zamanlayıcıdır.|",
+  "2023-2024 Vize|Aşağıdakilerden hangisi hipervizör tiplerindendir?|A) Tip4~B) Tip1~C) Tip6~D) Tip3~E) Tip5|B) Tip1|ACIKLAMA::Hipervizörler Tip-1 (çıplak metal) ve Tip-2 (barındırılan) olmak üzere ikiye ayrılır. Verilenlerden yalnızca Tip1 geçerlidir.|",
+  "2023-2024 Vize|Yerel ve uzak bilgi nesnelerine aynı işlemler kullanılarak erişilir. Bu özellik aşağıdakilerden hangisini ifade eder?|A) Sanal Bellek Yöneticisi~B) RAID~C) Eşzamanlılık~D) Erişim Şeffaflığı~E) Eşzaman Şeffaflığı|D) Erişim Şeffaflığı|ACIKLAMA::Erişim şeffaflığı, yerel ve uzak nesnelere aynı işlemlerle erişilebilmesini (konumun gizlenmesini) sağlar.|",
+  "2023-2024 Vize|Her servisin farklı bilgisayarda yürütülmesi işlemine ne ad verilir?|A) Kaynak paylaşımı~B) Dağıtık sistem~C) Zaman dağıtma~D) Döngü sistemi~E) Kum paketleme|E) Kum paketleme|ACIKLAMA::Çıkmış sınav cevap anahtarında (2024 Vize A) bu sorunun yanıtı 'Kum paketleme' olarak işaretlenmiştir.|Kavramsal olarak 'Dağıtık sistem' yanıtı daha uygun görünse de, resmî anahtarda 'Kum paketleme' işaretlidir; anahtara sadık kalınmıştır.",
+  "2023-2024 Vize|Aşağıdakilerden hangisi açık kaynaklı bulut platformu DEĞİLDİR?|A) OpenStack~B) Eucalyptus~C) Open Nebula~D) Nimbus~E) Microsoft|E) Microsoft|ACIKLAMA::OpenStack, Eucalyptus, OpenNebula ve Nimbus açık kaynak bulut platformlarıdır. Microsoft (Azure) tescilli/ticari bir platformdur.|",
+  "2023-2024 Vize|SLA'lar tarafından zorunlu kılınan gereksinimlerden hangisi aşağıda YANLIŞ verilmiştir?|A) güvenilirlik~B) servis kalitesi~C) ölçeklenebilirlik~D) güvenlik~E) gözlemlenebilirlik|E) gözlemlenebilirlik|ACIKLAMA::SLA gereksinimleri tipik olarak güvenilirlik, servis kalitesi, ölçeklenebilirlik ve güvenliği kapsar; 'gözlemlenebilirlik' standart bir SLA gereksinimi olarak sayılmaz.|Bu soru 'yanlış verilen' seçeneği ister; kaynak farklılıklarına göre değişebilir.",
+  "2023-2024 Bütünleme|İşletim sistemi güvenliğiyle ilgili işlevleri gerçekleştiren özel ayrıcalıklara sahip uygulamalara verilen ad hangisidir?|A) Güvenlikli~B) Garantili~C) Karmaşık~D) Güvenilir~E) Kalifiye|D) Güvenilir|ACIKLAMA::Güvenilir (trusted) uygulamalar, İS'in güvenlik işlevlerini yürütmek için özel ayrıcalıklara sahiptir.|",
+  "2023-2024 Bütünleme|I. Bir imajdan eşgörünüm önyükleme  II. Ekran konsolu çıktısı  III. Bir imajın kopyalanması — Kullanıcı hangilerinde SOAP mesajlarıyla EC2 eşgörünümlerini işleyebilir?|A) Yalnız II~B) I ve II~C) I ve III~D) Yalnız I~E) II ve III|B) I ve II|ACIKLAMA::SOAP tabanlı EC2 API'siyle imajdan eşgörünüm başlatma ve ekran konsolu çıktısı alma yapılabilir.|",
+  "2023-2024 Bütünleme|UBUNTU aşağıdaki Linux dağıtımlarından hangisine dayalı bir işletim sistemidir?|A) Arch~B) Manjaro~C) Debian~D) Fedora~E) Solus|C) Debian|ACIKLAMA::Ubuntu, Debian tabanlı bir Linux dağıtımıdır (apt/dpkg paket sistemini kullanır).|",
+  "2023-2024 Bütünleme|Bir ulus devletin başka bir ulusun bilgisayarlarına/ağlarına zarar/kesinti amacıyla sızmasına yönelik eylemlerine verilen ad hangisidir?|A) Siber Sınıflama~B) Siber Dalaşma~C) Siber Donanma~D) Siber Karşılaşma~E) Siber Savaş|E) Siber Savaş|ACIKLAMA::Devlet destekli, başka bir ulusa zarar/kesinti amaçlı saldırılar siber savaş olarak adlandırılır.|",
+  "2023-2024 Bütünleme|Xen güvenlik açıklarının analizi yapıldığında saldırıların büyük çoğunluğu hangi bileşene yapılmaktadır?|A) Yardımcı sanal makinenin hizmet bileşeni~B) Yardımcı sanal makinenin güvenlik bileşeni~C) Kontrol sanal makinesinin hizmet bileşeni~D) Kontrol işletim sisteminin hizmet bileşeni~E) Kontrol sanal makinesinin güvenlik bileşeni|C) Kontrol sanal makinesinin hizmet bileşeni|ACIKLAMA::Saldırıların çoğu ayrıcalıklı kontrol VM'inin (Dom0) hizmet bileşenlerini hedef alır.|",
+  "2023-2024 Bütünleme|\"Toplum giderek bilgi altyapısına ....... hale geldikçe, bilgi işlem ve iletişim sistemlerinin güvenliği yeni bir aciliyet kazanıyor.\" Boşluğa ne gelmelidir?|A) Sorumlu~B) Öngörülü~C) Bağımlı~D) Saygılı~E) Karmaşık|C) Bağımlı|ACIKLAMA::Toplumun bilgi altyapısına bağımlılığı arttıkça güvenlik daha aciliyet kazanır.|",
+  "2023-2024 Bütünleme|I. DoS saldırıları olasılığını ortaya çıkarmıştır.  II. Uygulama katmanı protokollerini anlar.  III. İzinsiz giriş tespit sistemlerini destekler. — Üçüncü nesil güvenlik duvarları için hangisi doğrudur?|A) Yalnız II~B) I ve III~C) II ve III~D) Yalnız III~E) I ve II|C) II ve III|ACIKLAMA::Üçüncü nesil (uygulama katmanı) güvenlik duvarları uygulama protokollerini anlar ve IDS ile bütünleşik çalışır.|",
+  "2023-2024 Bütünleme|Aşağıdakilerden hangisi bir transistörü açıp kapatmak için gereken voltajdır?|A) Zener Voltajı~B) Göreceli Voltaj~C) Paralel Voltaj~D) Eşik Voltaj~E) Kademeli Voltaj|D) Eşik Voltaj|ACIKLAMA::Transistörün iletime geçmesi için gereken minimum kapı gerilimi eşik voltajıdır (threshold voltage).|",
+  "2023-2024 Bütünleme|I. Xen tarafından sağlanan işlevselliği sürdürmek  II. Ayrıcalıkların sıkı kontrolünü sürdürmek  III. Kalıcı bileşenler oluşturmak — Hangileri XOAR'ın tasarım hedeflerindendir?|A) I ve II~B) I ve III~C) Yalnız II~D) II ve III~E) Yalnız III|A) I ve II|ACIKLAMA::XOAR, Xen işlevselliğini korurken ayrıcalıkları sıkı denetler; amacı kalıcı bileşenleri artırmak değil, tam tersine bileşenleri geçici (ephemeral) yaparak saldırı yüzeyini azaltmaktır.|",
+  "2023-2024 Bütünleme|Bir MPEG dosyasının şarkıcı adı, albüm adı gibi bilgilerine verilen ad hangisidir?|A) meta veri~B) hepta veri~C) hexa veri~D) kota veri~E) ata veri|A) meta veri|ACIKLAMA::İçeriği tanımlayan (şarkıcı, albüm vb.) bu bilgiler meta veridir (metadata).|",
+  "2023-2024 Bütünleme|Belirli bir S3 kovasındaki tüm nesnelerin anahtarlarını görüntülemek için aşağıdakilerden hangisi kullanılır?|A) Objectpanel listing = s3.panelObjects(\"bucket_name\");~B) ObjectSummary show = s3.sumObjects(\"bucket_name\");~C) Objectshowing show = s3.showObjects(\"bucket_name\");~D) ObjectListing listing = s3.listObjects(\"bucket_name\");~E) ObjectSummary sum = s3.summaryObjects(\"bucket_name\");|D) ObjectListing listing = s3.listObjects(\"bucket_name\");|ACIKLAMA::s3.listObjects(\"bucket_name\") çağrısı kovadaki nesne anahtarlarını içeren bir ObjectListing döndürür.|",
+  "2023-2024 Bütünleme|I. Stenografik Kullanım İlkeleri  II. Kimlik Doğrulama  III. Erişim Denetimi — Hangileri zorunlu işletim sistemi güvenliğinin unsurlarındandır?|A) Yalnız II~B) I ve II~C) Yalnız I~D) Yalnız III~E) II ve III|E) II ve III|ACIKLAMA::Zorunlu İS güvenliği kimlik doğrulama ve erişim denetimini kapsar. 'Stenografik kullanım ilkeleri' bir güvenlik unsuru değildir.|",
+  "2023-2024 Bütünleme|Adil Kuyruklama algoritmasının kısaltması aşağıdakilerden hangisidir?|A) HTB~B) SFQ~C) CBQ~D) WSC~E) FQ|E) FQ|ACIKLAMA::Adil Kuyruklama = Fair Queuing (FQ). (SFQ, bunun stokastik türevidir.)|",
+  "2023-2024 Bütünleme|${t_entropi}Mikroskobik bir sistemin termodinamik entropisi S = kB ln Ω'dır. Buradaki Ω aşağıdakilerden hangisi olarak bilinir?|A) Mikrofaj ortalama~B) Makro durum sayısı~C) Median durum sayısı~D) Median ortalama~E) Mikro durum sayısı|E) Mikro durum sayısı|ACIKLAMA::Boltzmann entropisinde Ω, belirli bir makro duruma karşılık gelen mikro durumların sayısıdır.|",
+  "2023-2024 Bütünleme|Güvenlik duvarlarında hedef/kaynak port numarasına dayalı filtreleme yapılırken hangi katmanda işlem yapılır?|A) Fiziksel~B) MAC~C) Ağ~D) Taşıma~E) Uygulama|D) Taşıma|ACIKLAMA::Port numaraları taşıma (transport) katmanına (TCP/UDP) aittir; port bazlı filtreleme bu katmanda yapılır.|",
+  "2023-2024 Bütünleme|2012 yılına kadar BT kurumsal altyapısı için harcanan bütçenin hangi yüzdesine kadarının enerjiye ayrılacağı planlanıyordu?|A) %40~B) %50~C) %70~D) %60~E) %65|A) %40|ACIKLAMA::Çıkmış sınav cevap anahtarında bu sorunun doğru yanıtı %40 olarak işaretlenmiştir (BT altyapı bütçesinin enerjiye ayrılması planlanan payı).|",
+  "2023-2024 Bütünleme|Bağımsız olarak oluşturulmuş ve test edilmiş bir dizi bileşenden karmaşık bir sistem oluşturma tekniğine verilen ad hangisidir?|A) Hiyerarşi~B) Modülerlik~C) Erişimsellik~D) Görecelik~E) Katmanlama|B) Modülerlik|ACIKLAMA::Modülerlik; bağımsız geliştirilip test edilen bileşenlerin birleştirilmesiyle karmaşık sistem kurma tekniğidir.|",
+  "2023-2024 Bütünleme|Aşağıdakilerden hangisi bir sanal makine DEĞİLDİR?|A) Klein~B) Xen~C) Parallels~D) Virtual Box~E) Hyper-V|A) Klein|ACIKLAMA::Xen, Parallels, VirtualBox ve Hyper-V sanallaştırma çözümleridir. 'Klein' bir sanal makine değildir.|",
+  "2023-2024 Bütünleme|Kaynaklar için rekabet eden süreçler/iş parçacıkları başkalarınca tutulur veya ek kaynak için beklemeye zorlanırsa ne gerçekleşir?|A) Paralel döngü~B) Ölümcül kilitlenme~C) Yarış koşulu~D) Önbırakma~E) Dairesel bekleme|B) Ölümcül kilitlenme|ACIKLAMA::Karşılıklı kaynak bekleme ölümcül kilitlenmedir (deadlock); dairesel bekleme bunun koşullarından biridir.|",
+  "2023-2024 Bütünleme|I. Bileşenlerin yapısı  II. Bileşenlerin sayısı  III. Bileşenler arasındaki etkileşim yollarının sayısı — Bir sistem simüle edildiğinde hangileri simülasyonun karmaşıklığını artırır?|A) I ve III~B) II ve III~C) Yalnız I~D) Yalnız III~E) I ve II|B) II ve III|ACIKLAMA::Bileşen sayısı ve aralarındaki etkileşim yollarının sayısı arttıkça simülasyon karmaşıklığı artar.|",
+  "2025-2026 Bütünleme|Bulut bilişimde karşılaşılan zorluklardan biri olan \"uyumluluk\" kavramı ile aşağıdakilerden hangisi ifade edilir?|A) Yasal ve düzenleyici gereksinimlere uyum sağlama ihtiyacı~B) Verilerin yalnızca merkezi sunucularda işlenmesi~C) Verilerin manuel olarak işlenmesi~D) Bulut hizmetlerinin performansını düşürmesi~E) Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılması|A) Yasal ve düzenleyici gereksinimlere uyum sağlama ihtiyacı|ACIKLAMA::Bulutta uyumluluk (compliance), verilerin ve hizmetlerin yasal/düzenleyici gerekliliklere (KVKK, GDPR, HIPAA vb.) uygun tutulması ihtiyacını ifade eder.|",
+  "2025-2026 Bütünleme|Aşağıdakilerden hangisi bilgi işlem kaynaklarından biri DEĞİLDİR?|A) Yazıcı~B) Depolama~C) CPU~D) Bellek~E) Ağ|A) Yazıcı|ACIKLAMA::Temel bilgi işlem kaynakları CPU, bellek, depolama ve ağdır. Yazıcı bir çevre birimidir, bir bilgi işlem kaynağı değildir.|",
+  "2025-2026 Bütünleme|Yazılım test türlerinden biri olan \"yük testi\" ile aşağıdaki ifadelerden hangisi belirtilir?|A) Yazılımın işlevselliğini doğrulamayı~B) Farklı bileşenlerin birlikte çalışmasını test etmeyi~C) Güvenlik açıklarını test etmeyi~D) En küçük birimleri test etmeyi~E) Yüksek kullanıcı trafiği veya veri yükü altında performansı test etmeyi|E) Yüksek kullanıcı trafiği veya veri yükü altında performansı test etmeyi|ACIKLAMA::Yük testi (load testing), sistemin yüksek kullanıcı/veri yükü altındaki performans ve kararlılığını ölçer.|",
+  "2025-2026 Bütünleme|IoT (Nesnelerin İnterneti) cihazlarının bulut bilişimle entegrasyonunun amacı aşağıdakilerden hangisidir?|A) IoT cihazlarının yalnızca yerel cihazlarda çalışmasını sağlamak~B) IoT cihazlarının fiziksel sunuculara bağlanmasını sağlamak~C) Verilerin yalnızca manuel olarak işlenmesini sağlamak~D) Gerçek zamanlı veri işleme ve analiz imkânı sunmak~E) IoT cihazlarının performansını düşürmek|D) Gerçek zamanlı veri işleme ve analiz imkânı sunmak|ACIKLAMA::IoT-bulut entegrasyonu, cihaz verilerinin merkezî bulutta gerçek zamanlı işlenip analiz edilmesini sağlar.|",
+  "2025-2026 Bütünleme|Dinamik ölçeklendirme yöntemlerinden biri olan \"otomatik ölçeklendirme\" kavramı ile aşağıdakilerden hangisi ifade edilir?|A) Uygulamanın kaynaklarının talebe göre otomatik olarak artırılıp azaltılması~B) Uygulamanın performansının düşürülmesi~C) Uygulamanın yalnızca manuel olarak güncellenmesi~D) Uygulamanın yalnızca sabit kaynaklarla çalıştırılması~E) Verilerin manuel olarak işlenmesi|A) Uygulamanın kaynaklarının talebe göre otomatik olarak artırılıp azaltılması|ACIKLAMA::Otomatik ölçeklendirme (auto-scaling), iş yüküne göre kaynakları otomatik büyütüp küçültür.|",
+  "2025-2026 Bütünleme|Çoklu bulut (multi-cloud) stratejileri ile aşağıdaki ifadelerden hangisi belirtilir?|A) Farklı bulut sağlayıcıları arasında iş yüklerinin dağıtılması~B) Bulut hizmetlerinin manuel olarak güncellenmesi~C) Bulut hizmetlerinin yalnızca özel bulutlarda çalıştırılması~D) Tüm iş yüklerinin tek bir bulut sağlayıcısında çalıştırılması~E) Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılması|A) Farklı bulut sağlayıcıları arasında iş yüklerinin dağıtılması|ACIKLAMA::Çoklu bulut stratejisi, iş yüklerini birden çok sağlayıcıya dağıtarak bağımlılığı azaltıp esneklik sağlar.|",
+  "2025-2026 Bütünleme|Yönlendiricilerin (router) temel işlevi aşağıdakilerden hangisidir?|A) Kullanıcıların ağ erişimini engellemek~B) Yalnızca ağ kesintilerini önlemek~C) Veri trafiğini doğru hedeflere yönlendirmek~D) Depolama alanlarını artırmak~E) Veri paketlerini şifrelemek|C) Veri trafiğini doğru hedeflere yönlendirmek|ACIKLAMA::Yönlendirici, paketleri hedef ağ adresine göre en uygun yol üzerinden iletir.|",
+  "2025-2026 Bütünleme|Güvenlik politikalarından biri olan \"erişim kontrolü\" ifadesinin faydası aşağıdakilerden hangisidir?|A) Kullanıcıların kimliklerini doğrulamasını sağlar~B) Verilerin test ortamında kullanılmasını sağlar~C) Verilerin düzenli olarak yedeklenmesini sağlar~D) Yetkisiz erişimi önlemek için kaynaklara erişim politikalarını düzenler~E) Verilerin şifrelenmesini sağlar|D) Yetkisiz erişimi önlemek için kaynaklara erişim politikalarını düzenler|ACIKLAMA::Erişim kontrolü, hangi kullanıcının hangi kaynağa erişebileceğini politikalarla düzenleyerek yetkisiz erişimi engeller. (Kimlik doğrulama ayrı bir adımdır.)|",
+  "2025-2026 Bütünleme|Karmaşık sistemlerde kullanılan \"yük dengeleme\" stratejisinin amacı aşağıdakilerden hangisidir?|A) İş yükünün manuel olarak işlenmesi~B) İş yükünün yalnızca öncelik sırasına göre işlenmesi~C) İş yükünün yalnızca bir kaynağa yönlendirilmesi~D) İş yükünün sırayla işlenmesi~E) İş yükünün sistem kaynakları arasında dengeli bir şekilde dağıtılması|E) İş yükünün sistem kaynakları arasında dengeli bir şekilde dağıtılması|ACIKLAMA::Yük dengeleme, gelen istekleri birden çok kaynağa dengeli dağıtarak performansı ve erişilebilirliği artırır.|",
+  "2025-2026 Bütünleme|Bulut altyapısında sunucuların temel işlevi aşağıdakilerden hangisidir?|A) Yalnızca veri depolamak~B) İnternet bağlantısını yönetmek~C) Uygulamaların çalıştırılmasını sağlamak~D) Yedekleme işlemlerini gerçekleştirmek~E) Güvenlik duvarı işlevi görmek|C) Uygulamaların çalıştırılmasını sağlamak|ACIKLAMA::Sunucular, uygulamaların ve hizmetlerin çalıştırıldığı temel işlem kaynaklarıdır.|",
+  "2025-2026 Bütünleme|Güvenlik Otomasyonu ve Orkestrasyonu (SOAR) sistemlerinin özelliklerinden biri olan \"tehdit istihbaratı entegrasyonu\" faydası aşağıdakilerden hangisidir?|A) Güvenlik olaylarının manuel olarak yönetilmesi~B) Fiziksel sunucuların performansını artırması~C) Verilerin düzenli olarak yedeklenmesi~D) Kullanıcıların erişim yetkilerinin kaldırılması~E) Dış kaynaklardan elde edilen tehdit istihbaratının güvenlik süreçlerine entegre edilmesi|E) Dış kaynaklardan elde edilen tehdit istihbaratının güvenlik süreçlerine entegre edilmesi|ACIKLAMA::SOAR, dış tehdit istihbaratı beslemelerini otomatik olarak güvenlik süreçlerine dahil ederek daha hızlı ve tutarlı yanıt sağlar.|",
+  "2025-2026 Bütünleme|Microsoft Office 365'in video konferans ve işbirliği aracı aşağıdakilerden hangisidir?|A) OneDrive~B) Outlook~C) Excel~D) Word~E) Teams|E) Teams|ACIKLAMA::Microsoft Teams, Office 365'in video konferans, sohbet ve işbirliği aracıdır.|",
+  "2025-2026 Bütünleme|Sürekli entegrasyon (CI) kavramı ile aşağıdakilerden hangisi ifade edilir?|A) Verilerin yalnızca manuel olarak işlenmesi~B) Verilerin yalnızca fiziksel sunucularda saklanması~C) Kod değişikliklerinin sürekli olarak entegre edilmesi~D) Bulut hizmetlerinin yalnızca yerel cihazlarda çalışması~E) Bulut hizmetlerinin performansını düşürmesi|C) Kod değişikliklerinin sürekli olarak entegre edilmesi|ACIKLAMA::CI (Continuous Integration), geliştiricilerin kod değişikliklerini sık sık ortak dala birleştirip otomatik test etmesidir.|",
+  "2025-2026 Bütünleme|Sanallaştırmanın avantajlarından hangisi, her sanal makinenin bağımsız çalışmasını ifade eder?|A) Maliyet tasarrufu~B) İzolasyon~C) Esneklik~D) Yedekleme~E) Kaynak verimliliği|B) İzolasyon|ACIKLAMA::İzolasyon, her sanal makinenin diğerlerinden yalıtılmış, bağımsız çalışmasını (birinin çökmesi diğerini etkilememesini) sağlar.|",
+  "2025-2026 Bütünleme|Büyük veri analitiğinde kullanılan \"veri gölü\" (data lake) ile aşağıdakilerden hangisi belirtilir?|A) Verilerin manuel olarak işlenmesini sağlayan bir sistem~B) Verilerin şifrelenmeden paylaşılması~C) Verilerin yalnızca yerel cihazlarda saklanması~D) Yapılandırılmış, yarı yapılandırılmış ve yapılandırılmamış verilerin ham hâlde saklandığı merkezi bir depo~E) Yalnızca yapılandırılmış verilerin saklandığı bir veritabanı|D) Yapılandırılmış, yarı yapılandırılmış ve yapılandırılmamış verilerin ham hâlde saklandığı merkezi bir depo|ACIKLAMA::Veri gölü, her türden veriyi dönüştürmeden ham hâlde tutan büyük ölçekli merkezi depodur.|",
+  "2025-2026 Bütünleme|Test otomasyonu araçlarından biri olan \"Selenium\" aşağıdaki amaçlardan hangisi için kullanılır?|A) Yazılımın manuel olarak test edilmesi~B) Web uygulamalarının test edilmesi~C) Mobil uygulamaların test edilmesi~D) Java tabanlı birim testlerinin yapılması~E) Yük testlerinin gerçekleştirilmesi|B) Web uygulamalarının test edilmesi|ACIKLAMA::Selenium, web tarayıcılarını otomatikleştirerek web uygulamalarının fonksiyonel testini yapan bir araçtır.|",
+  "2025-2026 Bütünleme|Google Cloud Console'un (GCP) \"güvenlik\" özelliğinin faydası aşağıdakilerden hangisidir?|A) GCP hizmetlerinin performansını artırır~B) GCP ortamında güvenlik politikalarının uygulanmasını ve izlenmesini sağlar~C) GCP hizmetlerini manuel olarak devre dışı bırakır~D) GCP hizmetlerinin yalnızca yedeklenmesini sağlar~E) GCP hizmetlerinin maliyetlerini artırır|B) GCP ortamında güvenlik politikalarının uygulanmasını ve izlenmesini sağlar|ACIKLAMA::GCP güvenlik özellikleri (IAM, güvenlik komuta merkezi vb.) politikaların uygulanmasını ve izlenmesini sağlar.|",
+  "2025-2026 Bütünleme|Bulut yönetim sistemlerinin sağladığı faydalardan biri olan \"maliyet tasarrufu\" nasıl elde edilir?|A) Yedekleme süreçlerinin durdurulması~B) Kaynakların verimli kullanımı ve maliyetlerin düşürülmesi~C) Performans izleme araçlarının devre dışı bırakılması~D) Bulut hizmetlerinin manuel olarak yönetilmesi~E) Güvenlik politikalarının uygulanmaması|B) Kaynakların verimli kullanımı ve maliyetlerin düşürülmesi|ACIKLAMA::Bulut yönetimi, kaynakları ihtiyaca göre verimli kullandırarak (ve atıl kaynakları kapatarak) maliyeti düşürür.|",
+  "2025-2026 Bütünleme|Bulut ortamında karmaşık sistemlerin yönetiminde kullanılan \"dinamik ölçeklendirme\" stratejisinin amacı aşağıdakilerden hangisidir?|A) Sistemlerin yalnızca güvenlik politikalarını uygulaması~B) Sistem bileşenlerinin manuel olarak yapılandırılması~C) Sistem performansının izlenmesi ve raporlanması~D) Sistem kaynaklarının talebe göre otomatik olarak ayarlanması~E) Sistem kaynaklarının sabit bir şekilde tahsis edilmesi|D) Sistem kaynaklarının talebe göre otomatik olarak ayarlanması|ACIKLAMA::Dinamik ölçeklendirme, kaynakları anlık talebe göre otomatik artırıp azaltarak hem performans hem maliyet dengesini kurar.|",
+  "2025-2026 Bütünleme|Tehdit istihbaratı kaynaklarından biri olan \"ticari istihbarat hizmetleri\" ne sağlar?|A) Kullanıcıların kimlik bilgilerini doğrular~B) Verilerin düzenli olarak yedeklenmesini sağlar~C) Güvenlik firmaları tarafından sağlanan profesyonel tehdit istihbaratı hizmetlerini kapsar~D) İnternetten ücretsiz olarak tehdit bilgisi sağlar~E) Organizasyon içindeki tehditlerden bilgi toplar|C) Güvenlik firmaları tarafından sağlanan profesyonel tehdit istihbaratı hizmetlerini kapsar|ACIKLAMA::Ticari tehdit istihbaratı, güvenlik firmalarının ücretli/profesyonel olarak sunduğu istihbarat beslemelerini ifade eder.|",
+  "2025-2026 Final|Otomasyon ve orkestrasyon süreçlerinden biri olan \"otomasyon\" ifadesinin faydası aşağıdakilerden hangisidir?|A) Bulut hizmetlerinin performansının düşürülmesi~B) Bulut hizmetlerinin yalnızca yedeklenmesi~C) Bulut hizmetlerinin maliyetlerinin artırılması~D) İş akışlarının manuel olarak yönetilmesi~E) Tekrarlayan görevlerin otomatikleştirilmesi|E) Tekrarlayan görevlerin otomatikleştirilmesi|ACIKLAMA::Otomasyon, tekrar eden manuel görevleri otomatik hâle getirerek hız, tutarlılık ve verimlilik sağlar.|",
+  "2025-2026 Final|Veri entegrasyonu için kullanılan araçlardan biri olan AWS Glue'nin temel işlevi aşağıdakilerden hangisidir?|A) Konteyner yönetimi~B) Bulut tabanlı ETL hizmeti sağlamak~C) Video konferans yapmak~D) Sunucusuz bilgi işlem~E) Elektronik tablo oluşturmak|B) Bulut tabanlı ETL hizmeti sağlamak|ACIKLAMA::AWS Glue, verileri çıkar-dönüştür-yükle (ETL) süreçleriyle hazırlayan yönetilen, sunucusuz bir bulut ETL hizmetidir.|",
+  "2025-2026 Final|Bulut bilişimde \"karbon ayak izi azaltma\" neyi ifade eder?|A) Bulut hizmetlerinin performansını düşürme çalışmaları~B) Verilerin yalnızca fiziksel sunucularda saklanması çalışmaları~C) Bulut hizmetlerinin karbon emisyonlarını ölçme ve azaltma çalışmaları~D) Verilerin yalnızca manuel olarak işlenmesini sağlama çalışmaları~E) Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlama çalışmaları|C) Bulut hizmetlerinin karbon emisyonlarını ölçme ve azaltma çalışmaları|ACIKLAMA::Karbon ayak izini azaltma; bulut hizmetlerinin enerji kaynaklı emisyonlarını ölçüp yenilenebilir enerji ve verimlilikle düşürmeyi hedefler.|",
+  "2025-2026 Final|Aşağıdakilerden hangisi ağ güvenliği yöntemlerinden biri DEĞİLDİR?|A) Ağ segmentasyonu~B) VPN~C) IDS/IPS~D) Güvenlik duvarları~E) CDN|E) CDN|ACIKLAMA::CDN (İçerik Dağıtım Ağı) bir performans/dağıtım teknolojisidir; birincil işlevi ağ güvenliği değildir. Diğerleri güvenlik yöntemleridir.|",
+  "2025-2026 Final|Gereksinim analizi sürecinde \"ihtiyaç toplama\" aşaması ile aşağıdakilerden hangisi ifade edilir?|A) Yazılımın test edilmesi~B) Uygulamanın bulut ortamında dağıtılması~C) Yazılımın bakımının yapılması~D) Kullanıcı ve paydaş gereksinimlerinin toplanması~E) Yazılımın kodlanması|D) Kullanıcı ve paydaş gereksinimlerinin toplanması|ACIKLAMA::İhtiyaç/gereksinim toplama, kullanıcı ve paydaşlardan sistemin ne yapması gerektiğine dair gereksinimlerin derlendiği aşamadır.|",
+  "2025-2026 Final|Aşağıdakilerden hangisi veri şifreleme tekniklerinden biridir?|A) Veri maskeleme~B) Güvenlik duvarı~C) Simetrik şifreleme~D) Veri anonimleştirme~E) Çok faktörlü kimlik doğrulama|C) Simetrik şifreleme|ACIKLAMA::Simetrik şifreleme, aynı anahtarla şifreleyip çözen bir şifreleme tekniğidir. Diğer seçenekler şifreleme dışı güvenlik/gizlilik yöntemleridir.|",
+  "2025-2026 Final|Sistem entegrasyonunun sağladığı faydalardan biri olan \"verimlilik artışı\" nasıl elde edilir?|A) İş süreçlerinin tamamen kaldırılmasıyla~B) Veri kaynaklarının manuel olarak birleştirilmesiyle~C) Yazılım güncellemelerinin durdurulmasıyla~D) Sistemlerin bağımsız çalıştırılmasıyla~E) İş süreçlerinin otomatikleştirilmesi ve manuel işlemlerin azaltılmasıyla|E) İş süreçlerinin otomatikleştirilmesi ve manuel işlemlerin azaltılmasıyla|ACIKLAMA::Sistem entegrasyonu, süreçleri otomatikleştirip manuel/yinelenen işleri azaltarak verimliliği artırır.|",
+  "2025-2026 Final|Karmaşık sistemlerin \"öngörülemezlik\" özelliği neyi ifade eder?|A) Sistemin sürekli erişilebilir olmasını~B) Sistemin gelecekteki davranışlarının kesin olarak tahmin edilememesini~C) Sistemin iş yükünü dengeli dağıtmasını~D) Sistemin farklı koşullara uyum sağlayabilme kapasitesini~E) Sistemin çevresel değişikliklere uyum sağlama yeteneğini|B) Sistemin gelecekteki davranışlarının kesin olarak tahmin edilememesini|ACIKLAMA::Öngörülemezlik, karmaşık sistemlerin çok sayıda etkileşimden dolayı gelecekteki davranışının kesin tahmin edilememesidir.|",
+  "2025-2026 Final|Büyük veri işleme araçlarından biri olan \"Apache Spark\"ın kullanım amacı aşağıdakilerden hangisidir?|A) Verilerin şifrelenmeden paylaşılması~B) Hızlı veri işleme motoru olması~C) Yalnızca mobil uygulamaların test edilmesi~D) Uygulamanın yalnızca manuel olarak güncellenmesi~E) Verilerin manuel olarak işlenmesi|B) Hızlı veri işleme motoru olması|ACIKLAMA::Apache Spark, bellek içi işleme sayesinde büyük veriyi hızlı işleyen dağıtık bir analitik motorudur.|",
+  "2025-2026 Final|Bulut uygulama geliştirme sürecinin ilk adımı aşağıdakilerden hangisidir?|A) Gereksinim Analizi~B) Tasarım~C) Dağıtım~D) Bakım~E) Test|A) Gereksinim Analizi|ACIKLAMA::Yazılım geliştirme yaşam döngüsünün ilk adımı gereksinim analizidir; ne yapılacağı burada belirlenir.|",
+  "2025-2026 Final|Sanallaştırma kavramının tanımı aşağıdakilerden hangisidir?|A) Fiziksel donanımın yazılım güncellemeleriyle değiştirilmesidir~B) Fiziksel bilgi işlem kaynaklarının sanal sürümlere dönüştürülmesidir~C) Yalnızca depolama cihazlarının yedeklenmesidir~D) İnternet bağlantısı olmadan çalışan bir sistemdir~E) Fiziksel makinelerin birleştirilmesidir|B) Fiziksel bilgi işlem kaynaklarının sanal sürümlere dönüştürülmesidir|ACIKLAMA::Sanallaştırma; işlemci, bellek, depolama gibi fiziksel kaynakların yazılımla soyutlanıp sanal sürümlere dönüştürülmesidir.|",
+  "2025-2026 Final|Kaynak yönetiminin sağladığı temel faydalardan biri aşağıdakilerden hangisidir?|A) Kullanıcı deneyimini olumsuz etkiler~B) Performansı düşürür~C) Gereksiz harcamaları önler ve maliyet tasarrufu sağlar~D) Yüksek maliyetler oluşturur~E) Kaynakların manuel olarak yönetilmesini zorunlu kılar|C) Gereksiz harcamaları önler ve maliyet tasarrufu sağlar|ACIKLAMA::İyi kaynak yönetimi, atıl/gereksiz kaynak kullanımını önleyerek maliyet tasarrufu ve verimlilik sağlar.|",
+  "2025-2026 Final|Karmaşık sistemlerin adaptif özelliklerinden biri olan \"esneklik\" neyi ifade eder?|A) Sistemin farklı ve beklenmedik koşullara uyum sağlayabilme kapasitesini~B) Sistemin çevresel değişikliklere uyum sağlama yeteneğini~C) Sistemin iş yükünü dengeli dağıtmasını~D) Sistemin başlangıç koşullarına olan hassasiyetini~E) Sistemin sürekli erişilebilir olmasını|A) Sistemin farklı ve beklenmedik koşullara uyum sağlayabilme kapasitesini|ACIKLAMA::Esneklik (adaptif anlamda), sistemin farklı ve beklenmedik koşullara uyum sağlayabilme kapasitesidir.|B şıkkı da uyum yeteneğini ifade eder ve tartışmaya açıktır; anahtarda esneklik için A işaretlenmiştir.",
+  "2025-2026 Final|Mikro hizmetlerin konteynerlerle kullanımının avantajlarından biri olan \"taşınabilirlik\" neyi ifade eder?|A) Konteynerlerin her ortamda aynı şekilde çalışabilmesini~B) Konteynerlerin iş süreçlerini kaldırmasını~C) Konteynerlerin manuel olarak güncellenmesini~D) Konteynerlerin veri tabanlarını birleştirmesini~E) Konteynerlerin yalnızca bir sistemde çalıştırılmasını|A) Konteynerlerin her ortamda aynı şekilde çalışabilmesini|ACIKLAMA::Taşınabilirlik, konteynerlerin bağımlılıklarıyla paketlendiği için her ortamda (geliştirme, test, üretim) aynı şekilde çalışabilmesidir.|",
+  "2025-2026 Final|Kimlik yönetimi kavramı ile ilişkili durum aşağıdakilerden hangisidir?|A) Kullanıcı kimliklerinin yönetimi~B) İnternet bağlantısının yönetimi~C) Fiziksel sunucuların yönetimi~D) Yazılım geliştirme araçları sağlama~E) Donanım satın alma ve yönetme|A) Kullanıcı kimliklerinin yönetimi|ACIKLAMA::Kimlik yönetimi (Identity Management), kullanıcı kimliklerinin, rollerinin ve erişim haklarının yönetilmesidir.|",
+  "2025-2026 Final|Microsoft Azure Portal'ın \"kaynak yönetimi\" özelliği neyi ifade eder?|A) Azure hizmetlerinin manuel olarak devre dışı bırakılmasını sağlar~B) Azure hizmetlerinin yalnızca yedeklenmesini sağlar~C) Azure hizmetlerinin performansını optimize etmez~D) Azure kaynaklarının etkin bir şekilde yönetilmesi ve yapılandırılmasını ifade eder~E) Azure hizmetlerinin yalnızca güvenlik politikalarını izler|D) Azure kaynaklarının etkin bir şekilde yönetilmesi ve yapılandırılmasını ifade eder|ACIKLAMA::Azure kaynak yönetimi (ARM), kaynakların oluşturulması, gruplanması, yapılandırılması ve etkin yönetimini sağlar.|",
+  "2025-2026 Final|Aşağıdaki depolama türlerinden hangisi büyük ölçekli veri depolama ve arşivleme için idealdir?|A) Dosya depolama~B) Blok depolama~C) RAM depolama~D) SSD depolama~E) Nesne depolama|E) Nesne depolama|ACIKLAMA::Nesne depolama (ör. S3), yüksek ölçeklenebilirliği ve düşük maliyetiyle büyük veri arşivleme için idealdir.|",
+  "2025-2026 Final|Performans optimizasyonu tekniklerinden biri olan \"önbellekleme\" ile aşağıdaki ifadelerden hangisi belirtilir?|A) Uygulamanın performansının düşürülmesi~B) Verilerin şifrelenmesi~C) Uygulamanın yalnızca manuel olarak ölçeklendirilmesi~D) Sık kullanılan verilerin hızlı erişim için saklanması~E) Verilerin manuel olarak işlenmesi|D) Sık kullanılan verilerin hızlı erişim için saklanması|ACIKLAMA::Önbellekleme (caching), sık erişilen veriyi hızlı erişilen bir katmanda tutarak gecikmeyi ve yükü azaltır.|",
+  "2025-2026 Final|Çok faktörlü kimlik doğrulama (MFA) yöntemlerinden biri olan \"biyometrik doğrulama\" neyi ifade eder?|A) Kullanıcının şifreyi tekrar girmesiyle doğrulama~B) Kullanıcının IP adresine göre doğrulama~C) Kullanıcının e-posta adresine gönderilen bir bağlantı ile doğrulama~D) Parmak izi veya yüz tanıma gibi fiziksel özelliklerle doğrulama~E) Kullanıcının telefonuna gönderilen bir kod ile doğrulama|D) Parmak izi veya yüz tanıma gibi fiziksel özelliklerle doğrulama|ACIKLAMA::Biyometrik doğrulama, parmak izi/yüz/iris gibi kişiye özgü fiziksel özelliklerle kimlik doğrular.|",
+  "2025-2026 Final|Edge Computing'in (uç bilişim) temel avantajı aşağıdakilerden hangisidir?|A) Verilerin yalnızca fiziksel sunucularda saklanmasını sağlaması~B) Verilerin yalnızca manuel olarak işlenmesini sağlaması~C) Verilerin üretildiği noktaya yakın işlenmesiyle gecikme süresini azaltması~D) Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlaması~E) Bulut hizmetlerinin performansını düşürmesi|C) Verilerin üretildiği noktaya yakın işlenmesiyle gecikme süresini azaltması|ACIKLAMA::Uç bilişim, işlemeyi verinin üretildiği noktaya (uca) yaklaştırarak gecikmeyi ve merkezî ağ yükünü azaltır.|",
+  "2024-2025 Bütünleme|Test otomasyonu araçlarından biri olan \"Selenium\" aşağıdaki amaçlarından hangisi için kullanılır?|A) Java tabanlı birim testlerinin yapılması~B) Mobil uygulamaların test edilmesi~C) Yük testlerinin gerçekleştirilmesi~D) Web uygulamalarının test edilmesi~E) Yazılımın manuel olarak test edilmesi|D) Web uygulamalarının test edilmesi|ACIKLAMA::Selenium, web tarayıcılarını otomatikleştirerek web uygulamalarının fonksiyonel/otomasyon testini yapar. (JUnit → birim testi, Appium → mobil, LoadRunner → yük testi, manuel test ise araç değil yöntemdir.)|",
+  "2024-2025 Bütünleme|Bulut ortamında karmaşık sistemlerin yönetiminde kullanılan \"dinamik ölçeklendirme\" stratejisinin amacı aşağıdakilerden hangisidir?|A) Sistemlerin yalnızca güvenlik politikalarını uygulaması~B) Sistem kaynaklarının sabit bir şekilde tahsis edilmesi~C) Sistem performansının izlenmesini ve raporlanması~D) Sistem kaynaklarının talebe göre otomatik olarak ayarlanması~E) Sistem bileşenlerinin manuel olarak yapılandırılması|D) Sistem kaynaklarının talebe göre otomatik olarak ayarlanması|ACIKLAMA::Dinamik ölçeklendirme, kaynakları anlık talebe göre otomatik büyütüp küçülterek hem performansı korur hem de atıl kaynak maliyetini önler.|",
+  "2024-2025 Bütünleme|Aşağıdakilerden hangisi sanal makinelerin bir avantajıdır?|A) Fiziksel donanım gereksinimini artırır~B) Daha yüksek maliyetlidir~C) Bağımsız bir ortam sağlar~D) Yalnızca fiziksel sunucularla çalışır~E) Daha az esneklik sunar|C) Bağımsız bir ortam sağlar|ACIKLAMA::Sanal makineler birbirinden yalıtılmış (izole), bağımsız ortamlar sunar; diğer şıklar VM'in sağladığı faydanın tam tersini söyler.|",
+  "2024-2025 Bütünleme|Edge computing'in temel avantajlarından biri aşağıdakilerden hangisidir?|A) Verilerin yalnızca merkezi sunucularda işlenmesini sağlaması~B) Verilerin üretildiği noktaya yakın işlenmesiyle gecikme süresini azaltması~C) Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılmasını sağlaması~D) Verilerin yalnızca manuel olarak işlenmesini sağlaması~E) Bulut hizmetlerinin performansını düşürmesi|B) Verilerin üretildiği noktaya yakın işlenmesiyle gecikme süresini azaltması|ACIKLAMA::Uç bilişim, işlemeyi verinin üretildiği kaynağa yaklaştırarak gecikmeyi ve merkezî ağ trafiğini azaltır; IoT ve gerçek zamanlı senaryolar için idealdir.|",
+  "2024-2025 Bütünleme|Erişim kontrolü yöntemlerinden biri olan \"denetim izleri\" ile aşağıdakilerden hangisi ifade edilir?|A) Kullanıcıların kimlik bilgilerinin doğrulanması~B) Kullanıcıların erişim yetkilerinin kaldırılması~C) Tüm erişim ve etkinliklerin kaydedilmesi ve izlenmesi~D) Verilerin düzenli olarak yedeklenmesi~E) Verilerin şifrelenmesi|C) Tüm erişim ve etkinliklerin kaydedilmesi ve izlenmesi|ACIKLAMA::Denetim izleri (audit trail/log), sistemdeki tüm erişim ve etkinlikleri kim-ne-zaman biçiminde kayıt altına alıp izlenebilir kılar; olay incelemesi ve hesap verebilirliğin temelidir.|",
+  "2024-2025 Bütünleme|Kaynak izleme ve analiz sürecinin ilk adımı aşağıdakilerden hangisidir?|A) Analiz~B) Optimizasyon~C) Kaynak tahsisi~D) İzleme~E) Yedekleme|D) İzleme|ACIKLAMA::Süreç önce veri toplamayla, yani izleme (monitoring) ile başlar; ölçüm olmadan analiz ve optimizasyon yapılamaz. Sıra genelde İzleme → Analiz → Optimizasyon şeklindedir.|Bazı yönetim çerçeveleri süreci 'planlama/hedef belirleme' ile başlatır; bu sınavın anahtarı ilk adımı 'İzleme' (D) kabul etmiştir.",
+  "2024-2025 Bütünleme|Bulut yönetim sistemlerinin sağladığı faydalardan biri olan \"maliyet tasarrufu\" elde edilme biçimi aşağıdakilerden hangisidir?|A) Performans izleme araçlarının devre dışı bırakılması~B) Güvenlik politikalarının uygulanmaması~C) Bulut hizmetlerinin manuel olarak yönetilmesi~D) Yedekleme süreçlerinin durdurulması~E) Kaynakların verimli kullanımı ve maliyetlerin düşürülmesi|E) Kaynakların verimli kullanımı ve maliyetlerin düşürülmesi|ACIKLAMA::Bulut yönetimi, kaynakları talebe göre verimli kullandırıp atıl kaynağı kapatarak (kullandıkça öde) maliyeti düşürür. Diğer şıklar güvenlik/sürekliliği bozan yanlış yollardır.|",
+  "2024-2025 Bütünleme|Bulut bilişimde karşılaşılan zorluklardan biri olan \"uyumluluk\" kavramı ile aşağıdakilerden hangisi ifade edilir?|A) Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılması~B) Bulut hizmetlerinin performansını düşürmesi~C) Verilerin manuel olarak işlenmesi~D) Yasal ve düzenleyici gereksinimlere uyum sağlama ihtiyacı~E) Verilerin yalnızca merkezi sunucularda işlenmesi|D) Yasal ve düzenleyici gereksinimlere uyum sağlama ihtiyacı|ACIKLAMA::Uyumluluk (compliance), veri ve hizmetlerin KVKK/GDPR/HIPAA gibi yasal ve düzenleyici gerekliliklere uygun tutulması ihtiyacını ifade eder.|",
+  "2024-2025 Bütünleme|Otomasyon ve orkestrasyon süreçlerinden biri olan \"otomasyon\" ifadesinin faydası aşağıdakilerden hangisidir?|A) Bulut hizmetlerinin yalnızca yedeklenmesi~B) Bulut hizmetlerinin performansının düşürülmesi~C) Tekrarlayan görevlerin otomatikleştirilmesi~D) Bulut hizmetlerinin maliyetlerinin artırılması~E) İş akışlarının manuel olarak yönetilmesi|C) Tekrarlayan görevlerin otomatikleştirilmesi|ACIKLAMA::Otomasyon, tekrar eden manuel görevleri otomatik hâle getirerek hız, tutarlılık ve verimlilik sağlar; orkestrasyon ise bu otomatik görevleri uçtan uca koordine eder.|",
+  "2024-2025 Bütünleme|Konteyner yönetiminde yaygın olarak kullanılan araçlardan biri olan Kubernetes'in temel işlevi aşağıdakilerden hangisidir?|A) Konteynerlerin dağıtımını ve yönetimini otomatikleştirmek~B) Veri tabanı sorgularını optimize etmek~C) Sanal makineler oluşturmak~D) E-posta gönderip almak~E) Sunucusuz bilgi işlem sağlamak|A) Konteynerlerin dağıtımını ve yönetimini otomatikleştirmek|ACIKLAMA::Kubernetes; konteynerlerin dağıtım, ölçeklendirme, yük dengeleme ve kendini onarma (self-healing) işlemlerini otomatikleştiren bir orkestrasyon platformudur.|",
+  "2024-2025 Bütünleme|Aşağıdakilerden hangisi bulut tabanlı geliştirme platformlarından biridir?|A) Appium~B) Selenium~C) LoadRunner~D) JUnit~E) GitHub|E) GitHub|ACIKLAMA::Appium, Selenium, LoadRunner ve JUnit test araçlarıdır; GitHub ise kod barındırma, sürüm kontrolü ve CI/CD sunan bulut tabanlı geliştirme/işbirliği platformudur.|Görüş: GitHub tam bir IDE/PaaS değil, kod barındırma-işbirliği platformudur; ancak listedeki tek geliştirme odaklı seçenek olduğundan anahtar E kabul edilmiştir.",
+  "2024-2025 Bütünleme|Sıfır Güven Mimarisi'nin (Zero Trust Architecture) temel ilkelerinden biri olan \"mikrosegmentasyon\" ile aşağıdakilerden hangisi sağlanır?|A) Kullanıcıların kimlik bilgilerinin şifrelenmesi~B) Verilerin düzenli olarak yedeklenmesi~C) Kullanıcıların erişim yetkilerinin kaldırılması~D) Ağ trafiğinin tamamen durdurulması~E) Ağın daha küçük ve izole segmentlere ayrılması|E) Ağın daha küçük ve izole segmentlere ayrılması|ACIKLAMA::Mikrosegmentasyon, ağı küçük ve yalıtılmış bölgelere ayırarak yanal (lateral) hareketi kısıtlar; bir bölge ele geçse bile saldırının yayılması zorlaşır.|",
+  "2024-2025 Bütünleme|Sistem entegrasyonunun temel amacı aşağıdakilerden hangisidir?|A) Bulut hizmetlerinin performansını düşürme~B) Verilerin yalnızca fiziksel sunucularda saklanmasını sağlamak~C) Verilerin yalnızca manuel olarak işlenmesini sağlamak~D) Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlamak~E) Farklı sistemlerin bir arada çalışmasını sağlamak|E) Farklı sistemlerin bir arada çalışmasını sağlamak|ACIKLAMA::Sistem entegrasyonu; farklı uygulama ve sistemlerin veri/işlev paylaşarak birlikte (birlikte çalışabilir) çalışmasını sağlamayı amaçlar.|",
+  "2024-2025 Bütünleme|Yapay zekâ (AI) etiği ilkelerinden biri olan \"şeffaflık\" ile aşağıdakilerden hangisi ifade edilir?|A) AI sistemlerinin yalnızca manuel olarak çalıştırılması~B) AI sistemlerinin taraflı kararlar alması~C) AI sistemlerinin nasıl çalıştığının anlaşılabilir olması~D) AI sistemlerinin güvenlik açıklarının göz ardı edilmesi~E) AI sistemlerinin sonuçlarından sorumlu tutulmaması|C) AI sistemlerinin nasıl çalıştığının anlaşılabilir olması|ACIKLAMA::Şeffaflık (transparency), bir AI sisteminin karar mekanizmasının açıklanabilir ve anlaşılabilir olmasıdır; hesap verebilirlik ve güvenin temelidir.|",
+  "2024-2025 Bütünleme|IoT (Nesnelerin İnterneti) cihazlarının bulut bilişimle entegrasyonunun amacı aşağıdakilerden hangisidir?|A) Gerçek zamanlı veri işleme ve analiz imkanı sunmak.~B) IoT cihazlarının fiziksel sunuculara bağlanmasını sağlamak.~C) Verilerin yalnızca manuel olarak işlenmesini sağlamak.~D) IoT cihazlarının performansını düşürmek.~E) IoT cihazlarının yalnızca yerel cihazlarda çalışmasını sağlamak.|A) Gerçek zamanlı veri işleme ve analiz imkanı sunmak.|ACIKLAMA::IoT-bulut entegrasyonu, cihazlardan gelen verinin merkezî bulutta gerçek zamanlı işlenip analiz edilmesini ve ölçeklenebilir depolamayı sağlar.|",
+  "2024-2025 Bütünleme|Karmaşık sistemlerde kullanılan \"yük dengeleme\" stratejisinin amacı aşağıdakilerden hangisidir?|A) İş yükünün yalnızca bir kaynağa yönlendirilmesi~B) İş yükünün sistem kaynakları arasında dengeli bir şekilde dağıtılması~C) İş yükünün yalnızca öncelik sırasına göre işlenmesini~D) İş yükünün sırayla işlenmesi~E) İş yükünün manuel olarak işlenmesi|B) İş yükünün sistem kaynakları arasında dengeli bir şekilde dağıtılması|ACIKLAMA::Yük dengeleme, gelen istekleri birden çok kaynağa dengeli dağıtarak tek noktanın aşırı yüklenmesini önler; performansı ve erişilebilirliği artırır.|",
+  "2024-2025 Bütünleme|Sanallaştırmanın aşağıdaki avantajlarından hangisi, her sanal makinenin bağımsız çalışmasını ifade eder?|A) İzolasyon~B) Esneklik~C) Kaynak verimliliği~D) Maliyet tasarrufu~E) Yedekleme|A) İzolasyon|ACIKLAMA::İzolasyon, her sanal makinenin diğerlerinden yalıtılmış çalışmasıdır; birinin çökmesi ya da ele geçirilmesi diğerlerini doğrudan etkilemez.|",
+  "2024-2025 Bütünleme|Sürekli entegrasyon (CI) kavramı ile aşağıdakilerden hangisi ifade edilir?|A) Kod değişikliklerinin sürekli olarak entegre edilmesi~B) Verilerin yalnızca manuel olarak işlenmesi~C) Verilerin yalnızca fiziksel sunucularda saklanması~D) Bulut hizmetlerinin performansını düşürme~E) Bulut hizmetlerinin yalnızca yerel cihazlarda çalışması|A) Kod değişikliklerinin sürekli olarak entegre edilmesi|ACIKLAMA::CI (Continuous Integration), geliştiricilerin kod değişikliklerini sık sık ortak dala birleştirip her birleştirmede otomatik derleme/test çalıştırmasıdır; hatalar erken yakalanır.|",
+  "2024-2025 Bütünleme|Dinamik ölçeklendirme yöntemlerinden biri olan \"otomatik ölçeklendirme\" kavramı ile aşağıdakilerden hangisi ifade edilir?|A) Uygulamanın yalnızca manuel olarak güncellenmesi~B) Uygulamanın kaynaklarının talebe göre otomatik olarak artırılıp azaltılması~C) Verilerin manuel olarak işlenmesi~D) Uygulamanın yalnızca sabit kaynaklarla çalıştırılması~E) Uygulamanın performansının düşürülmesi|B) Uygulamanın kaynaklarının talebe göre otomatik olarak artırılıp azaltılması|ACIKLAMA::Otomatik ölçeklendirme (auto-scaling), iş yükü arttığında kaynak ekleyip azaldığında geri alarak performans ve maliyeti otomatik dengeler.|",
+  "2024-2025 Bütünleme|Veri güvenliği yöntemlerinden biri olan \"veri maskeleme\"nin amacı aşağıdakilerden hangisidir?|A) Kullanıcıların kimliklerinin doğrulanması~B) Hassas verilerin gizlenmesi veya değiştirilmesi~C) Verilerin düzenli olarak yedeklenmesi~D) Verilerin şifrelenmesi~E) Verilerin test ortamında kullanılması|B) Hassas verilerin gizlenmesi veya değiştirilmesi|ACIKLAMA::Veri maskeleme; hassas veriyi (ör. TC/kart no) gerçek değerinin yerine sahte ama gerçekçi değerlerle değiştirerek gizler, çoğunlukla test/geliştirme ortamlarında kullanılır.|Görüş: 'Şifreleme' (D) de bir koruma yöntemidir ama farklıdır: şifrelemede veri anahtarla geri açılabilir, maskelemede genelde geri döndürülemez biçimde gizlenir. Cevap, maskelemeye özgü olan B'dir.",
+];
+
+// --- PARSE RAW DATA TO UI DATA ---
+const DATA = [];
+const soruMap = new Map();
+let id_cnt = 1;
+
+rawData.forEach(item => {
+  if (!item || !item.trim()) return;
+  const parts = item.split('|');
+  if (parts.length < 4) return;
+  
+  let tagsRaw = parts[0];
+  let qRaw = parts[1].trim();
+  let options = parts[2].split('~').map(o => o.trim());
+  let correctAnswer = parts[3].trim();
+  let explanation = (parts[4] || '').replace('ACIKLAMA::', '').replace('💡 Açıklama:', '').trim();
+  let note = (parts[5] || '').trim();
+
+  // Extract assets like ${t_enerji} and remove from question string
+  let as = [];
+  qRaw = qRaw.replace(/\$\{(t_[a-zA-Z0-9_]+)\}(<br>)?/g, (match, p1) => {
+    as.push(p1);
+    return '';
+  }).trim();
+
+  // --- Konu tespiti (çalışırken konuya göre filtrelemek için) ---
+  const _t = (qRaw + ' ' + as.join(' ')).toLocaleLowerCase('tr');
+  let konu = 'Genel bulut kavramları';
+  if (/xen|dom0|domu|hipervizör|hypervisor|sanal makine|sanallaştırma|paravirtual|konuk i̇s|guest|tip-?1|tip-?2|wine|kvm|bochs|parallels|virtualbox|hyper-v|yorumlayıcı/.test(_t)) konu = 'Sanallaştırma & Hipervizör';
+  else if (/iaas|paas|saas|kaas|baas|iletim yolu|piramit|hizmet olarak|servis olarak|fayda bilişim|utility|azure|aws|amazon|ec2|s3|ami|eşgörünüm|soap|listobjects|kova|bucket|glacier/.test(_t)) konu = 'Bulut modelleri & AWS';
+  else if (/depolama|storage|s3|ebs|blok depolama|nesne depolama|md5|etag|fiber|fc |worldwidename|wwn|infiniband|raid|hadoop|hdfs/.test(_t)) konu = 'Depolama & Bağlantı';
+  else if (/güvenlik|güvenilir|güvenlik duvarı|firewall|siber|saldırı|sql enjeksiyon|tür zorlaması|tcb|tls|zorunlu|erişim denetimi|kimlik doğrulama|ids|izinsiz giriş|xoar|type enforcement/.test(_t)) konu = 'Güvenlik';
+  else if (/ağ|kuyruk|cbq|sfq|adil kuyruklama|fair queuing|yük dengeleme|port|katman|paket|bant genişliği|sns|bildirim|voip/.test(_t)) konu = 'Ağ & Yük Dengeleme';
+  else if (/kaynak yönetimi|otomatik ölçeklendirme|auto scaling|kabul kontrolü|elastik|ölçeklen|sla|kaynak havuzu|göç|migration|şeffaflık|transparency|ara katman|middleware/.test(_t)) konu = 'Kaynak Yönetimi & Ölçekleme';
+  else if (/paralel|flynn|sisd|mimd|simd|mimari|işlemci|transistör|güç yönetim|speedstep|powernow|enerji|entropi|boltzmann|karmaşıklık|modülerlik|katmanlama|simülasyon|deadlock|kilitlenme|ölüm tutuşu/.test(_t)) konu = 'Mimari, Enerji & Sistem Karmaşıklığı';
+  else if (/dağıtık|dağıtım|servis|iş akışı|görev|tps|işlem süreç|bulut uygulama|meta veri|ubuntu|linux|debian|sunucu|işletim sistemi/.test(_t)) konu = 'Dağıtık Sistemler & İşletim';
+
+  // Determine kind from tags
+  let k = 'vize';
+  const lowTags = tagsRaw.toLowerCase();
+  if (lowTags.includes('büt') || lowTags.includes('but')) k = 'but';
+  else if (lowTags.includes('final')) k = 'final';
+
+  let tagsList = tagsRaw.split(',').map(t => t.trim());
+
+  /* Tekrar tespiti yalnızca soru metnine bakınca, aynı köke sahip ama şıkları
+     bambaşka olan sorular birleşip biri kayboluyordu. Anahtar artık soru metni
+     + şıkların harfsiz, sıralanmış kümesi. */
+  const optKey = options.map(o => o.replace(/^[A-Ea-e]\)\s*/, '').trim().toLocaleLowerCase('tr')).sort().join('~');
+  const key = qRaw + '##' + optKey;
+
+  if (soruMap.has(key)) {
+    let kayit = soruMap.get(key);
+    tagsList.forEach(t => { if (!kayit.tags.includes(t)) kayit.tags.push(t); });
+  } else {
+    soruMap.set(key, {
+      id: id_cnt++,
+      k: k,
+      tags: tagsList,
+      q: qRaw,
+      o: options,
+      a: correctAnswer,
+      e: explanation,
+      n: note,
+      konu: konu,
+      as: as
+    });
+  }
+});
+
+soruMap.forEach(val => DATA.push(val));
+
+const KIND_LABEL = {vize:'Vize', final:'Final', but:'Bütünleme'};
+
+let state = {kind:'all', year:'', rep:false, flag:false, konu:'', q:'', allOpen:false, order:null};
+let score = {t:0, f:0};
+
+const $ = s => document.querySelector(s);
+const listEl = $('#list'), emptyEl = $('#empty');
+
+/* ---- setup counts + year options ---- */
+const counts = {all:DATA.length, vize:0, final:0, but:0, rep:0, flag:0};
+const years = new Set();
+const konular = new Set();
+const kindOf = t => { const l = t.toLowerCase(); return (l.includes('büt') || l.includes('but')) ? 'but' : (l.includes('final') ? 'final' : 'vize'); };
+DATA.forEach(d => {
+  d.kinds = new Set(d.tags.map(kindOf));
+  d.kinds.forEach(k => counts[k]++);
+  if (d.tags.length > 1) counts.rep++;
+  if (d.n) counts.flag++;
+  konular.add(d.konu);
+  d.tags.forEach(t => years.add(t));
+  d._s = (d.q + ' ' + d.o.join(' ') + ' ' + d.e + ' ' + d.tags.join(' ')).toLocaleLowerCase('tr');
+});
+$('#s-all').textContent = counts.all; $('#s-vize').textContent = counts.vize;
+$('#s-final').textContent = counts.final; $('#s-but').textContent = counts.but;
+$('#s-rep').textContent = counts.rep;
+if ($('#s-flag')) $('#s-flag').textContent = counts.flag;
+['all','vize','final','but'].forEach(k => $('#c-' + k).textContent = counts[k]);
+
+const konuSel = $('#konu');
+if (konuSel) [...konular].sort().forEach(k => {
+  const o = document.createElement('option'); o.value = k; o.textContent = k; konuSel.appendChild(o);
+});
+
+const yearSel = $('#year');
+[...years].sort().forEach(y => {
+  const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o);
+});
+
+/* ---- helpers ---- */
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hl(text, term){
+  const safe = esc(text);
+  if (!term) return safe;
+  const t = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return safe.replace(new RegExp('(' + t + ')', 'gi'), '<mark>$1</mark>');
+}
+const letter = s => (s.trim()[0] || '').toUpperCase();
+/* Soru metnindeki satır sonları escape edilince ekranda düz yazı olarak
+   görünüyordu; sadece <br> etiketlerini geri açıyoruz, <= gibi işaretler
+   güvenle kaçırılmış kalıyor. */
+const br = h => h.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
+/* ---- render ---- */
+function visible(){
+  const q = state.q.toLocaleLowerCase('tr').trim();
+  let rows = DATA.filter(d =>
+    (state.kind === 'all' || d.kinds.has(state.kind)) &&
+    (!state.year || d.tags.includes(state.year)) &&
+    (!state.rep || d.tags.length > 1) &&
+    (!state.flag || !!d.n) &&
+    (!state.konu || d.konu === state.konu) &&
+    (!q || d._s.includes(q))
+  );
+  if (state.order) rows = rows.slice().sort((a,b) => state.order.indexOf(a.id) - state.order.indexOf(b.id));
+  return rows;
+}
+
+function render(){
+  const rows = visible();
+  $('#shown').textContent = rows.length;
+  emptyEl.hidden = rows.length > 0;
+  const term = state.q.trim();
+
+  listEl.innerHTML = rows.map((d, i) => {
+    const correct = letter(d.a);
+    return `
+    <article class="cell${d.n ? ' flagged' : ''}" data-id="${d.id}">
+      <div class="gut"><span class="in">Soru [${i + 1}]</span><span class="kind">${KIND_LABEL[d.k]}</span></div>
+      <div class="body">
+        <div class="tags">
+          ${d.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+          ${d.tags.length > 1 ? '<span class="tag rep">🔥 tekrar</span>' : ''}
+          ${d.konu ? `<span class="tag konu">${esc(d.konu)}</span>` : ''}
+          ${d.n ? '<span class="tag flag">⚠️ not var</span>' : ''}
+        </div>
+        <p class="q">${i + 1}. ${br(hl(d.q, term))}</p>
+        ${d.as && d.as.length ? '<div class="assets">' + d.as.map(k => ASSETS[k] || '').join('') + '</div>' : ''}
+        <ul class="opts">
+          ${d.o.map(o => `<li><button class="opt" data-l="${letter(o)}" data-c="${correct}">${hl(o, term)}</button></li>`).join('')}
+        </ul>
+        <div class="acts"><button class="reveal">Cevabı göster</button></div>
+        <div class="out">
+          <div class="lbl">Out [${i + 1}] — doğru cevap</div>
+          <div class="ans">${hl(d.a, term)}</div>
+          <p class="exp">${hl(d.e, term)}</p>
+          ${d.n ? `<p class="note">${hl(d.n, term)}</p>` : ''}
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  if (state.allOpen) listEl.querySelectorAll('.out').forEach(o => o.classList.add('show'));
+}
+
+/* ---- interactions ---- */
+listEl.addEventListener('click', e => {
+  const rev = e.target.closest('.reveal');
+  if (rev){
+    const out = rev.closest('.body').querySelector('.out');
+    out.classList.toggle('show');
+    rev.textContent = out.classList.contains('show') ? 'Cevabı gizle' : 'Cevabı göster';
+    return;
+  }
+  const opt = e.target.closest('.opt');
+  if (!opt || opt.classList.contains('locked')) return;
+
+  const list = opt.closest('.opts');
+  const correct = opt.dataset.c;
+  const picked = opt.dataset.l;
+  list.querySelectorAll('.opt').forEach(b => {
+    b.classList.add('locked');
+    if (b.dataset.l === correct) b.classList.add('correct');
+  });
+  if (picked !== correct) opt.classList.add('wrong');
+
+  picked === correct ? score.t++ : score.f++;
+  updateScore();
+
+  const out = opt.closest('.body').querySelector('.out');
+  out.classList.add('show');
+  opt.closest('.body').querySelector('.reveal').textContent = 'Cevabı gizle';
+});
+
+function updateScore(){
+  const tot = score.t + score.f;
+  $('#score').classList.toggle('show', tot > 0);
+  $('#sc-t').textContent = score.t;
+  $('#sc-f').textContent = score.f;
+  $('#sc-r').textContent = tot ? Math.round(score.t / tot * 100) + '% · ' + tot + ' soru cevaplandı' : '';
+}
+$('#sc-reset').addEventListener('click', () => {
+  score = {t:0, f:0}; updateScore(); render();
+});
+
+$('#kinds').addEventListener('click', e => {
+  const b = e.target.closest('.chip[data-k]');
+  if (!b) return;
+  state.kind = b.dataset.k;
+  document.querySelectorAll('.chip[data-k]').forEach(c => c.setAttribute('aria-pressed', c === b));
+  render();
+});
+$('#flag').addEventListener('click', e => {
+  state.flag = !state.flag;
+  e.currentTarget.setAttribute('aria-pressed', state.flag);
+  render();
+});
+$('#konu').addEventListener('change', e => { state.konu = e.target.value; render(); });
+$('#rep').addEventListener('click', e => {
+  state.rep = !state.rep;
+  e.currentTarget.setAttribute('aria-pressed', state.rep);
+  render();
+});
+yearSel.addEventListener('change', e => { state.year = e.target.value; render(); });
+$('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
+
+$('#toggle').addEventListener('click', e => {
+  state.allOpen = !state.allOpen;
+  e.currentTarget.textContent = state.allOpen ? 'Cevapları gizle' : 'Cevapları göster';
+  e.currentTarget.classList.toggle('on', state.allOpen);
+  listEl.querySelectorAll('.out').forEach(o => o.classList.toggle('show', state.allOpen));
+  listEl.querySelectorAll('.reveal').forEach(r => r.textContent = state.allOpen ? 'Cevabı gizle' : 'Cevabı göster');
+});
+
+$('#shuffle').addEventListener('click', () => {
+  const ids = visible().map(d => d.id);
+  for (let i = ids.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
+  state.order = ids;
+  $('#reset-order').hidden = false;
+  render();
+  window.scrollTo({top:0});
+});
+$('#reset-order').addEventListener('click', e => {
+  state.order = null; e.currentTarget.hidden = true; render();
+});
+
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== $('#q')){ e.preventDefault(); $('#q').focus(); }
+  if (e.key === 'Escape' && document.activeElement === $('#q')){ $('#q').value = ''; state.q = ''; render(); $('#q').blur(); }
+});
+
+const topBtn = $('#top');
+topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+addEventListener('scroll', () => topBtn.classList.toggle('show', scrollY > 700), {passive:true});
+
+render();
+</script>
+</body>
+</html>

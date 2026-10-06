@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUZEF · Karar Alma Teknikleri — Çıkmış Soru Bankası</title>
+<style>
+
+/* ——— Özel Segoe UI / Aydınlık Tema (Görseldeki Tasarım) ——— */
+:root{
+  --paper: #f4f6f8;
+  --card: #ffffff;
+  --raise: #f8f9fa;
+  --ink: #2d3436; 
+  --ink-2: #4a5568;
+  --ink-3: #718096;
+  --line: #dfe6e9;
+  --line-2: #ecf0f1;
+  --blue: #1a2b4c; /* Görseldeki koyu lacivert */
+  --blue-soft: #ecf0f1;
+  --ok: #27ae60;
+  --ok-soft: #eafaf1;
+  --no: #e74c3c;
+  --no-soft: #fde8e7;
+  --amber: #d35400; /* Görseldeki turuncu/kiremit rengi */
+  --amber-soft: #fbf0e9;
+  --shadow: 0 4px 6px rgba(0,0,0,0.05);
+  --gutter: #f4f6f8;
+  --on-accent: #ffffff;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 18px 80px; }
+
+/* ---------- masthead ---------- */
+.mast { padding: 30px 0 20px; }
+.eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); font-weight: 700; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+h1 { font-size: 28px; line-height: 1.2; font-weight: 700; margin: 0 0 10px; color: var(--blue); }
+.lede { color: var(--ink-2); margin: 0 0 20px; font-size: 15px; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; min-width: 96px; box-shadow: var(--shadow); }
+.stat b { display: block; font-size: 20px; font-weight: 700; color: var(--blue); }
+.stat span { font-size: 11px; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+
+/* ---------- toolbar ---------- */
+.bar { position: sticky; top: 0; z-index: 40; margin: 0 -18px; padding: 15px 18px; background: var(--paper); border-bottom: 2px solid var(--line); }
+.bar-in { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; }
+
+.search { position: relative; flex: 1 1 240px; min-width: 0; }
+.search input { width: 100%; padding: 10px 12px 10px 34px; border-radius: 6px; font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-3); }
+.kbd { display: none; }
+
+.chip { font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--ink); transition: .15s; display: inline-flex; align-items: center; gap: 7px; }
+.chip:hover { background: var(--line); }
+.chip[aria-pressed="true"], .chip.on { background: var(--blue); border-color: var(--blue); color: var(--on-accent); }
+
+/* Görseldeki özel buton renkleri */
+#toggle { background: var(--amber); border-color: var(--amber); color: white; }
+#toggle:hover { background: #ba4a00; border-color: #ba4a00; }
+#rep { background: var(--no); border-color: var(--no); color: white; }
+#rep:hover { background: #c0392b; border-color: #c0392b; }
+#rep[aria-pressed="true"] { background: #a93226; border-color: #a93226; }
+select.chip { appearance: none; padding-right: 28px; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+
+.spacer { flex: 1; }
+.count { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; font-weight: 600; }
+.count b { color: var(--ink); }
+
+/* ---------- score strip ---------- */
+.score { display: none; align-items: center; gap: 14px; flex-wrap: wrap; margin: 18px 0 0; padding: 11px 15px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); font-size: 13px; font-weight: 600; }
+.score.show { display: flex; }
+.score .t { color: var(--ok); }
+.score .f { color: var(--no); }
+.score .rate { margin-left: auto; color: var(--ink-2); }
+.linkbtn { background: none; border: none; font: inherit; font-size: 12.5px; color: var(--blue); cursor: pointer; text-decoration: underline; padding: 0; font-weight: 700; }
+
+/* ---------- question cell ---------- */
+.list { margin-top: 26px; display: flex; flex-direction: column; gap: 16px; }
+.cell { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 5px solid var(--blue); display: flex; flex-direction: column; }
+.gut { display: none; } /* Sol menüyü (Soru 1 vs) tamamen gizleyip resimdeki gibi dümdüz yapıyoruz */
+.body { padding: 20px; min-width: 0; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tag { font-size: 11.5px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: var(--blue); color: var(--on-accent); white-space: nowrap; }
+.tag.rep { background: var(--no); }
+
+.q { font-size: 17px; font-weight: 700; margin: 0 0 16px; line-height: 1.4; color: var(--blue); }
+
+.opts { list-style: none; padding: 0; margin: 0 0 15px; display: flex; flex-direction: column; gap: 6px; }
+.opt { width: 100%; text-align: left; font: inherit; cursor: pointer; font-size: 14px; line-height: 1.5; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--line); background: #f8f9fa; color: var(--ink); transition: .13s; }
+.opt:hover:not(.locked) { background: #eafaf1; border-color: var(--ok); }
+.opt.locked { cursor: default; }
+.opt.correct { background: #d4edda; border-color: #28a745; color: #155724; font-weight: 700; }
+.opt.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; font-weight: 700; }
+
+.acts { display: flex; margin-top: 5px; }
+.reveal { width: 100%; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; padding: 10px; border-radius: 6px; border: none; background: var(--blue); color: var(--on-accent); transition: background 0.2s; text-align: center; }
+.reveal:hover { background: #111d33; }
+
+.out { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--ok); border-radius: 6px; }
+.out.show { display: block; animation: fade .18s ease-out; }
+@keyframes fade { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+.out .lbl { display: none; }
+.ans { font-size: 14px; font-weight: 700; color: #155724; margin-bottom: 5px; }
+.ans::before { content: "Cevap: "; }
+.exp { font-size: 14px; color: #155724; margin: 0; }
+.exp::before { content: "Açıklama: "; font-weight: 700; font-style: italic; }
+
+.note { font-size: 13.5px; color: #7a4a00; background: var(--amber-soft); border-left: 4px solid var(--amber); border-radius: 6px; padding: 10px 12px; margin: 12px 0 0; }
+.note::before { content: "⚠️ Dikkat — "; font-weight: 700; }
+.cell.flagged { border-left-color: var(--amber); }
+.tag.flag { background: var(--amber); }
+#flag[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: #fff; }
+
+/* ---------- tablo görselleri ---------- */
+.assets { margin: 0 0 15px; display: flex; flex-direction: column; gap: 10px; }
+.asset { margin: 0; max-width: 100%; overflow-x: auto; }
+table.df { width: 100%; border-collapse: collapse; font-size: 13.5px; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+table.df caption { caption-side: top; text-align: left; padding: 0 0 8px; font-weight: 700; color: var(--blue); }
+table.df th, table.df td { padding: 8px 10px; text-align: center; border: 1px solid var(--line); }
+table.df thead th { background: var(--blue); color: white; font-weight: 700; border-color: #111d33; }
+table.df tbody tr:nth-child(even) { background-color: #f8f9fa; }
+table.df tbody th { background: transparent; color: var(--ink); font-weight: 700; }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-3); border: 1px dashed var(--line); border-radius: 8px; margin-top: 26px; background: var(--card); }
+.empty b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 5px; }
+.foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); text-align: center; }
+.top { position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--blue); color: white; cursor: pointer; box-shadow: var(--shadow); display: none; align-items: center; justify-content: center; font-size: 20px; }
+.top.show { display: flex; }
+
+#theme { display: none; } /* Karanlık mod butonunu görseldeki gibi sabit tasarım için gizliyoruz */
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 12px 70px; }
+  .bar { margin: 0 -12px; padding: 10px 12px; }
+  .body { padding: 15px; }
+  .chip { width: 100%; justify-content: center; }
+  .search { flex: 1 1 100%; }
+  .count { width: 100%; text-align: center; }
+  #rep { margin-top: 5px; }
+}
+@media print {
+  .bar, .top, .acts, .score { display: none !important; }
+  body { background: #fff; }
+  .out { display: block !important; }
+  .note { border-left: 2px solid #000; }
+  .cell { break-inside: avoid; box-shadow: none; border-left: 2px solid #000; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">AUZEF · Yönetim Bilişim Sistemleri</p>
+    <h1>Karar Alma Teknikleri<br>Çıkmış Soru Bankası</h1>
+    <p class="lede">Vize, Final ve Bütünleme sınavlarından derlenen soru havuzu. Bu sürümde her açıklama tablo verileriyle yeniden hesaplandı, sorular konuya göre etiketlendi; cevap anahtarıyla çelişen ya da eksik aktarılmış sorulara <b>⚠️ Dikkat</b> notu eklendi.</p>
+    <div class="stats">
+      <div class="stat"><b id="s-all">0</b><span>Toplam soru</span></div>
+      <div class="stat"><b id="s-vize">0</b><span>Vize</span></div>
+      <div class="stat"><b id="s-final">0</b><span>Final</span></div>
+      <div class="stat"><b id="s-but">0</b><span>Bütünleme</span></div>
+      <div class="stat"><b id="s-rep">0</b><span>Tekrar eden</span></div>
+      <div class="stat"><b id="s-flag">0</b><span>Notlu / tartışmalı</span></div>
+    </div>
+  </header>
+
+  <nav class="bar" aria-label="Filtreler">
+    <div class="bar-in">
+      <div class="row">
+        <label class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="Soru, şık veya açıklamada ara…" autocomplete="off" aria-label="Ara">
+          <span class="kbd">/</span>
+        </label>
+      </div>
+      <div class="row" id="kinds" role="group" aria-label="Sınav türü">
+        <button class="chip" data-k="all" aria-pressed="true">Tümü <span class="n" id="c-all"></span></button>
+        <button class="chip" data-k="vize" aria-pressed="false">Vize <span class="n" id="c-vize"></span></button>
+        <button class="chip" data-k="final" aria-pressed="false">Final <span class="n" id="c-final"></span></button>
+        <button class="chip" data-k="but" aria-pressed="false">Bütünleme <span class="n" id="c-but"></span></button>
+        <button class="chip amber" id="rep" aria-pressed="false">🔥 Banko / Tekrar edenler</button>
+        <button class="chip" id="flag" aria-pressed="false">⚠️ Tartışmalı / notlu</button>
+        <select class="chip" id="konu" aria-label="Konuya göre filtrele"><option value="">Tüm konular</option></select>
+        <select class="chip" id="year" aria-label="Döneme göre filtrele"><option value="">Tüm dönemler</option></select>
+      </div>
+      <div class="row">
+        <button class="chip" id="toggle">Cevapları göster</button>
+        <button class="chip" id="shuffle">Karıştır</button>
+        <button class="chip" id="reset-order" hidden>Sıraya dön</button>
+        <span class="spacer"></span>
+        <span class="count"><b id="shown">0</b> soru görüntüleniyor</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="score" id="score">
+    <span>Doğru <span class="t" id="sc-t">0</span></span>
+    <span>Yanlış <span class="f" id="sc-f">0</span></span>
+    <span class="rate" id="sc-r"></span>
+    <button class="linkbtn" id="sc-reset">sıfırla</button>
+  </div>
+
+  <main class="list" id="list"></main>
+  <div class="empty" id="empty" hidden><b>Eşleşen soru yok</b>Aramayı sadeleştirin ya da filtreleri temizleyin.</div>
+
+  <footer class="foot">
+    Kaynak: AUZEF Yönetim Bilişim Sistemleri (YBS) özel Karar Alma Teknikleri derlemesi.<br>
+    ⚠️ notu taşıyan sorularda cevap anahtarı ile tablo verileri uyuşmuyor. Bu sorularda anahtarın şıkkı korunmuş, hesabın işaret ettiği doğru cevap notta ayrıca belirtilmiştir.
+  </footer>
+</div>
+
+<button class="top" id="top" aria-label="Başa dön">↑</button>
+
+<script>
+// --- ASSETS (TABLOLAR) ---
+const ASSETS = {
+  "t_km": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Durum 1 ve Durum 2 Matrisi</caption>
+        <thead>
+          <tr><th rowspan="2">Seçenekler</th><th colspan="2">Durum 1</th><th colspan="2">Durum 2</th></tr>
+          <tr><th>Kazanç</th><th>Maliyet</th><th>Kazanç</th><th>Maliyet</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Seçenek 1</th><td>100</td><td>5</td><td>200</td><td>10</td></tr>
+          <tr><th scope="row">Seçenek 2</th><td>90</td><td>10</td><td>180</td><td>20</td></tr>
+          <tr><th scope="row">Seçenek 3</th><td>80</td><td>15</td><td>160</td><td>30</td></tr>
+          <tr><th scope="row">Seçenek 4</th><td>70</td><td>20</td><td>140</td><td>40</td></tr>
+          <tr><th scope="row">Seçenek 5</th><td>60</td><td>25</td><td>120</td><td>50</td></tr>
+          <tr><th scope="row">Seçenek 6</th><td>50</td><td>30</td><td>100</td><td>60</td></tr>
+          <tr><th scope="row">Seçenek 7</th><td>40</td><td>35</td><td>80</td><td>70</td></tr>
+          <tr><th scope="row">Seçenek 8</th><td>30</td><td>40</td><td>60</td><td>80</td></tr>
+          <tr><th scope="row">Seçenek 9</th><td>20</td><td>45</td><td>40</td><td>90</td></tr>
+          <tr><th scope="row">Seçenek 10</th><td>10</td><td>50</td><td>20</td><td>100</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_rekabet": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Rekabet Matrisi (A ve B)</caption>
+        <thead>
+          <tr><th colspan="2" rowspan="2">A Firmasına Göre</th><th colspan="4">B'nin Stratejileri</th></tr>
+          <tr><th>B1</th><th>B2</th><th>B3</th><th>B4</th></tr>
+        </thead>
+        <tbody>
+          <tr><th rowspan="3" scope="row">A'nın Stratejileri</th><th>A1</th><td>6</td><td>-1</td><td>5</td><td>3</td></tr>
+          <tr><th>A2</th><td>10</td><td>4</td><td>5</td><td>-3</td></tr>
+          <tr><th>A3</th><td>6</td><td>5</td><td>7</td><td>4</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_urun": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Ürün Durum/Olasılık Matrisi</caption>
+        <thead>
+          <tr><th rowspan="2">Ürün</th><th colspan="2">Durum 1</th><th colspan="2">Durum 2</th><th colspan="2">Durum 3</th><th colspan="2">Durum 4</th></tr>
+          <tr><th>Getiri</th><th>Olasılık</th><th>Getiri</th><th>Olasılık</th><th>Getiri</th><th>Olasılık</th><th>Getiri</th><th>Olasılık</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">A</th><td>-2000</td><td>0.15</td><td>2000</td><td>0.4</td><td>6000</td><td>0.3</td><td>0</td><td>0.15</td></tr>
+          <tr><th scope="row">B</th><td>5000</td><td>0.15</td><td>4000</td><td>0.4</td><td>-2000</td><td>0.3</td><td>-3000</td><td>0.15</td></tr>
+          <tr><th scope="row">C</th><td>10000</td><td>0.15</td><td>5000</td><td>0.4</td><td>-4000</td><td>0.3</td><td>-12000</td><td>0.15</td></tr>
+          <tr><th scope="row">D</th><td>1200</td><td>0.15</td><td>1200</td><td>0.4</td><td>1200</td><td>0.3</td><td>1200</td><td>0.15</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_basit": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Basit Olasılık Matrisi</caption>
+        <thead>
+          <tr><th>SEÇENEKLER</th><th>D1 (Olasılık: 0.3)</th><th>D2 (Olasılık: 0.7)</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">S1</th><td>200</td><td>-20</td></tr>
+          <tr><th scope="row">S2</th><td>150</td><td>20</td></tr>
+          <tr><th scope="row">S3</th><td>100</td><td>60</td></tr>
+          <tr><th scope="row">S4</th><td>50</td><td>40</td></tr>
+          <tr><th scope="row">S5</th><td>100</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_maliyet_5li": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Maliyet Matrisi</caption>
+        <thead>
+          <tr><th>Seçenekler</th><th>Durum 1</th><th>Durum 2</th><th>Durum 3</th><th>Durum 4</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Seçenek 1</th><td>15</td><td>-2</td><td>25</td><td>3</td></tr>
+          <tr><th scope="row">Seçenek 2</th><td>8</td><td>3</td><td>12</td><td>2</td></tr>
+          <tr><th scope="row">Seçenek 3</th><td>22</td><td>35</td><td>10</td><td>-15</td></tr>
+          <tr><th scope="row">Seçenek 4</th><td>40</td><td>40</td><td>40</td><td>40</td></tr>
+          <tr><th scope="row">Seçenek 5</th><td>50</td><td>50</td><td>50</td><td>50</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_kazanc_5li": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Kazanç Matrisi</caption>
+        <thead>
+          <tr><th>Seçenekler</th><th>Durum 1</th><th>Durum 2</th><th>Durum 3</th><th>Durum 4</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Seçenek 1</th><td>5</td><td>20</td><td>30</td><td>40</td></tr>
+          <tr><th scope="row">Seçenek 2</th><td>10</td><td>40</td><td>-50</td><td>60</td></tr>
+          <tr><th scope="row">Seçenek 3</th><td>30</td><td>40</td><td>-60</td><td>70</td></tr>
+          <tr><th scope="row">Seçenek 4</th><td>50</td><td>50</td><td>-80</td><td>80</td></tr>
+          <tr><th scope="row">Seçenek 5</th><td>60</td><td>70</td><td>-90</td><td>100</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_vam": `
+    <figure class="asset">
+      <table class="df">
+        <caption>VAM / Ulaştırma Matrisi</caption>
+        <thead>
+          <tr><th>Fabrikalar</th><th>Bursa</th><th>Adana</th><th>Samsun</th><th>KAPASİTELER</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">İstanbul</th><td>20</td><td>90</td><td>60</td><td>140</td></tr>
+          <tr><th scope="row">Ankara</th><td>40</td><td>50</td><td>30</td><td>120</td></tr>
+          <tr><th scope="row">İzmir</th><td>60</td><td>70</td><td>60</td><td>50</td></tr>
+          <tr><th scope="row">İHTİYAÇLAR</th><td>60</td><td>150</td><td>100</td><td>310</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_atama": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Atama Matrisi</caption>
+        <thead>
+          <tr><th>İş Parçaları</th><th>MA / M1</th><th>MB / M2</th><th>MC / M3</th><th>MD / M4</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">İ1 / 1. İş</th><td>5</td><td>7</td><td>9</td><td>6</td></tr>
+          <tr><th scope="row">İ2 / 2. İş</th><td>8</td><td>6</td><td>9</td><td>2</td></tr>
+          <tr><th scope="row">İ3 / 3. İş</th><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+          <tr><th scope="row">İ4 / 4. İş</th><td>9</td><td>7</td><td>8</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_regresyon_ithalat": `
+    <figure class="asset">
+      <table class="df" style="font-size:11.5px">
+        <caption>Regresyon Çıktısı (İthalat)</caption>
+        <thead>
+          <tr><th>Değişkenler</th><th>Katsayı</th><th>Std. Hata</th><th>t-istatistik</th><th>Prob.</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Sabit</th><td>-6.096</td><td>1.541</td><td>-3.956</td><td>0.0043</td></tr>
+          <tr><th scope="row">LKUR_EURO (KUR_EURO)</th><td>-0.5639 / -0.203</td><td>0.200</td><td>-1.018</td><td>0.320</td></tr>
+          <tr><th scope="row">LGELIR (GELİR)</th><td>0.306901 / 0.471</td><td>0.126</td><td>3.737</td><td>0.0141</td></tr>
+          <tr><th scope="row">LIHRACAT (İhracat)</th><td>0.761</td><td>0.097</td><td>7.821</td><td>0.0000</td></tr>
+          <tr><th scope="row">KRIZ</th><td>-0.173</td><td>0.046</td><td>-3.765</td><td>0.0114</td></tr>
+          <tr><td colspan="5" style="text-align:center"><b>R-squared:</b> 0.983712 &nbsp;—&nbsp; <b>F-statistic:</b> 347.2771</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_simpleks": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Simpleks Başlangıç Tablosu</caption>
+        <thead>
+          <tr><th>Cj</th><th>45</th><th>55</th><th>0</th><th>0</th><th rowspan="2">Çözüm Vektörü</th></tr>
+          <tr><th>Temel Değişken</th><th>x1</th><th>x2</th><th>x3</th><th>x4</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">x3 (0)</th><td>6</td><td>4</td><td>1</td><td>0</td><td>120</td></tr>
+          <tr><th scope="row">x4 (0)</th><td>3</td><td>10</td><td>0</td><td>1</td><td>180</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_durum1_maliyet": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Durum 1 Maliyetleri</caption>
+        <thead>
+          <tr><th>Seçenekler</th><th>Maliyet Tutarı</th><th>Olasılık</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">S1</th><td>35</td><td>0.8</td></tr>
+          <tr><th scope="row">S2</th><td>55</td><td>0.7</td></tr>
+          <tr><th scope="row">S3</th><td>75</td><td>0.6</td></tr>
+          <tr><th scope="row">S4</th><td>95</td><td>0.5</td></tr>
+          <tr><th scope="row">S5</th><td>115</td><td>0.4</td></tr>
+          <tr><th scope="row">S6</th><td>135</td><td>0.3</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_durum2_maliyet": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Durum 2 Maliyetleri</caption>
+        <thead>
+          <tr><th>Seçenekler</th><th>Maliyet Tutarı</th><th>Olasılık</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">S1</th><td>45</td><td>0.8</td></tr>
+          <tr><th scope="row">S2</th><td>65</td><td>0.7</td></tr>
+          <tr><th scope="row">S3</th><td>85</td><td>0.6</td></tr>
+          <tr><th scope="row">S4</th><td>105</td><td>0.5</td></tr>
+          <tr><th scope="row">S5</th><td>125</td><td>0.4</td></tr>
+          <tr><th scope="row">S6</th><td>145</td><td>0.3</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+  "t_maliyet_olasilik": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Kazanç ve Maliyet Dağılımı</caption>
+        <thead>
+          <tr><th>Seçenekler</th><th>Kazanç</th><th>Olasılık</th><th>Maliyet</th><th>Olasılık</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Seçenek 1</th><td>100</td><td>1</td><td>20</td><td>0.1</td></tr>
+          <tr><th scope="row">Seçenek 2</th><td>90</td><td>0.9</td><td>40</td><td>0.2</td></tr>
+          <tr><th scope="row">Seçenek 3</th><td>80</td><td>0.8</td><td>60</td><td>0.3</td></tr>
+          <tr><th scope="row">Seçenek 4</th><td>70</td><td>0.7</td><td>80</td><td>0.4</td></tr>
+          <tr><th scope="row">Seçenek 5</th><td>60</td><td>0.6</td><td>100</td><td>0.5</td></tr>
+          <tr><th scope="row">Seçenek 6</th><td>50</td><td>0.5</td><td>120</td><td>0.6</td></tr>
+          <tr><th scope="row">Seçenek 7</th><td>40</td><td>0.4</td><td>140</td><td>0.7</td></tr>
+          <tr><th scope="row">Seçenek 8</th><td>30</td><td>0.3</td><td>160</td><td>0.8</td></tr>
+          <tr><th scope="row">Seçenek 9</th><td>20</td><td>0.2</td><td>180</td><td>0.9</td></tr>
+          <tr><th scope="row">Seçenek 10</th><td>10</td><td>0.1</td><td>200</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </figure>`
+};
+
+// --- RAW DATA FROM SOURCE ---
+const rawData = [
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_basit}<br>Tablo-1'e göre en iyi kazanç seçeneği aşağıdakilerden hangisidir?|A) S1~B) S2~C) S3~D) S4~E) S5|C) S3|ACIKLAMA::Beklenen değer = 0,3 × (Durum 1) + 0,7 × (Durum 2). S1 = 60 − 14 = 46, S2 = 45 + 14 = 59, S3 = 30 + 42 = 72, S4 = 15 + 28 = 43, S5 = 30 + 0 = 30. En yüksek beklenen kazanç 72 ile S3'tedir.|Kaynak dosyada cevap 'B) S3' olarak girilmişti. Metin doğruydu ama harf yanlıştı: S3 bu soruda C şıkkıdır. Düzeltildi; aksi hâlde şıkka tıklayınca doğru cevap yanlış işaretleniyordu.",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_rekabet}<br>A oyuncusunun stratejileri karşısında B oyuncusunun en iyi B1 stratejisi aşağıdakilerden hangisidir?|A) 10~B) 4~C) 3~D) 5~E) 7|A) 10|ACIKLAMA::Matris A oyuncusunun kazançlarını gösterir. Bir B stratejisinin değeri, o sütundaki en büyük ödemedir (B açısından en kötü ihtimal). B1 sütunu 6, 10, 6 olduğundan değeri 10'dur. Sütun maksimumları B1=10, B2=5, B3=7, B4=4; bunların en küçüğü olan minimaks değer 4 ile B4, B'nin gerçek optimal stratejisidir.|Soru kökü tartışmalı: 'B'nin en iyisi' düz okunursa B ödeyen taraf olduğu için sütundaki en küçük değer (6) beklenirdi. Cevap anahtarı sütun maksimumu mantığını kullanıyor; aynı mantık 2025-2026 Bütünleme'deki B4 sorusunda da geçerli.",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_km}<br>Yukarıdaki tabloda Durum 1'de en iyi ikinci kazanç seçeneği aşağıdakilerden hangisidir?|A) Seçenek 4~B) Seçenek 3~C) Seçenek 7~D) Seçenek 2~E) Seçenek 5|D) Seçenek 2|ACIKLAMA::Durum 1 kazanç sütunu 100, 90, 80, 70 … şeklinde azalır. En iyi ikinci değer 90 olup Seçenek 2'ye aittir.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_kazanc_5li}<br>Yukarıdaki kazanç matrisindeki bilgilere göre iyimserlik kriteri açısından optimal seçenek aşağıdakilerden hangisidir?|A) Seçenek 3~B) Seçenek 4~C) Seçenek 1~D) Seçenek 2~E) Seçenek 5|E) Seçenek 5|ACIKLAMA::İyimserlik (maximax): önce her seçeneğin en iyi sonucu bulunur → S1=40, S2=60, S3=70, S4=80, S5=100. Bunların en büyüğü 100 ile Seçenek 5'tir.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_km}<br>Yukarıdaki tabloya göre Durum 1'de en iyi üçüncü maliyet seçeneği aşağıdakilerden hangisidir?|A) Seçenek 8~B) Seçenek 5~C) Seçenek 1~D) Seçenek 2~E) Seçenek 3|E) Seçenek 3|ACIKLAMA::Durum 1 maliyetleri 5, 10, 15, 20 … şeklinde artar. Küçükten büyüğe üçüncü sırada 15 vardır, yani Seçenek 3.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_urun}<br>Tablo-2'ye göre C ürününün tüm durumlar karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) 1200~B) 500~C) 3500~D) 1300~E) 2300|B) 500|ACIKLAMA::C ürünü: (10000 × 0,15) + (5000 × 0,40) + (−4000 × 0,30) + (−12000 × 0,15) = 1500 + 2000 − 1200 − 1800 = 500.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_km}<br>Yukarıdaki tabloda Durum 2'de en iyi altıncı maliyet seçeneği aşağıdakilerden hangisidir?|A) Seçenek 5~B) Seçenek 6~C) Seçenek 4~D) Seçenek 2~E) Seçenek 1|B) Seçenek 6|ACIKLAMA::Durum 2 maliyetleri 10, 20, 30, 40, 50, 60 … şeklinde artar. Küçükten büyüğe altıncı sırada 60 yer alır; bu da Seçenek 6'dır.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_urun}<br>Tablo-2'ye göre A ürününün tüm durumlar karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) 2300~B) 1200~C) 3500~D) 1300~E) 1500|A) 2300|ACIKLAMA::A ürünü: (−2000 × 0,15) + (2000 × 0,40) + (6000 × 0,30) + (0 × 0,15) = −300 + 800 + 1800 + 0 = 2300.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_kazanc_5li}<br>Yukarıdaki kazanç matrisindeki bilgilere göre kötümserlik kriteri açısından optimal seçenek aşağıdakilerden hangisidir?|A) Seçenek 5~B) Seçenek 1~C) Seçenek 3~D) Seçenek 4~E) Seçenek 2|B) Seçenek 1|ACIKLAMA::Kötümserlik (maximin): önce her seçeneğin en kötü sonucu alınır → S1=5, S2=−50, S3=−60, S4=−80, S5=−90. Bunların en iyisi 5 ile Seçenek 1'dir.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_basit}<br>Tablo-1'e göre en kötü kazanç seçeneği aşağıdakilerden hangisidir?|A) S1~B) S4~C) S5~D) S3~E) S2|C) S5|ACIKLAMA::Beklenen değerler S1=46, S2=59, S3=72, S4=43, S5=30. En düşük değer 30 ile S5'e aittir.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_urun}<br>Tablo-2'ye göre B ürününün tüm durumlar karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) 2300~B) 1500~C) 1300~D) 1200~E) 3500|C) 1300|ACIKLAMA::B ürünü: (5000 × 0,15) + (4000 × 0,40) + (−2000 × 0,30) + (−3000 × 0,15) = 750 + 1600 − 600 − 450 = 1300.|",
+  "2021-2022 Vize, 2022 Vize, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize|${t_maliyet_5li}<br>Yukarıdaki maliyet matrisindeki bilgilere göre eş-olasılık kriteri açısından optimal seçenek aşağıdakilerden hangisidir?|A) Seçenek 3~B) Seçenek 1~C) Seçenek 4~D) Seçenek 2~E) Seçenek 5|B) Seçenek 1|ACIKLAMA::Eş olasılık (Laplace) kriterinde dört durumun her biri 1/4 ağırlıkla alınır. Ortalamalar: S1 = 41/4 = 10,25 · S2 = 25/4 = 6,25 · S3 = 52/4 = 13 · S4 = 40 · S5 = 50.|Tabloya göre en düşük ortalama maliyet 6,25 ile Seçenek 2'dir; anahtar ise Seçenek 1 diyor. Aynı tabloyla sorulan 2023-2024 Final sorusunda cevap Seçenek 2 kabul edilmiş. İki soru birbiriyle çelişiyor.",
+  "2022 Final, 2023-2024 Final, 2024 Final, 2025-2026 Final|${t_simpleks}<br>Yukarıdaki verilere göre x1'deki bir birim değişimin amaç fonksiyona etkisi aşağıdakilerden hangisidir?|A) 6~B) 0~C) 45~D) 30~E) 55|C) 45|ACIKLAMA::Simpleks başlangıç tablosunda x1 sütununun üstündeki Cj değeri 45'tir; bu, x1'in bir birim artmasının amaç fonksiyonuna katkısıdır.|",
+  "2022 Final, 2023-2024 Final, 2024 Final, 2025-2026 Final|${t_km}<br>Yukarıdaki tabloda Durum 1'de en iyi kazanç seçeneği aşağıdakilerden hangisidir?|A) Seçenek 5~B) Seçenek 4~C) Seçenek 1~D) Seçenek 2~E) Seçenek 3|C) Seçenek 1|ACIKLAMA::Durum 1 kazanç sütununda en yüksek değer 100 olup Seçenek 1'e aittir.|",
+  "2022 Final, 2023-2024 Final, 2024 Final, 2025-2026 Final|${t_vam}<br>Yukarıdaki verilere göre İstanbul'dan Samsun'a taşıma maliyeti aşağıdakilerden hangisidir?|A) 70~B) 40~C) 90~D) 50~E) 60|E) 60|ACIKLAMA::İstanbul satırı ile Samsun sütununun kesişimindeki birim taşıma maliyeti 60'tır.|",
+  "2022 Final, 2023-2024 Final, 2024 Final, 2025-2026 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelde, sabitin standart hata değeri kaçtır?|A) 4.33~B) 1.541~C) 2.033~D) 5.22~E) 1.22|B) 1.541|ACIKLAMA::Sabit terimin Std. Hata sütunundaki değeri 1,541'dir.|2025-2026 Final'de aynı soruya cevap 1,357 olarak verilmiş. Kaynakta iki farklı regresyon çıktısı (logaritmik ve düz model) tek tabloda birleştirilmiş; hangi dönemin sorusunu çözdüğünüze dikkat edin.",
+  "2022 Bütünleme, 2024-2025 Bütünleme, 2025-2026 Bütünleme|${t_durum2_maliyet}<br>Durum2'de en yüksek beklenen maliyet seçeneği aşağıdakilerden hangisidir?|A) S1~B) S3~C) S2~D) S4~E) S5|D) S4|ACIKLAMA::Beklenen maliyet = maliyet × olasılık → S1=36 · S2=45,5 · S3=51 · S4=52,5 · S5=50 · S6=43,5. En yüksek 52,5 ile S4'tür.|",
+  "2022 Bütünleme, 2024-2025 Bütünleme, 2025-2026 Bütünleme|${t_rekabet}<br>B oyuncusunun stratejileri karşısında A oyuncusunun en iyi stratejisi aşağıdakilerden hangisidir?|A) 5~B) 3~C) 6~D) 4~E) 2|D) 4|ACIKLAMA::A için maximin: satır minimumları A1=−1, A2=−3, A3=4. Bunların en büyüğü 4 olduğundan A3 seçilir ve garanti kazanç 4'tür.|",
+  "2022 Bütünleme, 2024-2025 Bütünleme, 2025-2026 Bütünleme|${t_basit}<br>Tablo-1'e göre seçenek-1'in beklenen kazancı aşağıdakilerden hangisidir?|A) 42~B) 46~C) 72~D) 59~E) 49|B) 46|ACIKLAMA::S1 = (200 × 0,3) + (−20 × 0,7) = 60 − 14 = 46.|",
+  "2021-2022 Vize|${t_maliyet_olasilik}<br>Yukarıdaki tabloya göre Durum 1'deki en iyi dokuzuncu kazanç seçeneği aşağıdakilerden hangisidir?|A) Seçenek 7~B) Seçenek 8~C) Seçenek 9~D) Seçenek 10~E) Seçenek 1|C) Seçenek 9|ACIKLAMA::Durum 1 kazançları 100'den 10'a azalarak sıralanır. Dokuzuncu sırada 20 yer alır; bu da Seçenek 9'dur.|",
+  "2021-2022 Vize|${t_durum1_maliyet}<br>Durum 1'de en düşük beklenen maliyet hangi seçenektir?|A) S1~B) S2~C) S3~D) S4~E) S5|A) S1|ACIKLAMA::Beklenen maliyetler: S1 = 35 × 0,8 = 28 · S2 = 55 × 0,7 = 38,5 · S3 = 75 × 0,6 = 45 · S4 = 95 × 0,5 = 47,5 · S5 = 115 × 0,4 = 46 · S6 = 135 × 0,3 = 40,5. En düşüğü 28 ile S1'dir.|",
+  "2021-2022 Vize|Aşağıdaki seçeneklerden hangisi karar alma modellerinin aşamalarından biri değildir?|A) Problemin tanımlanması~B) Alternatif olasılıkların düşünülmesi~C) Modelin kurulması~D) Verilerin toplanması~E) Çözümün uygulanması|B) Alternatif olasılıkların düşünülmesi|ACIKLAMA::Ders kitabındaki aşamalar şunlardır: karar probleminin belirlenmesi → bilgi derleme → problemin formüle edilmesi → model kurma → modelin çözümü → duyarlılık analizi → sonuçların yorumu → karar verme, uygulama ve kontrol. 'Alternatif olasılıkların düşünülmesi' bu listede geçmez.|",
+  "2021-2022 Vize|${t_basit}<br>Tablo 1'e göre 3'ün beklenen kazanç değeri aşağıdakilerden hangisidir?|A) 60~B) 65~C) 70~D) 72~E) 80|D) 72|ACIKLAMA::S3 = (100 × 0,3) + (60 × 0,7) = 30 + 42 = 72.|",
+  "2021-2022 Vize|${t_durum1_maliyet}<br>Durum 1'de beklenen en yüksek maliyet hangi seçenektedir?|A) S3~B) S4~C) S5~D) S6~E) S7|C) S5|ACIKLAMA::Beklenen maliyetler: S1=28 · S2=38,5 · S3=45 · S4=47,5 · S5=46 · S6=40,5.|Hesap en yüksek değeri 47,5 ile S4'te veriyor, anahtar ise S5 diyor. Aynı mantıkla sorulan Durum 2 sorusunda (2022 Bütünleme) cevap S4 kabul edilmiş; bu soru kendi ikiziyle çelişiyor.",
+  "2021-2022 Vize|${t_urun}<br>Yukarıdaki tabloya göre B ürününün durum 4 karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) -300~B) -400~C) -450~D) 450~E) 500|C) -450|ACIKLAMA::B ürünü Durum 4: −3000 × 0,15 = −450.|",
+  "2021-2022 Vize|Aşağıdakilerden hangisi karar alma modellerinin aşamaları arasında sayılamaz?|A) Karar verme uygulama ve kontrol~B) Model oluşturma~C) Veri toplama~D) Problemin tespiti~E) Alternatifleri belirleme|A) Karar verme uygulama ve kontrol|ACIKLAMA::Cevap anahtarı 'Karar verme, uygulama ve kontrol' seçeneğini aşama dışı sayıyor.|Bu ifade aslında standart sürecin son aşamasıdır ve bu bankadaki başka dört soruda geçerli aşama olarak kabul ediliyor. Listede aşama olmayan ifade daha çok 'Alternatifleri belirleme' olurdu. Soru veya anahtar hatalı görünüyor.",
+  "2021-2022 Vize|${t_basit}<br>Tablo 1'e göre seçenek 5'in beklenen kazanç değeri aşağıdakilerden hangisidir?|A) 10~B) 20~C) 30~D) 40~E) 50|C) 30|ACIKLAMA::S5 = (100 × 0,3) + (0 × 0,7) = 30.|",
+  "2021-2022 Vize|Karar süreçlerinde kullanılan modelin tanımı aşağıdakilerden hangisidir?|A) Model gerçeğin idealize edilmiş temsilidir.~B) Model karmaşık algoritmalar bütünüdür.~C) Model sadece matematiksel bir formüldür.~D) Model bir yazılım aracıdır.~E) Model bir tahmin yöntemidir.|A) Model gerçeğin idealize edilmiş temsilidir.|ACIKLAMA::Model, gerçekliğin karar vermeye yetecek kadar sadeleştirilmiş, idealize edilmiş temsilidir. Matematiksel formül, yazılım veya algoritma modelin araçları olabilir ama tanımı değildir.|",
+  "2021-2022 Vize|${t_basit}<br>Yukarıdaki tabloya göre seçenek 4'ün beklenen değeri aşağıdakilerden hangisidir?|A) 33~B) 40~C) 43~D) 53~E) 63|C) 43|ACIKLAMA::S4 = (50 × 0,3) + (40 × 0,7) = 15 + 28 = 43.|",
+  "2021-2022 Vize|${t_urun}<br>Yukarıdaki tabloya göre C ürününün durum 4 karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) 1200~B) 1500~C) 1800~D) 2100~E) 2400|C) 1800|ACIKLAMA::C ürünü Durum 4 için doğru hesap −12000 × 0,15 = −1800'dür.|Şıklarda −1800 yok; verilen 1800 değeri aslında A ürününün Durum 3 getirisidir (6000 × 0,3). Soru ya yanlış aktarılmış ya da C yerine A ürünü sorulmuş. Tabloya göre işaretlenecek doğru cevap şıklarda bulunmuyor.",
+  "2022 Vize|${t_basit}<br>Tablo-1'e göre Durum-2'nin olasılığı aşağıdakilerden hangisidir?|A) 0.4~B) 0.6~C) 0.5~D) 0.7~E) 1.0|D) 0.7|ACIKLAMA::Tablo başlığında Durum 2 için olasılık 0,7 verilmiştir. İki durumun olasılıkları toplamı 0,3 + 0,7 = 1 olmalıdır.|",
+  "2022 Vize|Aşağıdakilerden hangisi bir model türü değildir?|A) Kalitatif model~B) Uyuşum modeli~C) Determinist model~D) Kantitatif model~E) İleri model|E) İleri model|ACIKLAMA::Temel model sınıflandırmaları kantitatif–kalitatif, determinist–probabilistik, statik–dinamik şeklindedir. 'İleri model' diye bir model türü yoktur.|",
+  "2022 Vize|Aşağıdakilderden hangisi model kurma konusunda önemli noktalardan biri değildir?|A) Problem kantitatif ölçülere göre formüle edilmelidir.~B) Model sistemin yapısal durumunu yorumlamaya olanak vermelidir.~C) Bilgi derleme ve model kurma aşamasında düzeltme yapılmalıdır.~D) Modelin maliyeti düşük belirlenmelidir.~E) Modelin kurulması gerekçelenebilmelidir.|D) Modelin maliyeti düşük belirlenmelidir.|ACIKLAMA::Model kurmada amaç gerçekliği doğru temsil etmektir; maliyet bir kısıttır, kural değildir. Diğer seçenekler model kurma ilkeleri arasında sayılır.|",
+  "2022 Vize|Aşağıdakilerden hangisi modellerin yararlarından biri değildir?|A) Düşük maliyetlidir.~B) Model zamandan tasarruf sağlar.~C) Model somut sonuçlar ortaya koyar.~D) Model kolayca anlaşılır.~E) Gerekirse hemen düzeltilebilir.|A) Düşük maliyetlidir.|ACIKLAMA::Model kurmak veri, uzmanlık ve zaman gerektirdiğinden her zaman düşük maliyetli değildir. Zaman tasarrufu, somut sonuç, anlaşılırlık ve kolay düzeltilebilirlik ise modellerin sayılan yararlarıdır.|",
+  "2022 Vize|${t_rekabet}<br>B oyuncusunun stratejileri karşısında A oyuncusunun en iyi stratejisi aşağıdakilerden hangisidir?|A) 5~B) 6~C) 4~D) 3~E) 2|C) 4|ACIKLAMA::A için maximin: satır minimumları −1, −3 ve 4; en büyüğü 4 olduğundan A3 seçilir.|",
+  "2023-2024 Vize|Aşağıdaki şıklardan hangisi karar alma modellerinin aşamalarından biri değildir?|A) Sonuçların yorumu~B) Modelin çözümü~C) Duyarlılık analizleri~D) Karar verme, uygulama ve kontrol~E) Riskleri ortadan kaldırma|E) Riskleri ortadan kaldırma|ACIKLAMA::Standart aşamalar problem belirleme, bilgi derleme, formülasyon, model kurma, çözüm, duyarlılık analizi, sonuçların yorumu ve karar verme-uygulama-kontroldür. 'Riskleri ortadan kaldırma' diye bir aşama yoktur; risk yönetilir, yok edilmez.|",
+  "2023-2024 Vize|Aşağıdakilerden hangisi karar alma modellerinin aşamalarından biri değildir?|A) Karar probleminin belirlenmesi~B) Belirsizlik~C) Bilgi derleme~D) Problemin formule edilmesi~E) Model kurma|B) Belirsizlik|ACIKLAMA::Belirsizlik bir karar ortamıdır (kesinlik, risk, belirsizlik, çakışma). Sürecin bir aşaması değildir.|",
+  "2023-2024 Vize|${t_basit}<br>Tablo-1'e göre seçenek-1'in beklenen kazancı aşağıdakilerden hangisidir?|A) 42~B) 46~C) 72~D) 59~E) 49|B) 46|ACIKLAMA::S1 = (200 × 0,3) + (−20 × 0,7) = 60 − 14 = 46.|",
+  "2023-2024 Vize|${t_urun}<br>Yukarıdaki tabloya göre, A ürününün durum-2 karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) 800~B) 2300~C) -300~D) -500~E) 1300|A) 800|ACIKLAMA::A ürünü Durum 2: 2000 × 0,40 = 800.|",
+  "2023-2024 Vize|${t_urun}<br>A ürününün Durum 1 karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) 1300~B) -300~C) -500~D) 3500~E) 2300|B) -300|ACIKLAMA::A ürünü Durum 1: −2000 × 0,15 = −300.|",
+  "2024-2025 Vize|Aşağıdaki seçeneklerden hangisi karar alma modellerinin aşamalarından biri değildir?|A) Karar probleminin belirlenmesi~B) Sonuçların elenmesi~C) Problemin formüle edilmesi~D) Karar verme, uygulama ve kontrol~E) Alternatif olasılıkların düşünülmesi|E) Alternatif olasılıkların düşünülmesi|ACIKLAMA::'Sonuçların elenmesi' ve 'alternatif olasılıkların düşünülmesi' standart aşama adları değildir; anahtarda E şıkkı esas alınmıştır.|",
+  "2024-2025 Vize|${t_urun}<br>Tablo-2'ye göre A ürününün durum 3 karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) 2300~B) -900~C) 1300~D) 1800~E) -500|D) 1800|ACIKLAMA::A ürünü Durum 3: 6000 × 0,30 = 1800.|",
+  "2024-2025 Vize|${t_urun}<br>Tablo-2'ye göre A ürününün durum 4 karşısında beklenen getirisi aşağıdakilerden hangisidir?|A) -500~B) 0~C) 1800~D) -900~E) 1300|B) 0|ACIKLAMA::A ürünü Durum 4: 0 × 0,15 = 0. Getiri sıfır olduğu için olasılık ne olursa olsun katkı sıfırdır.|",
+  "2024-2025 Vize|Karar ağacı yönteminin aşağıdaki aşamalarından hangisi aşağıdaki şıklarda yanlış verilmiştir?|A) Başla~B) Olay düğümleri~C) Seçenek değerleri~D) İyimserlik~E) Eylem düğümleri|D) İyimserlik|ACIKLAMA::Karar ağacında karar (eylem) düğümleri kare, olay (şans) düğümleri daire ile gösterilir; uçlarda seçenek değerleri yazılır. İyimserlik ise belirsizlik altında kullanılan bir karar kriteridir, ağacın bir ögesi değildir.|",
+  "2024-2025 Vize|Aşağıdakilerden hangisi karar alma modellerinin aşamaları arasında sayılamaz?|A) Finansman yaratma~B) Sonuçların yorumu~C) Bilgi derleme~D) Karar verme, uygulama ve kontrol~E) Model kurma|A) Finansman yaratma|ACIKLAMA::Finansman yaratma bir işletme fonksiyonudur; karar modeli kurma sürecinin aşamaları arasında yer almaz.|",
+  "2022 Final|${t_simpleks}<br>Yukarıdaki tabloda çözüm vektöründe 120 sayısı aşağıdakilerden hangisini gösterir?|A) Kısıt düzeyini~B) Maliyet düzeyini~C) Maksimum kârı~D) Satış düzeyini~E) Minimum kârı|A) Kısıt düzeyini|ACIKLAMA::Çözüm vektörü sütunu, kısıtların sağ taraf sabitlerini yani mevcut kaynak düzeylerini gösterir. 120 birinci kısıtın kapasitesidir.|",
+  "2022 Final|${t_atama}<br>Yukarıdaki verilere göre İ4'ün Mc'ye atama maliyeti aşağıdakilerden hangisidir?|A) 8~B) 7~C) 5~D) 6~E) 9|A) 8|ACIKLAMA::Atama tablosunda İ4 satırı ile MC sütununun kesişimi 8'dir.|",
+  "2022 Final|<br>A) x1 + 2x2 <= 50<br>B) 2x1 + x2 <= 70<br>C) 6x2 <= 180<br>Yukarıdaki verilere göre C teknik sınırlamasında, x1'deki bir birim değişimin kaynak tüketimine etkisi aşağıdakilerden hangisidir?|A) 3~B) 2~C) 7~D) 5~E) 6|E) 6|ACIKLAMA::C teknik sınırlaması 6x2 ≤ 180 şeklindedir ve içinde x1 hiç yoktur; dolayısıyla x1'deki bir birim değişimin kaynak tüketimine etkisi 0'dır. Anahtardaki 6 değeri x2'nin katsayısıdır.|Soru kökünde x1 yerine x2 sorulmuş olmalı. Anahtar 6'yı kabul ettiği için sınavda 6 işaretlenmeli, ama matematiksel doğru cevap 0'dır.",
+  "2022 Final|Aşağıdakilerden hangisi karar alma modellerinin aşamalarından biri değildir?|A) Bilgi derleme~B) Model kurma~C) Karar probleminin belirlenmesi~D) Problemin formüle edilmesi~E) Belirsizlik|E) Belirsizlik|ACIKLAMA::Belirsizlik bir karar ortamıdır, sürecin aşaması değildir.|",
+  "2022 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modeldeki LGELİR bağımsız değişkenin t-istatistik değeri aşağıdakilerden hangisidir?|A) 10.833~B) 2.015~C) 5.522~D) 3.737~E) 2.005|D) 3.737|ACIKLAMA::LGELİR satırında t-istatistik sütunundaki değer 3,737'dir. Mutlak değeri 2'nin üzerinde olduğu için değişken anlamlı kabul edilir.|",
+  "2022 Final|${t_atama}<br>İ3'ün MA'ya atanması maliyeti nedir?|A) 4~B) 9~C) 6~D) 3~E) 7|D) 3|ACIKLAMA::İ3 satırı ile MA sütununun kesişimi 3'tür.|",
+  "2022 Final|<br>Y = 10 + 4x + u <br> t-istatistik: [5.0] [76.335]<br>Yukarıdaki verilere göre modelde, bağımsız değişkenin t-istatistik değeri nedir?|A) 107.50~B) 567~C) -1.119~D) 76.335~E) 206|D) 76.335|ACIKLAMA::Köşeli parantezlerdeki t-istatistikler sırasıyla sabite ve bağımsız değişkene aittir; ikinci değer olan 76,335 x'e aittir.|",
+  "2022 Final|<br>A) x1 + 2x2 <= 50<br>B) 2x1 + x2 <= 70<br>C) 6x2 <= 180<br>Yukarıdaki verilere göre B teknik sınırlamasında, x1'deki bir birim değişimin kaynak tüketimine etkisi aşağıdakilerden hangisidir?|A) 2~B) 6~C) 7~D) 3~E) 5|A) 2|ACIKLAMA::B kısıtı 2x1 + x2 ≤ 70 olduğundan x1'in katsayısı 2'dir; x1 bir birim artarsa kaynaktan 2 birim tüketilir.|",
+  "2022 Final|${t_simpleks}<br>Yukarıdaki tabloda sayılardan hangisi kısıtlarından birini gösterir?|A) 10~B) 6~C) 180~D) 3~E) 1|C) 180|ACIKLAMA::Çözüm vektörü sütunundaki 120 ve 180 değerleri kısıtların sağ taraf sabitleridir. Şıklar arasında bunlardan yalnızca 180 vardır.|",
+  "2022 Final|${t_kazanc_5li}<br>Yukarıdaki kazanç matrisindeki bilgilere göre eş-olasılık kriterine göre en iyi seçenek aşağıdakilerden hangisidir?|A) Seçenek 1~B) Seçenek 4~C) Seçenek 3~D) Seçenek 5~E) Seçenek 2|E) Seçenek 2|ACIKLAMA::Eş olasılık kriterinde dört durum da 1/4 ağırlıkla alınır. Ortalamalar: S1 = 95/4 = 23,75 · S2 = 60/4 = 15 · S3 = 80/4 = 20 · S4 = 100/4 = 25 · S5 = 140/4 = 35.|Hesap en yüksek ortalamayı 35 ile Seçenek 5'te veriyor; anahtar Seçenek 2 diyor. Kaynak açıklamadaki 'iki durumun olasılığı 0,5' ifadesi de yanlıştı, tabloda dört durum var.",
+  "2022 Final|<br>Y = 10 + 4x + u <br> t-istatistik: [5.0] [4.0]<br>Bilgilere göre modelde bağımsız değişkenin t-istatistik değeri kaçtır?|A) 2~B) 4~C) 10~D) 20~E) 5|B) 4|ACIKLAMA::Köşeli parantezlerdeki ikinci değer bağımsız değişkene aittir: 4.|",
+  "2022 Final|${t_maliyet_olasilik}<br>Tablodaki bilgilere göre Durum 2'de en iyi maliyet seçeneği aşağıdakilerden hangisidir?|A) Seçenek 3~B) Seçenek 2~C) Seçenek 1~D) Seçenek 7~E) Seçenek 5|C) Seçenek 1|ACIKLAMA::Beklenen maliyet = maliyet × olasılık → 20×0,1=2 · 40×0,2=8 · 60×0,3=18 · 80×0,4=32 · 100×0,5=50 · 120×0,6=72 · 140×0,7=98 · 160×0,8=128 · 180×0,9=162 · 200×1=200. En düşüğü 2 ile Seçenek 1'dir.|",
+  "2022 Final|${t_vam}<br>Yukarıdaki verilere göre İzmir'deki fabrikanın kapasitesi aşağıdakilerden hangisidir?|A) 40~B) 90~C) 50~D) 70~E) 60|C) 50|ACIKLAMA::İzmir satırının kapasite sütunundaki değer 50'dir. Toplam kapasite 140+120+50 = 310, toplam ihtiyaç 60+150+100 = 310 olduğundan problem dengelidir.|",
+  "2023-2024 Final|<br>Y = 10 + 4x + u<br>Yukarıdaki verilere göre modelin sabitinin değeri aşağıdakilerden hangisidir?|A) 4~B) 2~C) 20~D) 5~E) 10|E) 10|ACIKLAMA::Y = 10 + 4x + u denkleminde x sıfırken Y'nin aldığı değer, yani sabit terim 10'dur.|",
+  "2023-2024 Final|${t_atama}<br>Yukarıdaki verilere göre İ1'in MA'ya atama maliyeti aşağıdakilerden hangisidir?|A) 7~B) 9~C) 6~D) 5~E) 4|D) 5|ACIKLAMA::İ1 satırı ile MA sütununun kesişimi 5'tir.|",
+  "2023-2024 Final|<br>Y = 10 + 4x + u<br>Yukarıdaki verilere göre modelde bağımsız değişkenin katsayısının değeri aşağıdakilerden hangisidir?|A) 4~B) 10~C) 5~D) 20~E) 2|A) 4|ACIKLAMA::Bağımsız değişkenin katsayısı 4'tür: x bir birim artarsa Y ortalama 4 birim artar.|",
+  "2023-2024 Final|${t_simpleks}<br>Yukarıdaki verilere göre x2'deki bir birim değişimin amaç fonksiyona etkisi aşağıdakilerden hangisidir?|A) 07~B) 45~C) 55~D) 6~E) 20|C) 55|ACIKLAMA::x2 sütununun üstündeki Cj değeri 55'tir.|",
+  "2023-2024 Final|<br>Z = 20x1 + 30x2<br>Yukarıdaki verilere göre x2'deki bir birim değişimin amaç fonksiyona etkisi aşağıdakilerden hangisidir?|A) 30~B) 7~C) 20~D) 5~E) 6|A) 30|ACIKLAMA::Z = 20x1 + 30x2 fonksiyonunda x2'nin katsayısı 30'dur.|",
+  "2023-2024 Final|${t_vam}<br>Yukarıdaki verilere göre İstanbul'dan Adana'ya taşıma maliyeti aşağıdakilerden hangisidir?|A) 70~B) 50~C) 40~D) 20~E) 90|E) 90|ACIKLAMA::İstanbul satırı ile Adana sütununun kesişimi 90'dır.|",
+  "2023-2024 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre LIHRACAT değişkenin katsayı değeri aşağıdakilerden hangisidir?|A) 0.99~B) 0.761~C) 2.9~D) 3.4~E) 2.5|B) 0.761|ACIKLAMA::LİHRACAT satırındaki katsayı 0,761'dir. Log-log modelde bu değer esneklik olarak yorumlanır: ihracat %1 artarsa ithalat yaklaşık %0,76 artar.|",
+  "2023-2024 Final|${t_regresyon_ithalat}<br>Tablodaki bilgilere göre modelde LKUR_EURO değişkenin katsayısının değeri kaçtır?|A) -0.173~B) 0.761~C) 200~D) 0.471~E) -0.203|E) -0.203|ACIKLAMA::LKUR_EURO satırındaki katsayı −0,203'tür.|Tabloda LKUR_EURO ile KUR_EURO aynı satırda birleştirilmiş (−0,5639 / −0,203). 2025-2026 Bütünleme'de KUR_EURO için −0,563907 doğru kabul edilmiş; yani değerlerin sırası ile etiketler ters görünüyor. En sağlıklısı iki modeli ayrı tablolara bölmek.",
+  "2023-2024 Final|${t_regresyon_ithalat}<br>Tablodaki bilgilere göre modelin sabitinin değeri kaçtır?|A) 20~B) 0.471~C) -6.096~D) 2~E) 4|C) -6.096|ACIKLAMA::Sabit terimin katsayısı −6,096'dır.|",
+  "2023-2024 Final|${t_vam}<br>Yukarıdaki verilere göre İstanbul'dan Bursa'ya taşıma maliyeti aşağıdakilerden hangisidir?|A) 70~B) 20~C) 90~D) 40~E) 50|B) 20|ACIKLAMA::İstanbul satırı ile Bursa sütununun kesişimi 20'dir.|",
+  "2023-2024 Final|${t_maliyet_5li}<br>Yukarıdaki maliyet matrisindeki bilgilere göre eş-olasılık kriteri açısından en düşük maliyetli seçenek aşağıdakilerden hangisidir?|A) Seçenek 5~B) Seçenek 3~C) Seçenek 1~D) Seçenek 2~E) Seçenek 4|D) Seçenek 2|ACIKLAMA::Eş olasılıkta ortalamalar: S1 = 10,25 · S2 = 6,25 · S3 = 13 · S4 = 40 · S5 = 50. En düşük ortalama maliyet 6,25 ile Seçenek 2'dedir.|Bu soru hesapla tam uyuşuyor. Ancak aynı tabloyla sorulan Vize ve 2025-2026 Bütünleme sorularında anahtar Seçenek 1 diyor; aralarında çelişki var ve tabloya göre doğrusu bu sorudur.",
+  "2023-2024 Final|${t_atama}<br>Yukarıdaki verilere göre İ2'nin MA'ya atama maliyeti aşağıdakilerden hangisidir?|A) 6~B) 9~C) 7~D) 8~E) 5|D) 8|ACIKLAMA::İ2 satırı ile MA sütununun kesişimi 8'dir.|",
+  "2024 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modeldeki GELİR bağımsız değişkenin katsayısının değeri aşağıdakilerden hangisidir?|A) 0.5201~B) 0.8201~C) 0.1201~D) 0.306901~E) 0.65201|D) 0.306901|ACIKLAMA::GELİR satırındaki katsayı 0,306901'dir.|",
+  "2024 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modeldeki LGELİR bağımsız değişkenin Std.Hata değeri aşağıdakilerden hangisidir?|A) 1.22~B) 0.126~C) 0.346~D) 0.726~E) 0.426|B) 0.126|ACIKLAMA::LGELİR satırının Std. Hata sütunundaki değer 0,126'dır. Katsayı bu değere bölündüğünde t-istatistiği elde edilir.|",
+  "2024 Final|${t_atama}<br>Yukarıdaki verilere göre İ4'ün MC'ye atama maliyeti aşağıdakilerden hangisidir?|A) 9~B) 7~C) 8~D) 5~E) 6|C) 8|ACIKLAMA::İ4 satırı ile MC sütununun kesişimi 8'dir.|",
+  "2024 Final|<br>Y = 10 + 4x + u <br>Standart Hata: (1.0) (2.0)<br>Yukarıdaki verilere göre modelde, bağımsız değişkenin standart hata değeri aşağıdakilerden hangisidir?|A) 14~B) 1~C) 12~D) 20~E) 5|B) 1|ACIKLAMA::Parantez içindeki değerler sırasıyla sabite ve x'e aittir; bağımsız değişkenin standart hatası 1,0'dır.|",
+  "2024 Final|<br>Y = -0.279 + 0.996X <br> t-istatistik: [-1.119] [76.335]<br>Yukarıdaki bilgilere göre modelin sabitinin t-istatistik değeri aşağıdakilerden hangisidir?|A) 203~B) 432~C) 76.335~D) 232~E) -1.119|E) -1.119|ACIKLAMA::Köşeli parantez içindeki ilk değer sabite aittir: −1,119. Mutlak değeri 2'nin altında olduğundan sabit terim anlamsızdır.|",
+  "2024 Final|${t_simpleks}<br>Yukarıdaki verilere göre x4'teki bir birim değişimin amaç fonksiyona etkisi aşağıdakilerden hangisidir?|A) 0~B) 10~C) 20~D) 45~E) 6|A) 0|ACIKLAMA::x4 bir aylak (yardımcı) değişkendir ve amaç fonksiyonundaki katsayısı 0'dır; kâra katkı sağlamaz, yalnızca kullanılmayan kapasiteyi gösterir.|",
+  "2024 Final|${t_atama}<br>Yukarıdaki verilere göre İ3'ün MD'ye atama maliyeti aşağıdakilerden hangisidir?|A) 1~B) 9~C) 7~D) 5~E) 6|E) 6|ACIKLAMA::İ3 satırı ile MD sütununun kesişimi 6'dır.|",
+  "2024 Final|${t_vam}<br>Yukarıdaki verilere göre Ankara'dan Adana'ya taşıma maliyeti değeri aşağıdakilerden hangisidir?|A) 70~B) 20~C) 50~D) 40~E) 90|C) 50|ACIKLAMA::Ankara satırı ile Adana sütununun kesişimi 50'dir.|",
+  "2024 Final|<br>Y = -0.279 + 0.996X <br> Standart Hata: (0.249) (0.013)<br>Yukarıdaki verilere göre bağımsız değişkenin standart hata değeri aşağıdakilerden hangisidir?|A) 0.013~B) 533~C) 123~D) 204~E) 144|A) 0.013|ACIKLAMA::Parantez içindeki ikinci değer bağımsız değişkene aittir: 0,013. Katsayı 0,996 bu hataya bölününce t değeri yaklaşık 76,3 çıkar.|",
+  "2024-2025 Bütünleme|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelde gelir değişkenin olasılık (prob.) değeri aşağıdakilerden hangisidir?|A) 0.0306~B) 0.0043~C) 0.0141~D) 0.0563~E) 0.0911|C) 0.0141|ACIKLAMA::GELİR satırının Prob. sütunundaki değer 0,0141'dir; %5 düzeyinde anlamlı, %1 düzeyinde anlamsızdır.|",
+  "2024-2025 Bütünleme|${t_maliyet_5li}<br>Yukarıdaki maliyet tablosuna göre Seçenek 4 için beklenen maliyet değeri aşağdıakilerden hangisidir?|A) 40~B) 10~C) 30~D) 50~E) 20|D) 50|ACIKLAMA::Tabloda Seçenek 4 tüm durumlarda 40 değerini aldığı için olasılıklar ne olursa olsun beklenen maliyet 40 çıkar.|Anahtar 50 diyor; bu değer tabloda Seçenek 5'e ait. Soru muhtemelen farklı bir maliyet tablosuyla sorulmuş.",
+  "2024-2025 Bütünleme|${t_maliyet_olasilik}<br>Aşağıdaki tabloda Durum 2'de beklenen en iyi maliyet seçeneği aşağıdakilerden hangisidir?|A) Seçenek 1~B) Seçenek 8~C) Seçenek 2~D) Seçenek 5~E) Seçenek 3|B) Seçenek 8|ACIKLAMA::Beklenen maliyetler 2 · 8 · 18 · 32 · 50 · 72 · 98 · 128 · 162 · 200 şeklindedir.|Bu sıralamada en düşük değer Seçenek 1'e aittir; anahtar Seçenek 8 diyor (128). Aynı tabloyla sorulan 2022 Final sorusunda cevap Seçenek 1 kabul edilmiş, iki soru çelişiyor.",
+  "2024-2025 Bütünleme|${t_atama}<br>Yukarıdaki verilere göre birinci işi, ikinci makineye atama maliyeti aşağıdakilerden hangisidir?|A) 2~B) 4~C) 3~D) 5~E) 6|C) 3|ACIKLAMA::Bu bankadaki atama tablosunda birinci iş ile ikinci makinenin kesişimi 7'dir.|Anahtarın verdiği 3 değeri tabloda yok, şıklarda 7 de yok. Kaynakta iki farklı atama matrisi (İ1–İ4 / MA–MD ile numaralı sürüm) tek tabloda birleştirilmiş; bu soru muhtemelen diğerine ait.",
+  "2024-2025 Bütünleme|${t_atama}<br>Yukarıdaki verilere göre İ3'ün Mc'ye atama maliyeti aşağıdakilerden hangisidir?|A) 7~B) 8~C) 6~D) 5~E) 9|D) 5|ACIKLAMA::İ3 satırı ile MC sütununun kesişimi 5'tir.|",
+  "2024-2025 Bütünleme|<br>A) 2x1 + 4x2 <= 70<br>B) 3x1 + x2 <= 30<br>Yukarıdaki verilere göre B teknik sınırlamasında, x1'in bir birim değişimin kaynak tüketimine etkisi aşağıdakilerden hangisidir?|A) 5~B) 6~C) 4~D) 2~E) 17|C) 4|ACIKLAMA::B kısıtı 3x1 + x2 ≤ 30 olduğundan x1'in katsayısı 3'tür.|Anahtar 4 diyor; 4 değeri A kısıtındaki x2'nin katsayısı. Neredeyse aynı soru bir alt sırada 3 cevabıyla yer alıyor, yani banka kendi içinde çelişiyor.",
+  "2024-2025 Bütünleme|${t_vam}<br>Yukarıdaki verilere göre ikinci fabrikadan, birinci depoya taşıma maliyeti değeri aşağıdakilerden hangisidir?|A) 60~B) 70~C) 90~D) 50~E) 40|E) 40|ACIKLAMA::İkinci fabrika Ankara, birinci depo Bursa'dır; kesişimdeki taşıma maliyeti 40'tır.|",
+  "2024-2025 Bütünleme|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelin sabitinin olasılık (prob.) değeri aşağıdakilerden hangisidir?|A) 0.0563~B) 0.0000~C) 0.0043~D) 0.0306~E) 0.0911|C) 0.0043|ACIKLAMA::Sabit terimin Prob. sütunundaki değeri 0,0043'tür; %1 düzeyinde bile anlamlıdır.|",
+  "2024-2025 Bütünleme|<br>A) 2x1 + 4x2 <= 70<br>B) 3x1 + x2 <= 30<br>Yukarıdaki verilere göre B teknik sınırlamasında, Xi'deki bir birim değişimin kaynak tüketimine etkisi değeri aşağıdakilerden hangisidir?|A) 6~B) 5~C) 3~D) 2~E) 4|C) 3|ACIKLAMA::B kısıtı 3x1 + x2 ≤ 30 olduğundan x1 bir birim arttığında kaynaktan 3 birim tüketilir.|",
+  "2024-2025 Bütünleme|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre kur_euro değişkenin %1 hata payımda modelde yer almasına yönelik aşağıdaki ifadelerden hangisi doğrudur?|A) Modelde yer almalıdır.~B) Yeterli bilgi yoktur.~C) Karar verilemez.~D) Kısmen yer alabilir.~E) Modelde yer almamalıdır.|A) Modelde yer almalıdır.|ACIKLAMA::Karar kuralı şudur: prob değeri 0,01'in altındaysa değişken %1 düzeyinde anlamlıdır ve modelde kalır.|Tabloda KUR_EURO satırının prob değeri 0,320 görünüyor; bu değer 0,01'in çok üzerinde olduğu için tabloya göre değişken modelde yer almamalıdır. Kaynak açıklamadaki 0,0014 değeri tabloyla uyuşmuyor. Sınavda anahtar A kabul edilmiş.",
+  "2024-2025 Bütünleme|${t_vam}<br>Yukarıdaki verilere göre İzmir'den Samsun'a taşıma maliyeti değeri aşağıdakilerden hangisidir?|A) 50~B) 70~C) 90~D) 40~E) 80|B) 70|ACIKLAMA::İzmir satırı ile Samsun sütununun kesişiminde bu tabloda 60 yazıyor.|Anahtar 70 diyor; 70 değeri İzmir–Adana hücresine ait. Ya tablo ya da anahtar hatalı; aynı tabloyla sorulan İzmir–Adana sorusunda 70 doğru kabul edilmiş.",
+  "2024-2025 Bütünleme|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre gelir değişkenin %1 hata payında modelde yer almasına yönelik aşağıdaki ifadelerden hangisi doğrudur?|A) Yeterli bilgi yok.~B) Modelde yer almamalıdır.~C) Kısmen yer alabilir.~D) Karar verilemez.~E) Modelde yer almalıdır.|B) Modelde yer almamalıdır.|ACIKLAMA::GELİR değişkeninin prob değeri 0,0141'dir. Bu değer 0,01'den büyük olduğu için değişken %1 anlamlılık düzeyinde anlamsızdır ve o düzeyde modelde yer almamalıdır. %5 düzeyinde ise anlamlı olurdu.|",
+  "2024-2025 Bütünleme|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelin F-statistiği değeri aşağıdakilerden hangisidir?|A) 343.2771~B) 342.2771~C) 345.2771~D) 341.2771~E) 347.2771|E) 347.2771|ACIKLAMA::Tablo altındaki F-statistic değeri 347,2771'dir. Yüksek F değeri modelin bütün olarak anlamlı olduğunu gösterir.|",
+  "2024-2025 Bütünleme|<br>Z = 30x1 + 40x2<br>Yukarıdaki verilere göre X2'nin bir birim değişimin amaç fonksiyona etkisi aşağıdakilerden hangisidir?|A) 2~B) 3~C) 4~D) 6~E) 40|E) 40|ACIKLAMA::Z = 30x1 + 40x2 fonksiyonunda x2'nin katsayısı 40'tır.|",
+  "2024-2025 Bütünleme|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelin belirlilik katsayısı (R2) değeri aşağıdakilerden hangisidir?|A) 0.883712~B) 0.983712~C) 0.923371~D) 0.900712~E) 0.954712|B) 0.983712|ACIKLAMA::R-squared değeri 0,983712'dir; bağımlı değişkendeki değişimin yaklaşık %98'i model tarafından açıklanmaktadır.|",
+  "2025-2026 Final|${t_atama}<br>Yukarıdaki verilere göre dördüncü işi, dördüncü makineye atama maliyeti aşağıdakilerden hangisidir?|A) 6~B) 4~C) 16~D) 5~E) 2|D) 5|ACIKLAMA::Bu bankadaki atama tablosunda dördüncü iş ile dördüncü makinenin kesişimi 1'dir.|Anahtarın verdiği 5 değeri bu tabloda İ1–MA hücresine ait ve 1 değeri şıklarda yok. Atama sorularının bir kısmı başka bir matrisle sorulmuş görünüyor.",
+  "2025-2026 Final|<br>X1 + 2X2 <= 50<br>Yukarıdaki bilgilere göre aşağıdakilerden hangisi X1 ve X2 için köşe çözümleri arasındadır?|A) (5,15)~B) (0,15)~C) (0,5)~D) (5,0)~E) (0,25)|E) (0,25)|ACIKLAMA::X1 + 2X2 ≤ 50 kısıtında X1 = 0 alınırsa X2 = 25, X2 = 0 alınırsa X1 = 50 bulunur. Köşe noktaları (0,0), (50,0) ve (0,25)'tir; şıklarda bunlardan yalnızca (0,25) vardır.|",
+  "2025-2026 Final|${t_atama}<br>Yukarıdaki verilere göre üçüncü işi, üçüncü makineye atama maliyeti aşağıdakilerden hangisidir?|A) 2~B) 15~C) 6~D) 4~E) 5|E) 5|ACIKLAMA::Üçüncü iş satırı ile üçüncü makine sütununun kesişimi 5'tir.|",
+  "2025-2026 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelin SABİTİNİN Std.Hata değeri aşağıdakilerden hangisidir?|A) 2.32~B) 2.03~C) 5.23~D) 1.357~E) 4.32|D) 1.357|ACIKLAMA::Anahtar bu dönem için 1,357 değerini kabul etmiştir.|Bu bankadaki regresyon tablosunda sabit terimin standart hatası 1,541 görünüyor. Kaynakta iki ayrı model çıktısı birleştirildiği için dönemden döneme farklı değerler çıkıyor; tablonun ikiye bölünmesi gerekir.",
+  "2025-2026 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelde, KRIZ değişkeninin Prob değeri aşağıdakilerden hangisidir?|A) 0.0114~B) 0.0020~C) 0.0121~D) 0.0521~E) 0.0413|A) 0.0114|ACIKLAMA::KRIZ satırının Prob. sütunundaki değeri 0,0114'tür.|",
+  "2025-2026 Final|${t_maliyet_5li}<br>Yukarıdaki maliyet tablosuna göre Seçenek 2 için beklenen maliyet nedir?|A) 30~B) 50~C) 10~D) 40~E) 20|E) 20|ACIKLAMA::Anahtar 20 değerini kabul etmiştir.|Bu bankadaki maliyet tablosunda Seçenek 2 satırı 8, 3, 12 ve 2 değerlerinden oluşur; dört durum eşit olasılıklı alınırsa beklenen maliyet 6,25 çıkar. Kaynak açıklamadaki 20 × 0,5 + 20 × 0,5 işlemi bu tabloya ait değil; soru başka bir matrisle sorulmuş.",
+  "2025-2026 Final|${t_regresyon_ithalat}<br>Yukarıdaki verilere göre modelde İhracat değişkenin olasılık (prob.) değeri aşağıdakilerden hangisidir?|A) 0.0000~B) 0.0911~C) 0.0043~D) 0.0306~E) 0.0563|A) 0.0000|ACIKLAMA::İHRACAT satırının Prob. sütunundaki değer 0,0000'dır; değişken her anlamlılık düzeyinde anlamlıdır.|",
+  "2025-2026 Final|${t_simpleks}<br>Yukarıdaki tabloda çözüm için pivot (anahtar) sütun aşağıdakilerden hangisidir?|A) X1 olduğu sütun~B) X3 olduğu satır~C) X5 olduğu sütun~D) X2 olduğu sütun~E) X4 olduğu satır|D) X2 olduğu sütun|ACIKLAMA::Anahtar sütun, Cj satırında en büyük kâr katsayısına sahip değişkenin sütunudur. Tabloda Cj değerleri 45 ve 55 olduğundan 55'e sahip x2 sütunu anahtar sütundur. Anahtar satır ise çözüm vektörü değerlerinin anahtar sütundaki katsayılara oranlarından en küçüğüyle belirlenir: 120/4 = 30 ve 180/10 = 18, yani x4 satırı.|Kaynak açıklamada Z = 20X1 + 30X2 fonksiyonu geçiyordu; o fonksiyon bu tabloya ait değil. Sonuç değişmiyor, çünkü her iki durumda da ikinci değişken seçiliyor.",
+  "2025-2026 Final|<br>Z=30X1+40X2<br>Yukarıdaki verilere göre X2 bir birim değişimin amaç fonksiyona etkisi aşağıdakilerden hangisidir?|A) 3~B) 2~C) 40~D) 6~E) 4|C) 40|ACIKLAMA::Z = 30X1 + 40X2 fonksiyonunda X2'nin katsayısı 40'tır.|",
+  "2025-2026 Final|<br>Y=0.5+0.08X1+0.0014X2+0.028X3<br>Yukarıdaki bilgilere göre modelde X2 değişkenin katsayı değeri aşağıdakilerden hangisidir?|A) 0.0306~B) 0.0043~C) 0.0911~D) 0.0014~E) 0.0563|D) 0.0014|ACIKLAMA::Denklemde X2'nin önündeki katsayı 0,0014'tür.|",
+  "2025-2026 Bütünleme|${t_maliyet_5li}<br>Yukarıdaki maliyet tablosuna göre Seçenek 5 için beklenen maliyet nedir?|A) 40~B) 20~C) 30~D) 50~E) 10|D) 50|ACIKLAMA::Seçenek 5 tüm durumlarda 50 değerini aldığı için olasılıklar ne olursa olsun beklenen maliyet 50'dir. Bu satır riski olmayan, kesin sonuçlu bir seçeneği temsil eder.|",
+  "2025-2026 Bütünleme|${t_regresyon_ithalat}<br>Tablodaki bilgilere göre modelin sabitinin değeri kaçtır?|A) 4~B) 2~C) -6.096~D) 20~E) 0.471|C) -6.096|ACIKLAMA::Sabit terimin katsayı sütunundaki değeri −6,096'dır.|",
+  "2025-2026 Bütünleme|${t_maliyet_5li}<br>Yukarıdaki maliyet matrisindeki bilgilere göre eş-olasılık kriteri açısından optimal seçenek aşağıdakilerden hangisidir?|A) Seçenek 5~B) Seçenek 1~C) Seçenek 3~D) Seçenek 4~E) Seçenek 2|B) Seçenek 1|ACIKLAMA::Eş olasılıkta ortalamalar: S1 = 10,25 · S2 = 6,25 · S3 = 13 · S4 = 40 · S5 = 50.|Tabloya göre en düşük ortalama Seçenek 2'ye ait; anahtar Seçenek 1 diyor. Kaynak açıklamadaki 'maliyetlerin tüm durumlarda aynı olduğu' ifadesi de yalnızca Seçenek 4 ve 5 için doğru. 2023-2024 Final'deki aynı soru Seçenek 2 cevabını veriyor.",
+  "2025-2026 Bütünleme|Aşağıdakilerden hangisi karar ağacı yönteminin aşamalarından değildir?|A) Eylem düğümleri~B) Başla~C) Seçenek değerleri~D) Olay düğümleri~E) Kötümserlik|E) Kötümserlik|ACIKLAMA::Karar ağacının ögeleri başlangıç noktası, eylem (karar) düğümleri, olay (şans) düğümleri ve seçenek değerleridir. Kötümserlik ise belirsizlik altında kullanılan bir karar kriteridir.|",
+  "2025-2026 Bütünleme|${t_maliyet_olasilik}<br>Durum 1'deki seçeneklerde en yüksek beklenen kazanç aşağıdakilerden hangisidir?|A) Seçenek 3~B) Seçenek 5~C) Seçenek 1~D) Seçenek 8~E) Seçenek 2|C) Seçenek 1|ACIKLAMA::Kazanç sütununda beklenen değerler 100×1 = 100 · 90×0,9 = 81 · 80×0,8 = 64 · 70×0,7 = 49 şeklinde azalır. En yüksek beklenen kazanç 100 ile Seçenek 1'dedir.|",
+  "2025-2026 Bütünleme|${t_km}<br>Yukarıdaki tabloya göre Durum 1'de en iyi üçüncü maliyet seçeneği aşağıdakilerden hangisidir?|A) S3~B) S1~C) S2~D) S5~E) S4|A) S3|ACIKLAMA::Durum 1 maliyetleri 5, 10, 15, 20 … şeklinde artar; küçükten büyüğe üçüncü sırada 15 vardır ve bu Seçenek 3'e (S3) aittir.|",
+  "2025-2026 Bütünleme|<br>2X1 + 4X2 <= 70<br>Yukarıdaki verilere göre A teknik sınırlamasında, X2 bir birim değişimin kaynak tüketimine etkisi aşağıdakilerden hangisidir?|A) 2~B) 6~C) 3~D) 5~E) 4|E) 4|ACIKLAMA::A kısıtı 2X1 + 4X2 ≤ 70 olduğundan X2'nin katsayısı 4'tür; X2 bir birim artarsa kaynaktan 4 birim tüketilir.|",
+  "2025-2026 Bütünleme|${t_rekabet}<br>Yukarıdaki tabloya göre, A oyuncusunun stratejileri karşısında B oyuncusunun en iyi B4 stratejisi aşağıdakilerden hangisidir?|A) 6~B) 4~C) 10~D) 5~E) 7|B) 4|ACIKLAMA::B için minimaks: sütun maksimumları B1=10, B2=5, B3=7, B4=4. En küçük değer 4 olduğundan B4 seçilir. A'nın maximin değeri de 4 olduğu için oyunun eyer noktası vardır ve oyun değeri 4'tür.|",
+  "2025-2026 Bütünleme|${t_vam}<br>Yukarıdaki verilere göre İzmir'den Adana'ya taşıma maliyeti aşağıdakilerden hangisidir?|A) 20~B) 90~C) 40~D) 70~E) 50|D) 70|ACIKLAMA::İzmir satırı ile Adana sütununun kesişimi 70'tir.|",
+  "2025-2026 Bütünleme|${t_regresyon_ithalat}<br>Tablodaki bilgilere göre modelde KUR_EURO değişkenin katsayısının değeri kaçtır?|A) -0.563907~B) 0.471646~C) -0.173646~D) -0.102661~E) 0.7616546|A) -0.563907|ACIKLAMA::Anahtara göre KUR_EURO katsayısı −0,563907'dir.|Aynı satırda LKUR_EURO için −0,203 değeri de veriliyor. İki farklı model çıktısı birleştirildiği için hangi etiketin hangi değere ait olduğu tabloda net değil; L ile başlayan sürüm logaritmik modeldir.",
+  "2025-2026 Bütünleme|${t_atama}<br>Yukarıdaki verilere göre İ1 iş parçalarını MD makineye atama maliyeti aşağıdakilerden hangisidir?|A) 9~B) 6~C) 7~D) 8~E) 5|B) 6|ACIKLAMA::İ1 satırı ile MD sütununun kesişimi 6'dır.|",
+  "2025-2026 Bütünleme|<br>Y= 10 + 4x + u<br>Yukarıdaki verilere göre modelde, bağımsız değişkenin Prob değeri aşağıdakilerden hangisidir?|A) 20~B) 0~C) 5~D) 12~E) 14|B) 0|ACIKLAMA::Anahtar 0 değerini kabul etmiştir.|Soruda yalnızca Y = 10 + 4x + u denklemi veriliyor; prob değerini bulmak için gereken standart hata ya da t değeri verilmemiş. Soru eksik aktarılmış görünüyor.",
+  "2025-2026 Bütünleme|<br>Z = 30X1 + 40X2<br>Yukarıdaki verilere göre X1 bir birim değişimin amaç fonksiyona etkisi aşağıdakilerden hangisidir?|A) 30~B) 35~C) 40~D) 25~E) 20|A) 30|ACIKLAMA::Z = 30X1 + 40X2 fonksiyonunda X1'in katsayısı 30'dur; X1 bir birim artarsa amaç fonksiyonu 30 birim artar.|"
+];
+
+// --- PARSE RAW DATA TO UI DATA ---
+const DATA = [];
+const soruMap = new Map();
+let id_cnt = 1;
+
+rawData.forEach(item => {
+  if (!item || !item.trim()) return;
+  const parts = item.split('|');
+  if (parts.length < 4) return;
+  
+  let tagsRaw = parts[0];
+  let qRaw = parts[1].trim();
+  let options = parts[2].split('~').map(o => o.trim());
+  let correctAnswer = parts[3].trim();
+  let explanation = (parts[4] || '').replace('ACIKLAMA::', '').replace('💡 Açıklama:', '').trim();
+  let note = (parts[5] || '').trim();
+
+  // Extract assets like ${t_km} and remove from question string
+  let as = [];
+  qRaw = qRaw.replace(/\$\{(t_[a-zA-Z0-9_]+)\}(<br>)?/g, (match, p1) => {
+    as.push(p1);
+    return '';
+  }).trim();
+
+  // --- Konu tespiti (çalışırken konuya göre filtrelemek için) ---
+  const _t = (qRaw + ' ' + as.join(' ')).toLocaleLowerCase('tr');
+  let konu = 'Diğer';
+  if (as.includes('t_rekabet')) konu = 'Oyun teorisi';
+  else if (as.includes('t_vam')) konu = 'Ulaştırma (VAM)';
+  else if (as.includes('t_atama')) konu = 'Atama problemi';
+  else if (as.includes('t_simpleks')) konu = 'Simpleks';
+  else if (as.includes('t_regresyon_ithalat') || /y\s*=|t-istatistik|prob|katsayı|standart hata|r2|belirlilik/.test(_t)) konu = 'Regresyon';
+  else if (/iyimserlik|kötümserlik|eş-olasılık|eş olasılık|maximax|maximin|pişmanlık/.test(_t)) konu = 'Belirsizlik kriterleri';
+  else if (as.length) konu = 'Karar matrisi / beklenen değer';
+  else if (/z\s*=|x1|x2|kısıt|teknik sınırlama|köşe çözüm|amaç fonksiyon/.test(_t)) konu = 'Doğrusal programlama';
+  else if (/karar ağacı/.test(_t)) konu = 'Karar ağacı';
+  else if (/model|aşama|sayılamaz/.test(_t)) konu = 'Teori / model kavramı';
+
+  // Determine kind from tags
+  let k = 'vize';
+  const lowTags = tagsRaw.toLowerCase();
+  if (lowTags.includes('büt') || lowTags.includes('but')) k = 'but';
+  else if (lowTags.includes('final')) k = 'final';
+
+  let tagsList = tagsRaw.split(',').map(t => t.trim());
+
+  /* Tekrar tespiti yalnızca soru metnine bakınca, aynı köke sahip ama şıkları
+     bambaşka olan sorular birleşip biri kayboluyordu. Anahtar artık soru metni
+     + şıkların harfsiz, sıralanmış kümesi. */
+  const optKey = options.map(o => o.replace(/^[A-Ea-e]\)\s*/, '').trim().toLocaleLowerCase('tr')).sort().join('~');
+  const key = qRaw + '##' + optKey;
+
+  if (soruMap.has(key)) {
+    let kayit = soruMap.get(key);
+    tagsList.forEach(t => { if (!kayit.tags.includes(t)) kayit.tags.push(t); });
+  } else {
+    soruMap.set(key, {
+      id: id_cnt++,
+      k: k,
+      tags: tagsList,
+      q: qRaw,
+      o: options,
+      a: correctAnswer,
+      e: explanation,
+      n: note,
+      konu: konu,
+      as: as
+    });
+  }
+});
+
+soruMap.forEach(val => DATA.push(val));
+
+const KIND_LABEL = {vize:'Vize', final:'Final', but:'Bütünleme'};
+
+let state = {kind:'all', year:'', rep:false, flag:false, konu:'', q:'', allOpen:false, order:null};
+let score = {t:0, f:0};
+
+const $ = s => document.querySelector(s);
+const listEl = $('#list'), emptyEl = $('#empty');
+
+/* ---- setup counts + year options ---- */
+const counts = {all:DATA.length, vize:0, final:0, but:0, rep:0, flag:0};
+const years = new Set();
+const konular = new Set();
+DATA.forEach(d => {
+  counts[d.k]++;
+  if (d.tags.length > 1) counts.rep++;
+  if (d.n) counts.flag++;
+  konular.add(d.konu);
+  d.tags.forEach(t => years.add(t));
+  d._s = (d.q + ' ' + d.o.join(' ') + ' ' + d.e + ' ' + d.tags.join(' ')).toLocaleLowerCase('tr');
+});
+$('#s-all').textContent = counts.all; $('#s-vize').textContent = counts.vize;
+$('#s-final').textContent = counts.final; $('#s-but').textContent = counts.but;
+$('#s-rep').textContent = counts.rep;
+if ($('#s-flag')) $('#s-flag').textContent = counts.flag;
+['all','vize','final','but'].forEach(k => $('#c-' + k).textContent = counts[k]);
+
+const konuSel = $('#konu');
+if (konuSel) [...konular].sort().forEach(k => {
+  const o = document.createElement('option'); o.value = k; o.textContent = k; konuSel.appendChild(o);
+});
+
+const yearSel = $('#year');
+[...years].sort().forEach(y => {
+  const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o);
+});
+
+/* ---- helpers ---- */
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hl(text, term){
+  const safe = esc(text);
+  if (!term) return safe;
+  const t = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return safe.replace(new RegExp('(' + t + ')', 'gi'), '<mark>$1</mark>');
+}
+const letter = s => (s.trim()[0] || '').toUpperCase();
+/* Soru metnindeki satır sonları escape edilince ekranda düz yazı olarak
+   görünüyordu; sadece <br> etiketlerini geri açıyoruz, <= gibi işaretler
+   güvenle kaçırılmış kalıyor. */
+const br = h => h.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
+/* ---- render ---- */
+function visible(){
+  const q = state.q.toLocaleLowerCase('tr').trim();
+  let rows = DATA.filter(d =>
+    (state.kind === 'all' || d.k === state.kind) &&
+    (!state.year || d.tags.includes(state.year)) &&
+    (!state.rep || d.tags.length > 1) &&
+    (!state.flag || !!d.n) &&
+    (!state.konu || d.konu === state.konu) &&
+    (!q || d._s.includes(q))
+  );
+  if (state.order) rows = rows.slice().sort((a,b) => state.order.indexOf(a.id) - state.order.indexOf(b.id));
+  return rows;
+}
+
+function render(){
+  const rows = visible();
+  $('#shown').textContent = rows.length;
+  emptyEl.hidden = rows.length > 0;
+  const term = state.q.trim();
+
+  listEl.innerHTML = rows.map((d, i) => {
+    const correct = letter(d.a);
+    return `
+    <article class="cell${d.n ? ' flagged' : ''}" data-id="${d.id}">
+      <div class="gut"><span class="in">Soru [${i + 1}]</span><span class="kind">${KIND_LABEL[d.k]}</span></div>
+      <div class="body">
+        <div class="tags">
+          ${d.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+          ${d.tags.length > 1 ? '<span class="tag rep">🔥 tekrar</span>' : ''}
+          ${d.konu ? `<span class="tag konu">${esc(d.konu)}</span>` : ''}
+          ${d.n ? '<span class="tag flag">⚠️ not var</span>' : ''}
+        </div>
+        <p class="q">${i + 1}. ${br(hl(d.q, term))}</p>
+        ${d.as && d.as.length ? '<div class="assets">' + d.as.map(k => ASSETS[k] || '').join('') + '</div>' : ''}
+        <ul class="opts">
+          ${d.o.map(o => `<li><button class="opt" data-l="${letter(o)}" data-c="${correct}">${hl(o, term)}</button></li>`).join('')}
+        </ul>
+        <div class="acts"><button class="reveal">Cevabı göster</button></div>
+        <div class="out">
+          <div class="lbl">Out [${i + 1}] — doğru cevap</div>
+          <div class="ans">${hl(d.a, term)}</div>
+          <p class="exp">${hl(d.e, term)}</p>
+          ${d.n ? `<p class="note">${hl(d.n, term)}</p>` : ''}
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  if (state.allOpen) listEl.querySelectorAll('.out').forEach(o => o.classList.add('show'));
+}
+
+/* ---- interactions ---- */
+listEl.addEventListener('click', e => {
+  const rev = e.target.closest('.reveal');
+  if (rev){
+    const out = rev.closest('.body').querySelector('.out');
+    out.classList.toggle('show');
+    rev.textContent = out.classList.contains('show') ? 'Cevabı gizle' : 'Cevabı göster';
+    return;
+  }
+  const opt = e.target.closest('.opt');
+  if (!opt || opt.classList.contains('locked')) return;
+
+  const list = opt.closest('.opts');
+  const correct = opt.dataset.c;
+  const picked = opt.dataset.l;
+  list.querySelectorAll('.opt').forEach(b => {
+    b.classList.add('locked');
+    if (b.dataset.l === correct) b.classList.add('correct');
+  });
+  if (picked !== correct) opt.classList.add('wrong');
+
+  picked === correct ? score.t++ : score.f++;
+  updateScore();
+
+  const out = opt.closest('.body').querySelector('.out');
+  out.classList.add('show');
+  opt.closest('.body').querySelector('.reveal').textContent = 'Cevabı gizle';
+});
+
+function updateScore(){
+  const tot = score.t + score.f;
+  $('#score').classList.toggle('show', tot > 0);
+  $('#sc-t').textContent = score.t;
+  $('#sc-f').textContent = score.f;
+  $('#sc-r').textContent = tot ? Math.round(score.t / tot * 100) + '% · ' + tot + ' soru cevaplandı' : '';
+}
+$('#sc-reset').addEventListener('click', () => {
+  score = {t:0, f:0}; updateScore(); render();
+});
+
+$('#kinds').addEventListener('click', e => {
+  const b = e.target.closest('.chip[data-k]');
+  if (!b) return;
+  state.kind = b.dataset.k;
+  document.querySelectorAll('.chip[data-k]').forEach(c => c.setAttribute('aria-pressed', c === b));
+  render();
+});
+$('#flag').addEventListener('click', e => {
+  state.flag = !state.flag;
+  e.currentTarget.setAttribute('aria-pressed', state.flag);
+  render();
+});
+$('#konu').addEventListener('change', e => { state.konu = e.target.value; render(); });
+$('#rep').addEventListener('click', e => {
+  state.rep = !state.rep;
+  e.currentTarget.setAttribute('aria-pressed', state.rep);
+  render();
+});
+yearSel.addEventListener('change', e => { state.year = e.target.value; render(); });
+$('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
+
+$('#toggle').addEventListener('click', e => {
+  state.allOpen = !state.allOpen;
+  e.currentTarget.textContent = state.allOpen ? 'Cevapları gizle' : 'Cevapları göster';
+  e.currentTarget.classList.toggle('on', state.allOpen);
+  listEl.querySelectorAll('.out').forEach(o => o.classList.toggle('show', state.allOpen));
+  listEl.querySelectorAll('.reveal').forEach(r => r.textContent = state.allOpen ? 'Cevabı gizle' : 'Cevabı göster');
+});
+
+$('#shuffle').addEventListener('click', () => {
+  const ids = visible().map(d => d.id);
+  for (let i = ids.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
+  state.order = ids;
+  $('#reset-order').hidden = false;
+  render();
+  window.scrollTo({top:0});
+});
+$('#reset-order').addEventListener('click', e => {
+  state.order = null; e.currentTarget.hidden = true; render();
+});
+
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== $('#q')){ e.preventDefault(); $('#q').focus(); }
+  if (e.key === 'Escape' && document.activeElement === $('#q')){ $('#q').value = ''; state.q = ''; render(); $('#q').blur(); }
+});
+
+const topBtn = $('#top');
+topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+addEventListener('scroll', () => topBtn.classList.toggle('show', scrollY > 700), {passive:true});
+
+render();
+</script>
+</body>
+</html>

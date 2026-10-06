@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUZEF GENEL İKTİSAD</title>
+    <style>
+        :root { 
+            --p: #1a2b4c; --s: #2c3e50; --a: #f39c12; --suc: #27ae60; 
+            --bg: #f4f6f8; --c: #ffffff; --t: #2d3436; --b: #dfe6e9; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--t); margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1050px; margin: 0 auto; }
+        
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 1000;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .header { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--a); margin-bottom: 15px; }
+        .header h1 { margin: 5px 0; font-size: 1.5em; }
+        .header p { margin: 0; font-size: 0.9em; }
+        
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: var(--bg); padding: 5px; border-radius: 10px; }
+        
+        .btn { background: #ecf0f1; color: var(--p); border: 2px solid var(--b); padding: 8px 12px; font-size: 0.95em; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; box-sizing: border-box; }
+        .btn:hover { background: #bdc3c7; }
+        .btn.active { background: var(--a); color: white; border-color: var(--a); }
+        .btn-g { background: #d35400; color: white; }
+        
+        .card { background: var(--c); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--p); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .tag { color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .tag-u { background: #3498db; } .tag-e { background: var(--p); } .tag-h { background: #e74c3c; }
+        .q-text { font-size: 1.1em; font-weight: bold; color: var(--p); margin-bottom: 15px; }
+        .opt { list-style: none; padding: 0; margin: 0 0 15px 0; }
+        .opt li { background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid var(--b); margin-bottom: 5px; cursor: pointer; transition: 0.2s; }
+        .opt li:hover { background: #eafaf1; border-color: var(--suc); }
+        .ans-btn { background: var(--s); color: white; border: none; padding: 8px; width: 100%; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .ans-box { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--suc); border-radius: 6px; }
+        .ans-true { color: var(--suc); font-weight: bold; margin-bottom: 5px; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .sticky-top { position: relative; padding-top: 5px; padding-bottom: 5px; }
+            .header { padding: 10px; margin-bottom: 10px; }
+            .header h1 { font-size: 1.2em; }
+            .header p { font-size: 0.8em; } 
+            .controls { gap: 6px; padding: 0; }
+            .btn { padding: 10px; font-size: 0.85em; width: 100%; margin: 0; }
+            #kategori-secici, #arama { width: 100%; min-width: 100%; }
+            .card { padding: 15px; }
+            .q-text { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="sticky-top">
+        <div class="header">
+            <h1>AUZEF GENEL İKTİSAD</h1>
+            <p>YBS OZEL (TUM SORULAR)</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-g" onclick="toggleAll()">👁️ Tüm Cevapları Aç/Kapat</button>
+
+            <select class="btn" id="kategori-secici" onchange="filter(this.value)" style="background: var(--p); color: white; min-width: 180px; text-align: center; font-weight:bold; padding:8px; border-radius:6px; cursor:pointer;">
+                <option value="all">📚 Tüm Havuz (Hepsi)</option>
+                <optgroup label="Sınavlar">
+                     <option value="vize">📅 Vizeler (Tümü)</option>
+                     <option value="final">📅 Finaller (Tümü)</option>
+                     <option value="büt">📅 Bütünlemeler</option>
+                     
+                </optgroup>
+            </select>
+
+            <button class="btn" style="background: #e74c3c; color:white;" onclick="document.getElementById('kategori-secici').value='b'; filter('b')">🔥 Banko Sorular</button>
+
+            <input type="text" id="arama" class="btn" placeholder="🔍 Soru veya cevapta kelime ara..." onkeyup="aramaYap()" style="background: white; color: black; cursor: text; text-align: left; min-width: 250px;">
+        </div>
+    </div>
+    
+    <div id="q-container"></div>
+
+</div>
+
+<script>
+const rawData = [
+
+`2022 Vize|1. Eş maliyet doğrusu hangi durumu belirtmektedir?|A) Üretim maliyetini~B) Sermaye maliyetini~C) İşçi maliyetini~D) Faktör bileşiminin maliyetini~E) Faktör tercihini|D) Faktör bileşiminin maliyetini|💡 Açıklama: Eş maliyet doğrusu, üreticinin belirli bir bütçe ile satın alabileceği ve aynı toplam maliyeti veren çeşitli faktör (girdi) bileşimlerini gösterir.`,
+
+`2022 Vize|2. Arz-talep eğrileri analizinde talep eğrisi altında ve denge fiyatı üzerinde kalan alan aşağıdakilerden hangisini gösterir?|A) Fayda maksimizasyonu~B) Toplam rant~C) Tüketici rantı~D) Üretici rantı~E) Kâr maksimizasyonu|C) Tüketici rantı|💡 Açıklama: Tüketicinin bir mal için ödemeye razı olduğu en yüksek fiyat ile fiilen ödediği piyasa fiyatı (denge fiyatı) arasındaki fark tüketici rantıdır.`,
+
+`2022 Vize|3. Malların fiyatının düşmesi bütçe doğrusunu nasıl etkiler?|A) Etkilemez~B) Eğimini değiştirmez~C) Eğimini değiştirir~D) Paralel sağa kaydırır~E) Paralel sola kaydırır|D) Paralel sağa kaydırır|💡 Açıklama: Tüketicinin geliri sabitken tüm malların fiyatları aynı oranda düşerse, satın alma gücü artar ve bütçe doğrusu eğimi değişmeden paralel olarak sağa kayar.`,
+
+`2022 Vize|4. Aşağıdakilerden hangisi uzun dönemde firma içi maliyetlerin yükselmesine neden olmaktadır?|A) İçsel ekonomiler~B) Alan ekonomileri~C) İçsel eksi ekonomiler~D) Dışsal ekonomiler~E) Dışsal eksi ekonomiler|C) İçsel eksi ekonomiler|💡 Açıklama: Bir firmanın üretim ölçeğini büyütmesi sonucunda, yönetim ve organizasyon zorlukları gibi nedenlerle maliyetlerin artmasına içsel eksi (negatif) ekonomiler denir.`,
+
+`2022 Vize|5. Aşağıdakilerden hangisi eş ürün eğrisinin özelliklerinden değildir?|A) Eğri üzerindeki her nokta farklı üretim düzeyini gösterir~B) Paralel eğrilerdir~C) Marjinal teknik ikame özelliğini taşır~D) Birbirlerini kesmezler~E) Dışbükeydir|A) Eğri üzerindeki her nokta farklı üretim düzeyini gösterir|💡 Açıklama: Eş ürün eğrisi üzerindeki her nokta FARKLI değil, AYNI üretim düzeyini temsil eder.`,
+
+`2022 Vize|6. Aşağıdakilerden hangisi arz eğrisinin yer değiştirmesine etki eden faktörlerden biri değildir?|A) Geleceğe yönelik beklentiler~B) Mal fiyatı~C) Teknoloji~D) Maliyetler~E) Diğer mal fiyatı|B) Mal fiyatı|💡 Açıklama: Malın kendi fiyatındaki değişimler eğriyi sağa veya sola kaydırmaz; eğri üzerinde bir noktadan diğerine harekete neden olur.`,
+
+`2022 Vize|7. Her toplumun belirli bir düzeyde karşı karşıya olduğu ve iktisadın temel uğraş alanı olan sorun aşağıdakilerden hangisidir?|A) Fayda~B) Enflasyon~C) Kıtlık~D) Para~E) Fiyat|C) Kıtlık|💡 Açıklama: İhtiyaçların sonsuz, kaynakların ise sınırlı olması durumuna kıtlık denir ve iktisadın temel çıkış noktasıdır.`,
+
+`2022 Vize|8. İhtiyaçları tatmine yarayan unsurlara verilen ad aşağıdakilerden hangisidir?|A) Emek~B) Mal~C) Faktör~D) Doğal kaynak~E) Sermaye|B) Mal|💡 Açıklama: İnsan ihtiyaçlarını doğrudan veya dolaylı olarak karşılama özelliğine sahip olan fiziksel varlıklara mal denir.`,
+
+`2022 Vize|9. Arz ve talep aynı oranda artarsa aşağıdaki durumlardan hangisi ortaya çıkar?|A) Denge fiyatı değişmez~B) Denge fiyatı düşer~C) Denge fiyatı yükselir~D) Denge fiyatı sabit kalır~E) Denge miktarı azalır|A) Denge fiyatı değişmez|💡 Açıklama: Hem arz hem de talep tam olarak aynı oranda sağa kayarsa, denge miktarı artarken denge fiyatı başlangıç seviyesinde sabit kalır (değişmez).`,
+
+`2022 Vize|10. Bir malın fiyatı arttıkça arz edilen miktarın artmasına, fiyat azalınca arz edilen miktarın azalmasına verilen ad aşağıdakilerden hangisidir?|A) Üretim esnekliği~B) Arz kanunu~C) Marjinal üretim~D) Fiyat kanunu~E) Arz esnekliği|B) Arz kanunu|💡 Açıklama: Fiyat ile arz edilen miktar arasındaki bu doğru orantılı ilişki "Arz Kanunu" olarak adlandırılır.`,
+
+`2022 Vize|11. İktisadi faaliyetlerde insan ihtiyaçlarını giderme amacına yönelik olarak mal ve hizmet üretilmesine verilen ad aşağıdakilerden hangisidir?|A) Esneklik~B) Arz~C) Fayda~D) Talep~E) Tüketim|B) Arz|💡 Açıklama: Üretilen mal ve hizmetlerin tüketici ihtiyaçlarını gidermek üzere piyasaya sunulmasına genel bağlamda arz denmektedir.`,
+
+`2022 Vize|12. Teorik olarak faydanın ölçülebileceğini varsayan fayda görüşü aşağıdakilerden hangisidir?|A) Toplam fayda~B) Azalan fayda~C) Marjinal fayda~D) Kardinal fayda~E) Ordinal fayda|D) Kardinal fayda|💡 Açıklama: Faydanın "util" adı verilen birimlerle sayısal olarak ölçülebileceğini savunan yaklaşıma Kardinal (sayısal) fayda teorisi denir.`,
+
+`2022 Vize|13. Bir malın talep edilen miktarının, bu malın fiyatı karşısındaki duyarlılığının ölçüsüne verilen ad aşağıdakilerden hangisidir?|A) Çapraz talep esnekliği~B) Talebin tercih esnekliği~C) Talebin ikame esnekliği~D) Talebin fiyat esnekliği~E) Talebin gelir esnekliği|D) Talebin fiyat esnekliği|💡 Açıklama: Fiyattaki %1'lik bir değişimin, talep edilen miktarda yarattığı yüzdesel değişime talebin fiyat esnekliği denir.`,
+
+`2022 Vize|14. Üretim miktarına bağlı olmayan maliyetler aşağıdakilerden hangisi ile adlandırılır?|A) Toplam maliyet~B) Marjinal maliyet~C) Değişir maliyet~D) Ortalama değişir maliyet~E) Sabit maliyet|E) Sabit maliyet|💡 Açıklama: Üretim sıfır olsa bile katlanılması gereken ve üretim hacmine göre değişmeyen maliyetlere sabit maliyetler (kira vb.) denir.`,
+
+`2022 Vize|15. Aşağıdakilerden hangisi, bir birim daha mal tüketimi sonucu, toplam faydada yaratılan değişikliğe verilen isimdir?|A) Kardinal fayda~B) Toplam fayda~C) Ordinal fayda~D) Azalan fayda~E) Marjinal fayda|E) Marjinal fayda|💡 Açıklama: Tüketilen son birimin toplam faydaya yaptığı ilave katkıya marjinal (ek) fayda adı verilir.`,
+
+`2022 Vize|16. Tatmin edildiğinde haz ve doyum, tatmin edilmediğinde ise acı ve üzüntü veren duyguya verilen ad aşağıdakilerden hangisidir?|A) İhtiyaç~B) Yarar~C) Hizmet~D) Fayda~E) Talep|A) İhtiyaç|💡 Açıklama: İktisatta karşılandığında haz, karşılanmadığında elem ve üzüntü veren duygulara ihtiyaç denir.`,
+
+`2022 Vize|17. Aşağıdakilerden hangisi bir fayda yaratmak veya mevcut faydalara ilavelerde bulunmak amacıyla yapılan bütün faaliyetleri kapsayan kavramdır?|A) İhtiyaç~B) Tüketim~C) Üretim~D) İktisadi davranış~E) Rasyonel davranış|C) Üretim|💡 Açıklama: İnsan ihtiyaçlarını karşılamak üzere mal ve hizmetlerin miktarını ve faydasını artırmaya yönelik faaliyetlerin tümüne üretim denir.`,
+
+`2022 Vize|18. Bir malın fiyatındaki bir değişmenin diğer malın arz miktarında meydana getirdiği değişime verilen ad aşağıdakilerden hangisidir?|A) Çapraz esneklik~B) Fiyat esnekliği~C) Gelir esnekliği~D) Nokta esnekliği~E) Yay esnekliği|A) Çapraz esneklik|💡 Açıklama: Bir malın miktarının, başka (ilişkili) bir malın fiyatındaki değişime karşı gösterdiği duyarlılık "çapraz esneklik" olarak adlandırılır.`,
+
+`2022 Vize|19. Çapraz talep esnekliği pozitif olan mallara verilen ad aşağıdakilerden hangisidir?|A) Giffen Malı~B) Veblen Malı~C) Tamamlayıcı Mal~D) Snop Mal~E) İkame Mal|E) İkame Mal|💡 Açıklama: Çapraz esneklik pozitifse, mallar birbiri yerine kullanılabilen (ikame) mallardır (Örn: Çay fiyatı artarsa kahve talebi artar).`,
+
+`2022 Vize|20. Aşağıdakilerden hangisi iki noktadan geçen doğrunun orta noktasının esnekliğini belirtmektedir?|A) Gelir esnekliği~B) Nokta esnekliği~C) Çapraz esneklik~D) Fiyat esnekliği~E) Yay esnekliği|E) Yay esnekliği|💡 Açıklama: Talep eğrisi üzerindeki iki nokta arasındaki kısmın (yayın) ortalama esnekliğinin hesaplanmasına yay (ark) esnekliği denir.`,
+
+`2023-2024 Vize|1. Reel GSYİH'nın potansiyel GSYİH'nın gerisinde kalması sonucu oluşan işsizliğe ne ad verilmektedir?|A) Mevsimsel~B) Yapısal~C) Friksiyonel~D) Gizli~E) Konjonktürel|E) Konjonktürel|💡 Açıklama: Ekonomik daralma dönemlerinde üretimin düşmesiyle ortaya çıkan işsizlik türüne konjonktürel işsizlik denir.`,
+
+`2023-2024 Vize|2. Monopolcünün belli koşullar altında malının farklı birimlerini farklı fiyattan satmasına ne ad verilmektedir?|A) Maliyet arttırılması~B) Fiyat arttırılması~C) Tüketici rantı~D) Üretici rantı~E) Fiyat farklılaştırılması|E) Fiyat farklılaştırılması|💡 Açıklama: Bir malın farklı alıcılara farklı fiyatlardan satılması işlemine fiyat farklılaştırması (ayrımcılığı) denir.`,
+
+`2023-2024 Vize|3. Vergilerdeki bir değişimin arz eğrisi üzerindeki etkisi ne ile ifade edilir?|A) Arz kayması~B) Arz esnekliği~C) Arz kanunu~D) Arz fiyatı~E) Arz miktarı|A) Arz kayması|💡 Açıklama: Vergiler maliyetleri doğrudan etkiler. Vergilerin artması veya azalması arz eğrisinin bütünüyle yer değiştirmesine (arz kayması) neden olur.`,
+
+`2023-2024 Vize|4. Tüketicinin geliri ile çeşitli mallardan satın alabileceği mal miktarlarının geometrik yerini tanımlayan ifade aşağıdakilerden hangisidir?|A) Eş maliyet doğrusu~B) Bütçe doğrusu~C) Gelir tüketim eğrisi~D) Eş ürün eğrisi~E) Kayıtsızlık eğrisi|E) Kayıtsızlık eğrisi|💡 Açıklama: Not: Orijinal cevap anahtarında E şıkkı verilmiştir ancak sorudaki tanım iktisadi olarak 'Bütçe doğrusu'na aittir.`,
+
+`2023-2024 Vize|5. Aşağıdakilerden hangisi tam rekabet piyasasından söz etmek için zorunlu bir koşul değildir?|A) Alıcı satıcı sayısının çok olması~B) Kâr maksimizasyonu~C) Homojenlik~D) Şeffaflık~E) Mobilite|B) Kâr maksimizasyonu|💡 Açıklama: Tam rekabet piyasasının zorunlu varsayımları atomisite, homojenlik, mobilite ve şeffaflıktır. Kâr maksimizasyonu piyasanın yapısal bir koşulu değil, firmanın amacıdır.`,
+
+`2023-2024 Vize|6. Aşağıdakilerden hangisi üretim miktarında meydana gelen bir değişimin toplam maliyette meydana getirdiği değişimi ifade etmektedir?|A) Marjinal maliyet~B) Değişir maliyet~C) Toplam maliyet~D) Sabit maliyet~E) Ortalama maliyet|A) Marjinal maliyet|💡 Açıklama: Üretilen son birimin (veya üretimdeki bir birimlik artışın) toplam maliyete yaptığı ek katkıya marjinal maliyet denir.`,
+
+`2023-2024 Vize|7. Reeskont oranlarındaki düşmenin ekonomiye etkisi ne şekilde olur?|A) Ticari bankaların kredi maliyetlerini düşürür.~B) Enflasyonu düşürür.~C) Para arzı daralır.~D) Ticari bankaların kredi maliyetlerini arttır.~E) Merkez bankasının lehine olur.|A) Ticari bankaların kredi maliyetlerini düşürür.|💡 Açıklama: Merkez Bankası reeskont oranını düşürdüğünde bankaların fon bulma maliyeti azalır ve piyasaya daha ucuza kredi sunabilirler.`,
+
+`2023-2024 Vize|8. Millî gelir kaç şekilde hesaplanmaktadır?|A) 1~B) 4~C) 2~D) 3~E) 5|D) 3|💡 Açıklama: Milli gelir temel olarak 3 farklı yöntemle hesaplanır: Üretim yöntemi, Gelir yöntemi ve Harcama yöntemi.`,
+
+`2023-2024 Vize|9. Diğer girdiler sabitken, bir üretim faktöründen üretime katılan birimler arttırıldıkça elde edilen ek üretim miktarının azalması durumuna ne ad verilmektedir?|A) Sabit verimler kanunu~B) Azalan verimler kanunu~C) Toplam verimler kanunu~D) Sabit marjinal verimler kanunu~E) Artan toplam verimler kanunu|B) Azalan verimler kanunu|💡 Açıklama: Kısa dönemde sabit girdiler varken değişken girdinin miktarı artırıldıkça, bir noktadan sonra marjinal fiziki ürünün azalmasına azalan verimler kanunu denir.`,
+
+`2023-2024 Vize|10. Arz (maliyet) enflasyonunun en önemli nedeni aşağıdakilerden hangisidir?|A) Enerji kıtlığı~B) İş gücü yetersizliği~C) Döviz darboğazı~D) Üretim maliyetlerindeki artış~E) Sermaye yetersizliği|D) Üretim maliyetlerindeki artış|💡 Açıklama: Arz enflasyonu (maliyet enflasyonu), firmaların kullandığı üretim faktörlerinin maliyetlerindeki artışların fiyatlar genel düzeyini yukarı çekmesiyle oluşur.`,
+
+`2023-2024 Vize|11. Tam rekabet piyasasında firmanın kaç tür geliri vardır?|A) 2~B) 1~C) 3~D) 4~E) 5|C) 3|💡 Açıklama: Firmanın analiz edilen üç temel gelir türü vardır: Toplam Gelir (TR), Ortalama Gelir (AR) ve Marjinal Gelir (MR).`,
+
+`2023-2024 Vize|12. Ekonomide emek-yoğun teknolojilerde görülen işsizlik türü aşağıdakilerden hangisidir?|A) Friksiyonel işsizlik~B) Yapısal işsizlik~C) İradi işsizlik~D) Gayriiradi işsizlik~E) Gizli işsizlik|E) Gizli işsizlik|💡 Açıklama: Tarım gibi emek-yoğun sektörlerde sıkça görülen, bazı çalışanlar üretimden çekilse dahi toplam üretimde bir azalmanın yaşanmadığı duruma gizli işsizlik denir.`,
+
+`2023-2024 Vize|13. Mal ihracatında artışın sağlanması hangi koşula bağlı olmaktadır?|A) İthal mallarının iç talep esnekliği~B) İhracata hazır mal stokunun varlığı~C) Millî paranın dış değerinin yüksek olması~D) İhraç mallarının dış talep esnekliğinin düşük olması~E) Rekabet gücünün olmaması|B) İhracata hazır mal stokunun varlığı|💡 Açıklama: Bir ülkenin ihracatını artırabilmesi için öncelikle dışarıya satabileceği, üretime ve ihracata hazır yeterli mal stokuna sahip olması gerekir.`,
+
+`2023-2024 Vize|14. Bir malın talebi sabitken arzı azalırsa aşağıdakilerden hangisi meydana gelir?|A) Denge miktarı artar, denge fiyatı sabit kalır.~B) Denge fiyatı artar, denge miktarı azalır.~C) Hem denge fiyatı hem de denge miktarı azalır.~D) Denge fiyatı azalır, denge miktarı sabit kalır.~E) Hem denge fiyatı hem de denge miktarı artar.|B) Denge fiyatı artar, denge miktarı azalır.|💡 Açıklama: Talep eğrisi sabitken arz eğrisi sola kayarsa piyasada mal kıtlaşacağı için denge fiyatı yükselir, alınıp satılan miktar ise azalır.`,
+
+`2023-2024 Vize|15. Ülke sınırları içinde üretilen mal ve hizmetlerin parasal değeri aşağıdakilerden hangisidir?|A) KBMG~B) Millî gelir~C) GSYİH~D) GSMH~E) Harcanabilir gelir|C) GSYİH|💡 Açıklama: Gayrisafi Yurt İçi Hasıla (GSYİH), bir ülkenin coğrafi sınırları içinde belirli bir dönemde üretilen tüm nihai mal ve hizmetlerin parasal (piyasa) değeridir.`,
+
+`2023-2024 Vize|16. Talep esnekliğinde miktar ve fiyatları dikkate alan esneklik kavramı aşağıdakilerden hangisidir?|A) Yay esnekliği~B) Gelir esnekliği~C) Çapraz esneklik~D) İlk gelir düzeyi~E) Nokta esnekliği|A) Yay esnekliği|💡 Açıklama: Eğri üzerindeki iki nokta arasındaki ortalama esnekliği, ilk ve son fiyat ile miktar seviyelerinin ortalamalarını dikkate alarak hesaplayan yönteme yay esnekliği denir.`,
+
+`2023-2024 Vize|17. Aşağıdakilerden hangisi para politikası araçlarından biri değildir?|A) Kredi tavanı~B) Açık piyasa işlemleri~C) Kanuni karşılık~D) Parasal taban~E) Reeskont oranı|D) Parasal taban|💡 Açıklama: Açık piyasa işlemleri, kanuni karşılıklar ve reeskont oranı Merkez Bankası'nın araçlarıdır. Parasal taban ise piyasaya sürülen para büyüklüğüdür, bir araç değildir.`,
+
+`2023-2024 Vize|18. Aşağıdakilerden hangisi paranın özelliklerinden biri değildir?|A) Bölünebilir olması~B) Değişim aracı olması~C) Heterojen olması~D) Taşınmaya elverişli olması~E) Dayanıklı olması|C) Heterojen olması|💡 Açıklama: Paranın bir değişim aracı olarak işlev görebilmesi için birimlerinin birbiriyle tamamen aynı özelliklerde (homojen) olması gerekir; heterojen olmamalıdır.`,
+
+`2023-2024 Vize|19. Ekonomide para miktarının ihtiyacın üzerine çıkması durumuna ne ad verilmektedir?|A) Deflasyon~B) Mal ve hizmet fiyatlarının düşmesi~C) Enflasyon~D) Paranın satın alma gücünün artması~E) Stagflasyon|C) Enflasyon|💡 Açıklama: Piyasada dolaşan para miktarının üretilen mal ve hizmetlerden daha hızlı artması, paranın değer kaybetmesine ve fiyatlar genel düzeyinin sürekli artmasına (enflasyona) yol açar.`,
+
+`2023-2024 Vize|20. Monopolcü bir firmanın marjinal gelir eğrisinin talep eğrisinin altında yer almasının nedeni aşağıdakilerden hangisidir?|A) Firmanın piyasadaki diğer firmaların satışını engellemek için fiyatları yüksek tutması~B) Marjinal maliyetin sürekli azalması~C) Marjinal gelirin belirli bir satış düzeyinden sonra artması~D) Firmanın daha fazla mal satabilmek için fiyatlarını düşürmesi~E) Diğer firmaların yüksek maliyette çalışmaları|D) Firmanın daha fazla mal satabilmek için fiyatlarını düşürmesi|💡 Açıklama: Monopolcü firma daha fazla ürün satmak istediğinde fiyatı indirmek zorundadır. Fiyat düşüşü tüm birimlere yansıyacağı için elde edilen ek (marjinal) gelir fiyattan (talepten) her zaman düşük olur.`,
+
+`2024 Vize|1. Üretim fonksiyonu aşağıdakilerden hangisini ifade etmektedir?[cite: 4]|A) Girdi maliyeti~B) Faktörlerin teknik zorunluluğunu~C) Faktör miktarı~D) Faktör fiyatı~E) Çıktı maliyeti|B) Faktörlerin teknik zorunluluğunu|💡 Açıklama: Üretim fonksiyonu, teknoloji veri iken kullanılan girdiler (faktörler) ile elde edilebilecek maksimum çıktı arasındaki teknik ilişkiyi belirtir.`,
+
+`2024 Vize|2. Özel mülkiyetin yanında kamu mülkiyetini, piyasa mekanizması yanında müdahaleyi, fiyat mekanizması yanında merkezî planlamayı kabul eden iktisadi yapılanma aşağıdakilerden hangisidir?[cite: 4]|A) Fizyokratik sistem~B) Karma ekonomik sistem~C) Sosyalist sistem~D) Merkantilist sistem~E) Kapitalist sistem|B) Karma ekonomik sistem|💡 Açıklama: Hem özel sektörün hem de devletin (kamu) ekonomide aktif rol aldığı, piyasa ve planlamanın bir arada uygulandığı sistem karma ekonomik sistemdir.`,
+
+`2024 Vize|3. Aşağıdakilerden hangisi ikame mala örnektir?[cite: 4]|A) Bilgisayar - masa~B) Tavuk - koyun~C) Reçel - peynir~D) Çay - şeker~E) Araba - benzin|B) Tavuk - koyun|💡 Açıklama: İkame (rakip) mallar birbiri yerine kullanılabilen mallardır. Tavuk ve koyun eti birbirinin yerine tüketilebilen ikame mallardır.`,
+
+`2024 Vize|4. Vergilerdeki bir değişimin arz eğrisi üzerindeki etkisi aşağıdakilerden hangisi ile ifade edilir?[cite: 4]|A) Arz kayması~B) Arz fiyatı~C) Arz kanunu~D) Arz miktarı~E) Arz esnekliği|A) Arz kayması|💡 Açıklama: Vergilerin artması veya azalması maliyetleri doğrudan etkiler, bu da arz eğrisinin bütünüyle sağa veya sola kaymasına (arz kayması) neden olur.`,
+
+`2024 Vize|5. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?[cite: 4]|A) ed: 0~B) ed: ∞~C) ed: 1~D) ed: -1~E) ed: <1|B) ed: ∞|💡 Açıklama: Yatay eksene (miktar eksenine) paralel olan talep eğrilerinde fiyat değişmezken miktar sonsuz değişebilir, bu nedenle esneklik sonsuzdur (ed: ∞).`,
+
+`2024 Vize|6. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?[cite: 4]|A) Sanayi talep eğrisi~B) Talep eğrisi~C) Firma arz eğrisi~D) Piyasa arz eğrisi~E) Arz eğrisi|D) Piyasa arz eğrisi|💡 Açıklama: Belirli bir malı üreten tüm firmaların bireysel arz eğrilerinin her bir fiyat seviyesindeki miktarlarının (yatay) toplanmasıyla piyasa arz eğrisi elde edilir.`,
+
+`2024 Vize|7. Diğer faktörlerin değişmeyip sabit olduğu bir ortamda bir malın fiyatının yükselmesi hâlinde aşağıdakilerden hangisi gerçekleşir?[cite: 4]|A) Talep edilen mal miktarında düşüş olur.~B) Malın talebinde artış olur.~C) Malın talebinde düşüş olur.~D) Malın arz edilen miktarı azalır.~E) Talep edilen mal miktarında artış olur.|A) Talep edilen mal miktarında düşüş olur.|💡 Açıklama: Talep kanununa göre, diğer şartlar sabitken (ceteris paribus) bir malın fiyatı artarsa, o maldan talep edilen miktar azalır.`,
+
+`2024 Vize|8. İkame mallar ile ilgili aşağıdakilerden hangisi doğrudur?[cite: 4]|A) Esneklik katsayısı sıfırdır.~B) Esneklik katsayısı birden büyüktür.~C) Esneklik katsayısı daima pozitiftir.~D) Esneklik katsayısı daima negatiftir.~E) Esneklik katsayısı birden küçüktür.|C) Esneklik katsayısı daima pozitiftir.|💡 Açıklama: İkame mallarda birinin fiyatı artarsa diğerinin talebi artar. Çapraz talep esnekliği aynı yönlü hareketten dolayı daima pozitiftir.`,
+
+`2024 Vize|9. Marjinal ürünün sıfır olduğu noktada toplam ürün nasıldır?[cite: 4]|A) Sıfırdır.~B) Azalmaktadır.~C) Negatiftir.~D) Minimumdur.~E) Maksimumdur.|E) Maksimumdur.|💡 Açıklama: Marjinal ürün (eklenen son birimin katkısı) pozitifken toplam ürün artar. Marjinal ürün sıfır olduğunda toplam ürün artık artmaz, yani ulaştığı en yüksek (maksimum) seviyededir.`,
+
+`2024 Vize|10. Toplam fayda ilk etapta azalarak artar ve toplam fayda maksimuma ulaştıktan sonra azalmaya başlar. Bunun nedeni aşağıdakilerden hangisidir?[cite: 4]|A) Artan toplam fayda kanunu~B) Artan marjinal fayda kanunu~C) Değişen marjinal fayda kanunu~D) Azalan marjinal fayda kanunu~E) Azalan toplam fayda kanunu|D) Azalan marjinal fayda kanunu|💡 Açıklama: Bir malın tüketimi arttıkça elde edilen ek (marjinal) faydanın sürekli düşmesini ifade eden azalan marjinal fayda kanunu nedeniyle toplam fayda önce azalarak artar, sonra düşer.`,
+
+`2024 Vize|11. Aşağıdakilerden hangisi mal darlığından yararlanarak kanun otoritesinin koyduğu ya da kontrol ettiği fiyatlardan daha yüksek fiyata satış yapılan durumu ifade etmektedir?[cite: 4]|A) King kanunu~B) Tüketici rantı~C) Örümcek ağı~D) Üretici rantı~E) Karaborsa|E) Karaborsa|💡 Açıklama: Devletin belirlediği tavan fiyat uygulamalarında mal yetersizliği (kıtlık) oluşursa, malların yasa dışı olarak denge fiyatından daha yüksek fiyata satıldığı karaborsa piyasası ortaya çıkar.`,
+
+`2024 Vize|12. Geniş bir üretim aralığında ölçeğe göre artan getiriye sahip bir firmanın uzun dönem ortalama maliyetleri bu aralıkta nasıl değişir?[cite: 4]|A) Önce minimum bir değere kadar azalır sonra artar.~B) Artar.~C) Önce maksimum bir değere kadar artar sonra azalır.~D) Azalır.~E) Sabit kalır.|D) Azalır.|💡 Açıklama: Ölçeğe göre artan getiri durumunda (içsel ekonomiler), üretim ölçeği büyüdükçe firmanın uzun dönem ortalama maliyetleri düşüş gösterir.`,
+
+`2024 Vize|13. Aşağıdakilerden hangisinde marjinal fayda yaklaşımına göre toplam fayda (TU) ve marjinal fayda (MU) ilişkisi tam ve doğru olarak verilmiştir?[cite: 4]|A) TU'nun maksimum olduğu noktada MU sıfıra eşittir.~B) MU ve TU eğrileri birlikte artış gösterirler.~C) MU'nun maksimum olduğu noktada TU sıfıra eşittir.~D) MU artarken TU önce azalan sonra artan bir eğridir.~E) MU ve TU eğrilerinin ikisinde de her noktada eğimi negatiftir.|A) TU'nun maksimum olduğu noktada MU sıfıra eşittir.|💡 Açıklama: Tüketicinin doyum noktasına ulaştığı (TU'nun maksimum olduğu) anda tüketilen son birimden alınan ek fayda (MU) artık sıfırdır.`,
+
+`2024 Vize|14. Aşağıdakilerden hangisi örümcek ağı teoreminin uygulandığı ürünlere en iyi örnektir?[cite: 4]|A) Tarım~B) Bilişim~C) Teknoloji~D) İmalat üretimi~E) Hizmet|A) Tarım|💡 Açıklama: Örümcek ağı (Cobweb) teoremi, üretim süreci uzun olan ve fiyat değişimlerine arzın gecikmeli (genellikle bir sonraki dönem) tepki verdiği tarım ürünleri için geçerlidir.`,
+
+`2024 Vize|15. Arz eğrisi üzerindeki iki nokta arasında kalan kısmının esnekliğine ne ad verilmektedir?[cite: 4]|A) Nokta esnekliği~B) Gelir esnekliği~C) Çapraz esneklik~D) Fiyat esnekliği~E) Yay esnekliği|E) Yay esnekliği|💡 Açıklama: Bir eğri üzerindeki belirli iki nokta arasındaki kısmın (yayın) ortalama esnekliğinin hesaplanmasına yay (ark) esnekliği denir.`,
+
+`2024 Vize|16. Arz eğrisindeki sola kaymanın talep eğrisindeki kayma ile eşit ancak ters yönlü olduğu durumda aşağıdakilerden hangisi olur?[cite: 4]|A) Piyasa dengededir.~B) Piyasa denge miktarı azalır.~C) Piyasa fiyatı değişmez.~D) Piyasa denge miktarı azalırken piyasa fiyatı değişmez.~E) Piyasa denge miktarı değişmezken piyasa fiyatı yükselir.|E) Piyasa denge miktarı değişmezken piyasa fiyatı yükselir.|💡 Açıklama: Arz sola kaydığında (azaldığında) miktar düşer fiyat artar. Talep eşit oranda ters yöne (sağa) kaydığında (arttığında) miktar artar fiyat artar. Miktardaki zıt etkiler birbirini götürür (miktar değişmez), fiyat ise iki yönlü baskıyla kesin olarak yükselir.`,
+
+`2024 Vize|17. Kayıtsızlık eğrilerinin orijine dış bükey olmalarının nedeni aşağıdakilerden hangisidir?[cite: 4]|A) Tercihlerin tamamlanmışlığı varsayımı~B) Tüketici tercihlerinin değişmesi~C) Azalan marjinal ikame oranı varsayımı~D) Daha az malın daha çok mala tercih edileceği varsayımı~E) Daha çok malın daha az mala tercih edileceği varsayımı|C) Azalan marjinal ikame oranı varsayımı|💡 Açıklama: Bir maldan daha fazla tüketildikçe o maldan elde edilen marjinal fayda düşeceği için, diğer maldan vazgeçilmek istenen miktar da gittikçe azalır. Bu duruma azalan marjinal ikame oranı denir ve eğrinin dış bükey (konveks) olmasını sağlar.`,
+
+`2024 Vize|18. Firmanın birim üretim başına düşen maliyetine ne ad verilir?[cite: 4]|A) Ortalama sabit maliyet~B) Marjinal maliyet~C) Ortalama toplam maliyet~D) Ortalama değişken maliyet~E) Toplam maliyet|C) Ortalama toplam maliyet|💡 Açıklama: Toplam maliyetin üretilen birim miktarına bölünmesiyle elde edilen, birim başına maliyete Ortalama (Toplam) Maliyet denir.`,
+
+`2024 Vize|19. Et fiyatı % 20 artınca et talep miktarı değişmiyor ise et talep esnekliği ile ilgili aşağıdakilerden hangisi söylenebilir?[cite: 4]|A) Esneklik birden küçüktür.~B) Esneklik birden büyüktür.~C) Esneklik sıfırdır.~D) Esneklik bire eşittir.~E) Esneklik sonsuzdur.|C) Esneklik sıfırdır.|💡 Açıklama: Fiyat ne kadar değişirse değişsin talep edilen miktar hiç değişmiyorsa (tepkisiz ise), esneklik sıfırdır (tam inelastik talep).`,
+
+`2024 Vize|20. Aynı eş-ürün eğrisi üzerinde kalmak koşulu ile herhangi bir üretim faktöründen bir birim vazgeçilmesi karşısında arttırılan üretim faktörü miktarı oranı aşağıdakilerden hangisini ifade etmektedir?[cite: 4]|A) Üretimde kullanılan girdi miktarlarını oranı~B) Faktörlerin ikame oranı~C) Marjinal teknik ikame oranı~D) Faktörlerin fiyat oranı~E) Faktörlerin esneklik oranı|C) Marjinal teknik ikame oranı|💡 Açıklama: Üretici aynı üretim düzeyini korurken, bir girdiyi azalttığında diğer girdiyi ne kadar artırması gerektiğini gösteren orana marjinal teknik ikame oranı denir.`,
+`2024 Vize, 2025-2026 Vize|1. Marjinal ürünün sıfır olduğu noktada toplam ürün nasıldır?[cite: 5]|A) Negatiftir.~B) Sıfırdır.~C) Minimumdur.~D) Azalmaktadır.~E) Maksimumdur.|E) Maksimumdur.|💡 Açıklama: Marjinal ürün (eklenen son birimin katkısı) pozitifken toplam ürün artar. Marjinal ürün sıfır olduğunda toplam ürün ulaştığı en yüksek (maksimum) seviyededir.`,
+
+`2024 Vize, 2025-2026 Vize|2. Arz eğrisindeki sola kaymanın talep eğrisindeki kayma ile eşit ancak ters yönlü olduğu durumda aşağıdakilerden hangisi olur?[cite: 5]|A) Piyasa fiyatı değişmez.~B) Piyasa denge miktarı azalırken piyasa fiyatı değişmez.~C) Piyasa denge miktarı değişmezken piyasa fiyatı yükselir.~D) Piyasa dengededir.~E) Piyasa denge miktarı azalır.|C) Piyasa denge miktarı değişmezken piyasa fiyatı yükselir.|💡 Açıklama: Arz azalıp talep aynı oranda arttığında zıt miktar etkileri birbirini sıfırlar (miktar değişmez), ancak iki durum da fiyatı yukarı ittiği için piyasa fiyatı kesin olarak yükselir.`,
+
+`2024 Vize, 2025-2026 Vize|3. Toplam fayda ilk etapta azalarak artar ve toplam fayda maksimuma ulaştıktan sonra azalmaya başlar. Bunun nedeni aşağıdakilerden hangisidir?[cite: 5]|A) Değişen marjinal fayda kanunu~B) Azalan marjinal fayda kanunu~C) Artan toplam fayda kanunu~D) Artan marjinal fayda kanunu~E) Azalan toplam fayda kanunu|B) Azalan marjinal fayda kanunu|💡 Açıklama: Tüketim arttıkça ek (marjinal) faydanın sürekli düşmesini ifade eden azalan marjinal fayda kanunu, toplam faydanın azalarak artmasına ve sonra düşmesine neden olur.`,
+
+`2024 Vize, 2025-2026 Vize|4. Aşağıdakilerden hangisi ikame mala örnektir?[cite: 5]|A) Bilgisayar - masa~B) Araba - benzin~C) Çay - şeker~D) Reçel - peynir~E) Tavuk - koyun|E) Tavuk - koyun|💡 Açıklama: Birbirinin yerine kullanılabilen ve rakip olan mallara ikame mal denir. Tavuk ve koyun eti ikame mallardır.`,
+
+`2024 Vize, 2025-2026 Vize|5. Aşağıdakilerden hangisi örümcek ağı teoreminin uygulandığı ürünlere en iyi örnektir?[cite: 5]|A) Tarım~B) İmalat üretimi~C) Bilişim~D) Hizmet~E) Teknoloji|A) Tarım|💡 Açıklama: Üretim süreci uzun olan ve fiyat değişimlerine arzın gecikmeli tepki verdiği tarım ürünleri örümcek ağı teoreminin en tipik örneğidir.`,
+
+`2024 Vize, 2025-2026 Vize|6. Özel mülkiyetin yanında kamu mülkiyetini, piyasa mekanizması yanında müdahaleyi, fiyat mekanizması yanında merkezî planlamayı kabul eden iktisadi yapılanma aşağıdakilerden hangisidir?[cite: 5]|A) Kapitalist sistem~B) Karma ekonomik sistem~C) Sosyalist sistem~D) Merkantilist sistem~E) Fizyokratik sistem|B) Karma ekonomik sistem|💡 Açıklama: Özel sektör ile devletin ekonomide birlikte yer aldığı sisteme karma ekonomik sistem denir.`,
+
+`2024 Vize, 2025-2026 Vize|7. Kayıtsızlık eğrilerinin orijine dış bükey olmalarının nedeni aşağıdakilerden hangisidir?[cite: 5]|A) Daha az malın daha çok mala tercih edileceği varsayımı~B) Daha çok malın daha az mala tercih edileceği varsayımı~C) Tüketici tercihlerinin değişmesi~D) Azalan marjinal ikame oranı varsayımı~E) Tercihlerin tamamlanmışlığı varsayımı|D) Azalan marjinal ikame oranı varsayımı|💡 Açıklama: Bir maldan çok tüketildikçe o maldan elde edilen marjinal faydanın düşmesi, diğer maldan vazgeçilmek istenen miktarı azaltır. Bu durum (azalan marjinal ikame oranı) eğrinin orijine dış bükey olmasını sağlar.`,
+
+`2024 Vize, 2025-2026 Vize|8. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?[cite: 5]|A) Arz eğrisi~B) Sanayi talep eğrisi~C) Firma arz eğrisi~D) Piyasa arz eğrisi~E) Talep eğrisi|D) Piyasa arz eğrisi|💡 Açıklama: Tüm firmaların bireysel arz miktarlarının her fiyat seviyesinde toplanmasıyla elde edilen eğri piyasa arz eğrisidir.`,
+
+`2024 Vize, 2025-2026 Vize|9. Aşağıdakilerden hangisinde marjinal fayda yaklaşımına göre toplam fayda (TU) ve marjinal fayda (MU) ilişkisi tam ve doğru olarak verilmiştir?[cite: 5]|A) MU ve TU eğrilerinin ikisinde de her noktada eğimi negatiftir.~B) TU'nun maksimum olduğu noktada MU sıfıra eşittir.~C) MU artarken TU önce azalan sonra artan bir eğridir.~D) MU'nun maksimum olduğu noktada TU sıfıra eşittir.~E) MU ve TU eğrileri birlikte artış gösterirler.|B) TU'nun maksimum olduğu noktada MU sıfıra eşittir.|💡 Açıklama: Toplam doyumun en yüksek noktaya ulaştığı (TU maksimum) anda, ilave birimden sağlanan ek fayda (MU) artık sıfır olur.`,
+
+`2024 Vize, 2025-2026 Vize|10. Vergilerdeki bir değişimin arz eğrisi üzerindeki etkisi aşağıdakilerden hangisi ile ifade edilir?[cite: 5]|A) Arz kanunu~B) Arz kayması~C) Arz fiyatı~D) Arz miktarı~E) Arz esnekliği|B) Arz kayması|💡 Açıklama: Vergiler maliyet unsurudur. Vergilerin değişmesi arz eğrisinin komple sağa veya sola yer değiştirmesine (arz kayması) yol açar.`,
+
+`2024 Vize, 2025-2026 Vize|11. Firmanın birim üretim başına düşen maliyetine ne ad verilir?[cite: 5]|A) Ortalama toplam maliyet~B) Toplam maliyet~C) Ortalama sabit maliyet~D) Marjinal maliyet~E) Ortalama değişken maliyet|A) Ortalama toplam maliyet|💡 Açıklama: Toplam maliyetin üretilen birim adedine bölünmesi birim maliyeti, yani ortalama (toplam) maliyeti verir.`,
+
+`2024 Vize, 2025-2026 Vize|12. İkame mallar ile ilgili aşağıdakilerden hangisi doğrudur?[cite: 5]|A) Esneklik katsayısı sıfırdır.~B) Esneklik katsayısı birden küçüktür.~C) Esneklik katsayısı daima negatiftir.~D) Esneklik katsayısı birden büyüktür.~E) Esneklik katsayısı daima pozitiftir.|E) Esneklik katsayısı daima pozitiftir.|💡 Açıklama: İkame mallarda birinin fiyatındaki artış, diğerinin talebini de artırdığı için aralarındaki çapraz talep esnekliği katsayısı her zaman pozitiftir.`,
+
+`2024 Vize, 2025-2026 Vize|13. Üretim fonksiyonu aşağıdakilerden hangisini ifade etmektedir?[cite: 5]|A) Faktör miktarı~B) Girdi maliyeti~C) Çıktı maliyeti~D) Faktör fiyatı~E) Faktörlerin teknik zorunluluğunu|E) Faktörlerin teknik zorunluluğunu|💡 Açıklama: Üretim fonksiyonu, belirli bir teknoloji düzeyinde girdiler (faktörler) ile elde edilebilen maksimum çıktı arasındaki teknik zorunlu ilişkiyi belirtir.`,
+
+`2024 Vize, 2025-2026 Vize|14. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?[cite: 5]|A) ed: 1~B) ed: >1~C) ed: ∞~D) ed: <1~E) ed: 0|C) ed: ∞|💡 Açıklama: Fiyat değişmezken miktarın sonsuz oranda değişebildiği durumlarda (yatay talep eğrisi) esneklik sonsuzdur (tam esnek).`,
+
+`2024 Vize, 2025-2026 Vize|15. Aşağıdakilerden hangisi mal darlığından yararlanarak kanun otoritesinin koyduğu ya da kontrol ettiği fiyatlardan daha yüksek fiyata satış yapılan durumu ifade etmektedir?[cite: 5]|A) King kanunu~B) Tüketici rantı~C) Üretici rantı~D) Karaborsa~E) Örümcek ağı|D) Karaborsa|💡 Açıklama: Piyasada oluşan kıtlık neticesinde, malların devletin belirlediği tavan fiyatın üzerinde yasa dışı satılması karaborsa olarak adlandırılır.`,
+
+`2024 Vize, 2025-2026 Vize|16. Aynı eş-ürün eğrisi üzerinde kalmak koşulu ile herhangi bir üretim faktöründen bir birim vazgeçilmesi karşısında arttırılan üretim faktörü miktarı oranı aşağıdakilerden hangisini ifade etmektedir?[cite: 5]|A) Üretimde kullanılan girdi miktarlarını oranı~B) Faktörlerin esneklik oranı~C) Faktörlerin fiyat oranı~D) Marjinal teknik ikame oranı~E) Faktörlerin ikame oranı|D) Marjinal teknik ikame oranı|💡 Açıklama: Aynı üretim seviyesini korurken, bir girdiden ne kadar azaltıldığında diğerinin ne kadar artırılması gerektiğini gösteren teknik oran budur.`,
+
+`2024 Vize, 2025-2026 Vize|17. Diğer faktörlerin değişmeyip sabit olduğu bir ortamda bir malın fiyatının yükselmesi hâlinde aşağıdakilerden hangisi gerçekleşir?[cite: 5]|A) Malın talebinde artış olur.~B) Malın arz edilen miktarı azalır.~C) Talep edilen mal miktarında düşüş olur.~D) Malın talebinde düşüş olur.~E) Talep edilen mal miktarında artış olur.|C) Talep edilen mal miktarında düşüş olur.|💡 Açıklama: Talep kanunu gereği; diğer şartlar sabitken bir malın fiyatı arttığında o maldan talep edilen miktar azalır.`,
+
+`2024 Vize, 2025-2026 Vize|18. Geniş bir üretim aralığında ölçeğe göre artan getiriye sahip bir firmanın uzun dönem ortalama maliyetleri bu aralıkta nasıl değişir?[cite: 5]|A) Azalır.~B) Önce minimum bir değere kadar azalır sonra artar.~C) Sabit kalır.~D) Artar.~E) Önce maksimum bir değere kadar artar sonra azalır.|A) Azalır.|💡 Açıklama: Ölçeğe göre artan getiri varlığında (ölçek ekonomileri), firma üretimini artırdıkça birim (ortalama) maliyetleri giderek düşer.`,
+
+`2024 Vize, 2025-2026 Vize|19. Et fiyatı % 20 artınca et talep miktarı değişmiyor ise et talep esnekliği ile ilgili aşağıdakilerden hangisi söylenebilir?[cite: 5]|A) Esneklik sıfırdır.~B) Esneklik sonsuzdur.~C) Esneklik birden büyüktür.~D) Esneklik birden küçüktür.~E) Esneklik bire eşittir.|A) Esneklik sıfırdır.|💡 Açıklama: Fiyattaki değişime rağmen talep edilen miktar hiç tepki vermiyorsa (sabit kalıyorsa) talep esnekliği sıfırdır (tam inelastik).`,
+
+`2024 Vize, 2025-2026 Vize|20. Arz eğrisi üzerindeki iki nokta arasında kalan kısmının esnekliğine ne ad verilmektedir?[cite: 5]|A) Nokta esnekliği~B) Gelir esnekliği~C) Fiyat esnekliği~D) Çapraz esneklik~E) Yay esnekliği|E) Yay esnekliği|💡 Açıklama: Bir eğrinin iki farklı noktası arasında kalan belirli bir bölümün (yayın) esnekliğinin hesaplanmasına yay esnekliği denir.`,
+
+`2022 Final|1. Diğer malları üretmek amacıyla kullanılan makineler, araçlar ve fabrikalar bir üretim faktörü olarak aşağıdakilerden hangisi ile adlandırılır?[cite: 6]|A) Toprak~B) Sermaye~C) Emek~D) Girişim~E) Doğal kaynak|B) Sermaye|💡 Açıklama: Sermaye, iktisadi anlamda üretilmiş üretim araçlarını, yani üretim sürecinde kullanılan makine, teçhizat, bina ve araçları ifade eder.`,
+
+`2022 Final|2. Talep enflasyonuna sebep olmayan unsur aşağıdakilerden hangisidir?[cite: 6]|A) Yatırım yetersizliği~B) Döviz yetersizliği~C) Sermaye yetersizliği~D) Enerji yetersizliği~E) İşgücü yetersizliği|C) Sermaye yetersizliği|💡 Açıklama: Talep enflasyonu, talebin aşırı artmasıyla oluşur. Sermaye, enerji veya işgücü yetersizliği gibi unsurlar ise üretimi (arzı) kısıtlayarak arz (maliyet) yönlü enflasyona yol açar.`,
+
+`2022 Final|3. Bir ekonomide iş bölümü ve uzmanlaşmayı hızlandıran para fonksiyonu aşağıdakilerden hangisidir?[cite: 6]|A) Değer olarak saklanması fonksiyonu~B) Finansal yeniliklere olanak tanıma fonksiyonu~C) Tasarruf aracı olma fonksiyonu~D) Mübadele aracı olma fonksiyonu~E) Değer ölçüsü ve hesap birimi olma fonksiyonu|D) Mübadele aracı olma fonksiyonu|💡 Açıklama: Paranın mübadele (değişim) aracı olması, trampa (takas) sisteminin zorluklarını ortadan kaldırarak ticareti kolaylaştırır ve kişilerin belirli alanlarda uzmanlaşmasına olanak tanır.`,
+
+`2022 Final|4. Orijinden çıkan arz doğrusu dikey eksene yaklaşıyorsa aşağıdakilerden hangisi söylenebilir?[cite: 6]|A) Piyasa ekonomisi~B) Tam rekabet~C) Serbest piyasa~D) Liberalleşme~E) Tekelleşme|E) Tekelleşme|💡 Açıklama: Arz doğrusunun dikey eksene (fiyat eksenine) yaklaşması ve dikleşmesi esnekliğinin düştüğünü gösterir. Piyasaya yeni firma girişinin zorlaşması, tekelleşme eğilimine işaret eder.`,
+
+`2022 Final|5. Tam rekabetçi bir firmanın talep eğrisi hakkında aşağıdakilerden hangisi söylenebilir?[cite: 6]|A) Yatay eksene paraleldir~B) Toplam maliyete (TM) eşittir.~C) Toplam gelire (TG) eşittir.~D) Toplam kâra eşittir.~E) Marjinal gelirin üstündedir.|A) Yatay eksene paraleldir|💡 Açıklama: Tam rekabet piyasasında firma fiyat alıcıdır. Fiyatı değiştiremediği için firmanın karşılaştığı talep eğrisi piyasa fiyatında yatay eksene paraleldir (sonsuz esnektir).`,
+
+`2022 Final|6. Reeskont oranının artmasının ekonomiye etkisi hakkında aşağıdakilerden hangisi söylenebilir?[cite: 6]|A) Para arzı azalır.~B) Para arzı etkilenmez.~C) Yabancı sermaye girişi artar.~D) Para arzı artar.~E) Ülkeye döviz girişi artar.|A) Para arzı azalır.|💡 Açıklama: Merkez Bankası reeskont oranını artırdığında, bankaların Merkez'den borçlanma maliyeti yükselir. Bu da bankaların açacağı kredileri sınırlar ve piyasadaki para arzı daralır.`,
+
+`2022 Final|7. Aşağıdakilerden hangisi cari ücrete razı kişilerin iş bulamama durumundaki işsizlik türüdür?[cite: 6]|A) Konjoktürel işsizlik~B) Friksiyonel işsizlik~C) İradi işsizlik~D) Gayrı-iradi işsizlik~E) Yapısal işsizlik|D) Gayrı-iradi işsizlik|💡 Açıklama: Geçerli (cari) piyasa ücretinden çalışmaya hazır ve istekli olup iş aradığı halde iş bulamayanların durumuna gayri iradi (istek dışı) işsizlik denir.`,
+
+`2022 Final|8. Zarf eğrisi aşağıdaki maliyetlerden hangisini tanımlamaktadır?[cite: 6]|A) Ortalama değişir maliyet~B) Kısa dönem ortalama maliyet~C) Ortalama toplam maliyet~D) Uzun dönem ortalama maliyet~E) Ortalama sabit maliyet|D) Uzun dönem ortalama maliyet|💡 Açıklama: Firma tüm faktörleri değiştirebildiğinde oluşan ve olası tüm kısa dönem ortalama maliyet eğrilerini alttan teğet olarak saran eğriye uzun dönem ortalama maliyet (zarf eğrisi) denir.`,
+
+`2022 Final|9. Paranın bir biriminin bağlı olduğu unsuru belirten düzenlemeye ne ad verilir?[cite: 6]|A) Para arzı~B) Para talebi~C) Para miktarı~D) Para politikası~E) Para sistemi|E) Para sistemi|💡 Açıklama: Ülke parasının hangi maden veya kritere (altın, gümüş, kâğıt para vb.) dayanarak basıldığını ve değerinin nasıl korunduğunu belirleyen yasal kurallar bütününe para sistemi denir.`,
+
+`2022 Final|10. Tam rekabet piyasasındaki bir firmanın toplam gelir doğrusunun eğimi aşağıdakilerden hangisine bağlı olarak değişmektedir?[cite: 6]|A) Ortalama gelir~B) Fiyat~C) Üretim miktarı~D) Toplam kâr miktarı~E) Marjinal maliyet|C) Üretim miktarı|💡 Açıklama: Orijinal cevap anahtarına göre C şıkkı verilmiştir. (Not: Tam rekabet piyasasında fiyat sabitken toplam gelir doğrusunun fonksiyonel büyüklüğü üretim miktarı (Q) ile orantılı olarak gelişir.)`,
+
+`2022 Final|11. Aşağıdakilerden hangisi dört temel faktör geliri ile hesaplanan milli gelir değerini vermektedir?[cite: 6]|A) Kişi başına milli gelir~B) Gelir yöntemi ile milli gelir~C) Vergiler yönünden milli gelir~D) Üretim yöntemi ile milli gelir~E) Harcama yöntemi ile milli gelir|B) Gelir yöntemi ile milli gelir|💡 Açıklama: Üretim faktörlerinin elde ettiği getirilerin (ücret, faiz, rant ve kâr) toplanması suretiyle milli gelirin hesaplanmasına "Gelir Yöntemi" adı verilir.`,
+
+`2022 Final|12. Aşağıdakilerden hangisi fayda ile ilgili bir kavramdır?[cite: 6]|A) Tüketicilerin geliri~B) Tüketicilerin ihtiyaçları~C) Tüketicilerin tatmini~D) Tüketicilerin tercihi~E) Tüketicilerin sayısı|C) Tüketicilerin tatmini|💡 Açıklama: İktisatta mal ve hizmetlerin tüketilmesi sonucu bireylerin sağladığı psikolojik haz veya tatmin duygusuna fayda denir.`,
+
+`2022 Final|13. "Belirli bir ücret karşılığında bireylerin hizmetlerinden yararlanılması" olarak tanımlanan kavram aşağıdakilerden hangisidir?[cite: 6]|A) Emek~B) İstihdam~C) İşsizlik oranı~D) İşsizlik~E) İşgücü|B) İstihdam|💡 Açıklama: Üretim faktörlerinin (özellikle emeğin) belirli bir bedel karşılığında fiilen üretim sürecine dâhil edilmesi ve kullanılmasına istihdam denir.`,
+
+`2022 Final|14. Aşağıdakilerden hangisi gelir sıfır iken yapılan tüketimi ifade etmektedir?[cite: 6]|A) Lüks Tüketim~B) Ortalama Tüketim Eğilimi~C) Tüketim~D) Marjinal Tüketim Eğilimi~E) Otonom Tüketim|E) Otonom Tüketim|💡 Açıklama: Bireyin geliri hiç olmasa bile (sıfır gelirde) hayatta kalabilmek için zorunlu olarak yaptığı harcamalara otonom (gelirden bağımsız) tüketim denir.`,
+
+`2022 Final|15. Aşağıdakilerden hangisi çeşitli kullanma imkânlarından en yüksek tatmini veya en büyük getiri imkânının seçilmesini ifade etmektedir?[cite: 6]|A) Bedensel davranış~B) Seçici davranış~C) Zihinsel davranış~D) Finansal davranış~E) Rasyonel davranış|E) Rasyonel davranış|💡 Açıklama: İktisadi birimlerin her zaman faydalarını veya kârlarını en üst seviyeye çıkaracak (maksimize edecek) şekilde hareket etmesine rasyonel (akılcı) davranış denir.`,
+
+`2022 Final|16. Aşağıdakilerden hangisi eksik rekabet piyasasının özelliklerinden değildir?[cite: 6]|A) Firma sayısının az olması~B) Üretimin az olması~C) Malların homojen olması~D) Malların heterojen olması~E) Kar düzeyinin yüksek olması|C) Malların homojen olması|💡 Açıklama: Malların birbiriyle tıpatıp aynı (homojen) olması sadece tam rekabet piyasasının bir özelliğidir. Eksik rekabette mallar genellikle heterojendir (farklılaştırılmıştır).`,
+
+`2024 Vize, 2025-2026 Vize, 2022 Final|17. Aşağıdakilerden hangisi örümcek ağı teoreminin uygulandığı ürünlere en iyi örnektir?[cite: 6]|A) Tarım~B) Hizmet~C) İmalat üretimi~D) Teknoloji~E) Bilişim|A) Tarım|💡 Açıklama: Tarım ürünleri üretim süreçlerinin uzun olması sebebiyle, çiftçilerin cari dönemin fiyatlarına bakıp arz kararını bir sonraki dönem için almasına yol açar (Örümcek Ağı teoremi).`,
+
+`2022 Final|18. Aşağıdakilerden hangisi aynı malı üreten firmaların rekabeti ortadan kaldırmak amacıyla birleşerek oluşturdukları kollektif monopollerdir?[cite: 6]|A) Psikolojik monopoller~B) Anlaşmalı monopoller~C) Yasal monopoller~D) Fiili monopoller~E) Doğal monopoller|B) Anlaşmalı monopoller|💡 Açıklama: Firmaların bir araya gelerek kartel veya tröst kurmak suretiyle fiyatları kontrol etme ve piyasayı tekel gibi yönetme amaçlı oluşturdukları yapılara anlaşmalı monopoller denir.`,
+
+`2022 Final|19. Aşağıdakilerden hangisi yapısal enflasyonun özellikleri arasında yer almamaktadır?[cite: 6]|A) Kişi başına gelir düzeyinin yüksek olması~B) Eksik rekabet piyasalarının varlığı~C) Maliyetlerin yüksek olması~D) Altyapı yatırımlarının geniş yer tutması~E) İşgücü verimliliğinin düşük olması|A) Kişi başına gelir düzeyinin yüksek olması|💡 Açıklama: Yapısal enflasyon kronik sorunlara sahip gelişmekte olan ülkelerde görülür. Bu nedenle "kişi başına gelir düzeyinin yüksek olması" yapısal enflasyonu olan bir ekonominin özelliği değildir.`,
+
+`2024 Vize, 2025-2026 Vize, 2022 Final|20. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?[cite: 6]|A) ed: 1~B) ed: >1~C) ed: 0~D) ed: 00~E) ed: <1|D) ed: 00|💡 Açıklama: Fiyatın sabit olduğu, miktarın ise sonsuz olarak değişebildiği yatay eksene paralel bir talep eğrisinde esneklik sonsuzdur (ed: ∞ veya 00).`,
+
+`2022 Büt|1. Aşağıdakilerden hangisi bir ekonomide üretilmiş bütün nihai mal ve hizmetlerin piyasa fiyatları ile hesaplanmış değerini vermektedir?|A) Harcanabilir Gelir~B) GSMH~C) Kişisel Gelir~D) SMH~E) GSYH|B) GSMH|💡 Açıklama: Bir ülkenin vatandaşları tarafından belirli bir dönemde (genellikle 1 yıl) üretilen tüm nihai mal ve hizmetlerin piyasa fiyatları cinsinden değerine Gayrisafi Millî Hasıla (GSMH) denir.`,
+
+`2022 Büt|2. Aşağıdakilerden hangisi altın ve gümüşe çevrilebilen paraları tanımlamaktadır?|A) Kağıt para~B) Temsili para~C) Banknot~D) Sikke~E) Mal para|B) Temsili para|💡 Açıklama: Karşılığı %100 oranında kıymetli maden (altın, gümüş) olarak saklanan ve istendiğinde bu madenlere dönüştürülebilen paralara temsili para denir.`,
+
+`2022 Vize, 2024 Vize, 2025-2026 Vize, 2022 Büt|3. Arz eğrisi üzerindeki iki nokta arasında kalan kısmının esnekliğine ne ad verilmektedir?|A) Yay esnekliği~B) Nokta esnekliği~C) Fiyat esnekliği~D) Çapraz esneklik~E) Gelir esnekliği|A) Yay esnekliği|💡 Açıklama: Bir eğrinin iki farklı noktası arasında kalan belirli bir bölümün (yayın) esnekliğinin hesaplanmasına yay esnekliği denir.`,
+
+`2022 Büt|4. Enflasyonun yükselme ihtimalini arttıran unsur aşağıdakilerden hangisidir?|A) Faiz oranlarındaki artış~B) Para miktarındaki artış~C) Para miktarındaki azalış~D) Talep artışı~E) Döviz kurunda yükseliş|B) Para miktarındaki artış|💡 Açıklama: Piyasada dolaşan para miktarının artması, harcamaları tetikleyerek fiyatlar genel düzeyinin (enflasyonun) yükselmesine neden olur.`,
+
+`2022 Büt|5. Aşağıdakilerden hangisi çok sayıda satıcı firmaya karşılık, alıcı sayısının tek olduğu piyasa türüdür?|A) Monopol Piyasası~B) İkili Monopol Piyasası~C) Monopollü Rekabet Piyasası~D) Monopson Piyasası~E) Oligopol Piyasası|D) Monopson Piyasası|💡 Açıklama: Piyasada çok sayıda satıcının bulunduğu ancak sadece tek bir alıcının olduğu (alıcı tekeli) piyasa türüne monopson piyasası denir.`,
+
+`2022 Büt|6. Tam rekabet piyasasında faaliyet gösteren bir firmanın normal kar elde etmesinin koşulu aşağıdakilerden hangisidir?|A) Marjinal maliyet = Marjinal gelir~B) Ortalama maliyet = Ortalama gelir~C) Fiyat Ortalama gelir~D) Ortalama değişir maliyet = Marjinal gelir~E) Marjinal gelir Ortalama gelir|A) Marjinal maliyet = Marjinal gelir|💡 Açıklama: (Not: Cevap anahtarında A şıkkı verilmiştir.) Firmanın kârını maksimize ettiği (veya zararını minimize ettiği) denge koşulu Marjinal Maliyetin (MC), Marjinal Gelire (MR) eşit olmasıdır.`,
+
+`2022 Büt|7. Arz edenlere yeni tesis kurarak arz düzeylerini arttırma imkanı veren dönem aşağıdakilerden hangisidir?|A) Piyasa dönemi~B) Resesyon dönemi~C) Stagflasyon dönemi~D) Uzun dönem~E) Kısa dönem|D) Uzun dönem|💡 Açıklama: Tüm üretim faktörlerinin değiştirilebildiği, firmaların yeni tesisler kurup üretim kapasitelerini artırabildikleri döneme uzun dönem denir.`,
+
+`2022 Büt|8. Talep çapraz esnekliğinin sıfıra yaklaşması aşağıdaki hangi durumu ifade etmektedir?|A) İkamenin az~B) İkâmenin güç~C) İkâmenin kolay~D) İkâmenin çok~E) İkâmenin tam|B) İkâmenin güç|💡 Açıklama: Çapraz esnekliğin sıfıra yaklaşması, bir malın fiyatındaki değişimin diğer malın talebini pek etkilemediğini, yani bu iki malın birbirinin yerine kullanılmasının (ikamesinin) güç olduğunu gösterir.`,
+
+`2022 Büt|9. Hangi kuruma bozuk paraları basma yetkisi verilmiştir?|A) Merkez Bankası~B) Hazine Müsteşarlığı~C) Maliye Bakanlığı~D) Katılım Bankaları~E) Ticari Bankalar|C) Maliye Bakanlığı|💡 Açıklama: Türkiye'de kâğıt paraları (banknotları) Merkez Bankası, madeni ufaklık (bozuk) paraları ise Maliye Bakanlığı'na bağlı Darphane basar.`,
+
+`2022 Büt|10. Belli bir üretim sektöründe gerekli olandan daha fazla emeğin istihdam edilmesi halinde fazla emeğe ne ad verilir?|A) Mevsimlik işsizlik~B) Friksiyonel işsizlik~C) Tam istihdam~D) Gizli işsizlik~E) Yapısal işsizlik|D) Gizli işsizlik|💡 Açıklama: Üretim sürecinden çekildiklerinde toplam üretim miktarında herhangi bir azalmaya neden olmayan atıl durumdaki fazla emeğe gizli işsizlik denir.`,
+
+`2022 Büt|11. Para politikası araçlarından en esnek olanı aşağıdakilerden hangisidir?|A) Faiz oranları~B) Zorunlu karşılık oranları~C) Açık piyasa işlemleri~D) Transfer harcamaları~E) Reeskont oranları|C) Açık piyasa işlemleri|💡 Açıklama: Merkez Bankası'nın piyasadaki para miktarını ayarlamak için hazine kâğıtlarını alıp satması olan Açık Piyasa İşlemleri (APİ), en hızlı ve esnek şekilde uygulanan para politikası aracıdır.`,
+
+`2022 Büt|12. İktisadın tanımı ile ilgili olarak aşağıdaki ifadelerden hangisi yanlıştır?|A) İktisat, ulusal ve uluslararası bazda ticareti inceler.~B) İktisat, tercih bilimidir.~C) İktisat, kıtlık bilimidir.~D) İktisat, para ve para benzerlerini incelemez.~E) İktisat, malların üretim ve değişimini içeren faaliyetleri inceler.|D) İktisat, para ve para benzerlerini incelemez.|💡 Açıklama: İktisat, para, bankacılık, finans ve para benzeri değerleri inceleyen temel bir bilim dalıdır. Bu yüzden D şıkkı yanlıştır.`,
+
+`2022 Büt|13. Aşağıdakilerden hangisi yıllık üretimin baz alınan yılın fiyatları ile hesaplanması sonucu bulunan geliri ifade etmektedir?|A) Reel milli gelir~B) Potansiyel GSMH~C) Harcanabilir gelir~D) Nominal milli gelir~E) Reel GSYİH|A) Reel milli gelir|💡 Açıklama: Enflasyonun etkisinden arındırmak amacıyla, üretilen mal ve hizmetlerin cari yıl fiyatlarıyla değil, belirli bir temel (baz) yılın sabit fiyatlarıyla hesaplanan değerine reel milli gelir denir.`,
+
+`2022 Büt|14. Monopolcü firmanın daha fazla kar elde etmek için aynı ürünü farklı alt piyasalarda farklı fiyatlardan satmasına ne denir?|A) Pazar bölmesi~B) Piyasa farklılaştırması~C) Fiyat farklılaştırması~D) Ürün farklılaştırması~E) Bölge farklılaştırması|C) Fiyat farklılaştırması|💡 Açıklama: Monopol gücüne sahip bir firmanın, kârını artırmak amacıyla aynı maliyete sahip bir malı farklı alıcılara veya piyasalara farklı fiyatlardan satmasına fiyat farklılaştırması (ayrımcılığı) denir.`,
+
+`2022 Büt|15. Aşağıdakilerden hangisi tam rekabet piyasasının özelliklerinden birisi değildir?|A) Satıcı sayısı çoktur~B) Fiyat veridir~C) Mallar homojendir~D) Alıcı sayısı çoktur~E) Piyasaya giriş çıkış yoktur|E) Piyasaya giriş çıkış yoktur|💡 Açıklama: Tam rekabet piyasasında piyasaya giriş ve çıkışların tamamen serbest olması (mobilite) temel özelliklerden biridir.`,
+
+`2022 Büt|16. Hangi işsizlik türü ekonominin en elverişli dönemlerinde bile görülebilmektedir?|A) Gizli işsizlik~B) Yapısal işsizlik~C) Friksiyonel işsizlik~D) Konjoktürel işsizlik~E) İradi işsizlik|C) Friksiyonel işsizlik|💡 Açıklama: Kişilerin iş değiştirme süreçlerinde veya mezuniyet sonrası ilk işlerini ararken geçirdikleri geçici sürede oluşan friksiyonel (geçici/arizi) işsizlik, ekonomi tam istihdamda olsa bile her zaman vardır.`,
+
+`2022 Büt|17. Üretici üretim miktarını arttırdıkça sermaye faktörünü daha fazla kullanılıyorsa genişleme yolu eğrisi nasıl bir durum göstermektedir?|A) Sermaye eksenine doğru kıvrılmaktadır~B) Düz bir doğru şeklindedir~C) Emek eksenine doğru kıvrılmaktadır~D) Sağa doğru artandır~E) Sola doğru artandır|A) Sermaye eksenine doğru kıvrılmaktadır|💡 Açıklama: Üretim ölçeği büyüdükçe firmanın teknoloji tercihi sermaye-yoğun bir yapıya kayıyorsa, faktör bileşimlerini gösteren genişleme yolu eğrisi sermaye eksenine doğru yaklaşarak bükülür.`,
+
+`2022 Büt|18. Aşağıdakilerden hangisi firma dışı fakat endüstri içi kazanç durumunu ifade etmektedir?|A) Dışsal eksi ekonomiler~B) Ölçek ekonomileri~C) İçsel eksi ekonomiler~D) İçsel ekonomiler~E) Dışsal ekonomiler|E) Dışsal ekonomiler|💡 Açıklama: Firmanın kendi ölçeğinden bağımsız olarak, içinde bulunduğu endüstrinin (sektörün) gelişmesi ve büyümesi sayesinde elde ettiği maliyet avantajlarına ve kazançlara dışsal ekonomiler denir.`,
+
+`2022 Büt|19. Paranın değer ölçüsü olma özelliğini kaybettiği enflasyon türü aşağıdakilerden hangisidir?|A) Kronik enflasyon~B) Sinsi enflasyon~C) Stagflasyon~D) Yapısal enflasyon~E) Hiperenflasyon|E) Hiperenflasyon|💡 Açıklama: Fiyatların kontrol edilemez bir hızda arttığı ve paranın satın alma gücünün tamamen çöktüğü hiperenflasyon dönemlerinde, ulusal para değer ölçüsü ve değişim aracı olma vasfını yitirir.`,
+
+`2022 Büt|20. Bir malın tüketim miktarları arttıkça marjinal faydanın seyri ile ilgili aşağıdakilerden hangisi söylenebilir?|A) Değişmez.~B) Önce azalır minumumdan sonra artar.~C) Önce artar maksimumdan sonra azalır.~D) Artar.~E) Azalır.|E) Azalır.|💡 Açıklama: İktisatta azalan marjinal fayda kanunu gereği, bir malın tüketilen miktarı arttıkça tüketilen son birimden elde edilen ek tatmin (marjinal fayda) sürekli azalır.`,
+
+`2023-2024 Final|1. Kaydi para yaratılmasında para fonksiyonunu gören unsur aşağıdakilerden hangisidir?|A) Çek~B) Vadesiz mevduat~C) Senet~D) Mal para~E) Kâğıt para|B) Vadesiz mevduat|💡 Açıklama: Bankacılık sisteminde bankaların verdikleri kredilerle yarattıkları ve fiziki olmayan paraya kaydi para denir; bu süreç vadesiz mevduatlar üzerinden işler.`,
+
+`2023-2024 Final|2. Dönem üretiminin baz alınan bir yılın fiyatları ile hesaplanmasıyla bulunan gelir ölçüsüne ne ad verilmektedir?|A) Reel gelir~B) Kişisel gelir~C) Milli gelir~D) Harcanabilir gelir~E) Nominal gelir|A) Reel gelir|💡 Açıklama: Enflasyonun şişirici etkisinden arındırmak amacıyla üretimin cari yıl değil, temel (baz) alınan bir yılın sabit fiyatlarıyla hesaplanması reel geliri verir.`,
+
+`2023-2024 Final|3. Çok sayıda alıcı ve satıcı bulunurken farklılaştırılmış mal ve hizmetlerin satıldığı piyasa aşağıdakilerden hangisidir?|A) Monopson piyasası~B) Tam rekabet piyasası~C) Oligopol piyasası~D) Monopol piyasası~E) Monopollü rekabet piyasası|E) Monopollü rekabet piyasası|💡 Açıklama: Çok sayıda firmanın bulunduğu ancak malların homojen olmadığı (farklılaştırıldığı, marka vb. unsurlarla ayrıştığı) piyasalara monopollü rekabet piyasası denir.`,
+
+`2023-2024 Final|4. Aşağıdakilerden hangisi bir ekonomideki işsizlik oranının hesaplanmasında kullanılır?|A) [(Çalışanlar - İş gücü) / Çalışanlar) x 100~B) (Çalışanlar / Toplam Nüfus) x 100~C) (İşsiz sayısı / İş gücü) x 100~D) [(İşsiz sayısı / Toplam nüfus)] x 100~E) [(Çalışanlar - İşsizler) / İş gücü) x 100|C) (İşsiz sayısı / İş gücü) x 100|💡 Açıklama: İşsizlik oranı, işsiz sayısının toplam iş gücüne (çalışanlar + iş arayanlar) bölünüp 100 ile çarpılmasıyla hesaplanır.`,
+
+`2023-2024 Final|5. Aşağıdakilerden hangisi para politikası uygulamalarından biri değildir?|A) Tedavüldeki banknot miktarının arttırılması~B) Merkez Bankasının tahvil satması~C) Kredi faizlerinin arttırılması~D) Vergi oranlarında indirim yapılması~E) Reeskont oranlarının düşürülmesi|D) Vergi oranlarında indirim yapılması|💡 Açıklama: Vergilerle ilgili düzenlemeler (indirimler veya artışlar) Maliye Bakanlığı'nın yürüttüğü "Maliye Politikası"nın bir aracıdır, Merkez Bankası'nın yürüttüğü para politikasının aracı değildir.`,
+
+`2023-2024 Final|6. Toplam faydanın maksimum olduğu durumda marjinal fayda nasıldır?|A) Bir~B) Sıfır~C) Minimum~D) İki~E) Maksimum|B) Sıfır|💡 Açıklama: Tüketicinin belirli bir maldan elde ettiği toplam doyum en yüksek seviyeye (maksimuma) ulaştığında, ilave tüketilen birimden sağlanan ek (marjinal) fayda sıfır olur.`,
+
+`2023-2024 Final|7. Merkez Bankası enflasyonla mücadele politikasında aşağıdakilerden hangisini uygulamamaktadır?|A) Reeskont oranlarının düşürülmesi~B) Zorunlu karşılık oranının yükseltilmesi~C) Reeskont oranlarının yükseltilmesi~D) Piyasaya devlet tahvili satılması~E) Kanuni rezerv oranının yükseltilmesi|A) Reeskont oranlarının düşürülmesi|💡 Açıklama: Enflasyonla mücadelede piyasadaki para miktarını kısmak hedeflenir. Reeskont oranlarının "düşürülmesi" kredileri ucuzlatıp para miktarını artıracağı için enflasyona karşı uygulanamaz.`,
+
+`2023-2024 Final|8. Aşağıdakilerden hangisi talebin fiyat esnekliğini etkileyen faktörlerden biri değildir?|A) İkame mal varlığı~B) Mala harcanan miktarın gelire oranı~C) Harcama alışkanlıklarının değişim hızı~D) Piyasanın yapısı~E) Yeni alıcıların piyasaya girmesi|E) Yeni alıcıların piyasaya girmesi|💡 Açıklama: Yeni alıcıların piyasaya girmesi talep eğrisini bütünüyle sağa kaydıran (talebi artıran) bir etkendir; esnekliği (fiyat değişimine olan duyarlılığı) belirleyen temel yapısal faktörlerden biri değildir.`,
+
+`2024 Vize, 2025-2026 Vize, 2023-2024 Final|9. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?|A) Arz eğrisi~B) Sanayi talep eğrisi~C) Talep eğrisi~D) Firma arz eğrisi~E) Piyasa arz eğrisi|E) Piyasa arz eğrisi|💡 Açıklama: Bir malı üreten tüm firmaların bireysel arz miktarlarının her fiyat seviyesinde yatay olarak toplanmasıyla elde edilen toplam eğri piyasa arz eğrisidir.`,
+
+`2023-2024 Final|10. Tam rekabet piyasasındaki bir firmanın ortalama geliri (OG) ile ilgili aşağıdakilerden hangisi doğrudur?|A) Ortalama maliyete bağlı olarak artar.~B) Üretimle birlikte azalır.~C) Üretimle birlikte artar.~D) Önce artar, sonra azalır.~E) Sabittir ve fiyata eşittir.|E) Sabittir ve fiyata eşittir.|💡 Açıklama: Tam rekabet piyasasında fiyat sabit olduğu için (firma fiyat alıcıdır), firmanın elde ettiği ortalama gelir (OG) ve marjinal gelir (MG) her zaman bu sabit piyasa fiyatına (P) eşittir.`,
+
+`2023-2024 Final|11. Deflasyon sürecinde uygulanmayacak tedbir aşağıdakilerden hangisidir?|A) Ücretleri arttırma~B) Ucuz faizli kredi~C) Otonom yatırımları azaltma~D) Tüketici kredilerini arttırma~E) Gelir ve kurumlar vergisindeki düzenlemeler|C) Otonom yatırımları azaltma|💡 Açıklama: Deflasyon ekonomide durgunluk ve fiyatların sürekli düşmesi durumudur. Bu süreçte harcamaları teşvik etmek gerekirken, otonom yatırımları "azaltmak" ekonomiyi daha da daraltır.`,
+
+`2023-2024 Final|12. Kişilerin serbestçe kullanabileceği gelir aşağıdakilerden hangisi ile tanımlanmaktadır?|A) Millî gelir~B) GSYİH~C) Kişisel gelir~D) Harcanabilir gelir~E) Safi milli gelir|D) Harcanabilir gelir|💡 Açıklama: Kişilerin eline geçen kişisel gelirden dolaysız vergiler (gelir vergisi vb.) düşüldükten sonra geriye kalan, tüketim veya tasarruf için serbestçe harcanabilen gelire harcanabilir gelir denir.`,
+
+`2023-2024 Final|13. Revalüasyon aşağıdakilerden hangisi nedeniyle uygulanmaktadır?|A) İthalat azlığı~B) Ödemeler dengesi fazlalığı~C) İhracat azlığı~D) İthalat fazlası~E) Ödemeler dengesi azlığı|B) Ödemeler dengesi fazlalığı|💡 Açıklama: Revalüasyon, ödemeler dengesinin sürekli fazla vermesi (ülkeye giren dövizin çok yüksek olması) durumunda devletin resmî müdahalesiyle yerli paranın değerinin artırılması işlemidir.`,
+
+`2023-2024 Final|14. Monopolcünün karşılaştığı talep eğrisi nasıldır?|A) Tam rekabettekinden daha yatıktır.~B) Marjinal gelirin altındadır.~C) Piyasa talep eğrisi ile aynıdır.~D) Sonsuz esnektir.~E) Monopollü rekabettekinden daha esnektir.|C) Piyasa talep eğrisi ile aynıdır.|💡 Açıklama: Monopol piyasasında malı üreten tek bir firma olduğu için, o endüstrinin tamamı o firmadan oluşur. Bu sebeple monopolcünün talep eğrisi, doğrudan piyasa talep eğrisinin kendisidir.`,
+
+`2023-2024 Final|15. Aşağıdakilerden hangisi paranın ticarete konu olan her türlü işlemi yürüten özelliğini ifade etmektedir?|A) Homojen olması~B) Bölünebilir olması~C) Taklit edilememesi~D) Taşınabilir olması~E) Dayanıklı olması|B) Bölünebilir olması|💡 Açıklama: Paranın alt birimlere (ufaklıklara) bölünebilir olması, hem çok küçük hem de çok büyük değerlerdeki her türlü ticari işlemin sorunsuzca yürütülmesini sağlar.`,
+
+`2023-2024 Final|16. Aşağıdakilerden hangisi bir malın denge fiyatını vermektedir?|A) Piyasa talebinin piyasa arzını aştığı herhangi bir düzey~B) Piyasa arzının piyasa talebini aştığı herhangi bir düzey~C) Malın karaborsa fiyatı~D) Piyasa arz ve talebinin kesiştiği nokta~E) Malın maliyeti ile piyasa fiyatı arasındaki fark|D) Piyasa arz ve talebinin kesiştiği nokta|💡 Açıklama: Serbest piyasada arz eğrisi ile talep eğrisinin kesiştiği noktada piyasa dengesi oluşur ve bu noktadaki fiyat seviyesi denge fiyatıdır.`,
+
+`2023-2024 Final|17. Aşağıdakilerden hangisi sabit maliyetler arasında yer almamaktadır?|A) Kira~B) Sigorta masrafları~C) Faiz~D) Enerji~E) Ücretler|D) Enerji|💡 Açıklama: (Not: Orijinal cevap anahtarına göre enerji doğru cevap olarak verilmiştir.) Sabit maliyetler üretim miktarından bağımsız olan giderlerdir (kira, sigorta gibi). Enerji (elektrik, yakıt) üretime bağlı olarak değişen bir maliyettir.`,
+
+`2023-2024 Final|18. Ekonomide talep ve üretim yapısında meydana gelen değişiklik sonucu ortaya çıkan işsizlik türü aşağıdakilerden hangisidir?|A) Konjonktürel işsizlik~B) Friksiyonel işsizlik~C) Yapısal işsizlik~D) İradi işsizlik~E) Gizli İşsizlik|C) Yapısal işsizlik|💡 Açıklama: Teknolojik gelişmeler veya tüketici alışkanlıklarındaki değişimler nedeniyle ekonominin temel üretim ve talep yapısının (sektörlerin) değişmesine uyum sağlayamayanların oluşturduğu işsizliğe yapısal işsizlik denir.`,
+
+`2023-2024 Final|19. Tam rekabet piyasasına ait bir firmada uzun dönemde kâr için aşağıdakilerden hangisi söylenebilir?|A) Normaldir.~B) Çok düşüktür.~C) Üretim miktarı arttıkça artar.~D) Pozitiftir.~E) Azalarak artar.|A) Normaldir.|💡 Açıklama: Tam rekabet piyasasında uzun dönemde piyasaya yeni firmaların girişi serbest olduğu için aşırı kâr ortadan kalkar ve firmalar sadece "normal kâr" (iktisadi kârın sıfır olduğu durum) elde ederler.`,
+
+`2023-2024 Final|20. Üretici bütçesindeki değişim sonucu daha fazla faktör alımı ile üretim artışı söz konusu ise bu durum aşağıdakilerden hangisi ile ifade edilmektedir?|A) Genişleme yolu~B) Marjinal ikame oranı~C) Eş ürün eğrisi~D) Eş maliyet doğrusu~E) Marjinal teknik ikame oranı|A) Genişleme yolu|💡 Açıklama: Üreticinin mali imkânları (bütçesi) arttığında ve faktör fiyatları sabitken üretim düzeyini artırarak ulaşacağı en uygun (optimum) faktör bileşimlerinin noktalarını birleştiren eğriye genişleme yolu eğrisi denir.`,
+
+`2024 Büt|1. Aşağıdakilerden hangisi firmanın satışında bir birimlik değişmenin toplam gelirde meydana getirdiği değişme oranıdır?|A) MG = ΔTG > ΔQ~B) MG = TG / Q~C) MG = TG > Q~D) MG = ΔTG / ΔQ~E) MG = ΔTG < ΔQ|D) MG = ΔTG / ΔQ|💡 Açıklama: Marjinal gelir (MG), satış miktarındaki bir birimlik değişimin ($\Delta Q$) toplam gelirde ($\Delta TG$) yarattığı değişmedir. Formülü $MG = \Delta TG / \Delta Q$ şeklindedir.`,
+
+`2022 Büt, 2024 Büt|2. Paranın değer ölçüsü olma özelliğini kaybettiği enflasyon türü aşağıdakilerden hangisidir?|A) Sinsi enflasyon~B) Yapısal enflasyon~C) Kronik enflasyon~D) Stagflasyon~E) Hiperenflasyon|E) Hiperenflasyon|💡 Açıklama: Fiyatların kontrol edilemez bir hızda arttığı ve paranın satın alma gücünün tamamen çöktüğü hiperenflasyon dönemlerinde, ulusal para değer ölçüsü ve değişim aracı olma vasfını yitirir.`,
+
+`2024 Büt|3. Aşağıdakilerden hangisi monopol piyasalarında karşılaşılan iktisadi olgulardan birisi değildir?|A) Monopolün kısa ve uzun dönem koşullarının farklılık göstermesi~B) Monopolcü firmanın bir mal ve hizmetin tek arz edicisi olması~C) Monopolcu firma denge durumunun maliyetlere göre açıklanması~D) Monopolcü firmanın piyasada azalan eğimli bir talep eğrisine sahip olması~E) Monopolcü firma ile endüstrinin aynı olması|A) Monopolün kısa ve uzun dönem koşullarının farklılık göstermesi|💡 Açıklama: Monopol piyasasına yeni firmaların girişi engelli olduğu için, monopolcü firmanın kısa dönem ve uzun dönem denge koşulları (aşırı kâr elde etme durumu) genellikle birbirinin aynıdır, farklılık göstermez.`,
+
+`2024 Büt|4. Aşağıdakilerden hangisi tüketicinin sabit geliri ile iki malı hangi miktarlarda tüketme olanaklarına sahip olduğunu gösteren seçim noktalarını birleştirir?|A) Gelir tüketim eğrisi~B) Fiyat-tüketim eğrisi~C) Genişleme yolu~D) Bütçe doğrusu~E) Maliyet kısıtı|D) Bütçe doğrusu|💡 Açıklama: Tüketicinin veri (sabit) geliri ve piyasa fiyatları ile bütçesini tam olarak harcayarak satın alabileceği mal bileşimlerinin geometrik yerine bütçe doğrusu denir.`,
+
+`2024 Büt|5. Zorunlu karşılık oranları değiştiğinde bankaların karşılaştığı risk aşağıdakilerden hangisidir?|A) Likidite sıkışıklığı~B) Kredileri arttırma zorunluluğu~C) Likidite bolluğu~D) Faiz oranında istikrarsızlık~E) Merkez Bankasından borçlanma güçlüğü|A) Likidite sıkışıklığı|💡 Açıklama: Merkez Bankası zorunlu karşılık oranlarını artırdığında, ticari bankalar topladıkları mevduatların daha büyük bir kısmını Merkez Bankası'nda tutmak zorunda kalır. Bu durum bankalarda nakit (likidite) sıkışıklığı yaratır.`,
+
+`2024 Büt|6. Birbirinin tamamlayıcısı iki malın esneklik katsayısı ile ilgili ifadelerden hangisi doğrudur?|A) Daima negatiftir.~B) Birden küçüktür.~C) Birden büyüktür.~D) Sıfırdır.~E) Daima pozitiftir.|A) Daima negatiftir.|💡 Açıklama: Tamamlayıcı mallarda (örn: otomobil ve benzin) birinin fiyatı artarken diğerinin talebi azalır. Ters yönlü bu ilişki nedeniyle çapraz talep esnekliği daima negatiftir.`,
+
+`2024 Büt|7. Harcanabilir gelirden bağımsız tüketim harcamalarına ne ad verilmektedir?|A) Ortalama tüketim~B) Lüks tüketim~C) Uyarılmış tüketim~D) Toplam tüketim~E) Otonom tüketim|E) Otonom tüketim|💡 Açıklama: Bireylerin geliri sıfır dahi olsa hayatta kalabilmek için yapmak zorunda oldukları, gelirden tamamen bağımsız zorunlu harcamalara otonom tüketim denir.`,
+
+`2022 Büt, 2024 Büt|8. Hangi kuruma bozuk paraları basma yetkisi verilmektedir?|A) Merkez Bankası~B) Hazine ve Maliye Bakanlığı~C) Devlet Planlama Teşkilatı~D) Katılım Bankaları~E) Ticari Bankalar|B) Hazine ve Maliye Bakanlığı|💡 Açıklama: Türkiye'de madeni (bozuk) paraları basma yetkisi Hazine ve Maliye Bakanlığı'na bağlı Darphane ve Damga Matbaası Genel Müdürlüğü'ne aittir.`,
+
+`2024 Büt|9. Aşağıdakilerden hangisi monopollü rekabet piyasası özelliklerinden birisidir?|A) Çok sayıda firmanın farklılaştırılmış ürün satması~B) Az sayıda firmanın homojen ürün satması~C) Aşırı kârlılık elde edilmesi~D) Çok sayıda firmanın homojen ürün satması~E) Az sayıda firmanın farklılaştırılmış ürün satması|A) Çok sayıda firmanın farklılaştırılmış ürün satması|💡 Açıklama: Monopollü rekabet piyasasının en belirgin özelliği, piyasada birbirini ikame edebilen ancak marka, ambalaj, kalite gibi unsurlarla farklılaştırılmış (heterojen) ürünler satan çok sayıda firmanın bulunmasıdır.`,
+
+`2024 Büt|10. Tarımsal ürünlerde arzın talep değişikliğine uyabilmesi için en az bir üretim döneminin geçmesi gerektiği ifadesi aşağıdakilerden hangisi ile açıklanmaktadır?|A) Azalan verimler kanunu~B) Cobwed (örümcek ağı) teoremi~C) Crowding out~D) King kanunu~E) Engel kanunu|B) Cobwed (örümcek ağı) teoremi|💡 Açıklama: Üretim süreci uzun olan tarım ürünlerinde, üreticilerin cari dönemdeki fiyatlara bakarak verdikleri üretim (arz) kararlarının piyasaya ancak bir sonraki dönemde yansımasını açıklayan teori Örümcek Ağı (Cobweb) teoremidir.`,
+
+`2024 Büt|11. Aşağıdakilerden hangi enflasyon çeşidinde dış ödemelerde, bir başka ülke parası standart ölçü olarak kullanılmaktadır?|A) Yapısal enflasyon~B) Sinsi enflasyon~C) Hiperenflasyon~D) Kronik enflasyon~E) Sürünen enflasyon|C) Hiperenflasyon|💡 Açıklama: Hiperenflasyon durumunda ulusal para tüm değerini ve işlevini yitirir. Güveni sağlamak için tasarruflar, fiyatlamalar ve dış ödemeler gibi işlemlerde yabancı güçlü paralar (dolarizasyon) standart ölçü olarak kullanılır.`,
+
+`2024 Büt|12. Sabit maliyet eğrisinin şekli aşağıdakilerden hangisidir?|A) Pozitif eğimli~B) Yatay bir çizgi~C) Negatif eğimli~D) Hiperbol~E) Düşey bir çizgi|B) Yatay bir çizgi|💡 Açıklama: Sabit maliyetler (kira, amortisman vb.) üretim miktarından bağımsız olarak değişmeyen maliyetlerdir. Bu nedenle miktar (yatay) eksenine paralel düz ve yatay bir çizgi şeklindedir.`,
+
+`2024 Büt|13. Belli bir dönemde bir ülke vatandaşlarının sahip oldukları üretim faktörleri kullanılarak üretilmiş bütün nihai mal ve hizmetlerin piyasa fiyatlarıyla hesaplanmış değeri aşağıdakilerden hangisidir?|A) MG~B) GSYİH~C) GSMH~D) SMH~E) KG|C) GSMH|💡 Açıklama: Üretimin ülke sınırları içinde yapılmasına değil de, nerede olursa olsun "ülke vatandaşları (millî üretim faktörleri)" tarafından yapılmış olmasına vurgu yapıldığı için bu Gayrisafi Millî Hasıla (GSMH) tanımıdır.`,
+
+`2024 Büt|14. Üretim teknolojisinin değişmesi ile iş gücü talep yapısının değişmesi sonucu görülen işsizlik türü aşağıdakilerden hangisidir?|A) Friksiyonel işsizlik~B) Yapısal işsizlik~C) Gayrı-iradi işsizlik~D) İradi işsizlik~E) Konjoktürel işsizlik|B) Yapısal işsizlik|💡 Açıklama: Teknolojik ilerlemeler veya temel ekonomik sektörlerin değişmesi sonucu iş gücünün mevcut niteliklerinin yeni taleplere uyum sağlayamaması nedeniyle ortaya çıkan işsizliğe yapısal işsizlik denir.`,
+
+`2022 Büt, 2024 Büt|15. Aşağıdakilerden hangisi altın ve gümüşe çevrilebilen paraları tanımlamaktadır?|A) Mal para~B) Banknot~C) Sikke~D) Temsili para~E) Kâğıt para|D) Temsili para|💡 Açıklama: Karşılığı \%100 oranında kıymetli maden (altın, gümüş vb.) olarak saklanan ve istendiğinde anında bu madenlere dönüştürülebilen sertifika niteliğindeki paralara temsili para denir.`,
+
+`2024 Büt|16. Toplam gelir ile toplam maliyetin birbirine eşit olduğu üretim düzeyi aşağıdakilerden hangisidir?|A) Aşırı kâr noktası~B) Denge noktası~C) Maksimum kâr noktası~D) Kapanma noktası~E) Başa baş noktası|E) Başa baş noktası|💡 Açıklama: Bir firmanın toplam gelirinin tam olarak toplam maliyetini karşıladığı, yani ekonomik kârın ve zararın tam sıfır olduğu geçiş noktasına başa baş (kâra geçiş) noktası denir.`,
+
+`2024 Büt|17. Ekonomi üzerinde en az olumsuz etkiye sahip olan işsizlik türü aşağıdakilerden hangisidir?|A) Konjoktürel işsizlik~B) Teknolojik işsizlik~C) Friksiyonel işsizlik~D) Yapısal işsizlik~E) Mevsimlik işsizlik|C) Friksiyonel işsizlik|💡 Açıklama: Kişilerin daha iyi bir iş bulmak amacıyla kendi istekleriyle iş değiştirdikleri kısa süreli geçiş dönemlerini kapsadığı için friksiyonel (arizi) işsizlik, ekonomideki en doğal ve olumsuz etkisi en az olan işsizlik türüdür.`,
+
+`2022 Vize, 2024 Büt|18. İktisadi faaliyetlerde insan ihtiyaçlarını giderme amacına yönelik olarak mal ve hizmet üretilmesine verilen ad aşağıdakilerden hangisidir?|A) Talep~B) Fayda~C) Tüketim~D) Esneklik~E) Arz|E) Arz|💡 Açıklama: Üretilen mal ve hizmetlerin tüketici ihtiyaçlarını gidermek üzere piyasaya sunulmasına genel bağlamda arz denmektedir.`,
+
+`2024 Büt|19. Eş ürün eğrileri ile ilgili olarak aşağıdakilerden hangisi söylenemez?|A) Faktörler birbirlerini ikame edebilirler.~B) Üretim sırasında faktörlerin birbirini ikame etmesi durumunda çıktı miktarında artış veya azalış meydana gelir.~C) Kayıtsızlık eğrileri ile aynı anlamı ifade etmektedir.~D) Aynı üretim seviyesini sağlayan farklı faktör bileşimlerinin geometrik yeridir.~E) Eş ürün eğrileri uzun dönem firma analizinde kullanılmaktadır.|C) Kayıtsızlık eğrileri ile aynı anlamı ifade etmektedir.|💡 Açıklama: Eş ürün eğrileri üreticinin aynı çıktıyı veren üretim bileşimlerini (arz yönünü) gösterirken, kayıtsızlık eğrileri tüketicinin aynı tatmini sağlayan tüketim bileşimlerini (talep yönünü) gösterir. Aynı anlamı taşımazlar.`,
+
+`2024 Büt|20. Aşağıdakilerden hangisi para politikası araçları arasında yer almamaktadır?|A) Kredi tavanı~B) Reeskont oranı~C) İthalat teminatları~D) Zorunlu karşılıklar~E) Açık piyasa işlemleri|C) İthalat teminatları|💡 Açıklama: İthalat teminatları, devletin dış ticaret rejiminin (dış ticaret politikası) bir aracıdır. Açık piyasa işlemleri, zorunlu karşılıklar ve reeskont oranları ise Merkez Bankası'nın temel para politikası araçlarıdır.`,
+`2022 Büt, 2023-2024 Vize, 2024-2025 Final|1. Monopolcü firmanın daha fazla kâr elde etmek için aynı ürünü farkı alt piyasalarda farklı fiyatlardan satmasına ne ad verilir?|A) Pazar bölmesi~B) Piyasa farklılaştırması~C) Ürün farklılaştırması~D) Fiyat farklılaştırması~E) Bölge farklılaştırması|D) Fiyat farklılaştırması|💡 Açıklama: Monopol gücüne sahip bir firmanın, kârını artırmak amacıyla aynı maliyete sahip bir malı farklı alıcılara veya piyasalara farklı fiyatlardan satmasına fiyat farklılaştırması (ayrımcılığı) denir.`,
+
+`2023-2024 Vize, 2024-2025 Final|2. Aşağıdakilerden hangisi üretim miktarında meydana gelen bir değişimin toplam maliyette meydana getirdiği değişimi ifade etmektedir?|A) Ortalama maliyet~B) Sabit maliyet~C) Değişir maliyet~D) Toplam maliyet~E) Marjinal maliyet|E) Marjinal maliyet|💡 Açıklama: Üretilen son birimin (veya üretimdeki bir birimlik artışın) toplam maliyete yaptığı ek katkıya marjinal maliyet denir.`,
+
+`2022 Büt, 2024-2025 Final|3. Hangi işsizlik türü ekonominin en elverişli dönemlerinde bile görülebilmektedir?|A) Gizli işsizlik~B) İradi işsizlik~C) Yapısal işsizlik~D) Friksiyonel işsizlik~E) Konjoktürel işsizlik|D) Friksiyonel işsizlik|💡 Açıklama: Kişilerin iş değiştirme süreçlerinde veya ilk işlerini ararken geçirdikleri geçici sürede oluşan friksiyonel (geçici) işsizlik, ekonomi tam istihdamda olsa bile her zaman vardır.`,
+
+`2023-2024 Vize, 2024-2025 Final|4. Tüketicinin geliri ile çeşitli mallardan satın alabileceği mal miktarlarının geometrik yerini tanımlayan ifade aşağıdakilerden hangisidir?|A) Eş ürün eğrisi~B) Gelir tüketim eğrisi~C) Bütçe doğrusu~D) Eş maliyet doğrusu~E) Kayıtsızlık eğrisi|C) Bütçe doğrusu|💡 Açıklama: Tüketicinin veri geliriyle belirli fiyatlardan alabileceği mal bileşimlerini gösteren doğru bütçe doğrusudur.`,
+
+`2024-2025 Final|5. Monopolcü firmanın denge koşulu aşağıdakilerden hangisidir?|A) MM=MG~B) OM=OG~C) MM=OM~D) MM>MG~E) MM<MG|A) MM=MG|💡 Açıklama: Tüm piyasalarda olduğu gibi monopolcü firmanın da kârını maksimize ettiği (dengeye ulaştığı) koşul, Marjinal Maliyetin (MM) Marjinal Gelire (MG) eşit olmasıdır.`,
+
+`2024-2025 Final|6. Antidepresyonist politikalar ile önlenmeye çalışılan işsizlik türü aşağıdakilerden hangisidir?|A) Gayri iradi işsizlik~B) Konjonktürel işsizlik~C) Yapısal işsizlik~D) İradi işsizlik~E) Friksiyonel işsizlik|B) Konjonktürel işsizlik|💡 Açıklama: Ekonomik dalgalanmalar (kriz ve depresyon dönemleri) sonucu ortaya çıkan konjonktürel işsizlik, devleti genişletici (antidepresyonist) politikalar uygulamaya iter.`,
+
+`2024-2025 Final|7. Aşağıdakilerden hangisi paranın temel özelliklerinden değildir?|A) Taşınabilir olması~B) Değişim aracı olması~C) Homojenlik~D) Dayanıklılık~E) Bölünebilirlik|B) Değişim aracı olması|💡 Açıklama: Taşınabilirlik, homojenlik, dayanıklılık ve bölünebilirlik paranın fiziksel 'özellikleri'dir. Değişim aracı olması ise paranın bir 'işlevi' (fonksiyonu) dir.`,
+
+`2022 Büt, 2024-2025 Final|8. Aşağıdakilerden hangisi yıllık üretimin baz alınan yılın fiyatları ile hesaplanması sonucu bulunan geliri ifade etmektedir?|A) Reel milli gelir~B) Nominal milli gelir~C) Reel GSYİH~D) Potansiyel GSMH~E) Harcanabilir gelir|A) Reel milli gelir|💡 Açıklama: Enflasyonun etkisinden arındırmak amacıyla, üretilen mal ve hizmetlerin belirli bir temel (baz) yılın sabit fiyatlarıyla hesaplanan değerine reel milli gelir denir.`,
+
+`2022 Büt, 2024-2025 Final|9. Üretici üretim miktarını arttırdıkça sermaye faktörünü daha fazla kullandıyorsa genişleme yolu eğrisi nasıl bir durum göstermektedir?|A) Düz bir doğru şeklindedir.~B) Sermaye eksenine doğru kıvrılmaktadır.~C) Emek eksenine doğru kıvrılmaktadır.~D) Sağa doğru artandır.~E) Sola doğru artandır.|B) Sermaye eksenine doğru kıvrılmaktadır.|💡 Açıklama: Üretim ölçeği büyüdükçe firmanın teknoloji tercihi sermaye-yoğun bir yapıya kayıyorsa, genişleme yolu eğrisi sermaye eksenine doğru yaklaşarak bükülür.`,
+
+`2023-2024 Vize, 2024-2025 Final|10. Aşağıdakilerden hangisi tam rekabet piyasasından söz etmek için zorunlu bir koşul değildir?|A) Homojenlik~B) Kâr maksimizasyonu~C) Mobilite~D) Alıcı satıcı sayısının çok olması~E) Şeffaflık|B) Kâr maksimizasyonu|💡 Açıklama: Tam rekabet piyasasının zorunlu varsayımları atomisite (çok sayıda alıcı-satıcı), homojenlik, mobilite ve şeffaflıktır. Kâr maksimizasyonu ise firmanın amacıdır, piyasanın yapısal koşulu değildir.`,
+
+`2022 Vize, 2024-2025 Final|11. Aşağıdakilerden hangisi arz eğrisinin yer değiştirmesine etki eden faktörlerden biri değildir?|A) Mal fiyatı~B) Teknoloji~C) Diğer mal fiyatı~D) Maliyetler~E) Geleceğe yönelik beklentiler|A) Mal fiyatı|💡 Açıklama: Malın kendi fiyatındaki değişimler eğriyi sağa veya sola kaydırmaz; eğri üzerinde bir noktadan diğerine (miktarda) harekete neden olur.`,
+
+`2024-2025 Final|12. Ekonomide istikrarı sağlamak için para arzı düşük bir hızla artarken hangi para politikası kuralı uygulanmaktadır?|A) Para arzı hedeflemesi~B) Para talebi hedeflemesi~C) Enflasyon hedeflemesi~D) GSYH hedeflemesi~E) Döviz hedeflemesi|A) Para arzı hedeflemesi|💡 Açıklama: Merkez Bankası'nın ekonomideki büyümeye paralel olarak para arzını belirli ve sabit bir oranda artırmayı taahhüt etmesine para arzı hedeflemesi (monetarist kural) denir.`,
+
+`2024-2025 Final|13. Kısa dönem dengesinde zarar eden tam rekabetçi firma nasıl davranır?|A) Toplam zararı toplam sabit maliyetten büyükse üretimini sürdürür.~B) Fiyat ortalama değişir maliyetten küçük ise üretimini sürdürür.~C) Başa baş noktasına kadar üretimini sürdürür.~D) Optimumdan küçük ölçekte bir tesisle çalışıyorsa üretimini sürdürür.~E) Fiyat ortalama değişir maliyete eşit veya ondan büyükse üretimini sürdürür.|E) Fiyat ortalama değişir maliyete eşit veya ondan büyükse üretimini sürdürür.|💡 Açıklama: Firma zarar etse bile fiyat (P), Ortalama Değişken Maliyeti (AVC) karşılıyorsa veya ondan büyükse sabit maliyetlerinin en azından bir kısmını kurtarmak için kısa dönemde üretime devam eder.`,
+
+`2023-2024 Vize, 2024-2025 Final|14. Arz (maliyet) enflasyonunun en önemli nedeni aşağıdakilerden hangisidir?|A) Sermaye yetersizliği~B) İş gücü yetersizliği~C) Üretim maliyetlerindeki artış~D) Enerji kıtlığı~E) Döviz darboğazı|C) Üretim maliyetlerindeki artış|💡 Açıklama: Firmaların kullandığı üretim faktörlerinin (hammadde, ücret vb.) maliyetlerindeki artışların fiyatlar genel düzeyini yukarı çekmesiyle arz (maliyet) enflasyonu oluşur.`,
+
+`2023-2024 Vize, 2024-2025 Final|15. Talep esnekliğinde miktar ve fiyatları dikkate alan esneklik kavramı aşağıdakilerden hangisidir?|A) Çapraz esneklik~B) Nokta esnekliği~C) İlk gelir düzeyi~D) Gelir esnekliği~E) Yay esnekliği|E) Yay esnekliği|💡 Açıklama: Eğri üzerindeki iki nokta arasındaki ortalama esnekliği, ilk ve son fiyat ile miktar seviyelerinin ortalamalarını dikkate alarak hesaplayan yönteme yay esnekliği denir.`,
+
+`2022 Vize, 2024-2025 Final|16. Arz-talep eğrileri analizinde talep eğrisi altında ve denge fiyatı üzerinde kalan alan aşağıdakilerden hangisini gösterir?|A) Toplam rant~B) Fayda maksimizasyonu~C) Kâr maksimizasyonu~D) Tüketici rantı~E) Üretici rantı|D) Tüketici rantı|💡 Açıklama: Tüketicinin bir mal için ödemeye razı olduğu en yüksek fiyat (talep eğrisi) ile fiilen ödediği piyasa fiyatı (denge fiyatı) arasındaki fark tüketici rantıdır.`,
+
+`2024-2025 Final|17. Hangi para çeşidi malın malla değişimini yansıtmaktadır?|A) Bozuk para~B) Temsili para~C) Kağıt para~D) Mal para~E) Kaydi para|D) Mal para|💡 Açıklama: İnsanlık tarihinde paranın icadından önce (trampa ekonomisinde) veya ilk para formlarında doğrudan başka bir malla değiştirilebilen ve kendi başına bir değeri olan mallara mal para denir.`,
+
+`2023-2024 Vize, 2024-2025 Final|18. Milli gelir kaç şekilde hesaplanmaktadır?|A) 5~B) 2~C) 3~D) 4~E) 1|C) 3|💡 Açıklama: Milli gelir temel olarak 3 farklı yöntemle hesaplanır: Üretim yöntemi, Gelir yöntemi ve Harcama yöntemi.`,
+
+`2024-2025 Final|19. Aşağıdakilerden hangisi döviz kurunun değerini düşürme işlemini ifade etmektedir?|A) Stagflasyon~B) Devalüasyon~C) Revalüasyon~D) Resesyon~E) Deflasyon|B) Devalüasyon|💡 Açıklama: Sabit kur sistemlerinde, ödemeler dengesi açığını kapatmak amacıyla devletin resmî müdahalesiyle ulusal paranın yabancı paralar karşısındaki değerinin düşürülmesine devalüasyon denir.`,
+
+`2022 Büt, 2024-2025 Final|20. Para politikası araçlarından en esnek olanı aşağıdakilerden hangisidir?|A) Reeskont oranları~B) Transfer harcamaları~C) Açık piyasa işlemleri~D) Zorunlu karşılık oranları~E) Faiz oranları|C) Açık piyasa işlemleri|💡 Açıklama: Merkez Bankası'nın piyasadaki para miktarını ayarlamak için hazine kâğıtlarını alıp satması olan Açık Piyasa İşlemleri (APİ), istenildiği an uygulanabildiği için en esnek araçtır.`,
+
+`2023-2024 Final, 2025-2026 Büt|1. Kaydi para yaratılmasında para fonksiyonunu gören unsur aşağıdakilerden hangisidir?|A) Kâğıt para~B) Çek~C) Vadesiz mevduat~D) Senet~E) Mal para|C) Vadesiz mevduat|💡 Açıklama: Bankacılık sisteminde bankaların kredi verme süreciyle vadesiz mevduatlar üzerinden yarattıkları, fiziki olmayan paraya kaydi para denir.`,
+
+`2024 Büt, 2025-2026 Büt|2. Aşağıdakilerden hangisi firmanın satışında bir birimlik değişmenin toplam gelirde meydana getirdiği değişme oranıdır?|A) MG=TG/Q~B) MG=ΔTG/ΔQ~C) MG=TG>Q~D) MG=ΔTG>ΔQ~E) MG=ΔTG<ΔQ|B) MG=ΔTG/ΔQ|💡 Açıklama: Marjinal gelir (MG), satış miktarındaki bir birimlik değişim ($\Delta Q$) sonucunda toplam gelirde ($\Delta TG$) oluşan değişim oranıdır.`,
+
+`2023-2024 Final, 2025-2026 Büt|3. Kişilerin serbestçe kullanabileceği gelir aşağıdakilerden hangisi ile tanımlanmaktadır?|A) GSYİH~B) Kişisel gelir~C) Harcanabilir gelir~D) Safi milli gelir~E) Milli gelir|C) Harcanabilir gelir|💡 Açıklama: Kişisel gelirden dolaysız vergiler çıkarıldıktan sonra kalan, bireylerin tüketim veya tasarruf için serbestçe harcayabildiği tutardır.`,
+
+`2023-2024 Final, 2025-2026 Büt|4. Aşağıdakilerden hangisi bir malın denge fiyatını vermektedir?|A) Piyasa talebinin piyasa arzını aştığı herhangi bir düzey~B) Malın maliyeti ile piyasa fiyatı arasındaki fark~C) Piyasa arz ve talebinin kesiştiği nokta~D) Piyasa arzının piyasa talebini aştığı herhangi bir düzey~E) Malın karaborsa fiyatı|C) Piyasa arz ve talebinin kesiştiği nokta|💡 Açıklama: Serbest piyasada arz ve talep eğrilerinin kesiştiği noktada piyasa dengesi oluşur ve bu fiyat denge fiyatıdır.`,
+
+`2024 Vize, 2025-2026 Büt|5. Üretim fonksiyonu aşağıdakilerden hangisini ifade etmektedir?|A) Faktör miktarı~B) Faktör fiyatı~C) Girdi maliyeti~D) Çıktı maliyeti~E) Faktörlerin teknik zorunluluğunu|E) Faktörlerin teknik zorunluluğunu|💡 Açıklama: Üretim fonksiyonu, belirli bir teknoloji düzeyinde girdiler (faktörler) ile elde edilebilecek maksimum çıktı arasındaki teknik ilişkiyi ifade eder.`,
+
+`2024 Büt, 2025-2026 Büt|6. Paranın değer ölçüsü olma özelliğini kaybettiği enflasyon türü aşağıdakilerden hangisidir?|A) Hiperenflasyon~B) Sinsi enflasyon~C) Stagflasyon~D) Kronik enflasyon~E) Yapısal enflasyon|A) Hiperenflasyon|💡 Açıklama: Fiyatların aşırı hızlı arttığı hiperenflasyon ortamlarında, paranın satın alma gücü çöker ve değer ölçüsü olma fonksiyonunu kaybeder.`,
+
+`2023-2024 Vize, 2025-2026 Büt|7. Reel GSYİH'nın potansiyel GSYİH'nın gerisinde kalması sonucu oluşan işsizliğe ne ad verilmektedir?|A) Konjonktürel~B) Friksiyonel~C) Mevsimsel~D) Yapısal~E) Gizli|A) Konjonktürel|💡 Açıklama: Ekonomik durgunluk dönemlerinde, toplam talebin yetersizliği nedeniyle oluşan işsizliğe konjonktürel işsizlik denir.`,
+
+`2022 Final, 2025-2026 Büt|8. Aşağıdakilerden hangisi fayda ile ilgili bir kavramdır?|A) Tüketicilerin sayısı~B) Tüketicilerin ihtiyaçları~C) Tüketicilerin geliri~D) Tüketicilerin tercihi~E) Tüketicilerin tatmini|E) Tüketicilerin tatmini|💡 Açıklama: İktisadi anlamda fayda, bir malın tüketilmesi sonucu bireyin elde ettiği psikolojik tatmin duygusudur.`,
+
+`2024-2025 Final, 2025-2026 Büt|9. Firmanın birim üretim başına düşen maliyetine ne ad verilir?|A) Ortalama toplam maliyet~B) Ortalama sabit maliyet~C) Ortalama değişken maliyet~D) Marjinal maliyet~E) Toplam maliyet|A) Ortalama toplam maliyet|💡 Açıklama: Toplam maliyetin üretilen birim miktarına bölünmesiyle elde edilen değer, birim başına maliyeti yani ortalama toplam maliyeti verir.`,
+
+`2024 Büt, 2025-2026 Büt|10. Belli bir dönemde bir ülke vatandaşlarının sahip oldukları üretim faktörleri kullanılarak üretilmiş bütün nihai mal ve hizmetlerin piyasa fiyatlarıyla hesaplanmış değeri aşağıdakilerden hangisidir?|A) GSYİH~B) MG~C) GSMH~D) SMH~E) KG|C) GSMH|💡 Açıklama: Üretimin nerede yapıldığına değil, kimin faktörleri tarafından yapıldığına odaklanan bu tanım Gayrisafi Millî Hasıla'dır.`,
+
+`2023-2024 Final, 2025-2026 Büt|11. Aşağıdakilerden hangisi para politikası araçlarından biri değildir?|A) Açık piyasa işlemleri~B) Parasal taban~C) Reeskont oranı~D) Kanuni karşılık~E) Kredi tavanı|B) Parasal taban|💡 Açıklama: Açık piyasa işlemleri, reeskont oranı, kanuni karşılık ve kredi tavanı birer araçtır; parasal taban ise piyasadaki para büyüklüğünü ifade eder.`,
+
+`2023-2024 Final, 2025-2026 Büt|12. Aşağıdakilerden hangisi paranın özelliklerinden biri değildir?|A) Bölünebilir olması~B) Heterojen olması~C) Dayanıklı olması~D) Taşınmaya elverişli olması~E) Değişim aracı olması|B) Heterojen olması|💡 Açıklama: Paranın değişim aracı olarak işlev görebilmesi için homojen (aynı nitelikte) olması gerekir; heterojen olması istenmez.`,
+
+`2023-2024 Final, 2025-2026 Büt|13. Tam rekabet piyasasındaki bir firmanın ortalama geliri (OG) ile ilgili aşağıdakilerden hangisi doğrudur?|A) Ortalama maliyete bağlı olarak artar.~B) Üretimle birlikte azalır.~C) Üretimle birlikte artar.~D) Sabittir ve fiyata eşittir.~E) Önce artar, sonra azalır.|D) Sabittir ve fiyata eşittir.|💡 Açıklama: Tam rekabet piyasasında firma fiyat alıcı olduğu için fiyat sabittir; dolayısıyla ortalama gelir de bu fiyata eşittir.`,
+
+`2024-2025 Final, 2025-2026 Büt|14. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?|A) ed: 0~B) ed: <1~C) ed: 1~D) ed: 00~E) ed: ∞|D) ed: 00|💡 Açıklama: Fiyatın sabit olduğu durumlarda esneklik sonsuzdur (tam esnek), bu durum 00 veya ∞ ile ifade edilir.`,
+
+`2023-2024 Final, 2025-2026 Büt|15. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?|A) Piyasa arz eğrisi~B) Firma arz eğrisi~C) Arz eğrisi~D) Talep eğrisi~E) Sanayi talep eğrisi|A) Piyasa arz eğrisi|💡 Açıklama: Tüm firmaların bireysel arzlarının her fiyat seviyesinde toplanmasıyla oluşan eğri piyasa arz eğrisidir.`,
+
+`2023-2024 Final, 2025-2026 Büt|16. Aşağıdakilerden hangisi para politikası uygulamalarından biri değildir?|A) Reeskont oranlarının düşürülmesi~B) Tedavüldeki banknot miktarının arttırılması~C) Kredi faizlerinin arttırılması~D) Vergi oranlarında indirim yapılması~E) Merkez Bankasının tahvil satması|D) Vergi oranlarında indirim yapılması|💡 Açıklama: Vergiler, Maliye Politikası'nın bir aracıdır ve Maliye Bakanlığı tarafından yönetilir.`,
+
+`2023-2024 Final, 2025-2026 Büt|17. Mal ihracatında artışın sağlanması hangi koşula bağlı olmaktadır?|A) Milli paranın dış değerinin yüksek olması~B) İhraç mallarının dış talep esnekliğinin düşük olması~C) Rekabet gücünün olmaması~D) İhracata hazır mal stokunun varlığı~E) İthal mallarının iç talep esnekliği|D) İhracata hazır mal stokunun varlığı|💡 Açıklama: Bir ülkenin ihracatını artırabilmesi için öncelikle dışarıya satabileceği, ihracata hazır yeterli mal stokuna sahip olması gerekir.`,
+
+`2024-2025 Final, 2025-2026 Büt|18. Hangi işsizlik türü ekonominin en elverişli dönemlerinde bile görülebilmektedir?|A) Konjonktürel işsizlik~B) Gizli işsizlik~C) İradi işsizlik~D) Yapısal işsizlik~E) Friksiyonel işsizlik|E) Friksiyonel işsizlik|💡 Açıklama: İş değiştirme süreçlerinde veya ilk iş arayışında yaşanan geçici süreli (friksiyonel) işsizlik, ekonomi tam istihdamda olsa bile mevcuttur.`,
+
+`2023-2024 Vize, 2025-2026 Büt|19. Monopolcünün belli koşullar altında malının farklı birimlerini farklı fiyattan satmasına ne ad verilmektedir?|A) Fiyat arttırılması~B) Fiyat farklılaştırılması~C) Üretici rantı~D) Maliyet arttırılması~E) Tüketici rantı|B) Fiyat farklılaştırılması|💡 Açıklama: Aynı malın farklı alıcılara veya piyasalara farklı fiyatlardan satılması işlemine fiyat farklılaştırması denir.`,
+
+`2024 Büt, 2025-2026 Büt|20. Aşağıdakilerden hangisi monopol piyasalarında karşılaşılan iktisadi olgulardan birisi değildir?|A) Monopolcu firma denge durumunun maliyetlere göre açıklanması~B) Monopolcü firmanın piyasada azalan eğimli bir talep eğrisine sahip olması~C) Monopolcü firma ile endüstrinin aynı olması~D) Monopolcü firmanın bir mal ve hizmetin tek arz edicisi olması~E) Monopolün kısa ve uzun dönem koşullarının farklılık göstermesi|E) Monopolün kısa ve uzun dönem koşullarının farklılık göstermesi|💡 Açıklama: Giriş engelleri nedeniyle monopolün kısa ve uzun dönem dengeleri (aşırı kâr durumu) genellikle birbirinin aynısıdır.`,
+
+];
+   // --- BURADAN İTİBAREN KOPYALAYIN ---
+    let isAllOpen = false;
+    let temizlenmisData = []; // Birleştirilmiş verileri global tutalım ki arama/filtreleme yapabilelim
+
+    // 1. SORULARI BİRLEŞTİREN FONKSİYON
+    function sorulariBirlestir(dataArray) {
+        const soruMap = new Map();
+
+        dataArray.forEach(item => {
+            if (!item || item.trim() === '') return;
+            
+            const parts = item.split('|');
+            if (parts.length < 4) return; 
+            
+            let tagsRaw = parts[0];
+            const question = parts[1].trim(); 
+            const options = parts[2];
+            const correctAnswer = parts[3];
+            const explanation = parts[4] ? parts[4] : '';
+
+            let tagsList = tagsRaw.split(',').map(t => t.trim());
+            let mevcutSayi = 1;
+
+            tagsList = tagsList.filter(t => {
+                const match = t.match(/(\d+)\s*Kez Çıktı/i);
+                if (match) {
+                    mevcutSayi = parseInt(match[1]);
+                    return false; 
+                }
+                return true;
+            });
+
+            if (soruMap.has(question)) {
+                let kayit = soruMap.get(question);
+                kayit.count += mevcutSayi; 
+                
+                tagsList.forEach(t => {
+                    if (!kayit.tags.includes(t)) {
+                        kayit.tags.push(t);
+                    }
+                });
+            } else {
+                soruMap.set(question, {
+                    tags: tagsList,
+                    options: options,
+                    correctAnswer: correctAnswer,
+                    explanation: explanation,
+                    count: mevcutSayi
+                });
+            }
+        });
+
+        const birlestirilmisData = [];
+        for (let [qText, data] of soruMap.entries()) {
+            let finalTags = [...data.tags];
+            if (data.count > 1) {
+                finalTags.push(`${data.count} Kez Çıktı!`);
+            }
+            
+            const itemString = `${finalTags.join(',')}|${qText}|${data.options}|${data.correctAnswer}|${data.explanation}`;
+            birlestirilmisData.push(itemString);
+        }
+
+        return birlestirilmisData;
+    }
+
+   // 2. EKRANA BASTIRMA FONKSİYONU (Renklendirme Geliştirilmiş Versiyon)
+    function renderQuestions(data) {
+        const container = document.getElementById('q-container');
+        container.innerHTML = '';
+        
+        if(data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px;">Kriterlerinize uygun soru bulunamadı.</p>';
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const parts = item.split('|');
+            const tagsRaw = parts[0];
+            const question = parts[1];
+            const options = parts[2].split('~');
+            const correctAnswer = parts[3];
+            const explanation = parts[4] || '';
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const tagsDiv = document.createElement('div');
+            tagsDiv.className = 'tags';
+            
+            tagsRaw.split(',').forEach(tag => {
+                tag = tag.trim();
+                if(!tag) return;
+                const span = document.createElement('span');
+                span.className = 'tag';
+                
+                let lowerTag = tag.toLowerCase();
+                if(lowerTag.includes('ünite') || lowerTag.match(/^u\d+/)) {
+                    span.classList.add('tag-u');
+                } else if(lowerTag.includes('banko') || lowerTag.includes('kez çıktı')) {
+                    span.classList.add('tag-h');
+                } else {
+                    span.classList.add('tag-e');
+                }
+                
+                span.textContent = tag;
+                tagsDiv.appendChild(span);
+            });
+
+            const qDiv = document.createElement('div');
+            qDiv.className = 'q-text';
+            qDiv.textContent = (index + 1) + ". " + question;
+
+            const optUl = document.createElement('ul');
+            optUl.className = 'opt';
+            
+            options.forEach(opt => {
+                const li = document.createElement('li');
+                li.textContent = opt;
+                li.onclick = function() {
+                    // Önce bu sorudaki tüm şıkları varsayılan (gri) haline getirerek sıfırla
+                    Array.from(optUl.children).forEach(child => {
+                        child.style.backgroundColor = '#f8f9fa';
+                        child.style.borderColor = 'var(--b)';
+                        child.style.color = 'var(--t)';
+                        child.style.fontWeight = 'normal';
+                    });
+                    
+                    // Cevap kontrolü
+                    if(opt.trim() === correctAnswer.trim()) {
+                        // DOĞRU ŞIKKA TIKLANDIYSA: Canlı Yeşil Yap
+                        this.style.backgroundColor = '#d4edda';
+                        this.style.borderColor = '#28a745';
+                        this.style.color = '#155724';
+                        this.style.fontWeight = 'bold';
+                    } else {
+                        // YANLIŞ ŞIKKA TIKLANDIYSA: Canlı Kırmızı Yap
+                        this.style.backgroundColor = '#f8d7da';
+                        this.style.borderColor = '#dc3545';
+                        this.style.color = '#721c24';
+                        this.style.fontWeight = 'bold';
+                        
+                        // KULLANICIYA YARDIM: Aynı esnada doğru olan şıkkı da otomatik yeşile boya
+                        Array.from(optUl.children).forEach(child => {
+                            if(child.textContent.trim() === correctAnswer.trim()) {
+                                child.style.backgroundColor = '#d4edda';
+                                child.style.borderColor = '#28a745';
+                                child.style.color = '#155724';
+                                child.style.fontWeight = 'bold';
+                            }
+                        });
+                    }
+                };
+                optUl.appendChild(li);
+            });
+
+            const btn = document.createElement('button');
+            btn.className = 'ans-btn';
+            btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster';
+            
+            const ansBox = document.createElement('div');
+            ansBox.className = 'ans-box';
+            ansBox.style.display = isAllOpen ? 'block' : 'none';
+            ansBox.innerHTML = `<div class="ans-true">Cevap: ${correctAnswer}</div>${explanation ? `<div><em>Açıklama:</em> ${explanation}</div>` : ''}`;
+
+            btn.onclick = () => {
+                if (ansBox.style.display === 'block') {
+                    ansBox.style.display = 'none';
+                    btn.textContent = 'Cevabı Göster';
+                } else {
+                    ansBox.style.display = 'block';
+                    btn.textContent = 'Cevabı Gizle';
+                }
+            };
+
+            card.appendChild(tagsDiv);
+            card.appendChild(qDiv);
+            card.appendChild(optUl);
+            card.appendChild(btn);
+            card.appendChild(ansBox);
+
+            container.appendChild(card);
+        });
+    }
+//buraya kadar 
+    // 3. BUTON VE ARAMA FONKSİYONLARI
+    function toggleAll() {
+        isAllOpen = !isAllOpen;
+        const boxes = document.querySelectorAll('.ans-box');
+        const btns = document.querySelectorAll('.ans-btn');
+        boxes.forEach(box => box.style.display = isAllOpen ? 'block' : 'none');
+        btns.forEach(btn => btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster');
+    }
+
+    function filter(val) {
+        val = val.toLowerCase();
+        if (val === 'all') {
+            renderQuestions(temizlenmisData);
+            return;
+        }
+        
+        let filtered = [];
+        if (val === 'b') {
+            // Banko ve çok çıkanlar
+            filtered = temizlenmisData.filter(item => {
+                let lower = item.toLowerCase();
+                return lower.includes('banko') || lower.includes('kez çıktı');
+            });
+        } else {
+            // Sınavlar ve üniteler
+            filtered = temizlenmisData.filter(item => {
+                const tags = item.split('|')[0].toLowerCase();
+                return tags.includes(val);
+            });
+        }
+        renderQuestions(filtered);
+    }
+
+    function aramaYap() {
+        const val = document.getElementById('arama').value.toLowerCase();
+        const filtered = temizlenmisData.filter(item => {
+            const parts = item.toLowerCase().split('|');
+            const q = parts[1] || '';
+            const a = parts[3] || '';
+            const exp = parts[4] || '';
+            return q.includes(val) || a.includes(val) || exp.includes(val);
+        });
+        renderQuestions(filtered);
+    }
+
+    // 4. BAŞLANGIÇ (Her şeyi tetikleyen an)
+    window.onload = () => {
+        temizlenmisData = sorulariBirlestir(rawData);
+        renderQuestions(temizlenmisData);
+    };
+    // --- BURAYA KADAR KOPYALAYIN ---
+
+</script>
+</body>
+</html>

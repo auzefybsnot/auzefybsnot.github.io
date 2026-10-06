@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUZEF Web Programlama 2 </title>
+    <style>
+        :root { 
+            --p: #1a2b4c; --s: #2c3e50; --a: #f39c12; --suc: #27ae60; 
+            --bg: #f4f6f8; --c: #ffffff; --t: #2d3436; --b: #dfe6e9; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--t); margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1050px; margin: 0 auto; }
+        
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 1000;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .header { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--a); margin-bottom: 15px; }
+        .header h1 { margin: 5px 0; font-size: 1.5em; }
+        .header p { margin: 0; font-size: 0.9em; }
+        
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; background: var(--bg); padding: 5px; border-radius: 10px; }
+        
+        .btn { background: #ecf0f1; color: var(--p); border: 2px solid var(--b); padding: 8px 12px; font-size: 0.95em; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; box-sizing: border-box; }
+        .btn:hover { background: #bdc3c7; }
+        .btn.active { background: var(--a); color: white; border-color: var(--a); }
+        .btn-g { background: #d35400; color: white; }
+        
+        .card { background: var(--c); border-radius: 8px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--p); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .tag { color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .tag-u { background: #3498db; } .tag-e { background: var(--p); } .tag-h { background: #e74c3c; }
+        .q-text { font-size: 1.1em; font-weight: bold; color: var(--p); margin-bottom: 15px; }
+        .opt { list-style: none; padding: 0; margin: 0 0 15px 0; }
+        .opt li { background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid var(--b); margin-bottom: 5px; cursor: pointer; transition: 0.2s; }
+        .opt li:hover { background: #eafaf1; border-color: var(--suc); }
+        .ans-btn { background: var(--s); color: white; border: none; padding: 8px; width: 100%; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .ans-box { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--suc); border-radius: 6px; }
+        .ans-true { color: var(--suc); font-weight: bold; margin-bottom: 5px; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .sticky-top { position: relative; padding-top: 5px; padding-bottom: 5px; }
+            .header { padding: 10px; margin-bottom: 10px; }
+            .header h1 { font-size: 1.2em; }
+            .header p { font-size: 0.8em; } 
+            .controls { gap: 6px; padding: 0; }
+            .btn { padding: 10px; font-size: 0.85em; width: 100%; margin: 0; }
+            #kategori-secici, #arama { width: 100%; min-width: 100%; }
+            .card { padding: 15px; }
+            .q-text { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="sticky-top">
+        <div class="header">
+            <h1>AUZEF Web Programlama 2</h1>
+            <p>YBS OZEL (Tüm Sorular )</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-g" onclick="toggleAll()">👁️ Tüm Cevapları Aç/Kapat</button>
+
+            <select class="btn" id="kategori-secici" onchange="filter(this.value)" style="background: var(--p); color: white; min-width: 180px; text-align: center; font-weight:bold; padding:8px; border-radius:6px; cursor:pointer;">
+                <option value="all">📚 Tüm Havuz (Hepsi)</option>
+                <optgroup label="Sınavlar">
+                     <option value="vize">📅 Vizeler (Tümü)</option>
+                     <option value="final">📅 Finaller (Tümü)</option>
+                     <option value="büt">📅 Bütünlemeler</option>
+                     
+                </optgroup>
+            </select>
+
+            <button class="btn" style="background: #e74c3c; color:white;" onclick="document.getElementById('kategori-secici').value='b'; filter('b')">🔥 Banko Sorular</button>
+
+            <input type="text" id="arama" class="btn" placeholder="🔍 Soru veya cevapta kelime ara..." onkeyup="aramaYap()" style="background: white; color: black; cursor: text; text-align: left; min-width: 250px;">
+        </div>
+    </div>
+    
+    <div id="q-container"></div>
+
+</div>
+
+<script>
+const rawData = [
+    `2023-2024 Vize|[HttpPost] public string DegerAl() { return ("txt"); } Yukarıda tanımlı metod UserController'ında ise bu metoda gönderim yapan form nasıl tanımlanabilir?|A) <form method="POST" action="\\User\\DegerAl">...</form>~B) <form action="\\User\\DegerAl">...</form>~C) <form method="GET" action="\\User\\DegerAl">...</form>~D) <form method="POST" action="\\UserController\\DegerAl">...</form>~E) <form method="Get" action="\\UserController\\DegerAl">...</form>|A) <form method="POST" action="\\User\\DegerAl">...</form>|Cevap anahtarına göre doğru şık A seçeneğidir.`,
+
+    `2023-2024 Vize|Asp.Net Core MVC uygulamalarında Controller'da cookie tanımlamak için hangi namespace(isim alanı) projeye eklenmelidir?|A) Microsoft.AspNetCore.Http~B) System.Collections.Generic~C) System.Text.Json~D) Microsoft.Extensions.Logging~E) Microsoft.AspNetCore.Json|A) Microsoft.AspNetCore.Http|Cevap anahtarına göre doğru şık A seçeneğidir.`,
+
+    `2023-2024 Vize|Web'in hangi aşamasında kullanıcıların yorum yapma ve geri bildirim olmadan, sadece bilgi alabildikleri bir ortam sunulmaktadır?|A) Semantic Web~B) Web 3.0~C) Web 4.0~D) Web 2.0~E) Web 1.0|E) Web 1.0|Cevap anahtarına göre doğru şık E seçeneğidir.`,
+
+    `2023-2024 Vize|Cookie'ler ile aşağıdaki bilgilerin hangisini tutmak en uygun olur?|A) Veri tabanı bilgilerini~B) Kullanıcı yetki bilgilerini~C) Kullanıcı şifre bilgilerini~D) Kullanıcı renk tercihlerini~E) Sunucu bilgilerini|D) Kullanıcı renk tercihlerini|Cevap anahtarına göre doğru şık D seçeneğidir.`,
+
+    `2023-2024 Vize|Asp.Net Core MVC'de Controller'dan view'e Personel tipinde Per nesnesi gönderilmektedir. Bu Per nesnesine ait PerBirim özelliğinin değerine gönderimi gerçekleştirilen view içerisinden aşağıdaki kodlardan hangisi kullanılarak ulaşılabilir?|A) @Per.PerBirim~B) @m.PerBirim~C) @Model.PerBirim~D) @Personel. Perbirim~E) @PerBirim|C) @Model.PerBirim|Cevap anahtarına göre doğru şık C seçeneğidir.`,
+
+    `2023-2024 Vize|Bir MVC modelinde kullanıcıya görsel bir arayüz sağlayan bileşen aşağıdakilerden hangisidir?|A) Controller~B) Validation~C) Model~D) ViewBag~E) View|E) View|Cevap anahtarına göre doğru şık E seçeneğidir.`,
+
+    `2023-2024 Vize|Yazılım geliştiriciler için önceden yazılmış bileşenler, kod parçacıkları ve uygulama şablonları sunan yapı aşağıdakilerden hangisidir?|A) Web 4.0~B) FrameWork~C) Web 2.0~D) Web 1.0~E) Genel Web|B) FrameWork|Cevap anahtarına göre doğru şık B seçeneğidir.`,
+
+    `2023-2024 Vize|Aşağıdakilerden hangisi Razor yorum-açıklama bloğu için doğru bir söz dizimidir?|A) // açıklama~B) { açıklama }~C) @* açıklama *@~D) /* açıklama */~E) <! açıklama|C) @* açıklama *@|Cevap anahtarına göre doğru şık C seçeneğidir.`,
+
+    `2023-2024 Vize|Bir yazılım mimari modeli olan MVC'nin açılımı nedir?|A) Model-Validation-Component~B) Model-ViewBag-C#~C) Model-Vision-Component~D) Model-View-Controller~E) Model-Validation-Controller|D) Model-View-Controller|Cevap anahtarına göre doğru şık D seçeneğidir.`,
+
+    `2023-2024 Vize|Bir Html Form gönderilmek istendiğinde bu form hangi form elemanı tarafından gönderilir?|A) <input type="radio">~B) <input type="text">~C) <input type="submit">~D) <input type="hidden">~E) <input type="gonder">|C) <input type="submit">|Cevap anahtarına göre doğru şık C seçeneğidir.`,
+
+    `2023-2024 Vize|I - HTTP Cookies (Çerezler) II - Session III - Hidden Fields (Gizli Alanlar) Bir web uygulamasında yukarıdakilerden hangisi/hangilerine istemci makinesinden ulaşılabilir?|A) Yalnız I~B) I ve III~C) I ve ll~D) II ve III~E) Yalnız II|B) I ve III|Cevap anahtarına göre doğru şık B seçeneğidir.`,
+
+    `2023-2024 Vize|Html Form işlemlerinde bir çok seçenek içerisinden birden fazla seçim yapılmak istendiğinde hangi form eleman tipi kullanılabilir?|A) button~B) submit~C) checkbox~D) text~E) radio|C) checkbox|Cevap anahtarına göre doğru şık C seçeneğidir.`,
+
+    `2023-2024 Vize|Aşağıda verilen web frameworkleri (çerçeveleri) ve programlama dilleri eşleşmelerinden hangisi yanlıştır?|A) Laravel (Php)~B) Belirtilmemiş/Boş Seçenek~C) Spring (Java)~D) Asp.Net Core (C#)~E) Flask (Python)|B) Belirtilmemiş/Boş Seçenek|PDF kaynağında B seçeneğinin içeriği boş bırakılmıştır ve cevap anahtarına göre yanlış eşleşme olan doğru şık B seçeneğidir.`,
+
+    `2023-2024 Vize|public class Ogrenci { public string OgrAd { get; set; } public string OgrSoyad { get; set; } public string OgrNo { get; set; } public int OgrYas { get; set; } } Yukarıdaki gibi tanımlı bir kod MVC modelinde hangi bileşende tanımlanmalıdır?|A) View~B) Controller~C) Index~D) Model~E) ViewData|D) Model|Cevap anahtarına göre doğru şık D seçeneğidir.`,
+
+    `2023-2024 Vize|Asp.Net Core Mvc uygulamalarında bir Layout dosyasında aşağıdakilerden hangisi kesin olarak bulunmaz?|A) Model sınıfı tanımları~B) Html kodları~C) Menüler~D) Javascript kütüphaneleri referansları~E) Css kütüphane|A) Model sınıfı tanımları|Cevap anahtarına göre doğru şık A seçeneğidir.`,
+
+    `2023-2024 Vize|Asp.Net Core MVC projelerinde varsayılan olarak hangi Controller tanımlıdır?|A) IndexController~B) ViewController~C) Controller~D) HomeController~E) DefaultController|D) HomeController|Cevap anahtarına göre doğru şık D seçeneğidir.`,
+
+    `2023-2024 Vize|@{ var x=7; y=5; msj = "Merhaba Dünya"; } <p>Değer: @x + y ==> Mesaj: @msj</p> Asp.Net Core MVC de bir View'de yukarıdaki kod çalıştırıldığında ekran görüntüsü ne olur?|A) Değer: 7 + y ==> Mesaj: Merhaba Dünya~B) Kod hata verir.~C) Değer: 7 + y ==> Mesaj: @msj~D) Değer: 12 ==> Mesaj: Merhaba Dünya~E) Değer: 12 ==> Mesaj: @msj|A) Değer: 7 + y ==> Mesaj: Merhaba Dünya|Cevap anahtarına göre doğru şık A seçeneğidir.`,
+
+    `2023-2024 Vize|Asp.Net Core MVC uygulamalarında Layout, varsayılan olarak hangi klasörün altında tanımlıdır?|A) Index/Default~B) Model/Shared~C) Controller/Shared~D) View/Default~E) View/Shared|E) View/Shared|Cevap anahtarına göre doğru şık E seçeneğidir.`,
+
+    `2023-2024 Vize|Bir Html Form gönderilmek istediğinde ve gönderim metodu tanımlanmadığında varsayılan olarak hangi metod ile gönderilir?|A) Method~B) Model~C) Post~D) Action~E) Get|E) Get|Cevap anahtarına göre doğru şık E seçeneğidir.`,
+
+    `2023-2024 Vize|Ağ üzerindeki web kaynaklarının görüntülenmesinde hangi protokol kullanılır?|A) SMTP~B) HTTP~C) DNS~D) IP~E) FTP|B) HTTP|Cevap anahtarına göre doğru şık B seçeneğidir.`,
+
+`2024-2025 Vize|Asp.Net Core'da view içinde C# kullanmak için kodlar aşağıdaki bloklardan hangisi arasında yazılabilir?|A) @{...}~B) <!-...->~C) /*...*/~D) {...}~E) //...|A) @{...}|Açıklama: Razor söz diziminde C# kod blokları @{ ... } arasına yazılır.`,
+
+    `2024-2025 Vize|Bir Asp Net Core MVC uygulamasında <input name="ad" type="text"> isimli Html form elemanı Get metodu ile gönderildiğinde bu elemana ait değer, gönderimi gerçekleşen action metod'ta elde edilme biçimi aşağıdakilerden hangisidir?|A) HttpContext.Response.Form["text"]~B) HttpContext.Request.Query ["ad"]~C) HttpContext.Request.Query ["text"]~D) HttpContext.Request.Form["ad"]~E) HttpContext.Request.Form["text"]|B) HttpContext.Request.Query ["ad"]|Açıklama: GET metodu ile gönderilen form verileri URL üzerinde QueryString ile taşınır ve sunucuda Request.Query koleksiyonu ile nesnenin 'name' niteliği (ad) kullanılarak yakalanır.`,
+
+    `2024-2025 Vize|I. Asp.Net Core Microsoft tarafından geliştirlen bir web framework'üdür. II. Asp.Net Core sadece Windows platfromlarında çalışır. III. Asp.Net Core ile C# programlama dili kullanılabilir. Yukarıdaki ifaedelerden hangisi veya hangileri doğrudur?|A) I, II ve III~B) Yalnız I~C) I ve II~D) Yalnız III~E) I ve III|E) I ve III|Açıklama: Asp.Net Core cross-platform (çapraz platform) bir framework'tür, yani sadece Windows'ta değil Linux ve macOS üzerinde de çalışır. Bu nedenle II. ifade yanlıştır.`,
+
+    `2024-2025 Vize|Asp.Net Core MVC projesinde "tema" isimli bir cookie değişkene "pixel" değeri aşağıdaki hangi kod ile verilebilir?|A) HttpContext.Request.Query("tema", "pixel");~B) HttpContext.Response. Cookies.Add("tema", "pixel");~C) HttpContext.Request.Cookies.Add("tema", "pixel");~D) HttpContext.Request.Cookies.Append("tema", "pixel");~E) HttpContext.Response. Cookies.Append("tema", "pixel");|E) HttpContext.Response. Cookies.Append("tema", "pixel");|Açıklama: Çerezler (Cookies) tarayıcıya (istemciye) gönderilmek üzere oluşturulduğundan Response nesnesi kullanılır ve Append metodu ile eklenir.`,
+
+    `2024-2025 Vize|Bir web uygulamasında login olan bir kullamcının yetki verisi, oturum boyunca projeye ait tüm sayfalarda kullanılmak istenmektedir. Bu işlem için aşağıdaki seçeneklerden hangisini kullanmak en uygundur?|A) Yetki verisini oturum (session)'da tanımlamak.~B) Hiç bir yetki verisi kullanmamak.~C) Yetki verisini sorgu dizisinde (query string) tanımlamak.~D) Yetki verisini çerez (cookie) olarak tanımlamak.~E) Yetki verisini gizli (hidden) bir form alanında belirtmek.|A) Yetki verisini oturum (session)'da tanımlamak.|Açıklama: Oturum boyunca güvenli bir şekilde saklanması ve kullanıcının dolaştığı tüm sayfalardan erişilmesi gereken hassas veriler (login, yetki) Session (oturum) durum yönetiminde tutulur.`,
+
+    `2024-2025 Vize|Bir form http://localhost:5000/Haber/HaberDetay?HbrId=100 şeklinde gönderildi ise bu forma ait gönderim metodu aşağıdakilerden hangisidir?|A) Verb~B) Action~C) Post~D) Model~E) Get|E) Get|Açıklama: Form verilerinin URL adres çubuğu üzerinde "?Parametre=Değer" şeklinde eklendiği gönderim metodu GET metodudur.`,
+
+    `2024-2025 Vize|Html Form işlemlerinde bir çok seçenek içerisinden sadece bir seçenek seçilmek istendiğinde aşağıdaki form eleman tiplerinden hangisi kullanılabilir?|A) text~B) textarea~C) radio~D) submit~E) check|C) radio|Açıklama: Birden çok seçenekten yalnızca bir tanesinin seçilmesine izin veren HTML form elemanı tipi 'radio' (radyo düğmesi) tipidir.`,
+
+    `2024-2025 Vize|Cookie'ler ile aşağıdaki bilgilerin hangisin saklanması uygun olmaz?|A) Kullanıcı Renk Tercihleri~B) Veri Tabanı Bilgileri~C) Kullanıcı Tema Tercihleri~D) Kayıt Listeleme Sayısı~E) Dil Ayarları|B) Veri Tabanı Bilgileri|Açıklama: Cookie'ler istemci tarafında (kullanıcının tarayıcısında) açık/değiştirilebilir olarak tutulduğu için veri tabanı şifreleri gibi kritik güvenlik gerektiren verilerin saklanması kesinlikle uygun değildir.`,
+
+    `2024-2025 Vize|Asp.Net Core MVC uygulamalarında varsayılan olarak kullanılan görünüm motoru (view engine) aşağıdaki seçeneklerden hangsinde doğru olarak verilmiştir?|A) C#~B) Css~C) Razor~D) Html~E) Tag|C) Razor|Açıklama: Asp.Net Core MVC'de HTML arasına C# kodlarının dinamik olarak işlenmesini sağlayan varsayılan görünüm motoru Razor Engine'dir.`,
+
+    `2024-2025 Vize|I. PHP II. HTML III. Javascript Yukarıdakilerden hangisi veya hangileri istemci tarafında kullanılan bir teknolojidir?|A) II ve III~B) I, II ve III~C) I ve II~D) Yalnız I~E) Yalnız II|A) II ve III|Açıklama: HTML ve Javascript tarayıcıda (istemci / client tarafında) çalışır. PHP ise sunucu (server) tarafında çalışan bir teknolojidir.`,
+
+    `2024-2025 Vize|Asp.Net Core MVC projesinde http://localhost:5000/Ogrenci/OgrGetir url'si ile gelen istek aşağıdaki Control'ler ve Action'lardan hangisi tarafından karşılanır?|A) HomeController - OgrGetir Action~B) OgrenciController - OgrGetir Action~C) OgrenciController - Index Action~D) HomeController - Index Action~E) DefaultController - Index Action|B) OgrenciController - OgrGetir Action|Açıklama: Varsayılan Route (yönlendirme) yapısı {Controller}/{Action} şeklindedir. İlk parametre "Ogrenci" Controller'ı, ikinci parametre "OgrGetir" Action metodunu ifade eder.`,
+
+    `2024-2025 Vize|Asp.Net Core MVC uygulamalarında kullanılan Layout'a ait dosya uzantısı aşağıdakilerden hangisinde doğru verilmiştir?|A) .cshtml~B) js~C) .css~D) .php~E).cs|A) .cshtml|Açıklama: Ana şablonu oluşturan Layout dosyaları, tıpkı standart View'ler gibi .cshtml (C# HTML) uzantısına sahiptir.`,
+
+    `2024-2025 Vize|Action Metod tanımı için aşağıdakilerden hangisi doğrudur?|A) Controller sınıfının private metodlarıdır.~B) Model sınıfının değişkenleridir.~C) Controller sınıfının public metodlarıdır.~D) Model sınıfın public metodlarıdır.~E) Model sınıfının private metodlarıdır.|C) Controller sınıfının public metodlarıdır.|Açıklama: Action metodları, web üzerinden gelen dış HTTP isteklerini karşılayabilmeleri için Controller sınıfı içerisinde "public" (dışarıdan erişilebilir) erişim belirleyicisiyle tanımlanmak zorundadır.`,
+
+    `2024-2025 Vize|Bir web projesinde stiller aşağıdaki uzantılı dosyalardan hangisinde saklanır?|A) .cs~B) .resx~C) .cshtml~D) .css~E) .js|D) .css|Açıklama: Web projelerinde sayfanın görsel tasarımları, biçimlendirmeleri ve stilleri Cascading Style Sheets (CSS) olan .css uzantılı dosyalarda saklanır.`,
+
+    `2024-2025 Vize|public class Personel { public string PerAd{get; set; } public string Persoyad { get; set; } public string PerSicil { get; set; } } Yukarıdaki gibi tanımlı bir kod, MVC modelinde aşağıdaki bileşenlerin hangisinde tanımlanmalıdır?|A) View~B) Model~C) TempData~D) ViewData~E) Index|B) Model|Açıklama: Veritabanı tablolarını veya veri yapılarını özellik (property) olarak temsil eden bu C# sınıfları, MVC (Model-View-Controller) mimarisindeki Model katmanında bulunur.`,
+
+    `2024-2025 Vize|Bir Html Form işleminde, forma ait gönderim adresinin tanımlanmadığı durumda bu form varsayılan olarak gönderilme yeri veya gönderilmeme durumu aşağıdakilerden hangisidir?|A) Index sayfasına~B) Form gönderilmez.~C) Default sayfasına~D) Projenin açılış sayfasına~E) Formun tanımlı olduğu sayfaya|E) Formun tanımlı olduğu sayfaya|Açıklama: Bir <form> etiketinde 'action' (gönderim adresi) niteliği belirtilmemişse, form verileri varsayılan olarak içinde bulunduğu sayfanın kendisine post edilir.`,
+
+    `2024-2025 Vize|Asp.Net Core MVC'de Msg bir ViewData'ya value(değer) olarak "msj" değeri atanmıştır. Bu ViewData bir View'içinde kullanılabilme biçimi aşağıdakilerden hangisidir?|A) @ViewData["msj"];~B) @ViewData.Msj;~C) @ViewData["Msg"];~D) @ViewData.Msg~E) @ViewBag["Msg"];|C) @ViewData["Msg"];|Açıklama: ViewData, anahtar (key) kullanarak değer saklayan bir sözlük koleksiyonudur. Msg anahtarıyla oluşturulan bir veriye ulaşmak için köşeli parantez içinde @ViewData["Msg"] yazımı kullanılır.`,
+
+    `2024-2025 Vize|Asp.Net Core MVC'de varsayılan route sıralaması aşağıdaki seçeneklerden hangisinde doğru bir şekilde yer almaktadır?|A) Controller/Parametre/Action~B) Action/Controller/Parametre~C) Action/Parametre/Controller~D) Controller/Action/Parametre~E) Parametre/Action/Controller|D) Controller/Action/Parametre|Açıklama: Program.cs (veya Startup.cs) içinde tanımlanan varsayılan Route şablonu {controller=Home}/{action=Index}/{id?} sırasını takip eder.`,
+
+    `2024-2025 Vize|Web yazılım geliştirmede kullanılan ve Asp.Net Core projelerinde de sıklıkla tercih edilen yazılım mimari model aşağıdaki seçeneklerden hangisinde yer almaktadır?|A) Event-bus pattern~B) Blackboard pattern~C) Master-slave pattern~D) MVC pattern~E) Peer-to-peer pattern|D) MVC pattern|Açıklama: Model, View ve Controller olmak üzere üç temel bileşene ayrılarak yapılandırılan mimari modelin adı MVC pattern'dir.`,
+
+    `2024-2025 Vize|Asp.Net Core MVC uygulamasında uzantısı.cshtml olan view'lerde kullanılan ve razor motoru tarafından yorumlanan programlama dili aşağıdakilerden hangisidir?|A) Java~B) Php~C) Perl~D) C#~E) C|D) C#|Açıklama: .cshtml uzantılı görünümlerde (View) Razor motoru yardımıyla HTML etiketlerinin arasına C# programlama dili kodları dinamik olarak yerleştirilir.`,
+
+`2024-2025 Vize, 2025-2026 Vize|Bir HTML Form işleminde, forma ait gönderim adresinin tanımlanmadığı durumda bu form varsayılan olarak gönderilme yeri veya gönderilmeme durumu aşağıdakilerden hangisidir?|A) Projenin açılış sayfasına~B) Form gönderilmez.~C) Index sayfasına~D) Default sayfasına~E) Formun tanımlı olduğu sayfaya|E) Formun tanımlı olduğu sayfaya|Açıklama: Bir form etiketinde 'action' (gönderim adresi) niteliği belirtilmemişse, form verileri varsayılan olarak içinde bulunduğu sayfanın kendisine post edilir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|HTML Form işlemlerinde bir çok seçenek içerisinden sadece bir seçenek seçilmek istendiğinde aşağıdaki form eleman tiplerinden hangisi kullanılabilir?|A) submit~B) radio~C) check~D) text~E) textarea|B) radio|Açıklama: Birden çok seçenekten yalnızca bir tanesinin seçilmesine izin veren HTML form elemanı tipi 'radio' (radyo düğmesi) tipidir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Bir WEB projesinde stiller aşağıdaki uzantılı dosyalardan hangisinde saklanır?|A) .css~B) .cshtml~C) .resx~D) .cs~E) .js|A) .css|Açıklama: Web projelerinde sayfanın görsel tasarımları, biçimlendirmeleri ve stilleri Cascading Style Sheets (CSS) olan .css uzantılı dosyalarda saklanır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Action Metod tanımı için aşağıdakilerden hangisi doğrudur?|A) Model sınıfının private metodlarıdır.~B) Model sınıfın public metodlarıdır.~C) Model sınıfının değişkenleridir.~D) Controller sınıfının private metodlarıdır.~E) Controller sınıfının public metodlarıdır.|E) Controller sınıfının public metodlarıdır.|Açıklama: Action metodları, web üzerinden gelen dış HTTP isteklerini karşılayabilmeleri için Controller sınıfı içerisinde 'public' (dışarıdan erişilebilir) erişim belirleyicisiyle tanımlanmak zorundadır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core MVC projesinde http://localhost:5000/Ogrenci/OgrGetir url'si ile gelen istek aşağıdaki Control'ler ve Action'lardan hangisi tarafından karşılanır?|A) OgrenciController - OgrGetir Action~B) HomeController - OgrGetir Action~C) HomeController - Index Action~D) DefaultController - Index Action~E) OgrenciController - Index Action|A) OgrenciController - OgrGetir Action|Açıklama: Varsayılan Route (yönlendirme) yapısı {Controller}/{Action} şeklindedir. İlk parametre 'Ogrenci' Controller'ı, ikinci parametre 'OgrGetir' Action metodunu ifade eder.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core MVC uygulamalarında kullanılan Layout'a ait dosya uzantısı aşağıdakilerden hangisinde doğru verilmiştir?|A) .php~B) .cs~C) .css~D) .cshtml~E) .js|D) .cshtml|Açıklama: Ana şablonu oluşturan Layout dosyaları, tıpkı standart View'ler gibi .cshtml (C# HTML) uzantısına sahiptir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Cookie'ler ile aşağıdaki bilgilerin hangisinin saklanması uygun olmaz?|A) Kayıt Listeleme Sayısı~B) Dil Ayarları~C) Veri Tabanı Bilgileri~D) Kullanıcı Tema Tercihleri~E) Kullanıcı Renk Tercihleri|C) Veri Tabanı Bilgileri|Açıklama: Cookie'ler istemci tarafında (kullanıcının tarayıcısında) açık tutulduğu için veri tabanı şifreleri gibi kritik güvenlik gerektiren verilerin saklanması kesinlikle uygun değildir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Bir Web uygulamasında login olan bir kullanıcının yetki verisi, oturum boyunca projeye ait tüm sayfalarda kullanılmak istenmektedir. Bu işlem için aşağıdaki seçeneklerden hangisini kullanmak en uygundur?|A) Yetki verisini çerez (cookie) olarak tanımlamak.~B) Yetki verisini sorgu dizisinde (query string) tanımlamak.~C) Yetki verisini oturum (session)'da tanımlamak.~D) Hiç bir yetki verisi kullanmamak.~E) Yetki verisini gizli (hidden) bir form alanında belirtmek.|C) Yetki verisini oturum (session)'da tanımlamak.|Açıklama: Oturum boyunca güvenli bir şekilde saklanması ve kullanıcının dolaştığı tüm sayfalardan erişilmesi gereken hassas veriler Session (oturum) durum yönetiminde tutulur.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core MVC'de Msg adlı key(anahtar) değere sahip bir ViewData'ya value(değer) olarak "msj" değeri atanmıştır. Bu ViewData bir View'içinde kullanılabilme biçimi aşağıdakilerden hangisidir?|A) @ViewData.Msg~B) @ViewBag["Msg"];~C) @ViewData["msj"];~D) @ViewData["Msg"];~E) @ViewData.Msj;|D) @ViewData["Msg"];|Açıklama: ViewData, anahtar (key) kullanarak değer saklayan bir sözlük koleksiyonudur. Msg anahtarıyla oluşturulan bir veriye ulaşmak için köşeli parantez içinde @ViewData["Msg"] yazımı kullanılır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Bir form http://localhost:5000/Haber/HaberDetay?HbrId=100 şeklinde gönderildi ise bu forma ait gönderim metodu aşağıdakilerden hangisidir?|A) Action~B) Get~C) Post~D) Model~E) Verb|B) Get|Açıklama: Form verilerinin URL adres çubuğu üzerinde parametre şeklinde eklendiği gönderim metodu GET metodudur.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Bir Asp.Net Core MVC uygulamasında <input name="ad" type="text"> isimli HTML form elemanı Get metodu ile gönderildiğinde bu elemana ait değer, gönderimi gerçekleşen action metod'ta elde edilme biçimi aşağıdakilerden hangisidir?|A) HttpContext.Request.Query ["ad"]~B) HttpContext.Request.Query ["text"]~C) HttpContext.Request.Form["text"]~D) HttpContext.Response.Form["text"]~E) HttpContext.Request.Form["ad"]|A) HttpContext.Request.Query ["ad"]|Açıklama: GET metodu ile gönderilen form verileri URL üzerinde taşınır ve sunucuda Request.Query koleksiyonu ile nesnenin 'name' niteliği (ad) kullanılarak yakalanır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core MVC projesinde "tema" isimli bir cookie değişkene "pixel" değeri aşağıdaki hangi kod ile verilebilir?|A) HttpContext.Response. Cookies.Append("tema", "pixel");~B) HttpContext.Response.Cookies.Add("tema", "pixel");~C) HttpContext.Request.Cookies.Append("tema", "pixel");~D) HttpContext.Request.Query("tema", "pixel");~E) HttpContext.Request.Cookies.Add("tema", "pixel");|A) HttpContext.Response. Cookies.Append("tema", "pixel");|Açıklama: Çerezler (Cookies) tarayıcıya (istemciye) gönderilmek üzere oluşturulduğundan Response nesnesi kullanılır ve Append metodu ile eklenir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core MVC uygulamalarında varsayılan olarak kullanılan görünüm motoru (view engine) aşağıdaki seçeneklerden hangsinde doğru olarak verilmiştir?|A) CSS~B) Razor~C) C#~D) HTML~E) Tag|B) Razor|Açıklama: Asp.Net Core MVC'de HTML arasına C# kodlarının dinamik olarak işlenmesini sağlayan varsayılan görünüm motoru Razor Engine'dir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|I. PHP II. HTML III. Javascript Yukarıdakilerden hangisi veya hangileri istemci tarafında kullamlan bir teknolojidir?|A) I, II ve III~B) I ve II~C) Yalnız II~D) II ve III~E) Yalnız I|D) II ve III|Açıklama: HTML ve Javascript tarayıcıda (istemci / client tarafında) çalışır. PHP ise sunucu (server) tarafında çalışan bir teknolojidir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core'da view içinde C# kullanmak için kodlar aşağıdaki bloklardan hangisi arasında yazılabilir?|A) <!--...-->~B) //...~C) @{...}~D) {...}~E) /*...*/|C) @{...}|Açıklama: Razor söz diziminde C# kod blokları @{ ... } arasına yazılır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core MVC uygulamasında uzantısı .cshtml olan view'lerde kullanılan ve Razor motoru tarafından yorumlanan programlama dili aşağıdakilerden hangisidir?|A) Python~B) Java~C) Perl~D) C#~E) PHP|D) C#|Açıklama: .cshtml uzantılı görünümlerde (View) Razor motoru yardımıyla HTML etiketlerinin arasına C# programlama dili kodları dinamik olarak yerleştirilir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Web yazılım geliştirmede kullanılan ve Asp.Net Core projelerinde de sıklıkla tercih edilen yazılım mimari model aşağıdaki seçeneklerden hangisinde yer almaktadır?|A) Master-slave pattern~B) Peer-to-peer pattern~C) Event-bus pattern~D) Blackboard pattern~E) MVC pattern|E) MVC pattern|Açıklama: Model, View ve Controller olmak üzere üç temel bileşene ayrılarak yapılandırılan mimari modelin adı MVC pattern'dir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|Asp.Net Core MVC'de varsayılan route sıralaması aşağıdaki seçeneklerden hangisinde doğru bir şekilde yer almaktadır?|A) Action/Parametre/Controller~B) Controller/Action/Parametre~C) Action/Controller/Parametre~D) Parametre/Action/Controller~E) Controller/Parametre/Action|B) Controller/Action/Parametre|Açıklama: Program.cs içinde tanımlanan varsayılan Route şablonu {controller=Home}/{action=Index}/{id?} sırasını takip eder.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|public class Personel { public string PerAd { get; set; } public string PerSoyad { get; set; } public string PerSicil { get; set; } } Yukarıdaki gibi tanımlı bir kod, MVC modelinde aşağıdaki bileşenlerin hangisinde tanımlanmalıdır?|A) ViewData~B) TempData~C) View~D) Index~E) Model|E) Model|Açıklama: Veritabanı tablolarını veya veri yapılarını özellik (property) olarak temsil eden bu C# sınıfları, MVC (Model-View-Controller) mimarisindeki Model katmanında bulunur.`,
+
+    `2024-2025 Vize, 2025-2026 Vize|I. Asp.Net Core Microsoft tarafından geliştirilen bir web framework'üdür. II. Asp.Net Core sadece Windows platfromlarında çalışır. III. Asp.Net Core ile C# programlama dili kullanılabilir. Yukarıdaki ifaedelerden hangisi veya hangileri doğrudur?|A) Yalnız I~B) I, II ve III~C) I ve III~D) Yalnız III~E) I ve II|C) I ve III|Açıklama: Asp.Net Core cross-platform (çapraz platform) bir framework'tür, yani sadece Windows'ta değil Linux ve macOS üzerinde de çalışır. Bu nedenle II. ifade yanlıştır.`,
+
+`2023-2024 Final|Bir Asp.Net Core MVC projesinde tüm view'lerde tanımlı bir layout ayarlaması yapılmak istendiğinde bu işlem aşağıdakilerden hangisinde gerçekleştirilir?|A) Layout.cshtml~B) Index.cshtml~C) Default.cshtml~D) View.cshtml~E) _ViewStart.cshtml|E) _ViewStart.cshtml|Açıklama: Asp.Net Core MVC projelerinde _ViewStart.cshtml dosyası, tüm View'ler (görünümler) render edilmeden önce çalışarak varsayılan Layout sayfasını belirler.`,
+
+    `2023-2024 Final|Asp.Net Core MVC'de EF Core komutlarını yürütmek için DB sağlayıcı paketiyle birlikte migrations, scaffolding vb işlemler için hangi paket yüklenmelidir?|A) Microsoft.EntityFrameworkCore.Tools~B) Microsoft.EfCore.Tools~C) Microsoft.EfCore.Add. Tools~D) Microsoft.EntityFrameworkCore.Migrations~E) Microsoft.EntityFrameworkCore.Migration Tools|A) Microsoft.EntityFrameworkCore.Tools|Açıklama: Entity Framework Core üzerinde veritabanı göç (migration) işlemlerini komut satırından yürütebilmek için 'Microsoft.EntityFrameworkCore.Tools' paketinin projeye dâhil edilmesi gerekir.`,
+
+    `2023-2024 Final|int[] sayilar = new int[] { 20, 10, 30, 50,40}; var d=sayilar.Count(); Yukarıda yer alan d değeri kaçtır?|A) 5~B) 3~C) 1~D) 4~E) 2|A) 5|Açıklama: C# dilinde LINQ ile kullanılan Count() metodu dizideki eleman sayısını döndürür. Tanımlı dizide 5 adet eleman bulunmaktadır.`,
+
+    `2023-2024 Final|Asp.Net Core Rest Api mimarisinde bir kaydı güncellemek istediğimizde bu isteğe yanıt veren metot hangi öznitelik ile belirtilmelidir?|A) HttpDelete~B) HttpPut~C) HttpPost~D) HttpGet~E) HttpPatch|B) HttpPut|Açıklama: REST API standartlarında mevcut bir veriyi tamamen güncellemek için HTTP PUT metodu kullanılır ve bu işlem [HttpPut] özniteliği (attribute) ile işaretlenir.`,
+
+    `2023-2024 Final|Form Tag Helper'ı ile bir form gönderilmek istendiğinde varsayılan olarak hangi gönderim metodu kullanılır?|A) Self~B) Index~C) Get~D) Null~E) Post|E) Post|Açıklama: Asp.Net Core'da <form> etiketi Tag Helper tarafından işlendiğinde, method belirtilmemişse güvenlik sebebiyle varsayılan olarak 'post' metodunu kullanır.`,
+
+    `2023-2024 Final|Bir Asp.Net Core MVC uygulamasında, modelde veri türü byte olarak tanımlanan bir özellik <input> tag helper'ı kullanarak bağlandığında, html olarak üretilecek <input> elemanın özelliği ne olur?|A) type="number"~B) type="text"~C) type="datetime-local"~D) type="checkbox"~E) type="null"|A) type="number"|Açıklama: 'byte' sayısal bir veri tipi (0-255 arası tam sayı) olduğu için, Tag Helper bunu HTML tarafına sayısal girdi alınabilmesi adına type="number" olarak çevirir.`,
+
+    `2023-2024 Final|[HttpDelete("{id}")] public ActionResult Delete(int id) { return NotFound(); } Bir Asp. Net Core Core Api uygulamasında yukarıda yer alan Delete Action metodu çağrıldığında hangi http durum kodu (http status code) döner?|A) 502~B) 204~C) 102~D) 404~E) 306|D) 404|Açıklama: Controller içerisindeki NotFound() metodu, aranan kaynağın bulunamadığını ifade eden standart HTTP 404 durum kodunu (Status Code) döndürür.`,
+
+    `2023-2024 Final|Bir Asp.Net Core MVC uygulamasında model doğrulamaya ait hata mesajlarının istemci tafarında gösterimi için varsayılan olarak hangi tag helper kullanılır?|A) <h1>~B) <span>~C) <hr>~D) <input>~E) <label>|B) <span>|Açıklama: Model doğrulama (Validation) hataları, ilgili form elemanının hemen altında gösterilmek üzere asp-validation-for Tag Helper'ı kullanılarak varsayılan olarak <span> etiketleri içerisine basılır.`,
+
+    `2023-2024 Final|Bir form, post işlemi ile gönderildiğinde bu işlemi karşılayacak metod nasıl tanımlanabilir?|A) public string HttpGet() { return ("deneme"); }~B) public string Get() { return ("deneme"); }~C) [HttpGet] public string Kaydet() { return ("deneme"); }~D) public string HttpPost() { return ("deneme"); }~E) [HttpPost] public string Kaydet() { return ("deneme"); }|E) [HttpPost] public string Kaydet() { return ("deneme"); }|Açıklama: İstemciden gelen HTTP POST isteklerini karşılayacak Action metodu, başına [HttpPost] veri ek açıklaması (Data Annotation) konularak tanımlanmalıdır.`,
+
+    `2023-2024 Final|Bir Asp.Net Core MVC uygulamasında model doğrulamanın sunucu tarafında gerçekleşmesi için hangi nesneye ait özellik true olmalıdır?|A) Js.IsTrue~B) ModelState.Valid~C) Data.IsTrue~D) Model.IsTrue~E) ModelState.IsValid|E) ModelState.IsValid|Açıklama: Sunucu (Server) tarafında, modeldeki verilerin Data Annotations kurallarına uyup uymadığını kontrol etmek için Controller içerisinde ModelState.IsValid boolean değeri kontrol edilir.`,
+
+    `2023-2024 Final|Asp.Net Core MVC uygulamalarında model sınıfına ait ayrıntıları görüntülemek için form öğelerini içeren bir view (görünüm) oluşturmak istediğimizde hangi template seçilmelidir?|A) Delete~B) Empty~C) Edit~D) Details~E) Create|D) Details|Açıklama: Sınıfa (Model) ait bir nesnenin sadece okunabilir ayrıntılarını listeleyen bir görünüm oluşturulurken Scaffolding ekranında 'Details' şablonu (template) seçilir.`,
+
+    `2023-2024 Final|[HttpPost] public void Post([FromBody] string value) { } Bir Asp.Net Core API uygulamasında yukarıda yer alan Post() metodu çağrıldığında bu API'nın RestFull olabilmesi için bu metodun hangi işlemi yerine getirmesi gerekir?|A) Delete~B) Update~C) Create~D) Fetch~E) Read|C) Create|Açıklama: RESTful standartlarına göre HTTP POST metodu, sunucuda yeni bir kaynak veya kayıt oluşturma (Create) işlemi yapmak için kullanılır.`,
+
+    `2023-2024 Final|Aşağıdakilerden hangisi sunucu tarafında kullanılan bir teknolojidir?|A) Txt~B) Javascript~C) Php~D) Html~E) Css|C) Php|Açıklama: Javascript, HTML ve CSS tarayıcıda (istemci) çalışırken; PHP doğrudan sunucu (server) üzerinde derlenen ve çalışan bir teknolojidir.`,
+
+    `2023-2024 Final|Asp.Net Core MVC projesinde "renk" isimli bir cookie değişkene "mavi" değeri hangi kod ile verilebilir?|A) HttpContext.Request.Cookies.Add("renk", "mavi");~B) HttpContext.Response. Cookies.Add("renk", "mavi");~C) HttpContext.Response.Cookies.Append("renk", "mavi");~D) HttpContext.Request.Query("renk", "mavi");~E) HttpContext.Request. Cookies.Append("renk", "mavi");|C) HttpContext.Response.Cookies.Append("renk", "mavi");|Açıklama: Yeni bir çerez tarayıcıya (istemciye) yanıt olarak gönderileceği için Response nesnesi kullanılır ve değer eklemek için Append metodu çağrılır.`,
+
+    `2023-2024 Final|List<Kitap> Kitaplar = new List<Kitap>() { new Kitap(){KitapID= 1, KitapSayfasi= 690}, new Kitap(){KitapID= 2, KitapSayfasi= 850}, new Kitap(){KitapID= 3, KitapSayfasi= 520}, new Kitap(){KitapID= 4, KitapSayfasi= 400}, new Kitap(){KitapID= 5, KitapSayfasi= 90} }; var sonuc = Kitaplar. Where(x => x.KitapSayfasi > 500 || x.KitapSayfasi < 1000).toList(); var deger = sonuc.Count; Yukarıdaki kod çalıştırıldığında deger değişkeninin değeri kaç olur?|A) 2~B) 3~C) 5~D) 1~E) 4|C) 5|Açıklama: Şart ifadesi '500'den büyük VEYA (||) 1000'den küçük' olarak verilmiştir. Listedeki tüm kitap sayfaları bu mantıksal şartı sağladığı için listenin tamamı (5 eleman) döner.`,
+
+    `2023-2024 Final|Bir model içinde yer alan aşağıdaki özelliklerden hangisi varsayılan olarak primary key olarak tanımlanır?|A) public int PerPrimary { get; set; }~B) public int PerId { get; set; }~C) public int PrimaryKey { get; set; }~D) public int Per { get; set; }~E) public int PerKey { get; set; }|B) public int PerId { get; set; }|Açıklama: Entity Framework Core varsayılan (Convention) olarak 'Id' veya 'SinifAdiId' (Örn: PerId) ismine sahip olan özellikleri otomatik olarak Birincil Anahtar (Primary Key) kabul eder.`,
+
+    `2023-2024 Final|EF Core kullanılan bir Asp.Net Core projesinde sınıf özellikleri (class properties), veri tabanında hangi öğeye karşılık gelir?|A) Tablo Sütunlarına / Kolanlarına~B) Sql örneklerine~C) Veritabanlarına~D) Tablolara~E) Tablo Kayıtlarına|A) Tablo Sütunlarına / Kolanlarına|Açıklama: ORM yapılarında model (sınıf) veritabanındaki Tabloya, modelin içindeki özellikler (properties) ise o tablodaki Sütunlara (Kolonlara) karşılık gelir.`,
+
+    `2023-2024 Final|List<Kitap> Kitaplar = new List<Kitap>() { new Kitap(){KitapID= 1, KitapSayfasi= 90}, new Kitap(){KitapID= 2, KitapSayfasi= 80}, new Kitap(){KitapID= 3, KitapSayfasi= 90}, new Kitap(){KitapID= 4, KitapSayfasi= 40}, new Kitap(){KitapID= 5, KitapSayfasi= 30} }; var sonuc = Kitaplar.Any(x => x.KitapSayfasi > 50 && x.KitapSayfasi < 95); Yukarıdaki kod çalıştırıldığında sonuç değişkenindeki değer ne olur?|A) 5~B) true~C) 3~D) false~E) 2|B) true|Açıklama: LINQ Any() metodu, koleksiyonda şarta uyan en az 1 tane bile kayıt varsa geriye boolean 'true' değerini döndürür (KitapID 1, 2 ve 3 bu şarta uymaktadır).`,
+
+    `2023-2024 Final|Bir Model sınıfı tanımlanmak istendiğinde bu sınıfın uzantısı aşağıdakilerden hangisi olabilir?|A) .cshtml~B) .asp~C) .js~D) .cs~E) .html|D) .cs|Açıklama: Asp.Net Core'da Model sınıfları C# programlama dili ile yazıldığı için dosyaların uzantısı .cs (C Sharp) olmalıdır.`,
+
+    `2023-2024 Final|Asp.Net Core uygulamalarında modele ait özellik değerinin kredi kartı numarasına uygunluğunu denetleyen öznitelik aşağıdakilerden hangisidir?|A) [CardNumber]~B) [CardValue]~C) [Card]~D) [CreditCard]~E) [NumberCard]|D) [CreditCard]|Açıklama: Veri doğrulama işlemlerinde (Data Annotations), girilen metnin geçerli bir kredi kartı algoritmasına uyup uymadığını kontrol eden öznitelik [CreditCard] attribute'udur.`,
+
+`2023-2024 Büt|List<Kitap> Kitaplar = new List<Kitap>() { new Kitap(){KitapID= 1, KitapSayfasi = 90}, new Kitap(){KitapID= 2, KitapSayfasi = 80}, new Kitap(){KitapID= 3, KitapSayfasi = 90}, new Kitap(){KitapID= 4, KitapSayfasi= 40}, new Kitap(){KitapID= 5, KitapSayfasi = 30} }; var sonuc = Kitaplar.All(x => x.KitapSayfasi > 50 && x.KitapSayfasi < 95); Yukarıdaki kod çalıştırıldığında sonuc değişkenindeki değer ne olur?|A) 5~B) 2~C) 3~D) true~E) false|E) false|Açıklama: LINQ'teki All() metodu yalnızca koleksiyondaki 'tüm' elemanlar şarta uyarsa true döner. 40 ve 30 sayfa değerli kitaplar şarta (> 50) uymadığı için sonuç 'false' olur.`,
+
+    `2023-2024 Büt|Asp.Net Core MVC uygulamalarında varsayılan url kalıbı(routing) için "http://localhost:3000/Ogrenci" adresi çağrıldığında hangi action metod varsayılan olarak çağrılır?|A) public~B) Default~C) Id~D) Ogrenci~E) Index|E) Index|Açıklama: Varsayılan (default) route yapılandırmasında {controller}/{action=Index}/{id?} kullanılır. Sadece controller adı (Ogrenci) girilirse, action metod varsayılan olarak "Index" kabul edilir.`,
+
+    `2023-2024 Büt|Asp.Net Core Rest Api mimarisinde kayıtlar listelenmek istendiğinde bu isteğe yanıt veren metot hangi öznitelik ile belirtilmelidir?|A) HttpUpdate~B) HttpPost~C) HttpPut~D) HttpGet~E) HttpDelete|D) HttpGet|Açıklama: REST API mimarisinde veritabanındaki kayıtları veya verileri okumak/listelemek için HTTP standartlarına uygun olan [HttpGet] metodu kullanılır.`,
+
+    `2023-2024 Büt|I. İstemci-Sunucu Mimarisi (Client-server architecture) II. Tek Tip Arayüz (Uniform Interface) III. Durumsuzluk (Stateless) Bir Web API'nin RestFull API olabilmeleri için yukarıda yer alan kısıtlamalardan hangisi / hangilerine uyması gerekir?|A) I ve III~B) I, II ve III~C) Yalnız I~D) I ve II~E) Yalnız III|B) I, II ve III|Açıklama: REST (Representational State Transfer) mimarisinin bir servise RESTful denebilmesi için şart koştuğu kısıtlamalar arasında bu üç temel prensibin tamamı yer almaktadır.`,
+
+    `2023-2024 Büt|[.......] public string KullaniciAdi { get; set; } KullaniciAdi adlı özellik tanımlanırken .... ile belirtilen yere aşağıdakilerden hangisi gelmelidir?|A) [Name="Kullanıcı Adı"]~B) [Display (Name = "Kullanıcı Adı")]~C) [DisplayName = "Kullanıcı Adı"]~D) (Name="Kullanıcı Adı")]~E) [Display ="Kullanıcı Adı"]|B) [Display (Name = "Kullanıcı Adı")]|Açıklama: Model özelliklerinin görünümlerde (View) etiket (label) ismini değiştirmek ve daha anlaşılır bir isim göstermek için DataAnnotations altındaki [Display(Name="...")] özniteliği kullanılır.`,
+
+    `2023-2024 Büt|Asp.Net Core MVC projesinde "SessionRenk" isimli bir Session değişkene "mavi" değeri hangi kod ile verilebilir?|A) HttpContext.Session.SetString("Session", "mavi");~B) HttpContext.Query.Set("Renk", "mavi");~C) HttpContext.Session.SetString("SessionRenk", "mavi");~D) HttpContext.Session.Set("SessionRenk", "mavi");~E) HttpContext.Session.SetString("Renk", "mavi");|C) HttpContext.Session.SetString("SessionRenk", "mavi");|Açıklama: Oturum (Session) üzerinde metin tabanlı (string) bir veri saklamak için, HttpContext üzerinden ulaşılabilen .SetString() metodu ilk parametrede değişken adı, ikinci parametrede değeri olacak şekilde kullanılır.`,
+
+    `2023-2024 Büt|Veritabanındaki ilgili sütunda izin verilen maksimum string uzunluğunu belirtmek için modele ait özelliğe uygulanabilen öznitelik aşağıdakilerden hangisidir?|A) [StringLength]~B) [Required]~C) [MaxLength]~D) [MaxString]~E) [MaxStringLength]|C) [MaxLength]|Açıklama: Entity Framework Core tarafından veritabanı sütunları oluşturulurken veya doğrulama sırasında modelin alabileceği maksimum metin uzunluğunu sınırlayan attribute [MaxLength]'tir.`,
+
+    `2023-2024 Büt|Web Framework'leri (çerçeveleri) için aşağıdaki ifadelerden hangisi yanlıştır?|A) Web frameworkler olmadan web programlama gerçekleştirilemez.~B) Web framework yazılım ve web geliştiricileri için hazır olan bir dizi kaynak ve araç anlamına gelir.~C) Web frameworkler web geliştirmenin önemli bir parçası haline gelmiştir.~D) Web frameworkler, çok çeşitli önceden yazılmış bileşenler, kod parçacıkları ve uygulama şablonları sunar.~E) Web frameworkler yazılım gerçekleştirmede zamansal tasarruf sağlar.|A) Web frameworkler olmadan web programlama gerçekleştirilemez.|Açıklama: Web framework'ler (çerçeveler) projelerin geliştirilme sürecini hızlandırır ve yapılandırır, ancak 'framework'ler olmadan web programlama yapılamaz' ifadesi kesinlikle yanlıştır (Örn: Çıplak C#, Pure PHP, Vanilla JS kullanılabilir).`,
+
+    `2023-2024 Büt|Asp.Net Core MVC uygulamasında uzantısı .cshtml olan view'lerde kullanılan ve razor motoru tarafından yorumlanana programlama dili aşağıdakilerden hangisidir?|A) java~B) c#~C) python~D) perl~E) php|B) c#|Açıklama: .cshtml uzantılı (C Sharp HTML) dosyalarda, HTML kodlarının arasına Razor View Engine (görünüm motoru) sayesinde C# dili gömülür.`,
+
+    `2023-2024 Büt|var sonuc= dizi.Where( x=>x>5) .ToList(); Yukarıda yer alan kod Asp.Net Core uygulamalarında hangi sözdizimi yapısına uygundur?|A) LINQ Method syntax~B) Html~C) C#~D) Asp~E) LINQ - Query syntax|A) LINQ Method syntax|Açıklama: Lambda ifadelerinin (x => x) ve noktalı uzantı metodlarının (.Where, .ToList) kullanıldığı LINQ yazım biçimine 'LINQ Method Syntax' (Metot Sözdizimi) adı verilir.`,
+
+    `2023-2024 Büt|Web projelerinde kullanıcılar formlar ile veri gönderimi yaptıklarında, verilere ait doğrulama işlemi nasıl gerçekleştirilmelidir?|A) Sadece sunucu taraflı doğrulama olmalıdır.~B) Hem istemci hem sunucu taraflı doğrulama olmalıdır.~C) Javascript ile doğrulama yeterlidir.~D) Sadece istemci tarafında doğrulama~E) Html5'in sunduğu form özellikleri ile doğrulama yeterlidir.|B) Hem istemci hem sunucu taraflı doğrulama olmalıdır.|Açıklama: Güvenlik ve veri bütünlüğü için hem ön yüzde (Kullanıcı Dostu Hızlı Geri Bildirim - İstemci) hem de arka planda (Bypass veya API erişimine karşı - Sunucu) doğrulama yapılması zorunludur.`,
+
+    `2023-2024 Büt|Bir Asp.Net Core MVC uygulamasında model doğrulamaya ait hata mesajlarının istemci tarafında gösterimi için kullanılan tag helper, aşağıda yer alan hangi özellik ile modele bağlanır?|A) asp-validation~B) asp-for~C) asp-validation-for~D) asp-error~E) asp-tag|C) asp-validation-for|Açıklama: İlgili property'de (özellikte) çıkan doğrulama hatasını <span> tag'i ile web sayfasına yansıtmak amacıyla asp-validation-for="Ozellik" Tag Helper'ı kullanılır.`,
+
+    `2023-2024 Büt|Bir Asp Net Core MVC uygulamasında <input name="ad" type="text"> isimli Html form elemanı Get metodu ile gönderildiğinde bu elemana ait değer, gönderimi gerçekleşen action metod'ta nasıl elde edilir?|A) HttpContext.Request.Form["ad"]~B) HttpContext.Request.Form["text"]~C) HttpContext.Request.Query ["ad"]~D) HttpContext.Response.Form["text"]~E) HttpContext.Request.Query ["text"]|C) HttpContext.Request.Query ["ad"]|Açıklama: GET metodu kullanıldığında form verileri URL'deki "Query String" (?parametre=deger) kısmında taşındığı için, bu verilere sunucu tarafında Request.Query koleksiyonu ve input'un name değeri ("ad") ile ulaşılır.`,
+
+    `2023-2024 Büt|Asp.Net Core MVC'de SQL Server veri tabanı yönetim sisteminin EF Core ile birlikte kullanılacağı varsayıldığında, proje oluşturulduktan sonra projeye SQL Server'a ait hangi veri sağlayıcısı eklenmelidir?|A) Microsoft.EntityFrameworkCore.SqlServer~B) MsSql.Data.EntityFrameworkCore~C) Microsoft.EntityFramework Core.InMemory~D) Microsoft.EfCore.Sql~E) Microsoft.EfCore.SqlServer|A) Microsoft.EntityFrameworkCore.SqlServer|Açıklama: Microsoft SQL Server ile Entity Framework Core bağlamak ve konfigürasyonlarını (DbContext üzerinde) yapabilmek için 'Microsoft.EntityFrameworkCore.SqlServer' isimli NuGet paketinin yüklenmesi gerekir.`,
+
+    `2023-2024 Büt|<a href="/Haber/HbrOku">Tıkla</a> html anchor etiketi, tag helper'lar ile nasıl tanımlanabilir?|A) <a asp-controller="HbrOku" asp-action="Haber" >Tıkla</a>~B) <a asp-for="Tıkla" >Tıkla</a>~C) <a asp-for="Haber" asp-action="Hbroku">Tıkla</a>~D) <a asp-for="action" asp-controller="Haber"Tıkla</a>~E) <a asp-action="HbrOku" asp-controller="Haber">Tıkla</a>|E) <a asp-action="HbrOku" asp-controller="Haber">Tıkla</a>|Açıklama: Route yönlendirme linklerinde, tag helper'lar vasıtasıyla gidilecek Controller adı 'asp-controller' (Haber), metot adı ise 'asp-action' (HbrOku) attribute'ları ile belirtilir.`,
+
+    `2023-2024 Büt|EF Core'da modele ait anlık durumun görüntüsünü almak için aşağıdaki komutlardan hangisi kullanılır?|A) New-Migration~B) Add-Database~C) Add-Db~D) Add-Migration~E) New-Db|D) Add-Migration|Açıklama: Veritabanı modelinizde yaptığınız değişikliklerin, bir sonraki güncellemede (Update-Database) yansıtılabilmesi için anlık görüntüsünü (snapshot) kayıt altına alan komut 'Add-Migration' komutudur.`,
+
+    `2023-2024 Büt|I. Açılımı Link Name Query'dir. II. LINQ, genel koleksiyonlar için IntelliSense (akıllı kod ile metin tamamlaya desteği) sağlar. III. Geliştiricilerin, her bir veri kaynağı veya veri formatı türü için yeni bir sorgu dili öğrenmesi gerekmez. LINQ için yukarıda yer alan maddelerden hangisi / hangileri doğrudur?|A) I ve III~B) Yalnız I~C) I ve II~D) Yalnız II~E) Il ve III|E) Il ve III|Açıklama: I. maddedeki açılım yanlıştır. LINQ'in gerçek açılımı "Language Integrated Query"dir (Dile Tümleşik Sorgu). Bu yüzden II ve III numaralı maddeler doğrudur.`,
+
+    `2023-2024 Büt|Tag helper'lar ile ilgili aşağıdaki maddelerden hangisi söylenemez?|A) Yazılan kod, HTML Helper'lara kıyasla daha temiz ve okunabilir haldedir.~B) Tag Helper kullanan biçimlendirme standart HTML gibi görünür.~C) Tag Helper derleme zamanında kontrol edilir.~D) Tag helper'lar @ kaçış dizisi ile kullanılırlar.~E) Bazı Tag Helper'lar model ile bağlanabilir.|D) Tag helper'lar @ kaçış dizisi ile kullanılırlar.|Açıklama: MVC'de geleneksel Html Helper metodları (Örn: @Html.TextBoxFor) '@' sembolüyle başlarken, yeni sistem Tag Helper'lar standart HTML etiketlerine 'asp-' özelliği (attribute) dahil edilerek kullanılır.`,
+
+    `2023-2024 Büt|Asp.Net Core uygulamalarında modele ait özellik değerinin mail adresine uygunluğunu denetleyen öznitelik aşağıdakilerden hangisidir?|A) [E-MailAddress]~B) [MailAddress]~C) [Mail]~D) [EmailAddress]~E) [Emai]|D) [EmailAddress]|Açıklama: Sınıf özelliği (property) içerisindeki metnin geçerli ve uygun bir E-Posta formatında girilip girilmediğini kontrol eden doğrulama sınıfı (Data Annotation) '[EmailAddress]' şeklindedir.`,
+
+    `2023-2024 Büt|Asp.Net Core uygulamalarında kullanılan [ApiController] özniteliği için aşağıdakilerden hangisi doğrudur?|A) Kullanıma hazır doğrulama ve model bağlama sağlar.~B) Postman kullanımına olanak tanır.~C) API'ye ait port numarasını ayarlar.~D) Controller sınıfına miras verir.~E) Veri tabanına kayıt işlemlerinden sorumludur.|A) Kullanıma hazır doğrulama ve model bağlama sağlar.|Açıklama: [ApiController] sınıfların tepesinde kullanıldığında, ModelState'de bir hata tespit ederse anında 400 Bad Request fırlatma (otomatik doğrulama) gibi özellikleri aktif eder.`,
+
+`2024-2025 Büt|public string PerSicil { get; set; } Yukarıdaki gibi tanımlı bir model elemanının tag helper ile kullanımı nasıl olmalıdır?|A) <input asp-tag="PerSicil " />~B) <input text="PerSicil" />~C) <input asp-label="PerSicil " />~D) <input asp-for="PerSicil " />~E) <input type="PerSicil " />|D) <input asp-for="PerSicil " />|Açıklama: Asp.Net Core Tag Helper yapısında, bir modelin özelliğini (property) form elemanına bağlamak için asp-for niteliği kullanılır.`,
+
+    `2024-2025 Büt|<a href="/Ogrenci/OgrenciGetir">Tıkla</a> html anchor etiketi, tag helper'lar ile tanımlanma biçimi aşağıdakilerden hangisidir?|A) <a asp-controller="Ogrenci" asp-action ="OgrenciGetir" >Tıkla</a>~B) <a asp-for="action" asp-controller="Ogrenci"> Tıkla</a>~C) <a asp-action="Ogrenci" asp-controller="OgrenciGetir">Tıkla</a>~D) <a asp-for="Ogrenci" asp-action="OgrenciGetir">Tıkla</a>~E) <a asp-for="Tıkla" >Tıkla</a>|A) <a asp-controller="Ogrenci" asp-action ="OgrenciGetir" >Tıkla</a>|Açıklama: Link oluştururken Tag Helper kullanımında, Controller adı asp-controller ile, Metot adı ise asp-action ile belirtilir.`,
+
+    `2023-2024 Vize, 2024-2025 Büt|public class Ogrenci { public string OgrAd { get; set; } public string OgrSoyad { get; set; } public string OgrNo { get; set; } public int OgrYas { get; set; } } Yukarıdaki gibi tanımlı bir kod MVC modelinde hangi bileşende tanımlanmalıdır?|A) Controller~B) View~C) Index~D) ViewData~E) Model|E) Model|Açıklama: Veritabanı yapılarını veya veri nesnelerini temsil eden bu C# sınıfları, MVC (Model-View-Controller) mimarisindeki Model katmanında tanımlanır.`,
+
+    `2024-2025 Büt|Bir Asp.Net Core MVC uygulamalarında form elemanlarına ait veri girişi açıklamaları için varsayılan olarak kullanılan tag helper aşağıdakilerden hangisidir?|A) <input>~B) <label>~C) <h1>~D) <span>~E) <hr>|B) <label>|Açıklama: Kullanıcıya form elemanının ne olduğunu açıklamak (etiketlemek) için varsayılan olarak <label> tag helper'ı (asp-for ile birlikte) kullanılır.`,
+
+    `2024-2025 Büt|I. Query String (Sorgu Dizisi) II. Hidden Fields(Gizli Alanlar) III. Session Yukarıdakilerden hangisi/hangilerine istemci makinesinden erişilebilir?|A) II ve III~B) I ve II~C) Yalnız III~D) Yalnız I~E) I ve III|B) I ve II|Açıklama: Query String (URL üzerinde) ve Hidden Fields (sayfa kaynağında) açık olarak yer aldığı için istemci (client) tarafından doğrudan erişilebilir. Session ise sunucu (server) tarafında güvenli tutulur.`,
+
+    `2024-2025 Büt|[.......] public string KullaniciAdi { get; set; } Kullanıcı adı alanı boş geçilemez Yukarıdaki şekildeki gibi bir hata mesajının oluşması için yukarıda yer alan özelliğin üstünde ..... ile belirtilen yere aşağıdakilerden hangisi gelmelidir?|A) ErrorMessage ="Kullanıcı adı alanı boş geçilemez")~B) "Kullanıcı adı alanı boş geçilemez")~C) [Required (ErrorMessage ="Kullanıcı adı alanı boş geçilemez")]~D) [Error (Message ="Kullanıcı adı alanı boş geçilemez")]~E) [Required("Kullanıcı adı alanı boş geçilemez")]|C) [Required (ErrorMessage ="Kullanıcı adı alanı boş geçilemez")]|Açıklama: Boş geçilemez alanları belirlemek için [Required] Data Annotation'ı kullanılır ve özel hata mesajı ErrorMessage parametresi ile atanır.`,
+
+    `2024-2025 Büt|List<Kitap> Kitaplar = new List<Kitap>() { new Kitap(){KitapID= 1, KitapSayfasi = 500}, new Kitap(){KitapID= 2, KitapSayfasi = 580}, new Kitap(){KitapID= 3, KitapSayfasi = 420}, new Kitap(){KitapID= 4, KitapSayfasi= 800}, new Kitap(){KitapID= 5, KitapSayfasi = 750} }; var sonuc = Kitaplar.Where(x => x.KitapSayfasi > 500 && x.KitapSayfasi < 800).ToList(); var deger = sonuc.Count; Yukarıdaki kod çalıştırıldığında deger değişkeninin değeri aşağıdakilerden hangisidir?|A) 5~B) 4~C) 1~D) 2~E) 3|D) 2|Açıklama: Şarta göre sayfa sayısı 500'den büyük VE 800'den küçük olan kitaplar listelenir (580 ve 750 sayfalı olanlar). Bu şarta uyan toplam 2 adet kayıt bulunur.`,
+
+    `2024-2025 Büt|EF Core ile Kitap sınıfına ait Kitaplar tablosunun oluşturulması için projede yer alan DbContext sınıfında nasıl bir tanım yapılmalıdır?|A) public Set<Kitap> Kitaplar { get; set; }~B) public DbSet<Kitaplar> Kitap { get; set; }~C) public Db<Kitap> Kitaplar { get; set; }~D) public Db<Kitaplar> Kitap { get; set; }~E) public DbSet<Kitap> Kitaplar { get; set; }|E) public DbSet<Kitap> Kitaplar { get; set; }|Açıklama: Entity Framework Core'da veritabanı tablolarını temsil eden koleksiyonlar DbSet<T> (T = Model/Sınıf Tipi) jenerik türü ile tanımlanır.`,
+
+    `2024-2025 Büt|Asp.Net Core MVC uygulamasında bir Html Form http://localhost:3000/Haber/HaberDetay?HaberTip=Spor&HaberId=10 şeklinde gönderildi ise bu URL'den kaç farklı form elemanı değeri elde edilebilir?|A) 4~B) 5~C) 2~D) 3~E) 1|C) 2|Açıklama: URL üzerindeki Query String alanında, '?' işaretinden sonra gelen ve '&' ile ayrılan "HaberTip" ve "HaberId" olmak üzere toplam 2 farklı değer taşınmaktadır.`,
+
+    `2023-2024 Final, 2024-2025 Büt|Asp.Net Core uygulamalarında modele ait özellik değerinin kredi kartı numarasına uygunluğunu denetleyen öznitelik aşağıdakilerden hangisidir?|A) [CardValue]~B) [NumberCard]~C) [CreditCard]~D) [Card]~E) [CardNumber]|C) [CreditCard]|Açıklama: Veri doğrulama işlemlerinde (Data Annotations), girilen metnin geçerli bir kredi kartı algoritmasına uyup uymadığını kontrol eden öznitelik [CreditCard] attribute'udur.`,
+
+    `2024-2025 Büt|I. XML etiketleri büyük-küçük harf duyarlıdır. II. XML etiketleri hiyerarşik bir yapıda oluşturulmalıdır. III. XML de etiketler sabit olarak herkesin anlayabileceği biçimde tanımlıdır. Yukarıda verilen ifadelerden hangisi / hangileri doğrudur?|A) I,II ve III~B) Yalnız 1~C) I ve II~D) I ve III~E) Yalnız II|C) I ve II|Açıklama: XML büyük-küçük harf duyarlıdır (case-sensitive) ve hiyerarşik (ağaç) bir yapıya sahiptir. Ancak etiketler HTML gibi sabit/standart değildir, kullanıcı ihtiyacına göre serbestçe tanımlanır.`,
+
+    `2023-2024 Büt, 2024-2025 Büt|EF Core'da modele ait anlık durumun görüntüsünü almak için aşağıdaki komutlardan hangisi kullanılır?|A) Add-Database~B) Add-Db~C) New-Migration~D) New-Db~E) Add-Migration|E) Add-Migration|Açıklama: Veritabanı modelinizde yaptığınız değişikliklerin, bir sonraki güncellemede (Update-Database) yansıtılabilmesi için anlık görüntüsünü (snapshot) kayıt altına alan komut 'Add-Migration' komutudur.`,
+
+    `2024-2025 Büt|@for (int i=10; i<=12; i++) @i.ToString() Asp.Net Core MVC de bir View'de yukarıdaki kod çalıştırıldığında ekran görüntüsü aşağıdakilerden hangisidir?|A) @i.ToString()@i.ToString()@i.ToString()~B) Null~C) 1011~D) 101112~E) 1012|D) 101112|Açıklama: Döngü i=10'dan başlayıp i<=12 olana kadar çalışır (10, 11, 12). Sayılar aralarında boşluk olmadan yan yana ekrana basıldığında çıktı "101112" olur.`,
+
+    `2024-2025 Büt|Bir RestFull API'de POST http metodu ile istemciden sunucuya veriler aşağıdaki protokollerden hangisi ile gönderilir?|A) HEAD~B) SOAP~C) FTP~D) HTTP~E) DNS|D) HTTP|Açıklama: RESTful API mimarisi, istemci-sunucu arasındaki veri alışverişini standart web protokolü olan HTTP (Hypertext Transfer Protocol) üzerinden gerçekleştirir.`,
+
+    `2024-2025 Büt|public string Index() { int[] sayilar = new int[5] {1, 2, 3, 4, 5}; var sonuc = sayilar.First(x => x % 6 == 0); return sonuc.ToString(); } Yukarıda yer alan Index() action metodu çağrıldığında ekrana aşağıdakilerden hangisi yazılır veya program hata verir?|A) 6~B) Program hata verir~C) 3~D) 0~E) 1|B) Program hata verir|Açıklama: LINQ'teki First() metodu, dizide koşula uyan (6'ya tam bölünen) hiçbir eleman bulamazsa 'InvalidOperationException' hatası fırlatarak programı durdurur.`,
+
+    `2023-2024 Final, 2024-2025 Büt|List<Kitap> Kitaplar = new List<Kitap>() { new Kitap(){KitapID= 1, KitapSayfasi = 90}, new Kitap(){KitapID= 2, KitapSayfasi = 80}, new Kitap(){KitapID= 3, KitapSayfasi = 90}, new Kitap(){KitapID= 4, KitapSayfasi= 40}, new Kitap(){KitapID= 5, KitapSayfasi = 30} }; var sonuc = Kitaplar.Any(x => x.KitapSayfasi > 50 && x.KitapSayfasi < 95); Yukarıdaki kod çalıştırıldığında sonuç değişkenindeki değer aşağıdakilerden hangisidir?|A) 2~B) true~C) 5~D) 3~E) false|B) true|Açıklama: LINQ Any() metodu, koleksiyonda şarta uyan en az 1 tane bile kayıt varsa geriye boolean 'true' değerini döndürür.`,
+
+    `2023-2024 Final, 2024-2025 Büt|Bir model içinde yer alan aşağıdaki özelliklerden hangisi varsayılan olarak primary key olarak tanımlanır?|A) public int PerId { get; set; }~B) public int Per { get; set; }~C) public int PerPrimary { get; set; }~D) public int PerKey { get; set; }~E) public int PrimaryKey { get; set; }|A) public int PerId { get; set; }|Açıklama: Entity Framework Core varsayılan (Convention) olarak 'Id' veya 'SinifAdiId' (Örn: PerId) ismine sahip olan özellikleri otomatik olarak Birincil Anahtar (Primary Key) kabul eder.`,
+
+    `2024-2025 Büt|Asp.Net Core uygulamalarında Form tag helper'ı ile siteler arası istek sahteciliği (CSRF) saldırısını önlemek için otomatik olarak aşağıdaki tiplerden hangi form elemanı üretilir?|A) Date~B) Text~C) Null~D) Numeric~E) Hidden|E) Hidden|Açıklama: Güvenlik için üretilen RequestVerificationToken doğrulama alanı, kullanıcıdan gizli bir şekilde arka planda gönderilmesi gerektiği için HTML formunda 'hidden' (gizli) input olarak oluşturulur.`,
+
+    `2023-2024 Final, 2024-2025 Büt|Aşağıdakilerden hangisi sunucu tarafında kullanılan bir teknolojidir?|A) Php~B) Txt~C) Html~D) Css~E) Javascript|A) Php|Açıklama: Javascript, HTML ve CSS tarayıcıda (istemci) çalışırken; PHP doğrudan sunucu (server) üzerinde derlenen ve çalışan bir teknolojidir.`,
+
+    `2024-2025 Büt|Rest Api mimarisinin kullanıldığı Asp.Net Core uygulamasında bir kaydı silmek istediğimizde bu isteğe yanıt veren metot aşağıdaki özniteliklerden hangisi ile belirtilmelidir?|A) HttpDelete~B) HttpPost~C) HttpUpdate~D) HttpPut~E) HttpGet|A) HttpDelete|Açıklama: REST API standartlarında veritabanından bir kayıt silmek için HTTP'nin doğasına uygun olarak [HttpDelete] özniteliği (attribute) kullanılır.`,
+
+
+`2023-2024 Final, 2025 Final|Bir Asp.Net Core MVC uygulamasında model doğrulamaya ait hata mesajlarının istemci tafarında gösterimi için varsayılan olarak hangi tag helper kullanılır?|A) <h1>~B) <span>~C) <input>~D) <hr>~E) <label>|B) <span>|Açıklama: Model doğrulama (Validation) hataları, ilgili form elemanının hemen altında gösterilmek üzere asp-validation-for Tag Helper'ı kullanılarak varsayılan olarak <span> etiketleri içerisine basılır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize, 2025 Final|Asp.Net Core MVC uygulamalarında varsayılan olarak kullanılan görünüm motoru (view engine) aşağıdaki seçeneklerden hangsinde doğru olarak verilmiştir?|A) HTML~B) Razor~C) C#~D) Tag~E) CSS|B) Razor|Açıklama: Asp.Net Core MVC'de HTML arasına C# kodlarının dinamik olarak işlenmesini sağlayan varsayılan görünüm motoru Razor Engine'dir.`,
+
+    `2025 Final|[Range (5, 10)] public int Deger { get; set; } Bir Asp.Net Core MVC uygulmasında bir model içerisinde yukarıdaki gibi tanımlı [Range(5, 10)] özniteliği ile Deger özelliği için nasıl bir kısıtlama sağlanmış olur?|A) Değer özelliğinin minimum 5, maksimum 10 karakterli olması sağlanır.~B) Değer özelliğinin [5,10] arasında değerler alabilmesi sağlanır.~C) Değer özelliğinin minimum 5 karakterli olması sağlanır.~D) Değer özelliğinin sadece 5 ve 10 değerlerini alabilmesi sağlanır.~E) Değer özelliğinin maksimum 10 karakterli olması sağlanır.|B) Değer özelliğinin [5,10] arasında değerler alabilmesi sağlanır.|Açıklama: Data Annotations içerisindeki [Range(min, max)] özniteliği, sayısal bir değerin belirlenen minimum ve maksimum aralıkta (bu aralık dâhil) değer almasını zorunlu kılar.`,
+
+    `2024-2025 Büt, 2025 Final|EF Core ile Kitap sınıfına ait Kitaplar tablosunun oluşturulması için projede yer alan DbContext sınıfında nasıl bir tanım yapılmalıdır?|A) public Set<Kitap> Kitaplar { get; set; }~B) public Db<Kitap> Kitaplar { get; set; }~C) public DbSet<Kitaplar> Kitap { get; set; }~D) public DbSet<Kitap> Kitaplar { get; set; }~E) public Db<Kitaplar> Kitap { get; set; }|D) public DbSet<Kitap> Kitaplar { get; set; }|Açıklama: Entity Framework Core'da veritabanı tablolarını temsil eden koleksiyonlar DbSet<T> (T = Model/Sınıf Tipi) jenerik türü ile tanımlanır.`,
+
+    `2025 Final|Form tag helper'ı ile siteler arası istek sahteciliği (CSRF) saldırısını önlemek için kullanılan özellik aşağıdakilerden hangisidir?|A) asp-antiforgery~B) asp-area~C) asp-page~D) asp-protocol~E) asp-host|A) asp-antiforgery|Açıklama: Form gönderimlerinde Cross-Site Request Forgery (CSRF) saldırılarına karşı doğrulama token'ı oluşturmak için asp-antiforgery="true" özelliği kullanılır.`,
+
+    `2023-2024 Final, 2024-2025 Büt, 2025 Final|List<Kitap> Kitaplar = new List<Kitap>() { new Kitap(){KitapID= 1, KitapSayfasi = 90}, new Kitap(){KitapID= 2, KitapSayfasi = 80}, new Kitap(){KitapID= 3, KitapSayfasi = 90}, new Kitap(){KitapID= 4, KitapSayfasi= 40}, new Kitap(){KitapID= 5, KitapSayfasi = 30} }; var sonuc = Kitaplar.Any(x => x.KitapSayfasi > 50 && x.KitapSayfasi < 95); Yukarıdaki kod çalıştırıldığında sonuç değişkenindeki değer aşağıdakilerden hangisidir?|A) 2~B) 3~C) 5~D) false~E) true|E) true|Açıklama: LINQ Any() metodu, koleksiyonda şarta uyan en az 1 tane bile kayıt varsa geriye boolean 'true' değerini döndürür.`,
+
+    `2025 Final|Bir Asp.Net Core MVC uygulamasında migration oluşturduktan sonra migration işlemini yürütmek için Package Manager Console Ekranı'nda aşağıdaki hangi komut çalıştırılmalıdır?|A) Select-Database~B) Update-Database~C) Add-Sql~D) Add-Database~E) Add-Migration|B) Update-Database|Açıklama: Add-Migration ile oluşturulan anlık görüntüleri (migration dosyalarını) veritabanına fiziksel olarak yansıtmak (yürütmek) için 'Update-Database' komutu kullanılır.`,
+
+    `2024-2025 Büt, 2025 Final|Bir Asp.Net Core MVC uygulamalarında form elemanlarına ait veri girişi açıklamaları için varsayılan olarak kullanılan tag helper aşağıdakilerden hangisidir?|A) <hr>~B) <input>~C) <h1>~D) <label>~E) <span>|D) <label>|Açıklama: Kullanıcıya form elemanının ne olduğunu açıklamak (etiketlemek) için varsayılan olarak <label> tag helper'ı (asp-for ile birlikte) kullanılır.`,
+
+    `2025 Final|public string Index() { int[] sayilar = new int[6] {0, 1, 2, 3, 4, 5}; var sonuc = sayilar.FirstOrDefault(x => x % 3 == 0); return sonuc.ToString(); } Yukarıda yer alan Index() action metodu çağrıldığında ekrana hangi sayı basılır ?|A) 2~B) 4~C) 1~D) 3~E) 0|E) 0|Açıklama: LINQ FirstOrDefault() metodu, şarta uyan ilk elemanı getirir. Dizideki ilk eleman 0'dır ve 0'ın 3'e bölümünden kalan 0 olduğu için (0 % 3 == 0) şartı sağlar. Ekrana 0 basılır.`,
+
+    `2025 Final|Asp.Net Core MVC' de oluşturulan bir web API'ye ait http://localhost/api/Personel/ adresine bir Http Get metodu isteği gönderildiğini varsayalım. Bu durumda RestFull mimarisine göre hangi işlemin yapılması beklenir?|A) Tüm personel kayıtlarının silinmesi~B) Http isteğinde gelen veriler doğrultusunda yeni bir personel kaydı eklenmesi~C) Hata mesajı döndürmesi~D) Tüm personel kayıtlarının listelenmesi~E) Personel kayıtlarının http isteğinde gelen veriler ile güncellenmesi|D) Tüm personel kayıtlarının listelenmesi|Açıklama: REST API mimarisinde kök URL'ye (/api/Personel) yapılan 'HTTP GET' istekleri varsayılan olarak o kaynağa ait 'Tüm kayıtların listelenmesi' (Read/List) amacını taşır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize, 2025 Final|I. PHP II. HTML III. Javascript Yukarıdakilerden hangisi veya hangileri istemci tarafında kullamlan bir teknolojidir?|A) Yalnız II~B) Yalnız I~C) I ve II~D) I, II ve III~E) II ve III|E) II ve III|Açıklama: HTML ve Javascript tarayıcıda (istemci / client tarafında) çalışır. PHP ise sunucu (server) tarafında çalışan bir teknolojidir.`,
+
+    `2024-2025 Büt, 2025 Final|Asp.Net Core uygulamalarında Form tag helper'ı ile siteler arası istek sahteciliği (CSRF) saldırısını önlemek için otomatik olarak aşağıdaki tiplerden hangi form elemanı üretilir?|A) Text~B) Date~C) Numeric~D) Hidden~E) Null|D) Hidden|Açıklama: Güvenlik için üretilen doğrulama alanı, kullanıcıdan gizli bir şekilde gönderilmesi gerektiği için HTML formunda 'hidden' (gizli) input olarak oluşturulur.`,
+
+    `2023-2024 Final, 2025 Final|EF Core kullanılan bir Asp.Net Core projesinde sınıf özellikleri (class properties), veri tabanında hangi öğeye karşılık gelir?|A) Tablo Sütunlarına / Kolanlarına~B) Veritabanlarına~C) Tablolara~D) Tablo Kayıtlarına~E) Sql örneklerine|A) Tablo Sütunlarına / Kolanlarına|Açıklama: ORM yapılarında model (sınıf) veritabanındaki Tabloya, modelin içindeki özellikler (properties) ise o tablodaki Sütunlara (Kolonlara) karşılık gelir.`,
+
+    `2024-2025 Büt, 2025 Final|Bir RestFull API'de POST http metodu ile istemciden sunucuya veriler aşağıdaki protokollerden hangisi ile gönderilir?|A) SOAP~B) FTP~C) HTTP~D) HEAD~E) DNS|C) HTTP|Açıklama: RESTful API mimarisi, istemci-sunucu arasındaki veri alışverişini standart web protokolü olan HTTP üzerinden gerçekleştirir.`,
+
+    `2024-2025 Vize, 2025-2026 Vize, 2025 Final|Bir form http://localhost:5000/Haber/HaberDetay?HbrId=100 şeklinde gönderildi ise bu forma ait gönderim metodu aşağıdakilerden hangisidir?|A) Verb~B) Post~C) Model~D) Action~E) Get|E) Get|Açıklama: Form verilerinin URL adres çubuğu üzerinde parametre şeklinde eklendiği gönderim metodu GET metodudur.`,
+
+    `2023-2024 Final, 2025 Final|Asp.Net Core MVC uygulamalarında model sınıfına ait ayrıntıları görüntülemek için form öğelerini içeren bir view (görünüm) oluşturmak istediğimizde hangi template seçilmelidir?|A) Edit~B) Delete~C) Details~D) Create~E) Empty|C) Details|Açıklama: Sınıfa (Model) ait bir nesnenin sadece okunabilir ayrıntılarını listeleyen bir görünüm oluşturulurken 'Details' şablonu (template) seçilir.`,
+
+    `2023-2024 Büt, 2025 Final|Asp.Net Core Rest Api mimarisinde kayıtlar listelenmek istendiğinde bu isteğe yanıt veren metot hangi öznitelik ile belirtilmelidir?|A) HttpGet~B) HttpPut~C) HttpPost~D) HttpDelete~E) HttpUpdate|A) HttpGet|Açıklama: REST API mimarisinde veritabanındaki kayıtları veya verileri okumak/listelemek için HTTP standartlarına uygun olan [HttpGet] metodu kullanılır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize, 2025 Final|Asp.Net Core MVC'de Msg adlı key(anahtar) değere sahip bir ViewData'ya value(değer) olarak "msj" değeri atanmıştır. Bu ViewData bir View'içinde kullanılabilme biçimi aşağıdakilerden hangisidir?|A) @ViewData["Msg"];~B) @ViewBag["Msg"];~C) @ViewData.Msj;~D) @ViewData["msj"];~E) @ViewData.Msg|A) @ViewData["Msg"];|Açıklama: ViewData, anahtar (key) kullanarak değer saklayan bir sözlük koleksiyonudur. Msg anahtarıyla oluşturulan bir veriye ulaşmak için köşeli parantez içinde @ViewData["Msg"] yazımı kullanılır.`,
+
+    `2023-2024 Final, 2025 Final|Bir Model sınıfı tanımlanmak istendiğinde bu sınıfın uzantısı aşağıdakilerden hangisi olabilir?|A) .asp~B) .cshtml~C) .cs~D) .js~E) .html|C) .cs|Açıklama: Asp.Net Core'da Model sınıfları C# programlama dili ile yazıldığı için dosyaların uzantısı .cs (C Sharp) olmalıdır.`,
+
+    `2023-2024 Final, 2025 Final|int[] sayilar = new int[] { 20, 10, 30, 50,40}; var d = sayilar.Count(); Yukarıda yer alan d değeri kaçtır?|A) 1~B) 2~C) 5~D) 4~E) 3|C) 5|Açıklama: C# dilinde LINQ ile kullanılan Count() metodu dizideki eleman sayısını döndürür. Tanımlı dizide 5 adet eleman bulunmaktadır.`,
+
+`2023-2024 Final, 2025 Final, 2025-2026 Büt|Bir Model sınıfı tanımlanmak istendiğinde bu sınıfın uzantısı aşağıdakilerden hangisi olabilir?|A) .cs~B) .cshtml~C) .asp~D) .html~E) .js|A) .cs|Açıklama: Asp.Net Core'da Model sınıfları C# programlama dili ile yazıldığı için dosyaların uzantısı .cs (C Sharp) olmalıdır.`,
+
+    `2023-2024 Büt, 2025-2026 Büt|var sonuc = dizi.Where(x => x > 5).ToList(); Yukarıda yer alan kod Asp.Net Core uygulamalarında hangi sözdizimi yapısına uygundur?|A) C#~B) Asp~C) Html~D) LINQ-Method syntax~E) LINQ Query syntax|D) LINQ-Method syntax|Açıklama: Lambda ifadelerinin (x => x) ve noktalı uzantı metodlarının (.Where, .ToList) kullanıldığı LINQ yazım biçimine 'LINQ Method Syntax' (Metot Sözdizimi) adı verilir.`,
+
+    `2024-2025 Büt, 2025 Final, 2025-2026 Büt|EF Core ile Kitap sınıfına ait Kitaplar tablosunun oluşturulması için projede yer alan DbContext sınıfında nasıl bir tanım yapılmalıdır?|A) public Set<Kitap> Kitaplar { get; set; }~B) public DbSet<Kitap> Kitaplar { get; set; }~C) public Db<Kitaplar> Kitap { get; set; }~D) public Db<Kitap> Kitaplar { get; set; }~E) public DbSet<Kitaplar> Kitap { get; set; }|B) public DbSet<Kitap> Kitaplar { get; set; }|Açıklama: Entity Framework Core'da veritabanı tablolarını temsil eden koleksiyonlar DbSet<T> (T = Model/Sınıf Tipi) jenerik türü ile tanımlanır.`,
+
+    `2024-2025 Vize, 2025-2026 Vize, 2025 Final, 2025-2026 Büt|I. PHP II. HTML III. Javascript Yukarıdakilerden hangisi veya hangileri istemci tarafında kullanılan bir teknolojidir?|A) I ve II~B) Yalnız II~C) Yalnız I~D) I, II ve III~E) II ve III|E) II ve III|Açıklama: HTML ve Javascript tarayıcıda (istemci / client tarafında) çalışır. PHP ise sunucu (server) tarafında çalışan bir teknolojidir.`,
+
+    `2024-2025 Büt, 2025 Final, 2025-2026 Büt|Bir RestFull API'de POST http metodu ile istemciden sunucuya veriler aşağıdaki protokollerden hangisi ile gönderilir?|A) SOAP~B) DNS~C) HTTP~D) FTP~E) HEAD|C) HTTP|Açıklama: RESTful API mimarisi, istemci-sunucu arasındaki veri alışverişini standart web protokolü olan HTTP üzerinden gerçekleştirir.`,
+
+    `2023-2024 Vize, 2025-2026 Büt|Asp.Net Core MVC uygulamalarında Controller'da cookie tanımlamak için hangi namespace(isim alanı) projeye eklenmelidir?|A) Microsoft.Extensions.Logging~B) System.Text.Json~C) Microsoft.AspNetCore.Http~D) Microsoft.AspNetCore.Json~E) System.Collections.Generic|C) Microsoft.AspNetCore.Http|Açıklama: Çerezlere (Cookies) Request ve Response nesneleri üzerinden erişilir ve bu nesneleri kullanabilmek için Microsoft.AspNetCore.Http isim alanının (namespace) projeye dâhil edilmesi gerekir.`,
+
+    `2025-2026 Büt|public DateTime KayitTarihi { get; set; } Şeklinde tanımlı bir model elemanının tag helper ile kullanım biçimi aşağıdakilerden hangisidir?|A) <input type="KayitTarihi" />~B) <input text="KayitTarihi" />~C) <input asp-for="KayitTarihi" />~D) <input asp-tag="KayitTarihi" />~E) <input asp-label="KayitTarihi" />|C) <input asp-for="KayitTarihi" />|Açıklama: Asp.Net Core Tag Helper yapısında, bir modelin özelliğini (property) form elemanına bağlamak için form elemanı içerisinde asp-for niteliği kullanılır.`,
+
+    `2025-2026 Büt|var sonuc = from x in Personel where x.PersonelNo > 10 select x; Yukarıda yer alan kod bloğu Asp.Net Core uygulamalarında hangi sözdizimi yapısına uygundur?|A) LINQ-Method syntax~B) C#~C) Html~D) LINQ-Query syntax~E) Asp|D) LINQ-Query syntax|Açıklama: SQL sorgularına benzeyen ve "from", "where", "select" gibi anahtar kelimeler kullanılarak yazılan LINQ formatına LINQ Query Syntax (Sorgu Sözdizimi) adı verilir.`,
+
+    `2023-2024 Final, 2025-2026 Büt|Bir form, post işlemi ile gönderildiğinde bu işlemi karşılayacak metod nasıl tanımlanabilir?|A) [HttpPost] public string Kaydet() { return ("deneme"); }~B) public string HttpGet() { return ("deneme"); }~C) public string Get() { return ("deneme"); }~D) [HttpGet] public string Kaydet() { return ("deneme"); }~E) public string HttpPost() { return ("deneme"); }|A) [HttpPost] public string Kaydet() { return ("deneme"); }|Açıklama: İstemciden gelen HTTP POST isteklerini karşılayacak Action metodu, başına [HttpPost] veri ek açıklaması (Data Annotation) konularak tanımlanmalıdır.`,
+
+    `2023-2024 Büt, 2025-2026 Büt|Web projelerinde kullanıcılar formlar ile veri gönderimi yaptıklarında, verilere ait doğrulama işlemi nasıl gerçekleştirilmelidir?|A) Html5'in sunduğu form özellikleri ile doğrulama yeterlidir.~B) Sadece istemci tarafında doğrulama olmalıdır.~C) Hem istemci hem sunucu taraflı doğrulama olmalıdır.~D) Sadece sunucu taraflı doğrulama olmalıdır.~E) Javascript ile doğrulama yeterlidir.|C) Hem istemci hem sunucu taraflı doğrulama olmalıdır.|Açıklama: Güvenlik ve veri bütünlüğü için hem ön yüzde (Kullanıcı Dostu Hızlı Geri Bildirim - İstemci) hem de arka planda (Bypass veya API erişimine karşı - Sunucu) doğrulama yapılması zorunludur.`,
+
+    `2023-2024 Final, 2025-2026 Büt|Asp.Net Core Rest Api kaydı güncellemek istediğimizde bu isteğe yanıt veren metot aşağıdaki hangi öznitelik ile belirtilmelidir?|A) HttpPost~B) HttpDelete~C) HttpGet~D) HttpUpdate~E) HttpPut|E) HttpPut|Açıklama: REST API standartlarında mevcut bir veriyi tamamen güncellemek için HTTP PUT metodu kullanılır ve bu işlem [HttpPut] özniteliği (attribute) ile işaretlenir.`,
+
+    `2025 Final, 2025-2026 Büt|Bir Asp.Net Core MVC uygulamasında migration oluşturduktan sonra migration işlemini yürütmek için Package Manager Console Ekranı'nda aşağıdaki hangi komut çalıştırılmalıdır?|A) Add-Database~B) Update-Database~C) Add-Sql~D) Add-Migration~E) Select-Database|B) Update-Database|Açıklama: Add-Migration ile oluşturulan anlık görüntüleri (migration dosyalarını) veritabanına fiziksel olarak yansıtmak (yürütmek) için 'Update-Database' komutu kullanılır.`,
+
+    `2024-2025 Büt, 2025 Final, 2025-2026 Büt|Asp.Net Core uygulamalarında Form tag helper'ı ile siteler arası istek sahteciliği (CSRF) saldırısını önlemek için otomatik olarak aşağıdaki tiplerden hangi form elemanı üretilir?|A) Text~B) Date~C) Null~D) Numeric~E) Hidden|E) Hidden|Açıklama: Güvenlik için üretilen RequestVerificationToken doğrulama alanı, kullanıcıdan gizli bir şekilde arka planda gönderilmesi gerektiği için HTML formunda 'hidden' (gizli) input olarak oluşturulur.`,
+
+    `2023-2024 Final, 2025-2026 Büt|[HttpDelete("{id}")] public ActionResult Delete(int id) { return NotFound(); } Bir Asp.Net Core Api uygulamasında yukarıda yer alan Delete Action metodu çağrıldığında hangi http durum kodu (http status code) döner?|A) 204~B) 502~C) 306~D) 102~E) 404|E) 404|Açıklama: Controller içerisindeki NotFound() metodu, aranan kaynağın bulunamadığını ifade eden standart HTTP 404 durum kodunu (Status Code) döndürür.`,
+
+    `2025 Final, 2025-2026 Büt|Form tag helper'ı ile siteler arası istek sahteciliği (CSRF) saldırısını önlemek için kullanılan özellik aşağıdakilerden hangisidir?|A) asp-area~B) asp-page~C) asp-protocol~D) asp-antiforgery~E) asp-host|D) asp-antiforgery|Açıklama: Form gönderimlerinde Cross-Site Request Forgery (CSRF) saldırılarına karşı doğrulama token'ı oluşturmak için asp-antiforgery="true" özelliği kullanılır.`,
+
+    `2025-2026 Büt|Bir ASP.NET Core MVC uygulaması için varsayılan olarak oluşturulan layout aşağıdaki seçeneklerden hangisinde doğru olarak verilmiştir?|A) Layout.cshtml~B) _Layout.cshtml~C) Layout.cs~D) _Layout.cs~E) view.cshtml|B) _Layout.cshtml|Açıklama: Asp.Net Core MVC projelerinde, projenin ortak şablonunu belirleyen View (Görünüm) dosyası Views/Shared klasörü altında '_Layout.cshtml' ismiyle otomatik olarak oluşturulur.`,
+
+    `2023-2024 Büt, 2024-2025 Büt, 2025-2026 Büt|EF Core'da modele ait anlık durumun görüntüsünü almak için aşağıdaki komutlardan hangisi kullanılır?|A) Add-Migration~B) New-Migration~C) New-Db~D) Add-Db~E) Add-Database|A) Add-Migration|Açıklama: Veritabanı modelinizde yaptığınız değişikliklerin, bir sonraki güncellemede (Update-Database) yansıtılabilmesi için anlık görüntüsünü (snapshot) kayıt altına alan komut 'Add-Migration' komutudur.`,
+
+    `2023-2024 Büt, 2025-2026 Büt|Asp.Net Core uygulamalarında modele ait özellik değerinin mail adresine uygunluğunu denetleyen öznitelik aşağıdakilerden hangisidir?|A) [Emai]~B) [Mail]~C) [E-MailAddress]~D) [EmailAddress]~E) [MailAddress]|D) [EmailAddress]|Açıklama: Sınıf özelliği (property) içerisindeki metnin geçerli ve uygun bir E-Posta formatında girilip girilmediğini kontrol eden doğrulama sınıfı (Data Annotation) '[EmailAddress]' şeklindedir.`,
+
+    `2024-2025 Büt, 2025-2026 Büt|public string Index() { int[] sayilar = new int[5] {1, 2, 3, 4, 5}; var sonuc = sayilar.First(x => x % 6 == 0); return sonuc.ToString(); } Yukarıda yer alan Index() action metodu çağrıldığında ekrana aşağıdakilerden hangisi yazılır veya program hata verir?|A) 1~B) Program hata verir~C) 3~D) 0~E) 6|B) Program hata verir|Açıklama: LINQ'teki First() metodu, dizide koşula uyan (6'ya tam bölünen) hiçbir eleman bulamazsa 'InvalidOperationException' hatası fırlatarak programı durdurur.`,
+
+    `2023-2024 Final, 2025 Final, 2025-2026 Büt|Bir Asp.Net Core MVC uygulamasında model doğrulamaya ait hata mesajlarının istemci tarafında gösterimi için varsayılan olarak hangi tag helper kullanılır?|A) <span>~B) <input>~C) <h1>~D) <hr>~E) <label>|A) <span>|Açıklama: Model doğrulama (Validation) hataları, ilgili form elemanının hemen altında gösterilmek üzere asp-validation-for Tag Helper'ı kullanılarak varsayılan olarak <span> etiketleri içerisine basılır.`,
+
+
+];
+   // --- BURADAN İTİBAREN KOPYALAYIN ---
+    let isAllOpen = false;
+    let temizlenmisData = []; // Birleştirilmiş verileri global tutalım ki arama/filtreleme yapabilelim
+
+    // 1. SORULARI BİRLEŞTİREN FONKSİYON
+    function sorulariBirlestir(dataArray) {
+        const soruMap = new Map();
+
+        dataArray.forEach(item => {
+            if (!item || item.trim() === '') return;
+            
+            const parts = item.split('|');
+            if (parts.length < 4) return; 
+            
+            let tagsRaw = parts[0];
+            const question = parts[1].trim(); 
+            const options = parts[2];
+            const correctAnswer = parts[3];
+            const explanation = parts[4] ? parts[4] : '';
+
+            let tagsList = tagsRaw.split(',').map(t => t.trim());
+            let mevcutSayi = 1;
+
+            tagsList = tagsList.filter(t => {
+                const match = t.match(/(\d+)\s*Kez Çıktı/i);
+                if (match) {
+                    mevcutSayi = parseInt(match[1]);
+                    return false; 
+                }
+                return true;
+            });
+
+            if (soruMap.has(question)) {
+                let kayit = soruMap.get(question);
+                kayit.count += mevcutSayi; 
+                
+                tagsList.forEach(t => {
+                    if (!kayit.tags.includes(t)) {
+                        kayit.tags.push(t);
+                    }
+                });
+            } else {
+                soruMap.set(question, {
+                    tags: tagsList,
+                    options: options,
+                    correctAnswer: correctAnswer,
+                    explanation: explanation,
+                    count: mevcutSayi
+                });
+            }
+        });
+
+        const birlestirilmisData = [];
+        for (let [qText, data] of soruMap.entries()) {
+            let finalTags = [...data.tags];
+            if (data.count > 1) {
+                finalTags.push(`${data.count} Kez Çıktı!`);
+            }
+            
+            const itemString = `${finalTags.join(',')}|${qText}|${data.options}|${data.correctAnswer}|${data.explanation}`;
+            birlestirilmisData.push(itemString);
+        }
+
+        return birlestirilmisData;
+    }
+
+   // 2. EKRANA BASTIRMA FONKSİYONU (Renklendirme Geliştirilmiş Versiyon)
+    function renderQuestions(data) {
+        const container = document.getElementById('q-container');
+        container.innerHTML = '';
+        
+        if(data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px;">Kriterlerinize uygun soru bulunamadı.</p>';
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const parts = item.split('|');
+            const tagsRaw = parts[0];
+            const question = parts[1];
+            const options = parts[2].split('~');
+            const correctAnswer = parts[3];
+            const explanation = parts[4] || '';
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const tagsDiv = document.createElement('div');
+            tagsDiv.className = 'tags';
+            
+            tagsRaw.split(',').forEach(tag => {
+                tag = tag.trim();
+                if(!tag) return;
+                const span = document.createElement('span');
+                span.className = 'tag';
+                
+                let lowerTag = tag.toLowerCase();
+                if(lowerTag.includes('ünite') || lowerTag.match(/^u\d+/)) {
+                    span.classList.add('tag-u');
+                } else if(lowerTag.includes('banko') || lowerTag.includes('kez çıktı')) {
+                    span.classList.add('tag-h');
+                } else {
+                    span.classList.add('tag-e');
+                }
+                
+                span.textContent = tag;
+                tagsDiv.appendChild(span);
+            });
+
+            const qDiv = document.createElement('div');
+            qDiv.className = 'q-text';
+            qDiv.textContent = (index + 1) + ". " + question;
+
+            const optUl = document.createElement('ul');
+            optUl.className = 'opt';
+            
+            options.forEach(opt => {
+                const li = document.createElement('li');
+                li.textContent = opt;
+                li.onclick = function() {
+                    // Önce bu sorudaki tüm şıkları varsayılan (gri) haline getirerek sıfırla
+                    Array.from(optUl.children).forEach(child => {
+                        child.style.backgroundColor = '#f8f9fa';
+                        child.style.borderColor = 'var(--b)';
+                        child.style.color = 'var(--t)';
+                        child.style.fontWeight = 'normal';
+                    });
+                    
+                    // Cevap kontrolü
+                    if(opt.trim() === correctAnswer.trim()) {
+                        // DOĞRU ŞIKKA TIKLANDIYSA: Canlı Yeşil Yap
+                        this.style.backgroundColor = '#d4edda';
+                        this.style.borderColor = '#28a745';
+                        this.style.color = '#155724';
+                        this.style.fontWeight = 'bold';
+                    } else {
+                        // YANLIŞ ŞIKKA TIKLANDIYSA: Canlı Kırmızı Yap
+                        this.style.backgroundColor = '#f8d7da';
+                        this.style.borderColor = '#dc3545';
+                        this.style.color = '#721c24';
+                        this.style.fontWeight = 'bold';
+                        
+                        // KULLANICIYA YARDIM: Aynı esnada doğru olan şıkkı da otomatik yeşile boya
+                        Array.from(optUl.children).forEach(child => {
+                            if(child.textContent.trim() === correctAnswer.trim()) {
+                                child.style.backgroundColor = '#d4edda';
+                                child.style.borderColor = '#28a745';
+                                child.style.color = '#155724';
+                                child.style.fontWeight = 'bold';
+                            }
+                        });
+                    }
+                };
+                optUl.appendChild(li);
+            });
+
+            const btn = document.createElement('button');
+            btn.className = 'ans-btn';
+            btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster';
+            
+            const ansBox = document.createElement('div');
+            ansBox.className = 'ans-box';
+            ansBox.style.display = isAllOpen ? 'block' : 'none';
+            ansBox.innerHTML = `<div class="ans-true">Cevap: ${correctAnswer}</div>${explanation ? `<div><em>Açıklama:</em> ${explanation}</div>` : ''}`;
+
+            btn.onclick = () => {
+                if (ansBox.style.display === 'block') {
+                    ansBox.style.display = 'none';
+                    btn.textContent = 'Cevabı Göster';
+                } else {
+                    ansBox.style.display = 'block';
+                    btn.textContent = 'Cevabı Gizle';
+                }
+            };
+
+            card.appendChild(tagsDiv);
+            card.appendChild(qDiv);
+            card.appendChild(optUl);
+            card.appendChild(btn);
+            card.appendChild(ansBox);
+
+            container.appendChild(card);
+        });
+    }
+//buraya kadar 
+    // 3. BUTON VE ARAMA FONKSİYONLARI
+    function toggleAll() {
+        isAllOpen = !isAllOpen;
+        const boxes = document.querySelectorAll('.ans-box');
+        const btns = document.querySelectorAll('.ans-btn');
+        boxes.forEach(box => box.style.display = isAllOpen ? 'block' : 'none');
+        btns.forEach(btn => btn.textContent = isAllOpen ? 'Cevabı Gizle' : 'Cevabı Göster');
+    }
+
+    function filter(val) {
+        val = val.toLowerCase();
+        if (val === 'all') {
+            renderQuestions(temizlenmisData);
+            return;
+        }
+        
+        let filtered = [];
+        if (val === 'b') {
+            // Banko ve çok çıkanlar
+            filtered = temizlenmisData.filter(item => {
+                let lower = item.toLowerCase();
+                return lower.includes('banko') || lower.includes('kez çıktı');
+            });
+        } else {
+            // Sınavlar ve üniteler
+            filtered = temizlenmisData.filter(item => {
+                const tags = item.split('|')[0].toLowerCase();
+                return tags.includes(val);
+            });
+        }
+        renderQuestions(filtered);
+    }
+
+    function aramaYap() {
+        const val = document.getElementById('arama').value.toLowerCase();
+        const filtered = temizlenmisData.filter(item => {
+            const parts = item.toLowerCase().split('|');
+            const q = parts[1] || '';
+            const a = parts[3] || '';
+            const exp = parts[4] || '';
+            return q.includes(val) || a.includes(val) || exp.includes(val);
+        });
+        renderQuestions(filtered);
+    }
+
+    // 4. BAŞLANGIÇ (Her şeyi tetikleyen an)
+    window.onload = () => {
+        temizlenmisData = sorulariBirlestir(rawData);
+        renderQuestions(temizlenmisData);
+    };
+    // --- BURAYA KADAR KOPYALAYIN ---
+
+</script>
+</body>
+</html>

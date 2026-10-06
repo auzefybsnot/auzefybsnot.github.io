@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUZEF · Kurumsal Bilgi Sistemleri — Çıkmış Soru Bankası</title>
+<style>
+
+/* ——— Özel Segoe UI / Aydınlık Tema ——— */
+:root{
+  --paper: #f4f6f8;
+  --card: #ffffff;
+  --raise: #f8f9fa;
+  --ink: #2d3436;
+  --ink-2: #4a5568;
+  --ink-3: #718096;
+  --line: #dfe6e9;
+  --line-2: #ecf0f1;
+  --blue: #1a2b4c;
+  --blue-soft: #ecf0f1;
+  --ok: #27ae60;
+  --ok-soft: #eafaf1;
+  --no: #e74c3c;
+  --no-soft: #fde8e7;
+  --amber: #d35400;
+  --amber-soft: #fbf0e9;
+  --shadow: 0 4px 6px rgba(0,0,0,0.05);
+  --gutter: #f4f6f8;
+  --on-accent: #ffffff;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 18px 80px; }
+
+/* ---------- masthead ---------- */
+.mast { padding: 30px 0 20px; }
+.eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); font-weight: 700; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+h1 { font-size: 28px; line-height: 1.2; font-weight: 700; margin: 0 0 10px; color: var(--blue); }
+.lede { color: var(--ink-2); margin: 0 0 20px; font-size: 15px; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; min-width: 96px; box-shadow: var(--shadow); }
+.stat b { display: block; font-size: 20px; font-weight: 700; color: var(--blue); }
+.stat span { font-size: 11px; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+
+/* ---------- toolbar ---------- */
+.bar { position: sticky; top: 0; z-index: 40; margin: 0 -18px; padding: 15px 18px; background: var(--paper); border-bottom: 2px solid var(--line); }
+.bar-in { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; }
+
+.search { position: relative; flex: 1 1 240px; min-width: 0; }
+.search input { width: 100%; padding: 10px 12px 10px 34px; border-radius: 6px; font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-3); }
+.kbd { display: none; }
+
+.chip { font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--ink); transition: .15s; display: inline-flex; align-items: center; gap: 7px; }
+.chip:hover { background: var(--line); }
+.chip[aria-pressed="true"], .chip.on { background: var(--blue); border-color: var(--blue); color: var(--on-accent); }
+
+#toggle { background: var(--amber); border-color: var(--amber); color: white; }
+#toggle:hover { background: #ba4a00; border-color: #ba4a00; }
+#rep { background: var(--no); border-color: var(--no); color: white; }
+#rep:hover { background: #c0392b; border-color: #c0392b; }
+#rep[aria-pressed="true"] { background: #a93226; border-color: #a93226; }
+select.chip { appearance: none; padding-right: 28px; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+
+.spacer { flex: 1; }
+.count { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; font-weight: 600; }
+.count b { color: var(--ink); }
+
+/* ---------- score strip ---------- */
+.score { display: none; align-items: center; gap: 14px; flex-wrap: wrap; margin: 18px 0 0; padding: 11px 15px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); font-size: 13px; font-weight: 600; }
+.score.show { display: flex; }
+.score .t { color: var(--ok); }
+.score .f { color: var(--no); }
+.score .rate { margin-left: auto; color: var(--ink-2); }
+.linkbtn { background: none; border: none; font: inherit; font-size: 12.5px; color: var(--blue); cursor: pointer; text-decoration: underline; padding: 0; font-weight: 700; }
+
+/* ---------- question cell ---------- */
+.list { margin-top: 26px; display: flex; flex-direction: column; gap: 16px; }
+.cell { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 5px solid var(--blue); display: flex; flex-direction: column; }
+.gut { display: none; }
+.body { padding: 20px; min-width: 0; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tag { font-size: 11.5px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: var(--blue); color: var(--on-accent); white-space: nowrap; }
+.tag.rep { background: var(--no); }
+.tag.konu { background: var(--blue-soft); color: var(--blue); }
+
+.q { font-size: 17px; font-weight: 700; margin: 0 0 16px; line-height: 1.4; color: var(--blue); }
+
+.opts { list-style: none; padding: 0; margin: 0 0 15px; display: flex; flex-direction: column; gap: 6px; }
+.opt { width: 100%; text-align: left; font: inherit; cursor: pointer; font-size: 14px; line-height: 1.5; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--line); background: #f8f9fa; color: var(--ink); transition: .13s; }
+.opt:hover:not(.locked) { background: #eafaf1; border-color: var(--ok); }
+.opt.locked { cursor: default; }
+.opt.correct { background: #d4edda; border-color: #28a745; color: #155724; font-weight: 700; }
+.opt.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; font-weight: 700; }
+
+.acts { display: flex; margin-top: 5px; }
+.reveal { width: 100%; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; padding: 10px; border-radius: 6px; border: none; background: var(--blue); color: var(--on-accent); transition: background 0.2s; text-align: center; }
+.reveal:hover { background: #111d33; }
+
+.out { display: none; margin-top: 15px; padding: 15px; background: #eafaf1; border-left: 4px solid var(--ok); border-radius: 6px; }
+.out.show { display: block; animation: fade .18s ease-out; }
+@keyframes fade { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+.out .lbl { display: none; }
+.ans { font-size: 14px; font-weight: 700; color: #155724; margin-bottom: 5px; }
+.ans::before { content: "Cevap: "; }
+.exp { font-size: 14px; color: #155724; margin: 0; }
+.exp::before { content: "Açıklama: "; font-weight: 700; font-style: italic; }
+
+.note { font-size: 13.5px; color: #7a4a00; background: var(--amber-soft); border-left: 4px solid var(--amber); border-radius: 6px; padding: 10px 12px; margin: 12px 0 0; }
+.note::before { content: "⚠️ Not — "; font-weight: 700; }
+.cell.flagged { border-left-color: var(--amber); }
+.tag.flag { background: var(--amber); }
+#flag[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: #fff; }
+
+/* ---------- tablo görselleri ---------- */
+.assets { margin: 0 0 15px; display: flex; flex-direction: column; gap: 10px; }
+.asset { margin: 0; max-width: 100%; overflow-x: auto; }
+table.df { width: 100%; border-collapse: collapse; font-size: 13.5px; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+table.df caption { caption-side: top; text-align: left; padding: 0 0 8px; font-weight: 700; color: var(--blue); }
+table.df th, table.df td { padding: 8px 10px; text-align: center; border: 1px solid var(--line); }
+table.df thead th { background: var(--blue); color: white; font-weight: 700; border-color: #111d33; }
+table.df tbody tr:nth-child(even) { background-color: #f8f9fa; }
+table.df tbody th { background: transparent; color: var(--ink); font-weight: 700; text-align: left; }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-3); border: 1px dashed var(--line); border-radius: 8px; margin-top: 26px; background: var(--card); }
+.empty b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 5px; }
+.foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); text-align: center; }
+.top { position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--blue); color: white; cursor: pointer; box-shadow: var(--shadow); display: none; align-items: center; justify-content: center; font-size: 20px; }
+.top.show { display: flex; }
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 12px 70px; }
+  .bar { margin: 0 -12px; padding: 10px 12px; }
+  .body { padding: 15px; }
+  .chip { width: 100%; justify-content: center; }
+  .search { flex: 1 1 100%; }
+  .count { width: 100%; text-align: center; }
+  #rep { margin-top: 5px; }
+}
+@media print {
+  .bar, .top, .acts, .score { display: none !important; }
+  body { background: #fff; }
+  .out { display: block !important; }
+  .note { border-left: 2px solid #000; }
+  .cell { break-inside: avoid; box-shadow: none; border-left: 2px solid #000; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">AUZEF · Yönetim Bilişim Sistemleri</p>
+    <h1>Kurumsal Bilgi Sistemleri<br>Çıkmış Soru Bankası</h1>
+    <p class="lede">Vize, final ve bütünleme sınavlarından derlenen çıkmış soru havuzu. Her soru, cevaplı PDF kitapçıklarında <b>koyu (kalın) işaretlenmiş</b> doğru şıkka sadık kalınarak yanıtlandı; konuya göre etiketlendi, kendi açıklamam ve gerektiğinde kişisel görüşümle desteklendi. Farklı dönem anahtarlarında değişen ya da tartışmalı sorulara <b>⚠️ Not</b> ekledim. Şıkkı seç → anında kontrol; ya da “Cevabı göster”e bas.</p>
+    <div class="stats">
+      <div class="stat"><b id="s-all">0</b><span>Toplam soru</span></div>
+      <div class="stat"><b id="s-vize">0</b><span>Vize</span></div>
+      <div class="stat"><b id="s-final">0</b><span>Final</span></div>
+      <div class="stat"><b id="s-but">0</b><span>Bütünleme</span></div>
+      <div class="stat"><b id="s-rep">0</b><span>Tekrar / banko</span></div>
+      <div class="stat"><b id="s-flag">0</b><span>Notlu / tartışmalı</span></div>
+    </div>
+  </header>
+
+  <nav class="bar" aria-label="Filtreler">
+    <div class="bar-in">
+      <div class="row">
+        <label class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="Soru, şık veya açıklamada ara…" autocomplete="off" aria-label="Ara">
+          <span class="kbd">/</span>
+        </label>
+      </div>
+      <div class="row" id="kinds" role="group" aria-label="Sınav türü">
+        <button class="chip" data-k="all" aria-pressed="true">Tümü <span class="n" id="c-all"></span></button>
+        <button class="chip" data-k="vize" aria-pressed="false">Vize <span class="n" id="c-vize"></span></button>
+        <button class="chip" data-k="final" aria-pressed="false">Final <span class="n" id="c-final"></span></button>
+        <button class="chip" data-k="but" aria-pressed="false">Bütünleme <span class="n" id="c-but"></span></button>
+        <button class="chip amber" id="rep" aria-pressed="false">🔥 Banko / Tekrar edenler</button>
+        <button class="chip" id="flag" aria-pressed="false">⚠️ Tartışmalı / notlu</button>
+        <select class="chip" id="konu" aria-label="Konuya göre filtrele"><option value="">Tüm konular</option></select>
+        <select class="chip" id="year" aria-label="Döneme göre filtrele"><option value="">Tüm dönemler</option></select>
+      </div>
+      <div class="row">
+        <button class="chip" id="toggle">Cevapları göster</button>
+        <button class="chip" id="shuffle">Karıştır</button>
+        <button class="chip" id="reset-order" hidden>Sıraya dön</button>
+        <span class="spacer"></span>
+        <span class="count"><b id="shown">0</b> soru görüntüleniyor</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="score" id="score">
+    <span>Doğru <span class="t" id="sc-t">0</span></span>
+    <span>Yanlış <span class="f" id="sc-f">0</span></span>
+    <span class="rate" id="sc-r"></span>
+    <button class="linkbtn" id="sc-reset">sıfırla</button>
+  </div>
+
+  <main class="list" id="list"></main>
+  <div class="empty" id="empty" hidden><b>Eşleşen soru yok</b>Aramayı sadeleştirin ya da filtreleri temizleyin.</div>
+
+  <footer class="foot">
+    Kaynak: AUZEF Kurumsal Bilgi Sistemleri dersi çıkmış sınav (vize / final / bütünleme) kitapçıkları.<br>
+    Doğru cevaplar, cevaplı PDF’lerde kalın basılan şıktan alınmıştır. ⚠️ notu taşıyan sorular; dönemler arası anahtarı değişen, baskı hatası içeren ya da kavramsal olarak tartışmalı sorulardır. Açıklamalar tarafıma aittir; sınavda kendi kitapçığınızın anahtarını esas alın.
+  </footer>
+</div>
+
+<button class="top" id="top" aria-label="Başa dön">↑</button>
+
+<script>
+// --- ASSETS (TABLOLAR / GÖRSELLER) ---
+const ASSETS = {
+  "t_hiyerarsi": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Bilgi (Veri) Hiyerarşisi — katmanlar ve ne oldukları</caption>
+        <thead><tr><th>Katman</th><th>Nedir?</th><th>Örnek</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1 · Veri</th><td>İşlenmemiş, ham gerçekler; gözlem/ölçüm çıktısı</td><td>“18, 22, 25”</td></tr>
+          <tr><th scope="row">2 · Bilgi</th><td>İşlenip anlam kazanmış veri (bağlam eklenir)</td><td>“Bu hafta ort. sıcaklık 22°C”</td></tr>
+          <tr><th scope="row">3 · Üst-bilgi</th><td>Bilginin bilgisi; ilişkiler, kurallar, örüntüler</td><td>“Sıcaklık artınca satış artıyor”</td></tr>
+          <tr><th scope="row">4 · Bilgelik</th><td>Deneyim + sezgiyle doğru kararı verme yetisi</td><td>“Yaz için stok planı yap”</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:12px;color:var(--ink-3);margin-top:6px">Not: “Eğitim” bu hiyerarşinin bir katmanı <b>değildir</b> (klasik çeldirici).</div>
+    </figure>`,
+
+  "t_duzey": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Yönetim Düzeyleri ↔ Bilişim Sistemleri</caption>
+        <thead><tr><th>Yönetim Düzeyi</th><th>Karar Tipi</th><th>Destekleyen Sistem</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Stratejik (üst)</th><td>Uzun vadeli, yapılandırılmamış</td><td>Yönetici Destek Sistemleri (YDS/ESS)</td></tr>
+          <tr><th scope="row">Taktik (orta)</th><td>Yarı yapılandırılmış</td><td>Yönetim Bilgi S. (YBS/MIS), Karar Destek S. (KDS/DSS)</td></tr>
+          <tr><th scope="row">Bilgi/Ofis</th><td>Bilgi üretimi ve paylaşımı</td><td>Bilgi Çalışması / Ofis Otomasyon S.</td></tr>
+          <tr><th scope="row">Operasyonel (alt)</th><td>Günlük, yapılandırılmış</td><td>Veri İşleme / İşlem Süreç S. (TPS)</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+
+  "t_miy": `
+    <figure class="asset">
+      <table class="df">
+        <caption>MİY (CRM) Mimarisi — üç bileşen</caption>
+        <thead><tr><th>Bileşen</th><th>İşlevi</th><th>Tipik Teknoloji</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Operasyonel MİY</th><td>Temas noktalarındaki süreçleri otomatikleştirir (satış, pazarlama, servis)</td><td>Çağrı merkezi, satış otomasyonu</td></tr>
+          <tr><th scope="row">Analitik MİY</th><td>Müşteri verisini analiz eder, örüntü çıkarır</td><td>Veri ambarı, veri madenciliği</td></tr>
+          <tr><th scope="row">İş birlikçi MİY</th><td>Kanallar/paydaşlar arası etkileşimi yönetir; hızlı tepki</td><td>Portal, e-posta, ortak platform</td></tr>
+        </tbody>
+      </table>
+    </figure>`,
+
+  "t_yasam": `
+    <figure class="asset">
+      <div style="background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;box-shadow:0 2px 4px rgba(0,0,0,.05)">
+        <div style="font-weight:700;color:var(--blue);margin-bottom:8px;font-size:13.5px">Ürün Yaşam Eğrisi (satış / zaman)</div>
+        <svg viewBox="0 0 460 170" width="100%" height="150" role="img" aria-label="Ürün yaşam eğrisi">
+          <line x1="30" y1="140" x2="440" y2="140" stroke="#b2bec3" stroke-width="1.5"/>
+          <line x1="30" y1="140" x2="30" y2="15" stroke="#b2bec3" stroke-width="1.5"/>
+          <path d="M30,138 C110,135 120,60 190,45 C250,33 250,30 300,42 C350,54 400,110 435,132"
+                fill="none" stroke="#1a2b4c" stroke-width="2.5"/>
+          <text x="70" y="132" font-size="10" fill="#718096">Giriş</text>
+          <text x="150" y="132" font-size="10" fill="#718096">Büyüme</text>
+          <text x="245" y="24" font-size="10" fill="#718096">Olgunluk</text>
+          <text x="380" y="132" font-size="10" fill="#718096">Gerileme</text>
+          <text x="18" y="20" font-size="10" fill="#718096">Satış</text>
+          <text x="430" y="155" font-size="10" fill="#718096">Zaman</text>
+        </svg>
+        <div style="font-size:12px;color:var(--ink-3);margin-top:4px">Radyo gibi köklü ürünlerin toplam yaşam süresi, yeni/hızlı tüketilen ürünlere göre çok daha uzundur.</div>
+      </div>
+    </figure>`,
+
+  "t_sgdc": `
+    <figure class="asset">
+      <div style="background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;box-shadow:0 2px 4px rgba(0,0,0,.05)">
+        <div style="font-weight:700;color:var(--blue);margin-bottom:10px;font-size:13.5px">Sistem Geliştirme / Entegrasyon Sırası</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px">
+          <span style="background:#1a2b4c;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700">1 · Analiz</span><span>→</span>
+          <span style="background:#1a2b4c;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700">2 · Tasarım</span><span>→</span>
+          <span style="background:#1a2b4c;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700">3 · Yazılım</span><span>→</span>
+          <span style="background:#1a2b4c;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700">4 · Entegrasyon</span><span>→</span>
+          <span style="background:#d35400;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700">5 · Sürdürülebilirlik</span>
+        </div>
+      </div>
+    </figure>`,
+
+  "t_kkp": `
+    <figure class="asset">
+      <table class="df">
+        <caption>KKP (ERP) — Tipik Çekirdek Modüller</caption>
+        <thead><tr><th>Alan</th><th>Kapsam</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Finans & Muhasebe</th><td>Genel muhasebe, bütçe, maliyet, sabit kıymet</td></tr>
+          <tr><th scope="row">Üretim</th><td>Planlama, MRP, iş emri, kapasite</td></tr>
+          <tr><th scope="row">Tedarik / Satın alma</th><td>Sipariş, stok, depo, lojistik</td></tr>
+          <tr><th scope="row">Satış & Dağıtım</th><td>Teklif, sipariş, sevkiyat, faturalama</td></tr>
+          <tr><th scope="row">İnsan Kaynakları</th><td>Bordro, özlük, performans</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:12px;color:var(--ink-3);margin-top:6px">“Araştırma-Geliştirme (Ar-Ge)” klasik KKP çekirdek fonksiyonu <b>sayılmaz</b> (çeldirici).</div>
+    </figure>`,
+
+  "t_tzy": `
+    <figure class="asset">
+      <table class="df">
+        <caption>Tedarik Zinciri Yönetimi (TZY) ↔ Lojistik</caption>
+        <thead><tr><th></th><th>Lojistik</th><th>Tedarik Zinciri Yönetimi</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Kapsam</th><td>Taşıma, depolama, stok akışı</td><td>Tedarikçiden son müşteriye tüm ağ</td></tr>
+          <tr><th scope="row">İlişki</th><td>TZY’nin bir alt kümesidir</td><td>Lojistiği <b>kapsayan</b> daha geniş bütün</td></tr>
+          <tr><th scope="row">Amaç</th><td>Doğru ürünü doğru yere ulaştırmak</td><td>Zincirin tümünde toplam değeri artırmak</td></tr>
+        </tbody>
+      </table>
+    </figure>`
+};
+
+// --- RAW DATA (kaynak kitapçıklardan derlendi) ---
+const rawData = [
+  "2025-26 Vize, 2024-25 Vize, 2026 Büt, 2023-24 Vize|${t_hiyerarsi}Aşağıdakilerden hangisi gözlemler sonucunda elde edilebilir?|A) Veri~B) Bilgi~C) Üst-bilgi~D) Bilgelik~E) Bilişim|A) Veri|ACIKLAMA::Gözlem ve ölçümün doğrudan çıktısı ham, işlenmemiş gerçeklerdir; yani veridir. Veri işlenip bağlam kazandığında bilgiye, bilginin bilgisi üst-bilgiye, deneyimle birleşince bilgeliğe dönüşür.|",
+  "2025-26 Vize, 2023-24 Vize|“Bilgiye dayalı dinamiklerin, toplumdaki iş yapma ve yaşama biçimlerini kökten değiştiren faktörlerin bütünü” aşağıdakilerden hangisini tanımlar?|A) İleri toplum~B) Veri toplumu~C) Bilgi toplumu~D) Bilişim toplumu~E) Sanal toplum|D) Bilişim toplumu|ACIKLAMA::Bilgiye dayalı dinamiklerin iş ve yaşam biçimini dönüştürdüğü toplum, AUZEF anahtarında “bilişim toplumu” olarak verilir.|“Bilgi toplumu” ile “bilişim toplumu” çok yakın terimlerdir ve şıklarda ikisi de bulunur. Bu tanımın anahtarı “Bilişim toplumu”dur; ayrımı ezberleyin.",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize, 2023-24 Büt|Bilişim toplumuyla ilgili aşağıdaki ifadelerden hangisi doğrudur?|A) Bilişim toplumu iyi eğitimli bireylerden oluşur.~B) Bilişim toplumu serbestçe haberleşen bir toplumdur.~C) Bilişim toplumu bilime dayalı bir toplumdur.~D) Bilişim toplumu yalnızca bilim insanlarından oluşur.~E) Bilişim toplumu bilgiye dayalı bir toplumdur.|E) Bilişim toplumu bilgiye dayalı bir toplumdur.|ACIKLAMA::Bilişim toplumunun ayırt edici özelliği, üretim ve değerin bilgiye dayanmasıdır. Eğitim düzeyi ya da haberleşme sonuçtur; tanımlayıcı öz “bilgiye dayalı” olmasıdır.|İki farklı kitapçıkta da doğru metin aynı: “bilgiye dayalı toplumdur”. Şık harfi kitapçığa göre değişir, metni ezberleyin.",
+  "2024 Final, 2022-24 Final|${t_hiyerarsi}Bilgi ve sistem teorisi bağlamında “bilgi” aşağıdakilerden hangisiyle tanımlanabilir?|A) Verinin işlenerek anlamlı hâle getirilmiş hâli~B) İşlenmemiş ve ham gözlem sonuçları~C) Bir sistemin tecrübeleri ve anlayışı~D) Bilginin paylaşımıyla ilgili bilim dalı~E) Bilinenler arasındaki tüm ilişkiler|A) Verinin işlenerek anlamlı hâle getirilmiş hâli|ACIKLAMA::Bilgi (information), verinin işlenip anlam kazanmış hâlidir. “Ham gözlem” veriyi; “tecrübe/anlayış” bilgeliğe yakın kavramı tanımlar.|",
+  "2025 Büt, 2022-24 Final|Bilişim ile ilgili aşağıdakilerden hangisi doğrudur?|A) Bilgisayarların yalnızca bilim için kullanılmasıdır.~B) Bilişim, bilgi ile ilgili faaliyetlerin bütünüdür.~C) Yalnızca haberleşme teknolojilerini kapsar.~D) Bilimsel işletmecilik yöntemidir.~E) Bilişim, “bilgi” ve “iletişim” kelimelerinden türemiş bir kavramdır.|B) Bilişim, bilgi ile ilgili faaliyetlerin bütünüdür.|ACIKLAMA::Bilişim; bilginin üretilmesi, işlenmesi, saklanması ve iletilmesiyle ilgili faaliyetlerin tümünü kapsar.|“Bilişim = bilgi + iletişim kelimelerinden türedi” ifadesi yaygın bir çeldiricidir; anahtar bunu değil, “bilgi ile ilgili faaliyetler bütünü”nü doğru kabul eder.",
+  "2024-25 Vize, 2023-24 Vize, 2023-24 Büt|${t_hiyerarsi}Aşağıdakilerden hangisi bilgi hiyerarşisinin bir katmanı DEĞİLDİR?|A) Veri~B) Bilgi~C) Üst-bilgi~D) Eğitim~E) Bilgelik|D) Eğitim|ACIKLAMA::Bilgi hiyerarşisi Veri → Bilgi → Üst-bilgi → Bilgelik katmanlarından oluşur. Eğitim bu piramidin bir katmanı değildir.|",
+  "2024 Büt, 2024 Final, 2022-24 Final|Bilginin üretilmesi, dönüştürülmesi, paylaşılması ve kullanımı konusunda belirli bir anlayışa sahip olmak ................ olarak tanımlanır.|A) yönetim okuryazarlığı~B) sosyal okuryazarlık~C) bilgisayar okuryazarlığı~D) bilişim okuryazarlığı~E) teknoloji okuryazarlığı|D) bilişim okuryazarlığı|ACIKLAMA::Bilginin yaşam döngüsüne (üretim, dönüştürme, paylaşım, kullanım) dair anlayış “bilişim okuryazarlığı”dır. Bilgisayar okuryazarlığı yalnızca cihaz kullanımıyla sınırlıdır; bilişim okuryazarlığı daha kapsamlıdır.|",
+  "2025-26 Vize|Bilgi sistemleri ................ sistemlerdir.|A) yüksek entropiye sahip~B) sosyo-teknik~C) tümüyle otomatik~D) yalnızca teknik~E) yalnızca davranışsal|B) sosyo-teknik|ACIKLAMA::Bilgi sistemleri insan (sosyal) ve teknoloji (teknik) bileşenlerini birlikte içerdiği için sosyo-teknik sistemlerdir; sadece yazılım/donanımdan ibaret değildir.|Görüş: Bu, dersin en sevdiğim vurgularından. Bir bilgi sistemi projesi çökerse çoğunlukla “teknik” değil “sosyal” taraf (insan, süreç, kültür) yüzünden çöker.",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize|Bilgi teknolojisinin maliyetinin hızla düşmesi ve gücünün artması ................ .|A) kârı artırmanın kolay bir yoludur~B) sürdürülebilir değildir~C) bilgisayar kapasitesindeki gelişimle eşleşmez~D) verimliliğe kolayca dönüşmez~E) az gelişmiş ülkeler için geçerli değildir|D) verimliliğe kolayca dönüşmez|ACIKLAMA::Bu, klasik “verimlilik paradoksu”dur: ucuzlayan ve güçlenen BT, tek başına otomatik olarak verimliliğe/kâra dönüşmez; süreç, insan ve yönetim uyumu gerekir.|Görüş: Sınavda çeldirici olarak “kârı artırmanın kolay yolu” konur; tuzağa düşmeyin — teknoloji tek başına yetmez.",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize|Doğru kullanıldığında, kurumsal bir bilgi sistemi ................ ortaya çıkarır.|A) daha yüksek maliyetli bir yapı~B) daha karmaşık bir bürokrasi~C) daha verimli bir organizasyon~D) yalnızca teknik bir altyapı~E) bağımsız çalışan birimler|C) daha verimli bir organizasyon|ACIKLAMA::Kurumsal bilgi sistemlerinin temel vaadi; süreçleri bütünleştirerek daha verimli, koordineli bir organizasyon üretmektir.|",
+  "2025-26 Vize, 2024-25 Vize, 2025-26 Final, 2023-24 Vize|Aşağıdakilerden hangisi belirli bir sistemi tanımlayan bileşenlerden biri DEĞİLDİR?|A) Girdi~B) Süreç~C) Çıktı~D) Geri bildirim~E) Entropi|E) Entropi|ACIKLAMA::Bir sistem girdi → süreç → çıktı ve geri bildirim bileşenleriyle tanımlanır. Entropi bir düzensizlik ölçüsüdür; sistemin yapısal bileşeni değildir.|",
+  "2025-26 Vize, 2024-25 Vize, 2025-26 Final, 2023-24 Vize|Aşağıdakilerden hangisi kurumsal bilgi sistemlerinin temel özelliklerinin ilk ortaya çıktığı dönemi belirtir?|A) Ayda ilk insan - 1969~B) İkinci dünya savaşı sonrası - 1950~C) Endüstri devrimi - 1750~D) İşletmecilikte bilimsel yöntem - 1900~E) Endüstri 4.0 - 2016|B) İkinci dünya savaşı sonrası - 1950|ACIKLAMA::İncelediğim üç cevaplı kitapçıkta da (2025-26 vize, 2024-25 vize, 2025-26 final) koyu işaretlenen şık “İkinci dünya savaşı sonrası - 1950”dir; kurumsal bilişim, savaş sonrası işletme bilgisayarlarıyla şekillenmiştir.|Bazı kaynaklarda kavramsal köken “İşletmecilikte bilimsel yöntem - 1900” (Taylor) olarak da geçer. Elinizdeki kitapçığın anahtarına göre işaretleyin; benim doğruladığım kitapçıklarda cevap 1950.",
+  "2025-26 Vize, 2024-25 Vize|Aşağıdakilerden hangisi kurumsal bir bilişim sisteminin özelliklerinden biri DEĞİLDİR?|A) Müşteri ile tedarikçi arasındaki bağlantıyı sağlar.~B) Stratejik düzeyden operasyonel düzeye destek verir.~C) Veri ve bilgiyi bütünleşik yönetir.~D) Farklı işletme fonksiyonlarını bir araya getirir.~E) Bilgiye dayalı karar almayı destekler.|A) Müşteri ile tedarikçi arasındaki bağlantıyı sağlar.|ACIKLAMA::“Müşteri–tedarikçi bağlantısı” daha çok tedarik zinciri/dış bütünleşme özelliğidir; klasik kurumsal bilişim sisteminin tanımlayıcı iç özelliği olarak verilmez ve bu soruda “değildir” yanıtıdır.|Dikkat: Bunu, cevabı “yalnızca üretime destek verir” olan “modern KBS özelliği değildir” sorusuyla karıştırmayın; ikisi ayrı sorulardır.",
+  "2025-26 Vize, 2025-26 Final, 2025 Büt, 2024 Final, 2026 Büt, 2022-24 Final|Aşağıdakilerden hangisi modern kurumsal bilgi sistemlerinin bir özelliği DEĞİLDİR?|A) İşletmenin yalnızca üretim işlemlerine destek sağlar.~B) Farklı fonksiyonları bütünleştirir.~C) Stratejik ve operasyonel kararları destekler.~D) Bilgiyi paydaşlar arasında paylaştırır.~E) Süreçleri uçtan uca entegre eder.|A) İşletmenin yalnızca üretim işlemlerine destek sağlar.|ACIKLAMA::Modern KBS tüm işletme fonksiyonlarını (finans, satış, İK, üretim...) bütünleştirir. “Yalnızca üretime destek sağlar” ifadesi bu bütünleşik doğaya aykırıdır, dolayısıyla özelliği değildir.|Banko soru: neredeyse tüm dönemlerde çıkıyor. Anahtar hep aynı: “yalnızca üretim” çeldiricisi.",
+  "2025-26 Vize, 2024-25 Vize|Aşağıdakilerden hangisi bir kurum içindeki çeşitli bölümlerce ortak kullanılan bilgi teknolojisi kaynaklarını ifade eder?|A) Bilişim teknolojileri altyapısı~B) Uygulama yazılımı~C) Karar destek sistemi~D) Veri ambarı~E) Kurumsal portal|A) Bilişim teknolojileri altyapısı|ACIKLAMA::Ortak kullanılan donanım, ağ, veri ve temel hizmetlerin bütünü “bilişim teknolojileri (BT) altyapısı”dır; üzerine kurulan uygulamalardan farklıdır.|",
+  "2025-26 Vize, 2025 Büt|${t_duzey}İşletmenin stratejik düzeydeki yöneticilerine yardımcı olan bilişim sistemleri aşağıdakilerden hangisidir?|A) Yönetici destek sistemleri~B) İşlem süreç sistemleri~C) Ofis otomasyon sistemleri~D) Bilgi çalışması sistemleri~E) Kayıt tutma sistemleri|A) Yönetici destek sistemleri|ACIKLAMA::Üst/stratejik düzey, yapılandırılmamış kararlar için Yönetici Destek Sistemleri (YDS/ESS) kullanır. İşlem süreç sistemleri (TPS) ise operasyonel düzeye hizmet eder.|",
+  "2024 Final, 2025 Büt, 2024 Büt, 2022-24 Final|${t_duzey}Aşağıdaki işletme süreçlerinden hangisinin operasyonel düzeyde bilişim sistemleriyle desteklenebilirliği daha yüksektir?|A) Günlük ticari faaliyetler~B) Uzun vadeli strateji belirleme~C) Yeni pazar keşfi~D) Kurumsal vizyon oluşturma~E) Üst yönetim politikaları|A) Günlük ticari faaliyetler|ACIKLAMA::Operasyonel düzey; tekrarlı, yapılandırılmış günlük işlemleri (satış kaydı, sipariş, stok) kapsar ve bilişim sistemleriyle en kolay otomatikleşen alandır.|",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize|${t_kkp}Aşağıdakilerden hangisi tümüyle entegre bir Kurumsal Kaynak Planlaması (KKP) fonksiyonlarından biri DEĞİLDİR?|A) Finans ve muhasebe~B) Üretim planlama~C) İnsan kaynakları~D) Satış ve dağıtım~E) Araştırma ve geliştirme|E) Araştırma ve geliştirme|ACIKLAMA::KKP çekirdeği finans, üretim, tedarik, satış-dağıtım ve İK modüllerini bütünleştirir. Ar-Ge klasik çekirdek KKP fonksiyonu olarak sayılmaz.|",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize|İşletmedeki mühendisler, mimarlar ve tasarımcılar gibi çalışanlar aşağıdaki hangi grupta yer alır?|A) Veri çalışanları~B) Üretim çalışanları~C) Bilgi çalışanları~D) Hizmet çalışanları~E) Yönetim çalışanları|C) Bilgi çalışanları|ACIKLAMA::Yeni bilgi/ürün üreten uzmanlar (mühendis, mimar, tasarımcı) “bilgi çalışanları”dır. Veri çalışanları ise mevcut bilgiyi işleyip kaydeden personeldir.|",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize|${t_yasam}Aşağıdaki ürünlerden hangisinin yaşam süresi (piyasadaki toplam ömrü) en fazladır?|A) Akıllı telefon~B) Radyo~C) Tablet~D) Dizüstü bilgisayar~E) Akıllı saat|B) Radyo|ACIKLAMA::Radyo, onlarca yıldır varlığını sürdüren köklü bir teknolojidir; hızlı yenilenen dijital cihazlara göre ürün yaşam süresi çok daha uzundur.|",
+  "2025-26 Vize, 2024-25 Vize, 2025-26 Final, 2023-24 Vize|İşletmelerde bütünleşik (entegre) yapılar kurulması öncelikle neyi sağlar?|A) Maliyetlerin artmasını~B) Verimliliğin artmasını~C) Bağımsız birimlerin çoğalmasını~D) Bürokrasinin genişlemesini~E) Veri tekrarının artmasını|B) Verimliliğin artmasını|ACIKLAMA::Bütünleşik yapılar; veri tekrarını ve kopukluğu azaltıp süreçleri koordine ederek verimliliği artırır.|",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize|e-İş (e-business) kavramı aşağıdakilerden hangisini ifade eder?|A) Yalnızca internetten satış yapmayı~B) İşletme süreçlerinin dijital hâle gelmesini~C) Yalnızca sosyal medya kullanımını~D) Sadece elektronik ödemeyi~E) Yalnızca web sitesi sahibi olmayı|B) İşletme süreçlerinin dijital hâle gelmesini|ACIKLAMA::e-İş; işletmenin tüm iç ve dış süreçlerinin (üretim, tedarik, İK, müşteri) dijitalleşmesidir. e-Ticaret (sadece alım-satım) bunun bir alt kümesidir.|Görüş: e-Ticaret ⊂ e-İş. Soru “yalnızca satış” derse tuzaktır; e-İş kapsam olarak daha geniştir.",
+  "2024-25 Vize, 2023-24 Vize|Bilgi sistemlerinin işletmelerde yol açtığı en büyük değişiklik aşağıdakilerden hangisidir?|A) Tüm çalışan gruplarında teknolojiye ilgi azalması~B) Rekabetin tümüyle ortadan kalkması~C) Ana bilgisayar (mainframe) bağımlılığının artması~D) Yönetim bilgi sistemlerinin geçmişe göre çok daha kapsamlı hâle gelmesi~E) Organizasyonların küçülmek zorunda kalması|D) Yönetim bilgi sistemlerinin geçmişe göre çok daha kapsamlı hâle gelmesi|ACIKLAMA::Zamanla yönetim bilgi sistemleri stratejik, operasyonel ve paydaş süreçlerini kapsayacak biçimde genişlemiş; işletmenin her katmanına yayılmıştır.|",
+  "2025-26 Final|Bir bilişim sisteminin görünen ve görünmeyen faydaları için aşağıdakilerden hangisi doğrudur?|A) Sistemin görünen faydası görünmeyen faydasından düşüktür.~B) Tüm faydalar görünürdür.~C) Tüm faydalar görünmezdir.~D) Görünen ve görünmeyen fayda daima eşittir.~E) Görünen faydası görünmeyen faydasından fazladır.|A) Sistemin görünen faydası görünmeyen faydasından düşüktür.|ACIKLAMA::Bilişim yatırımlarında somut/görünen faydaların (maliyet düşüşü vb.) yanında; müşteri memnuniyeti, hız, itibar gibi görünmeyen faydalar çoğu zaman daha büyüktür.|Görüş: Fizibilite yaparken görünmeyen faydaları küçümsemek, iyi projelerin reddedilmesine yol açar. Bu soru tam da onu vurguluyor.",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize|Aşağıdakilerden hangisi küresel tedarik zincirlerinin karşılaştığı zorluklardan biri DEĞİLDİR?|A) Döviz kuru dalgalanmaları~B) Kültürel ve dil farklılıkları~C) Çalışanların eğitim eksikliği~D) Uzun mesafeler ve lojistik~E) Farklı yasal düzenlemeler|C) Çalışanların eğitim eksikliği|ACIKLAMA::Küresel tedarik zincirinin tipik zorlukları mesafe, kur, mevzuat ve kültür farklarıdır. “Çalışanların eğitim eksikliği” küresellikten kaynaklanan bir zorluk olarak verilmez.|",
+  "2025-26 Vize, 2024-25 Vize, 2023-24 Vize, 2022-24 Final|${t_tzy}Soğuk tedarik zincirinin en yoğun kullanıldığı sektör aşağıdakilerden hangisidir?|A) İnşaat~B) Sağlık~C) Otomotiv~D) Tekstil~E) Madencilik|B) Sağlık|ACIKLAMA::Aşı, ilaç ve kan gibi ürünlerin belirli sıcaklıkta taşınıp saklanması gerektiğinden, soğuk zincir en kritik olarak sağlık sektöründe kullanılır (gıda da yoğun bir alandır).|",
+  "2025-26 Vize, 2025 Büt, 2023-24 Vize|Yeşil tedarik zinciri kavramı aşağıdakilerden hangisini ifade eder?|A) Yalnızca maliyeti düşürmeyi~B) Zincir boyunca çevreye verilen zararın en aza indirilmesini~C) Yalnızca hızlı teslimatı~D) Tedarikçi sayısını azaltmayı~E) Yalnızca yerli üretimi|B) Zincir boyunca çevreye verilen zararın en aza indirilmesini|ACIKLAMA::Yeşil tedarik zinciri; tedarik, üretim, dağıtım ve geri dönüşüm dahil tüm halkalarda çevresel etkiyi (karbon, atık, enerji) en aza indirmeyi amaçlar.|",
+  "2024-25 Vize, 2023-24 Vize, 2023-24 Büt|${t_tzy}Lojistik ile Tedarik Zinciri Yönetimi (TZY) arasındaki ilişki için aşağıdakilerden hangisi doğrudur?|A) Lojistik, TZY’yi kapsayan üst kavramdır.~B) İkisi tamamen aynı şeydir.~C) TZY, lojistiği de kapsayan daha geniş bir faaliyetler bütünüdür.~D) Aralarında bir ilişki yoktur.~E) Lojistik yalnızca üretimle ilgilidir.|C) TZY, lojistiği de kapsayan daha geniş bir faaliyetler bütünüdür.|ACIKLAMA::TZY; tedarikçiden son müşteriye kadar tüm ağı yönetir. Lojistik (taşıma, depolama, stok akışı) bu bütünün bir alt kümesidir.|",
+  "2025-26 Final, 2026 Büt, 2024 Final, 2024 Büt|Tedarik zincirinde belirsizliğin temel kaynağı aşağıdakilerden hangisidir?|A) Tedarikçi sayısının azlığı~B) Müşteri taleplerindeki değişkenlik~C) Depo sayısının fazlalığı~D) Sabit fiyat politikası~E) Kısa teslim süreleri|B) Müşteri taleplerindeki değişkenlik|ACIKLAMA::Belirsizliğin asıl kaynağı, tahmin edilmesi güç olan müşteri talebindeki dalgalanmadır; bu da zincir boyunca stok ve planlama sorunları doğurur.|Banko: Bu kavram “kırbaç etkisi” sorusuyla birlikte gelir. İkisinin de kökü talep değişkenliğidir.",
+  "2026 Büt, 2024 Final, 2022-24 Final|Tedarik zincirinde “kırbaç (bullwhip) etkisi”nin oluşmasının temel nedeni aşağıdakilerden hangisidir?|A) Ürüne olan talepteki değişkenlik~B) Tedarikçilerin azlığı~C) Depo otomasyonu~D) Sabit üretim planı~E) Kısa mesafeli taşıma|A) Ürüne olan talepteki değişkenlik|ACIKLAMA::Son müşterideki küçük talep dalgalanmaları, zincirde yukarı çıkıldıkça (perakende → toptancı → üretici) abartılı stok/sipariş salınımlarına dönüşür; buna kırbaç etkisi denir.|Görüş: Çözümü bilgi paylaşımıdır — zincirdeki herkes gerçek talebi görürse kırbaç sönümlenir. Bu yüzden entegrasyon önemlidir.",
+  "2026 Büt, 2025-26 Final, 2024 Final, 2024 Büt, 2022-24 Final|Tedarik zinciri yönetiminin temel amacı aşağıdakilerden hangisidir?|A) Yalnızca tedarikçi maliyetini düşürmek~B) Yalnızca stok tutmak~C) Zincirin tümünde ortaya çıkan toplam değeri artırmak~D) Yalnızca en yakın tedarikçiyi seçmek~E) Yalnızca taşıma süresini uzatmak|C) Zincirin tümünde ortaya çıkan toplam değeri artırmak|ACIKLAMA::TZY tek bir halkayı değil, tedarikçiden son müşteriye kadar zincirin tümünde yaratılan toplam değeri (kâr + müşteri değeri) artırmayı hedefler.|",
+  "2025-26 Final, 2024 Final, 2024 Büt, 2022-24 Final|Etkin bir tedarik zincirinin temel amacı aşağıdakilerden hangisidir?|A) Tedarikçileri birbiriyle rekabet ettirmek~B) Yalnızca fiyatı düşürmek~C) Zincir ortakları arasında iş birliği ve koordinasyon ilişkisi kurmak~D) Stokları sürekli artırmak~E) Aracıları çoğaltmak|C) Zincir ortakları arasında iş birliği ve koordinasyon ilişkisi kurmak|ACIKLAMA::Etkin TZY, ortaklar arası güvene dayalı iş birliği ve bilgi paylaşımıyla sağlanır; kısa vadeli fiyat pazarlığı yerine uzun vadeli koordinasyon esastır.|",
+  "2025 Büt, 2022-24 Final|Tedarik zincirinde “bozulma” kavramı aşağıdakilerden hangisini ifade eder?|A) Ürün kalitesinin düşmesini~B) Zincirdeki bir veya daha fazla basamağın azaltılmasını (aradan çıkarılmasını)~C) Fiyatların artmasını~D) Stokların bozulmasını~E) Tedarikçi sayısının artmasını|B) Zincirdeki bir veya daha fazla basamağın azaltılmasını (aradan çıkarılmasını)|ACIKLAMA::Buradaki “bozulma” (disintermediation); aracı bir veya birkaç halkanın zincirden çıkarılarak doğrudan bağlantı kurulmasıdır (ör. üreticiden tüketiciye satış).|",
+  "2025 Büt, 2022-24 Final|Stratejik tedarik ile geleneksel tedarik anlayışı arasındaki fark için hangisi doğrudur?|A) Stratejik tedarik yalnızca fiyata bakar.~B) İkisi arasında fark yoktur.~C) Geleneksel tedarik yalnızca üretimle ilgilenir.~D) Geleneksel tedarik toplam maliyeti değil yalnızca satın alma fiyatını dikkate alır.~E) Stratejik tedarik tedarikçiyle ilişkiyi önemsemez.|D) Geleneksel tedarik toplam maliyeti değil yalnızca satın alma fiyatını dikkate alır.|ACIKLAMA::Geleneksel yaklaşım en ucuz satın alma fiyatına odaklanır; stratejik tedarik ise toplam sahip olma maliyetini, kaliteyi ve tedarikçiyle uzun vadeli ilişkiyi gözetir.|",
+  "2026 Büt, 2022-24 Final|Kapalı döngü (closed-loop) tedarik zinciri aşağıdakilerden hangisini ifade eder?|A) Yalnızca ileri lojistiği olan sistem~B) Üreticinin hem ileri hem geri (tersine) lojistiği kontrol ettiği sistem~C) Yalnızca tek tedarikçili sistem~D) Stok tutulmayan sistem~E) Yalnızca ihracata dayalı sistem|B) Üreticinin hem ileri hem geri (tersine) lojistiği kontrol ettiği sistem|ACIKLAMA::Kapalı döngüde ürün müşteriye ulaştıktan sonra iade/geri dönüşüm/yeniden üretim yoluyla zincire geri döner; üretici hem ileri hem tersine lojistiği yönetir.|",
+  "2025-26 Final, 2024 Final, 2022-24 Final|“Değer ağları” kavramı aşağıdakilerden hangisini ifade eder?|A) Tek bir işletmenin iç süreçlerini~B) Birden fazla değer zincirinin bir araya gelmesiyle oluşan yapıyı~C) Yalnızca lojistik faaliyetlerini~D) Yalnızca finansal işlemleri~E) Rakip işletmelerin birleşmesini|B) Birden fazla değer zincirinin bir araya gelmesiyle oluşan yapıyı|ACIKLAMA::Değer ağı; birbirine bağlı birden çok işletmenin değer zincirlerinin (tedarikçi, üretici, dağıtıcı) esnek biçimde bütünleşmesiyle oluşan yapıdır.|",
+  "2026 Büt, 2025-26 Final, 2024 Final|${t_miy}Aşağıdakilerden hangisi Müşteri İlişkileri Yönetimi (MİY) amaçlarından biri DEĞİLDİR?|A) Müşteri memnuniyetini yönetmek~B) Müşteri geri bildirimini toplamak~C) Pazarın özelliklerini analiz etmek~D) Müşteri sadakatini artırmak~E) Tüm paydaşlarla ilişkilerin yönetimi|E) Tüm paydaşlarla ilişkilerin yönetimi|ACIKLAMA::MİY özellikle müşteriye odaklanır. “Tüm paydaşlarla ilişki yönetimi” daha geniş bir kurumsal kavramdır ve MİY’in doğrudan amacı olarak verilmez.|Banko: birçok final/bütünlemede çıktı. Çeldirici hep “paydaşlar” kelimesi.",
+  "2024 Final, 2025-26 Final|${t_miy}Aşağıdakilerden hangisi Müşteri İlişkileri Yönetimi'nin (MİY) konusu DEĞİLDİR?|A) Müşteri sadakatinin artırılması~B) Müşteri memnuniyeti~C) Müşteri taleplerinin üretim arzı ile karşılanması~D) Müşteriyle iletişim~E) Müşteri verisinin analizi|C) Müşteri taleplerinin üretim arzı ile karşılanması|ACIKLAMA::Talebin üretim/arz ile karşılanması tedarik zinciri ve üretim planlamanın konusudur; MİY ilişkinin kurulması ve sürdürülmesine odaklanır.|",
+  "2024 Final, 2025-26 Final|Bir işletmenin MİY stratejisi temelde ................ .|A) ürün merkezlidir~B) maliyet merkezlidir~C) teknoloji merkezlidir~D) müşteri merkezlidir~E) rakip merkezlidir|D) müşteri merkezlidir|ACIKLAMA::MİY’in özü, işletmeyi ürün odaklılıktan çıkarıp müşteri odaklı bir yapıya taşımaktır; strateji müşteri merkezlidir.|",
+  "2026 Büt, 2024 Final|Müşteriler kârlılık ve ilişki değerine göre I–IV kategorilerine ayrıldığında, işletmenin en çok yatırım yapması gereken müşteriler hangileridir?|A) I ve II~B) Yalnız II~C) II ve III~D) Yalnız I~E) III ve IV|A) I ve II|ACIKLAMA::En yüksek değeri taşıyan üst kategoriler (I ve II) elde tutma ve ilişki geliştirme açısından önceliklidir; düşük değerli gruplara aynı yoğunlukta kaynak ayrılmaz.|",
+  "2026 Büt, 2025-26 Final, 2024 Final, 2022-24 Final|${t_miy}Hedef pazarla ilgili detaylı bilgi elde etmek için aşağıdaki hangi yöntem kullanılır?|A) Veri madenciliği~B) Yedekleme~C) Şifreleme~D) Kablolama~E) Biçimlendirme|A) Veri madenciliği|ACIKLAMA::Büyük müşteri verisinden gizli örüntü, eğilim ve segmentleri çıkarmak için veri madenciliği (data mining) kullanılır; bu analitik MİY’in kalbidir.|",
+  "2026 Büt, 2025 Büt|Müşteri ile tüketici arasındaki fark için aşağıdakilerden hangisi doğrudur?|A) Satın alan müşteri, kullanan tüketicidir.~B) Satın alan tüketici, kullanan müşteridir.~C) Müşteri bir işletme ya da birey olabilir; tüketici ise yalnızca bireylerdir.~D) İkisi arasında fark yoktur.~E) Müşteri yalnızca birey, tüketici yalnızca işletmedir.|C) Müşteri bir işletme ya da birey olabilir; tüketici ise yalnızca bireylerdir.|ACIKLAMA::Müşteri satın alma kararını veren taraftır ve birey veya işletme (kurumsal müşteri) olabilir. Tüketici ise ürünü nihai olarak kullanan bireydir.|Not: “Satın alan/kullanan” ayrımı da doğru bir bilgidir; ancak bu soruların anahtarı “müşteri birey ya da işletme, tüketici yalnızca birey” şıkkını işaretlemiştir.",
+  "2025 Büt, 2022-24 Final|Müşteri İlişkileri Yönetimi'ni en iyi tanımlayan ifade aşağıdakilerden hangisidir?|A) Yalnızca reklam yapma faaliyeti~B) Müşteriyle uzun vadeli ve kârlı ilişki kurmayı hedefleyen bir strateji~C) Yalnızca şikâyet toplama sistemi~D) Sadece bir yazılım paketi~E) Yalnızca satış sonrası servis|B) Müşteriyle uzun vadeli ve kârlı ilişki kurmayı hedefleyen bir strateji|ACIKLAMA::MİY bir yazılımdan ibaret değildir; müşteriyi tanıyıp uzun vadeli, karşılıklı kârlı ilişki kurmayı amaçlayan bütünsel bir iş stratejisidir.|Görüş: “MİY = sadece yazılım” sanmak en yaygın yanılgıdır. Yazılım aracı; asıl olan strateji ve kültürdür.",
+  "2025 Büt, 2022-24 Final|${t_miy}Operasyonel MİY uygulamalarının temel amacı aşağıdakilerden hangisidir?|A) Stratejik plan yapmak~B) Müşteri verisini derinlemesine analiz etmek~C) Müşteri temas noktalarındaki süreçleri otomatikleştirmek~D) Rakipleri izlemek~E) Yalnızca rapor üretmek|C) Müşteri temas noktalarındaki süreçleri otomatikleştirmek|ACIKLAMA::Operasyonel MİY; satış, pazarlama ve servis gibi temas noktalarındaki günlük süreçleri otomatikleştirir. Derin analiz ise analitik MİY’in işidir.|",
+  "2025 Büt|Müşteri İlişkileri Yönetimi'nin temel amacı aşağıdakilerden hangisidir?|A) Paydaşlarla ilişkilerin yönetimi~B) Müşterilerle ilişkilerin yönetimi~C) Toplam kalite yönetimi~D) Tedarikçilerle ilişki yönetimi~E) Gelir kanallarının yönetimi|B) Müşterilerle ilişkilerin yönetimi|ACIKLAMA::Adından da anlaşılacağı gibi MİY’in temel amacı müşterilerle ilişkilerin yönetimidir; “paydaşlar” çeldiricisine dikkat.|",
+  "2026 Büt|${t_miy}İş birlikçi (collaborative) MİY’in işletmeye sağladığı temel fayda aşağıdakilerden hangisidir?|A) Maliyetleri sabitlemek~B) Ürün çeşidini azaltmak~C) Pazar payını düşürmek~D) Müşteriye daha hızlı tepki vermek~E) Kurum kültürünü değiştirmek|D) Müşteriye daha hızlı tepki vermek|ACIKLAMA::İş birlikçi MİY; kanallar ve birimler arası koordinasyonla müşteriye tutarlı ve hızlı yanıt verilmesini sağlar.|",
+  "2025-26 Final|${t_miy}MİY mimarisinin üç temel bileşeni aşağıdakilerden hangisinde birlikte verilmiştir?|A) Kaliteli, Uyumlu, Özel~B) Kavramsal, Deterministik, Paylaşımcı~C) Operasyonel, Analitik, İş birlikçi~D) Kurumsal, Stokastik, Profesyonel~E) Fonksiyonel, Etik, Tedarikçi|C) Operasyonel, Analitik, İş birlikçi|ACIKLAMA::MİY üç katmanda ele alınır: Operasyonel (süreç otomasyonu), Analitik (veri analizi) ve İş birlikçi (kanal/paydaş koordinasyonu).|",
+  "2022-24 Final, 2024 Final|${t_miy}Analitik MİY uygulamalarında müşteri verisinin toplanıp saklandığı temel teknoloji aşağıdakilerden hangisidir?|A) Güvenlik duvarı~B) Veri ambarı~C) Yönlendirici~D) Sanal makine~E) Yük dengeleyici|B) Veri ambarı|ACIKLAMA::Analitik MİY; farklı kaynaklardan gelen müşteri verisini bütünleştirip saklayan veri ambarı (data warehouse) üzerine kuruludur; madencilik bunun üstünde çalışır.|",
+  "2022-24 Final, 2024 Final|MİY projelerinde teknolojinin temel rolü aşağıdakilerden hangisidir?|A) Çalışan sayısını azaltmak~B) Müşteri verilerini toplamak ve analiz etmek~C) Ürün fiyatını belirlemek~D) Reklam metni yazmak~E) Tedarikçi seçmek|B) Müşteri verilerini toplamak ve analiz etmek|ACIKLAMA::MİY’de teknoloji; müşteriye dair veriyi toplar, bütünleştirir ve analiz ederek ilişki kararlarını besler. Strateji ve kültür ise insanın işidir.|",
+  "2022-24 Final, 2024 Final|MİY’de “etkileşim” kavramı öncelikle aşağıdakilerden hangisiyle ilgilidir?|A) Depo sayısı~B) Müşteri temas noktalarının sayısı ve çeşitliliği~C) Üretim hattı hızı~D) Tedarikçi mesafesi~E) Sunucu kapasitesi|B) Müşteri temas noktalarının sayısı ve çeşitliliği|ACIKLAMA::Etkileşim; müşteriyle kurulan temas noktalarının (mağaza, çağrı merkezi, web, sosyal medya) sayısı ve çeşitliliğiyle ölçülür. Ne kadar çok kanal, o kadar zengin ilişki.|",
+  "2022-24 Final, 2024 Final|Bir MİY projesinin başarısında en belirleyici faktör aşağıdakilerden hangisidir?|A) En pahalı yazılımı seçmek~B) Projenin şirket yapısına ve kültürüne uygun olması~C) Yalnızca donanım gücü~D) Tedarikçi sayısı~E) Reklam bütçesi|B) Projenin şirket yapısına ve kültürüne uygun olması|ACIKLAMA::MİY başarısı teknolojiden çok uyuma bağlıdır: seçilen çözüm işletmenin süreçlerine, yapısına ve kültürüne oturmalıdır.|Görüş: Bu, dersin altını çizdiği bir gerçek — MİY projelerinin çoğu teknik değil, kültürel/organizasyonel uyumsuzluk yüzünden başarısız olur.",
+  "2024 Final, 2022-24 Final|MİY uygulamasında karşılaşılan en temel zorluk aşağıdakilerden hangisidir?|A) Pazarlama stratejisi seçimi~B) Müşteri verisi toplama~C) Teknolojik altyapı kurulumu~D) Ürün geliştirme~E) Şirket kültürünün değişmesi (dönüşüm direnci)|E) Şirket kültürünün değişmesi (dönüşüm direnci)|ACIKLAMA::MİY, işletmeyi müşteri odaklı hâle getirdiği için köklü bir kültür değişimi gerektirir; asıl zorluk teknolojide değil, bu dönüşüme direnci aşmaktadır.|",
+  "2026 Büt, 2025-26 Final, 2025 Büt, 2022-24 Final|Kurumsal bilgi sistemleri ile ilgili aşağıdakilerden hangisi doğrudur?|A) Yalnızca stratejik düzeydeki yöneticilerin ele alacağı bir konudur.~B) İşletmelerin odaklanması gereken nispeten yeni bir konudur.~C) İşletmelerin gelecekte odaklanacağı, henüz fikir aşamasında bir konudur.~D) Geçmişte başarı sağlamış olsa da bugün değerini kaybetmiş bir konudur.~E) Yalnızca operasyonel düzeydeki yöneticilerin ele alacağı bir konudur.|B) İşletmelerin odaklanması gereken nispeten yeni bir konudur.|ACIKLAMA::Kurumsal bilgi sistemleri; her düzeydeki yöneticiyi ilgilendiren, işletmelerin üzerine odaklanması gereken görece yeni ve gelişen bir alandır.|",
+  "2026 Büt, 2025 Büt, 2024 Final, 2022-24 Final|Aşağıdakilerden hangisi bir işletmenin kurumsal bilgi sistemine sahip olma yollarından biri DEĞİLDİR?|A) Hazır paket yazılım satın almak~B) Kendi bünyesinde geliştirmek~C) Dış kaynak (outsourcing) kullanmak~D) Kiralama / bulut hizmeti almak~E) Rakip işletmelerden birinin yazılımını kopyalamak|E) Rakip işletmelerden birinin yazılımını kopyalamak|ACIKLAMA::KBS’ye sahip olmanın meşru yolları satın alma, kendi geliştirme, dış kaynak ve kiralamadır. Rakibin yazılımını kopyalamak ne yasal ne de mümkün bir yoldur.|",
+  "2026 Büt, 2025-26 Final, 2024 Final, 2022-24 Final|Aşağıdakilerden hangisi kurumsal bilgi sistemlerinin ana başlıkları/konuları arasında yer ALMAZ?|A) Kurumsal Kaynak Planlaması (KKP)~B) Müşteri İlişkileri Yönetimi (MİY)~C) Tedarik Zinciri Yönetimi (TZY)~D) Arz-talep dengesi~E) Sistem entegrasyonu|D) Arz-talep dengesi|ACIKLAMA::KBS’nin ana başlıkları KKP, MİY, TZY ve entegrasyondur. “Arz-talep dengesi” bir ekonomi kavramıdır; KBS ana konu başlığı olarak sayılmaz.|",
+  "2025-26 Final, 2025 Büt|KKP ve MİY’in yanında kurumsal bilgi sistemlerinin üçüncü temel bileşeni aşağıdakilerden hangisidir?|A) Tedarik Zinciri Yönetimi~B) Ofis otomasyonu~C) Veri madenciliği~D) Bordro sistemi~E) Web tasarımı|A) Tedarik Zinciri Yönetimi|ACIKLAMA::Kurumsal bilgi sistemleri klasik olarak üç ayak üzerinde durur: KKP (iç kaynaklar), MİY (müşteri) ve TZY (tedarik zinciri).|",
+  "2025-26 Final, 2025 Büt|Sistem entegrasyonunda kullanılan “faz (aşamalı) yaklaşımı” aşağıdakilerden hangisini ifade eder?|A) Sistemi tek seferde devreye almayı~B) Sistemi adım adım, parça parça devreye almayı~C) Eski sistemi hiç kullanmamayı~D) Yalnızca pilot bölgede kullanmayı~E) Sistemi hiç test etmemeyi|B) Sistemi adım adım, parça parça devreye almayı|ACIKLAMA::Faz yaklaşımı; yeni sistemi modül modül veya birim birim, aşamalı olarak devreye alarak riski dağıtır. Bir anda geçişe göre daha kontrollüdür.|",
+  "2025-26 Final, 2022-24 Final|Kurumsal bilgi sistemleri bağlamında “kurum” kavramı aşağıdakilerden hangisini ifade eder?|A) Tek bir departmanı~B) Birlikte iş yapan işletmeler bütününü~C) Yalnızca kamu kuruluşlarını~D) Sadece üretim tesisini~E) Bağımsız bireyleri|B) Birlikte iş yapan işletmeler bütününü|ACIKLAMA::Burada “kurum”; tek bir şirketle sınırlı kalmayıp tedarikçi, iş ortağı ve müşteriyi de kapsayan, birlikte iş yapan işletmeler bütününü anlatır.|",
+  "2026 Büt, 2022-24 Final|Sistem geçişinde “paralel strateji” aşağıdakilerden hangisini ifade eder?|A) Yalnızca yeni sistemi kullanmayı~B) Eski ve yeni sistemin bir süre aynı anda çalıştırılmasını~C) Hiç test yapmamayı~D) Sistemi hiç değiştirmemeyi~E) Yalnızca eski sistemi kullanmayı|B) Eski ve yeni sistemin bir süre aynı anda çalıştırılmasını|ACIKLAMA::Paralel geçişte eski ve yeni sistem bir süre birlikte çalışır; sonuçlar karşılaştırılıp yeni sistemin güvenilirliği doğrulanınca eski sistem kapatılır. Güvenli ama maliyetlidir.|",
+  "2024 Final, 2022-24 Final|${t_sgdc}Sistem geliştirme yaşam döngüsündeki aşamaların doğru sıralaması aşağıdakilerden hangisidir?|A) Tasarım → Analiz → Yazılım → Entegrasyon → Sürdürülebilirlik~B) Yazılım → Analiz → Tasarım → Entegrasyon → Sürdürülebilirlik~C) Analiz → Tasarım → Entegrasyon → Yazılım → Sürdürülebilirlik~D) Analiz → Yazılım → Tasarım → Sürdürülebilirlik → Entegrasyon~E) Analiz → Tasarım → Yazılım → Entegrasyon → Sürdürülebilirliğin sağlanması|E) Analiz → Tasarım → Yazılım → Entegrasyon → Sürdürülebilirliğin sağlanması|ACIKLAMA::Doğru akış: önce ihtiyaç Analizi, sonra Tasarım, ardından Yazılımın geliştirilmesi, Entegrasyon ve son olarak sistemin Sürdürülebilirliğinin sağlanması.|",
+  "2024 Final, 2024 Büt, 2022-24 Final|Sistem entegrasyonunda aşağıdakilerden hangisi bir “sosyal faktör” DEĞİLDİR?|A) Çalışanların direnci~B) Kurum kültürü~C) Yönetim desteği~D) Müşteri İlişkileri Yönetimi~E) İletişim ve eğitim|D) Müşteri İlişkileri Yönetimi|ACIKLAMA::Entegrasyonun sosyal (insana dair) faktörleri; direnç, kültür, yönetim desteği, iletişim/eğitimdir. “MİY” bir sistem/uygulamadır, sosyal faktör değildir.|",
+  "2024 Final, 2024 Büt, 2022-24 Final|Örgütsel düzeylerin farklı bilişim sistemleri kullanması aşağıdakilerden hangisine yol açar?|A) Sistemin daha ucuz olmasına~B) Sistemin teknolojik olarak karmaşık ve yüksek maliyetli olmasına~C) Veri tekrarının azalmasına~D) Entegrasyonun kolaylaşmasına~E) Personel ihtiyacının bitmesine|B) Sistemin teknolojik olarak karmaşık ve yüksek maliyetli olmasına|ACIKLAMA::Her düzeyin ayrı sistem kullanması; bu sistemlerin birbirine bağlanmasını gerektirir, bu da teknolojik karmaşıklığı ve maliyeti artırır. Entegrasyon ihtiyacının temel gerekçesidir.|",
+  "2025-26 Final|Bir işletmenin kurumsal bilgi sistemlerine geçiş kararında dikkate alması gereken temel faktörler aşağıdakilerden hangisidir?|A) Ürün, fiyat, dağıtım, tutundurma~B) İnsan, süreç, teknoloji ve bilgi~C) Verimlilik, etkinlik, kârlılık, sürdürülebilirlik~D) Maliyet, zaman, kalite, esneklik~E) Teknoloji, iş süreçleri, strateji ve rekabet|E) Teknoloji, iş süreçleri, strateji ve rekabet|ACIKLAMA::İncelediğim final kitapçığında koyu işaretlenen şık “Teknoloji, iş süreçleri, strateji ve rekabet”tir; geçiş kararı hem iç yetkinlik hem rekabet ortamıyla birlikte değerlendirilir.|Bazı kaynaklarda “İnsan, süreç, teknoloji ve bilgi” dörtlüsü de doğru kabul edilir. Kendi kitapçığınızın anahtarını esas alın.",
+  "2025-26 Final|Aşağıdakilerden hangisi işletmeleri maliyet düşürmeye zorlayan faktörlerden biri DEĞİLDİR?|A) Müşteri memnuniyetsizliği~B) Rekabet baskısı~C) Paydaşların memnuniyetinin azalması~D) Yeni iş modelleri~E) Ürün yaşam süresinin kısalması|C) Paydaşların memnuniyetinin azalması|ACIKLAMA::Rekabet, kısalan ürün ömrü ve yeni iş modelleri işletmeyi maliyet düşürmeye iter. “Paydaş memnuniyetinin azalması” bir maliyet düşürme baskısı olarak verilmez.|",
+  "2026 Büt, 2024 Final, 2024 Büt, 2022-24 Final|Kamu kurumlarının kurumsal bilgi sistemlerini yönetmesini zorlaştıran temel özellik aşağıdakilerden hangisidir?|A) Kâr amacı gütmemesi~B) Kurumsal bilgi sistemlerinin maliyetinin yüksek olması~C) Çalışan sayısının az olması~D) Rekabetin olmaması~E) Müşteri sayısının azlığı|B) Kurumsal bilgi sistemlerinin maliyetinin yüksek olması|ACIKLAMA::KBS kurulum ve bakım maliyetleri yüksektir; bütçe kısıtları ve kamu satın alma süreçleriyle birleşince kamuda yönetimi güçleşir.|",
+  "2026 Büt|Kurumsal bilgi sistemleri küçük işletmelere aşağıdakilerden hangisi konusunda yardımcı olur?|A) Çalışanları eğitmek~B) Ürünler için küresel bir pazar geliştirilmesi~C) Vergi ödememek~D) Rakipleri engellemek~E) Personel azaltmak|B) Ürünler için küresel bir pazar geliştirilmesi|ACIKLAMA::İnternet tabanlı KBS/e-iş araçları, küçük işletmelerin bile ürünlerini küresel pazara ulaştırmasını sağlar; ölçek dezavantajını azaltır.|",
+  "2025 Büt|Kurumsal bilgi sistemlerinin geleceği için aşağıdakilerden hangisi söylenemez?|A) İş süreçleriyle daha çok bütünleşecektir.~B) Teknolojiyle birlikte evrilecektir.~C) Veri analitiği daha önemli hâle gelecektir.~D) Yalnızca kalite belgelerinin alınmasıyla gelişecektir.~E) Karar desteğinde rolü artacaktır.|D) Yalnızca kalite belgelerinin alınmasıyla gelişecektir.|ACIKLAMA::KBS’nin gelişimi süreç bütünleşmesi, analitik ve teknolojiyle ilerler. Gelişimi “yalnızca kalite belgesi almaya” bağlamak yanlıştır.|",
+  "2026 Büt, 2025 Büt|Kurumsal analiz ile stratejik analiz arasındaki fark için aşağıdakilerden hangisi doğrudur?|A) İkisi aynıdır.~B) Kurumsal analiz iş süreçlerine, stratejik analiz işletmenin amaçlarına odaklanır.~C) Stratejik analiz yalnızca büyük işletmelerde yapılır.~D) Kurumsal analiz yalnızca teknolojiyle ilgilenir.~E) Stratejik analiz yalnızca veri toplar.|B) Kurumsal analiz iş süreçlerine, stratejik analiz işletmenin amaçlarına odaklanır.|ACIKLAMA::Kurumsal analiz “işleri nasıl yapıyoruz?” (süreçler) sorusuna; stratejik analiz “nereye gitmek istiyoruz?” (amaç/hedef) sorusuna odaklanır.|",
+  "2025 Büt|Aşağıdakilerden hangisi kurumsal analiz kapsamındaki faaliyetlerden biri DEĞİLDİR?|A) Yöneticilerin bireysel becerilerinin belirlenip sisteme aktarılması~B) Süreçlere öncelik verilmesi~C) Zayıf ve kuvvetli bölümlerin belirlenmesi~D) İş süreçlerinin incelenmesi~E) Değişim ihtiyacının saptanması|A) Yöneticilerin bireysel becerilerinin belirlenip sisteme aktarılması|ACIKLAMA::Kurumsal analiz süreç ve yapı odaklıdır. “Yöneticilerin kişisel becerilerini belirleyip sisteme aktarmak” bu analizin bir faaliyeti olarak verilmez.|",
+  "2025 Büt|Bir sistemde “ödünleşme (trade-off)” kavramı aşağıdakilerden hangisini ifade eder?|A) Dengede olanlar içinden en iyisini seçmek~B) Dengesizliği tamamen ortadan kaldırmak~C) Dengede tutulması gereken unsurları gözeterek karşılıklı fedakârlık yapmak~D) Dengede olmayanları dengelemek~E) Bilinçli dengesizlik oluşturmak|C) Dengede tutulması gereken unsurları gözeterek karşılıklı fedakârlık yapmak|ACIKLAMA::Ödünleşmede bir şeyi kazanmak için başka bir şeyden ölçülü ödün verilir (ör. hız ↔ maliyet). Amaç, gözetilmesi gereken unsurlar arasında dengeyi korumaktır.|",
+  "2025 Büt|Pazarlama departmanının en etkin biçimde kullandığı kurumsal bilgi sistemi aşağıdakilerden hangisidir?|A) KKP sistemleri~B) Bordro sistemleri~C) Üretim planlama sistemleri~D) Stok sistemleri~E) MİY sistemleri|E) MİY sistemleri|ACIKLAMA::Pazarlama; müşteri segmentasyonu, kampanya ve sadakat için doğrudan MİY (CRM) sistemlerini kullanır.|",
+  "2022-24 Final|Bilgi işlem gücündeki artış ve internetin yaygınlaşması sonucunda ortaya çıkan yapı aşağıdakilerden hangisidir?|A) Birbirinden bağımsız çalışan işletmeler~B) Bilişim ağlarıyla birbirine bağlı işletmeler~C) Yalnızca yerel pazarda çalışan işletmeler~D) Tek merkezli işletmeler~E) Teknoloji kullanmayan işletmeler|B) Bilişim ağlarıyla birbirine bağlı işletmeler|ACIKLAMA::Ucuzlayan işlem gücü ve internet; işletmeleri tedarikçi, ortak ve müşteriyle ağ üzerinden bağlı, birbirine entegre yapılar hâline getirmiştir.|",
+  "2022-24 Final|${t_kkp}Kurumsal Kaynak Planlaması (KKP) ile ilgili aşağıdakilerden hangisi doğrudur?|A) İşletmenin kaynaklarının daha verimli kullanımını sağlar~B) Yalnızca muhasebe için kullanılır~C) Departmanları birbirinden ayırır~D) Yalnızca büyük fabrikalarda çalışır~E) Veri paylaşımını engeller|A) İşletmenin kaynaklarının daha verimli kullanımını sağlar|ACIKLAMA::KKP; finans, üretim, İK, satış gibi süreçleri tek veri tabanında bütünleştirerek kaynakların (para, insan, malzeme, zaman) verimli kullanımını sağlar.|",
+  "2022-24 Final|Sistem geliştirmede “test” aşamasının temel amacı aşağıdakilerden hangisidir?|A) Sistemin ihtiyaçları karşılayıp karşılamadığını kontrol etmek~B) Yeni personel almak~C) Reklam yapmak~D) Fiyat belirlemek~E) Tedarikçi seçmek|A) Sistemin ihtiyaçları karşılayıp karşılamadığını kontrol etmek|ACIKLAMA::Test aşaması; geliştirilen sistemin belirlenen gereksinimleri doğru ve hatasız karşıladığını, devreye almadan önce doğrulamayı amaçlar.|",
+  "2024 Final, 2022-24 Final|Kurumsal bilgi sistemleri, ................ yönelik organizasyon ve yönetim çözümleri olarak tanımlanabilir.|A) yalnızca teknik altyapıya~B) yalnızca maliyet düşürmeye~C) iş ve işletme çevresinin yarattığı zorluklara~D) yalnızca müşteri şikâyetlerine~E) yalnızca üretim hatalarına|C) iş ve işletme çevresinin yarattığı zorluklara|ACIKLAMA::KBS yalnızca teknoloji değildir; iş ve işletme çevresinin (rekabet, mevzuat, müşteri, tedarik) yarattığı zorluklara karşı geliştirilen organizasyon + yönetim + teknoloji çözümleridir.|Görüş: Bu tanım dersin özeti gibidir — bir bilgi sistemi = teknoloji + organizasyon + yönetim üçlüsüdür; sadece yazılım değildir."
+];
+
+// --- PARSE RAW DATA TO UI DATA ---
+const DATA = [];
+const soruMap = new Map();
+let id_cnt = 1;
+
+rawData.forEach(item => {
+  if (!item || !item.trim()) return;
+  const parts = item.split('|');
+  if (parts.length < 4) return;
+
+  let tagsRaw = parts[0];
+  let qRaw = parts[1].trim();
+  let options = parts[2].split('~').map(o => o.trim());
+  let correctAnswer = parts[3].trim();
+  let explanation = (parts[4] || '').replace('ACIKLAMA::', '').trim();
+  let note = (parts[5] || '').trim();
+
+  let as = [];
+  qRaw = qRaw.replace(/\$\{(t_[a-zA-Z0-9_]+)\}(<br>)?/g, (m, p1) => { as.push(p1); return ''; }).trim();
+
+  // --- Konu tespiti ---
+  const _t = (qRaw + ' ' + options.join(' ')).toLocaleLowerCase('tr');
+  let konu = 'KBS Genel & Kavramlar';
+  if (/müşteri ilişkileri|mi̇y|\bmiy\b|crm|müşteri merkez|temas nokta|müşteri ve tüketici|müşteriyle|müşteri kategor|tüketici|analitik mi̇y|operasyonel mi̇y|iş birlikçi|veri madenciliği|müşteri sadak/.test(_t)) konu = 'Müşteri İlişkileri Yönetimi (MİY)';
+  else if (/tedarik zinciri|lojistik|kırbaç|soğuk zincir|yeşil tedarik|değer ağ|değer zincir|kapalı döngü|bozulma|arz-talep|stratejik tedarik|belirsizli/.test(_t)) konu = 'Tedarik Zinciri Yönetimi';
+  else if (/kkp|kurumsal kaynak planlama|\berp\b|araştırma ve geliştirme|üçüncü temel bileşen/.test(_t)) konu = 'KKP / ERP';
+  else if (/entegrasyon|faz|paralel strateji|sistem geliştirme|geliştirme yaşam|test aşama|geçiş|kurumsal analiz|stratejik analiz|ödünleş|trade-off|sürdürülebilir|sosyal faktör/.test(_t)) konu = 'Sistem Geliştirme & Entegrasyon';
+  else if (/sistem.*bileşen|entropi|girdi|geri bildirim|temel özellik|ilk ortaya|modern kurumsal|kurumsal bir bilişim|yönetici destek|operasyonel düzey|günlük ticari|ürün yaşam|yaşam süre|bilişim teknolojileri altyapı|bilgi çalışan|mühendis/.test(_t)) konu = 'Sistem & KBS Temelleri';
+  else if (/veri|bilgi hiyerarşi|bilişim toplum|bilgi toplum|okuryazar|üst-bilgi|bilgelik|sosyo-teknik|bilişim ile ilgili|gözlem|e-iş|verimliliğe|bilgi teknolojisinin/.test(_t)) konu = 'Kavramlar (Veri–Bilgi–Bilişim)';
+
+  let k = 'vize';
+  const lowTags = tagsRaw.toLowerCase();
+  if (lowTags.includes('büt') || lowTags.includes('but')) k = 'but';
+  else if (lowTags.includes('final')) k = 'final';
+
+  let tagsList = tagsRaw.split(',').map(t => t.trim());
+
+  const optKey = options.map(o => o.replace(/^[A-Ea-e]\)\s*/, '').trim().toLocaleLowerCase('tr')).sort().join('~');
+  const key = qRaw + '##' + optKey;
+
+  if (soruMap.has(key)) {
+    let kayit = soruMap.get(key);
+    tagsList.forEach(t => { if (!kayit.tags.includes(t)) kayit.tags.push(t); });
+  } else {
+    soruMap.set(key, { id: id_cnt++, k, tags: tagsList, q: qRaw, o: options, a: correctAnswer, e: explanation, n: note, konu, as });
+  }
+});
+
+soruMap.forEach(val => DATA.push(val));
+
+const KIND_LABEL = {vize:'Vize', final:'Final', but:'Bütünleme'};
+let state = {kind:'all', year:'', rep:false, flag:false, konu:'', q:'', allOpen:false, order:null};
+let score = {t:0, f:0};
+
+const $ = s => document.querySelector(s);
+const listEl = $('#list'), emptyEl = $('#empty');
+
+const counts = {all:DATA.length, vize:0, final:0, but:0, rep:0, flag:0};
+const years = new Set();
+const konular = new Set();
+const kindOf = t => { const l = t.toLowerCase(); return (l.includes('büt') || l.includes('but')) ? 'but' : (l.includes('final') ? 'final' : 'vize'); };
+DATA.forEach(d => {
+  d.kinds = new Set(d.tags.map(kindOf));
+  d.kinds.forEach(k => counts[k]++);
+  if (d.tags.length > 1) counts.rep++;
+  if (d.n) counts.flag++;
+  konular.add(d.konu);
+  d.tags.forEach(t => years.add(t));
+  d._s = (d.q + ' ' + d.o.join(' ') + ' ' + d.e + ' ' + d.n + ' ' + d.tags.join(' ')).toLocaleLowerCase('tr');
+});
+$('#s-all').textContent = counts.all; $('#s-vize').textContent = counts.vize;
+$('#s-final').textContent = counts.final; $('#s-but').textContent = counts.but;
+$('#s-rep').textContent = counts.rep;
+if ($('#s-flag')) $('#s-flag').textContent = counts.flag;
+['all','vize','final','but'].forEach(k => $('#c-' + k).textContent = counts[k]);
+
+const konuSel = $('#konu');
+if (konuSel) [...konular].sort().forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = k; konuSel.appendChild(o); });
+
+const yearOrder = ['2023-24 Vize','2024-25 Vize','2025-26 Vize','2024 Final','2024-25 Final','2025-26 Final','2022-24 Final','2024 Büt','2025 Büt','2026 Büt','2023-24 Büt'];
+const yearSel = $('#year');
+[...years].sort((a,b)=>{const ia=yearOrder.indexOf(a),ib=yearOrder.indexOf(b);return (ia<0?99:ia)-(ib<0?99:ib);}).forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); });
+
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hl(text, term){
+  const safe = esc(text);
+  if (!term) return safe;
+  const t = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return safe.replace(new RegExp('(' + t + ')', 'gi'), '<mark>$1</mark>');
+}
+const letter = s => (s.trim()[0] || '').toUpperCase();
+const br = h => h.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
+function visible(){
+  const q = state.q.toLocaleLowerCase('tr').trim();
+  let rows = DATA.filter(d =>
+    (state.kind === 'all' || d.kinds.has(state.kind)) &&
+    (!state.year || d.tags.includes(state.year)) &&
+    (!state.rep || d.tags.length > 1) &&
+    (!state.flag || !!d.n) &&
+    (!state.konu || d.konu === state.konu) &&
+    (!q || d._s.includes(q))
+  );
+  if (state.order) rows = rows.slice().sort((a,b) => state.order.indexOf(a.id) - state.order.indexOf(b.id));
+  return rows;
+}
+
+function render(){
+  const rows = visible();
+  $('#shown').textContent = rows.length;
+  emptyEl.hidden = rows.length > 0;
+  const term = state.q.trim();
+
+  listEl.innerHTML = rows.map((d, i) => {
+    const correct = letter(d.a);
+    return `
+    <article class="cell${d.n ? ' flagged' : ''}" data-id="${d.id}">
+      <div class="body">
+        <div class="tags">
+          ${d.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+          ${d.tags.length > 1 ? '<span class="tag rep">🔥 tekrar / banko</span>' : ''}
+          ${d.konu ? `<span class="tag konu">${esc(d.konu)}</span>` : ''}
+          ${d.n ? '<span class="tag flag">⚠️ not var</span>' : ''}
+        </div>
+        <p class="q">${i + 1}. ${br(hl(d.q, term))}</p>
+        ${d.as && d.as.length ? '<div class="assets">' + d.as.map(k => ASSETS[k] || '').join('') + '</div>' : ''}
+        <ul class="opts">
+          ${d.o.map(o => `<li><button class="opt" data-l="${letter(o)}" data-c="${correct}">${hl(o, term)}</button></li>`).join('')}
+        </ul>
+        <div class="acts"><button class="reveal">Cevabı göster</button></div>
+        <div class="out">
+          <div class="ans">${hl(d.a, term)}</div>
+          <p class="exp">${hl(d.e, term)}</p>
+          ${d.n ? `<p class="note">${hl(d.n, term)}</p>` : ''}
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  if (state.allOpen) listEl.querySelectorAll('.out').forEach(o => o.classList.add('show'));
+}
+
+listEl.addEventListener('click', e => {
+  const rev = e.target.closest('.reveal');
+  if (rev){
+    const out = rev.closest('.body').querySelector('.out');
+    out.classList.toggle('show');
+    rev.textContent = out.classList.contains('show') ? 'Cevabı gizle' : 'Cevabı göster';
+    return;
+  }
+  const opt = e.target.closest('.opt');
+  if (!opt || opt.classList.contains('locked')) return;
+  const list = opt.closest('.opts');
+  const correct = opt.dataset.c;
+  const picked = opt.dataset.l;
+  list.querySelectorAll('.opt').forEach(b => {
+    b.classList.add('locked');
+    if (b.dataset.l === correct) b.classList.add('correct');
+  });
+  if (picked !== correct) opt.classList.add('wrong');
+  picked === correct ? score.t++ : score.f++;
+  updateScore();
+  const out = opt.closest('.body').querySelector('.out');
+  out.classList.add('show');
+  opt.closest('.body').querySelector('.reveal').textContent = 'Cevabı gizle';
+});
+
+function updateScore(){
+  const tot = score.t + score.f;
+  $('#score').classList.toggle('show', tot > 0);
+  $('#sc-t').textContent = score.t;
+  $('#sc-f').textContent = score.f;
+  $('#sc-r').textContent = tot ? Math.round(score.t / tot * 100) + '% · ' + tot + ' soru cevaplandı' : '';
+}
+$('#sc-reset').addEventListener('click', () => { score = {t:0, f:0}; updateScore(); render(); });
+
+$('#kinds').addEventListener('click', e => {
+  const b = e.target.closest('.chip[data-k]');
+  if (!b) return;
+  state.kind = b.dataset.k;
+  document.querySelectorAll('.chip[data-k]').forEach(c => c.setAttribute('aria-pressed', c === b));
+  render();
+});
+$('#flag').addEventListener('click', e => { state.flag = !state.flag; e.currentTarget.setAttribute('aria-pressed', state.flag); render(); });
+$('#konu').addEventListener('change', e => { state.konu = e.target.value; render(); });
+$('#rep').addEventListener('click', e => { state.rep = !state.rep; e.currentTarget.setAttribute('aria-pressed', state.rep); render(); });
+yearSel.addEventListener('change', e => { state.year = e.target.value; render(); });
+$('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
+
+$('#toggle').addEventListener('click', e => {
+  state.allOpen = !state.allOpen;
+  e.currentTarget.textContent = state.allOpen ? 'Cevapları gizle' : 'Cevapları göster';
+  e.currentTarget.classList.toggle('on', state.allOpen);
+  listEl.querySelectorAll('.out').forEach(o => o.classList.toggle('show', state.allOpen));
+  listEl.querySelectorAll('.reveal').forEach(r => r.textContent = state.allOpen ? 'Cevabı gizle' : 'Cevabı göster');
+});
+
+$('#shuffle').addEventListener('click', () => {
+  const ids = visible().map(d => d.id);
+  for (let i = ids.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }
+  state.order = ids;
+  $('#reset-order').hidden = false;
+  render();
+  window.scrollTo({top:0});
+});
+$('#reset-order').addEventListener('click', e => { state.order = null; e.currentTarget.hidden = true; render(); });
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== $('#q')){ e.preventDefault(); $('#q').focus(); }
+  if (e.key === 'Escape' && document.activeElement === $('#q')){ $('#q').value = ''; state.q = ''; render(); $('#q').blur(); }
+});
+
+const topBtn = $('#top');
+topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+addEventListener('scroll', () => topBtn.classList.toggle('show', scrollY > 700), {passive:true});
+
+render();
+</script>
+</body>
+</html>
