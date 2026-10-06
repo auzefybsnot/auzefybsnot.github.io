@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="web">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka ve Makine Öğrenmesi - 2026 Tek Ders Sınavı Quiz | AUZEF YBS 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">4. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Makine Öğrenmesi 2026 Tek Ders Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">⭐ 2026 AUZEF YBS Resmi Sınavı</div>
+        <h1>Yapay Zeka ve Makine Öğrenmesi - 2026 Tek Ders Sınavı Quiz</h1>
+        <p class="hero-desc">28 Ağustos 2026 tarihli AUZEF YBS Makine Öğrenmesi Tek Ders Sınavının 20 sorudan oluşan görsel destekli, formül çözümlü interaktif quiz çalışması.</p>
+        <div class="hero-meta">
+            <span>📅 Sınav Tarihi: <strong>28 Ağustos 2026</strong></span>
+            <span>📝 Soru Sayısı: <strong>20 Soru</strong></span>
+            <span>⏱️ Önerilen Süre: <strong>30 Dakika</strong></span>
+            <span>🎓 Sınıf / Dönem: <strong>4. Sınıf - Bahar Dönemi</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">20</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Yapay_Zeka_Makine_Ogrenmesi_2026_Tek_Ders_Sinavi.pdf" target="_blank" class="btn btn-pdf">📥 Orijinal PDF</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (20)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">20</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Yapay_Zeka_Makine_Ogrenmesi_2026_Tek_Ders_Sinavi.pdf" target="_blank" class="btn btn-pdf">📥 Resmi Sınav PDF'ini İndir</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Regresyon / Hata Metrikleri (MAE)", "text": "Yukarıdaki tabloda bir regresyon modeline ait gerçek değerler (y) ve tahmin edilen değerler (ŷ) verilmiştir. Buna göre modelin Ortalama Mutlak Hatası (Mean Absolute Error — MAE) değeri aşağıdakilerden hangisidir?", "tableHtml": "\n        <table class=\"q-table\">\n            <thead>\n                <tr>\n                    <th>Gözlem</th>\n                    <th>Gerçek Değer (y)</th>\n                    <th>Tahmin Değeri (ŷ)</th>\n                    <th>Mutlak Fark |y - ŷ|</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr><td>1</td><td>10</td><td>12</td><td>|10 - 12| = 2</td></tr>\n                <tr><td>2</td><td>15</td><td>14</td><td>|15 - 14| = 1</td></tr>\n                <tr><td>3</td><td>20</td><td>18</td><td>|20 - 18| = 2</td></tr>\n                <tr><td>4</td><td>25</td><td>27</td><td>|25 - 27| = 2</td></tr>\n                <tr><td>5</td><td>30</td><td>29</td><td>|30 - 29| = 1</td></tr>\n            </tbody>\n        </table>\n        ", "options": [{"letter": "A", "text": "1.0"}, {"letter": "B", "text": "1.6"}, {"letter": "C", "text": "2.0"}, {"letter": "D", "text": "1.4"}, {"letter": "E", "text": "1.2"}], "correct": "B", "explanation": "MAE = (Σ |y - ŷ|) / n formülünden: Toplam mutlak hata = 2 + 1 + 2 + 2 + 1 = 8. Gözlem sayısı n = 5 olduğuna göre MAE = 8 / 5 = 1.6 bulunur."}, {"num": 2, "tag": "Naive Bayes / Sınıflandırma", "text": "Naive Bayes algoritması kullanılarak yaş = 35 ve gelir = Orta özelliklerine sahip bir müşterinin hangi müşteri segmentine ait olduğu tahmin edilmek istenmektedir. Analiz sonucunda aşağıdaki olasılık değerleri elde edilmiştir:\n\nP(segment = S1 | yaş = 35, gelir = Orta) = 0.21\nP(segment = S2 | yaş = 35, gelir = Orta) = 0.47\nP(segment = S3 | yaş = 35, gelir = Orta) = 0.18\nP(segment = S4 | yaş = 35, gelir = Orta) = 0.14\n\nYukarıda verilenlere göre Naive Bayes modeline göre müşterinin tahmin edilen segmenti aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "S3"}, {"letter": "B", "text": "Belirlenemez."}, {"letter": "C", "text": "S1"}, {"letter": "D", "text": "S2"}, {"letter": "E", "text": "S4"}], "correct": "D", "explanation": "Naive Bayes algoritmasında en yüksek sonsal olasılığa (maximum a posteriori) sahip sınıf tahmin edilir. Burada 0.47 ile en yüksek olasılık S2 segmentine aittir."}, {"num": 3, "tag": "Makine Öğrenmesi Temelleri", "text": "Klasik programlama ile makine öğrenmesi yaklaşımları çeşitli açılardan birbirinden ayrılmaktadır. Bu iki yaklaşım; kodlama biçimi, uyarlanabilirlik, veriye bağımlılık ve insan müdahalesi gibi özellikler bakımından farklılık göstermektedir.\nBuna göre aşağıdakilerden hangisi makine öğrenmesi sistemlerini klasik programlamadan ayıran temel özelliklerden biri olarak gösterilebilir?", "options": [{"letter": "A", "text": "Veriden öğrenerek kalıpları (patterns) genelleştirebilme yeteneğine sahip olmaları."}, {"letter": "B", "text": "Sonuçlarının her zaman tamamen yorumlanabilir olması."}, {"letter": "C", "text": "Yeni durumlara uyum sağlayabilmek için yalnızca manuel kod güncellemesi gerektirmeleri."}, {"letter": "D", "text": "Önceden tanımlanmış kuralları değişmeden yürütmeleri."}, {"letter": "E", "text": "İnsan tarafından yazılmış açık talimatlara tamamen bağımlı olmaları."}], "correct": "A", "explanation": "Klasik programlamada kurallar insan tarafından kodlanır; makine öğrenmesinde ise sistem verileri inceleyerek arkasındaki örüntüleri (patterns) ve kuralları kendisi öğrenir."}, {"num": 4, "tag": "Yapay Zeka Tarihi / Perceptron", "text": "Yapay zekâ tarihinde “ilk yapay zekâ kışı” olarak adlandırılan dönem Marvin Minsky ve Seymour Papert tarafından yapılan çalışmalar sonucunda ortaya çıkmıştır. Bu durumun neticesinde, bilim insanlarının yapay zekâya olan ilgisi azalmış ve araştırmalara ayrılan desteklerde düşüş yaşanmıştır.\nBuna göre aşağıdakilerden hangisi “ilk yapay zekâ kışı”nın ortaya çıkmasının temel nedeni olarak gösterilebilir?", "options": [{"letter": "A", "text": "Veri eksikliğinin tamamen ortadan kalkması"}, {"letter": "B", "text": "Yapay zekâ sistemlerinin donanım maliyetlerinin aşırı artması."}, {"letter": "C", "text": "Yapay zekânın yalnızca askeri alanlarda kullanılabilmesi."}, {"letter": "D", "text": "Geliştirilen temel yapay sinir hücresi modelinin lineer olmayan problemleri (özellikle XOR problemi) çözmede yetersiz kaldığının gösterilmesi."}, {"letter": "E", "text": "Yapay zekâ algoritmalarının insan zekâsını tamamen aşması."}], "correct": "D", "explanation": "Minsky ve Papert'in 1969 tarihli Perceptrons kitabı, tek katmanlı algılayıcıların lineer olarak ayrılamayan XOR problemini çözemediğini kanıtlamış ve bu durum araştırma fonlarının kesilmesine (1. YZ Kışı) yol açmıştır."}, {"num": 5, "tag": "Naive Bayes / Risk Sınıflandırması", "text": "Naive Bayes algoritması kullanılarak egzersizSuresi = Yüksek ve kolesterol = Orta özelliklerine sahip bir bireyin hangi risk grubuna ait olduğu tahmin edilmek istenmektedir. Analiz sonucunda aşağıdaki olasılık değerleri elde edilmiştir:\n\nP(risk = R1 | egzersizSuresi=Yüksek, kolesterol=Orta) = 0.15\nP(risk = R2 | egzersizSuresi=Yüksek, kolesterol=Orta) = 0.52\nP(risk = R3 | egzersizSuresi=Yüksek, kolesterol=Orta) = 0.23\nP(risk = R4 | egzersizSuresi=Yüksek, kolesterol=Orta) = 0.10\nP(risk = R5 | egzersizSuresi=Yüksek, kolesterol=Orta) = 0.05\n\nYukarıda verilenlere göre Naive Bayes modeline göre bireyin tahmin edilen risk grubu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "R4"}, {"letter": "B", "text": "R1"}, {"letter": "C", "text": "R3"}, {"letter": "D", "text": "R2"}, {"letter": "E", "text": "R5"}], "correct": "D", "explanation": "En yüksek olasılığı veren sınıf seçilir. P(R2) = 0.52 en yüksek değer olduğundan birey R2 grubuna dahil edilir."}, {"num": 6, "tag": "Pandas / Veri Tipleri", "text": "Yukarıda verilen çıktı aşağıdaki Python kod satırlarından hangisi kullanılarak elde edilmiştir?", "code": "Yas              int64\nMaas             int64\nSehir           object\nDeneyim_Yili     int64\nEvli              bool\nPerformans_Puani float64\ndtype: object", "image": "img/q6_dtypes_cikti.png", "options": [{"letter": "A", "text": "veriSeti.dtypes"}, {"letter": "B", "text": "veriSeti.describe()"}, {"letter": "C", "text": "veriSeti.head()"}, {"letter": "D", "text": "veriSeti.info()"}, {"letter": "E", "text": "veriSeti.shape"}], "correct": "A", "explanation": "Pandas DataFrame nesnesinde '.dtypes' özelliği veri tablosundaki her bir sütunun adını ve ait olduğu veri tipini seriler halinde gösterir."}, {"num": 7, "tag": "Yapay Zeka Tarihi / Alan Turing", "text": "Aşağıdaki bilim insanlarından hangisi, yayımladığı çalışmasında ilk defa “Makineler düşünebilir mi?” sorusunu ortaya atarak yapay zekâ alanının felsefi temellerini atan araştırmacı olarak kabul edilmektedir?", "options": [{"letter": "A", "text": "John McCarthy"}, {"letter": "B", "text": "Norbert Wiener"}, {"letter": "C", "text": "Alan Turing"}, {"letter": "D", "text": "Claude Shannon"}, {"letter": "E", "text": "Allen Newell"}], "correct": "C", "explanation": "Alan Turing, 1950'de yayınladığı 'Computing Machinery and Intelligence' makalesinde 'Makineler düşünebilir mi?' sorusunu sormuş ve Turing Testini önermiştir."}, {"num": 8, "tag": "Veri Görselleştirme / EDA", "text": "Bir veri setinde Gelir değişkeninin bireylerin Eğitim Düzeyi gruplarına göre nasıl değiştiğinin incelenmesi amaçlanmaktadır. Bu analizde hem dağılımın yapısını hem de aykırı değerlerin görülmesi istenmektedir.\nBuna göre aşağıdaki grafik türlerinden hangisi bu inceleme için en uygun görselleştirme yöntemidir?", "options": [{"letter": "A", "text": "Çizgi grafiği (Line plot)"}, {"letter": "B", "text": "Kutu grafiği (Box plot)"}, {"letter": "C", "text": "Pasta grafiği (Pie chart)"}, {"letter": "D", "text": "Isı haritası (Heatmap)"}, {"letter": "E", "text": "Sütun grafiği (Bar chart)"}], "correct": "B", "explanation": "Kutu grafiği (Box plot); medyan, çeyreklikler (IQR) ve sapan/aykırı değerleri (outliers) gruplar bazında karşılaştırmalı göstermek için en ideal görseldir."}, {"num": 9, "tag": "Anomali Tespiti vs Kümeleme", "text": "Aşağıdaki uygulamalardan hangisi anomali tespiti kullanımına örnek değildir?", "options": [{"letter": "A", "text": "Üretim hattında normalden sapma gösteren sensör ölçümlerinin belirlenmesi."}, {"letter": "B", "text": "Ağ trafiğinde olağandışı veri hareketlerinin tespit edilmesi."}, {"letter": "C", "text": "E-posta sisteminde istenmeyen (spam) mesajların belirlenmesi."}, {"letter": "D", "text": "Daha önce hiç yurt-dışı harcaması olmayan bir kredi kartı ile farklı bir ülkeden yapılan işlemin incelenmesi."}, {"letter": "E", "text": "Müşterilerin alışveriş alışkanlıklarına göre benzer gruplara ayrılması."}], "correct": "E", "explanation": "Müşterilerin benzer gruplara ayrılması Danışmansız Öğrenme / Kümeleme (Clustering) problemidir, anomali tespiti (sıra dışı sapmaları bulma) değildir."}, {"num": 10, "tag": "Kutu Grafiği Yorumlama", "text": "Yukarıdaki grafikte verilen kutu grafiği, bireylerin 'egzersiz yapma durumlarına göre, kan basıncı' (mmHg) değerlerinin dağılımını göstermektedir. Üstteki kutu grafiği egzersiz yapanlara, alttaki ise egzersiz yapmayanlara aittir.\nYukarıda verilen grafiğe göre aşağıdakilerden hangisi doğrudur?", "image": "img/q10_kutu_grafigi.png", "options": [{"letter": "A", "text": "Egzersiz yapan bireylerin kan basıncı daha yüksek bir aralıkta dağılmıştır."}, {"letter": "B", "text": "Egzersiz yapan bireylerin kan basıncı tamamen sabittir."}, {"letter": "C", "text": "Her iki grubun kan basıncı dağılımları aynıdır."}, {"letter": "D", "text": "Egzersiz yapmayan bireylerin ortanca kan basıncı değeri, egzersiz yapanlardan düşüktür."}, {"letter": "E", "text": "Egzersiz yapmayan bireylerin bazı aykırı (outlier) kan basıncı değerleri mevcuttur."}], "correct": "E", "explanation": "Grafikte alttaki 'egzersiz yapmıyor' kutusunun sol tarafında tekil elmas simgesi (yaklaşık 61 mmHg) görülmektedir. Bu simge veri setindeki aykırı değeri (outlier) temsil eder."}, {"num": 11, "tag": "Model Değerlendirme / classification_report", "text": "Yukarıda verilen Python kodu çıktısı ile ilgili aşağıdaki ifadelerden hangisi doğrudur?", "code": "from sklearn.metrics import classification_report\nprint(classification_report(y_gercek, y_tahmin))", "options": [{"letter": "A", "text": "Modelin yalnızca doğruluk (accuracy) değerini verir."}, {"letter": "B", "text": "Sadece yanlış sınıflandırılan gözlemleri listeler."}, {"letter": "C", "text": "Kümeleme analizine ait Silhouette skorunu verir."}, {"letter": "D", "text": "Her sınıf için precision, recall ve F1-score değerlerini raporlar."}, {"letter": "E", "text": "Regresyon modeline ait R² değerini hesaplar."}], "correct": "D", "explanation": "sklearn.metrics.classification_report fonksiyonu her bir sınıf için kesinlik (precision), duyarlılık (recall), F1-score ve destek (support) metriklerini detaylı tablo halinde döndürür."}, {"num": 12, "tag": "Pandas / Tip Dönüşümü", "text": "Yukarıdaki Python kodu bir pandas DataFrame'inde yer alan Gelir değişkeni üzerinde uygulanmaktadır. Verilen kod satırının temel amacı aşağıdakilerden hangisidir?", "code": "veriTablosu[\"Gelir\"] = veriTablosu[\"Gelir\"].astype(\"float64\")", "options": [{"letter": "A", "text": "Gelir değişkenindeki tekrar eden değerleri kaldırmak."}, {"letter": "B", "text": "Gelir değişkenini kategorik veri tipine dönüştürmek."}, {"letter": "C", "text": "Gelir değişkenindeki eksik değerleri silmek."}, {"letter": "D", "text": "Gelir değişkenini sıralamak."}, {"letter": "E", "text": "Gelir değişkeninin veri tipini ondalıklı sayısal (float64) formata dönüştürmek."}], "correct": "E", "explanation": "astype('float64') metodu sütunun saklandığı veri tipini 64-bit kayan noktalı sayıya (ondalıklı formata) dönüştürmek için kullanılır."}, {"num": 13, "tag": "Yapay Sinir Ağları / ReLU Aktivasyon", "text": "Bir yapay sinir ağı nöronunda net girdi değeri aşağıdaki gibi hesaplanmıştır:\nnet = -2\nBu nöronda aktivasyon fonksiyonu olarak ReLU (Rectified Linear Unit) kullanılmaktadır.\nBuna göre nöronun çıktı değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "0"}, {"letter": "D", "text": "-2"}, {"letter": "E", "text": "-1"}], "correct": "C", "explanation": "ReLU(x) = max(0, x) fonksiyonudur. Girdi x = -2 negatif olduğu için max(0, -2) = 0 çıktısını verir."}, {"num": 14, "tag": "İstatistiksel Modelleme / OLS Regresyon", "text": "Yukarıdaki modelde kullanılan değişkenlere göre aşağıdaki ifadelerden hangisi yanlıştır?", "code": "model = smf.ols(formula=\"finalNotu ~ dersCalismaSuresi + internetKullanimi\", data=egitim).fit()", "options": [{"letter": "A", "text": "Modelin bağımlı değişkeni öğrencinin final sınav notudur."}, {"letter": "B", "text": "Modelin doğruluğunu artırmak için bağımlı değişken çıkarılarak yalnızca bağımsız değişkenlerle analiz yapılmalıdır."}, {"letter": "C", "text": "Bağımsız değişkenlerden biri öğrencinin ders çalışma süresidir."}, {"letter": "D", "text": "Model, egitim adlı veri kümesi kullanılarak oluşturulmuştur."}, {"letter": "E", "text": "Modelde iki adet bağımsız değişken kullanılmıştır."}], "correct": "B", "explanation": "Regresyon modelinde bağımlı değişken (hedef y değişkeni) çıkarılamaz; modelin temel amacı zaten bu bağımlı değişkeni tahmin etmektir!"}, {"num": 15, "tag": "K-Means Kümeleme", "text": "Yukarıdaki Python kod bloğuna göre aşağıdaki ifadelerden hangisi doğrudur?", "code": "from sklearn.cluster import KMeans\nkume_sayisi = 4\nmodel = KMeans(\n    n_clusters=kume_sayisi,\n    init=\"random\",\n    n_init=10,\n    random_state=123\n)\netiketler = model.fit_predict(veri)\nmodel.labels_", "options": [{"letter": "A", "text": "Model, veri setini 4 kümeye ayıracak şekilde k-ortalamalar (k-Means) algoritmasını kullanır."}, {"letter": "B", "text": "init=\"random\" ifadesi küme sayısına rastgele karar verilmesini sağlar."}, {"letter": "C", "text": "fit_predict() fonksiyonu küme etiketlerinin üretiminde rol almaz."}, {"letter": "D", "text": "random_state=123 parametresi küme sayısını otomatik olarak belirler."}, {"letter": "E", "text": "model.labels_ ifadesi küme merkezlerinin koordinatlarını döndürür."}], "correct": "A", "explanation": "n_clusters=4 parametresi k-Means algoritmasının veriyi 4 farklı kümeye böleceğini açıkça tanımlar."}, {"num": 16, "tag": "Doğrusal Regresyon / Tahmin", "text": "Bir araştırmada satış miktarı (y) ile reklam harcaması (x) arasındaki ilişki doğrusal regresyon modeli ile incelenmiştir. Yapılan analiz sonucunda aşağıdaki regresyon modeli elde edilmiştir:\n\nY = 20 + 4x\n\nBurada: y: Satış miktarı (adet), x: Reklam harcaması (bin TL)\nBuna göre reklam harcaması 6 bin TL olduğunda model tarafından tahmin edilen satış miktarı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "36"}, {"letter": "B", "text": "24"}, {"letter": "C", "text": "44"}, {"letter": "D", "text": "48"}, {"letter": "E", "text": "56"}], "correct": "C", "explanation": "x = 6 değeri denklemde yerine konursa: Y = 20 + 4*(6) = 20 + 24 = 44 adet bulunur."}, {"num": 17, "tag": "Danışmansız Öğrenme (Unsupervised)", "text": "Aşağıdakilerden hangisi danışmansız öğrenme yönteminin temel özelliğini doğru şekilde ifade etmektedir?", "options": [{"letter": "A", "text": "Öğrenme süreci yalnızca insan tarafından belirlenen kurallara dayanır."}, {"letter": "B", "text": "Veri setinde önceden etiketlenmiş hedef değişken bulunmadan benzer örnekler gruplanır."}, {"letter": "C", "text": "Model yalnızca sınıflandırma problemlerinde kullanılabilir."}, {"letter": "D", "text": "Veri setinde mutlaka kategorik veya nümerik bir hedef nitelik bulunur."}, {"letter": "E", "text": "Algoritma, doğru veya yanlış davranışlara göre ödül-ceza mekanizmasıyla öğrenir."}], "correct": "B", "explanation": "Danışmansız öğrenmede (Unsupervised Learning) veri etiketleri (hedef değişken) yoktur; algoritma verideki benzerlikleri ve gizli örüntüleri gruplar."}, {"num": 18, "tag": "İstatistiksel Veri Türleri", "text": "Aşağıdaki değişkenlerden hangisi nominal veri türüne örnektir?", "options": [{"letter": "A", "text": "Bir kişinin kan grubu (A, B, AB, 0)."}, {"letter": "B", "text": "Bir kişinin aylık geliri (TL)."}, {"letter": "C", "text": "Günlük sıcaklık değeri (°C)."}, {"letter": "D", "text": "Bir aracın kilometre değeri."}, {"letter": "E", "text": "Bir öğrencinin başarı düzeyi (düşük–orta–yüksek)."}], "correct": "A", "explanation": "Kan grubu, aralarında büyüklük-küçüklük veya doğal sıralama bulunmayan saf adlandırma (nominal) niteliğidir. Başarı düzeyi ordinal, gelir ve km oransaldır."}, {"num": 19, "tag": "Karar Ağaçları (Decision Trees)", "text": "Karar ağaçları sınıflandırma amacıyla kullanıldığında temel hedef aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sınıf etiketi bilinmeyen bir gözlemin, olasılık dağılımını hesaplamak."}, {"letter": "B", "text": "Nitelikler arası korelasyonu maksimum düzeye çıkartmak."}, {"letter": "C", "text": "Etiketlenmemiş bir gözlemin niteliklerini test ederek uygun sınıf etiketini belirlemek."}, {"letter": "D", "text": "Ağaçtaki tüm yapraklara eşit sayıda gözlem yerleştirmek."}, {"letter": "E", "text": "Etiketlenmiş veriden yeni nitelikler üretmek."}], "correct": "C", "explanation": "Karar ağaçları kökten yaprağa kurallar dizisiyle nitelikleri sorgulayarak yeni bir gözleme en uygun sınıf etiketini atamayı hedefler."}, {"num": 20, "tag": "k-En Yakın Komşu (k-NN)", "text": "Aşağıdaki tabloda bir veri noktasının sınıfını tahmin etmek amacıyla k-En Yakın Komşu (k-NN) algoritması kullanılmıştır. Eğitim veri setinde, yeni gözlem z’ye en yakın 5 örneğin uzaklıkları ve gerçek sınıf etiketleri verilmiştir.\nk-NN algoritmasında çoğunluk oylaması (majority voting) kullanıldığına göre, z gözleminin k=5 komşuya göre tahmin edilen sınıfı aşağıdakilerden hangisidir?", "tableHtml": "\n        <table class=\"q-table\">\n            <thead>\n                <tr>\n                    <th>Örnek</th>\n                    <th>Uzaklık (Manhattan)</th>\n                    <th>Sınıf Etiketi</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr><td>K7</td><td>0.18</td><td><strong>A</strong></td></tr>\n                <tr><td>K15</td><td>0.22</td><td><strong>B</strong></td></tr>\n                <tr><td>K33</td><td>0.27</td><td><strong>A</strong></td></tr>\n                <tr><td>K41</td><td>0.35</td><td><strong>C</strong></td></tr>\n                <tr><td>K52</td><td>0.39</td><td><strong>A</strong></td></tr>\n            </tbody>\n        </table>\n        ", "options": [{"letter": "A", "text": "C"}, {"letter": "B", "text": "En küçük uzaklığa sahip sınıf seçilir."}, {"letter": "C", "text": "B ve C eşit sayıda olduğu için belirlenemez."}, {"letter": "D", "text": "B"}, {"letter": "E", "text": "A"}], "correct": "E", "explanation": "5 komşu içindeki oylar: Sınıf A = 3 oy (K7, K33, K52), Sınıf B = 1 oy (K15), Sınıf C = 1 oy (K41). Çoğunluk oylamasıyla en çok oyu alan A sınıfı seçilir."}];
+
+let userAnswers = {}; // qIndex: { selected: 'A', isCorrect: true }
+let currentFilter = 'all';
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+</body>
+</html>
