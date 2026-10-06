@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E2A4A">
+<title>İşletme Yönetimi — Ders Anlatımı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F3F6; --card:#FFFFFF; --raise:#F8FAFB; --gutter:#F4F7F9;
+  --ink:#1B2A41; --ink-2:#4C5C70; --ink-3:#8894A4;
+  --line:#E3E8ED; --line-2:#EEF1F5;
+  --blue:#1E2A4A; --blue-soft:#E8EDF7;
+  --ok:#12805C; --ok-soft:#E3F4EE; --ok-bd:#B5DFD0;
+  --no:#E0473C; --no-soft:#FDECEA;
+  --amber:#D2610E; --amber-soft:#FCEDE0;
+  --on-accent:#FFFFFF;
+  --shadow:0 1px 2px rgba(27,42,65,.05), 0 6px 20px -14px rgba(27,42,65,.3);
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
+}
+[data-theme="dark"]{
+  --paper:#151C25; --card:#1C2530; --raise:#222D3A; --gutter:#1A222C;
+  --ink:#E2E8F0; --ink-2:#A3B0C0; --ink-3:#75838F;
+  --line:#2E3A48; --line-2:#26313D;
+  --blue:#8FB3E0; --blue-soft:#232F42;
+  --ok:#5FC49C; --ok-soft:#172B25; --ok-bd:#2E4E43;
+  --no:#EF8B84; --no-soft:#2E1C1B;
+  --amber:#E8933F; --amber-soft:#2E2417;
+  --on-accent:#111820;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -18px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:840px;margin:0 auto;padding:0 16px 90px}
+
+/* başlık */
+.mast{padding:24px 0 14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);
+  font-weight:800;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+h1{font-size:25px;line-height:1.2;font-weight:800;margin:0 0 8px;color:var(--ink)}
+h1 span{display:block;font-size:15px;font-weight:700;color:var(--ink-3);margin-top:3px}
+.lede{color:var(--ink-2);margin:0;font-size:14.5px;line-height:1.65}
+
+/* yapışkan bar */
+nav.bar{position:sticky;top:0;z-index:40;margin:12px -16px 0;padding:9px 16px;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:840px;margin:0 auto;display:flex;gap:8px;align-items:center}
+select.sel{flex:1;min-width:0;font:inherit;font-size:14px;font-weight:700;padding:9px 10px;
+  border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.btn{font:inherit;font-size:14px;font-weight:800;cursor:pointer;padding:9px 12px;border-radius:9px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);transition:.15s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn.icon{padding:9px 11px;min-width:40px;text-align:center}
+
+/* cihaz menüsü */
+.device-menu-wrap{position:relative}
+.device-menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px;width:230px;display:none;z-index:100}
+.device-menu.show{display:block}
+.device-menu-head{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--ink-3);padding:6px 10px 4px}
+.device-opt{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 10px;border:none;background:transparent;font:inherit;font-size:13px;font-weight:700;color:var(--ink);border-radius:6px;cursor:pointer;text-align:left}
+.device-opt:hover{background:var(--gutter)}
+.device-opt.active{background:var(--blue-soft);color:var(--blue);font-weight:800}
+
+/* ünite gövdesi */
+.unit{display:none;padding-top:18px}
+.unit.on{display:block}
+.uhead{background:var(--blue);color:var(--on-accent);border-radius:14px;padding:16px 18px;margin:0 0 16px}
+[data-theme="dark"] .uhead{background:var(--raise);border:1px solid var(--line)}
+.uhead .num{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.75;font-weight:800}
+.uhead h2{margin:4px 0 8px;font-size:20px;line-height:1.25;font-weight:800;color:inherit}
+.uhead p{margin:0;font-size:14px;opacity:.9}
+h3{font-size:17px;font-weight:800;margin:26px 0 10px;color:var(--ink);display:flex;align-items:center;gap:8px}
+h3::before{content:"";width:4px;height:17px;border-radius:2px;background:var(--amber);flex:none}
+h4{font-size:15px;font-weight:800;margin:16px 0 6px;color:var(--ink)}
+p{margin:0 0 11px}
+.unit > p, .box p:last-child{margin-bottom:0}
+.unit > p{margin-bottom:11px}
+ul,ol{margin:0 0 12px;padding-left:20px}
+li{margin:0 0 6px}
+b,strong{font-weight:800}
+
+/* kutular */
+.box{border-radius:12px;padding:13px 15px;margin:0 0 14px;border:1px solid var(--line);
+  background:var(--card);box-shadow:var(--shadow);font-size:15px}
+.box .cap{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:800;
+  display:block;margin:0 0 7px}
+.box.formul{background:var(--gutter);border-left:4px solid var(--amber)}
+.box.formul .cap{color:var(--amber)}
+.box.ornek{border-left:4px solid var(--ok);background:var(--ok-soft)}
+.box.ornek .cap{color:var(--ok)}
+.box.tuzak{border-left:4px solid var(--no);background:var(--no-soft)}
+.box.tuzak .cap{color:var(--no)}
+.box.sinav{border-left:4px solid var(--blue);background:var(--blue-soft)}
+.box.sinav .cap{color:var(--blue)}
+.box.not{border-left:4px solid var(--ink-3);background:var(--raise)}
+.box.not .cap{color:var(--ink-3)}
+
+/* formül satırı */
+.f{display:block;font-size:15px;line-height:1.9;overflow-x:auto;white-space:normal;
+  padding:2px 0;font-weight:700}
+.f small{font-weight:600;color:var(--ink-3)}
+
+/* tablolar */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 14px}
+table{border-collapse:collapse;font-size:13.5px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;min-width:min(100%,260px);font-weight:600;width:100%}
+caption{caption-side:top;text-align:left;padding:8px 12px;font-size:11px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--blue);font-weight:800;background:var(--gutter);
+  border-bottom:1px solid var(--line)}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line-2);white-space:normal}
+thead th{background:var(--gutter);font-weight:800}
+tbody th{background:var(--gutter);color:var(--ink-2);font-weight:800}
+td.c,th.c{text-align:center}
+tr.hi td,tr.hi th{background:var(--ok-soft);color:var(--ok)}
+tr.tot td,tr.tot th{background:var(--blue-soft);font-weight:800}
+
+/* adım listesi */
+ol.adim{counter-reset:s;list-style:none;padding:0;margin:0 0 14px}
+ol.adim > li{counter-increment:s;position:relative;padding:0 0 0 34px;margin:0 0 11px;font-size:15px}
+ol.adim > li::before{content:counter(s);position:absolute;left:0;top:1px;width:24px;height:24px;
+  border-radius:50%;background:var(--blue);color:var(--on-accent);font-size:12.5px;font-weight:800;
+  display:grid;place-items:center}
+[data-theme="dark"] ol.adim > li::before{background:var(--blue-soft);color:var(--blue)}
+
+/* sorular kontrol */
+.sqhead{margin:26px 0 10px;display:flex;align-items:center;gap:8px;font-size:17px;font-weight:800}
+.sqhead::before{content:"";width:4px;height:17px;border-radius:2px;background:var(--ok);flex:none}
+.sqnote{font-size:13.5px;color:var(--ink-3);margin:-4px 0 12px}
+.sqctl{display:flex;gap:8px;margin-bottom:12px}
+.sqctl .btn{font-size:12.5px;padding:6px 12px}
+details.sq{border:1px solid var(--line);background:var(--card);border-radius:11px;margin:0 0 9px;
+  box-shadow:var(--shadow);overflow:hidden}
+details.sq > summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:14.5px;font-weight:700;
+  display:flex;gap:9px;align-items:flex-start;color:var(--ink)}
+details.sq > summary::-webkit-details-marker{display:none}
+details.sq > summary::after{content:"+";margin-left:auto;font-size:19px;font-weight:800;color:var(--ink-3);line-height:1;flex:none}
+details.sq[open] > summary::after{content:"−"}
+details.sq[open] > summary{border-bottom:1px solid var(--line-2);background:var(--gutter)}
+.sqn{flex:none;min-width:22px;height:22px;border-radius:6px;background:var(--blue-soft);color:var(--blue);
+  font-size:12px;font-weight:800;display:grid;place-items:center;margin-top:1px}
+.sqbody{padding:12px 14px 14px}
+.sqbody ul.o{list-style:none;padding:0;margin:0 0 10px}
+.sqbody ul.o li{padding:6px 10px;border:1px solid var(--line-2);border-radius:8px;margin:0 0 5px;
+  font-size:14px;background:var(--raise)}
+.sqbody ul.o li.ok{background:var(--ok-soft);border-color:var(--ok-bd);color:var(--ok);font-weight:800}
+.sqbody .coz{background:var(--gutter);border-left:3px solid var(--ok);border-radius:0 8px 8px 0;
+  padding:9px 12px;font-size:14px;margin:0 0 8px}
+.sqbody .coz b.cap{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ok);margin:0 0 4px}
+.sqtag{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:5px;
+  background:var(--gutter);color:var(--ink-3);border:1px solid var(--line);margin:0 4px 4px 0}
+.sqtag.rep{background:var(--amber-soft);color:var(--amber);border-color:color-mix(in srgb,var(--amber) 35%,transparent)}
+.sqall{margin:0 0 12px}
+
+/* alt gezinme */
+.pager{display:flex;gap:10px;margin:26px 0 0}
+.pager .btn{flex:1;text-align:center}
+.foot{margin:30px 0 0;padding:16px 0 0;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);line-height:1.7}
+#top{position:fixed;right:14px;bottom:18px;z-index:60;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:17px;cursor:pointer;
+  box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s}
+#top.show{opacity:1;pointer-events:auto}
+
+/* =========================================================
+   CİHAZ UYARLAMA PROFİLLERİ (DEVICE ADAPTIVE CSS)
+   ========================================================= */
+[data-device^="eink-"] *,
+[data-device^="eink-"] *::before,
+[data-device^="eink-"] *::after {
+  animation:none !important;
+  transition:none !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  text-shadow:none !important;
+}
+
+/* 6 inç Siyah-Beyaz E-Okuyucu */
+[data-device="eink-6-bw"] {
+  --paper:#FFFFFF !important; --card:#FFFFFF !important; --raise:#FFFFFF !important; --gutter:#FFFFFF !important;
+  --ink:#000000 !important; --ink-2:#111111 !important; --ink-3:#333333 !important;
+  --line:#000000 !important; --line-2:#000000 !important;
+  --blue:#000000 !important; --blue-soft:#FFFFFF !important;
+  --ok:#000000 !important; --ok-soft:#FFFFFF !important; --ok-bd:#000000 !important;
+  --amber:#000000 !important; --amber-soft:#FFFFFF !important;
+  --on-accent:#FFFFFF !important;
+}
+[data-device="eink-6-bw"] body { font-family:Georgia,'Bookerly',serif,system-ui !important; font-size:17px !important; }
+[data-device="eink-6-bw"] .uhead,
+[data-device="eink-6-bw"] .box,
+[data-device="eink-6-bw"] details.sq,
+[data-device="eink-6-bw"] .btn { border:2px solid #000000 !important; border-radius:4px !important; }
+[data-device="eink-6-bw"] .sqbody ul.o li.ok { border:2px solid #000000 !important; font-weight:800 !important; text-decoration:underline !important; }
+
+/* 6 inç Renkli E-Okuyucu */
+[data-device="eink-6-color"] body { font-size:16.5px !important; }
+[data-device="eink-6-color"] .box,
+[data-device="eink-6-color"] details.sq { border:1.5px solid var(--line) !important; }
+
+/* 10.3 inç Siyah-Beyaz Tablet */
+[data-device="eink-10-bw"] {
+  --paper:#FFFFFF !important; --card:#FFFFFF !important; --raise:#FFFFFF !important;
+  --ink:#000000 !important; --line:#000000 !important;
+}
+[data-device="eink-10-bw"] body { font-family:Georgia,'Bookerly',serif,system-ui !important; }
+[data-device="eink-10-bw"] .wrap,
+[data-device="eink-10-color"] .wrap { max-width:1100px !important; padding-right:60px !important; }
+[data-device="eink-10-bw"] .box,
+[data-device="eink-10-bw"] details.sq { border:2px solid #000000 !important; border-radius:6px !important; }
+
+/* Mobil Profil */
+[data-device="mobile"] body { font-size:15px !important; }
+[data-device="mobile"] .wrap { padding:0 12px 70px !important; }
+[data-device="mobile"] h1 { font-size:22px !important; }
+[data-device="mobile"] .box { padding:11px 12px !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">AUZEF &middot; Yönetim Bilişim Sistemleri &middot; 1. Sınıf Güz</p>
+    <h1>İşletme Yönetimi<span>Kapsamlı Ders Anlatımı ve Tam Çözümlü Soru Bankası</span></h1>
+    <p class="lede">AUZEF e-kitabının <b>8 ünitesinin tamamı</b> (Temel Kavramlar, Yönetim Düşüncesinin Tarihsel Gelişimi, Temel İlkeler ve İlişkili Bilimler, Çevre & Sosyal Sorumluluk, İşletmelerin Sınıflandırılması & Şirket Türleri, Kuruluş Çalışmaları & Kapasite, Yönetim & Pazarlama Fonksiyonları, Üretim & Finans & Muhasebe & İKY) sıfırdan kavram kavram anlatıldı. Her konuda <b>kavramsal ayrımlar, analojiler, tablolar, adım adım çözümlü örnekler, sınav tuzakları, son tekrar özetleri</b> ve 2022–2026 sınav dönemlerinden derlenen <b>tam çözümlü 12'şer çıkmış soru</b> (Toplam 96 tam çözümlü soru) yer alır. Cihazınıza uygun ekran profilini sağ üstteki menüden seçebilirsiniz.</p>
+  </header>
+
+  <nav class="bar">
+    <div class="bar-in">
+      <button class="btn icon" id="prev" aria-label="Önceki ünite">‹</button>
+      <select class="sel" id="usel">
+        <option value="0">Ünite 1 — İşletme ile İlgili Temel Kavramlar</option>
+        <option value="1">Ünite 2 — İşletmeciliğin Tarihsel Gelişimi</option>
+        <option value="2">Ünite 3 — Temel İşletmecilik İlkeleri</option>
+        <option value="3">Ünite 4 — İşletmenin Çevresi ve Sosyal Sorumluluk</option>
+        <option value="4">Ünite 5 — İşletmelerin Sınıflandırılması ve Şirketler</option>
+        <option value="5">Ünite 6 — Kuruluş Çalışmaları, Kapasite ve Kuruluş Yeri</option>
+        <option value="6">Ünite 7 — İşletme Fonksiyonları I: Yönetim ve Pazarlama</option>
+        <option value="7">Ünite 8 — İşletmecilik Fonksiyonları II: Üretim, Finans, Muhasebe ve İK</option>
+      </select>
+      <button class="btn icon" id="next" aria-label="Sonraki ünite">›</button>
+      <div class="device-menu-wrap">
+        <button class="btn icon" id="device-btn" title="Cihaz Profili" aria-label="Cihaz Profili">📱</button>
+        <div id="device-menu" class="device-menu">
+          <div class="device-menu-head">Ekran & Cihaz Profili</div>
+          <button class="device-opt" data-dev="auto"><span>🔄 Otomatik Algıla</span></button>
+          <button class="device-opt" data-dev="web"><span>💻 Masaüstü Web</span></button>
+          <button class="device-opt" data-dev="mobile"><span>📱 Akıllı Telefon</span></button>
+          <button class="device-opt" data-dev="eink-6-bw"><span>📖 6" E-Okuyucu (S/B)</span></button>
+          <button class="device-opt" data-dev="eink-6-color"><span>🎨 6" E-Okuyucu (Renkli)</span></button>
+          <button class="device-opt" data-dev="eink-10-bw"><span>📝 10.3" Tablet (S/B)</span></button>
+          <button class="device-opt" data-dev="eink-10-color"><span>🖍️ 10.3" Tablet (Renkli)</span></button>
+        </div>
+      </div>
+      <button class="btn icon" id="theme" aria-label="Tema">🌙</button>
+    </div>
+  </nav>
+
+<section class="unit" data-i="0">
+  <div class="uhead">
+    <span class="num">Ünite 1</span>
+    <h2>İşletme ile İlgili Temel Kavramlar</h2>
+    <p>İhtiyaçlar, Maslow hiyerarşisi, ekonomik mal ve hizmetler, fayda türleri (şekil, yer, zaman, mülkiyet), üretim faktörleri ve gelirleri, girişimci ile yönetici ayrımı ve işletmenin temel amaçları. Vize sınavında banko 3 soru bu üniteden çıkmaktadır.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Fırıncı ve Günlük Yaşam Analojisi:</b></p>
+    <p>1. <b>İhtiyaç ve Kıtlık:</b> Sabah karnınız acıkır; bu bir <b>fizyolojik birincil ihtiyaçtır</b>. Karnınızı doyurmak için bir fırına gidersiniz. Buğday tarladaki haliyle açlığınızı gidermez; fırıncı unu ekmeğe dönüştürerek <b>şekil faydası</b>, fırından kapınıza getirerek <b>yer faydası</b>, bayatlamadan sabah sıcak tutarak <b>zaman faydası</b> ve parasını alıp ekmeği size devrederek <b>mülkiyet faydası</b> yaratır.</p>
+    <p>2. <b>Girişimci vs Yönetici:</b> Fırını kendi birikimiyle açan, unun fiyatı artarsa batma riskini tek başına göğüsleyen kişi <b>girişimcidir</b> (amacı kârdır). Kasada durup fırını idare eden ve ay sonunda sabit maaşını alan usta başı ise <b>yöneticidir</b> (profesyoneldir, kâr-zarar riski ona ait değildir).</p>
+    <p>3. <b>Sınavda Ne Sorulur?</b> Maslow basamaklarının sırası, 4 fayda türünün hangi faaliyetle yaratıldığı, üretim faktörlerinin getiri adları (Toprak &rarr; Rant, Emek &rarr; Ücret, Sermaye &rarr; Faiz, Girişimci &rarr; Kâr) ve girişimci-yönetici farkı mutlaka sorulur.</p>
+  </div>
+
+  <h3>1.1. İnsan İhtiyaçları ve Maslow'un İhtiyaçlar Hiyerarşisi</h3>
+  <p>İhtiyaç, karşılandığında haz ve doyum, karşılanmadığında acı ve üzüntü veren bir yokluk duygusudur. İki ana gruba ayrılır:</p>
+  <ul>
+    <li><b>Birincil (Fizyolojik/Biyolojik) İhtiyaçlar:</b> İnsanın hayatta kalması için zorunlu olan yeme, içme, barınma, uyku gibi temel gereksinimlerdir. Ertelenemezler.</li>
+    <li><b>İkincil (Sosyo-Kültürel) İhtiyaçlar:</b> Bireyin toplum içinde yaşamasından kaynaklanan eğlenme, seyahat, statü, eğitim, moda ve kültürel faaliyet ihtiyaçlarıdır. Esnektir ve ertelenebilir.</li>
+  </ul>
+
+  <div class="box formul">
+    <span class="cap">Abraham Maslow'un İhtiyaçlar Hiyerarşisi (Aşağıdan Yukarıya 5 Basamak)</span>
+    <ol style="margin:4px 0 0 18px; line-height:1.65;">
+      <li><b>1. Fizyolojik İhtiyaçlar (Taban):</b> Açlık, susuzluk, barınma, nefes alma. (Karşılanmadan üst basamağa geçilemez).</li>
+      <li><b>2. Güvenlik İhtiyaçları:</b> Can güvenliği, iş güvencesi, sağlık sigortası, emeklilik, tehlikelerden korunma.</li>
+      <li><b>3. Sevgi ve Ait Olma (Sosyal) İhtiyaçlar:</b> Bir gruba ait olma, arkadaşlık, dostluk, sevilme, kabul görme.</li>
+      <li><b>4. Saygınlık ve Değer Görme (Statü) İhtiyaçları:</b> Başarı, takdir edilme, unvan, saygı görme, itibar.</li>
+      <li><b>5. Kendini Gerçekleştirme (Zirve):</b> Bireyin potansiyelini ve yeteneklerini en üst düzeyde ortaya koyması, kişisel gelişim.</li>
+    </ol>
+  </div>
+
+  <h3>1.2. Ekonomik Mal ve Hizmetler</h3>
+  <p>İhtiyaçları gidermeye yarayan her türlü unsura mal ve hizmet denir.</p>
+  <div class="tw"><table>
+    <caption>Mal ve Hizmet Sınıflandırması</caption>
+    <thead><tr><th class="l">Kriter</th><th class="l">Türler</th><th class="l">Özellik ve Örnek</th></tr></thead>
+    <tbody>
+      <tr><th class="l">Elde Edilme Şekline Göre</th><td class="l"><b>Serbest Mal</b><br><b>Ekonomik Mal</b></td><td class="l">Doğada hazır, bedelsiz (hava, güneş ışığı).<br>Üretim çabası gerektiren, bedelli, kıt olan mal (araba, ekmek).</td></tr>
+      <tr><th class="l">Kullanım Amacına Göre</th><td class="l"><b>Tüketim Malı</b><br><b>Üretim (Endüstriyel) Malı</b></td><td class="l">Nihai tüketicinin doğrudan ihtiyacını karşılayan (ayakkabı).<br>Başka mal üretmek için kullanılan (kumaş, dikiş makinesi).</td></tr>
+      <tr><th class="l">Kullanım Ömrüne Göre</th><td class="l"><b>Dayanıklı Mal</b><br><b>Dayanıksız Mal</b></td><td class="l">Uzun süreli kullanılan (buzdolabı, televizyon).<br>Kullanılınca tükenen (ekmek, deterjan).</td></tr>
+      <tr><th class="l">Maddilik Durumuna Göre</th><td class="l"><b>Maddi Mal</b><br><b>Hizmet</b></td><td class="l">Fiziksel varlığı olan, depolanabilen (telefon).<br>Fiziksel olmayan, üretildiği an tüketilen, stoklanamayan (eğitim, bankacılık).</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>1.3. Ekonomik Faaliyetler ve Dört Temel Fayda Türü</h3>
+  <p>İşletmeler mal ve hizmet üreterek insanlara 4 temel fayda sağlarlar:</p>
+  <div class="box formul">
+    <span class="cap">Dört Temel Fayda Türü</span>
+    <span class="f"><b>1. Şekil Faydası:</b> Maddelerin fiziksel veya kimyasal yapısını değiştirerek onları ihtiyaca uygun mamul haline getirmektir. <b>Üretim faaliyeti</b> ile yaratılır (Örn: Ağaçtan sandalye yapılması).</span>
+    <span class="f"><b>2. Yer Faydası:</b> Malları üretildikleri yerden ihtiyaç duyulan tüketim merkezlerine taşımaktır. <b>Ulaştırma ve lojistik faaliyeti</b> ile yaratılır (Örn: Rize'deki çayın İstanbul'a getirilmesi).</span>
+    <span class="f"><b>3. Zaman Faydası:</b> Malların bol olduğu dönemde stoklanıp, kıt olduğu dönemde tüketime sunulmasıdır. <b>Depolama faaliyeti</b> ile yaratılır (Örn: Yazın toplanan buğdayın kışın satılması).</span>
+    <span class="f"><b>4. Mülkiyet (Hak Sahipliği) Faydası:</b> Malların mülkiyetinin satıcıdan alıcıya devredilmesidir. <b>Ticaret ve satış faaliyeti</b> ile yaratılır.</span>
+  </div>
+
+  <h3>1.4. Üretim Faktörleri ve Getirileri</h3>
+  <p>Mal ve hizmet üretebilmek için bir araya getirilen kaynaklara <b>üretim faktörleri</b> denir. Klasik 4 faktöre günümüzde bilgi eklenmiştir:</p>
+  <div class="tw"><table>
+    <caption>Üretim Faktörleri ve Sağladıkları Gelir Türleri</caption>
+    <thead><tr><th class="l">Üretim Faktörü</th><th class="l">Tanımı</th><th class="c">Sağladığı Gelir Payı</th></tr></thead>
+    <tbody>
+      <tr class="hi"><th class="l">Doğal Kaynaklar (Toprak)</th><td class="l">Hammadde, tarım arazisi, su, madenler, enerji kaynakları</td><td class="c"><b>RANT (Kira)</b></td></tr>
+      <tr class="hi"><th class="l">Emek (İşgücü)</th><td class="l">İnsanın üretime kattığı fiziksel ve zihinsel çabası</td><td class="c"><b>ÜCRET</b></td></tr>
+      <tr class="hi"><th class="l">Sermaye (Kapital)</th><td class="l">Üretimde kullanılan makine, teçhizat, bina ve finansal araçlar</td><td class="c"><b>FAİZ</b></td></tr>
+      <tr class="hi"><th class="l">Girişimci (Müteşebbis)</th><td class="l">Diğer üç faktörü bir araya getiren ve riski üstlenen kişi</td><td class="c"><b>KÂR</b></td></tr>
+      <tr><th class="l">Bilgi / Teknoloji</th><td class="l">Modern 5. faktör: Veri, patent, yazılım ve yönetsel bilgi birikimi</td><td class="c">Telif / Lisans</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>1.5. Girişimci ve Yönetici Kavramları</h3>
+  <div class="box formul">
+    <span class="cap">Girişimci ile Yönetici Arasındaki Keskin Fark</span>
+    <span class="f"><b>Girişimci (Entrepreneur):</b> İhtiyaçları sezen, üretim faktörlerini bir araya getiren ve <b>kâr elde etmek amacıyla zarar riskini tek başına üstlenen</b> kişidir. Kâr da zarar da ona aittir.</span>
+    <span class="f"><b>Yönetici (Manager):</b> Kâr ve riski başkalarına (girişimciye/ortaklara) ait olan bir işletmeyi, belirli bir <b>ücret (maaş) karşılığında</b> profesyonelce sevk ve idare eden kişidir. Riski üstlenmez.</span>
+  </div>
+
+  <h3>1.6. İşletmenin Tanımı ve Temel Amaçları</h3>
+  <p><b>İşletme:</b> İnsan ihtiyaçlarını karşılamak üzere üretim faktörlerini uyumlu bir şekilde bir araya getirerek mal veya hizmet üreten ve/veya pazarlayan, kâr ve sosyal fayda amaçlı sosyo-teknik ekonomik birimdir.</p>
+  <ul>
+    <li><b>1. Kârlılık Amacı:</b> İşletmenin varlığını sürdürmesi, yatırımlarını yenilemesi ve ortaklarına getiri sağlaması için <b>en temel ve birincil ekonomik amaçtır</b>.</li>
+    <li><b>2. Toplumsal Fayda (Sosyal Sorumluluk) Amacı:</b> Toplumun refahını artırma, kaliteli mal üretme, çevreye duyarlı olma, istihdam yaratma ve vergi ödeme amacıdır.</li>
+    <li><b>3. Süreklilik ve Büyüme Amacı:</b> Piyasada kalıcı olma, rekabet edebilme ve pazar payını genişletme amacıdır.</li>
+  </ul>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: Fayda Türü Eşleştirme</span>
+    <p><b>Soru:</b> Bir lojistik firmasının Antalya'da üretilen domatesleri İstanbul hallerine taşıması ve soğuk hava deposunda 3 ay muhafaza etmesi sırasıyla hangi fayda türlerini yaratır?</p>
+    <ol class="adim">
+      <li><b>Taşıma faaliyeti:</b> Ürünün yerini tüketim merkezine değiştirdiği için <b>Yer Faydası</b> yaratır.</li>
+      <li><b>Depolama faaliyeti:</b> Ürünün tüketileceği zamanı genişlettiği için <b>Zaman Faydası</b> yaratır.</li>
+      <li><b>Sonuç:</b> Sırasıyla <b>Yer ve Zaman Faydası</b> sağlanmıştır.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Girişimci vs Yönetici):</b> Soruda "Kâr amacıyla riski üstlenen" diyorsa cevap <b>Girişimci</b>; "Belirli bir ücret karşılığı başkası adına yöneten" diyorsa cevap <b>Yönetici</b>dir. Yönetici kâr ve zarar riskini üstlenmez!</li>
+      <li><b>Tuzak 2 (Fayda - Faaliyet Eşleşmesi):</b> Şekil faydası &rarr; Üretim, Yer faydası &rarr; Ulaşım/Lojistik, Zaman faydası &rarr; Depolama, Mülkiyet faydası &rarr; Satış/Ticaret. Bu eşleştirmeyi ters sorarlar.</li>
+      <li><b>Tuzak 3 (Doğal Kaynak Geliri):</b> Doğal kaynakların (toprağın) geliri "Kira" değil, iktisat ve işletmedeki bilimsel adıyla <b>RANT</b>tır. Şıklarda rantı aramalısınız.</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>Maslow hiyerarşisi 5 basamaktır: Fizyolojik &rarr; Güvenlik &rarr; Ait Olma &rarr; Saygınlık &rarr; Kendini Gerçekleştirme.</li>
+      <li>Serbest mal doğada bedelsiz bulunur (hava); ekonomik mal kıttır ve emek/maliyet gerektirir.</li>
+      <li>Hizmetler maddi değildir, stoklanamaz ve üretildiği an tüketilir.</li>
+      <li>Fayda türleri: Şekil (üretim), Yer (taşıma), Zaman (depolama), Mülkiyet (ticaret).</li>
+      <li>Üretim faktörleri ve gelirleri: Toprak &rarr; <b>Rant</b>, Emek &rarr; <b>Ücret</b>, Sermaye &rarr; <b>Faiz</b>, Girişimci &rarr; <b>Kâr</b>.</li>
+      <li>Girişimci riski üstlenir ve kâr elde eder; yönetici ise ücret karşılığı işletmeyi idare eder.</li>
+      <li>İşletmenin birincil ve temel ekonomik amacı <b>kârlılıktır</b>.</li>
+      <li>İkincil ihtiyaçlar sosyal ve kültüreldir, ertelenebilir; birincil ihtiyaçlar hayati olup ertelenemez.</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Maslow'un İhtiyaçlar Hiyerarşisi kuramına göre en üst (beşinci) basamakta yer alan ihtiyaç türü aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) Fizyolojik ihtiyaçlar</li><li>B) Güvenlik ihtiyacı</li><li>C) Ait olma ve sevgi</li><li>D) Saygınlık ihtiyacı</li><li class="ok">E) Kendini gerçekleştirme ihtiyacı</li></ul><p class="coz"><b class="cap">Çözüm</b>Maslow'un piramidinde en altta Fizyolojik, ardından Güvenlik, Sevgi/Ait olma, Saygınlık ve piramidin en tepesinde (en üst basamakta) <b>Kendini Gerçekleştirme</b> ihtiyacı yer alır. Doğru seçenek E'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>Üretim faktörlerinden "Doğal Kaynaklar (Toprak)"ın üretim sürecine katılması karşılığında elde ettiği gelir payına ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Ücret</li><li>B) Faiz</li><li class="ok">C) Rant</li><li>D) Kâr</li><li>E) Prim</li></ul><p class="coz"><b class="cap">Çözüm</b>Üretim faktörlerinin gelir eşleşmesi: Emek &rarr; Ücret, Sermaye &rarr; Faiz, Girişimci &rarr; Kâr, Doğal Kaynaklar (Toprak) &rarr; <b>Rant</b> şeklindedir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Malların üretildikleri yerden alınıp ihtiyaç duyulan tüketim merkezlerine ulaştırılmasıyla sağlanan fayda türü aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Şekil faydası</li><li class="ok">B) Yer faydası</li><li>C) Zaman faydası</li><li>D) Mülkiyet faydası</li><li>E) Sosyal fayda</li></ul><p class="coz"><b class="cap">Çözüm</b>Mekânsal değişim ve taşıma faaliyetleriyle malların tüketim bölgesine getirilmesi <b>Yer Faydası</b> sağlar. Şekil faydası üretimle, zaman faydası depolamayla, mülkiyet faydası satışla oluşur. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Kâr ve zarar riski başkalarına ait olmak üzere, belirli bir ücret karşılığında işletmeyi profesyonelce yöneten kişiye ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2023 Bütünleme</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Girişimci</li><li class="ok">B) Yönetici</li><li>C) Hissedar</li><li>D) Müteşebbis</li><li>E) Aracı</li></ul><p class="coz"><b class="cap">Çözüm</b>Girişimci sermayesini koyup kâr/zarar riskini üstlenirken; risk başkasına ait olup bir <b>ücret karşılığı</b> işletmeyi yöneten kişiye <b>Yönetici</b> denir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>Aşağıdakilerden hangisi bir "serbest mal" örneğidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Vize</span><ul class="o"><li>A) Şişelenmiş içme suyu</li><li>B) Doğal gaz</li><li class="ok">C) Deniz kıyısındaki güneş ışığı</li><li>D) Odun kömürü</li><li>E) Elektrik enerjisi</li></ul><p class="coz"><b class="cap">Çözüm</b>Serbest mallar doğada hazır bulunan, hiçbir emek, maliyet veya üretim çabası gerektirmeyen ve bir bedel ödenmeksizin tüketilebilen mallardır (güneş ışığı, soluduğumuz hava). Diğer şıklar ekonomik (kıt) mallardır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>Hammadde ve maddelerin fiziksel veya kimyasal yapısını değiştirerek onları ihtiyacı karşılayacak mamul haline getirme faaliyeti hangi faydayı yaratır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Şekil faydası</li><li>B) Yer faydası</li><li>C) Zaman faydası</li><li>D) Mülkiyet faydası</li><li>E) Bilgi faydası</li></ul><p class="coz"><b class="cap">Çözüm</b>Üretim faaliyeti yoluyla maddelerin biçimini, yapısını ve fonksiyonunu değiştirip kullanışlı hale getirmek <b>Şekil Faydası</b> yaratır (örn: kumaştan gömlek üretmek). Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Aşağıdakilerden hangisi işletmenin "birincil ve temel ekonomik amacı"dır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023-2024 Final</span><span class="sqtag">2024 Vize</span><ul class="o"><li>A) İstihdam yaratmak</li><li class="ok">B) Kârlılık sağlamak</li><li>C) Çevreyi korumak</li><li>D) Vergi ödemek</li><li>E) Topluma hizmet etmek</li></ul><p class="coz"><b class="cap">Çözüm</b>Sosyal sorumluluk, istihdam ve çevre amaçları önemli olmakla birlikte, bir işletmenin varlığını sürdürebilmesinin temel ön koşulu ve birincil ekonomik amacı <b>Kârlılıktır</b>. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Hizmetlerin fiziksel mallardan en belirgin farkı aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) İhtiyaçları gidermemesi</li><li class="ok">B) Maddi varlığının olmaması ve stoklanamaması</li><li>C) Bir bedel karşılığı satılamaması</li><li>D) Üretim faktörü gerektirmemesi</li><li>E) Tüketiciye fayda sağlamaması</li></ul><p class="coz"><b class="cap">Çözüm</b>Hizmetler maddi (fiziksel) bir yapıya sahip değildir; üretildikleri an tüketilirler, depolanamaz ve stoklanamazlar (örn: muayene, uçak yolculuğu, ders anlatımı). Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>Maslow'un İhtiyaçlar Hiyerarşisinde bireyin bir emeklilik planı yapması, sigortalanması ve tehlikelerden uzak durma arzusu hangi basamağa aittir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Fizyolojik ihtiyaçlar</li><li class="ok">B) Güvenlik ihtiyaçları</li><li>C) Sosyal ihtiyaçlar</li><li>D) Saygınlık ihtiyacı</li><li>E) Kendini gerçekleştirme</li></ul><p class="coz"><b class="cap">Çözüm</b>Gelecek kaygısını azaltma, iş güvencesi, sağlık ve emeklilik sigortası piramidin 2. basamağı olan <b>Güvenlik İhtiyaçları</b> kapsamındadır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>Üretim faktörlerinden "Sermaye"nin üretime katılması karşılığında elde ettiği getiri aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Rant</li><li>B) Ücret</li><li class="ok">C) Faiz</li><li>D) Kâr</li><li>E) Prim</li></ul><p class="coz"><b class="cap">Çözüm</b>Sermaye faktörünün piyasadaki getiri payı <b>Faiz</b>dir. (Emek &rarr; Ücret, Toprak &rarr; Rant, Girişimci &rarr; Kâr). Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>Mevsiminde bol miktarda üretilen domateslerin salça yapılarak veya soğuk hava depolarında saklanarak kış aylarında satışa sunulması hangi faydayı sağlar?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Yer faydası</li><li class="ok">B) Zaman faydası</li><li>C) Mülkiyet faydası</li><li>D) Hukuki fayda</li><li>E) Prestij faydası</li></ul><p class="coz"><b class="cap">Çözüm</b>Ürünlerin depolanarak veya saklanarak kıt oldukları dönemde tüketime sunulması <b>Zaman Faydası</b> yaratır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Bir tekstil fabrikasının gömlek dikmek için satın aldığı kumaşlar ve iplikler ne tür mal sınıfına girer?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023-2024 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Nihai tüketim malı</li><li class="ok">B) Üretim (Endüstriyel) malı</li><li>C) Serbest mal</li><li>D) Dayanıklı tüketim malı</li><li>E) Lüks tüketim malı</li></ul><p class="coz"><b class="cap">Çözüm</b>Başka bir malın (gömleğin) üretilmesinde girdi olarak kullanılan ve nihai tüketiciye değil üreticiye yönelik olan mallar <b>Üretim (Endüstriyel) Malı</b>dır. Doğru seçenek B'dir.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <span></span>
+    <button class="btn" data-go="1">Ünite 2 ›</button>
+  </div>
+</section>
+
+<section class="unit" data-i="1">
+  <div class="uhead">
+    <span class="num">Ünite 2</span>
+    <h2>İşletmeciliğin Tarihsel Gelişimi ve Yönetim Yaklaşımları</h2>
+    <p>Sanayi devrimi, Klasik Yönetim (Taylor, Fayol, Weber), Neoklasik Yaklaşım (Hawthorne deneyleri ve Elton Mayo), Modern Yaklaşımlar (Sistem ve Durumsallık) ve Postmodern yaklaşımlar. AUZEF sınavlarında her dönem 3-4 soru doğrudan buradan gelmektedir.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Fabrika Saati ve İnsan Ruhu Analojisi:</b></p>
+    <p>1. <b>Klasik Yaklaşım (1900'ler - Makine Örgüt):</b> İnsanı adeta fabrikanın bir "çarkı veya vidası" gibi görür. Taylor der ki: "İşçinin her hareketini kronometreyle ölç, boş vakit bırakma, parça başı para ver çok çalışsın." Fayol yönetici ilkelerini koyar ("tek bir amir olsun"), Weber ise bürokrasiyi kurar ("her şey yazılı kurala bağlı olsun"). Ortak noktaları: İnsanın duygusu yoktur, sadece para için çalışır (Rasyonel İnsan).</p>
+    <p>2. <b>Neoklasik Yaklaşım (1930'lar - İnsan Kalbi):</b> Elton Mayo fabrikada ışıkları artırıp azaltarak deney yapar. Görür ki ışık azalsa bile işçilerin verimi artıyor! Çünkü yöneticiler onlarla ilgilenmiş, değerli hissettirmiştir. Anlaşılır ki insan makine değil, <b>sosyal bir varlıktır</b>; moralle, ait olmayla çalışır.</p>
+    <p>3. <b>Modern Yaklaşım (1960'lar - Canlı Organizma):</b> Sistem yaklaşımı der ki: "İşletme dış çevresinden kopuk yaşayamaz, açık bir sistemdir; organlar gibi alt sistemleri vardır ve 2+2=5 eder (sinerji)." Durumsallık yaklaşımı ise son noktayı koyar: <b>"Her yerde geçerli tek bir en iyi yol YOKTUR, çevreye göre değişir!"</b></p>
+  </div>
+
+  <h3>2.1. Sanayi Devrimi ve Etkileri</h3>
+  <p>18. yüzyılın ikinci yarısında İngiltere'de buhar makinesinin icadıyla başlayan Sanayi Devrimi; ev tipi küçük atölye üretiminden büyük fabrikalara, el emeğinden makineli seri üretime geçişi sağlamıştır. Şehirleşme hızlanmış, sermaye birikimi artmış ve profesyonel yönetim ihtiyacı doğmuştur.</p>
+
+  <h3>2.2. Klasik Yönetim Düşüncesi</h3>
+  <p>1900–1930 yılları arasında gelişen bu yaklaşım örgütü kapalı bir sistem, insanı ise sadece ekonomik çıkarlarla güdülenen rasyonel bir varlık (<i>Homo Economicus</i>) olarak görür. Üç ana akımdan oluşur:</p>
+
+  <div class="box formul">
+    <span class="cap">Klasik Yönetimin Üç Ayağı</span>
+    <span class="f"><b>1. Frederick Winslow Taylor — Bilimsel Yönetim Yaklaşımı (1911):</b><br>
+    &bull; İşin en verimli şekilde yapılması için <b>"Tek bir en iyi yol" (The One Best Way)</b> arayışıdır.<br>
+    &bull; <b>Zaman ve hareket etütleri:</b> Kronometre ile gereksiz hareketleri eleme, işi standartlaştırma.<br>
+    &bull; <b>Parça başı primli ücret sistemi:</b> Standart üstü üretene yüksek ücret verilerek verimlilik teşviki.<br>
+    &bull; Yöneticiler planlar, işçiler sadece uygular ayrımı.</span>
+    <span class="f"><b>2. Henri Fayol — Yönetim Süreci Yaklaşımı:</b><br>
+    &bull; Yönetimi ilk kez fonksiyonel süreç olarak tanımlamıştır: <b>Planlama, Örgütleme, Yöneltme (Emir-komuta), Koordinasyon ve Denetim (POK)</b>.<br>
+    &bull; <b>14 Yönetim İlkesi:</b> <b>Kumanda Birliği</b> (Her ast yalnızca <i>tek bir üstten</i> emir almalıdır), <b>Yönetim Birliği</b> (Aynı amaca yönelik faaliyetler tek plan altında toplanmalıdır), Hiyerarşi (Skalar zincir), Yetki ve Sorumluluk dengesi, Disiplin, Hakkaniyet, Personelin devamlılığı, Birlik ruhu (<i>Esprit de Corps</i>).</span>
+    <span class="f"><b>3. Max Weber — Bürokrasi Yaklaşımı:</b><br>
+    &bull; İdeal, akılcı ve verimli bir örgüt yapısı kurmayı amaçlar.<br>
+    &bull; <b>Yasal-Rasyonel Yetki:</b> Yetki kişiye değil, makama aittir.<br>
+    &bull; Yazılı kurallar ve prosedürler, katı hiyerarşi, işbölümü ve uzmanlaşma, <b>gayrişahsilik</b> (kişisel olmayan tarafsız ilişkiler), liyakate dayalı kariyer ve resmi kayıt tutma.</span>
+  </div>
+
+  <h3>2.3. Neoklasik (İnsan İlişkileri) Yönetim Yaklaşımı</h3>
+  <p>Klasik yaklaşımın "insanı duygusuz makine sayma" eksikliğini kapatmak üzere 1930'lu yıllarda ortaya çıkmıştır.</p>
+  <div class="box formul">
+    <span class="cap">Elton Mayo ve Hawthorne Araştırmaları (1927–1932)</span>
+    <p>Western Electric firmasının Hawthorne tesislerinde ışıklandırma, röle montaj ve mola deneyleri yapılmıştır. Çıkan tarihi sonuçlar:</p>
+    <ul style="margin:4px 0 0 18px; line-height:1.65;">
+      <li><b>Hawthorne Etkisi:</b> Çalışanlar izlendiklerini, kendilerine önem verildiğini ve değer atfedildiğini hissettiklerinde fiziksel koşullar kötüleşse bile verimlilikleri artar!</li>
+      <li>İnsan sadece ekonomik değil, <b>sosyal bir varlıktır</b>; grup normları, arkadaşlık, aidiyet ve takdir edilme paradan daha güçlü motive edici olabilir.</li>
+      <li>Her resmi örgütün içinde yöneticilerin kurmadığı kendiliğinden oluşan <b>Biçimsel Olmayan (İnformal / Gayriresmî) Gruplar</b> vardır ve üretimi büyük ölçüde bu gruplar belirler.</li>
+    </ul>
+  </div>
+
+  <h3>2.4. Modern Yönetim Yaklaşımları</h3>
+  <p>İşletmeyi çevreleyen değişkenlerle birlikte ele alan iki temel yaklaşımdır:</p>
+
+  <div class="box formul">
+    <span class="cap">Sistem Yaklaşımı ve Durumsallık Yaklaşımı</span>
+    <span class="f"><b>1. Sistem Yaklaşımı:</b><br>
+    İşletmeyi birbirine bağlı alt parçalardan oluşan ve çevresiyle sürekli madde-enerji-bilgi alışverişi yapan bir <b>Açık Sistem</b> olarak görür.<br>
+    <b>Bileşenler:</b> Girdiler &rarr; Dönüşüm (Süreç) &rarr; Çıktılar &rarr; Geri Bildirim (Feedback).<br>
+    <b>Entropi:</b> Sistemlerin bozulma, düzensizleşme ve yok olma eğilimidir. Açık sistemler çevreden kaynak alarak <b>Negatif Entropi</b> yaratır ve hayatta kalır.<br>
+    <b>Sinerji:</b> Parçaların bir araya gelerek tek tek toplamlarından daha büyük bir güç üretmesidir (<b>2 + 2 = 5</b>).</span>
+    <span class="f"><b>2. Durumsallık (Koşul-Bağımlılık / Contingency) Yaklaşımı:</b><br>
+    Klasiklerin "en iyi tek yol" anlayışını kesin olarak reddeder. <b>"Her yer ve koşulda geçerli TEK BİR EN İYİ yönetim tarzı YOKTUR!"</b> En uygun yapı, örgütün iç ve dış çevresine (teknolojiye, belirsizliğe, büyüklüğe) bağlıdır.</span>
+  </div>
+
+  <h3>2.5. Postmodern Yönetim Yaklaşımları</h3>
+  <ul>
+    <li><b>Popülasyon Ekolojisi:</b> Örgütlerin çevreye uyum sağlayamayacağını, çevrenin örgütleri doğal seleksiyonla elediğini veya hayatta tuttuğunu savunur.</li>
+    <li><b>Kaynak Bağımlılığı:</b> Örgütlerin hayatta kalmak için dış çevredeki kıt kaynaklara bağımlı olduğunu ve bu bağımlılığı yönetmesi gerektiğini açıklar.</li>
+    <li><b>Şebeke (Network) Örgütler:</b> Bir ana firmanın üretim, pazarlama, dağıtım gibi işleri farklı uzman işletmelere fason yaptırarak oluşturduğu esnek ağ yapısıdır.</li>
+    <li><b>Kıyaslama (Benchmarking):</b> Sektörün en iyisini model alıp onun üstün uygulamalarını öğrenerek kendine uyarlama.</li>
+  </ul>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: Yaklaşım Karşılaştırması</span>
+    <p><b>Soru:</b> Bir çağrı merkezinde yöneticinin personelin her telefon konuşmasını saniyesine kadar ölçüp standartlaştırması ve hedefi aşana parça başı prim vermesi hangi yönetim yaklaşımının uygulamasıdır?</p>
+    <ol class="adim">
+      <li><b>Faaliyet analizi:</b> Kronometre ile süre ölçme, standartlaştırma ve parça başı primli ücret sistemi bulunmaktadır.</li>
+      <li><b>Kuram eşleştirmesi:</b> Bu özellikler Frederick Taylor'ın <b>Bilimsel Yönetim Yaklaşımı</b>nın temel prensipleridir.</li>
+      <li><b>Sonuç:</b> Klasik Yönetim / Bilimsel Yönetim Yaklaşımıdır.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Taylor vs Fayol):</b> Taylor işçilerin fiziksel hareketlerine ve <b>atölye/üretim tabanına</b> odaklanır; Fayol ise tepe yönetime ve <b>yönetim fonksiyonlarına</b> (POK) odaklanır. Ayrımı gözden kaçırmayın.</li>
+      <li><b>Tuzak 2 (Kumanda Birliği vs Yönetim Birliği):</b> <i>Kumanda Birliği</i> "Her astın tek bir amirden emir alması" demektir. <i>Yönetim Birliği</i> ise "Aynı amaca yönelik faaliyetlerin tek plan altında toplanması"dır. Sınavda en çok bu iki kavram karıştırılır!</li>
+      <li><b>Tuzak 3 (Durumsallık Cümlesi):</b> Sınavda "Her koşulda geçerli tek bir en iyi yol olmadığını savunan yaklaşım hangisidir?" sorusunun cevabı istisnasız <b>Durumsallık (Koşul-Bağımlılık)</b> yaklaşımıdır.</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>Taylor: <b>Bilimsel Yönetim</b>, zaman-hareket etütleri, parça başı ücret, tek en iyi yol.</li>
+      <li>Fayol: <b>Yönetim Süreci</b> (Planlama, Örgütleme, Yöneltme, Koordinasyon, Denetim), Kumanda Birliği (tek amir).</li>
+      <li>Weber: <b>Bürokrasi</b>, yasal-rasyonel yetki, yazılı kurallar, gayrişahsilik.</li>
+      <li>Elton Mayo: <b>Hawthorne Araştırmaları</b>, sosyal insan, informal (gayriresmî) örgüt, moral ve ilgi.</li>
+      <li>Sistem Yaklaşımı: Girdi-Süreç-Çıktı-Geri bildirim, <b>Açık Sistem</b>, Negatif Entropi, Sinerji (2+2=5).</li>
+      <li>Durumsallık Yaklaşımı: <b>"Tek bir en iyi yol yoktur"</b>, en uygun yapı çevreye bağlıdır.</li>
+      <li>Klasik yaklaşım insanı makine gibi görür; Neoklasik yaklaşım insanı sosyal varlık olarak görür.</li>
+      <li>Benchmarking: En iyiyi kıyaslama ve örnek alma yöntemidir.</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Yönetimde "Zaman ve hareket etütleri" yaparak işi standartlaştıran ve "Tek bir en iyi yol" anlayışını savunan öncü düşünür kimdir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) Henri Fayol</li><li class="ok">B) Frederick W. Taylor</li><li>C) Max Weber</li><li>D) Elton Mayo</li><li>E) Peter Drucker</li></ul><p class="coz"><b class="cap">Çözüm</b>Bilimsel Yönetim Yaklaşımının kurucusu Frederick Winslow Taylor kronometre ile zaman ve hareket etütleri yapmış, işi parçalayarak standartlaştırmış ve tek bir en iyi yolu aramıştır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>Henri Fayol'un yönetim ilkelerinden biri olan ve "Her astın yalnızca tek bir üstten emir alması gerektiğini" belirten ilke aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Kumanda birliği ilkesi</li><li>B) Yönetim birliği ilkesi</li><li>C) Hiyerarşi ilkesi</li><li>D) Hakkaniyet ilkesi</li><li>E) Disiplin ilkesi</li></ul><p class="coz"><b class="cap">Çözüm</b>Kumanda Birliği (Emir-komuta birliği), karmaşayı önlemek için bir çalışanın yalnızca tek bir amirden emir alması gerektiğini ifade eder. Birden fazla amir kargaşaya yol açar. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Bürokrasi modelini geliştiren ve yetkinin makama dayalı olduğu "yasal-rasyonel yetki" tipini savunan düşünür kimdir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Frederick Taylor</li><li>B) Elton Mayo</li><li class="ok">C) Max Weber</li><li>D) Abraham Maslow</li><li>E) Douglas McGregor</li></ul><p class="coz"><b class="cap">Çözüm</b>Max Weber Bürokrasi modelinin kurucusudur. Yazılı kurallar, gayrişahsilik, katı hiyerarşi ve yasal-rasyonel yetkiyi savunmuştur. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Elton Mayo ve arkadaşlarının yürüttüğü Hawthorne Araştırmaları sonucunda ortaya çıkan en önemli bulgu aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) En önemli motivasyon aracının para olduğu</li><li class="ok">B) İnsanın sosyal bir varlık olduğu ve grup ilişkilerinin verimliliği etkilediği</li><li>C) Fiziksel ışıklandırmanın üretimi tek başına belirlediği</li><li>D) Katı kuralların her zaman verimliliği artırdığı</li><li>E) Biçimsel örgütün gayriresmî örgütü tamamen yok ettiği</li></ul><p class="coz"><b class="cap">Çözüm</b>Hawthorne deneyleri, çalışanların sadece parayla motive olan makineler olmadığını; ilgi görme, aidiyet, grup normları ve sosyal ilişkilerin (Hawthorne etkisi) verimlilikte belirleyici olduğunu kanıtlamıştır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>"Her yerde, her zaman ve her koşulda geçerli tek bir en iyi yönetim tarzı yoktur" ilkesini temel alan modern yönetim yaklaşımı hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2024 Final</span><span class="sqtag">2025-2026 Bütünleme</span><ul class="o"><li>A) Bilimsel yönetim yaklaşımı</li><li>B) Bürokrasi yaklaşımı</li><li>C) Sistem yaklaşımı</li><li class="ok">D) Durumsallık (Koşul-bağımlılık) yaklaşımı</li><li>E) Süreç yaklaşımı</li></ul><p class="coz"><b class="cap">Çözüm</b>Durumsallık yaklaşımı, evrensel ve mutlak tek bir yönetim formülü olmadığını; en uygun yöntemin örgütün iç ve dış çevresine bağlı olarak değiştiğini savunur. Doğru seçenek D'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>Sistem yaklaşımında parçaların bağımsız çalışması yerine bir araya gelerek daha büyük bir güç yaratmasını (2 + 2 = 5) ifade eden kavram hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Entropi</li><li class="ok">B) Sinerji</li><li>C) Geri bildirim</li><li>D) Alt sistem</li><li>E) Denge</li></ul><p class="coz"><b class="cap">Çözüm</b>Sinerji, sistemin bütününün parçalarının toplamından daha büyük ve etkili bir sonuç üretmesi durumudur. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Sistemlerin zamanla yıpranma, bozulma, enerjisini kaybetme ve yok olma eğilimine ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Vize</span><ul class="o"><li class="ok">A) Entropi</li><li>B) Sinerji</li><li>C) Homeostasis</li><li>D) Adaptasyon</li><li>E) Entegrasyon</li></ul><p class="coz"><b class="cap">Çözüm</b>Fizikten yönetime aktarılan Entropi kavramı, kapalı sistemlerin kaçınılmaz olarak düzensizliğe ve ölüme gitmesini açıklar. Açık sistemler çevreden kaynak alarak negatif entropi üretir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Aşağıdakilerden hangisi Henri Fayol'un belirlediği temel yönetim fonksiyonlarından (POK) biri <u>değildir</u>?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Planlama</li><li>B) Örgütleme</li><li>C) Yöneltme (Yürütme)</li><li class="ok">D) Pazarlama</li><li>E) Denetim</li></ul><p class="coz"><b class="cap">Çözüm</b>Fayol'un yönetim süreci fonksiyonları: Planlama, Örgütleme, Yöneltme, Koordinasyon ve Denetim'dir. Pazarlama bir işletme fonksiyonudur, yönetsel süreç fonksiyonu değildir. Doğru seçenek D'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>Klasik yönetim yaklaşımlarının insanı yalnızca parayla motive olan akılcı bir araç olarak görmesini ifade eden Latince kavram hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Bütünleme</span><span class="sqtag">2024 Vize</span><ul class="o"><li>A) Homo Sapiens</li><li class="ok">B) Homo Economicus</li><li>C) Homo Faber</li><li>D) Tabula Rasa</li><li>E) Status Quo</li></ul><p class="coz"><b class="cap">Çözüm</b>Klasik iktisat ve klasik yönetim yaklaşımları insanı yalnızca ekonomik çıkarları peşinde koşan rasyonel varlık (Homo Economicus) olarak varsaymıştır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>Bir örgüt içinde çalışanların kendiliğinden, resmi kuralların dışında dostluk ve ortak ilgilerle kurdukları yapıya ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) Biçimsel (Formal) örgüt</li><li class="ok">B) Biçimsel olmayan (İnformal / Gayriresmî) örgüt</li><li>C) Mekanik örgüt</li><li>D) Matriks örgüt</li><li>E) Bürokrasi</li></ul><p class="coz"><b class="cap">Çözüm</b>Resmi şemaların dışında kendiliğinden doğan, çalışanlar arası sosyal bağlara dayanan yapıya İnformal (Biçimsel Olmayan) Örgüt denir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>Sektörün en başarılı işletmelerinin iş yapış yöntemlerini inceleyip kendi işletmesine uyarlayarak rekabet avantajı sağlama tekniğine ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Downsizing</li><li>B) Outsourcing</li><li class="ok">C) Benchmarking (Kıyaslama)</li><li>D) Reengineering</li><li>E) Empowerment</li></ul><p class="coz"><b class="cap">Çözüm</b>En iyi uygulamaları araştırıp örnek alma ve kıyaslama yönetimine Benchmarking denir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Aşağıdakilerden hangisi Max Weber'in bürokrasi modelinin temel özelliklerinden biri <u>değildir</u>?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Yazılı kural ve prosedürler</li><li>B) Belirgin bir hiyerarşik yapı</li><li>C) Gayrişahsilik (kişisel olmayan ilişkiler)</li><li class="ok">D) Kararların duygusal ve kişisel sezgilere göre alınması</li><li>E) Liyakate dayalı uzmanlaşma</li></ul><p class="coz"><b class="cap">Çözüm</b>Weber'in bürokrasisinde kararlar kişisel sezgilere göre değil, tamamen <b>yazılı, tarafsız ve gayrişahsi kurallara</b> göre alınır. Doğru seçenek D'dir.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <button class="btn" data-go="0">‹ Ünite 1</button>
+    <button class="btn" data-go="2">Ünite 3 ›</button>
+  </div>
+</section>
+
+<section class="unit" data-i="2">
+  <div class="uhead">
+    <span class="num">Ünite 3</span>
+    <h2>İşletmeciliğin Diğer Bilimlerle İlişkisi ve Temel İlkeleri</h2>
+    <p>İşletmenin iktisat, davranış bilimleri, hukuk ve bilişim ile ilişkisi; temel işletmecilik ilkeleri olan verimlilik, etkinlik (etkililik), kârlılık (rantabilite) ve ekonomiklik kavramları ve hesaplamaları. Sınavlarda hesaplama ve kavram karşılaştırması olarak en az 3 soru gelmektedir.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Okçu ve Hedef Tahtası Analojisi:</b></p>
+    <p>1. <b>Etkililik (Effectiveness - Doğru İşi Yapmak):</b> Okçunun hedef tahtasındaki 12'den vurmasıdır. Yani önceden konulan amaca ne kadar ulaştınız? İster 1 okla vurun ister 50 okla; hedefi vurduysanız <b>etkilisinizdir</b>.</p>
+    <p>2. <b>Etkinlik (Efficiency - İşi Doğru Yapmak):</b> Hedefi vururken kaç ok harcadığınızdır. Hedefi tek bir okla, hiç israf etmeden vuran okçu <b>etkindir</b>. Kaynakları en az tüketerek sonuca varmaktır.</p>
+    <p>3. <b>Verimlilik (Productivity):</b> Bir fabrikada 10 işçi günde 100 ayakkabı üretiyorsa, işçi başına verim 10 ayakkabıdır. Girdi başına düşen çıktıdır (Çıktı / Girdi).</p>
+    <p>4. <b>Kârlılık (Rantabilite) ve Ekonomiklik:</b> Rantabilite yatırdığınız sermayenin ne kadar kâr getirdiğidir (Kâr / Sermaye). Ekonomiklik ise cebinize giren paranın çıkan maliyete oranıdır (Satış Geliri / Üretim Maliyeti). Oran 1'den büyükse işletme kârdadır.</p>
+  </div>
+
+  <h3>3.1. İşletmecilik Biliminin Diğer Bilim Dalları ile İlişkisi</h3>
+  <p>İşletmecilik disiplinler arası (interdisipliner) bir bilim dalıdır. Birçok alandan yararlanır:</p>
+
+  <div class="tw"><table>
+    <caption>İşletmenin İlişkili Olduğu Temel Bilim Dalları</caption>
+    <thead><tr><th class="l">Bilim Dalı</th><th class="l">İlişki ve Katkı Alanı</th><th class="l">Temel Fark</th></tr></thead>
+    <tbody>
+      <tr><th class="l">İktisat (Ekonomi)</th><td class="l">Piyasa dengesi, arz-talep, fiyatlandırma, maliyet analizi.</td><td class="l">İktisat makro ve genel ekonomik sistemi inceler; işletmecilik tek bir işletmenin kâr ve yönetimini inceler.</td></tr>
+      <tr><th class="l">Davranış Bilimleri<br><small>(Psikoloji, Sosyoloji, Sosyal Psikoloji)</small></th><td class="l">İnsan motivasyonu, liderlik, örgüt kültürü, iş tatmini, çatışma yönetimi ve grup dinamikleri.</td><td class="l">İşletme çalışanlarının ve tüketicilerin tutum ve davranışlarını anlamada temel kaynaktır.</td></tr>
+      <tr><th class="l">Matematik ve İstatistik</th><td class="l">Yöneylem araştırması, optimizasyon, stok kontrol modelleri, pazar araştırması anket analizleri.</td><td class="l">Yöneticilere sayısal (kantitatif) karar alma ve modelleme araçları sağlar.</td></tr>
+      <tr><th class="l">Hukuk</th><td class="l">Ticaret hukuku, borçlar hukuku, iş hukuku, vergi hukuku, tüketici hakları.</td><td class="l">İşletmenin meşruiyetini ve yasal çerçevesini belirler.</td></tr>
+      <tr><th class="l">Bilişim ve Bilgi Teknolojileri</th><td class="l">Yönetim Bilişim Sistemleri (YBS / MIS), ERP yazılımları, veri madenciliği, e-ticaret.</td><td class="l">Hızlı ve hatasız bilgi akışı sağlayarak rekabet üstünlüğü yaratır.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>3.2. Temel İşletmecilik İlkeleri</h3>
+  <p>Bir işletmenin başarılı ve rasyonel yönetilip yönetilmediğini ölçen dört altın gösterge:</p>
+
+  <div class="box formul">
+    <span class="cap">Dört Temel İlke ve Formülleri</span>
+    <span class="f"><b>1. Verimlilik (Productivity):</b> Üretim sürecinde kullanılan girdiler ile elde edilen çıktılar arasındaki fiziksel orandır:<br>
+    <b>Verimlilik = Üretilen Çıktı Miktarı / Kullanılan Girdi Miktarı</b><br>
+    <i>Örn: İşgücü Verimliliği = Toplam Üretim / Toplam Çalışma Saati</i></span>
+    <span class="f"><b>2. Etkinlik (Efficiency) ve Etkililik (Effectiveness):</b><br>
+    &bull; <b>Etkililik (Effectiveness):</b> Belirlenen amaçlara ve hedeflere ulaşma derecesidir. <b>"Doğru işi yapmak"</b>tır.<br>
+    &bull; <b>Etkinlik (Efficiency):</b> Amaçlara ulaşırken kaynakların israf edilmemesi, minimum girdi ile maksimum sonuca ulaşılmasıdır. <b>"İşi doğru yapmak"</b>tır.</span>
+    <span class="f"><b>3. Kârlılık (Rantabilite):</b> Belli bir dönemde elde edilen kârın, o kârı elde etmek için tahsis edilen sermayeye oranıdır:<br>
+    <b>Rantabilite = (Dönem Net Kârı / Kullanılan Sermaye) &times; 100</b><br>
+    &bull; <i>Mali (Özkaynak) Rantabilite = Net Kâr / Özkaynak</i><br>
+    &bull; <i>Ekonomik Rantabilite = (Net Kâr + Faiz Giderleri) / Toplam Sermaye (Aktifler)</i></span>
+    <span class="f"><b>4. Ekonomiklik:</b> Üretim faaliyetinin parasal değerler açısından uygunluğunu gösterir:<br>
+    <b>Ekonomiklik = Satış Gelirleri Tutarı (Hasılat) / Üretim Maliyetleri Tutarı</b><br>
+    <i>Ekonomiklik &gt; 1 ise: İşletme kârlı ve rasyonel çalışmaktadır.<br>
+    Ekonomiklik = 1 ise: Başabaş noktasıdır (kâr da yok zarar da yok).<br>
+    Ekonomiklik &lt; 1 ise: İşletme zarardadır.</i></span>
+  </div>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: Verimlilik ve Ekonomiklik Hesabı</span>
+    <p><b>Soru:</b> Bir mobilya atölyesi 5 işçi çalıştırarak ayda 200 adet masa üretmektedir. Masaların toplam satış geliri 500.000 TL, üretim maliyeti ise 400.000 TL'dir. İşçi başına verimliliği ve işletmenin ekonomiklik derecesini bulunuz.</p>
+    <ol class="adim">
+      <li><b>İşçi başına verimlilik hesabı:</b><br>
+      <i>Verimlilik = Çıktı / Girdi = 200 masa / 5 işçi = <b>40 masa/işçi</b></i>.</li>
+      <li><b>Ekonomiklik hesabı:</b><br>
+      <i>Ekonomiklik = Satış Hasılatı / Üretim Maliyeti = 500.000 TL / 400.000 TL = <b>1.25</b></i>.</li>
+      <li><b>Yorum:</b> Ekonomiklik 1.25 &gt; 1 olduğundan işletme ekonomik ve kârlı bir şekilde çalışmaktadır.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Etkinlik vs Etkililik):</b> Peter Drucker'ın meşhur ayrımı sınavlarda banko sorulur: "Doğru işleri yapmak" &rarr; <b>Etkililik (Effectiveness)</b>; "İşleri doğru yapmak (israfsız)" &rarr; <b>Etkinlik (Efficiency)</b>tir. Bu iki kelimenin yerini şıklarda değiştirirler.</li>
+      <li><b>Tuzak 2 (Verimlilik vs Ekonomiklik):</b> <i>Verimlilik</i> FİZİKSEL bir orandır (adet / saat, kg / kişi). <i>Ekonomiklik</i> ise PARASAL bir orandır (TL Hasılat / TL Maliyet). Soruda TL görüyorsanız ekonomikliktir!</li>
+      <li><b>Tuzak 3 (Rantabilite Paydası):</b> Rantabilite formülünde payda ciro veya maliyet değil, <b>SERMAYE</b>dir (Kâr / Sermaye).</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>İşletmecilik disiplinler arasıdır; iktisat piyasayı, işletme tek tek işletmeleri inceler.</li>
+      <li>Verimlilik = <b>Üretilen Çıktı / Kullanılan Girdi</b> (fiziksel ölçüt).</li>
+      <li>Etkililik: Hedefe ulaşma derecesidir (<b>Doğru işleri yapmak</b>).</li>
+      <li>Etkinlik: Kaynakları israf etmeden amaca varmaktır (<b>İşleri doğru yapmak</b>).</li>
+      <li>Kârlılık (Rantabilite) = <b>Net Kâr / Sermaye</b>.</li>
+      <li>Ekonomiklik = <b>Satış Geliri / Üretim Maliyeti</b>. 1'den büyük olması istenir.</li>
+      <li>Davranış bilimleri (sosyoloji, psikoloji) işletmeye insan unsurunu anlamada rehberlik eder.</li>
+      <li>ERP ve Yönetim Bilişim Sistemleri (YBS), işletmelerin karar alma süreçlerini optimize eder.</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Üretim sürecinde elde edilen çıktı miktarının, bu çıktıyı elde etmek için kullanılan girdi miktarına oranına ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li class="ok">A) Verimlilik (Prodüktivite)</li><li>B) Rantabilite</li><li>C) Ekonomiklik</li><li>D) Likidite</li><li>E) Kaldıraç</li></ul><p class="coz"><b class="cap">Çözüm</b>Fiziksel anlamda Çıktı / Girdi oranı <b>Verimlilik (Prodüktivite)</b> olarak tanımlanır. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>Yönetim biliminde "Doğru işleri yapmak" olarak tanımlanan ve belirlenen örgütsel hedeflere ulaşma derecesini ifade eden kavram hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Etkinlik (Efficiency)</li><li class="ok">B) Etkililik (Effectiveness)</li><li>C) Verimlilik</li><li>D) Ekonomiklik</li><li>E) Rantabilite</li></ul><p class="coz"><b class="cap">Çözüm</b>"Doğru işleri yapmak" ve önceden konulan hedeflere ne ölçüde ulaşıldığını göstermek <b>Etkililik (Effectiveness)</b> kavramıdır. "İşleri doğru yapmak" ise etkinliktir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Bir işletmenin belirli bir dönemde elde ettiği net kârın, o kârı elde etmek için tahsis edilen sermayeye oranına ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Ekonomiklik</li><li>B) Verimlilik</li><li class="ok">C) Kârlılık (Rantabilite)</li><li>D) Etkinlik</li><li>E) Mali esneklik</li></ul><p class="coz"><b class="cap">Çözüm</b>Kâr / Sermaye oranı finansal ve işletmecilik literatüründe <b>Rantabilite (Kârlılık)</b> olarak adlandırılır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Bir üretim faaliyetinde "Satış Hasılatı / Üretim Maliyeti" formülü ile hesaplanan ve sonucunun 1'den büyük olması beklenen ilke hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2024 Vize</span><ul class="o"><li>A) Verimlilik</li><li class="ok">B) Ekonomiklik</li><li>C) Etkililik</li><li>D) Likidite</li><li>E) Esneklik</li></ul><p class="coz"><b class="cap">Çözüm</b>Elde edilen toplam satış hasılatının katlanılan toplam maliyete oranı <b>Ekonomiklik</b>tir. Oranın 1'den büyük olması işletmenin kâr ettiğini gösterir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>İşletme bilimi ile iktisat (ekonomi) bilimi arasındaki temel yaklaşım farkı aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) İktisat genel ekonomik sistemi ve piyasayı, işletme ise bağımsız bir ekonomik birim olarak tek tek işletmeleri inceler.</li><li>B) İktisat kârı hedefler, işletme toplumsal faydayı hedefler.</li><li>C) İktisat uygulamalıdır, işletme teoriktir.</li><li>D) İşletme hukuki kuralları koyar, iktisat uygular.</li><li>E) Aralarında hiçbir konu benzerliği yoktur.</li></ul><p class="coz"><b class="cap">Çözüm</b>İktisat bilimi makro düzeyde kıt kaynakların toplumdaki dağılımını ve genel fiyat mekanizmasını incelerken; işletme bilimi mikronun da özeline inerek münferit işletmelerin kârlı ve verimli sevk ve idaresini inceler. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>Örgütlerde insan kaynaklarının motivasyonu, liderlik tarzları, çalışanların iş tatmini ve grup davranışlarını incelerken işletme hangi bilim dalından en çok yararlanır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Hukuk</li><li class="ok">B) Davranış Bilimleri (Psikoloji, Sosyoloji)</li><li>C) Matematik</li><li>D) Fizik</li><li>E) İktisat</li></ul><p class="coz"><b class="cap">Çözüm</b>Çalışanların ve tüketicilerin tutum, motivasyon ve grup içi davranışlarını anlamak için <b>Davranış Bilimleri</b>nden (psikoloji, sosyoloji, sosyal psikoloji) yararlanılır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Bir fabrikada günde 8 saat çalışan 20 işçi toplam 1.600 adet ürün üretmektedir. Bu fabrikada işçi başına saatlik verimlilik kaçtır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Bütünleme</span><span class="sqtag">2025 Vize</span><ul class="o"><li class="ok">A) 10 adet/saat</li><li>B) 20 adet/saat</li><li>C) 50 adet/saat</li><li>D) 80 adet/saat</li><li>E) 100 adet/saat</li></ul><p class="coz"><b class="cap">Çözüm</b>Toplam çalışma saati = 20 işçi &times; 8 saat = 160 işçi-saat.<br>Saatlik işçi verimliliği = 1.600 ürün / 160 saat = <b>10 adet/saat</b> bulunur. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Yönetimde "İşleri doğru yapmak" ve kaynakları israf etmeden amaca ulaşmayı ifade eden kavram hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Etkinlik (Efficiency)</li><li>B) Etkililik (Effectiveness)</li><li>C) Rantabilite</li><li>D) Kapasite</li><li>E) Esneklik</li></ul><p class="coz"><b class="cap">Çözüm</b>Kaynakların verimli kullanılması, israfın önlenmesi ve girdinin minimize edilerek işin doğru yapılması <b>Etkinlik (Efficiency)</b>tir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>Bir işletmenin üretim faaliyetleri sonucunda elde ettiği ekonomiklik oranının 0.85 çıkması ne anlama gelir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) İşletmenin yüksek kâr elde ettiğini</li><li class="ok">B) İşletmenin satış gelirlerinin maliyetleri karşılayamadığını ve zararda olduğunu</li><li>C) Başabaş noktasında bulunulduğunu</li><li>D) Verimliliğin maksimum olduğunu</li><li>E) Rantabilitenin %85 olduğunu</li></ul><p class="coz"><b class="cap">Çözüm</b>Ekonomiklik = Hasılat / Maliyet formülünde oranın 1'den küçük çıkması (0.85 &lt; 1), hasılatın maliyetin altında kaldığını ve işletmenin <b>zarar ettiğini</b> gösterir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>İşletmelerde stok kontrolü, doğrusal programlama ve karar ağaçları gibi yöntemlerle optimal kararlar alınmasını sağlayan disiplinler arası alan hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><ul class="o"><li class="ok">A) Yöneylem Araştırması (Kantitatif Karar Modelleri)</li><li>B) Sosyoloji</li><li>C) İş Hukuku</li><li>D) Makro İktisat</li><li>E) Antropoloji</li></ul><p class="coz"><b class="cap">Çözüm</b>Matematik ve istatistiğin işletme kararlarına uygulanmasıyla doğan ve optimizasyon sağlayan alan <b>Yöneylem Araştırması</b>dır. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>1.000.000 TL özkaynak kullanan bir işletme yıl sonunda 250.000 TL net kâr elde etmiştir. Bu işletmenin mali (özkaynak) rantabilitesi yüzde kaçtır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) %10</li><li>B) %20</li><li class="ok">C) %25</li><li>D) %40</li><li>E) %50</li></ul><p class="coz"><b class="cap">Çözüm</b>Özkaynak Rantabilitesi = (Net Kâr / Özkaynak) &times; 100 = (250.000 / 1.000.000) &times; 100 = <b>%25</b> bulunur. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Aşağıdakilerden hangisi bir işletmenin "etkili" (effective) olduğunu ancak "etkin" (efficient) olmadığını gösteren duruma örnektir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) İşletmenin hedeflenen satış kotasına ulaşması ancak bu sırada aşırı yüksek reklam ve personel bütçesi harcaması</li><li>B) İşletmenin minimum bütçe harcayıp hedefe hiç ulaşamaması</li><li>C) İşletmenin hedefine hiç ulaşamaması ve batması</li><li>D) İşletmenin hem hedefine ulaşıp hem maliyetleri düşürmesi</li><li>E) İşletmenin piyasadan çekilmesi</li></ul><p class="coz"><b class="cap">Çözüm</b>Hedefe ulaşmak "etkililik"tir (kotayı tutturdu). Ancak aşırı maliyet ve israf yapmak "etkin olmamak"tır. Dolayısıyla A şıkkı tam olarak bu durumu açıklar. Doğru seçenek A'dır.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <button class="btn" data-go="1">‹ Ünite 2</button>
+    <button class="btn" data-go="3">Ünite 4 ›</button>
+  </div>
+</section>
+
+<section class="unit" data-i="3">
+  <div class="uhead">
+    <span class="num">Ünite 4</span>
+    <h2>İşletmenin Çevresi ve Sosyal Sorumluluk</h2>
+    <p>İç çevre ve dış çevre ayrımı, Görev (Yakın/Mikro) çevresi unsurları, Genel (Uzak/Makro) çevre ve PESTLE analizi, paydaş (stakeholder) yaklaşımı, kurumsal sosyal sorumluluk ve iş ahlakı. Vize ve finalde banko 3 soru gelmektedir.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Gemi Kaptanı ve Deniz Analojisi:</b></p>
+    <p>1. <b>İç Çevre (Geminin İçi):</b> Kaptanın doğrudan kontrol edebildiği makine dairesi, tayfalar, yakıt deposu ve disiplindir. İşletmede de yönetim, çalışanlar ve şirket kültürü <b>iç çevredir</b>.</p>
+    <p>2. <b>Yakın / Görev Çevresi (Aynı Denizdeki Gemiler ve Liman):</b> Geminin rotasındaki diğer balıkçılar (rakipler), yakıt aldığınız tanker (tedarikçiler) ve yolcularınızdır (müşteriler). Onlarla doğrudan temas halindesinizdir.</p>
+    <p>3. <b>Uzak / Makro Çevre (Fırtına ve Hava Durumu - PESTLE):</b> Kaptanın asla değiştiremeyeceği okyanus fırtınası, hava basıncı veya uluslararası deniz kanunlarıdır. Enflasyon, teknolojik devrimler veya siyasi krizler makro çevredir; işletme bunları kontrol edemez, sadece <b>uyum sağlamak zorundadır</b>.</p>
+  </div>
+
+  <h3>4.1. İşletme Çevresi Kavramı ve Sınıflandırması</h3>
+  <p>İşletmeler kapalı bir fanusta değil, çevreleriyle sürekli etkileşim içinde açık sistemler olarak yaşarlar. Çevre iki temel düzeye ayrılır:</p>
+  <ul>
+    <li><b>İç Çevre:</b> İşletmenin sınırları içinde yer alan, yöneticilerin doğrudan kontrol edebildiği ve yönlendirebildiği unsurlardır (yönetim yapısı, kurum kültürü, çalışanlar, finansal güç, teknolojik donanım).</li>
+    <li><b>Dış Çevre:</b> İşletmenin sınırları dışında kalan ve işletmenin tek başına kontrol edemediği tüm güçlerdir. Kendi içinde <b>Görev (Yakın) Çevresi</b> ve <b>Genel (Uzak) Çevre</b> olarak ikiye ayrılır.</li>
+  </ul>
+
+  <h3>4.2. Görev (Yakın / Mikro) Çevresi</h3>
+  <p>İşletmenin günlük operasyonlarını ve hedeflerine ulaşmasını doğrudan etkileyen ve işletmeyle birebir temas halinde olan aktörlerdir (Michael Porter'ın Sektörel Rekabet Güçleri Modeli):</p>
+
+  <div class="box formul">
+    <span class="cap">Görev Çevresinin Temel Aktörleri</span>
+    <span class="f"><b>1. Müşteriler / Tüketiciler:</b> Mal ve hizmetleri satın alanlar. İşletmenin varlık sebebidir.</span>
+    <span class="f"><b>2. Rakipler:</b> Aynı veya benzer ürünlerle aynı müşteri kitlesine hitap eden diğer firmalar.</span>
+    <span class="f"><b>3. Tedarikçiler:</b> İşletmeye hammadde, yarı mamul, enerji, makine ve hizmet sağlayan birimler.</span>
+    <span class="f"><b>4. İkame (Alternatif) Ürün Üreticileri:</b> Farklı bir ürün olmasına rağmen aynı tüketici ihtiyacını karşılayabilenler (Örn: Çay yerine kahve, tereyağı yerine margarin).</span>
+    <span class="f"><b>5. Finansal Kuruluşlar ve Bankalar:</b> Kredi, fon ve finansman sağlayan kurumlar.</span>
+    <span class="f"><b>6. İşgücü Piyasası ve Sendikalar:</b> Nitelikli personel sağlayan kaynaklar ve çalışanların haklarını temsil eden örgütler.</span>
+  </div>
+
+  <h3>4.3. Genel (Uzak / Makro) Çevre ve PESTLE Analizi</h3>
+  <p>Tüm sektörleri ve işletmeleri dolaylı yoldan etkileyen, işletmenin kontrol edemediği geniş toplumsal güçlerdir:</p>
+
+  <div class="tw"><table>
+    <caption>PESTLE Çevre Unsurları ve Etkileri</caption>
+    <thead><tr><th class="l">Çevre Boyutu</th><th class="l">Kapsamı</th><th class="l">İşletmeye Örnek Etkisi</th></tr></thead>
+    <tbody>
+      <tr><th class="l">Politik (Siyasi)</th><td class="l">Hükümet politikaları, vergi politikaları, siyasi istikrar, dış ticaret rejimleri.</td><td class="l">Gümrük vergilerinin artırılması veya sübvansiyonlar.</td></tr>
+      <tr><th class="l">Ekonomik</th><td class="l">Enflasyon, döviz kurları, faiz oranları, milli gelir büyümesi, işsizlik.</td><td class="l">Faizlerin yükselmesiyle kredi maliyetlerinin artması, alım gücünün düşmesi.</td></tr>
+      <tr><th class="l">Sosyo-Kültürel</th><td class="l">Nüfusun yaş yapısı (demografi), kültürel değerler, yaşam tarzı, eğitim.</td><td class="l">Yaşlanan nüfusla birlikte sağlık ve bakım hizmetlerine talebin patlaması.</td></tr>
+      <tr><th class="l">Teknolojik</th><td class="l">Yapay zeka, otomasyon, dijitalleşme, Ar-Ge hızı, e-ticaret platformları.</td><td class="l">Geleneksel perakendeciliğin yerini dijital pazar yerlerine bırakması.</td></tr>
+      <tr><th class="l">Yasal (Hukuki)</th><td class="l">İş kanunu, tüketici koruma kanunu, rekabet hukuku, veri koruma (KVKK).</td><td class="l">Asgari ücret düzenlemeleri, ürün güvenliği standartları.</td></tr>
+      <tr><th class="l">Ekolojik (Doğal)</th><td class="l">İklim değişikliği, kuraklık, atık yönetimi, karbon ayak izi, temiz enerji.</td><td class="l">Yeşil enerjiye geçiş zorunluluğu, plastik kullanım yasakları.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>4.4. Paydaş (Stakeholder) Yaklaşımı ve Sosyal Sorumluluk</h3>
+  <div class="box formul">
+    <span class="cap">Paydaşlar ve Sosyal Sorumluluk Düzeyleri</span>
+    <p><b>Paydaş (Stakeholder):</b> İşletmenin faaliyetlerinden, kararlarından ve çıktılarından doğrudan ya da dolaylı etkilenen ve işletmeyi etkileyebilen tüm kişi, grup ve kurumlardır.</p>
+    <ul style="margin:4px 0 0 18px; line-height:1.65;">
+      <li><b>İç Paydaşlar:</b> Şirket ortakları/hissedarlar, yöneticiler, çalışanlar.</li>
+      <li><b>Dış Paydaşlar:</b> Müşteriler, tedarikçiler, rakipler, devlet, yerel toplum, çevre örgütleri, meslek kuruluşları.</li>
+    </ul>
+    <p style="margin-top:8px;"><b>Archie Carroll'un Sosyal Sorumluluk Piramidi (4 Düzey):</b></p>
+    <ol style="margin:4px 0 0 18px; line-height:1.65;">
+      <li><b>1. Ekonomik Sorumluluk (Temel):</b> Kârlı olmak, verimli çalışmak, ortaklarına değer üretmek.</li>
+      <li><b>2. Yasal Sorumluluk:</b> Kanunlara, mevzuata ve düzenlemelere harfiyen uymak.</li>
+      <li><b>3. Ahlaki (Etik) Sorumluluk:</b> Yasaların ötesinde toplumsal ahlak kurallarına, dürüstlüğe ve adalet ilkelerine uygun davranmak.</li>
+      <li><b>4. Gönüllü (Filantropik) Sorumluluk (Zirve):</b> Topluma burs vermek, okul/hastane yaptırmak, sanatı ve çevreyi desteklemek.</li>
+    </ol>
+  </div>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: Çevre Sınıflandırması</span>
+    <p><b>Soru:</b> Bir otomotiv fabrikası için; (a) Çelik sağlayan demir-çelik fabrikası, (b) Merkez Bankası'nın faiz oranlarını artırması hangi çevre kategorilerindedir?</p>
+    <ol class="adim">
+      <li><b>(a) Çelik tedarikçisi:</b> İşletmeyle doğrudan ticari ilişkidedir &rarr; <b>Görev (Yakın / Mikro) Çevresi</b>.</li>
+      <li><b>(b) Faiz oranlarının artması:</b> Tüm ekonomiyi kapsayan ve işletmenin kontrol edemediği makro bir değişkendir &rarr; <b>Genel (Uzak / Makro) Ekonomik Çevre</b>.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Hissedar vs Paydaş):</b> <i>Hissedar (Shareholder)</i> şirkete para koyan hisse senedi sahibidir. <i>Paydaş (Stakeholder)</i> ise toplum, çalışan, müşteri, çevre dahil herkesi kapsayan çok daha geniş bir kavramdır. Soru kökünde dikkat edin.</li>
+      <li><b>Tuzak 2 (İkame Ürün vs Rakip):</b> Rakip aynı ürünü satandır (Coca Cola vs Pepsi). İkame ürün ise farklı bir ürün grubu olup aynı ihtiyacı giderendir (Otobüs bileti yerine Tren bileti).</li>
+      <li><b>Tuzak 3 (PESTLE Analiz Alanı):</b> PESTLE analizi iç çevreyi DEĞİL, tamamen <b>Uzak (Makro) Dış Çevreyi</b> analiz etmek için kullanılır.</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>İç çevre kontrol edilebilir (yönetim, kültür); dış çevre işletmenin kontrolü dışındadır.</li>
+      <li>Görev (Mikro) Çevresi: Müşteriler, Rakipler, Tedarikçiler, İkame Mallar, Sendikalar.</li>
+      <li>Genel (Makro) Çevre PESTLE: Politik, Ekonomik, Sosyo-Kültürel, Teknolojik, Yasal, Ekolojik.</li>
+      <li>Paydaş (Stakeholder): İşletmeden etkilenen ve işletmeyi etkileyen tüm kesimlerdir.</li>
+      <li>Carroll Sosyal Sorumluluk Piramidi: Ekonomik &rarr; Yasal &rarr; Etik &rarr; Gönüllü (Filantropik).</li>
+      <li>İkame ürün, aynı tüketici ihtiyacını karşılayan alternatif farklı ürün grubudur.</li>
+      <li>Demografik değişimler (yaşlanma, göç) sosyo-kültürel çevreye girer.</li>
+      <li>İşletmeler açık sistem olarak çevreye uyum sağlayabildiği ölçüde hayatta kalır.</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Aşağıdakilerden hangisi işletmenin "Görev (Yakın / Mikro) Çevresi" unsurlarından biri <u>değildir</u>?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Müşteriler</li><li>B) Rakipler</li><li>C) Tedarikçiler</li><li class="ok">D) Ülkedeki enflasyon oranı</li><li>E) İkame mal üreticileri</li></ul><p class="coz"><b class="cap">Çözüm</b>Enflasyon oranı genel ekonomik göstergedir ve <b>Genel (Makro) Çevre</b>ye aittir. Müşteriler, rakipler, tedarikçiler ve ikame mallar ise işletmeyle doğrudan temas halindeki <b>Görev (Mikro) Çevresi</b>dir. Doğru seçenek D'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>İşletmenin faaliyetlerinden, kararlarından ve sonuçlarından etkilenen veya işletmeyi etkileyen tüm kişi, grup ve kurumlara ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025-2026 Bütünleme</span><ul class="o"><li>A) Hissedarlar (Shareholders)</li><li class="ok">B) Paydaşlar (Stakeholders)</li><li>C) Aracılar</li><li>D) Konsorsiyum</li><li>E) Distribütörler</li></ul><p class="coz"><b class="cap">Çözüm</b>İşletmenin tüm etki alanındaki çalışanlar, müşteriler, tedarikçiler, devlet ve toplumu kapsayan geniş gruba <b>Paydaş (Stakeholder)</b> denir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Makro çevrenin incelenmesinde kullanılan PESTLE analizinde "E" harflerinden biri Ekolojik çevreyi temsil ederken diğeri hangi çevreyi temsil eder?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Enformasyonel çevre</li><li class="ok">B) Ekonomik çevre</li><li>C) Entelektüel çevre</li><li>D) Esnek çevre</li><li>E) Eğitsel çevre</li></ul><p class="coz"><b class="cap">Çözüm</b>PESTLE: Politik, <b>Ekonomik</b>, Sosyo-kültürel, Teknolojik, Legal (Yasal) ve Ekolojik çevrenin baş harflerinden oluşur. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Tereyağı fiyatlarının aşırı artması sonucu tüketicilerin margarin satın almaya başlaması, margarin ile tereyağı arasında nasıl bir ilişki olduğunu gösterir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2024 Vize</span><ul class="o"><li>A) Tamamlayıcı mal ilişkisi</li><li class="ok">B) İkame (Alternatif) mal ilişkisi</li><li>C) Serbest mal ilişkisi</li><li>D) Üretim malı ilişkisi</li><li>E) Dayanıklı mal ilişkisi</li></ul><p class="coz"><b class="cap">Çözüm</b>Birbirinin yerine kullanılabilen ve aynı ihtiyacı karşılayan mallara <b>İkame Mallar</b> denir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>Archie Carroll'un Kurumsal Sosyal Sorumluluk Piramidinin en tabanında yer alan ve diğer tüm sorumlulukların ön koşulu olan basamak hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Ekonomik sorumluluk</li><li>B) Yasal sorumluluk</li><li>C) Etik sorumluluk</li><li>D) Gönüllü (Filantropik) sorumluluk</li><li>E) Çevresel sorumluluk</li></ul><p class="coz"><b class="cap">Çözüm</b>Carroll piramidinde en altta işletmenin varlığını sürdürmesini sağlayan <b>Ekonomik Sorumluluk (kârlılık)</b> yer alır. Ardından sırasıyla Yasal, Etik ve Gönüllü sorumluluklar gelir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>Aşağıdakilerden hangisi bir işletmenin "İç Çevre" unsurları arasında yer alır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Hammadde tedarikçileri</li><li>B) Rakip firmalar</li><li class="ok">C) İşletmenin örgüt kültürü ve çalışanları</li><li>D) Tüketici dernekleri</li><li>E) Vergi mevzuatı</li></ul><p class="coz"><b class="cap">Çözüm</b>Örgüt kültürü, çalışanlar, yönetim biçimi ve işletmenin finansal varlıkları yöneticilerin kontrolünde olan <b>İç Çevre</b> unsurlarıdır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Bir ülkede ortalama yaşam süresinin uzaması ve nüfusun giderek yaşlanması, işletmeler açısından hangi makro çevre boyutundaki bir değişimdir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Teknolojik çevre</li><li>B) Politik çevre</li><li class="ok">C) Sosyo-Kültürel (Demografik) çevre</li><li>D) Yasal çevre</li><li>E) Fiziksel çevre</li></ul><p class="coz"><b class="cap">Çözüm</b>Nüfusun yaş, cinsiyet, eğitim ve göç yapısını kapsayan demografik değişimler <b>Sosyo-Kültürel Çevre</b> kapsamındadır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Bir işletmenin hiçbir yasal zorunluluk olmaksızın kendi isteğiyle eğitime burs vermesi veya fidan dikmesi hangi sosyal sorumluluk türüne girer?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Ekonomik sorumluluk</li><li>B) Yasal sorumluluk</li><li>C) Zorunlu sorumluluk</li><li class="ok">D) Gönüllü (Filantropik) sorumluluk</li><li>E) Sektörel sorumluluk</li></ul><p class="coz"><b class="cap">Çözüm</b>Yasal ve etik zorunlulukların ötesinde tamamen toplumsal iyi niyetle yapılan bağış, burs ve yardımlar <b>Gönüllü (Filantropik) Sorumluluk</b>tur. Doğru seçenek D'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>Devletin asgari ücreti yeniden belirlemesi ve iş sağlığı ve güvenliği teftişlerini artırması hangi makro çevre boyutuna örnektir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) Teknolojik çevre</li><li class="ok">B) Yasal (Hukuki) çevre</li><li>C) Ekolojik çevre</li><li>D) Kültürel çevre</li><li>E) Demografik çevre</li></ul><p class="coz"><b class="cap">Çözüm</b>İş kanunu, ücret yönetmelikleri ve resmi mevzuat hükümleri <b>Yasal (Hukuki) Çevre</b>yi oluşturur. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>Bir işletmenin hem çevreyi koruyup hem de kârlılığını sürdürebilmesini ifade eden modern kavram aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><ul class="o"><li class="ok">A) Sürdürülebilirlik</li><li>B) Dikey entegrasyon</li><li>C) Monopolleşme</li><li>D) Kartelleşme</li><li>E) Otomasyon</li></ul><p class="coz"><b class="cap">Çözüm</b>Gelecek kuşakların kaynaklarını tüketmeden ekonomik büyümeyi, çevresel korumayı ve sosyal refahı birlikte gözetmeye <b>Sürdürülebilirlik</b> denir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>Aşağıdakilerden hangisi bir işletmenin "İç Paydaşları" arasında yer alır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Yerel halk</li><li>B) Tedarikçiler</li><li class="ok">C) Şirket çalışanları ve yöneticiler</li><li>D) Tüketiciler</li><li>E) Meslek odaları</li></ul><p class="coz"><b class="cap">Çözüm</b>Çalışanlar, yöneticiler ve hissedarlar/ortaklar doğrudan örgüt bünyesinde yer aldıkları için <b>İç Paydaş</b>tır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Yapay zeka algoritmalarının ve bulut bilişimin işletmelerin üretim süreçlerine girmesi PESTLE analizinin hangi ayağını oluşturur?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Politik</li><li>B) Ekonomik</li><li>C) Sosyal</li><li class="ok">D) Teknolojik</li><li>E) Yasal</li></ul><p class="coz"><b class="cap">Çözüm</b>Yapay zeka, otomasyon, yazılım ve donanım yenilikleri <b>Teknolojik Çevre</b> bileşenidir. Doğru seçenek D'dir.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <button class="btn" data-go="2">‹ Ünite 3</button>
+    <button class="btn" data-go="4">Ünite 5 ›</button>
+  </div>
+</section>
+
+<section class="unit" data-i="4">
+  <div class="uhead">
+    <span class="num">Ünite 5</span>
+    <h2>İşletmelerin Sınıflandırılması ve Hukuki Yapıları</h2>
+    <p>Büyüklüklerine göre işletmeler (KOBİ tanımları), pazar alanlarına göre işletmeler, sermaye mülkiyetine göre türler ve en önemlisi hukuki yapılarına göre işletmeler: Tek kişi, Şahıs şirketleri (Kollektif, Komandit), Sermaye şirketleri (Anonim, Limited) ve Kooperatifler. Sınavlarda en çok soru gelen ünitedir.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Bakkal, Ortaklar ve Borsadaki Dev Şirket Analojisi:</b></p>
+    <p>1. <b>Tek Kişi İşletmesi:</b> Mahallenin bakkalıdır. Kâr da onundur, batarsa evini arabasını satıp borcu ödemek zorunda olan (sınırsız sorumlu) da odur. Vefat ederse dükkân kapanabilir.</p>
+    <p>2. <b>Şahıs Şirketleri (Kollektif & Komandit):</b> İki arkadaşın birbirine sonsuz güvenerek kurduğu ortaklıktır. <b>Kollektif şirkette</b> ikisi de sınırsız ve müteselsil sorumludur (biri kaçarsa borcu diğeri öder). <b>Komandit şirkette</b> ise biri işi yönetir ve sınırsız sorumludur (komandite), diğeri sadece parasını koyar, yönetime karışmaz ve sadece koyduğu para kadar sorumludur (komanditer).</p>
+    <p>3. <b>Sermaye Şirketleri (Anonim & Limited):</b> Burada kişilerin kim olduğu değil, <b>ortaya konan sermaye payı</b> önemlidir. Ortakların şahsi mal varlığı güvendedir; şirket batarsa en fazla koydukları sermaye payını kaybederler (sınırlı sorumluluk). <b>Anonim Şirket (A.Ş.)</b> hisse senedi çıkarıp borsada halka açılabilirken, <b>Limited Şirket (Ltd. Şti.)</b> hisse senedi çıkaramaz ve ortak sayısı en fazla 50 olabilir.</p>
+  </div>
+
+  <h3>5.1. Büyüklüklerine Göre İşletmeler (KOBİ Kavramı)</h3>
+  <p>İşletmeler çalışan sayısı, yıllık hasılat (ciro) ve mali bilanço toplamına göre sınıflandırılır:</p>
+  <div class="tw"><table>
+    <caption>KOBİ (Küçük ve Orta Büyüklükteki İşletmeler) Ölçütleri</caption>
+    <thead><tr><th class="l">İşletme Sınıfı</th><th class="c">Çalışan Sayısı</th><th class="l">Özellikleri</th></tr></thead>
+    <tbody>
+      <tr><th class="l">Mikro İşletme</th><td class="c"><b>1 – 9 kişi</b></td><td class="l">Aile işletmeleri, küçük esnaf ve sanatkârlar.</td></tr>
+      <tr><th class="l">Küçük İşletme</th><td class="c"><b>10 – 49 kişi</b></td><td class="l">Esnek üretim yapabilen, yerel veya bölgesel faaliyet gösteren işletmeler.</td></tr>
+      <tr><th class="l">Orta Ölçekli İşletme</th><td class="c"><b>50 – 249 kişi</b></td><td class="l">Kurumsallaşmaya başlamış, ihracat potansiyeli yüksek işletmeler.</td></tr>
+      <tr class="tot"><th class="l">Büyük İşletme</th><td class="c"><b>250 kişi ve üzeri</b></td><td class="l">KOBİ kapsamı dışındadır; yüksek sermayeli, kitlesel üretim yapan işletmeler.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>5.2. Pazar Alanlarına ve Faaliyetlerine Göre İşletmeler</h3>
+  <ul>
+    <li><b>Ulusal İşletmeler:</b> Faaliyetleri ve pazarı sadece tek bir ülkenin sınırları içinde kalan işletmelerdir.</li>
+    <li><b>Uluslararası İşletmeler:</b> Kendi merkez ülkesinde üretip başka ülkelere sadece ihracat veya ithalat yapan işletmelerdir.</li>
+    <li><b>Çok Uluslu İşletmeler:</b> Birden fazla ülkede fiilen üretim tesisleri, yatırımları ve şubeleri bulunan işletmelerdir.</li>
+    <li><b>Küresel (Global) İşletmeler:</b> Tüm dünyayı tek bir pazar olarak gören, stratejilerini ve operasyonlarını dünya çapında entegre yöneten işletmelerdir.</li>
+  </ul>
+
+  <h3>5.3. Sermaye Mülkiyetine Göre İşletmeler</h3>
+  <div class="box formul">
+    <span class="cap">Mülkiyet Türleri</span>
+    <span class="f"><b>Özel İşletmeler:</b> Sermayesinin tamamı veya büyük kısmı özel şahıslara ve şirketlere ait olan işletmelerdir.</span>
+    <span class="f"><b>Kamu İşletmeleri:</b> Sermayesinin tamamı veya %50'den fazlası devlete, belediyelere veya kamu tüzel kişilerine ait olan işletmelerdir (KİT, İDT, Kamu İktisadi Teşekkülleri).</span>
+    <span class="f"><b>Karma İşletmeler:</b> Kamu sermayesi ile özel sermayenin belirli oranlarda bir araya gelmesiyle kurulan işletmelerdir.</span>
+    <span class="f"><b>Yabancı Sermayeli İşletmeler:</b> Sermayesinin tamamı veya çoğunluğu başka ülke vatandaşlarına ait olan işletmelerdir.</span>
+  </div>
+
+  <h3>5.4. Hukuki Yapılarına Göre İşletmeler (Sınavın En Kritik Konusu)</h3>
+  <p>Türk Ticaret Kanunu (TTK) ve Borçlar Kanunu hükümlerine göre şirketlerin temel özellikleri:</p>
+
+  <div class="tw"><table>
+    <caption>Şirket Türlerinin Karşılaştırmalı Özellikleri</caption>
+    <thead><tr><th class="l">Özellik</th><th class="l">Kollektif Şirket</th><th class="l">Komandit Şirket</th><th class="l">Limited Şirket (Ltd.)</th><th class="l">Anonim Şirket (A.Ş.)</th></tr></thead>
+    <tbody>
+      <tr><th class="l">Grup Türü</th><td class="l"><b>Şahıs Şirketi</b></td><td class="l"><b>Şahıs Şirketi</b></td><td class="l"><b>Sermaye Şirketi</b></td><td class="l"><b>Sermaye Şirketi</b></td></tr>
+      <tr><th class="l">Ortak Sayısı</th><td class="l">En az 2 (Gerçek kişi)</td><td class="l">En az 2 (Komandite + Komanditer)</td><td class="l">1 – 50 kişi</td><td class="l">En az 1 kişi (Üst sınır yok)</td></tr>
+      <tr><th class="l">Ortakların Sorumluluğu</th><td class="l"><b>Sınırsız ve Müteselsil</b> (Zincirleme)</td><td class="l"><b>Komandite:</b> Sınırsız<br><b>Komanditer:</b> Koyduğu sermaye ile sınırlı</td><td class="l"><b>Sadece taahhüt edilen sermaye ile sınırlı</b></td><td class="l"><b>Sadece taahhüt edilen sermaye ile sınırlı</b></td></tr>
+      <tr><th class="l">Yönetim</th><td class="l">Tüm ortaklar yönetebilir</td><td class="l">Sadece Komandite ortaklar yönetir</td><td class="l">Müdür veya Müdürler Kurulu</td><td class="l">Yönetim Kurulu</td></tr>
+      <tr><th class="l">Hisse Senedi Çıkarma</th><td class="l">Çıkaramaz</td><td class="l">Çıkaramaz</td><td class="l"><b>Çıkaramaz</b>, halka açılamaz</td><td class="l"><b>Çıkarabilir</b>, borsaya kote olup halka açılabilir</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>5.5. Kooperatifler</h3>
+  <div class="box formul">
+    <span class="cap">Kooperatifin Tanımı ve Şartları</span>
+    <span class="f">Tüzel kişiliği haiz olmak üzere, ortaklarının belirli ekonomik menfaatlerini ve özellikle meslek veya geçimlerine ait ihtiyaçlarını <b>işgücü ve parasal katkılarıyla karşılıklı yardım ve dayanışma</b> suretiyle sağlamak ve korumak amacıyla kurulan değişir ortaklı ve değişir sermayeli ortaklıklardır.</span>
+    <p style="margin-top:6px;"><b>Kuruluş Şartı:</b> En az <b>7 ortak</b> tarafından imzalanan ana sözleşme ile kurulur. Kâr dağıtımı değil, ortaklara maliyetine hizmet ve tasarruf sağlama (risturn) esastır.</p>
+  </div>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: Şirket Türü Belirleme</span>
+    <p><b>Soru:</b> Bir işletmede ortaklardan Ahmet Bey şirketi fiilen yönetmekte ve borçlardan tüm şahsi mal varlığıyla sorumlu iken, Mehmet Bey sadece 100.000 TL sermaye koymuş, şirket yönetimine karışmamakta ve borçlardan sadece koyduğu 100.000 TL ile sorumlu tutulmaktadır. Bu şirket hangi hukuki yapıdadır?</p>
+    <ol class="adim">
+      <li><b>Ortak yapısını incele:</b> Bir ortak sınırsız sorumlu (komandite), diğer ortak koyduğu sermaye ile sınırlı sorumlu (komanditer).</li>
+      <li><b>Hukuk kuralı:</b> İki farklı sorumluluk türüne sahip ortakların bulunduğu tek şahıs şirketi <b>Komandit Şirket</b>tir.</li>
+      <li><b>Sonuç:</b> Ahmet Bey komandite ortak, Mehmet Bey komanditer ortaktır; şirket <b>Komandit Şirket</b>tir.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Komandite vs Komanditer):</b> Sınavda en çok bu ikisi karıştırılır! <b>KomanditE</b>: Sorumluluğu "E"linden geleni yapar, <b>sınırsızdır</b> ve şirketi yönetir. <b>KomanditeR</b>: Sorumluluğu "R"akamla (koyduğu sermaye ile) <b>sınırlıdır</b> ve şirketi yönetemez!</li>
+      <li><b>Tuzak 2 (Limited vs Anonim Hisse Senedi):</b> Limited şirket hisse senedi ve tahvil çıkaramaz, halka açılamaz! Hisse senedi çıkarıp borsada halka açılabilen tek şirket türü <b>Anonim Şirket (A.Ş.)</b>tir.</li>
+      <li><b>Tuzak 3 (KOBİ Üst Sınırı):</b> Orta ölçekli işletmelerin çalışan sayısı üst sınırı 249'dur. <b>250 ve üzeri</b> çalışan büyük işletme sayılır ve KOBİ tanımından çıkar!</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>KOBİ: Mikro (1-9), Küçük (10-49), Orta (50-249 çalışan). 250+ kişi Büyük İşletmedir.</li>
+      <li>Şahıs Şirketleri: Kollektif ve Komandit. Ortakların sorumluluğu sınırsızdır (komanditer hariç).</li>
+      <li>Sermaye Şirketleri: Anonim (A.Ş.) ve Limited (Ltd. Şti.). Ortakların sorumluluğu koydukları sermaye ile sınırlıdır.</li>
+      <li>Kollektif şirkette tüm ortaklar gerçek kişidir ve borçlardan sınırsız-müteselsil sorumludur.</li>
+      <li>Komandit şirkette komandite sınırsız, komanditer ise sermayesi kadar sınırlı sorumludur.</li>
+      <li>Anonim şirket pay senedi çıkarabilir, halka açılabilir; Limited şirket pay senedi çıkaramaz (1-50 ortak).</li>
+      <li>Kooperatif en az 7 ortakla kurulur; karşılıklı yardım ve dayanışma esastır.</li>
+      <li>Çok uluslu işletmeler birden fazla ülkede üretim ve yönetim yatırımı olan firmalardır.</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Komandit şirketlerde borçlara karşı sorumluluğu yalnızca koyduğu sermaye payı ile sınırlı olan ve şirket yönetiminde yer alamayan ortak türü hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2023-2024 Final</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) Komandite ortak</li><li class="ok">B) Komanditer ortak</li><li>C) Kollektif ortak</li><li>D) İntifa ortağı</li><li>E) Hâkim ortak</li></ul><p class="coz"><b class="cap">Çözüm</b>Komandit şirkette iki tür ortak vardır: Komandite ortak sınırsız sorumludur ve yönetir; <b>Komanditer ortak</b> ise sadece koyduğu sermaye ile sınırlı sorumludur ve şirketi yönetemez. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>Aşağıdaki şirket türlerinden hangisi "Sermaye Şirketleri" grubunda yer alır?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Kollektif Şirket</li><li>B) Adi Ortaklık</li><li class="ok">C) Anonim Şirket</li><li>D) Adi Komandit Şirket</li><li>E) Aile İşletmesi</li></ul><p class="coz"><b class="cap">Çözüm</b>Anonim Şirket ve Limited Şirket sermaye şirketidir. Kollektif ve Komandit şirketler ise şahıs şirketleridir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Ortak sayısı en fazla 50 olabilen ve hisse senedi çıkararak borsada halka açılamayan şirket türü aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Anonim Şirket</li><li class="ok">B) Limited Şirket</li><li>C) Kollektif Şirket</li><li>D) Komandit Şirket</li><li>E) Kooperatif</li></ul><p class="coz"><b class="cap">Çözüm</b>Limited şirketlerde ortak sayısı 1 ile 50 arasında sınırlandırılmıştır. Pay senedi çıkaramaz ve halka açılamaz. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Tüm ortaklarının gerçek kişi olması zorunlu olan ve ortakların şirket borçlarından dolayı tüm şahsi mal varlıklarıyla sınırsız ve müteselsil sorumlu olduğu şirket türü hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2024 Vize</span><ul class="o"><li class="ok">A) Kollektif Şirket</li><li>B) Anonim Şirket</li><li>C) Limited Şirket</li><li>D) Kooperatif</li><li>E) Sermayesi paylara bölünmüş komandit şirket</li></ul><p class="coz"><b class="cap">Çözüm</b>Kollektif şirketin ortaklarının tamamı gerçek kişi olmak zorundadır ve borçlardan dolayı birinci derecede sınırsız ve zincirleme (müteselsil) sorumludurlar. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>Türkiye'deki mevzuata göre bir işletmenin "KOBİ (Küçük ve Orta Büyüklükteki İşletme)" sayılabilmesi için çalışan sayısının en fazla kaç olması gerekir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) 49</li><li>B) 99</li><li class="ok">C) 249</li><li>D) 500</li><li>E) 1000</li></ul><p class="coz"><b class="cap">Çözüm</b>KOBİ üst sınırı <b>249 çalışan</b>dır. 250 ve üzeri çalışan istihdam eden işletmeler "Büyük İşletme" statüsüne geçer. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>En az 7 ortak tarafından karşılıklı yardım, dayanışma ve ortakların ekonomik menfaatlerini korumak amacıyla kurulan tüzel kişilik hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Anonim Şirket</li><li>B) Kollektif Şirket</li><li class="ok">C) Kooperatif</li><li>D) Holding</li><li>E) Konsorsiyum</li></ul><p class="coz"><b class="cap">Çözüm</b>Kooperatifler en az 7 ortak tarafından kurulan, kâr amacı gütmekten ziyade ortaklarına dayanışma ve tasarruf sağlayan ortaklıklardır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Sermayesinin tamamı veya %50'den fazlası devlete ait olan ve kamu hizmeti ile iktisadi faaliyetleri yürüten işletmelere genel olarak ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Vize</span><ul class="o"><li class="ok">A) Kamu İktisadi Teşebbüsü (KİT)</li><li>B) Çok Uluslu İşletme</li><li>C) Karma Şirket</li><li>D) Kollektif Şirket</li><li>E) Özel Girişim</li></ul><p class="coz"><b class="cap">Çözüm</b>Devletin sahibi olduğu ekonomik işletmelere Kamu İktisadi Teşebbüsü (KİT) veya Kamu İşletmesi denir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Birden fazla ülkede fiilen üretim tesisleri kurarak faaliyet gösteren ve yönetim merkezini ana ülkeden yürüten işletmeler hangi sınıfa girer?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Ulusal işletme</li><li>B) Yerel işletme</li><li class="ok">C) Çok uluslu işletme</li><li>D) Mikro işletme</li><li>E) Komandit işletme</li></ul><p class="coz"><b class="cap">Çözüm</b>Farklı ülkelerde doğrudan yatırımları ve üretim fabrikaları olan şirketlere <b>Çok Uluslu İşletme</b> denir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>Mikro işletmelerde çalışan personel sayısı aralığı aşağıdakilerden hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Bütünleme</span><span class="sqtag">2024 Vize</span><ul class="o"><li class="ok">A) 1 – 9 kişi</li><li>B) 10 – 49 kişi</li><li>C) 50 – 249 kişi</li><li>D) 250 – 500 kişi</li><li>E) 1 – 20 kişi</li></ul><p class="coz"><b class="cap">Çözüm</b>KOBİ mevzuatına göre 1 ila 9 çalışanı olan işletmeler <b>Mikro İşletme</b>dir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>Hisse senedi (pay senedi) ve tahvil çıkarabilen, sermayesi belirli paylara bölünmüş olan ve genel kurul tarafından seçilen yönetim kurulunca yönetilen şirket türü hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li class="ok">A) Anonim Şirket (A.Ş.)</li><li>B) Kollektif Şirket</li><li>C) Adi Şirket</li><li>D) Komandit Şirket</li><li>E) Tek Kişi İşletmesi</li></ul><p class="coz"><b class="cap">Çözüm</b>Pay senedi çıkararak sermaye piyasasında işlem görebilen ve yönetim kurulu tarafından sevk ve idare edilen şirket <b>Anonim Şirket</b>tir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>Aşağıdakilerden hangisi "Şahıs Şirketleri"nin sermaye şirketlerine göre temel bir dezavantajıdır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Kuruluşlarının zor olması</li><li class="ok">B) Ortakların kişisel mal varlıklarıyla sınırsız sorumlu olması ve ortaklardan birinin ayrılmasıyla şirketin dağılabilmesi</li><li>C) Karar almanın çok yavaş olması</li><li>D) Vergi oranlarının aşırı yüksek olması</li><li>E) Halka açılamamaları</li></ul><p class="coz"><b class="cap">Çözüm</b>Şahıs şirketlerinde ortakların sınırsız ve müteselsil sorumluluğu büyük risk taşır; ortaklar arasındaki güven bozulursa veya biri vefat ederse şirket kolayca dağılabilir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Hem kamu kurumlarının hem de özel sektör yatırımcılarının sermaye koyarak ortaklaşa kurdukları işletme türüne ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Kamu işletmesi</li><li>B) Özel işletme</li><li class="ok">C) Karma işletme</li><li>D) Çok uluslu işletme</li><li>E) Vakıf işletmesi</li></ul><p class="coz"><b class="cap">Çözüm</b>Kamu ve özel sermayenin birlikte ortaklık kurmasıyla oluşan yapılara <b>Karma İşletmeler</b> denir. Doğru seçenek C'dir.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <button class="btn" data-go="3">‹ Ünite 4</button>
+    <button class="btn" data-go="5">Ünite 6 ›</button>
+  </div>
+</section>
+
+<section class="unit" data-i="5">
+  <div class="uhead">
+    <span class="num">Ünite 6</span>
+    <h2>Kuruluş Çalışmaları, Kapasite ve Kuruluş Yeri</h2>
+    <p>İşletmelerin kuruluş süreci, fizibilite (yapılabilirlik) etütleri, kapasite türleri (teorik, pratik, fiili, atıl, zorlanmış ve optimum kapasite) ile kuruluş yeri seçim faktörleri. Sınavlarda kapasite türleri ve fizibilite basamaklarından en az 3-4 soru çıkmaktadır.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Otel Odaları ve Araba Fabrikası Analojisi:</b></p>
+    <p>1. <b>Fizibilite (Yapılabilirlik Etüdü):</b> Karanlık bir kuyuya taş atmadan önce el feneriyle bakmaktır. "Ben buraya otel açarsam müşteri gelir mi? (Ekonomik etüt), inşaatı yapabilir miyim? (Teknik etüt), param yeter mi, kredi bulabilir miyim? (Finansal etüt), belediye ruhsat verir mi? (Yasal etüt)." Bu sorulara "Evet" denirse yatırım kararı verilir.</p>
+    <p>2. <b>Kapasite Çeşitleri (100 Odalı Otel):</b><br>
+    &bull; <b>Teorik Kapasite:</b> Hiçbir oda boş kalmasa, hiç temizlik/tamirat yapılmasa teorik olarak 100 odadır.<br>
+    &bull; <b>Pratik (Normal) Kapasite:</b> Odaların temizliği, tadilatı ve rutin boşluklar hesaba katılınca gerçekçi olarak satılabilecek 90 odadır.<br>
+    &bull; <b>Fiili Kapasite:</b> O gün otelde kalan gerçek müşteri sayısıdır (Örn: 60 oda doldu).<br>
+    &bull; <b>Atıl (Boş) Kapasite:</b> Satılabilecekken boş kalan 30 odadır (Pratik - Fiili = 90 - 60 = 30).<br>
+    &bull; <b>Optimum Kapasite:</b> Bir oda başına düşen elektrik, personel ve temizlik maliyetinin <b>en düşük (minimum)</b> olduğu ideal doluluk oranıdır.</p>
+  </div>
+
+  <h3>6.1. İşletmelerin Kuruluş Süreci Aşamaları</h3>
+  <p>Bir işletmenin kurulması tesadüfi değil, sistematik aşamalarla gerçekleşir:</p>
+  <ol style="margin:6px 0 12px 20px; line-height:1.7;">
+    <li><b>1. Yatırım Fikri (Kuruluş Düşüncesi):</b> Girişimcinin bir pazar fırsatını veya ihtiyacı sezmesi.</li>
+    <li><b>2. Ön Fizibilite Etüdü:</b> Fikrin kabataslak uygulanabilir olup olmadığının hızlıca araştırılması.</li>
+    <li><b>3. Ayrıntılı Fizibilite (Yapılabilirlik) Etüdü:</b> Beş temel boyutta bilimsel verilerle yapılan derinlemesine analiz.</li>
+    <li><b>4. Fizibilite Raporu:</b> Tüm etütlerin sonuçlarını içeren kapsamlı değerlendirme belgesi.</li>
+    <li><b>5. Yatırım Kararı:</b> Rapordaki kârlılık ve risk analizine göre "Yatırıma devam et" veya "Vazgeç" kararı.</li>
+    <li><b>6. Kesin Proje:</b> Mimari, mühendislik, finansman ve hukuk planlarının kesinleştirilmesi.</li>
+    <li><b>7. Uygulama (Yatırımın Gerçekleştirilmesi):</b> Arsa alımı, fabrika inşaatı, makinelerin montajı.</li>
+    <li><b>8. Deneme Üretimi:</b> Makinelerin test edilmesi, aksaklıkların giderilmesi.</li>
+    <li><b>9. Kesin Üretime Geçiş:</b> Ticari üretime ve satışa başlanması.</li>
+  </ol>
+
+  <h3>6.2. Fizibilite (Yapılabilirlik) Etütlerinin Beş Boyutu</h3>
+  <div class="tw"><table>
+    <caption>Fizibilite Etüdü Boyutları ve Kapsamı</caption>
+    <thead><tr><th class="l">Etüt Türü</th><th class="l">Cevap Aranan Temel Soru</th><th class="l">Kapsamı ve İçeriği</th></tr></thead>
+    <tbody>
+      <tr><th class="l">Ekonomik Etüt</th><td class="l">Ürün satılır mı, talep var mı?</td><td class="l">Pazar araştırması, tüketici talebi, rakip analizi, fiyat ve satış geliri tahminleri, kapasite büyüklüğü seçimi.</td></tr>
+      <tr><th class="l">Teknik Etüt</th><td class="l">Nasıl ve nerede üretilecek?</td><td class="l">Üretim teknolojisi ve makine seçimi, tesis yerleşim planı, hammadde ve enerji temini, atık yönetimi.</td></tr>
+      <tr><th class="l">Finansal Etüt</th><td class="l">Kaç paraya mal olur, kâr eder mi?</td><td class="l">Sabit ve çalışma sermayesi ihtiyacı, özkaynak-kredi dengesi, nakit akış tablosu, başabaş noktası, kârlılık oranı.</td></tr>
+      <tr><th class="l">Yasal (Hukuki) Etüt</th><td class="l">Mevzuata uygun mu?</td><td class="l">Şirket türü seçimi, ruhsat, patent, vergi teşvikleri, çevre izinleri (ÇED raporu).</td></tr>
+      <tr><th class="l">Örgütsel Etüt</th><td class="l">Hangi personelle çalışılacak?</td><td class="l">Organizasyon şeması, iş analizleri, personel kadro planı, yetki ve sorumluluklar.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.3. Kapasite Türleri (Sınavlarda Kesin Çıkar)</h3>
+  <p><b>Kapasite:</b> Bir işletmenin belirli bir zaman diliminde mevcut üretim faktörlerini kullanarak üretebileceği maksimum mamul miktarıdır.</p>
+
+  <div class="box formul">
+    <span class="cap">Kapasite Çeşitleri ve Formülleri</span>
+    <span class="f"><b>1. Teorik (Maksimum) Kapasite:</b> Hiçbir arıza, bakım, elektrik kesintisi veya duruş olmadan, makinelerin 24 saat aralıksız ideal koşullarda üretebileceği teorik tavan miktardır. Pratikte ulaşılması imkansızdır.</span>
+    <span class="f"><b>2. Pratik (Normal) Kapasite:</b> Rutin bakım-onarım, vardiya değişimleri, arızalar ve çalışanların insani dinlenme molaları düşüldükten sonra <b>gerçekçi şartlarda ulaşılabilecek kapasite</b>dir.</span>
+    <span class="f"><b>3. Fiili (Gerçekleşen) Kapasite:</b> İşletmenin belirli bir dönemde (örn. 1 ayda) piyasa talebine göre <b>fiilen ürettiği</b> miktar.</span>
+    <span class="f"><b>4. Atıl (Boş) Kapasite:</b> Normal şartlarda üretilebilecekken talep yetersizliği vb. nedeniyle boşta kalan kısımdır:<br>
+    <b>Atıl Kapasite = Pratik Kapasite - Fiili Kapasite</b></span>
+    <span class="f"><b>5. Zorlanmış Kapasite:</b> Olağanüstü talep artışlarında makineleri aşırı çalıştırarak ve fazla mesai yaptırarak normal kapasitenin geçici olarak üzerine çıkılmasıdır.</span>
+    <span class="f"><b>6. Optimum (En Uygun) Kapasite:</b> Ortalama birim üretim maliyetinin <b>EN DÜŞÜK (MİNİMUM)</b> olduğu kapasite düzeyidir. Kârlılığı maksimize eder.</span>
+    <span class="f"><b>Kapasite Kullanım Oranı (KKO):</b> <b>KKO = (Fiili Kapasite / Pratik Kapasite) &times; 100</b></span>
+  </div>
+
+  <h3>6.4. Kuruluş Yeri Seçimini Etkileyen Faktörler</h3>
+  <ul>
+    <li><b>Hammaddeye Yakınlık:</b> Hammaddesi çabuk bozulan veya üretim sürecinde ağırlık kaybeden ürünlerde fabrika hammaddeye yakın kurulur (Örn: Çay fabrikaları Rize'de, Salça ve Konserve fabrikaları Bursa/İzmir'de, Şeker pancarı fabrikaları tarlaya yakın).</li>
+    <li><b>Pazara Yakınlık:</b> Mamulün taşınması zor, maliyetli veya çabuk bozulan olduğu durumlarda fabrika pazara (tüketiciye) yakın kurulur (Örn: Ekmek fırınları, taze süt, cam şişe).</li>
+    <li><b>İşgücü Temini:</b> Nitelikli veya ucuz işgücünün bol bulunduğu bölgeler.</li>
+    <li><b>Ulaşım ve Lojistik:</b> Liman, demiryolu ve otoyol bağlantıları.</li>
+    <li><b>Enerji ve Su Kaynakları:</b> Demir-çelik ve alüminyum gibi yoğun enerji tüketen sektörlerde elektrik ve su kaynaklarına yakınlık.</li>
+    <li><b>Devlet Teşvikleri ve OSB'ler:</b> Vergi indirimleri, arsa tahsisi ve organize sanayi bölgesi avantajları.</li>
+  </ul>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: Kapasite ve Atıl Kapasite Hesabı</span>
+    <p><b>Soru:</b> Bir tekstil fabrikasının normal (pratik) kapasitesi ayda 50.000 gömlektir. İşletme bu ay piyasa talebine bağlı olarak 35.000 gömlek üretmiştir. İşletmenin atıl kapasitesini ve kapasite kullanım oranını (KKO) bulunuz.</p>
+    <ol class="adim">
+      <li><b>Atıl Kapasite Hesabı:</b><br>
+      <i>Atıl Kapasite = Pratik Kapasite - Fiili Kapasite = 50.000 - 35.000 = <b>15.000 gömlek</b> boş kapasitedir.</i></li>
+      <li><b>Kapasite Kullanım Oranı Hesabı:</b><br>
+      <i>KKO = (Fiili / Pratik) &times; 100 = (35.000 / 50.000) &times; 100 = <b>%70</b></i>.</li>
+      <li><b>Sonuç:</b> Fabrika kapasitesinin %70'ini kullanmış, %30'u atıl kalmıştır.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Teorik vs Pratik Kapasite):</b> "Sıfır duruş ve arıza ile ideal koşullarda ulaşılabilecek tavan miktar" sorulduğunda cevap <b>Teorik (Maksimum) Kapasite</b>dir. "Normal çalışma koşullarında duruşlar düşüldükten sonraki gerçekçi miktar" sorulduğunda ise cevap <b>Pratik Kapasite</b>dir.</li>
+      <li><b>Tuzak 2 (Optimum Kapasite Tanımı):</b> Optimum kapasite "üretimin en yüksek olduğu" yer DEĞİLDİR; <b>"Birim maliyetin en düşük olduğu"</b> üretim düzeyidir!</li>
+      <li><b>Tuzak 3 (Hammadde vs Pazar Yakınlığı):</b> Şeker pancarı tarladan fabrikaya taşınırken çabuk bozulur ve posası atılarak ağırlık kaybeder; bu yüzden şeker fabrikaları <b>Hammaddeye yakın</b> kurulur. Cam şişe ve ekmek ise kırılgan ve taze olduğu için <b>Pazara yakın</b> kurulur.</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>Kuruluş süreci: Yatırım Fikri &rarr; Ön Fizibilite &rarr; Fizibilite &rarr; Rapor &rarr; Yatırım Kararı &rarr; Proje &rarr; Uygulama &rarr; Deneme &rarr; Kesin Üretim.</li>
+      <li>Fizibilite 5 boyuttur: Ekonomik, Teknik, Finansal, Hukuki ve Örgütsel etüt.</li>
+      <li>Pazar ve talep araştırması <b>Ekonomik Etüt</b> bünyesinde yapılır.</li>
+      <li>Teorik kapasite aralıksız maksimumdur; Pratik kapasite duruşlar düşülmüş normal kapasitedir.</li>
+      <li>Fiili kapasite dönem içinde fiilen üretilen miktardır; Atıl Kapasite = Pratik - Fiili.</li>
+      <li>Optimum Kapasite: <b>Ortalama birim maliyetin en düşük (minimum) olduğu</b> kapasitedir.</li>
+      <li>Ağırlık kaybeden ve çabuk bozulan hammaddeli ürünler <b>hammaddeye yakın</b> kurulur (çay, şeker).</li>
+      <li>Taşıması pahalı ve kırılgan ürünler <b>pazara yakın</b> kurulur (ekmek, mobilya montajı).</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Hiçbir kesinti, arıza, bakım ve duruş olmaksızın makinelerin teknik olarak üretebileceği en üst teorik üretim miktarına ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li class="ok">A) Teorik (Maksimum) Kapasite</li><li>B) Pratik Kapasite</li><li>C) Fiili Kapasite</li><li>D) Optimum Kapasite</li><li>E) Atıl Kapasite</li></ul><p class="coz"><b class="cap">Çözüm</b>İdeal ve kesintisiz koşullarda makinelerin fiziksel tavan sınırını belirleyen kapasiteye <b>Teorik (Maksimum) Kapasite</b> denir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>Bir işletmede ortalama birim üretim maliyetinin en düşük (minimum) olduğu kapasite düzeyine ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Teorik kapasite</li><li>B) Zorlanmış kapasite</li><li class="ok">C) Optimum kapasite</li><li>D) Atıl kapasite</li><li>E) Fiili kapasite</li></ul><p class="coz"><b class="cap">Çözüm</b>Ortalama maliyet eğrisinin dip noktasına, yani birim maliyetin en düşük olduğu ideal üretim hacmine <b>Optimum Kapasite</b> denir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Normal (pratik) kapasitesi 100.000 birim olan bir işletmenin belirli bir dönemde 70.000 birim üretim yapması durumunda "Atıl Kapasite" kaç birimdir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li class="ok">A) 30.000 birim</li><li>B) 70.000 birim</li><li>C) 100.000 birim</li><li>D) 170.000 birim</li><li>E) 0 birim</li></ul><p class="coz"><b class="cap">Çözüm</b>Atıl Kapasite = Pratik Kapasite - Fiili Kapasite formülünden: 100.000 - 70.000 = <b>30.000 birim</b> bulunur. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Fizibilite (yapılabilirlik) etütleri sürecinde pazar araştırması, talep tahmini, fiyat ve satış hacmi analizleri hangi etüt kapsamında gerçekleştirilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2024 Vize</span><ul class="o"><li class="ok">A) Ekonomik etüt</li><li>B) Teknik etüt</li><li>C) Finansal etüt</li><li>D) Hukuki etüt</li><li>E) Örgütsel etüt</li></ul><p class="coz"><b class="cap">Çözüm</b>Pazarın büyüklüğü, hedef kitle talebi, rakip durumu ve fiyat tahminleri <b>Ekonomik Etüt</b> bünyesinde araştırılır. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>Şeker pancarı fabrikalarının tarlalara, çay işleme tesislerinin çay bahçelerine çok yakın yerlerde kurulmasının temel gerekçesi nedir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Hammaddenin çabuk bozulması ve üretim sürecinde yüksek oranda ağırlık kaybetmesi</li><li>B) Pazara yakın olmanın kanunen yasak olması</li><li>C) Enerji kaynaklarının tarlada bulunması</li><li>D) İşgücü maliyetlerinin şehirde daha ucuz olması</li><li>E) Tüketicilerin tarlalarda yaşaması</li></ul><p class="coz"><b class="cap">Çözüm</b>Çay ve şeker pancarı gibi ürünler taşınırken çabuk bozulur ve işlenirken büyük ağırlık kaybeder; bu yüzden taşıma maliyetini düşürmek için fabrikalar <b>Hammaddeye yakın</b> kurulur. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>Üretim teknolojisinin seçimi, fabrika yerleşim planı, makine ve teçhizatın belirlenmesi fizibilite etütlerinin hangisinde yer alır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Ekonomik etüt</li><li class="ok">B) Teknik etüt</li><li>C) Finansal etüt</li><li>D) Yasal etüt</li><li>E) Sosyal etüt</li></ul><p class="coz"><b class="cap">Çözüm</b>Mühendislik, teknoloji seçimi, makine parkı, yerleşim ve üretim süreci <b>Teknik Etüt</b> konusudur. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Rutin bakım-onarım, vardiya değişimleri ve çalışanların insani dinlenme molaları düşüldükten sonra olağan şartlarda ulaşılabilen kapasite hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Teorik kapasite</li><li class="ok">B) Pratik (Normal) kapasite</li><li>C) Zorlanmış kapasite</li><li>D) Atıl kapasite</li><li>E) Optimum kapasite</li></ul><p class="coz"><b class="cap">Çözüm</b>Gerçekçi çalışma şartlarında duruş ve bakımlar düşüldükten sonra elde edilen kapasite <b>Pratik (Normal) Kapasite</b>dir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Yatırım kararının kesinleşmesinden sonra tesisin fiziki olarak kurulması, bina inşaatı ve makinelerin montajı hangi kuruluş aşamasını ifade eder?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Yatırım fikri</li><li>B) Ön fizibilite</li><li class="ok">C) Uygulama (Yatırımın gerçekleştirilmesi)</li><li>D) Deneme üretimi</li><li>E) Fizibilite raporu</li></ul><p class="coz"><b class="cap">Çözüm</b>Projenin sahada hayata geçirilmesi, inşaat ve montaj süreci <b>Uygulama</b> aşamasıdır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>Olağanüstü yüksek talep karşısında fazla mesai yaptırılarak ve makinelerin dinlendirilmeden çalıştırılmasıyla ulaşılan geçici kapasiteye ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) Atıl kapasite</li><li>B) Optimum kapasite</li><li class="ok">C) Zorlanmış kapasite</li><li>D) Normal kapasite</li><li>E) Pratik kapasite</li></ul><p class="coz"><b class="cap">Çözüm</b>Mevcut normal kapasitenin aşırı mesai ve zorlamalarla geçici olarak aşılmasına <b>Zorlanmış Kapasite</b> denir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>Bir yatırım projesinin kârlılık oranı, başabaş noktası ve fon kaynakları gereksinimi hangi fizibilite etüdünde hesaplanır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><ul class="o"><li>A) Teknik etüt</li><li>B) Hukuki etüt</li><li class="ok">C) Finansal (Mali) etüt</li><li>D) Örgütsel etüt</li><li>E) Ekolojik etüt</li></ul><p class="coz"><b class="cap">Çözüm</b>Yatırım tutarı, finansman kaynakları, nakit akışı ve kârlılık analizleri <b>Finansal (Mali) Etüt</b> kapsamındadır. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>Aşağıdakilerden hangisi bir işletmenin "Pazara Yakın" kurulmasını gerektiren faktörlerden biridir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Hammaddenin işlenirken %80 ağırlık kaybetmesi</li><li class="ok">B) Mamulün kırılgan, hacimli veya çabuk bozulabilir olması (örn: taze ekmek, cam şişe)</li><li>C) Hammaddenin nakliyesinin çok ucuz olması</li><li>D) Tarlaya yakın olmanın zorunlu olması</li><li>E) Elektrik enerjisinin maden ocaklarında bulunması</li></ul><p class="coz"><b class="cap">Çözüm</b>Ekmek, pasta, taze süt veya cam gibi mamullerin taşınması riskli, pahalı veya bozulabilir olduğundan tüketim merkezine yani <b>Pazara Yakın</b> kurulmalıdır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Kuruluş çalışmalarında tesisin ticari faaliyete geçmeden önce sistemdeki hataların ve ayarların görülmesi için yapılan üretime ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Seri üretim</li><li>B) Kesin üretim</li><li class="ok">C) Deneme üretimi</li><li>D) Zorlanmış üretim</li><li>E) Optimum üretim</li></ul><p class="coz"><b class="cap">Çözüm</b>Tesis tamamlandıktan sonra makinelerin performansını ve ürün kalitesini test etmek için yapılan ilk üretime <b>Deneme Üretimi</b> denir. Doğru seçenek C'dir.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <button class="btn" data-go="4">‹ Ünite 5</button>
+    <button class="btn" data-go="6">Ünite 7 ›</button>
+  </div>
+</section>
+
+<section class="unit" data-i="6">
+  <div class="uhead">
+    <span class="num">Ünite 7</span>
+    <h2>İşletme Fonksiyonları I: Yönetim ve Pazarlama</h2>
+    <p>Yönetim kavramı, yönetim sürecinin 5 temel fonksiyonu (Planlama, Örgütleme, Yöneltme, Koordinasyon, Denetim), yönetici kademeleri ve becerileri (Katz modeli); Pazarlama kavramı, pazar türleri, endüstriyel alıcılar ve 4P pazarlama karması. Final sınavlarında banko 4 soru gelmektedir.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Orkestra Şefi ve Vitrin Analojisi:</b></p>
+    <p>1. <b>Yönetim (Orkestra Şefi):</b> Şef sahnede tek bir keman veya trompet çalmaz; ama elindeki bagetle 100 müzisyenin aynı anda, ahenkle ve doğru notada çalmasını sağlar. Yönetim, <b>başkaları vasıtasıyla amaca ulaşma sanatıdır</b>. Önce notaları seçer (Planlama), enstrümanları yerleştirir (Örgütleme), ekibi motive eder (Yöneltme), sesleri dengeler (Koordinasyon) ve detone olanı düzeltir (Denetim).</p>
+    <p>2. <b>Pazarlama (Mağaza Vitrini ve 4P):</b> Pazarlama sadece satış yapmak değildir; müşterinin ne istediğini önceden öğrenip doğru <b>Ürünü (Product)</b> üretmek, doğru <b>Fiyatı (Price)</b> koymak, en kolay ulaşacağı <b>Dağıtım (Place)</b> kanalını kurmak ve cazip reklamlarla <b>Tutundurmaktır (Promotion)</b>.</p>
+    <p>3. <b>Endüstriyel Alıcı Farkı:</b> Siz ayakkabıyı giymek için alırsanız "Tüketici"sinizdir. Ama bir mağaza ayakkabıyı dükkânında kârla satmak için alıyorsa veya deri fabrikası ayakkabı yapmak için alıyorsa <b>"Endüstriyel (Örgütsel) Alıcı"</b>dır.</p>
+  </div>
+
+  <h3>7.1. Yönetim Fonksiyonu ve Yönetim Süreci</h3>
+  <p><b>Yönetim:</b> Belirlenen örgütsel amaçlara ulaşmak için insan, finans, fiziksel ve bilgi kaynaklarının planlanması, örgütlenmesi, yöneltilmesi, koordine edilmesi ve denetlenmesi sürecidir.</p>
+
+  <div class="box formul">
+    <span class="cap">Yönetim Sürecinin 5 Temel Fonksiyonu</span>
+    <span class="f"><b>1. Planlama (Planning):</b> Nelerin, ne zaman, nerede, nasıl ve kim tarafından yapılacağının önceden kararlaştırılmasıdır. <b>Yönetimin ilk ve temel fonksiyonudur</b>. Misyon, vizyon, amaç ve stratejiler burada belirlenir.</span>
+    <span class="f"><b>2. Örgütleme / Organize Etme (Organizing):</b> Plana uygun olarak işlerin bölümlere ayrılması, görev, yetki ve sorumlulukların dağıtılması, fiziksel ortamın ve donanımın yapılandırılmasıdır.</span>
+    <span class="f"><b>3. Yöneltme / Yürütme (Leading / Directing):</b> Çalışanların belirlenen hedefler doğrultusunda istekle ve verimle çalışması için harekete geçirilmesi, liderlik edilmesi, motive edilmesi ve talimat verilmesidir.</span>
+    <span class="f"><b>4. Koordinasyon / Eşgüdüm (Coordinating):</b> Örgütteki farklı departmanların, çalışanların ve çabaların birbiriyle uyumlu, ahenkli ve çelişki yaratmadan hedefe yönlendirilmesidir.</span>
+    <span class="f"><b>5. Denetim / Kontrol (Controlling):</b> Gerçekleşen fiili sonuçlar ile planlanan hedeflerin karşılaştırılması, varsa sapmaların (farkların) tespit edilip düzeltici önlemlerin alınmasıdır. <b>Yönetimin son fonksiyonudur</b>.</span>
+  </div>
+
+  <h3>7.2. Yönetici Kademeleri ve Yönetsel Beceriler (Robert Katz Modeli)</h3>
+  <div class="tw"><table>
+    <caption>Yönetici Kademeleri ve İhtiyaç Duyulan Beceriler</caption>
+    <thead><tr><th class="l">Kats Modeli</th><th class="l">Kapsamı ve Tanımı</th><th class="c">En Çok Gerekli Olduğu Düzey</th></tr></thead>
+    <tbody>
+      <tr><th class="l">Kavramsal Beceri</th><td class="l">İşletmeyi bir bütün olarak görebilme, parçaların birbirini nasıl etkilediğini anlama ve stratejik düşünme becerisi.</td><td class="c"><b>Üst Düzey Yöneticiler</b><br><small>(Genel Müdür, Yönetim Kurulu Başkanı)</small></td></tr>
+      <tr><th class="l">Beşeri (İlişkisel) Beceri</th><td class="l">İnsanları anlama, etkili iletişim kurma, empati yapabilme, motive etme ve takım çalışması yürütme becerisi.</td><td class="c"><b>TÜM KADEMELERDE EŞİT</b><br><small>(Üst, Orta ve Alt kademe için kritiktir)</small></td></tr>
+      <tr><th class="l">Teknik Beceri</th><td class="l">Belirli bir işin nasıl yapılacağına ilişkin uzmanlık bilgisi, yöntem, teknik ve araç-gereç kullanabilme becerisi.</td><td class="c"><b>Alt Düzey Yöneticiler</b><br><small>(Şefler, Formenler, Takım Liderleri)</small></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>7.3. Pazarlama Fonksiyonu ve Temel Kavramlar</h3>
+  <p>Pazarlama; hedef müşterilerin ihtiyaç ve isteklerini belirleme, bu ihtiyaçları rakiplerden daha tatmin edici şekilde karşılayacak değerleri üretme, fiyatlandırma, dağıtma ve tutundurma faaliyetlerinin tümüdür.</p>
+
+  <div class="box formul">
+    <span class="cap">Pazar Türleri ve Endüstriyel Alıcı Tanımı</span>
+    <span class="f"><b>Tüketici Pazarları (B2C):</b> Mal ve hizmetleri kişisel, ailevi veya evsel nihai tüketim amacıyla satın alan bireylerden oluşur.</span>
+    <span class="f"><b>Endüstriyel (Örgütsel / Kurumsal) Pazarlar (B2B):</b> Mal ve hizmetleri; başka mal ve hizmet üretmek, ticari faaliyette kullanmak veya kâr elde etmek amacıyla tekrar satmak üzere satın alan işletmelerden oluşur.<br>
+    <b>Endüstriyel Alıcı:</b> Ürünü son tüketim için değil, ticari veya üretim amacıyla alan işletmedir (Örn: Gömlek fabrikasının kumaş alması, marketin toptancıdan un alması).</span>
+  </div>
+
+  <h3>7.4. Pazarlama Karması (4P Modeli)</h3>
+  <p>E. Jerome McCarthy tarafından geliştirilen ve pazarlamanın operasyonel kalbini oluşturan 4 temel bileşen:</p>
+  <div class="tw"><table>
+    <caption>Pazarlama Karmasının 4 Temel Elemanı (4P)</caption>
+    <thead><tr><th class="l">Bileşen (Türkçe)</th><th class="c">İngilizce</th><th class="l">Kapsamı ve Karar Alanları</th></tr></thead>
+    <tbody>
+      <tr><th class="l">1. Ürün</th><td class="c"><b>Product</b></td><td class="l">Fiziksel ürün, ürün tasarımı, ambalaj, marka, garanti, kalite, ürün yaşam eğrisi aşamaları.</td></tr>
+      <tr><th class="l">2. Fiyat</th><td class="c"><b>Price</b></td><td class="l">Birim fiyat, iskonto/indirim politikaları, ödeme vadeleri, pazarın kaymağını alma vs nüfuz etme stratejileri.</td></tr>
+      <tr><th class="l">3. Dağıtım</th><td class="c"><b>Place</b></td><td class="l">Ürünün tüketiciye ulaştığı kanallar (doğrudan/dolaylı), toptancılar, perakendeciler, lojistik, fiziksel dağıtım.</td></tr>
+      <tr><th class="l">4. Tutundurma</th><td class="c"><b>Promotion</b></td><td class="l">Müşteriyle iletişim: Reklam, Halkla İlişkiler (PR), Kişisel Satış, Satış Geliştirme (Promosyon).</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: Yönetici Becerisi Eşleştirme</span>
+    <p><b>Soru:</b> Bir holdingin yönetim kurulu başkanının küresel ekonomik kriz karşısında şirketin 5 yıllık stratejik yönünü çizmesi hangi beceriyi; fabrikadaki ustabaşının arızalanan torna tezgahını tamir etmesi hangi beceriyi yansıtır?</p>
+    <ol class="adim">
+      <li><b>Yönetim kurulu başkanı:</b> Şirketi bir bütün olarak görüp uzun vadeli strateji kurmaktadır &rarr; <b>Kavramsal Beceri</b>.</li>
+      <li><b>Ustabaşı:</b> İşi fiilen icra eden teknik donanıma ve uzmanlığa sahiptir &rarr; <b>Teknik Beceri</b>.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Yönetimin İlk ve Son Fonksiyonu):</b> Yönetimin ilk fonksiyonu <b>Planlama</b>, son fonksiyonu ise <b>Denetim</b>dir. Planlama olmadan denetim yapılamaz, denetim olmadan planın başarılı olup olmadığı bilinemez!</li>
+      <li><b>Tuzak 2 (Katz Modeli Beşeri Beceri):</b> "Hangi beceri sadece alt kademede gerekir?" derlerse Teknik; "Hangi beceri tüm kademelerde aynı derecede gereklidir?" derlerse cevap <b>Beşeri (İlişkisel) Beceri</b>dir.</li>
+      <li><b>Tuzak 3 (Endüstriyel Alıcı):</b> "Kişisel kullanım için alan kişi" tüketici; "Kendi fabrikasında işlemek veya tekrar satmak için alan kişi" <b>Endüstriyel Alıcı</b>dır.</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>Yönetim süreci 5 fonksiyondur: Planlama &rarr; Örgütleme &rarr; Yöneltme &rarr; Koordinasyon &rarr; Denetim.</li>
+      <li>Yönetimin ilk fonksiyonu <b>Planlama</b>, son fonksiyonu <b>Denetim (Kontrol)</b>dür.</li>
+      <li>Katz modeli: Üst yönetimde <b>Kavramsal</b>, Alt yönetimde <b>Teknik</b> beceri ağırlıklıdır.</li>
+      <li>Beşeri (insani) beceri her üç yönetim kademesinde de eşit derecede önemlidir.</li>
+      <li>Pazarlama karması 4P: Ürün (Product), Fiyat (Price), Dağıtım (Place), Tutundurma (Promotion).</li>
+      <li>Endüstriyel alıcı ürünü son tüketim için değil, üretmek veya satmak için satın alan işletmedir.</li>
+      <li>Tutundurma araçları: Reklam, Halkla İlişkiler, Kişisel Satış ve Satış Geliştirme (Promosyon).</li>
+      <li>Denetim: Planlanan ile gerçekleşeni karşılaştırıp sapmaları düzeltme sürecidir.</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Aşağıdakilerden hangisi "Endüstriyel bir alıcı" tanımına tam olarak uyar?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2023-2024 Final</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) Evinde tüketmek üzere marketten süt alan Ahmet Bey</li><li class="ok">B) Kendi pastanesinde pasta yapmak üzere toptancıdan un ve şeker alan fırın işletmecisi</li><li>C) Çocuğuna hediye olarak bisiklet alan anne</li><li>D) Kendi kullandığı cep telefonunu satın alan öğrenci</li><li>E) Kendi bahçesine çiçek diken ev hanımı</li></ul><p class="coz"><b class="cap">Çözüm</b>Endüstriyel alıcı, ürünleri kişisel tüketimi için değil; başka bir ürün üretmekte girdi olarak kullanmak veya kârla satmak için alan işletmelerdir. Pasta üretmek için un alan fırıncı endüstriyel alıcıdır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>Yönetim sürecinde nelerin, ne zaman, nerede, nasıl ve kim tarafından yapılacağının önceden kararlaştırıldığı ilk ve temel fonksiyon hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Planlama</li><li>B) Örgütleme</li><li>C) Yöneltme</li><li>D) Koordinasyon</li><li>E) Denetim</li></ul><p class="coz"><b class="cap">Çözüm</b>Geleceğe dönük hedeflerin ve faaliyetlerin önceden belirlendiği başlangıç fonksiyonu <b>Planlama</b>dır. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Pazarlama karmasını oluşturan 4P unsurlarından hangisi reklam, halkla ilişkiler, kişisel satış ve promosyon faaliyetlerini kapsar?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Ürün (Product)</li><li>B) Fiyat (Price)</li><li>C) Dağıtım (Place)</li><li class="ok">D) Tutundurma (Promotion)</li><li>E) İnsan (People)</li></ul><p class="coz"><b class="cap">Çözüm</b>Hedef kitleyle iletişim kurma, ürünü tanıtma ve satın almayı teşvik etme karmasına <b>Tutundurma (Promotion)</b> denir. Doğru seçenek D'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Robert Katz'ın yönetici becerileri modeline göre, işletmeyi bir bütün olarak görebilme ve stratejik kararlar alabilme becerisi en çok hangi düzeydeki yöneticilerde bulunmalıdır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Vize</span><ul class="o"><li class="ok">A) Üst düzey yöneticiler (Kavramsal beceri)</li><li>B) Alt düzey yöneticiler (Teknik beceri)</li><li>C) Formenler</li><li>D) Şefler</li><li>E) Operasyon memurları</li></ul><p class="coz"><b class="cap">Çözüm</b>Büyük resmi görebilme ve stratejik planlama (kavramsal beceri) en çok Genel Müdür, CEO gibi <b>Üst Düzey Yöneticilerde</b> bulunmalıdır. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>Planlanan hedefler ile gerçekleşen fiili sonuçların karşılaştırılması ve varsa sapmaların düzeltilmesi yönetim sürecinin hangi fonksiyonudur?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Planlama</li><li>B) Örgütleme</li><li>C) Yöneltme</li><li>D) Koordinasyon</li><li class="ok">E) Denetim (Kontrol)</li></ul><p class="coz"><b class="cap">Çözüm</b>Hedef ile gerçekleşeni kıyaslayıp sapmaları tespit ve ıslah etme işlevi <b>Denetim (Kontrol)</b> fonksiyonudur. Doğru seçenek E'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>Robert Katz modeline göre üst, orta ve alt kademedeki tüm yöneticiler için eşit derecede öneme sahip olan yönetsel beceri hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li>A) Teknik beceri</li><li class="ok">B) Beşeri (İlişkisel / İnsani) beceri</li><li>C) Kavramsal beceri</li><li>D) Finansal beceri</li><li>E) Mühendislik becerisi</li></ul><p class="coz"><b class="cap">Çözüm</b>İnsanlarla iletişim kurma, empati ve takım çalışması becerisi (beşeri beceri) hiyerarşinin her basamağındaki yönetici için hayati ve eşit derecede önemlidir. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Aşağıdakilerden hangisi 4P Pazarlama Karması (Marketing Mix) elemanlarından biri <u>değildir</u>?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Bütünleme</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Ürün (Product)</li><li>B) Fiyat (Price)</li><li class="ok">C) Üretim (Production)</li><li>D) Dağıtım (Place)</li><li>E) Tutundurma (Promotion)</li></ul><p class="coz"><b class="cap">Çözüm</b>4P: Product, Price, Place, Promotion'dır. "Production" (Üretim) pazarlama karmasının elemanı değil, ayrı bir işletme fonksiyonudur. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Bir işletmede çalışanların ortak amaca doğru istekle yönlendirilmesi, motive edilmesi ve liderlik edilmesi hangi yönetsel faaliyettir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Planlama</li><li>B) Örgütleme</li><li class="ok">C) Yöneltme (Yürütme)</li><li>D) Denetim</li><li>E) İskonto</li></ul><p class="coz"><b class="cap">Çözüm</b>Çalışanları eyleme geçirme, motive etme ve liderlik fonksiyonu <b>Yöneltme (Yürütme)</b>dir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>Üretilen bir malın üreticiden hiçbir aracı olmadan doğrudan nihai tüketiciye satılmasına (örneğin fabrikanın kendi web sitesinden satış yapması) ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li class="ok">A) Doğrudan dağıtım</li><li>B) Dolaylı dağıtım</li><li>C) Yoğun dağıtım</li><li>D) Seçici dağıtım</li><li>E) Acentelik</li></ul><p class="coz"><b class="cap">Çözüm</b>Arada toptancı veya perakendeci olmaksızın üreticiden tüketiciye doğrudan satış <b>Doğrudan Dağıtım</b> kanalıdır. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>Bir işletmede farklı departmanlar (üretim, pazarlama, finans) arasındaki çalışmaların birbiriyle çelişmeden uyum içinde yürütülmesini sağlayan fonksiyon hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><ul class="o"><li>A) Planlama</li><li>B) Denetim</li><li class="ok">C) Koordinasyon (Eşgüdüm)</li><li>D) Tedarik</li><li>E) Fizibilite</li></ul><p class="coz"><b class="cap">Çözüm</b>Departmanlar arası ahenk, uyum ve senkronizasyonu sağlama faaliyeti <b>Koordinasyon (Eşgüdüm)</b> fonksiyonudur. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>Belirli bir makinenin kullanımında, tamirinde ve somut işlerin yapılmasında en çok ihtiyaç duyulan yönetsel beceri hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li class="ok">A) Teknik beceri</li><li>B) Kavramsal beceri</li><li>C) Stratejik beceri</li><li>D) Politik beceri</li><li>E) Felsefi beceri</li></ul><p class="coz"><b class="cap">Çözüm</b>Spesifik bir alanda yöntem, araç ve teknik kullanabilme uzmanlığı <b>Teknik Beceri</b>dir ve en çok alt kademe yöneticilerde gerekir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Yeni çıkan bir ürünün pazara ilk sunulduğunda yüksek fiyattan satılarak AR-GE ve yatırım maliyetlerinin hızla geri alınmasını amaçlayan fiyatlandırma stratejisi hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Pazarın kaymağını alma stratejisi</li><li>B) Pazara nüfuz etme stratejisi</li><li>C) Psikolojik fiyatlandırma</li><li>D) Zararına fiyatlandırma</li><li>E) Geleneksel fiyatlandırma</li></ul><p class="coz"><b class="cap">Çözüm</b>Pazara ilk girişte yüksek fiyattan satış yapıp sadece üst gelir grubuna hitap ederek kaymağı alma stratejisine <b>Pazarın Kaymağını Alma (Market Skimming)</b> denir. Düşük fiyatla hızla pazar kapmaya ise pazara nüfuz etme denir. Doğru seçenek A'dır.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <button class="btn" data-go="5">‹ Ünite 6</button>
+    <button class="btn" data-go="7">Ünite 8 ›</button>
+  </div>
+</section>
+
+<section class="unit" data-i="7">
+  <div class="uhead">
+    <span class="num">Ünite 8</span>
+    <h2>İşletmecilik Fonksiyonları II: Üretim, Ar-Ge, Finans, Muhasebe ve İK</h2>
+    <p>Üretim sistemleri (birim, seri, akış üretimi), Ar-Ge türleri, Finansman yöntemleri ve sermaye yapısı, Muhasebe türleri ve temel mali tablolar (Bilanço ve Gelir Tablosu) ile İnsan Kaynakları Yönetimi (iş analizi, iş tanımı, iş gerekleri). Final ve bütünleme sınavlarında en çok soru gelen ünitedir.</p>
+  </div>
+
+  <div class="box not">
+    <span class="cap">Önce şunu oturtalım</span>
+    <p><b>Fabrikanın Kalbi, Kasası ve İnsan Kaynağı Analojisi:</b></p>
+    <p>1. <b>Üretim Çeşitleri:</b> Gemi veya gökdelen yapıyorsanız kişiye özeldir (<b>Tek/Birim üretim</b>). Hazır giyimde yazlık gömlekleri 1000'er adetlik partilerle dikiyorsanız <b>Seri üretim</b>dir. Petrol rafinerisi veya şeker fabrikası gibi bant durmadan 24 saat aralıksız akıyorsa <b>Kütle/Süreç üretimidir</b>.</p>
+    <p>2. <b>Finans vs Muhasebe:</b> Muhasebe işletmenin "tarihçisi"dir; geçmişte nereye ne harcandığını kaydeder (Bilanço ve Gelir tablosu). Finans ise işletmenin "kaptanı"dır; geleceğe bakar: "Yarın fabrikayı büyütmek için parayı nereden bulacağız (özkaynak mı, kredi mi), bu parayı nereye yatıracağız?"</p>
+    <p>3. <b>İş Tanımı vs İş Gerekleri (Banko Sınav Sorusu):</b> <b>İş Tanımı</b> "işin kendisine" bakar (Görevler neler, çalışma saatleri ne?). <b>İş Gerekleri</b> ise "işi yapacak insana" bakar (Hangi üniversite mezunu olacak, kaç yıl tecrübeli, hangi yabancı dili bilecek?).</p>
+  </div>
+
+  <h3>8.1. Üretim Fonksiyonu ve Üretim Sistemleri</h3>
+  <p>Üretim; insan ihtiyaçlarını karşılamak üzere üretim faktörlerinin fiziksel veya hizmet çıktılarına dönüştürülmesidir.</p>
+  <div class="tw"><table>
+    <caption>Üretim Sistemlerinin Karşılaştırmalı Özellikleri</caption>
+    <thead><tr><th class="l">Üretim Tipi</th><th class="l">Temel Özelliği</th><th class="l">Örnekler</th></tr></thead>
+    <tbody>
+      <tr><th class="l">Tek (Birim / Sipariş) Üretim</th><td class="l">Müşterinin özel siparişine göre tek seferlik ve az miktarda yapılan üretimdir. Uzman işçilik ve esnek makineler gerekir.</td><td class="l">Yat/Gemi yapımı, baraj/köprü inşaatı, özel dikim gelinlik.</td></tr>
+      <tr><th class="l">Seri (Parti) Üretim</th><td class="l">Belirli bir mamulün önceden belirlenmiş büyüklükteki partiler (parti büyüklüğü) halinde üretilip ardından diğer mamule geçilmesidir.</td><td class="l">Konfeksiyon (pantolon, gömlek), mobilya, ilaç üretimi.</td></tr>
+      <tr><th class="l">Kütle / Akış / Süreç Üretimi</th><td class="l">Tamamen standartlaştırılmış tek bir ürünün özel montaj hatlarında durmaksızın çok yüksek miktarlarda üretilmesidir.</td><td class="l">Otomobil montaj hattı, çimento, şeker, petrol rafinerisi, şişelenmiş meşrubat.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.2. Araştırma ve Geliştirme (Ar-Ge) Fonksiyonu</h3>
+  <div class="box formul">
+    <span class="cap">Ar-Ge Faaliyetlerinin Üç Aşaması</span>
+    <span class="f"><b>1. Temel Araştırma:</b> Belirli bir ticari amaç gütmeksizin, doğayı ve evreni anlamak için saf bilimsel bilgi edinmeye yönelik teorik çalışmalardır (Örn: Üniversitelerde fizik yasalarını araştırmak).</span>
+    <span class="f"><b>2. Uygulamalı Araştırma:</b> Temel araştırmadan elde edilen bilgileri belirli ve pratik bir ticari amaca, yeni bir ürün fikrine veya probleme çözüme yönlendiren araştırmalardır.</span>
+    <span class="f"><b>3. Deneysel Geliştirme:</b> Araştırma sonuçlarını kullanarak ticari olarak üretilebilir yeni ürün, malzeme veya üretim süreci prototiplerinin tasarlanması ve test edilmesidir.</span>
+  </div>
+
+  <h3>8.3. Finans Fonksiyonu ve Sermaye Yapısı</h3>
+  <p>İşletmenin ihtiyaç duyduğu fonların en uygun şartlarla sağlanması ve en kârlı alanlara yatırılmasıdır.</p>
+  <ul>
+    <li><b>Özkaynak Finansmanı:</b> Şirket kurucularının ve ortakların koyduğu sermaye ile dağıtılmayıp şirkette bırakılan kârlardan (otofinansman) oluşur. Vadesi yoktur, faiz yükü getirmez, finansal riski düşüktür.</li>
+    <li><b>Yabancı Kaynak (Borç) Finansmanı:</b> Banka kredileri, tahvil ihracı ve ticari borçlardan oluşur. Vadelidir, anapara ve faiz geri ödeme zorunluluğu vardır. Aşırı borçlanma iflas riski yaratır.</li>
+    <li><b>Çalışma Sermayesi (Dönen Varlıklar):</b> Bir yıl içinde nakde dönüşebilen varlıklardır (Kasa, banka mevduatı, müşteri alacakları, stoklar).</li>
+    <li><b>Duran Varlıklar:</b> İşletmede bir yıldan uzun süre kullanılmak üzere edinilen varlıklardır (Binalar, araziler, makineler, taşıtlar).</li>
+  </ul>
+
+  <h3>8.4. Muhasebe Fonksiyonu ve Temel Mali Tablolar</h3>
+  <p>Muhasebe; işletmenin mali nitelikteki işlemlerini kaydeden, sınıflandıran, özetleyen ve raporlayan bilgi sistemidir.</p>
+  <div class="tw"><table>
+    <caption>İki Temel Finansal Tablo</caption>
+    <thead><tr><th class="l">Tablo</th><th class="c">Niteliği</th><th class="l">İçeriği ve Temel Eşitliği</th></tr></thead>
+    <tbody>
+      <tr class="hi"><th class="l">BİLANÇO</th><td class="c"><b>Statik Tablo</b><br><small>(Belirli bir andaki fotoğraf)</small></td><td class="l">İşletmenin belirli bir tarihteki varlıklarını (Aktif) ve bu varlıkların hangi kaynaklarla (Pasif: Borçlar + Özkaynak) finanse edildiğini gösterir.<br><b>Temel Bilanço Eşitliği: AKTİF = PASİF</b><br><i>(Dönen Varlıklar + Duran Varlıklar = Kısa Vadeli Borçlar + Uzun Vadeli Borçlar + Özkaynaklar)</i></td></tr>
+      <tr class="hi"><th class="l">GELİR TABLOSU</th><td class="c"><b>Dinamik Tablo</b><br><small>(Belli bir dönemin videosu)</small></td><td class="l">İşletmenin belirli bir hesap döneminde (örn. 1 yılda) elde ettiği tüm gelirler ile bu gelirleri elde etmek için yaptığı giderleri özetler.<br><b>Gelirler - Giderler = DÖNEM NET KÂRI (veya ZARARI)</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.5. İnsan Kaynakları Yönetimi (İKY)</h3>
+  <div class="box formul">
+    <span class="cap">İKY'nin Temel Kavramları: İş Analizi, İş Tanımı ve İş Gerekleri</span>
+    <span class="f"><b>İş Analizi:</b> Bir işin içeriğini, sorumluluklarını, çalışma koşullarını ve işin yapılış biçimini bilimsel yöntemlerle inceleyip veri toplama sürecidir. İki temel belge üretir:</span>
+    <span class="f"><b>1. İş Tanımı (Job Description):</b> <b>İŞİN KENDİSİNE</b> odaklanır. İşin unvanı, bağlı olduğu amir, yapılması gereken görevler, yetkiler, çalışma saatleri ve sorumlulukları içerir.</span>
+    <span class="f"><b>2. İş Gerekleri (Job Specification):</b> <b>İŞİ YAPACAK KİŞİYE</b> odaklanır. O işi başarıyla yapabilmek için bireyde bulunması gereken asgari eğitim düzeyi, deneyim, yetenek, yabancı dil, fiziki ve psikolojik özellikleri belirtir.</span>
+    <p style="margin-top:6px;"><b>İKY Süreçleri:</b> İK Planlaması &rarr; İşe Alma ve Seçim &rarr; Oryantasyon (İşe alıştırma) &rarr; Eğitim ve Geliştirme &rarr; Performans Değerlendirme &rarr; Ücretlendirme &rarr; Kariyer Yönetimi.</p>
+  </div>
+
+  <div class="box ornek">
+    <span class="cap">Adım Adım Çözümlü Örnek: İK Belgesi Ayrımı</span>
+    <p><b>Soru:</b> Bir şirketin iş ilanında yer alan; (a) "Yazılım hatalarını ayıklamak ve haftalık test raporu hazırlamak", (b) "Bilgisayar Mühendisliği mezunu olmak ve en az 3 yıl Python tecrübesine sahip olmak" ifadeleri sırasıyla hangi kavramlara aittir?</p>
+    <ol class="adim">
+      <li><b>(a) Hata ayıklamak ve rapor hazırlamak:</b> Yapılacak görevleri yani işin içeriğini anlatmaktadır &rarr; <b>İş Tanımı</b>.</li>
+      <li><b>(b) Mühendislik diploması ve 3 yıl tecrübe:</b> Çalışanda aranan kişisel nitelikleri anlatmaktadır &rarr; <b>İş Gerekleri (Spesifikasyonu)</b>.</li>
+    </ol>
+  </div>
+
+  <div class="box tuzak">
+    <span class="cap">Sınav Tuzakları</span>
+    <ul style="margin:4px 0 0 16px; line-height:1.65;">
+      <li><b>Tuzak 1 (Bilanço vs Gelir Tablosu):</b> Bilanço "belirli bir andaki" statik durumu gösterir (Aktif = Pasif). Gelir Tablosu ise "belirli bir dönem içindeki" gelir ve giderleri gösterir (Kâr/Zarar). "Belirli bir andaki varlık ve kaynak durumu" sorulursa cevap <b>Bilanço</b>dur.</li>
+      <li><b>Tuzak 2 (İş Tanımı vs İş Gerekleri):</b> "Görev, yetki ve sorumluluklar" &rarr; <b>İş Tanımı</b>; "Eğitim, deneyim, yaş, yabancı dil gibi personel nitelikleri" &rarr; <b>İş Gerekleri</b>dir. Karıştırmayın!</li>
+      <li><b>Tuzak 3 (Ar-Ge Türleri):</b> Ticari amaç gütmeyen saf bilim &rarr; <b>Temel Araştırma</b>; prototip geliştirme ve test &rarr; <b>Deneysel Geliştirme</b>dir.</li>
+    </ul>
+  </div>
+
+  <h3>Bu üniteden mutlaka bil</h3>
+  <div class="box sinav">
+    <span class="cap">Son Tekrar Özeti</span>
+    <ol style="margin:6px 0 0 18px; line-height:1.7;">
+      <li>Üretim sistemleri: Tek (sipariş), Seri (parti) ve Kütle/Süreç (akış) üretimi.</li>
+      <li>Ar-Ge türleri: Temel Araştırma (teorik), Uygulamalı Araştırma (pratik), Deneysel Geliştirme (prototip).</li>
+      <li>Özkaynak faizsiz ve vadesizdir; Yabancı kaynak borçtur ve faiz yükü getirir.</li>
+      <li>Dönen varlıklar 1 yılda nakde dönüşür; Duran varlıklar 1 yıldan uzun süre kullanılır.</li>
+      <li>Bilanço: <b>Aktif = Pasif</b> (Varlıklar = Borçlar + Özkaynaklar). Statik tablodur.</li>
+      <li>Gelir Tablosu: Gelirler - Giderler = Net Kâr/Zarar. Dinamik tablodur.</li>
+      <li>İş Tanımı: <b>Görev ve sorumluluklar</b> (İşin kendisine ait).</li>
+      <li>İş Gerekleri: <b>Eğitim, tecrübe ve yetenek</b> (Çalışanın kendisine ait).</li>
+    </ol>
+  </div>
+
+  <h3 class="sqhead">Çıkmış sorular — tam çözümlü</h3>
+  <p class="sqnote">Bu üniteden 12 soru.</p>
+  <div class="sqctl">
+    <button class="btn" data-open="1">Tümünü aç</button>
+    <button class="btn" data-open="0">Tümünü kapat</button>
+  </div>
+  <div class="sqall">
+
+    <details class="sq"><summary><span class="sqn">1</span><span>Bir işi yapacak personelde bulunması gereken asgari eğitim düzeyi, deneyim, yetenek ve kişisel nitelikleri belirten belgeye ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2023-2024 Final</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li>A) İş tanımı</li><li class="ok">B) İş gerekleri (Job specification)</li><li>C) İş değerlemesi</li><li>D) İş rotasyonu</li><li>E) Performans raporu</li></ul><p class="coz"><b class="cap">Çözüm</b>İşi yapacak kişide bulunması gereken diploma, deneyim ve yetenek gibi insani nitelikleri açıklayan belge <b>İş Gerekleri (İş Şartnamesi)</b>dir. Görevleri açıklayan belge ise iş tanımıdır. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">2</span><span>İşletmenin belirli bir andaki varlıklarını (Aktif) ve bu varlıkların finanse edildiği kaynakları (Pasif) gösteren temel finansal tablo hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2024 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) Bilanço</li><li>B) Gelir Tablosu</li><li>C) Nakit Akım Tablosu</li><li>D) Fon Akım Tablosu</li><li>E) Satışların Maliyeti Tablosu</li></ul><p class="coz"><b class="cap">Çözüm</b>İşletmenin belirli bir tarihteki mali durumunu (Varlıklar = Borçlar + Özkaynaklar) statik olarak özetleyen tablo <b>Bilanço</b>dur. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">3</span><span>Gemi inşası, baraj yapımı veya özel sipariş üzerine lüks bir köşk inşa edilmesi hangi üretim sistemi kapsamına girer?</span></summary><div class="sqbody"><span class="sqtag rep">3 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Vize</span><ul class="o"><li class="ok">A) Tek (Birim / Sipariş) Üretim</li><li>B) Seri (Parti) Üretim</li><li>C) Kütle Üretimi</li><li>D) Sürekli Üretim</li><li>E) Otomatik Akış Üretimi</li></ul><p class="coz"><b class="cap">Çözüm</b>Müşterinin özel istek ve siparişine göre tek seferlik ve büyük ölçekli yapılan üretimler <b>Tek (Birim / Sipariş) Üretim</b> sistemidir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">4</span><span>Doğrudan ticari bir kâr veya ürün hedefi gütmeksizin, doğa olaylarını ve evrensel kanunları anlamak için yürütülen saf bilimsel araştırmalara ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Bütünleme</span><span class="sqtag">2024 Final</span><ul class="o"><li class="ok">A) Temel araştırma</li><li>B) Uygulamalı araştırma</li><li>C) Deneysel geliştirme</li><li>D) Pazar araştırması</li><li>E) Ürün geliştirme</li></ul><p class="coz"><b class="cap">Çözüm</b>Herhangi bir ticari uygulama gayesi olmaksızın sırf bilimsel bilgi dağarcığını genişletmek için yapılan teorik çalışmalara <b>Temel Araştırma</b> denir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">5</span><span>İşletmede yapılması gereken görevleri, yetkileri, çalışma koşullarını ve sorumlulukları yani "işin kendisini" anlatan belge hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2025 Final</span><ul class="o"><li class="ok">A) İş tanımı (Job description)</li><li>B) İş gerekleri</li><li>C) İş analizi</li><li>D) Kariyer haritası</li><li>E) Kadro cetveli</li></ul><p class="coz"><b class="cap">Çözüm</b>Görev ve sorumlulukları tanımlayan, işin ne olduğunu açıklayan belge <b>İş Tanımı</b>dır. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">6</span><span>İşletmenin bir yıl içinde paraya çevrilebilen nakit, banka, alacak ve stok gibi varlıklarına ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2024 Bütünleme</span><ul class="o"><li class="ok">A) Dönen Varlıklar (Çalışma Sermayesi)</li><li>B) Duran Varlıklar</li><li>C) Özkaynaklar</li><li>D) Uzun Vadeli Borçlar</li><li>E) Ödenmiş Sermaye</li></ul><p class="coz"><b class="cap">Çözüm</b>Bir faaliyet dönemi (1 yıl) içinde nakde dönüştürülmesi öngörülen likit varlıklar <b>Dönen Varlıklar (Çalışma Sermayesi)</b> grubudur. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">7</span><span>Petrol rafinerileri, çimento fabrikaları ve şeker fabrikalarında 24 saat kesintisiz ve durmaksızın devam eden üretim türü hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Sipariş üretimi</li><li>B) Parti üretimi</li><li class="ok">C) Kütle / Akış / Süreç üretimi</li><li>D) Atölye üretimi</li><li>E) Proje üretimi</li></ul><p class="coz"><b class="cap">Çözüm</b>Homojen ve standart ürünlerin durdurulamaz bir akış sürecinde sürekli üretildiği sistem <b>Kütle / Akış / Süreç Üretimi</b>dir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">8</span><span>Belli bir hesap döneminde işletmenin tüm gelir ve giderlerini karşılaştırarak dönemin net kâr veya zararını gösteren dinamik tablo hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Vize</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Bilanço</li><li class="ok">B) Gelir Tablosu</li><li>C) Mizan</li><li>D) Yevmiye Defteri</li><li>E) Defteri Kebir</li></ul><p class="coz"><b class="cap">Çözüm</b>Gelirler ile giderler arasındaki farkı ve dönem kâr/zararını gösteren tablo <b>Gelir Tablosu</b>dur. Doğru seçenek B'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">9</span><span>İşletmenin ortakları tarafından taahhüt edilen sermaye ve şirket bünyesinde bırakılan geçmiş yıl kârlarından oluşan finansman kaynağı hangisidir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2024 Vize</span><span class="sqtag">2025 Bütünleme</span><ul class="o"><li class="ok">A) Özkaynak</li><li>B) Yabancı kaynak</li><li>C) Kısa vadeli borç</li><li>D) Tahvil</li><li>E) Banka kredisi</li></ul><p class="coz"><b class="cap">Çözüm</b>Şirket sahiplerinin koyduğu sermaye ve dağıtılmamış kârlar <b>Özkaynak</b> finansmanıdır. Faiz yükü ve geri ödeme vadesi yoktur. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">10</span><span>İşe yeni alınan bir personelin kuruma, çalışma arkadaşlarına ve iş ortamına uyum sağlamasını kolaylaştırmak için uygulanan eğitim sürecine ne ad verilir?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Arasınav</span><span class="sqtag">2024 Final</span><ul class="o"><li class="ok">A) Oryantasyon (İşe alıştırma eğitimi)</li><li>B) İş değerlemesi</li><li>C) Kariyer patikası</li><li>D) İş analizi</li><li>E) Yetki devri</li></ul><p class="coz"><b class="cap">Çözüm</b>Yeni çalışanın kuruma adapte olmasını sağlayan işe alıştırma sürecine <b>Oryantasyon</b> denir. Doğru seçenek A'dır.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">11</span><span>Bilimsel araştırmalardan elde edilen bulgularla yeni bir ürünün ilk çalışan prototipinin veya modelinin yapılması hangi Ar-Ge aşamasıdır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2022 Final</span><span class="sqtag">2025 Vize</span><ul class="o"><li>A) Temel araştırma</li><li>B) Uygulamalı araştırma</li><li class="ok">C) Deneysel geliştirme</li><li>D) Masa başı araştırma</li><li>E) Teorik geliştirme</li></ul><p class="coz"><b class="cap">Çözüm</b>Araştırma bulgularını somut bir modele, prototipe veya test edilebilir ürüne dönüştürme faaliyeti <b>Deneysel Geliştirme</b>dir. Doğru seçenek C'dir.</p></div></details>
+
+    <details class="sq"><summary><span class="sqn">12</span><span>Aşağıdakilerden hangisi bir işletmenin "Duran Varlıkları" arasında yer alır?</span></summary><div class="sqbody"><span class="sqtag rep">2 kez çıktı</span><span class="sqtag">2023 Final</span><span class="sqtag">2025 Final</span><ul class="o"><li>A) Kasa mevcudu</li><li>B) Bankadaki vadesiz mevduat</li><li>C) Satılmak üzere depoda bekleyen ticari mallar (stoklar)</li><li class="ok">D) Fabrika binası ve üretim makineleri</li><li>E) Alıcı senetleri</li></ul><p class="coz"><b class="cap">Çözüm</b>Bir yıldan uzun süre işletme faaliyetlerinde kullanılan bina, arazi, makine ve teçhizat <b>Duran Varlıklar</b> grubundadır. Diğer şıklar dönen varlıktır. Doğru seçenek D'dir.</p></div></details>
+
+  </div>
+
+  <div class="pager">
+    <button class="btn" data-go="6">‹ Ünite 7</button>
+    <span></span>
+  </div>
+</section>
+  <p class="foot"><b>Kaynak ve Metodoloji:</b> İstanbul Üniversitesi AUZEF — <i>İşletme Yönetimi</i> e-kitabı (Prof. Dr. Mahmut Paksoy vb.), 8 ünite. Anlatımlar, tanımlar, tablolar, şahıs ve sermaye şirketleri ayrımları kitaba tam sadık kalınarak oluşturulmuştur. Çözümlü sorular 2022, 2023, 2024, 2025 ve 2026 dönemlerinin vize, final ve bütünleme sınavlarından ilgili ünitelere göre derlenmiştir. Bu çalışma materyali kişisel öğrenme ve sınava hazırlık amacıyla hazırlanmıştır.</p>
+</div>
+<button class="btn icon" id="top" aria-label="Başa dön">↑</button>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const units = [...$$('.unit')];
+const sel = $('#usel');
+
+function show(i){
+  i = Math.max(0, Math.min(units.length - 1, i));
+  units.forEach((u, k) => u.classList.toggle('on', k === i));
+  sel.value = String(i);
+  $('#prev').disabled = i === 0;
+  $('#next').disabled = i === units.length - 1;
+  try { localStorage.setItem('isletme_ders_u', String(i)); } catch(e){}
+  window.scrollTo({top:0});
+}
+
+sel.addEventListener('change', e => show(+e.target.value));
+$('#prev').addEventListener('click', () => show(+sel.value - 1));
+$('#next').addEventListener('click', () => show(+sel.value + 1));
+
+// Pager links
+document.addEventListener('click', e => {
+  const pBtn = e.target.closest('.pager [data-go]');
+  if(pBtn) {
+    show(+pBtn.dataset.go);
+  }
+  // Open / Close all questions
+  const qBtn = e.target.closest('.sqctl [data-open]');
+  if(qBtn) {
+    const parentUnit = qBtn.closest('.unit');
+    const openState = qBtn.dataset.open === '1';
+    parentUnit.querySelectorAll('details.sq').forEach(d => d.open = openState);
+  }
+});
+
+// Klavye ok tuşları ile ünite geçişi
+window.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowRight') show(+sel.value + 1);
+  if (e.key === 'ArrowLeft') show(+sel.value - 1);
+});
+
+// Kayıtlı ünite yükle
+let savedU = 0;
+try { savedU = +(localStorage.getItem('isletme_ders_u') || 0); } catch(e){}
+show(savedU);
+
+// Tema kontrolü
+const tb = $('#theme');
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  tb.textContent = t === 'dark' ? '☀️' : '🌙';
+  try { localStorage.setItem('isletme_ders_t', t); } catch(e){}
+}
+let th = 'light';
+try { th = localStorage.getItem('isletme_ders_t') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch(e){}
+setTheme(th);
+tb.addEventListener('click', () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+// Cihaz Profili Kontrolü
+const devBtn = $('#device-btn');
+const devMenu = $('#device-menu');
+devBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  devMenu.classList.toggle('show');
+});
+window.addEventListener('click', () => devMenu.classList.remove('show'));
+
+function setDevice(d){
+  if(d === 'auto'){
+    const w = window.innerWidth;
+    if(w <= 640) d = 'mobile';
+    else d = 'web';
+  }
+  document.documentElement.setAttribute('data-device', d);
+  $$('.device-opt').forEach(opt => opt.classList.toggle('active', opt.dataset.dev === d));
+  try { localStorage.setItem('isletme_ders_dev', d); } catch(e){}
+}
+$$('.device-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    setDevice(opt.dataset.dev);
+    devMenu.classList.remove('show');
+  });
+});
+let savedDev = 'auto';
+try { savedDev = localStorage.getItem('isletme_ders_dev') || 'auto'; } catch(e){}
+setDevice(savedDev);
+
+// Başa dön butonu
+const topBtn = $('#top');
+addEventListener('scroll', () => topBtn.classList.toggle('show', scrollY > 600));
+topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+</body>
+</html>
