@@ -106,7 +106,7 @@ a { color: inherit; text-decoration: none; }
   padding: 12px 18px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 .brand {
   display: flex;
@@ -150,19 +150,27 @@ a { color: inherit; text-decoration: none; }
   background: var(--line-2);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
 .btn-icon {
   font: inherit;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  width: 38px;
   height: 38px;
+  padding: 0 10px;
   flex: none;
   border-radius: var(--radius-md);
   border: 1px solid var(--line);
   background: var(--card);
   color: var(--ink);
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: all .15s;
 }
 .btn-icon:hover {
@@ -170,6 +178,59 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(-1px);
 }
 .btn-icon:active { transform: scale(.95); }
+
+/* Device Menu Dropdown */
+.device-menu {
+  position: absolute;
+  top: 46px;
+  right: 0;
+  width: 250px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  z-index: 100;
+  display: none;
+}
+.device-menu.open { display: block; animation: dropFade .15s ease; }
+@keyframes dropFade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+.device-menu-head {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-3);
+  padding: 6px 10px 4px;
+}
+.device-opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: background .12s;
+}
+.device-opt:hover { background: var(--gutter); }
+.device-opt.active {
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-weight: 800;
+}
+.device-opt.active::after {
+  content: "✓";
+  font-weight: 900;
+}
 
 /* Main Wrapper */
 .wrap {
@@ -274,6 +335,31 @@ a { color: inherit; text-decoration: none; }
   background: var(--ok-soft);
   color: var(--ok);
   border-color: transparent;
+}
+
+/* Device Indicator Banner */
+.device-toast {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.device-toast.show { display: flex; }
+.device-toast-close {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink-3);
+  padding: 0 4px;
 }
 
 /* Search Box */
@@ -654,6 +740,134 @@ footer a {
 }
 footer a:hover { color: var(--amber); }
 
+/* =========================================================
+   CİHAZ UYARLAMA VE OPTİMİZASYON PROFİLLERİ (DEVICE ADAPTIVE)
+   ========================================================= */
+
+/* 1. TÜM E-INK MODLARI İÇİN ORTAK: TİTREMEYİ SIFIRLAMA */
+[data-device^="eink-"] *,
+[data-device^="eink-"] *::before,
+[data-device^="eink-"] *::after {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+
+/* 2. 6" SİYAH-BEYAZ E-INK (Kindle Basic, Paperwhite, Kobo Clara) */
+[data-device="eink-6-bw"] {
+  --paper: #FFFFFF !important;
+  --card: #FFFFFF !important;
+  --raise: #FFFFFF !important;
+  --gutter: #FFFFFF !important;
+  --ink: #000000 !important;
+  --ink-2: #111111 !important;
+  --ink-3: #333333 !important;
+  --line: #000000 !important;
+  --line-2: #000000 !important;
+  --blue: #000000 !important;
+  --blue-soft: #FFFFFF !important;
+  --ok: #000000 !important;
+  --ok-soft: #FFFFFF !important;
+  --ok-bd: #000000 !important;
+  --amber: #000000 !important;
+  --amber-soft: #FFFFFF !important;
+  --navy: #000000 !important;
+  --on-accent: #FFFFFF !important;
+}
+[data-device="eink-6-bw"] body {
+  font-family: Georgia, 'Bookerly', serif, system-ui !important;
+  font-size: 17px !important;
+  line-height: 1.6 !important;
+}
+[data-device="eink-6-bw"] .hd {
+  background: #FFFFFF !important;
+  border-bottom: 2px solid #000000 !important;
+}
+[data-device="eink-6-bw"] .hero,
+[data-device="eink-6-bw"] .class-card,
+[data-device="eink-6-bw"] .course-card,
+[data-device="eink-6-bw"] .mufredat-box {
+  background: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+  border-radius: 4px !important;
+}
+[data-device="eink-6-bw"] .btn-card,
+[data-device="eink-6-bw"] .course-btn,
+[data-device="eink-6-bw"] .btn-back,
+[data-device="eink-6-bw"] .btn-icon {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 1.5px solid #000000 !important;
+  border-radius: 4px !important;
+  font-weight: 800 !important;
+}
+[data-device="eink-6-bw"] .badge,
+[data-device="eink-6-bw"] .tag-sm,
+[data-device="eink-6-bw"] .course-code {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
+}
+[data-device="eink-6-bw"] .tab-btn.active {
+  background: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+/* 3. 6" RENKLİ E-INK (Kobo Clara Colour, Onyx Palma) */
+[data-device="eink-6-color"] body {
+  font-size: 16.5px !important;
+}
+[data-device="eink-6-color"] .course-card,
+[data-device="eink-6-color"] .class-card {
+  border: 1.5px solid var(--line) !important;
+}
+
+/* 4. 10.3" SİYAH-BEYAZ E-INK (reMarkable 2, Kindle Scribe, Boox Note) */
+[data-device="eink-10-bw"] {
+  --paper: #FFFFFF !important;
+  --card: #FFFFFF !important;
+  --raise: #FFFFFF !important;
+  --ink: #000000 !important;
+  --line: #000000 !important;
+}
+[data-device="eink-10-bw"] body {
+  font-family: Georgia, 'Bookerly', serif, system-ui !important;
+}
+[data-device="eink-10-bw"] .wrap,
+[data-device="eink-10-color"] .wrap {
+  max-width: 1240px !important;
+  padding-right: 85px !important; /* Kalemle not alma (Stylus Margin) payı */
+}
+[data-device="eink-10-bw"] .grid-cards,
+[data-device="eink-10-color"] .grid-cards {
+  grid-template-columns: repeat(2, 1fr) !important; /* 2 Sütunlu Ders Kitabı / Defter Görünümü */
+  gap: 20px !important;
+}
+[data-device="eink-10-bw"] .course-card,
+[data-device="eink-10-bw"] .class-card {
+  border: 2px solid #000000 !important;
+  border-radius: 6px !important;
+}
+
+/* 5. 10.3" RENKLİ E-INK VE TABLETLER (Onyx Tab Ultra C, reMarkable Paper Pro, iPad) */
+[data-device="eink-10-color"] .hero {
+  border-radius: 12px !important;
+}
+
+/* 6. MOBİL GÖRÜNÜM (Telefon) */
+[data-device="mobile"] .grid-cards {
+  grid-template-columns: 1fr !important;
+}
+[data-device="mobile"] .nav-links {
+  display: none !important;
+}
+[data-device="mobile"] .hero h1 {
+  font-size: 22px !important;
+}
+
 @media (max-width: 640px) {
   .hero h1 { font-size: 22px; }
   .grid-cards { grid-template-columns: 1fr; }
@@ -679,12 +893,38 @@ footer a:hover { color: var(--amber); }
 <a href="./4.Sinif/index.html" class="nav-link">4. Sınıf</a>
 
     </nav>
-    <button id="theme-btn" class="btn-icon" title="Tema Değiştir" aria-label="Tema Değiştir">🌙</button>
+    <div class="header-actions">
+      <!-- Cihaz & Ekran Modu Seçici Butonu -->
+      <button id="device-btn" class="btn-icon" title="Cihaz / Ekran Modu" aria-label="Cihaz Profili">
+        <span>💻</span>
+      </button>
+      
+      <!-- Cihaz Menüsü -->
+      <div id="device-menu" class="device-menu">
+        <div class="device-menu-head">Ekran & Cihaz Profili</div>
+        <button class="device-opt" data-dev="auto"><span>🔄 Otomatik Algıla</span></button>
+        <button class="device-opt" data-dev="web"><span>💻 Masaüstü Web</span></button>
+        <button class="device-opt" data-dev="mobile"><span>📱 Akıllı Telefon</span></button>
+        <button class="device-opt" data-dev="eink-6-bw"><span>📖 6" E-Okuyucu (S/B)</span></button>
+        <button class="device-opt" data-dev="eink-6-color"><span>🎨 6" E-Okuyucu (Renkli)</span></button>
+        <button class="device-opt" data-dev="eink-10-bw"><span>📝 10.3" Tablet / S/B</span></button>
+        <button class="device-opt" data-dev="eink-10-color"><span>🖍️ 10.3" Tablet / Renkli</span></button>
+      </div>
+
+      <!-- Tema Değiştirici -->
+      <button id="theme-btn" class="btn-icon" title="Tema Değiştir" aria-label="Tema Değiştir">🌙</button>
+    </div>
   </div>
 </header>
 
 
 <div class="wrap">
+  <!-- Device Toast Banner -->
+  <div id="device-toast" class="device-toast">
+    <span id="device-toast-text">Aktif Profil: Masaüstü Web</span>
+    <button class="device-toast-close" onclick="document.getElementById('device-toast').classList.remove('show')">&times;</button>
+  </div>
+
   <!-- Hero Section -->
   <div class="hero">
     <div class="eyebrow">AUZEF • YÖNETİM BİLİŞİM SİSTEMLERİ LİSANS PROGRAMI</div>
@@ -694,7 +934,7 @@ footer a:hover { color: var(--amber); }
       <span class="badge blue">📚 4 Sınıf Düzeni</span>
       <span class="badge amber">⚡ 15 Aktif Materyal</span>
       <span class="badge ok">🎓 2026-2027 Müfredat Uyumlu</span>
-      <span class="badge">📱 Mobil & Çevrimdışı Uyumlu</span>
+      <span class="badge">📖 E-Ink & Tablet Uyumlu</span>
     </div>
   </div>
 
@@ -1000,10 +1240,132 @@ footer a:hover { color: var(--amber); }
 <footer>
   <div style="max-width:1040px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
     <div><strong>AUZEF YBS Ders Portalı</strong> — İstanbul Üniversitesi Açık ve Uzaktan Eğitim Fakültesi</div>
-    <div>2026-2027 Müfredatına Uygun • <a href="https://ebs.istanbul.edu.tr/home/dersprogram/?id=15374&yil=2026" target="_blank" rel="noopener">İÜ EBS Müfredat</a></div>
+    <div>Cihaza Duyarlı E-Ink & Tablet Desteği • 2026-2027 Müfredat • <a href="https://ebs.istanbul.edu.tr/home/dersprogram/?id=15374&yil=2026" target="_blank" rel="noopener">İÜ EBS</a></div>
   </div>
 </footer>
+
 <script>
+// ==========================================
+// CİHAZ VE EKRAN PROFİLİ MOTORU (ADAPTIVE)
+// ==========================================
+const DEVICE_PROFILES = {
+  'web': { name: 'Masaüstü Web', icon: '💻' },
+  'mobile': { name: 'Akıllı Telefon', icon: '📱' },
+  'eink-6-bw': { name: '6" E-Okuyucu (S/B E-Ink)', icon: '📖' },
+  'eink-6-color': { name: '6" E-Okuyucu (Renkli)', icon: '🎨' },
+  'eink-10-bw': { name: '10.3" Tablet / E-Ink (S/B)', icon: '📝' },
+  'eink-10-color': { name: '10.3" Tablet / E-Ink (Renkli)', icon: '🖍️' }
+};
+
+function detectDefaultDevice() {
+  const ua = (navigator.userAgent || '').toLowerCase();
+  const isSlow = window.matchMedia && window.matchMedia('(update: slow)').matches;
+  const isMono = window.matchMedia && window.matchMedia('(monochrome)').matches;
+  const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const w = window.innerWidth || screen.width;
+
+  const isEinkUA = ua.includes('kindle') || ua.includes('kobo') || ua.includes('booklet') || ua.includes('silk') || ua.includes('onyx') || ua.includes('remarkable');
+
+  if (isEinkUA || isSlow || isMono) {
+    if (w <= 560) {
+      return isMono ? 'eink-6-bw' : 'eink-6-color';
+    } else {
+      return isMono ? 'eink-10-bw' : 'eink-10-color';
+    }
+  }
+
+  if (w >= 600 && w <= 1150 && isTouch) {
+    return 'eink-10-color';
+  }
+
+  if (w < 600 || (isTouch && w < 768)) {
+    return 'mobile';
+  }
+
+  return 'web';
+}
+
+function getActiveDevice() {
+  let saved = null;
+  try { saved = localStorage.getItem('auzef_device_profile'); } catch(e){}
+  if (saved && saved !== 'auto' && DEVICE_PROFILES[saved]) {
+    return saved;
+  }
+  return detectDefaultDevice();
+}
+
+function applyDeviceProfile(profileKey) {
+  const effective = (profileKey === 'auto') ? detectDefaultDevice() : profileKey;
+  document.documentElement.setAttribute('data-device', effective);
+
+  const btn = document.getElementById('device-btn');
+  const toast = document.getElementById('device-toast');
+  const toastText = document.getElementById('device-toast-text');
+
+  const pInfo = DEVICE_PROFILES[effective] || DEVICE_PROFILES['web'];
+  if (btn) {
+    btn.innerHTML = '<span>' + pInfo.icon + '</span>';
+    btn.title = 'Görünüm: ' + pInfo.name;
+  }
+
+  // Update checkmarks in menu
+  document.querySelectorAll('.device-opt').forEach(opt => {
+    const key = opt.getAttribute('data-dev');
+    let isCurrent = false;
+    let saved = null;
+    try { saved = localStorage.getItem('auzef_device_profile'); } catch(e){}
+    if (key === 'auto' && (!saved || saved === 'auto')) isCurrent = true;
+    else if (saved === key) isCurrent = true;
+    opt.classList.toggle('active', isCurrent);
+  });
+
+  // Notify toast if non-desktop
+  if (toast && toastText && (effective.startsWith('eink-') || profileKey !== 'auto')) {
+    toastText.textContent = 'Aktif Profil: ' + pInfo.icon + ' ' + pInfo.name + ' (' + (effective.includes('10') ? 'Not Alma Marjini Açık' : 'Optimize Görünüm') + ')';
+    toast.classList.add('show');
+  } else if (toast) {
+    toast.classList.remove('show');
+  }
+}
+
+function setDeviceProfile(key) {
+  try {
+    localStorage.setItem('auzef_device_profile', key);
+  } catch(e){}
+  applyDeviceProfile(key);
+  const menu = document.getElementById('device-menu');
+  if (menu) menu.classList.remove('open');
+}
+
+function initDeviceSystem() {
+  const devBtn = document.getElementById('device-btn');
+  const devMenu = document.getElementById('device-menu');
+
+  if (devBtn && devMenu) {
+    devBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      devMenu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!devMenu.contains(e.target) && e.target !== devBtn) {
+        devMenu.classList.remove('open');
+      }
+    });
+
+    document.querySelectorAll('.device-opt').forEach(b => {
+      b.addEventListener('click', () => {
+        setDeviceProfile(b.getAttribute('data-dev'));
+      });
+    });
+  }
+
+  let saved = null;
+  try { saved = localStorage.getItem('auzef_device_profile'); } catch(e){}
+  applyDeviceProfile(saved || 'auto');
+}
+
+// Tema motoru
 function initTheme() {
   const tb = document.getElementById('theme-btn');
   function setTheme(t) {
@@ -1027,25 +1389,32 @@ function initTheme() {
     });
   }
 }
-document.addEventListener('DOMContentLoaded', initTheme);
+
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initDeviceSystem();
+});
 </script>
+
 </body>
 </html>
 
+
 <script>
-// Search filter
 const searchInput = document.getElementById('search-input');
 const materials = document.querySelectorAll('#materials-grid .course-card');
 
-searchInput.addEventListener('input', (e) => {
-  const q = e.target.value.trim().toLowerCase();
-  materials.forEach(card => {
-    const text = card.getAttribute('data-title') || '';
-    if (!q || text.includes(q)) {
-      card.style.display = 'flex';
-    } else {
-      card.style.display = 'none';
-    }
+if (searchInput) {
+  searchInput.addEventListener('input', function(e) {
+    const q = e.target.value.trim().toLowerCase();
+    materials.forEach(function(card) {
+      const text = card.getAttribute('data-title') || '';
+      if (!q || text.includes(q)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
   });
-});
+}
 </script>
