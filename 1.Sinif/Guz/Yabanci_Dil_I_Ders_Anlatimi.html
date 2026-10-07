@@ -1,0 +1,3401 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Yabancı Dil I (ODYD0001) - AUZEF İngilizce I Ders Anlatımı ve Soru Havuzu</title>
+<style>
+/* =========================================================
+   DEĞİŞKENLER VE TEMEL DÜZEN
+   ========================================================= */
+:root {
+  --paper:#FAF7F2; --card:#FFFFFF; --raise:#F4EFE6; --gutter:#EFE8DB;
+  --ink:#1C1917; --ink-2:#44403C; --ink-3:#78716C;
+  --line:#E7DFD3; --line-2:#D6CBB8;
+  --blue:#0284C7; --blue-soft:#E0F2FE;
+  --ok:#059669; --ok-soft:#D1FAE5; --ok-bd:#A7F3D0;
+  --amber:#D97706; --amber-soft:#FEF3C7;
+  --no:#DC2626; --no-soft:#FEE2E2;
+  --on-accent:#FFFFFF;
+  --font-body:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-serif:Georgia,'Bookerly',serif;
+  --shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.03);
+}
+[data-theme="dark"] {
+  --paper:#121214; --card:#18181B; --raise:#202024; --gutter:#27272A;
+  --ink:#F4F4F5; --ink-2:#D4D4D8; --ink-3:#A1A1AA;
+  --line:#2E2E33; --line-2:#3F3F46;
+  --blue:#38BDF8; --blue-soft:#0C2D48;
+  --ok:#34D399; --ok-soft:#064E3B; --ok-bd:#047857;
+  --amber:#FBBF24; --amber-soft:#451A03;
+  --no:#F87171; --no-soft:#450A0A;
+  --on-accent:#09090B;
+  --shadow:0 1px 3px rgba(0,0,0,.3);
+}
+
+* { box-sizing:border-box; margin:0; padding:0 }
+html { font-size:16px; -webkit-text-size-adjust:100% }
+body {
+  background:var(--paper); color:var(--ink);
+  font-family:var(--font-body); line-height:1.65;
+  padding-bottom:80px; min-height:100vh;
+}
+
+.shell { max-width:960px; margin:0 auto; padding:16px }
+
+/* Başlık ve Cihaz Araç Çubuğu */
+.top-bar {
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:10px; padding:12px 16px; background:var(--card);
+  border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow);
+  position:sticky; top:12px; z-index:50; backdrop-filter:blur(8px);
+}
+.bar-left { display:flex; align-items:center; gap:10px; flex:1; min-width:240px }
+.bar-right { display:flex; align-items:center; gap:8px }
+
+.back-btn {
+  display:inline-flex; align-items:center; gap:6px; font:inherit; font-size:13px; font-weight:800;
+  padding:8px 12px; border-radius:9px; border:1px solid var(--line); background:var(--card);
+  color:var(--ink); text-decoration:none; white-space:nowrap; transition:.15s;
+}
+.back-btn:hover { background:var(--gutter) }
+
+select.sel {
+  flex:1; min-width:0; font:inherit; font-size:13.5px; font-weight:700; padding:8px 10px;
+  border-radius:9px; border:1px solid var(--line); background:var(--card); color:var(--ink);
+}
+.btn {
+  font:inherit; font-size:13.5px; font-weight:800; cursor:pointer; padding:8px 12px; border-radius:9px;
+  border:1px solid var(--line); background:var(--card); color:var(--ink); transition:.15s; white-space:nowrap;
+}
+.btn:active { transform:scale(.97) }
+.btn.icon { padding:8px 10px; min-width:38px; text-align:center }
+
+/* Cihaz Menüsü */
+.device-menu-wrap { position:relative }
+.device-menu {
+  position:absolute; right:0; top:calc(100% + 6px); background:var(--card);
+  border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow);
+  padding:6px; width:230px; display:none; z-index:100;
+}
+.device-menu.show { display:block }
+.device-menu-head { font-size:11px; font-weight:800; text-transform:uppercase; color:var(--ink-3); padding:6px 10px 4px }
+.device-opt {
+  display:flex; align-items:center; justify-content:space-between; width:100%;
+  padding:8px 10px; border:none; background:transparent; font:inherit; font-size:13px; font-weight:700;
+  color:var(--ink); border-radius:6px; cursor:pointer; text-align:left;
+}
+.device-opt:hover { background:var(--gutter) }
+.device-opt.active { background:var(--blue-soft); color:var(--blue); font-weight:800 }
+
+/* Ünite Gövdesi */
+.unit { display:none; padding-top:18px }
+.unit.on { display:block }
+.uhead {
+  background:var(--blue); color:var(--on-accent); border-radius:14px;
+  padding:16px 18px; margin:0 0 16px;
+}
+[data-theme="dark"] .uhead { background:var(--raise); border:1px solid var(--line) }
+.uhead .num { font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; opacity:.8; font-weight:800 }
+.uhead h2 { margin:4px 0 8px; font-size:20px; line-height:1.25; font-weight:800; color:inherit }
+.uhead p { margin:0; font-size:13.5px; opacity:.9 }
+
+h3 { font-size:17px; font-weight:800; margin:24px 0 10px; color:var(--ink); display:flex; align-items:center; gap:8px }
+h3::before { content:""; width:4px; height:17px; border-radius:2px; background:var(--amber); flex:none }
+h4 { font-size:15px; font-weight:800; margin:16px 0 6px; color:var(--ink) }
+p { margin:0 0 11px }
+ul, ol { margin:0 0 12px; padding-left:20px }
+li { margin:0 0 6px }
+b, strong { font-weight:800 }
+
+/* Kutular */
+.box {
+  border-radius:12px; padding:13px 15px; margin:0 0 14px; border:1px solid var(--line);
+  background:var(--card); box-shadow:var(--shadow); font-size:14.5px;
+}
+.box .cap {
+  font-size:11px; letter-spacing:.09em; text-transform:uppercase; font-weight:800;
+  display:block; margin:0 0 7px;
+}
+.box.formul { background:var(--gutter); border-left:4px solid var(--amber) }
+.box.formul .cap { color:var(--amber) }
+.box.formul dt { font-weight:800; color:var(--ink); margin-top:8px }
+.box.formul dt:first-child { margin-top:0 }
+.box.formul dd { margin-left:0; margin-bottom:8px; color:var(--ink-2); font-size:14px }
+
+.box.tuzak { border-left:4px solid var(--no); background:var(--no-soft) }
+.box.tuzak .cap { color:var(--no) }
+
+.box.info { border-left:4px solid var(--blue); background:var(--blue-soft) }
+.box.info .cap { color:var(--blue) }
+
+/* Tablolar */
+.tw { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 0 16px }
+table {
+  border-collapse:collapse; font-size:13.5px; background:var(--card); border:1px solid var(--line);
+  border-radius:10px; overflow:hidden; min-width:min(100%,300px); width:100%;
+}
+caption {
+  caption-side:top; text-align:left; padding:8px 12px; font-size:11.5px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--blue); font-weight:800; background:var(--gutter);
+  border-bottom:1px solid var(--line);
+}
+th, td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--line-2) }
+thead th { background:var(--gutter); font-weight:800 }
+tbody th { background:var(--gutter); color:var(--ink-2); font-weight:800 }
+
+/* Sorular Bölümü */
+.sqhead { margin:28px 0 10px; display:flex; align-items:center; gap:8px; font-size:17px; font-weight:800 }
+.sqhead::before { content:""; width:4px; height:17px; border-radius:2px; background:var(--ok); flex:none }
+.sqctl { display:flex; gap:8px; margin-bottom:12px }
+.sqctl .btn { font-size:12px; padding:6px 10px }
+
+details.sq {
+  border:1px solid var(--line); background:var(--card); border-radius:11px; margin:0 0 9px;
+  box-shadow:var(--shadow); overflow:hidden;
+}
+details.sq > summary {
+  list-style:none; cursor:pointer; padding:12px 14px; font-size:14.5px; font-weight:700;
+  display:flex; gap:9px; align-items:flex-start; color:var(--ink);
+}
+details.sq > summary::-webkit-details-marker { display:none }
+details.sq > summary::after { content:"+"; margin-left:auto; font-size:18px; font-weight:800; color:var(--ink-3); line-height:1; flex:none }
+details.sq[open] > summary::after { content:"−" }
+details.sq[open] > summary { border-bottom:1px solid var(--line-2); background:var(--gutter) }
+
+.sqn {
+  flex:none; min-width:24px; height:22px; border-radius:6px; background:var(--blue-soft); color:var(--blue);
+  font-size:11.5px; font-weight:800; display:grid; place-items:center; margin-top:1px;
+}
+.sqbody { padding:12px 14px 14px }
+.sqtag {
+  display:inline-block; font-size:11px; font-weight:800; padding:2px 7px; border-radius:5px;
+  background:var(--gutter); color:var(--ink-3); border:1px solid var(--line); margin:0 4px 6px 0;
+}
+.sqtag.rep { background:var(--amber-soft); color:var(--amber); border-color:color-mix(in srgb,var(--amber) 35%,transparent) }
+
+.sqbody ul.o { list-style:none; padding:0; margin:0 0 10px }
+.sqbody ul.o li {
+  padding:6px 10px; border:1px solid var(--line-2); border-radius:8px; margin:0 0 5px;
+  font-size:13.5px; background:var(--raise);
+}
+.sqbody ul.o li.ok { background:var(--ok-soft); border-color:var(--ok-bd); color:var(--ok); font-weight:800 }
+.sqbody .coz {
+  background:var(--gutter); border-left:3px solid var(--ok); border-radius:0 8px 8px 0;
+  padding:9px 12px; font-size:13.5px; margin:0;
+}
+.sqbody .coz b.cap { display:block; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ok); margin:0 0 4px }
+
+/* Alt Gezinme */
+.pager { display:flex; gap:10px; margin:28px 0 0 }
+.pager .btn { flex:1; text-align:center }
+.foot {
+  margin:30px 0 0; padding:16px 0 0; border-top:1px solid var(--line);
+  font-size:12.5px; color:var(--ink-3); line-height:1.7;
+}
+#top {
+  position:fixed; right:14px; bottom:18px; z-index:60; width:42px; height:42px; border-radius:50%;
+  border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:17px; cursor:pointer;
+  box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:.2s;
+}
+#top.show { opacity:1; pointer-events:auto }
+
+/* =========================================================
+   CİHAZ UYARLAMA PROFİLLERİ (DEVICE ADAPTIVE CSS)
+   ========================================================= */
+[data-device^="eink-"] *,
+[data-device^="eink-"] *::before,
+[data-device^="eink-"] *::after {
+  animation:none !important; transition:none !important; box-shadow:none !important;
+  backdrop-filter:none !important; -webkit-backdrop-filter:none !important; text-shadow:none !important;
+}
+[data-device="eink-6-bw"] {
+  --paper:#FFFFFF !important; --card:#FFFFFF !important; --raise:#FFFFFF !important; --gutter:#FFFFFF !important;
+  --ink:#000000 !important; --ink-2:#111111 !important; --ink-3:#333333 !important;
+  --line:#000000 !important; --line-2:#000000 !important;
+  --blue:#000000 !important; --blue-soft:#FFFFFF !important;
+  --ok:#000000 !important; --ok-soft:#FFFFFF !important; --ok-bd:#000000 !important;
+  --amber:#000000 !important; --amber-soft:#FFFFFF !important;
+  --on-accent:#FFFFFF !important;
+}
+[data-device="eink-6-bw"] body { font-family:Georgia,'Bookerly',serif,system-ui !important; font-size:17px !important; }
+[data-device="eink-6-bw"] .uhead,
+[data-device="eink-6-bw"] .box,
+[data-device="eink-6-bw"] details.sq,
+[data-device="eink-6-bw"] .btn { border:2px solid #000000 !important; border-radius:4px !important; }
+[data-device="eink-6-bw"] .sqbody ul.o li.ok { border:2px solid #000000 !important; font-weight:800 !important; text-decoration:underline !important; }
+
+[data-device="eink-6-color"] body { font-size:16.5px !important; }
+[data-device="eink-6-color"] .box,
+[data-device="eink-6-color"] details.sq { border:1.5px solid var(--line) !important; }
+
+[data-device="eink-10-bw"] {
+  --paper:#FFFFFF !important; --card:#FFFFFF !important; --raise:#FFFFFF !important;
+  --ink:#000000 !important; --line:#000000 !important;
+}
+[data-device="eink-10-bw"] .shell { max-width:860px !important; }
+[data-device="eink-10-bw"] body { font-family:Georgia,'Bookerly',serif,system-ui !important; font-size:18px !important; line-height:1.7 !important; }
+[data-device="eink-10-bw"] .box,
+[data-device="eink-10-bw"] details.sq { border:1.5px solid #000000 !important; }
+
+[data-device="phone"] .shell { padding:10px !important; }
+[data-device="phone"] .top-bar { padding:8px 10px !important; gap:6px !important; }
+[data-device="phone"] select.sel { font-size:12px !important; }
+[data-device="phone"] .uhead h2 { font-size:17px !important; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- Cihaz & Gezinme Çubuğu -->
+  <header class="top-bar">
+    <div class="bar-left">
+      <a href="../../1.Sinif/index.html" class="back-btn" title="Ders Listesine Dön">← Derslere Dön</a>
+      <select id="unitSel" class="sel" onchange="goUnit(parseInt(this.value))">
+        <option value="0">1. Ünite: Around The World: Countries, Nationalities & Verb 'To Be'</option><option value="1">2. Ünite: Saying Hello: Greetings, Possessive Adjectives & Numbers</option><option value="2">3. Ünite: Time & Date: Telling Time, Days, Months & Prepositions (in, on, at)</option><option value="3">4. Ünite: Hobbies & Interests: Modal 'Can / Can't' & Verbs of Preference</option><option value="4">5. Ünite: Life & Learning: Present Simple Tense (Geniş Zaman)</option><option value="5">6. Ünite: Daily Routines: Adverbs of Frequency & 'How Often'</option><option value="6">7. Ünite: Daily Life: Jobs, Object Pronouns & Question Words (WH-)</option><option value="7">8. Ünite: Lifestyles: Present Continuous Tense & Stative Verbs</option><option value="8">9. Ünite: In The Kitchen: Countable & Uncountable Nouns, Some & Any</option><option value="9">10. Ünite: At The Restaurant: Quantifiers (Much, Many, A lot of, A few, A little)</option><option value="10">11. Ünite: Getting There: Directions, Transport, Prepositions of Place & Imperatives</option><option value="11">12. Ünite: On Location: Places in Town & Past Simple 'Was / Were'</option><option value="12">13. Ünite: At Work: Past Simple Tense (Geçmiş Zaman) & Regular / Irregular Verbs</option><option value="13">14. Ünite: Bigger & Better: Comparative & Superlative Adjectives</option>
+      </select>
+    </div>
+    <div class="bar-right">
+      <div class="device-menu-wrap">
+        <button class="btn icon" id="devBtn" onclick="toggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+        <div class="device-menu" id="devMenu">
+          <div class="device-menu-head">Cihaz Profili Seçin</div>
+          <button class="device-opt" onclick="setDevice('desktop')">💻 Masaüstü / Web</button>
+          <button class="device-opt" onclick="setDevice('phone')">📱 Akıllı Telefon</button>
+          <button class="device-opt" onclick="setDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+          <button class="device-opt" onclick="setDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+          <button class="device-opt" onclick="setDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+        </div>
+      </div>
+      <button class="btn icon" id="thBtn" onclick="toggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+    </div>
+  </header>
+
+  <!-- Üniteler İçeriği -->
+  <main id="main">
+    
+    <section class="unit" data-i="0">
+      <div class="uhead">
+        <span class="num">1. ÜNİTE</span>
+        <h2>Around The World: Countries, Nationalities & Verb 'To Be'</h2>
+        <p>Dünya ülkeleri ve milliyetler (Countries and Nationalities), kişi zamirleri (Subject Pronouns: I, you, he, she, it, we, they), 'To Be' fiilinin şimdiki zaman kullanımı (am / is / are: olumlu, olumsuz, soru biçimleri, kısa cevaplar) ve 'Where are you from?' soru kalıbı.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede kişileri ve nesneleri tanımlayan kişi zamirlerini (Subject Pronouns), durum ve varlık bildiren 'To Be' (am, is, are) yardımcı fiilinin tüm çekimlerini, dünya ülkeleri ve millet adlarını, bir kişinin nereli ve hangi milletten olduğunu sorma ve söyleme kalıplarını eksiksiz uygulayabileceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Subject Pronouns (Özne Zamirleri)</dt>
+            <dd>Cümlede eylemi yapan veya durumun öznesi olan ismin yerine geçen sözcüklerdir: I (ben), You (sen/siz), He (o - erkek), She (o - kadın), It (o - cansız/hayvan), We (biz), They (onlar).</dd>
+            <dt>Verb 'To Be' (Olmak Fiili: am / is / are)</dt>
+            <dd>İngilizcede hareket bildirmeyen; durum, meslek, yaş, milliyet, konum ve niteleme bildiren temel yardımcı/durum fiilidir. Özneye göre am, is veya are olarak çekimlenir.</dd>
+            <dt>Country (Ülke) vs Nationality (Milliyet / Uyruk)</dt>
+            <dd>Country, bireyin vatandaşı olduğu veya doğduğu coğrafi/siyasi devleti (Örn: Turkey, Germany); Nationality ise o devletin mensubu olan milleti/uyruğu ifade eder (Örn: Turkish, German).</dd>
+            <dt>Contraction (Kısaltma / Büzülme)</dt>
+            <dd>Konuşma ve samimi yazı dilinde zamir ile 'to be' fiilinin kesme işareti (') ile birleştirilmesidir (I am -> I'm, He is -> He's, They are -> They're).</dd>
+          </dl>
+        </div>
+
+        <h3>1.1. Subject Pronouns (Özne Zamirleri) ve Kullanımı</h3>
+        <p>İngilizcede cümle kurarken Türkçe gibi şahıs ekleri tek başına yetmez; özne zamirleri açıkça belirtilmek zorundadır:</p>
+        <ul>
+          <li><strong>I:</strong> Her zaman, cümlenin başında, ortasında veya sonunda BÜYÜK harfle yazılır (Örn: <em>Ali and I are friends.</em>).</li>
+          <li><strong>You:</strong> Hem tekil 'sen' hem de çoğul 'siz' anlamında kullanılır. Her iki durumda da fiil çekimi çoğul kabul edilir (<em>You are</em>).</li>
+          <li><strong>He:</strong> Tekil erkek şahıslar için kullanılır (Örn: <em>Ahmet -> He</em>).</li>
+          <li><strong>She:</strong> Tekil kadın şahıslar için kullanılır (Örn: <em>Ayşe -> She</em>).</li>
+          <li><strong>It:</strong> Cinsiyeti bilinmeyen hayvanlar, cansız nesneler, hava durumu ve zaman için kullanılır (Örn: <em>The cat -> It, The book -> It</em>).</li>
+          <li><strong>We:</strong> Konuşan kişinin de dahil olduğu 1. çoğul şahıs 'biz' (Örn: <em>Ali and I -> We</em>).</li>
+          <li><strong>They:</strong> Birden fazla insan, hayvan veya nesne için kullanılan 3. çoğul şahıs 'onlar' (Örn: <em>The students -> They, The cars -> They</em>).</li>
+        </ul>
+
+        <h3>1.2. Verb 'To Be' (am / is / are) Çekim Tablosu</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Özne Zamiri</th>
+              <th>Olumlu (Affirmative)</th>
+              <th>Kısa Hali (Contracted)</th>
+              <th>Olumsuz (Negative)</th>
+              <th>Soru (Question)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>I</strong></td><td>I am</td><td>I'm</td><td>I am not (I'm not)</td><td>Am I?</td></tr>
+            <tr><td><strong>You</strong></td><td>You are</td><td>You're</td><td>You are not (You aren't)</td><td>Are you?</td></tr>
+            <tr><td><strong>He</strong></td><td>He is</td><td>He's</td><td>He is not (He isn't)</td><td>Is he?</td></tr>
+            <tr><td><strong>She</strong></td><td>She is</td><td>She's</td><td>She is not (She isn't)</td><td>Is she?</td></tr>
+            <tr><td><strong>It</strong></td><td>It is</td><td>It's</td><td>It is not (It isn't)</td><td>Is it?</td></tr>
+            <tr><td><strong>We</strong></td><td>We are</td><td>We're</td><td>We are not (We aren't)</td><td>Are we?</td></tr>
+            <tr><td><strong>They</strong></td><td>They are</td><td>They're</td><td>They are not (They aren't)</td><td>Are they?</td></tr>
+          </tbody>
+        </table>
+
+        <h3>1.3. Countries & Nationalities (Ülkeler ve Milliyetler)</h3>
+        <p>AUZEF sınavlarında bir kişinin nereli olduğu (Country) ile hangi milletten olduğu (Nationality) sıkça sorulur:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Ülke (Country)</th>
+              <th>Milliyet (Nationality)</th>
+              <th>Dil (Language)</th>
+              <th>Örnek Cümle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Turkey</td><td>Turkish</td><td>Turkish</td><td>He is from Turkey. He is Turkish.</td></tr>
+            <tr><td>England / The UK</td><td>British / English</td><td>English</td><td>She is from England. She is British.</td></tr>
+            <tr><td>Germany</td><td>German</td><td>German</td><td>Hans is from Germany. He is German.</td></tr>
+            <tr><td>France</td><td>French</td><td>French</td><td>Pierre is from France. He is French.</td></tr>
+            <tr><td>Italy</td><td>Italian</td><td>Italian</td><td>Marco is from Italy. He is Italian.</td></tr>
+            <tr><td>Spain</td><td>Spanish</td><td>Spanish</td><td>Maria is from Spain. She is Spanish.</td></tr>
+            <tr><td>Japan</td><td>Japanese</td><td>Japanese</td><td>Kenji is from Japan. He is Japanese.</td></tr>
+            <tr><td>China</td><td>Chinese</td><td>Chinese</td><td>Li is from China. He is Chinese.</td></tr>
+            <tr><td>The USA</td><td>American</td><td>English</td><td>John is from the USA. He is American.</td></tr>
+            <tr><td>Russia</td><td>Russian</td><td>Russian</td><td>Olga is from Russia. She is Russian.</td></tr>
+            <tr><td>Greece</td><td>Greek</td><td>Greek</td><td>Nikos is from Greece. He is Greek.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'from' Edatının Varlığına Dikkat!</span>
+          <p>Cümlede <strong>from</strong> edatı varsa hemen ardından <strong>ÜLKE (Country)</strong> gelmelidir!<br>
+          <em>"She is from ......"</em> -> Doğru cevap: <strong>Turkey / Germany / France</strong> (Turkish veya German YANLIŞTIR).<br>
+          Cümlede <strong>from</strong> edatı yoksa doğrudan <strong>MİLLİYET (Nationality)</strong> gelir:<br>
+          <em>"She is ......"</em> -> Doğru cevap: <strong>Turkish / German / French</strong>.</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (8 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>Our baby ______ one year old. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 1 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> s</li><li><b>B)</b> am</li><li><b>C)</b> are</li><li><b>D)</b> to be be</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 1. ünite konusudur. Doğru seçenek A'dir (s).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>A: Are Mke and Tom n the room? B: No, they ______. They are n the park. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 1 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> am</li><li><b>B)</b> s</li><li class="ok"><b>C)</b> are</li><li><b>D)</b> be</li><li><b>E)</b> aren’t</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 1. ünite konusudur. Doğru seçenek C'dir (aren’t).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>_____ am a student at Istanbul Unversty. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 1 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> She</li><li><b>B)</b> We</li><li><b>C)</b> He</li><li class="ok"><b>D)</b> I They 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 14/174 --- PAGE 15 ---</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 1. ünite konusudur. Doğru seçenek D'dir (I).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>A: Where are you from? B: I’m from ______. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 1 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> Turksh</li><li><b>B)</b> Brazlan</li><li class="ok"><b>C)</b> Japan</li><li><b>D)</b> French Russan</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 1. ünite konusudur. Doğru seçenek C'dir (Japan).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>A: What s her natonalty? B: She s ______. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 1 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> England</li><li class="ok"><b>B)</b> Iranan</li><li><b>C)</b> Inda</li><li><b>D)</b> South Korea Egypt</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 1. ünite konusudur. Doğru seçenek B'dir (Iranan).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>A: Where is Maria from?
+B: She is from ____________.
+Aşağıdakilerden hangisi diyaloğu doğru tamamlar?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Vize / 2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> Spanish</li><li class="ok"><b>B)</b> Spain</li><li><b>C)</b> Turkish</li><li><b>D)</b> English</li><li><b>E)</b> American</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'from' edatından sonra ülke adı (Country) gelmelidir. Spanish, Turkish, English ve American millet adıdır; Spain ise ülke adıdır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>Our baby ______ one year old.
+Cümleyi tamamlayan en uygun seçenek hangisidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024 Vize / 2026 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> am</li><li><b>B)</b> are</li><li class="ok"><b>C)</b> is</li><li><b>D)</b> be</li><li><b>E)</b> aren't</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>'Our baby' tekil bir öznedir (He/She/It dengi), bu nedenle şimdiki zamanda 'To Be' fiilinin 'is' biçimi kullanılır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="8">
+          <summary>
+            <span class="sqn">8</span>
+            <span>A: Are Mike and Tom in the room?
+B: No, they ______ . They are in the garden.
+Boşluğa hangisi gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024-2025 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> isn't</li><li class="ok"><b>B)</b> aren't</li><li><b>C)</b> am not</li><li><b>D)</b> not</li><li><b>E)</b> don't</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>Özne 'they' olduğundan ve cevap 'No' ile başladığından olumsuz çoğul çekim 'aren't' (are not) olmalıdır.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(-1)" disabled>← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(1)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="1">
+      <div class="uhead">
+        <span class="num">2. ÜNİTE</span>
+        <h2>Saying Hello: Greetings, Possessive Adjectives & Numbers</h2>
+        <p>Selamlaşma ve tanışma ifadeleri (Greetings and Introductions), iyelik sıfatları (Possessive Adjectives: my, your, his, her, its, our, their), sayılar (Numbers 1-100), yaş sorma kalıpları ve alfabe / heceleme kuralları.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; resmi ve gayriresmi selamlaşma, vedalaşma ve tanışma kalıplarını; nesnelerin ve kişilerin kime ait olduğunu gösteren iyelik sıfatlarını (Possessive Adjectives); 1'den 100'e kadar İngilizce sayıları ve yaş, telefon numarası söyleme kurallarını eksiksiz öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Formal Greeting (Resmi Selamlaşma)</dt>
+            <dd>İş ortamında, tanımadığımız veya üst konumdaki kişilere yönelik saygılı selamlardır (Good morning, Good afternoon, Good evening, How do you do?).</dd>
+            <dt>Informal Greeting (Samimi Selamlaşma)</dt>
+            <dd>Arkadaşlar ve aile üyeleri arasında kullanılan günlük samimi ifadelerdir (Hi, Hello, Hey, What's up?).</dd>
+            <dt>Possessive Adjectives (İyelik Sıfatları)</dt>
+            <dd>Her zaman bir ismin önüne gelerek o ismin kime ait olduğunu bildiren niteleyicilerdir: my (benim), your (senin/sizin), his (onun - erkek), her (onun - kadın), its (onun - cansız/hayvan), our (bizim), their (onların).</dd>
+          </dl>
+        </div>
+
+        <h3>2.1. Greetings & Introductions (Selamlaşma ve Tanışma Diyalogları)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Durum</th>
+              <th>İfade</th>
+              <th>Anlamı</th>
+              <th>Verilecek Yanıt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>İlk Tanışma (Resmi)</td><td>How do you do?</td><td>Memnun oldum (Nasılsınız?)</td><td><strong>How do you do?</strong> (Aynı kalıpla yanıt verilir!)</td></tr>
+            <tr><td>İlk Tanışma</td><td>Nice to meet you.</td><td>Tanıştığımıza memnun oldum.</td><td>Nice to meet you, too.</td></tr>
+            <tr><td>Hal Hatır Sorma</td><td>How are you?</td><td>Nasılsınız?</td><td>I'm fine, thank you. / Fine, thanks.</td></tr>
+            <tr><td>Sabah Selamı</td><td>Good morning</td><td>Günaydın</td><td>Good morning</td></tr>
+            <tr><td>Öğleden Sonra</td><td>Good afternoon</td><td>Tünaydın / İyi günler</td><td>Good afternoon</td></tr>
+            <tr><td>Akşam Selamı</td><td>Good evening</td><td>İyi akşamlar</td><td>Good evening</td></tr>
+            <tr><td>Ayrılırken / Gece</td><td>Good night</td><td>İyi geceler (Vedalaşma)</td><td>Good night / Sleep well</td></tr>
+          </tbody>
+        </table>
+
+        <h3>2.2. Possessive Adjectives (İyelik Sıfatları)</h3>
+        <p>İyelik sıfatları mutlaka kendilerinden sonra bir <strong>isim</strong> ile birlikte kullanılır (Possessive Adjective + Noun):</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Özne Zamiri</th>
+              <th>İyelik Sıfatı</th>
+              <th>Örnek Cümle</th>
+              <th>Türkçe Çevirisi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>I</td><td><strong>my</strong></td><td>This is <u>my</u> car.</td><td>Bu benim arabam.</td></tr>
+            <tr><td>You</td><td><strong>your</strong></td><td>What is <u>your</u> name?</td><td>Senin adın ne?</td></tr>
+            <tr><td>He</td><td><strong>his</strong></td><td><u>His</u> father is a doctor.</td><td>Onun (erkek) babası bir doktordur.</td></tr>
+            <tr><td>She</td><td><strong>her</strong></td><td><u>Her</u> sister is a teacher.</td><td>Onun (kadın) kız kardeşi öğretmendir.</td></tr>
+            <tr><td>It</td><td><strong>its</strong></td><td>The cat is drinking <u>its</u> milk.</td><td>Kedi kendi sütünü içiyor.</td></tr>
+            <tr><td>We</td><td><strong>our</strong></td><td>This is <u>our</u> classroom.</td><td>Bu bizim sınıfımızdır.</td></tr>
+            <tr><td>They</td><td><strong>their</strong></td><td><u>Their</u> house is very big.</td><td>Onların evi çok büyüktür.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'It's' ile 'Its' ve 'His' ile 'Her' Karışıklığı</span>
+          <p>1. <strong>It's</strong> = 'It is' veya 'It has' ifadesinin kısaltmasıdır (Örn: <em>It's cold today.</em>). Kesme işareti olmayan <strong>its</strong> ise iyelik sıfatıdır (Örn: <em>The dog wagged its tail.</em>).<br>
+          2. Sınavda özne bir erkek ismi (John, Tom, Ali) ise onun sahipliği için <strong>his</strong>; kadın ismi (Mary, Jane, Ayşe) ise <strong>her</strong> seçilmelidir!</p>
+        </div>
+
+        <h3>2.3. Numbers (Sayılar 1-100) ve Yaş Sorma</h3>
+        <ul>
+          <li><strong>1-12:</strong> one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve</li>
+          <li><strong>13-19 (-teen ekli):</strong> thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen</li>
+          <li><strong>Onluklar (-ty ekli):</strong> twenty (20), thirty (30), forty (40 - dikkat: 'u' harfi düşer!), fifty (50), sixty (60), seventy (70), eighty (80), ninety (90), one hundred (100).</li>
+          <li><strong>Yaş Sorma Kalıbı:</strong> <em>"How old are you?"</em> -> <em>"I am 20 years old."</em> (İngilizcede yaş söylerken 'to be' fiili kullanılır, 'have' KULLANILMAZ!).</li>
+        </ul>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (8 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>A: How are you? B: _______________ Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 2 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> My name s Jessca.</li><li><b>B)</b> I’m from Italy.</li><li><b>C)</b> We are at school.</li><li class="ok"><b>D)</b> Good, thanks! I’m Spansh.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 2. ünite konusudur. Doğru seçenek D'dir (Good, thanks!).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>A: _______________________? B: A-N-D-Y Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 2 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> How do you spell your name?</li><li><b>B)</b> What s your address?</li><li><b>C)</b> Where are you from?</li><li><b>D)</b> Are you Andy? How old are you?</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 2. ünite konusudur. Doğru seçenek A'dir (How do you spell your name?).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>A: I’m Lus. _______________________? B: Ah! She s my sster. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr? about:blank 26/174 --- PAGE 27 ---</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 2 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> Are you Lus?</li><li><b>B)</b> Is she a teacher?</li><li class="ok"><b>C)</b> Who s she?</li><li><b>D)</b> What s her job? How s she?</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 2. ünite konusudur. Doğru seçenek C'dir (Who s she?).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>A: _______ s your mother? B: She s n the ktchen. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 2 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> What</li><li><b>B)</b> How</li><li><b>C)</b> Who</li><li class="ok"><b>D)</b> Where Why</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 2. ünite konusudur. Doğru seçenek D'dir (Where).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>A: _______ s your job? B: I’m a doctor. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 2 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> Who</li><li><b>B)</b> How</li><li><b>C)</b> Why</li><li><b>D)</b> Where</li><li class="ok"><b>E)</b> What</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 2. ünite konusudur. Doğru seçenek E'dir (What).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>John is an engineer. ______ office is in the city center.
+Cümledeki boşluğa hangi iyelik sıfatı getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Vize / 2025 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> Her</li><li class="ok"><b>B)</b> His</li><li><b>C)</b> My</li><li><b>D)</b> Their</li><li><b>E)</b> Its</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>John bir erkek ismidir. 3. tekil erkek şahsın sahipliğini bildirmek için 'His' (onun) iyelik sıfatı kullanılır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>A: How do you do?
+B: ____________
+Resmi tanışma diyaloğunda B kişisi ne yanıt vermelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> I'm 25 years old.</li><li class="ok"><b>B)</b> How do you do?</li><li><b>C)</b> I am fine.</li><li><b>D)</b> Good night.</li><li><b>E)</b> Yes, I do.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>İngilizcede ilk resmi tanışmada söylenen 'How do you do?' ifadesine geleneksel ve doğru nezaket yanıtı yine 'How do you do?'dur.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="8">
+          <summary>
+            <span class="sqn">8</span>
+            <span>A: ____________?
+B: I am 22 years old.
+Boşluğa getirilecek en uygun soru kalıbı hangisidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024 Vize</span>
+            <ul class="o">
+              <li><b>A)</b> How are you?</li><li><b>B)</b> What is your job?</li><li class="ok"><b>C)</b> How old are you?</li><li><b>D)</b> Where are you from?</li><li><b>E)</b> How much is it?</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>Yaş sormak için 'How old are you?' kalıbı kullanılır.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(0)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(2)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="2">
+      <div class="uhead">
+        <span class="num">3. ÜNİTE</span>
+        <h2>Time & Date: Telling Time, Days, Months & Prepositions (in, on, at)</h2>
+        <p>Saatleri söyleme yöntemleri (Telling the time: o'clock, past, to, half past, quarter past/to), haftanın günleri (Days of the week), yılın ayları (Months), mevsimler (Seasons) ve zaman bildiren edatlar (Prepositions of Time: in, on, at kullanım kuralları ve istisnaları).</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede saati sorma ve söylemenin analog/dijital kurallarını, günleri, ayları ve mevsimleri; AUZEF sınavlarının en kritik gramer konusu olan zaman edatlarını (in, on, at) hiçbir istisnayı atlamadan doğru kullanabilmeyi öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Telling the Time (Saat Söyleme)</dt>
+            <dd>Saatin kaç olduğunu sormak (What time is it? / What is the time?) ve 'It is ...' yapısıyla dakikaları ve saati ifade etme sistemidir.</dd>
+            <dt>Past (Geçe) vs To (Kala)</dt>
+            <dd>Yelkovan 12 ile 6 arasındayken dakikayı 'past' (geçe), 6 ile 12 arasındayken bir sonraki saate kalan dakikayı 'to' (kala) ile belirtiriz.</dd>
+            <dt>Prepositions of Time (Zaman Edatları)</dt>
+            <dd>Belirli bir zaman diliminden önce gelerek eylemin ne zaman gerçekleştiğini gösteren 'at', 'on' ve 'in' edatlarıdır.</dd>
+          </dl>
+        </div>
+
+        <h3>3.1. Telling The Time (Saatleri Söyleme)</h3>
+        <ul>
+          <li><strong>Tam Saatler:</strong> <em>It is eight o'clock. (08:00)</em></li>
+          <li><strong>Çeyrek Geçe (Quarter past):</strong> <em>It is a quarter past eight. (08:15)</em></li>
+          <li><strong>Buçuk (Half past):</strong> <em>It is half past eight. (08:30)</em></li>
+          <li><strong>Çeyrek Kala (Quarter to):</strong> <em>It is a quarter to nine. (08:45)</em></li>
+          <li><strong>Dakika Geçe:</strong> <em>It is ten past eight. (08:10)</em></li>
+          <li><strong>Dakika Kala:</strong> <em>It is twenty to nine. (08:40)</em></li>
+        </ul>
+
+        <h3>3.2. Prepositions of Time: AT, ON, IN Kuralları</h3>
+        <p>AUZEF sınavlarında her yıl en az 1-2 soru bu tablodan çıkmaktadır:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Edat</th>
+              <th>Kullanım Alanı</th>
+              <th>Örnekler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>AT</strong></td>
+              <td>
+                • Tam saatler<br>
+                • Belirli özel anlar ve tatiller<br>
+                • Gece ve hafta sonu
+              </td>
+              <td>
+                • <strong>at</strong> 5 o'clock, <strong>at</strong> 8:30<br>
+                • <strong>at</strong> night, <strong>at</strong> midnight, <strong>at</strong> noon<br>
+                • <strong>at</strong> the weekend (İngiliz İngilizcesi)<br>
+                • <strong>at</strong> Christmas, <strong>at</strong> Easter
+              </td>
+            </tr>
+            <tr>
+              <td><strong>ON</strong></td>
+              <td>
+                • Günler (Days)<br>
+                • Tam tarihler (Gün + Ay)<br>
+                • Özel günler ve doğum günleri
+              </td>
+              <td>
+                • <strong>on</strong> Monday, <strong>on</strong> Friday<br>
+                • <strong>on</strong> Friday morning / Sunday evening<br>
+                • <strong>on</strong> 23rd April, <strong>on</strong> July 15th<br>
+                • <strong>on</strong> my birthday, <strong>on</strong> New Year's Day
+              </td>
+            </tr>
+            <tr>
+              <td><strong>IN</strong></td>
+              <td>
+                • Aylar (Months)<br>
+                • Mevsimler (Seasons)<br>
+                • Yıllar (Years)<br>
+                • Yüzyıllar ve çağlar<br>
+                • Günün bölümleri
+              </td>
+              <td>
+                • <strong>in</strong> May, <strong>in</strong> October<br>
+                • <strong>in</strong> summer, <strong>in</strong> winter<br>
+                • <strong>in</strong> 2026, <strong>in</strong> 1923<br>
+                • <strong>in</strong> the 21st century<br>
+                • <strong>in</strong> the morning, <strong>in</strong> the afternoon, <strong>in</strong> the evening
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: Ay ile Tam Tarih Ayrımı!</span>
+          <p>Yalnızca ay adı verilmişse <strong>IN</strong> kullanılır: <em>"My birthday is <strong>in</strong> May."</em><br>
+          Ancak ayın yanında gün/tarih rakamı varsa <strong>ON</strong> kullanılır: <em>"My birthday is <strong>on</strong> May 15th."</em><br>
+          Ayrıca: <em>"in the morning"</em> denir ama gün belirtilirse <em>"<strong>on</strong> Monday morning"</em> denir!</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (8 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>_______ s the thrd month of the year. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 3 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> September</li><li><b>B)</b> July</li><li class="ok"><b>C)</b> March 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 37/174 --- PAGE 38 ---</li><li><b>D)</b> Aprl February</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 3. ünite konusudur. Doğru seçenek C'dir (March).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>Tomorrow s my father’s _______ brthday. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 3 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> ffty</li><li><b>B)</b> fve</li><li><b>C)</b> sxty</li><li class="ok"><b>D)</b> seventy-frst thrteen</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 3. ünite konusudur. Doğru seçenek D'dir (seventy-frst).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>A: What tme does your lesson start? B: At _____________ (10.15) Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 3 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> ten o’clock</li><li class="ok"><b>B)</b> a quarter past ten</li><li><b>C)</b> half past ten</li><li><b>D)</b> a quarter to ten eleven ffteen</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 3. ünite konusudur. Doğru seçenek B'dir (a quarter past ten).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>A: How much s ths bke? B: It s _____________ euros. (€560) Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 3 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> fve hundred and sxty</li><li><b>B)</b> sx hundred and ffty</li><li><b>C)</b> fve hundred</li><li><b>D)</b> fve hundred and sxteen fve hundred and sx</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 3. ünite konusudur. Doğru seçenek A'dir (16.09.2024 14:13 Ders : YABANCI DİL I - eKtap).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>Weekend days are _______ and ________. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 3 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> Monday / Wednesday</li><li><b>B)</b> Sunday / Thursday</li><li class="ok"><b>C)</b> Saturday / Sunday</li><li><b>D)</b> Tuesday / Frday Wednesday / Thursday</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 3. ünite konusudur. Doğru seçenek C'dir (Saturday / Sunday).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>My final exam is ______ Friday morning ______ 09:30.
+Boşluklara sırasıyla hangi edatlar getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024-2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> in / at</li><li class="ok"><b>B)</b> on / at</li><li><b>C)</b> at / on</li><li><b>D)</b> in / on</li><li><b>E)</b> on / in</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>Gün belirtilen durumlarda (Friday morning) 'on'; tam saatlerde (09:30) 'at' edatı kullanılır. Dolayısıyla doğru sıra: on / at.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>Turkey became a republic ______ October 29th, 1923.
+Boşluğa hangi zaman edatı gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025-2026 Güz Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> in</li><li><b>B)</b> at</li><li class="ok"><b>C)</b> on</li><li><b>D)</b> from</li><li><b>E)</b> by</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>Tam gün ve tarih belirtilen (October 29th) ifadelerde 'on' edatı kullanılır. Sadece ay veya sadece yıl olsaydı 'in' kullanılırdı.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="8">
+          <summary>
+            <span class="sqn">8</span>
+            <span>It is 08:45.
+Bu saat İngilizcede nasıl ifade edilir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Vize</span>
+            <ul class="o">
+              <li><b>A)</b> It is quarter past eight.</li><li><b>B)</b> It is half past eight.</li><li class="ok"><b>C)</b> It is quarter to nine.</li><li><b>D)</b> It is quarter to eight.</li><li><b>E)</b> It is eight past nine.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>08:45, dokuza çeyrek kala demektir. Çeyrek kala ifadesi 'quarter to' ile kurulur: It is quarter to nine.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(1)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(3)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="3">
+      <div class="uhead">
+        <span class="num">4. ÜNİTE</span>
+        <h2>Hobbies & Interests: Modal 'Can / Can't' & Verbs of Preference</h2>
+        <p>Boş zaman etkinlikleri ve hobiler (Free time activities), yetenek ve izin bildiren modal yardımcı fiil 'Can / Can't' (olumlu, olumsuz, soru yapıları), sevme ve sevmeme fiilleri (like, love, enjoy, dislike, hate, prefer) ve sonrasında 'V-ing' (Gerund) kullanımı.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; yetenek, beceri ve kapasite bildiren 'Can / Can't' modal fiilini tüm öznelerle hatasız kullanabilmeyi; sevilen ve sevilmeyen eylemleri 'like / love / hate + V-ing' kuralıyla ifade edebilmeyi öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Modal Verb 'Can / Can't'</dt>
+            <dd>Fiziksel veya zihinsel yetenekleri (ability), olasılığı ya da izin alıp vermeyi (permission) ifade eden modal yardımcı fiildir. Özneye göre asla değişmez ve arkasından daima yalın fiil (V1) gelir.</dd>
+            <dt>Gerund (Fiilimsi: V-ing)</dt>
+            <dd>Bir fiilin sonuna '-ing' eki getirilerek isimleştirilmesidir. Duygu ve tercih bildiren fiillerden (like, love, hate, enjoy) sonra yapılan eylem gerund halinde gelir.</dd>
+          </dl>
+        </div>
+
+        <h3>4.1. Modal Verb 'Can' ve 'Can't' Kullanımı</h3>
+        <p>'Can' modal fiilinin en önemli özelliği, <strong>bütün özneler için aynı kalmasıdır</strong> (I, you, he, she, it, we, they can). Fiile asla '-s' takısı veya 'to' edatı gelmez:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Cümle Türü</th>
+              <th>Formül</th>
+              <th>Örnek Cümle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Olumlu (Affirmative)</strong></td><td>Subject + can + V1 (yalın fiil)</td><td>She <u>can play</u> the piano very well.</td></tr>
+            <tr><td><strong>Olumsuz (Negative)</strong></td><td>Subject + cannot / can't + V1</td><td>He <u>can't swim</u> in deep water.</td></tr>
+            <tr><td><strong>Soru (Question)</strong></td><td>Can + subject + V1?</td><td><u>Can you speak</u> English?</td></tr>
+            <tr><td><strong>Kısa Cevap</strong></td><td>Yes, I can. / No, I can't.</td><td>Yes, she can. / No, they can't.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>4.2. Verbs of Preference + V-ing (Sevme ve Tercih Fiilleri)</h3>
+        <p>İngilizcede hoşlanma, sevme veya nefret etme derecesini bildiren fiiller şunlardır:</p>
+        <ul>
+          <li><strong>Love:</strong> Çok sevmek (<em>I love reading books.</em>)</li>
+          <li><strong>Like:</strong> Hoşlanmak, sevmek (<em>He likes playing tennis.</em>)</li>
+          <li><strong>Enjoy:</strong> Keyif almak (<em>They enjoy listening to music.</em>)</li>
+          <li><strong>Don't like / Dislike:</strong> Sevmemek (<em>I don't like getting up early.</em>)</li>
+          <li><strong>Hate:</strong> Nefret etmek (<em>She hates doing housework.</em>)</li>
+          <li><strong>Prefer:</strong> Tercih etmek (<em>I prefer walking to driving.</em>)</li>
+        </ul>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'Can' Sonrası Yalın Fiil vs 'Like' Sonrası V-ing!</span>
+          <p>1. <strong>Can / Can't</strong> sonrasında fiil kesinlikle <strong>YALIN (V1)</strong> olmalıdır: <em>"He can swim."</em> (swimming veya swims YANLIŞTIR!).<br>
+          2. <strong>Like / Love / Hate</strong> sonrasında ise bir eylem geliyorsa mutlaka <strong>-ing</strong> takısı almalıdır: <em>"Does he like play football?"</em> YANLIŞ, doğrusu <strong>"Does he like playing football?"</strong>dir!</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>Cem s n hs fourth year at unversty. So he s a _______. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 4 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> teacher</li><li><b>B)</b> freshman</li><li><b>C)</b> sophomore</li><li class="ok"><b>D)</b> senor junor</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 4. ünite konusudur. Doğru seçenek D'dir (senor).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>A: _____ you _____ to the party tonght? B: Yes, I am. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 4 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> am / gong</li><li class="ok"><b>B)</b> are / gong 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 51/174 --- PAGE 52 ---</li><li><b>C)</b> are / go</li><li><b>D)</b> be / to go am / to go</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 4. ünite konusudur. Doğru seçenek B'dir (are / gong).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>A: Dad, what s on TV? B: _________________ Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 4 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> I’m watchng football.</li><li><b>B)</b> I’m talkng about the economy.</li><li><b>C)</b> I’m chasng the dog.</li><li><b>D)</b> We are playng n the garden. Your mom s washng the clothes.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 4. ünite konusudur. Doğru seçenek A'dir (I’m watchng football.).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>A: Where s Amy? B: She ___________ n her room. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 4 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> s play</li><li><b>B)</b> are playng</li><li><b>C)</b> be playng</li><li><b>D)</b> be play</li><li><b>E)</b> s playng</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 4. ünite konusudur. Doğru seçenek A'dir (s playng).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>A: I __________ to the cnema wth you. I’m tred. B: No problem. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 4 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> am comng</li><li><b>B)</b> are comng</li><li class="ok"><b>C)</b> am not comng</li><li><b>D)</b> be comng 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 52/174 --- PAGE 53 --- to come</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 4. ünite konusudur. Doğru seçenek C'dir (am not comng).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>Sarah can ______ three languages fluently, but she can't ______.
+Boşluklara hangi fiil biçimleri gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024 Final / 2026 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> speaks / driving</li><li class="ok"><b>B)</b> speak / drive</li><li><b>C)</b> speaking / drives</li><li><b>D)</b> to speak / to drive</li><li><b>E)</b> spoke / drove</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Can' ve 'Can't' modal yardımcı fiillerinden sonra ana fiil daima yalın (V1) haliyle kullanılır (speak / drive).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>My brother loves ______ football on weekends, but he hates ______ chess.
+Boşluklara hangileri getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> play / play</li><li class="ok"><b>B)</b> playing / playing</li><li><b>C)</b> plays / plays</li><li><b>D)</b> to playing / play</li><li><b>E)</b> played / played</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>Love ve hate gibi tercih ve duygu bildiren fiillerden sonra gelen eylemler Gerund (V-ing) biçiminde gelir (playing / playing).</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(2)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(4)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="4">
+      <div class="uhead">
+        <span class="num">5. ÜNİTE</span>
+        <h2>Life & Learning: Present Simple Tense (Geniş Zaman)</h2>
+        <p>Geniş zaman (Present Simple Tense) kuralları: Genel doğrular, alışkanlıklar ve tekrarlanan eylemler; olumlu, olumsuz ve soru yapıları; 'Do / Does' yardımcı fiilleri; 3. tekil şahıs (He, She, It) fiil ekleme kuralları (-s, -es, -ies) ve zaman zarfları.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcenin en temel zamanı olan Present Simple Tense'i (Geniş Zaman), 3. tekil şahıstaki fiil çekimlerini (-s, -es, -ies), olumsuz ve soru cümlelerinde 'do / does' yardımcı fiillerinin kullanımını ve fiilin yalın hale dönüş kuralını eksiksiz öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Present Simple Tense (Geniş Zaman)</dt>
+            <dd>Her zaman yapılan rutin işleri, alışkanlıkları, bilimsel ve genel geçer doğruları (bilimsel gerçekler) ve zaman çizelgelerini anlatmak için kullanılan zamandır.</dd>
+            <dt>Third Person Singular (-s / -es / -ies)</dt>
+            <dd>Present Simple Tense olumlu cümlelerinde özne 'He', 'She' veya 'It' (ya da tekil bir ad) olduğunda ana fiilin sonuna eklenen çekim ekidir.</dd>
+            <dt>Auxiliary Verb (Yardımcı Fiil: Do / Does)</dt>
+            <dd>Geniş zamanda olumsuz cümle ve soru cümlesi kurmak için kullanılan yardımcı fiildir. 'He, She, It' özneleri için 'Does/Doesn't', diğer özneler için 'Do/Don't' kullanılır.</dd>
+          </dl>
+        </div>
+
+        <h3>5.1. Present Simple Tense Cümle Yapısı</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Özne</th>
+              <th>Olumlu (Affirmative)</th>
+              <th>Olumsuz (Negative)</th>
+              <th>Soru (Question)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>I, You, We, They</strong></td>
+              <td>Subject + <strong>V1 (Yalın)</strong><br><em>I work every day.</em></td>
+              <td>Subject + <strong>don't + V1</strong><br><em>They don't work.</em></td>
+              <td><strong>Do</strong> + Subject + <strong>V1</strong>?<br><em>Do you work?</em></td>
+            </tr>
+            <tr>
+              <td><strong>He, She, It</strong></td>
+              <td>Subject + <strong>V + (-s / -es / -ies)</strong><br><em>He work<u>s</u> every day.</em></td>
+              <td>Subject + <strong>doesn't + V1</strong><br><em>He doesn't work.</em></td>
+              <td><strong>Does</strong> + Subject + <strong>V1</strong>?<br><em>Does he work?</em></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>5.2. 3. Tekil Şahıs (He, She, It) Fiil Takısı Kuralları</h3>
+        <ol>
+          <li><strong>Genel Kural:</strong> Çoğu fiilin sonuna doğrudan <strong>-s</strong> eklenir: <em>work -> works, read -> reads, live -> lives</em>.</li>
+          <li><strong>-ch, -sh, -ss, -x, -o ile Biten Fiiller:</strong> Sonuna <strong>-es</strong> eklenir: <em>watch -> watches, wash -> washes, pass -> passes, fix -> fixes, go -> goes, do -> does</em>.</li>
+          <li><strong>Ünsüz + y ile Biten Fiiller:</strong> 'y' düşer ve <strong>-ies</strong> gelir: <em>study -> studies, fly -> flies, cry -> cries</em>. (Dikkat: ünlü + y ise düşmez: <em>play -> plays</em>).</li>
+          <li><strong>Düzensiz:</strong> <em>have -> has</em>.</li>
+        </ol>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'Doesn't' ve 'Does' Sonrası Fiildeki '-s' Takısı Düşer!</span>
+          <p>Öğrencilerin sınavda en çok yanıldığı nokta burasıdır! Olumsuz cümlede <strong>doesn't</strong> veya soruda <strong>does</strong> varsa, fiilin sonundaki <strong>-s / -es / -ies takısı KESİNLİKLE KALKAR</strong> ve fiil YALIN (V1) hale döner!<br>
+          <em>"He doesn't works."</em> (YANLIŞ!) -> <strong>"He doesn't work."</strong> (DOĞRU!)<br>
+          <em>"Does she studies?"</em> (YANLIŞ!) -> <strong>"Does she study?"</strong> (DOĞRU!)</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>Does he lke ______ football? Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 5 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> play</li><li><b>B)</b> to playng</li><li><b>C)</b> playng</li><li><b>D)</b> s playng be play</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 5. ünite konusudur. Doğru seçenek A'dir (playng).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>Mr. Wnslet hates ______ about poltcs. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 5 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> talk</li><li><b>B)</b> talkng</li><li><b>C)</b> be talk</li><li><b>D)</b> to talkng be talkng</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 5. ünite konusudur. Doğru seçenek A'dir (talkng).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>I really love ______ Hstory. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 5 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Studyng</li><li><b>B)</b> to studyng</li><li><b>C)</b> study 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 64/174 --- PAGE 65 ---</li><li><b>D)</b> be study to be study</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 5. ünite konusudur. Doğru seçenek A'dir (Studyng).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>We are havng great tme ____________. Come and jon us! Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 5 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> yesterday</li><li><b>B)</b> last nght</li><li><b>C)</b> two days ago</li><li class="ok"><b>D)</b> now last year</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 5. ünite konusudur. Doğru seçenek D'dir (now).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>A: Marry lkes readng about the human body. B: Is she studyng _____________? A: Yes, she s. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 5 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Medcne</li><li><b>B)</b> Hstory</li><li><b>C)</b> Economcs</li><li><b>D)</b> Fashon Desgn Law</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 5. ünite konusudur. Doğru seçenek A'dir (Medcne).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>David ______ in a bank, but his wife ______ work.
+Boşluklara sırasıyla hangi ifadeler getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Vize / 2025 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> work / don't</li><li class="ok"><b>B)</b> works / doesn't</li><li><b>C)</b> work / doesn't</li><li><b>D)</b> working / isn't</li><li><b>E)</b> works / don't</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>Present Simple Tense'te David (He) olumlu cümlede fiile -s takısı alır (works); his wife (She) olumsuz cümlede 'doesn't + V1' alır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>______ your sister ______ German at high school?
+Sorudaki boşluklara sırasıyla hangileri gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024 Final</span>
+            <ul class="o">
+              <li><b>A)</b> Do / study</li><li><b>B)</b> Does / studies</li><li class="ok"><b>C)</b> Does / study</li><li><b>D)</b> Is / study</li><li><b>E)</b> Do / studies</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>'Your sister' 3. tekil şahıs (She) olduğundan soru 'Does' ile başlar. Does yardımcı fiili geldiğinde ana fiil YALIN (study) hale döner.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(3)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(5)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="5">
+      <div class="uhead">
+        <span class="num">6. ÜNİTE</span>
+        <h2>Daily Routines: Adverbs of Frequency & 'How Often'</h2>
+        <p>Günlük rutinler ve alışkanlıklar (Daily Routines), sıklık zarfları (Adverbs of Frequency: always, usually, often, sometimes, rarely/hardly ever, never), sıklık zarflarının cümledeki yeri ('to be' fiilinden sonra, esas fiilden önce) ve 'How often...?' soru kalıbı.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; eylemlerin hangi sıklıkla yapıldığını gösteren sıklık zarflarını (Adverbs of Frequency), bu zarfların cümle içerisindeki kesin söz dizimi kurallarını ve 'How often' soru yapısıyla sıklık sorma ve yanıtlama yöntemlerini eksiksiz kavrayacaksınız.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Adverbs of Frequency (Sıklık Zarfları)</dt>
+            <dd>Bir eylemin hangi sıklıkla veya ne oranda tekrarlandığını bildiren zarflardır. Yüzdelik dağılımına göre sıralanırlar.</dd>
+            <dt>Word Order (Söz Dizimi Kuralı)</dt>
+            <dd>Sıklık zarfları normal cümlelerde <strong>esas fiilden hemen ÖNCE</strong> (Subject + Adverb + Verb), ancak 'am / is / are' fiilinden <strong>SONRA</strong> gelir.</dd>
+            <dt>How Often...?</dt>
+            <dd>'Ne sıklıkla?' anlamına gelen ve eylemin yapılma sıklığını öğrenmek için sorulan soru kalıbıdır.</dd>
+          </dl>
+        </div>
+
+        <h3>6.1. Sıklık Zarfları ve Yüzdelik Dağılımı</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Sıklık Zarfı</th>
+              <th>Yaklaşık Oran</th>
+              <th>Türkçe Anlamı</th>
+              <th>Örnek Cümle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Always</strong></td><td>%100</td><td>Her zaman, daima</td><td>I <u>always</u> brush my teeth before bed.</td></tr>
+            <tr><td><strong>Usually / Normally</strong></td><td>%80 - %90</td><td>Genellikle, çoğunlukla</td><td>She <u>usually</u> drinks coffee in the morning.</td></tr>
+            <tr><td><strong>Often / Frequently</strong></td><td>%60 - %70</td><td>Sık sık</td><td>They <u>often</u> go to the cinema on Saturdays.</td></tr>
+            <tr><td><strong>Sometimes</strong></td><td>%50</td><td>Bazen, ara sıra</td><td>We <u>sometimes</u> eat out on Sundays.</td></tr>
+            <tr><td><strong>Hardly ever / Rarely / Seldom</strong></td><td>%10 - %20</td><td>Neredeyse hiç, nadiren</td><td>He <u>hardly ever</u> watches television.</td></tr>
+            <tr><td><strong>Never</strong></td><td>%0</td><td>Asla, hiçbir zaman</td><td>Susan <u>never</u> eats meat because she is a vegetarian.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>6.2. Cümle İçi Konum ve Söz Dizimi Kuralları</h3>
+        <ol>
+          <li><strong>Esas Fiil Varsa:</strong> Özne ile esas fiilin arasına girer:<br>
+            <em>"Subject + <strong>Adverb of Frequency</strong> + Main Verb"</em><br>
+            Örn: <em>He <strong>always</strong> arrives on time.</em> (He arrives always YANLIŞTIR!).
+          </li>
+          <li><strong>'To Be' (am / is / are) Varsa:</strong> 'To Be' fiilinden hemen sonra gelir:<br>
+            <em>"Subject + <strong>am / is / are</strong> + <strong>Adverb of Frequency</strong>"</em><br>
+            Örn: <em>She <strong>is always</strong> late for class.</em> (She always is late YANLIŞTIR!).
+          </li>
+        </ol>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'Never' Zaten Anlamca Olumsuzdur!</span>
+          <p><strong>Never</strong> zarfı kendi içinde 'asla/hiçbir zaman' anlamı taşıdığı için cümle biçimce <strong>OLUMLU</strong> kurulur, yanına asla <em>don't / doesn't</em> getirilmez!<br>
+          <em>"He doesn't never smoke."</em> (BÜYÜK YANLIŞ!) -> <strong>"He never smokes."</strong> (DOĞRU!).<br>
+          Ayrıca 3. tekil şahısta fiildeki '-s' takısı asla unutulmamalıdır: <em>"She never eats meat."</em></p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>We ________ the cnema every Saturday. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 6 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> drnk 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 77/174 --- PAGE 78 ---</li><li><b>B)</b> take</li><li class="ok"><b>C)</b> go to</li><li><b>D)</b> lsten play</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 6. ünite konusudur. Doğru seçenek C'dir (go to).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>Selm ________ a letter to her mother once a month. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 6 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Wrtes</li><li><b>B)</b> goes</li><li><b>C)</b> does</li><li><b>D)</b> studes talks</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 6. ünite konusudur. Doğru seçenek A'dir (Wrtes).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>A: Are you gong to Italy ths summer? B: Yes, but I _________ Span. Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 6 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> go</li><li><b>B)</b> know</li><li><b>C)</b> speak</li><li><b>D)</b> agree</li><li class="ok"><b>E)</b> prefer</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 6. ünite konusudur. Doğru seçenek E'dir (prefer).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>My mom ________ to work on Sunday. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 6 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> go</li><li><b>B)</b> gong</li><li><b>C)</b> doesn’t go</li><li><b>D)</b> don’t go to go 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 78/174 --- PAGE 79 ---</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 6. ünite konusudur. Doğru seçenek A'dir (doesn’t go).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>The frst customers ________ to the shop at about 8am. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 6 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> comng</li><li class="ok"><b>B)</b> come</li><li><b>C)</b> to come</li><li><b>D)</b> s comng to comng</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 6. ünite konusudur. Doğru seçenek B'dir (come).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>Susan is a strict vegetarian. She ______ eats meat.
+Anlama en uygun sıklık zarfı hangisidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024-2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> always</li><li><b>B)</b> usually</li><li class="ok"><b>C)</b> never</li><li><b>D)</b> often</li><li><b>E)</b> sometimes</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>Susan vejetaryen olduğuna göre 'asla et yemez'. %0 sıklık bildiren zarf 'never'dır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>Aşağıdaki cümlelerin hangisinde sıklık zarfının cümledeki konumu DOĞRUDUR?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025-2026 Güz Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> He arrives always late.</li><li class="ok"><b>B)</b> He is always late.</li><li><b>C)</b> He always is late.</li><li><b>D)</b> Always he late is.</li><li><b>E)</b> He late always is.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>Sıklık zarfları 'To Be' (am, is, are) fiilinden SONRA gelir: 'He is always late'.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(4)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(6)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="6">
+      <div class="uhead">
+        <span class="num">7. ÜNİTE</span>
+        <h2>Daily Life: Jobs, Object Pronouns & Question Words (WH-)</h2>
+        <p>Meslekler ve çalışma alanları (Jobs and Workplaces), nesne zamirleri (Object Pronouns: me, you, him, her, it, us, them) ve soru kelimeleri (Question Words: Who, What, Where, When, Why, Which, How, Whose).</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede en yaygın meslek adlarını ve çalıştıkları yerleri; fiilden veya edattan sonra kullanılan nesne zamirlerini (Object Pronouns); açık uçlu bilgi soruları sormak için kullanılan WH- soru kelimelerini hatasız uygulamayı öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Object Pronouns (Nesne Zamirleri)</dt>
+            <dd>Cümlede eylemden etkilenen, bir fiilin (verb) ya da edatın (preposition) ardından gelen şahıs zamirleridir: me (beni/bana), you (seni/sana/sizi/size), him (onu/ona - erkek), her (onu/ona - kadın), it (onu/ona - cansız), us (bizi/bize), them (onları/onlara).</dd>
+            <dt>WH- Question Words</dt>
+            <dd>Evet/Hayır yerine bilgi almak amacıyla cümlenin en başına getirilen soru sözcükleridir (Who, What, Where, When, Why, Which, How, Whose).</dd>
+          </dl>
+        </div>
+
+        <h3>7.1. Object Pronouns (Nesne Zamirleri) Tablosu</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Özne Zamiri (Subject)</th>
+              <th>Nesne Zamiri (Object)</th>
+              <th>Örnek Cümle</th>
+              <th>Türkçe Anlamı</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>I</td><td><strong>me</strong></td><td>She loves <u>me</u>. / Listen to <u>me</u>!</td><td>Beni / bana</td></tr>
+            <tr><td>You</td><td><strong>you</strong></td><td>I can help <u>you</u>.</td><td>Seni / size</td></tr>
+            <tr><td>He</td><td><strong>him</strong></td><td>Do you know <u>him</u>? / I work with <u>him</u>.</td><td>Onu / ona (erkek)</td></tr>
+            <tr><td>She</td><td><strong>her</strong></td><td>I saw <u>her</u> yesterday.</td><td>Onu / ona (kadın)</td></tr>
+            <tr><td>It</td><td><strong>it</strong></td><td>I bought a new book. I like <u>it</u>.</td><td>Onu / ona (cansız/hayvan)</td></tr>
+            <tr><td>We</td><td><strong>us</strong></td><td>They invited <u>us</u> to the party.</td><td>Bizi / bize</td></tr>
+            <tr><td>They</td><td><strong>them</strong></td><td>These are my friends. I respect <u>them</u>.</td><td>Onları / onlara</td></tr>
+          </tbody>
+        </table>
+
+        <h3>7.2. WH- Soru Kelimeleri ve Anlamları</h3>
+        <ul>
+          <li><strong>Who:</strong> Kim? (Kişiyi sorar: <em>Who is that man?</em>)</li>
+          <li><strong>What:</strong> Ne? / Hangi? (Nesneyi veya durumu sorar: <em>What do you do?</em>)</li>
+          <li><strong>Where:</strong> Nerede? / Nereye? (Yeri sorar: <em>Where do you live?</em>)</li>
+          <li><strong>When:</strong> Ne zaman? (Zamanı sorar: <em>When does the film start?</em>)</li>
+          <li><strong>Why:</strong> Niçin? / Neden? (Sebep sorar, 'Because' ile yanıtlanır: <em>Why are you late?</em>)</li>
+          <li><strong>Which:</strong> Hangisi? (Seçenekler arasından seçim sorar: <em>Which color do you prefer?</em>)</li>
+          <li><strong>How:</strong> Nasıl? (Tarz veya durum sorar: <em>How do you go to work?</em>)</li>
+          <li><strong>Whose:</strong> Kimin? (Aidiyet sorar: <em>Whose bag is this?</em>)</li>
+        </ul>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'What do you do?' Sorusu Ne Sorar?</span>
+          <p><strong>"What do you do?"</strong> kalıbı 'Şu an ne yapıyorsun?' demek DEĞİLDİR! 'Ne iş yapıyorsunuz / Mesleğiniz nedir?' anlamına gelir (What is your job?). Bu soruya <em>"I am a teacher / engineer / student."</em> şeklinde meslekle yanıt verilir!</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>________ doesn’t lke swmmng n the sea. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 7 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> I</li><li><b>B)</b> We</li><li><b>C)</b> You</li><li class="ok"><b>D)</b> He They</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 7. ünite konusudur. Doğru seçenek D'dir (He).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>________ don’t want to go shoppng wth you. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 7 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> I</li><li><b>B)</b> She</li><li><b>C)</b> He</li><li><b>D)</b> It 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 90/174 --- PAGE 91 --- You</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 7. ünite konusudur. Doğru seçenek A'dir (I).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>________ she often ________ homesck when she s away? Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 7 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> Do / feel</li><li class="ok"><b>B)</b> Does / feel</li><li><b>C)</b> Does / feelng</li><li><b>D)</b> Do / feelng Are / feelng</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 7. ünite konusudur. Doğru seçenek B'dir (Does / feel).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>A: Where ________ you ________ lesson? B: I usually go to the lbrary. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 7 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> does / studyng</li><li><b>B)</b> s / studyng</li><li class="ok"><b>C)</b> do / study</li><li><b>D)</b> are / study do / studyng</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 7. ünite konusudur. Doğru seçenek C'dir (do / study).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>A: How do you go to school? B: _____________________ Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 7 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> I lke my school.</li><li><b>B)</b> I study Geography at unversty.</li><li><b>C)</b> My sster goes to school at eleven.</li><li><b>D)</b> I do my homework at home.</li><li class="ok"><b>E)</b> I go to school by bus.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 7. ünite konusudur. Doğru seçenek E'dir (I go to school by bus.).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>A: ______ is the post office?
+B: It is next to the hospital over there.
+Boşluğa hangi soru kelimesi getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Final</span>
+            <ul class="o">
+              <li><b>A)</b> What</li><li><b>B)</b> How</li><li class="ok"><b>C)</b> Where</li><li><b>D)</b> Who</li><li><b>E)</b> When</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>Cevap bir konum/yer bildirdiğine göre ('hastanenin yanında'), yer soran 'Where' (Nerede?) soru kelimesi getirilmelidir.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>These are my new colleagues. I really like ______.
+Boşluğa hangi nesne zamiri getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> they</li><li class="ok"><b>B)</b> them</li><li><b>C)</b> their</li><li><b>D)</b> him</li><li><b>E)</b> us</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Colleagues' çoğul bir nesnedir. Fiilden (like) sonra çoğul şahıslar için nesne zamiri 'them' (onları) kullanılır.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(5)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(7)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="7">
+      <div class="uhead">
+        <span class="num">8. ÜNİTE</span>
+        <h2>Lifestyles: Present Continuous Tense & Stative Verbs</h2>
+        <p>Şimdiki Zaman (Present Continuous Tense: am/is/are + V-ing), konuşma anında gerçekleşen eylemler, olumlu/olumsuz/soru yapıları, zaman zarfları (now, at the moment, currently, right now) ve durum fiilleri (Stative Verbs: know, want, like, understand vb. şimdiki zamanda kullanılmayan fiiller).</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; konuşma anında meydana gelen olayları Present Continuous Tense (Şimdiki Zaman) ile kurabilmeyi; fiillere '-ing' takısı ekleme kurallarını; Present Simple (Geniş Zaman) ile Present Continuous arasındaki farkları ve sınavların vazgeçilmez sorusu olan durum fiillerini (Stative Verbs) eksiksiz uygulayabileceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Present Continuous Tense (Şimdiki Zaman)</dt>
+            <dd>Konuşma anında (şu anda) devam eden, geçici olan veya geleceğe yönelik kesin planlanmış eylemleri ifade eden zamandır (Formülü: am / is / are + Verb-ing).</dd>
+            <dt>Stative Verbs (Durum Fiilleri)</dt>
+            <dd>Fiziksel bir hareket veya eylem içermeyen; zihinsel süreç, duyu, duygu, algı veya sahiplik bildiren ve normal şartlarda <strong>kesinlikle -ing almayan</strong> fiillerdir.</dd>
+          </dl>
+        </div>
+
+        <h3>8.1. Present Continuous Tense Formülü ve Çekimi</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Cümle Türü</th>
+              <th>Özne</th>
+              <th>Yardımcı Fiil</th>
+              <th>Ana Fiil</th>
+              <th>Örnek Cümle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Olumlu</td><td>I</td><td>am</td><td>Verb + ing</td><td>I <u>am studying</u> English now.</td></tr>
+            <tr><td>Olumlu</td><td>He, She, It</td><td>is</td><td>Verb + ing</td><td>She <u>is reading</u> a book at the moment.</td></tr>
+            <tr><td>Olumlu</td><td>You, We, They</td><td>are</td><td>Verb + ing</td><td>They <u>are playing</u> football right now.</td></tr>
+            <tr><td>Olumsuz</td><td>I</td><td>am not</td><td>Verb + ing</td><td>I am not sleeping.</td></tr>
+            <tr><td>Olumsuz</td><td>He, She, It</td><td>isn't</td><td>Verb + ing</td><td>He isn't working today.</td></tr>
+            <tr><td>Olumsuz</td><td>You, We, They</td><td>aren't</td><td>Verb + ing</td><td>We aren't watching TV.</td></tr>
+            <tr><td>Soru</td><td colspan="3">Am / Is / Are + Subject + Verb-ing?</td><td><u>Are you listening</u> to me?</td></tr>
+          </tbody>
+        </table>
+
+        <h3>8.2. Present Simple vs Present Continuous Karşılaştırma Tablosu</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Özellik</th>
+              <th>Present Simple (Geniş Zaman)</th>
+              <th>Present Continuous (Şimdiki Zaman)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Kullanım Amacı</strong></td><td>Rutinler, alışkanlıklar, genel geçer doğrular</td><td>Şu an olan, geçici eylemler</td></tr>
+            <tr><td><strong>Formül</strong></td><td>V1 veya V-s / don't, doesn't</td><td>am / is / are + V-ing</td></tr>
+            <tr><td><strong>Zaman Zarfları</strong></td><td>always, usually, every day, often, on Mondays</td><td>now, at the moment, right now, currently, look!, listen!</td></tr>
+            <tr><td><strong>Örnek Cümle</strong></td><td>I <u>drink</u> coffee every morning.</td><td>I <u>am drinking</u> coffee right now.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>8.3. Stative Verbs (Durum Fiilleri: -ing ALMAYAN Fiiller)</h3>
+        <p>Aşağıdaki fiiller konuşma anında bile olsa genellikle <strong>Present Simple</strong> ile kullanılır, <strong>-ing ALMAZLAR</strong>:</p>
+        <ul>
+          <li><strong>Zihinsel Fiiller:</strong> know (bilmek), understand (anlamak), believe (inanmak), remember (hatırlamak), forget (unutmak).</li>
+          <li><strong>Duygu / İstek Fiilleri:</strong> want (istemek), need (ihtiyaç duymak), like (sevmek), love (çok sevmek), hate (nefret etmek), prefer (tercih etmek).</li>
+          <li><strong>Sahiplik Fiilleri:</strong> have / have got (sahip olmak), own (sahip olmak), belong to (ait olmak).</li>
+          <li><strong>Duyu Fiilleri:</strong> see (görmek), hear (duymak), smell (kokmak), taste (tat vermek).</li>
+        </ul>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'I am wanting' veya 'I am knowing' ASLA DENMEZ!</span>
+          <p>Cümlede 'now' veya 'at the moment' olsa bile durum fiili varsa Present Continuous KULLANILAMAZ!<br>
+          <em>"I am wanting a glass of water now."</em> (BÜYÜK YANLIŞ!) -> <strong>"I want a glass of water now."</strong> (DOĞRU!)<br>
+          <em>"He is understanding the question."</em> (YANLIŞ!) -> <strong>"He understands the question."</strong> (DOĞRU!).</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>Susan ________ eats meat because she s a vegetaran. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 8 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> always</li><li><b>B)</b> usually</li><li><b>C)</b> often</li><li><b>D)</b> sometmes</li><li class="ok"><b>E)</b> never</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 8. ünite konusudur. Doğru seçenek E'dir (never).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>A: What do you usually do on the weekend? B: I usually stay at home and watch TV, I _______ go out on the weekend. Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 8 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> rarely</li><li><b>B)</b> always</li><li><b>C)</b> often</li><li><b>D)</b> usually sometmes</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 8. ünite konusudur. Doğru seçenek A'dir (rarely).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>A: Does your son lke mlk? about:blank 99/174 --- PAGE 100 --- B: Yes, he loves t. He ______ drnks a glass of mlk before he goes to school. Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 8 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> always</li><li><b>B)</b> sometmes</li><li><b>C)</b> never</li><li><b>D)</b> rarely hardly ever</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 8. ünite konusudur. Doğru seçenek A'dir (always).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>A: How does Mark usually go to school? B: ___________________________ Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 8 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> He always reads about Turksh hstory.</li><li><b>B)</b> He usually leaves home at 8:30 n the mornng.</li><li><b>C)</b> Hs classes never start at 3pm.</li><li><b>D)</b> He often arrves at school at 9:00.</li><li class="ok"><b>E)</b> He usually walks to school because he doesn’t lve far.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 8. ünite konusudur. Doğru seçenek E'dir (He usually walks to school because he doesn’t lve far.).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>A: Do you eat cheese at breakfast? B: No, I ________ eat cheese because I hate t. Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 8 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> never</li><li><b>B)</b> always</li><li><b>C)</b> sometmes</li><li><b>D)</b> often usually</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 8. ünite konusudur. Doğru seçenek A'dir (never).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>Look! The children ______ in the garden right now.
+Boşluğa hangi fiil biçimi gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024-2025 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> plays</li><li class="ok"><b>B)</b> are playing</li><li><b>C)</b> play</li><li><b>D)</b> is playing</li><li><b>E)</b> played</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Look!' uyarısı ve 'right now' zaman zarfı şu anda devam eden eylemi gösterir. 'The children' çoğul olduğundan 'are playing' kullanılır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>I am so thirsty. I ______ a glass of cold water now.
+Boşluğa hangisi getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Final / 2026 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> am wanting</li><li class="ok"><b>B)</b> want</li><li><b>C)</b> wanting</li><li><b>D)</b> wants</li><li><b>E)</b> am wanted</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Want' (istemek) bir durum fiilidir (stative verb). Cümlede 'now' olsa bile durum fiilleri -ing takısı almaz ve Present Simple kullanılır: 'I want'.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(6)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(8)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="8">
+      <div class="uhead">
+        <span class="num">9. ÜNİTE</span>
+        <h2>In The Kitchen: Countable & Uncountable Nouns, Some & Any</h2>
+        <p>Mutfak, yiyecek ve içecek söz varlığı, sayılabilen ve sayılamayan isimler (Countable & Uncountable Nouns), tekil/çoğul kuralları, belgisiz tanımlıklar (A / An), 'Some' ve 'Any' kullanım kuralları ve istisnaları.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede isimlerin sayılabilir (Countable) ve sayılamaz (Uncountable) ayrımını; 'a/an', 'some' ve 'any' miktar belirteçlerinin cümle türlerine (olumlu, olumsuz, soru) göre kurallarını ve rica/teklif sorularındaki özel durumları öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Countable Nouns (Sayılabilen İsimler)</dt>
+            <dd>Teker teker sayılabilen, tekil ve çoğul halleri bulunan, önlerine 'a/an' veya sayı alabilen isimlerdir (an apple, two apples, a car, three cars).</dd>
+            <dt>Uncountable Nouns (Sayılamayan İsimler)</dt>
+            <dd>Tane olarak sayılamayan; sıvılar, tozlar, gazlar, soyut kavramlar ve kütle halindeki maddelerdir. Çoğul '-s' takısı almazlar ve daima tekil muamele görürler (water, milk, sugar, bread, money, information).</dd>
+            <dt>Some (Biraz / Birkaç)</dt>
+            <dd>Olumlu cümlelerde sayılamayan isimlerle ('biraz') ve sayılabilen çoğul isimlerle ('birkaç') kullanılan miktar sözcüğüdür.</dd>
+            <dt>Any (Hiç)</dt>
+            <dd>Olumsuz cümlelerde ve standart sorularda kullanılan miktar sözcüğüdür.</dd>
+          </dl>
+        </div>
+
+        <h3>9.1. Sayılabilen ve Sayılamayan İsimler Karşılaştırması</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Kategori</th>
+              <th>Countable (Sayılabilen)</th>
+              <th>Uncountable (Sayılamayan)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Tanım</strong></td><td>Tane tane sayılabilir</td><td>Kütle, sıvı, soyut, sayılamaz</td></tr>
+            <tr><td><strong>Tekil Kullanım</strong></td><td>a book, an apple</td><td>water, tea, sugar (a/an ALMAZ)</td></tr>
+            <tr><td><strong>Çoğul Kullanım</strong></td><td>books, apples (-s alır)</td><td>waters, milks OLMAZ (-s ALMAZ)</td></tr>
+            <tr><td><strong>Fiil Uyumu</strong></td><td>The book <u>is</u> / The books <u>are</u></td><td>Daima TEKİL: Water <u>is</u> essential.</td></tr>
+            <tr><td><strong>Sık Karıştırılanlar</strong></td><td>coins, dollar, job, suggestion</td><td><strong>money</strong> (para), <strong>bread</strong> (ekmek), <strong>furniture</strong>, <strong>information</strong>, <strong>work</strong></td></tr>
+          </tbody>
+        </table>
+
+        <h3>9.2. Some ve Any Kullanım Kuralları</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Cümle Türü</th>
+              <th>Kullanılan Belirteç</th>
+              <th>Örnek Cümle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Olumlu Cümle (+)</strong></td>
+              <td><strong>SOME</strong></td>
+              <td>There is <u>some milk</u> in the fridge.<br>There are <u>some apples</u> on the table.</td>
+            </tr>
+            <tr>
+              <td><strong>Olumsuz Cümle (-)</strong></td>
+              <td><strong>ANY</strong></td>
+              <td>There isn't <u>any milk</u> left.<br>There aren't <u>any apples</u> in the basket.</td>
+            </tr>
+            <tr>
+              <td><strong>Standart Soru (?)</strong></td>
+              <td><strong>ANY</strong></td>
+              <td>Is there <u>any water</u> in the bottle?<br>Are there <u>any questions</u>?</td>
+            </tr>
+            <tr>
+              <td><strong>Teklif / Rica Sorusu (?)</strong></td>
+              <td><strong>SOME</strong> (İstisna!)</td>
+              <td>Would you like <u>some coffee</u>? (Teklif)<br>Can I have <u>some water</u>? (Rica)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: Soru Cümlesinde 'SOME' İstisnası!</span>
+          <p>Normal sorularda 'any' kullanılır ancak sınavda soru bir <strong>teklif (offer)</strong> veya <strong>rica (request)</strong> ise (genellikle <em>"Would you like...?"</em> veya <em>"Can I have...?"</em> ile başlar) <strong>kesinlikle SOME</strong> kullanılır!<br>
+          <em>"Would you like any tea?"</em> (YANLIŞ!) -> <strong>"Would you like some tea?"</strong> (DOĞRU!).<br>
+          Ayrıca <strong>'money'</strong> ve <strong>'bread'</strong> İngilizcede sayılamaz (uncountable) kabul edilir!</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>There s ________ n the frdge. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 9 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> a lttle cheese</li><li><b>B)</b> fve slces of bread</li><li><b>C)</b> fve klos of rce</li><li><b>D)</b> three onons a few sweets</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 9. ünite konusudur. Doğru seçenek A'dir (a lttle cheese).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>A: How many ________ do you eat every day? B: Only one. Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 9 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> lemonade 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 107/174 --- PAGE 108 ---</li><li><b>B)</b> sugar</li><li><b>C)</b> soup</li><li><b>D)</b> orange juce</li><li class="ok"><b>E)</b> apples</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 9. ünite konusudur. Doğru seçenek E'dir (apples).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>I don’t drnk ________ cola. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 9 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> how much</li><li><b>B)</b> how many</li><li><b>C)</b> many</li><li><b>D)</b> much a few</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 9. ünite konusudur. Doğru seçenek A'dir (much).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>Can I have ________ sugar for my tea, please? Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 9 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> much</li><li><b>B)</b> many</li><li><b>C)</b> a klo of</li><li><b>D)</b> a few</li><li class="ok"><b>E)</b> a lttle</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 9. ünite konusudur. Doğru seçenek E'dir (a lttle).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>I don’t have ________ money. I can’t buy ths dress. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 9 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> much</li><li><b>B)</b> many</li><li><b>C)</b> a lttle</li><li><b>D)</b> a few how many</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 9. ünite konusudur. Doğru seçenek A'dir (16.09.2024 14:13 Ders : YABANCI DİL I - eKtap).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>A: Would you like ______ coffee?
+B: Yes, please. But there isn't ______ sugar left in the bowl.
+Boşluklara sırasıyla hangileri gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Vize / 2024 Final</span>
+            <ul class="o">
+              <li><b>A)</b> any / some</li><li class="ok"><b>B)</b> some / any</li><li><b>C)</b> some / some</li><li><b>D)</b> any / any</li><li><b>E)</b> a / an</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Would you like...?' bir teklif (ikram) sorusu olduğundan istisnai olarak 'some' alır. İkinci cümle ise olumsuz ('isn't') olduğundan 'any' alır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>Aşağıdakilerden hangisi İngilizcede sayılamaz (uncountable) bir isimdir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> apple</li><li><b>B)</b> book</li><li class="ok"><b>C)</b> money</li><li><b>D)</b> car</li><li><b>E)</b> student</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>İngilizcede para kavramı (money) sayılamaz (uncountable) kabul edilir. Coins veya dollars sayılabilirken, genel 'money' sayılamazdır.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(7)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(9)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="9">
+      <div class="uhead">
+        <span class="num">10. ÜNİTE</span>
+        <h2>At The Restaurant: Quantifiers (Much, Many, A lot of, A few, A little)</h2>
+        <p>Miktar belirteçleri (Quantifiers: much, many, a lot of, a few, a little), 'How much' ve 'How many' soru kalıpları, restoranda sipariş verme diyalogları (Would like, Can I take your order?, I'd like to have...) ve hesap isteme.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede miktar belirten çokluk ve azlık zarflarını (much, many, a lot of, a few, a little); fiyat ve miktar sorma kalıplarını ('How much' ve 'How many'); restoranda garsonla iletişim kurma, sipariş verme ve hesap isteme kalıplarını öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>How Many...?</dt>
+            <dd>Sayılabilen çoğul isimlerin adedini sormak için kullanılan soru kalıbıdır ('Kaç tane?'). Kendisinden sonra daima çoğul isim gelir (How many cars / people / pens?).</dd>
+            <dt>How Much...?</dt>
+            <dd>Sayılamayan isimlerin miktarını ('Ne kadar?') ya da bir nesnenin fiyatını ('Kaç para?') sormak için kullanılan soru kalıbıdır (How much water? / How much does it cost?).</dd>
+            <dt>Quantifiers (Miktar Belirteçleri)</dt>
+            <dd>İsimlerin miktarını veya derecesini gösteren niteleyicilerdir: many, much, a lot of, a few, a little, few, little.</dd>
+          </dl>
+        </div>
+
+        <h3>10.1. Miktar Belirteçleri (Quantifiers) Matrisi</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Miktar Anlamı</th>
+              <th>Sayılabilen Çoğul İsimlerle (Countable Plural)</th>
+              <th>Sayılamayan İsimlerle (Uncountable)</th>
+              <th>Her İkisiyle de Kullanılabilen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Çok / Fazla</strong></td>
+              <td><strong>MANY</strong><br>(Genellikle olumsuz ve sorularda)</td>
+              <td><strong>MUCH</strong><br>(Genellikle olumsuz ve sorularda)</td>
+              <td><strong>A LOT OF / LOTS OF</strong><br>(Genellikle olumlu cümlelerde)</td>
+            </tr>
+            <tr>
+              <td><strong>Az ama yeterli</strong></td>
+              <td><strong>A FEW</strong> (birkaç tane)</td>
+              <td><strong>A LITTLE</strong> (biraz)</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><strong>Neredeyse hiç / yetersiz</strong></td>
+              <td><strong>FEW</strong> (yok denecek kadar az)</td>
+              <td><strong>LITTLE</strong> (yok denecek kadar az)</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>10.2. 'A Few' vs 'A Little' ve 'Few' vs 'Little' Ayrımı</h3>
+        <ul>
+          <li><strong>A few + Countable Noun:</strong> Olumlu anlamda az ama yeterli miktardır: <em>"I have a few friends."</em> (Birkaç arkadaşım var, memnunum).</li>
+          <li><strong>Few + Countable Noun:</strong> Olumsuz anlamda neredeyse hiç yoktur: <em>"I have few friends. I feel lonely."</em> (Neredeyse hiç arkadaşım yok, yalnızım).</li>
+          <li><strong>A little + Uncountable Noun:</strong> Olumlu anlamda biraz vardır: <em>"I have a little money, I can buy lunch."</em> (Biraz param var, öğle yemeği alabilirim).</li>
+          <li><strong>Little + Uncountable Noun:</strong> Olumsuz anlamda yok denecek kadar azdır: <em>"We have little time, hurry up!"</em> (Neredeyse hiç vaktimiz yok, acele et!).</li>
+        </ul>
+
+        <h3>10.3. Restoranda Sipariş Verme Kalıpları</h3>
+        <ul>
+          <li><strong>Garson:</strong> <em>"May I take your order?"</em> (Siparişinizi alabilir miyim?) / <em>"Are you ready to order?"</em></li>
+          <li><strong>Müşteri:</strong> <em>"I would like (I'd like) a pizza, please."</em> (Bir pizza rica edeyim.)</li>
+          <li><strong>Müşteri:</strong> <em>"Can I have the bill, please?"</em> (Hesabı alabilir miyim lütfen?)</li>
+        </ul>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: Fiyat Sorarken 'How Much'!</span>
+          <p>Bir ürünün fiyatı sorulurken sayılabilen bir eşya olsa bile <strong>How much</strong> kalıbı kullanılır:<br>
+          <em>"How much is this shirt?"</em> (Bu gömlek ne kadar?)<br>
+          <em>"How much are these shoes?"</em> (Bu ayakkabılar kaç para?)<br>
+          Ancak adet soruluyorsa mutlaka <strong>How many</strong> kullanılır: <em>"How many shirts do you have?"</em></p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>about:blank 117/174 --- PAGE 118 --- Water: Would you lke a drnk frst? Customer: _______________________ Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 10 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Yes. Can I have a glass of orange juce please?</li><li><b>B)</b> Sure, t s Marry.</li><li><b>C)</b> No problem.</li><li><b>D)</b> I don’t lke my salad. Yes, two slces of pzza please.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 10. ünite konusudur. Doğru seçenek A'dir (Yes. Can I have a glass of orange juce please?).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>Water: Would you lke to eat some ______? Customer: No, thanks. Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 10 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> ayran</li><li><b>B)</b> water</li><li><b>C)</b> soda</li><li><b>D)</b> sprte</li><li class="ok"><b>E)</b> lasagna</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 10. ünite konusudur. Doğru seçenek E'dir (lasagna).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>Customer: ___________________ Water: Sure. Here you are. It s $14. Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 10 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> What would you recommend?</li><li><b>B)</b> Have a good day!</li><li class="ok"><b>C)</b> Can I have the check please?</li><li><b>D)</b> Can I get you anythng? How much s a glass of lemonade?</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 10. ünite konusudur. Doğru seçenek C'dir (Can I have the check please?).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>Water: How s the meal? Do you lke t? Customer: ______________________ about:blank 118/174 --- PAGE 119 --- Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 10 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> Another cola, please.</li><li class="ok"><b>B)</b> It s perfect!</li><li><b>C)</b> No, I’m okay.</li><li><b>D)</b> How much s ths? More water, thanks.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 10. ünite konusudur. Doğru seçenek B'dir (It s perfect!).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>Customer: Could I have a menu, please? Water: ______________________ Karşılıklı konuşmayı tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 10 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> Thank you.</li><li><b>B)</b> Can I get you anythng else?</li><li><b>C)</b> It s €5.</li><li><b>D)</b> Enjoy your meal.</li><li class="ok"><b>E)</b> Here you are.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 10. ünite konusudur. Doğru seçenek E'dir (Here you are.).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>A: ______ apples do we have?
+B: Only two. And ______ milk is left?
+A: Just a little.
+Boşluklara sırasıyla hangi soru kalıpları gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024-2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> How much / How many</li><li class="ok"><b>B)</b> How many / How much</li><li><b>C)</b> How many / How many</li><li><b>D)</b> How much / How much</li><li><b>E)</b> How / What</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>Apples sayılabilen çoğul isim olduğundan 'How many'; milk sayılamayan sıvı isim olduğundan 'How much' kullanılır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>I have ______ friends in this city, so I never feel lonely.
+Cümleye en uygun belirteç hangisidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2026 Bütünleme</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> a few</li><li><b>B)</b> few</li><li><b>C)</b> a little</li><li><b>D)</b> much</li><li><b>E)</b> little</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>Friends sayılabilendir ve 'asla yalnız hissetmiyorum' dendiğine göre yeterli sayıda arkadaşı vardır. Olumlu anlamda az ama yeterli çoğul isim belirteci 'a few'dur.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(8)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(10)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="10">
+      <div class="uhead">
+        <span class="num">11. ÜNİTE</span>
+        <h2>Getting There: Directions, Transport, Prepositions of Place & Imperatives</h2>
+        <p>Yol tarifi isteme ve verme (Asking for & Giving Directions), ulaşım araçları (Modes of Transport), yer edatları (Prepositions of Place: opposite, next to, between, in front of, behind, across) ve emir kipi (Imperatives) cümle yapıları.</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede bir yere nasıl gidileceğini sormayı ve yol tarifi vermeyi; şehir içi mekanların birbirine göre konumlarını belirten yer edatlarını (Prepositions of Place); ulaşım araçlarını ve emir/talimat bildiren emir kiplerini (Imperatives) eksiksiz uygulayabileceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Imperatives (Emir Cümleleri)</dt>
+            <dd>Özne kullanılmaksızın doğrudan fiilin yalın haliyle (V1) başlayan ve emir, rica, uyarı ya da talimat bildiren cümlelerdir (Örn: Stop!, Turn left!). Olumsuzu 'Don't + V1' ile yapılır (Örn: Don't smoke!).</dd>
+            <dt>Prepositions of Place (Yer Edatları)</dt>
+            <dd>Bir nesnenin ya da yerin nerede bulunduğunu gösteren edatlardır (next to, between, opposite, in front of, behind).</dd>
+            <dt>Asking Directions (Yol Sorma Kalıpları)</dt>
+            <dd>'How can I get to the bank?' veya 'Excuse me, where is the nearest hospital?' gibi yön öğrenme ifadeleridir.</dd>
+          </dl>
+        </div>
+
+        <h3>11.1. Giving Directions (Yol Tarifi Verme İfadeleri)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>İfade</th>
+              <th>Türkçe Anlamı</th>
+              <th>Örnek Kullanım</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Go straight ahead / Go straight on</strong></td><td>Düz gidin</td><td>Go straight ahead until the traffic lights.</td></tr>
+            <tr><td><strong>Turn left / Turn right</strong></td><td>Sola dönün / Sağa dönün</td><td>Turn right into Oxford Street.</td></tr>
+            <tr><td><strong>Take the first / second turning</strong></td><td>Birinci / İkinci sokaktan dönün</td><td>Take the first turning on your left.</td></tr>
+            <tr><td><strong>Cross the street / road</strong></td><td>Karşıdan karşıya geçin</td><td>Cross the street at the zebra crossing.</td></tr>
+            <tr><td><strong>Go past the ...</strong></td><td>...ın önünden geçip ilerleyin</td><td>Go past the cinema, the bank is on your right.</td></tr>
+            <tr><td><strong>It's on your left / right</strong></td><td>Solunuzda / Sağınızda kalır</td><td>The supermarket is on your left.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>11.2. Prepositions of Place (Yer Edatları)</h3>
+        <ul>
+          <li><strong>Next to:</strong> Yanında, bitişiğinde (<em>The pharmacy is next to the bank.</em>)</li>
+          <li><strong>Between ... and ...:</strong> İki şeyin arasında (<em>The post office is between the school and the library.</em>)</li>
+          <li><strong>Opposite:</strong> Karşısında (Yüz yüze bakan karşı konum: <em>The museum is opposite the park.</em>)</li>
+          <li><strong>In front of:</strong> Önünde (<em>There is a bus stop in front of the hospital.</em>)</li>
+          <li><strong>Behind:</strong> Arkasında (<em>The parking lot is behind the building.</em>)</li>
+          <li><strong>On the corner of:</strong> Köşesinde (<em>The hotel is on the corner of the street.</em>)</li>
+        </ul>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'Between' için İKİ Unsur Şarttır!</span>
+          <p>Cümlede <strong>between</strong> edatı kullanılabilmesi için mutlaka iki yer veya <strong>and</strong> bağlacı bulunmalıdır:<br>
+          <em>"The bank is between the cinema <strong>and</strong> the cafe."</em><br>
+          Eğer tek bir yer varsa ve tam karşısı kastediliyorsa <strong>opposite</strong>; bitişiğindeyse <strong>next to</strong> seçilmelidir!</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>¨qq The traffc lght s red now. ____________________ Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 11 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> Get across the road.</li><li><b>B)</b> Cross the street.</li><li class="ok"><b>C)</b> Wat for the green lght.</li><li><b>D)</b> Turn rght nto Ron Street. Turn left and t s on your rght.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 11. ünite konusudur. Doğru seçenek C'dir (Wat for the green lght.).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>You are n the Spansh class. ____________________ Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 11 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Don’t speak German.</li><li><b>B)</b> Speak German.</li><li><b>C)</b> Be quet, please.</li><li><b>D)</b> Open the door. Don’t lsten to your frend.</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 11. ünite konusudur. Doğru seçenek A'dir (Don’t speak German.).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>Go straght on and _____________ at the traffc lghts. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 11 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> don’t go</li><li class="ok"><b>B)</b> turn left</li><li><b>C)</b> st down</li><li><b>D)</b> stop talkng don’t look</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 11. ünite konusudur. Doğru seçenek B'dir (turn left).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>_______________, don’t take the left turn. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 11 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> Don’t move</li><li><b>B)</b> Turn left</li><li><b>C)</b> Take the left turn</li><li><b>D)</b> Don’t turn left</li><li class="ok"><b>E)</b> Take the rght turn</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 11. ünite konusudur. Doğru seçenek E'dir (Take the rght turn).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>_______________ when you arrve at the arport, please. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr? about:blank 127/174 --- PAGE 128 ---</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 11 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Phone me</li><li><b>B)</b> Sng a song</li><li><b>C)</b> Don’t fly</li><li><b>D)</b> Drve the car on the left Wear your dress</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 11. ünite konusudur. Doğru seçenek A'dir (Phone me).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>The pharmacy is ______ the bank and the bookstore.
+Boşluğa hangi yer edatı gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Final</span>
+            <ul class="o">
+              <li><b>A)</b> opposite</li><li class="ok"><b>B)</b> between</li><li><b>C)</b> next to</li><li><b>D)</b> behind</li><li><b>E)</b> in front of</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>İki yer adı 'and' ile bağlandığında (bank ve bookstore) aralarında anlamını veren 'between ... and ...' edatı kullanılır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>The traffic light is red now. ______ the street!
+Cümleyi tamamlayan en uygun emir kipi hangisidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> Cross</li><li class="ok"><b>B)</b> Don't cross</li><li><b>C)</b> Crosses</li><li><b>D)</b> Crossing</li><li><b>E)</b> To cross</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>Işık kırmızı olduğuna göre karşıya geçmeyiniz uyarısı yapılmalıdır. Olumsuz emir kipi 'Don't + V1' (Don't cross) ile kurulur.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(9)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(11)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="11">
+      <div class="uhead">
+        <span class="num">12. ÜNİTE</span>
+        <h2>On Location: Places in Town & Past Simple 'Was / Were'</h2>
+        <p>Şehirdeki mekanlar ve kamu binaları (Places in Town), geçmiş zaman 'To Be' fiili (Was / Were: olumlu, olumsuz, soru çekimleri), 'There was / There were' varlık bildirme yapıları ve geçmiş zaman zaman zarfları (yesterday, last, ago).</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede durum ve varlıkların geçmişteki halini anlatan 'Was / Were' yardımcı fiilini, tekil ve çoğul öznelerle hatasız çekimlemeyi; 'There was / There were' yapısıyla geçmişte var olan şeyleri ifade edebilmeyi ve şehir mekanlarını öğreneceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Past Simple 'To Be' (Was / Were)</dt>
+            <dd>'Am / is / are' fiillerinin geçmiş zaman biçimidir. 'Am' ve 'is' geçmişte <strong>was</strong> olurken, 'are' geçmişte <strong>were</strong> haline dönüşür.</dd>
+            <dt>There was / There were</dt>
+            <dd>Geçmişte bir şeyin var olduğunu bildirir. Tekil veya sayılamayan isimlerle <strong>there was</strong>; sayılabilen çoğul isimlerle <strong>there were</strong> kullanılır.</dd>
+          </dl>
+        </div>
+
+        <h3>12.1. Was ve Were Çekim Tablosu</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Özne</th>
+              <th>Şimdiki Zaman (Present)</th>
+              <th>Geçmiş Zaman (Past)</th>
+              <th>Olumsuz (Negative)</th>
+              <th>Soru (Question)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>I</strong></td><td>am</td><td><strong>was</strong></td><td>wasn't (was not)</td><td>Was I?</td></tr>
+            <tr><td><strong>He, She, It</strong></td><td>is</td><td><strong>was</strong></td><td>wasn't</td><td>Was he / she / it?</td></tr>
+            <tr><td><strong>You</strong></td><td>are</td><td><strong>were</strong></td><td>weren't (were not)</td><td>Were you?</td></tr>
+            <tr><td><strong>We</strong></td><td>are</td><td><strong>were</strong></td><td>weren't</td><td>Were we?</td></tr>
+            <tr><td><strong>They</strong></td><td>are</td><td><strong>were</strong></td><td>weren't</td><td>Were they?</td></tr>
+          </tbody>
+        </table>
+
+        <h3>12.2. There was / There were Kullanımı</h3>
+        <ul>
+          <li><strong>There was + Tekil / Sayılamayan İsim:</strong> <em>There was an accident on the bridge yesterday. / There was some water in the glass.</em></li>
+          <li><strong>There were + Çoğul İsim:</strong> <em>There were many people at the concert last night.</em></li>
+          <li><strong>Olumsuz:</strong> <em>There wasn't any bread. / There weren't any empty seats.</em></li>
+          <li><strong>Soru:</strong> <em>Was there a problem? / Were there many cars?</em></li>
+        </ul>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'You' Her Zaman 'WERE' Alır!</span>
+          <p>'You' zamiri tek bir kişiye ('sen') hitap etse bile gramer olarak her zaman çoğul kabul edilir ve kesinlikle <strong>WERE</strong> alır:<br>
+          <em>"Where was you yesterday?"</em> (BÜYÜK YANLIŞ!) -> <strong>"Where were you yesterday?"</strong> (DOĞRU!).<br>
+          Ancak 'I' zamiri geçmişte <strong>WAS</strong> alır: <em>"I was at home."</em></p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>Be quck please. I’m watng for you ______ the bus stop. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 12 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> at</li><li><b>B)</b> n</li><li><b>C)</b> on to</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 12. ünite konusudur. Doğru seçenek A'dir (at).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>There s a lttle money ______ my pocket. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 12 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> the</li><li><b>B)</b> at</li><li class="ok"><b>C)</b> on</li><li><b>D)</b> n to</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 12. ünite konusudur. Doğru seçenek C'dir (n).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>I’m watchng a very good flm ______ TV at the moment. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 12 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> at</li><li class="ok"><b>B)</b> on</li><li><b>C)</b> n the</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 12. ünite konusudur. Doğru seçenek B'dir (on).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>I’m gong to the ______ to have breakfast. Come wth me, please. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 12 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> pharmacy</li><li><b>B)</b> lbrary</li><li><b>C)</b> hosptal</li><li class="ok"><b>D)</b> café cnema</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 12. ünite konusudur. Doğru seçenek D'dir (café).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>Go to the ______ and buy a klo of bananas and two klos of potatoes. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 12 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> gas staton 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 137/174 --- PAGE 138 ---</li><li><b>B)</b> mosque</li><li><b>C)</b> church</li><li><b>D)</b> museum</li><li class="ok"><b>E)</b> grocery store</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 12. ünite konusudur. Doğru seçenek E'dir (grocery store).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>Where ______ you yesterday at 3 o'clock?
+Boşluğa hangisi gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024 Final / 2025 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> was</li><li class="ok"><b>B)</b> were</li><li><b>C)</b> are</li><li><b>D)</b> did</li><li><b>E)</b> been</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'You' zamiri geçmiş zamanda To Be fiilinin 'were' çekimini alır. Doğru soru: 'Where were you...?'</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>There ______ many people at the concert last night, but there ______ any food.
+Boşluklara sırasıyla hangileri gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025-2026 Güz Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> was / weren't</li><li class="ok"><b>B)</b> were / wasn't</li><li><b>C)</b> were / weren't</li><li><b>D)</b> was / wasn't</li><li><b>E)</b> are / isn't</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Many people' çoğuldur -> 'were'; 'food' sayılamaz tekildir ve olumsuzdur ('any food') -> 'wasn't'.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(10)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(12)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="12">
+      <div class="uhead">
+        <span class="num">13. ÜNİTE</span>
+        <h2>At Work: Past Simple Tense (Geçmiş Zaman) & Regular / Irregular Verbs</h2>
+        <p>Geçmiş Zaman (Past Simple Tense) kuralları, düzenli fiiller (Regular Verbs: -ed ekleme kuralları), düzensiz fiiller (Irregular Verbs listesi ve V2 halleri), olumsuz ve soru cümlelerinde 'Did / Didn't + V1' kuralı ve geçmiş zaman belirteçleri (yesterday, last week, 3 days ago, in 2020).</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; İngilizcede tamamlanmış geçmiş eylemleri anlatan Past Simple Tense'i, düzenli fiillerin '-ed' çekim kurallarını, en sık kullanılan düzensiz fiillerin 2. hallerini (V2), olumsuz ve sorularda 'didn't / did' ile fiilin yalın hale dönmesini eksiksiz kavrayacaksınız.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Past Simple Tense (Basit Geçmiş Zaman)</dt>
+            <dd>Geçmişte belirli bir zamanda başlamış ve tamamen sona ermiş olayları anlatmak için kullanılan zamandır.</dd>
+            <dt>Regular Verbs (Düzenli Fiiller)</dt>
+            <dd>Geçmiş zaman (V2) haline geçerken sonuna '-ed', '-d' veya '-ied' takısı alan fiillerdir (play -> played, watch -> watched, study -> studied).</dd>
+            <dt>Irregular Verbs (Düzensiz Fiiller)</dt>
+            <dd>Geçmiş zamanda kurala uymaksızın gövdesel ses değişikliğine uğrayan fiillerdir (go -> went, see -> saw, buy -> bought).</dd>
+            <dt>Auxiliary Verb 'Did / Didn't'</dt>
+            <dd>Geçmiş zamanda bütün özneler için ortak olan olumsuzluk ve soru yardımcı fiilidir. Cümleye 'did' girdiğinde ana fiil V1 (yalın) haline döner.</dd>
+          </dl>
+        </div>
+
+        <h3>13.1. Düzenli Fiillerde '-ed' Takısı Kuralları</h3>
+        <ol>
+          <li><strong>Genel Kural:</strong> Fiilin sonuna <strong>-ed</strong> gelir: <em>work -> worked, watch -> watched, clean -> cleaned</em>.</li>
+          <li><strong>'e' ile Bitenler:</strong> Sadece <strong>-d</strong> eklenir: <em>live -> lived, dance -> danced, like -> liked</em>.</li>
+          <li><strong>Ünsüz + y ile Bitenler:</strong> 'y' düşer, <strong>-ied</strong> gelir: <em>study -> studied, cry -> cried, marry -> married</em>.</li>
+          <li><strong>Tek Sesli + Tek Sessiz ile Biten Kısa Fiiller:</strong> Son ünsüz çiftleşir: <em>stop -> stopped, plan -> planned</em>.</li>
+        </ol>
+
+        <h3>13.2. En Çok Çıkan Düzensiz Fiiller (Irregular Verbs) Listesi</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>V1 (Yalın Hali)</th>
+              <th>V2 (Geçmiş Zaman)</th>
+              <th>Türkçe Anlamı</th>
+              <th>Örnek Cümle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>go</td><td><strong>went</strong></td><td>gitmek</td><td>He <u>went</u> to London last summer.</td></tr>
+            <tr><td>see</td><td><strong>saw</strong></td><td>görmek</td><td>I <u>saw</u> a movie yesterday.</td></tr>
+            <tr><td>have</td><td><strong>had</strong></td><td>sahip olmak / yapmak</td><td>We <u>had</u> breakfast at 8:00.</td></tr>
+            <tr><td>do</td><td><strong>did</strong></td><td>yapmak</td><td>She <u>did</u> her homework.</td></tr>
+            <tr><td>come</td><td><strong>came</strong></td><td>gelmek</td><td>They <u>came</u> home late last night.</td></tr>
+            <tr><td>buy</td><td><strong>bought</strong></td><td>satın almak</td><td>My father <u>bought</u> a new car.</td></tr>
+            <tr><td>take</td><td><strong>took</strong></td><td>almak / götürmek</td><td>He <u>took</u> an aspirin.</td></tr>
+            <tr><td>write</td><td><strong>wrote</strong></td><td>yazmak</td><td>She <u>wrote</u> an email.</td></tr>
+            <tr><td>make</td><td><strong>made</strong></td><td>yapmak</td><td>She <u>made</u> a delicious cake.</td></tr>
+            <tr><td>eat</td><td><strong>ate</strong></td><td>yemek</td><td>We <u>ate</u> fish for dinner.</td></tr>
+            <tr><td>drink</td><td><strong>drank</strong></td><td>içmek</td><td>He <u>drank</u> a cup of tea.</td></tr>
+            <tr><td>give</td><td><strong>gave</strong></td><td>vermek</td><td>She <u>gave</u> me her phone number.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>13.3. Olumsuz ve Soru Cümlelerinde 'DID / DIDN'T' Kuralı</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Cümle Türü</th>
+              <th>Formül</th>
+              <th>Örnek Cümle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Olumlu (+)</strong></td><td>Subject + <strong>V2</strong></td><td>She <u>went</u> to work yesterday.</td></tr>
+            <tr><td><strong>Olumsuz (-)</strong></td><td>Subject + <strong>didn't + V1 (Yalın!)</strong></td><td>She <u>didn't go</u> to work yesterday.</td></tr>
+            <tr><td><strong>Soru (?)</strong></td><td><strong>Did</strong> + Subject + <strong>V1 (Yalın!)</strong>?</td><td><u>Did she go</u> to work yesterday?</td></tr>
+            <tr><td><strong>Kısa Cevap</strong></td><td>Yes, she did. / No, she didn't.</td><td>Yes, I did. / No, I didn't.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'Didn't' ve 'Did' Sonrası Fiil V1 (YALIN) Olur!</span>
+          <p>Sınavlarda soru ve olumsuz cümlelerde öğrencilere çeldirici olarak V2 verilir!<br>
+          <em>"I didn't saw him yesterday."</em> (BÜYÜK YANLIŞ!) -> <strong>"I didn't see him yesterday."</strong> (DOĞRU!)<br>
+          <em>"Did you went to the cinema?"</em> (YANLIŞ!) -> <strong>"Did you go to the cinema?"</strong> (DOĞRU!).<br>
+          'Did' veya 'didn't' zaten geçmiş zamanı taşıdığından, ana fiil MUTLAKA yalın haline (V1) döner!</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (7 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>about:blank 149/174 --- PAGE 150 --- I can’t answer ths queston. It s _______. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 13 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> strong</li><li><b>B)</b> full</li><li class="ok"><b>C)</b> dffcult</li><li><b>D)</b> cheap hot</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 13. ünite konusudur. Doğru seçenek C'dir (dffcult).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>Jane s not lazy. In fact, she s qute _______. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 13 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> wde</li><li><b>B)</b> drty</li><li><b>C)</b> modern</li><li><b>D)</b> small</li><li class="ok"><b>E)</b> hard-workng</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 13. ünite konusudur. Doğru seçenek E'dir (hard-workng).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>I can’t buy ths car. It s too _______. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 13 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> expensve</li><li><b>B)</b> brave</li><li><b>C)</b> beautful</li><li><b>D)</b> cold coward</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 13. ünite konusudur. Doğru seçenek A'dir (expensve).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>A fsh ______ swm but t _______ fly. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 13 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> can / can 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 150/174 --- PAGE 151 ---</li><li><b>B)</b> can’t / can’t</li><li><b>C)</b> can’t / can</li><li class="ok"><b>D)</b> can / can’t can’t</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: D</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 13. ünite konusudur. Doğru seçenek D'dir (can / can’t).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>A: _______ you swm n cold water? B: No, I _______. I _______ only swm n warm water. Karşılıklı konuşmayı tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 13 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Can / can’t / can’t</li><li><b>B)</b> Can / can’t / can</li><li><b>C)</b> Can / can / can’t</li><li><b>D)</b> Can / can / can Can’t / can’t / can’t</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 13. ünite konusudur. Doğru seçenek A'dir (Can / can’t / can).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>I ______ to the cinema last night, but I ______ like the movie.
+Boşluklara sırasıyla hangileri gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2023-2024 Final / 2024 Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> go / didn't</li><li class="ok"><b>B)</b> went / didn't</li><li><b>C)</b> went / don't</li><li><b>D)</b> did go / wasn't</li><li><b>E)</b> gone / didn't</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Go' fiilinin geçmiş zaman V2 hali 'went'tir. Geçmişte olumsuzluk eki 'didn't'tır ve arkasından yalın fiil 'like' gelir (went / didn't).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>______ she ______ her homework yesterday?
+Sorudaki boşluklara sırasıyla hangileri gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Final</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> Did / do</li><li><b>B)</b> Did / did</li><li><b>C)</b> Does / do</li><li><b>D)</b> Did / does</li><li><b>E)</b> Was / do</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>Past Simple Tense soru cümlesinde yardımcı fiil 'Did' başa gelir ve ana fiil yalın (V1) hale döner: 'Did she do...?'</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(11)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(13)" >Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+    <section class="unit" data-i="13">
+      <div class="uhead">
+        <span class="num">14. ÜNİTE</span>
+        <h2>Bigger & Better: Comparative & Superlative Adjectives</h2>
+        <p>Sıfatların karşılaştırma dereceleri: Üstünlük derecesi (Comparative Adjectives: -er than / more than), en üstünlük derecesi (Superlative Adjectives: the -est / the most), tek ve çok heceli sıfat kuralları ve düzensiz sıfatlar (good, bad, far, little, much).</p>
+      </div>
+      <div class="ubody">
+        
+        <div class="box info">
+          <span class="cap">Kazanımlar ve Bölüm Özeti</span>
+          <p>Bu ünite tamamlandığında; iki kişi veya nesneyi birbiriyle kıyaslamayı sağlayan Comparative (Daha ...) yapısını; bir grubun en iyisini/en fazlasını belirten Superlative (En ...) yapısını, hece sayısına göre eklenen ekleri ve düzensiz sıfatları eksiksiz uygulayabileceksiniz.</p>
+        </div>
+
+        <div class="box formul">
+          <span class="cap">Akademik Terim ve Kavram Sözlüğü</span>
+          <dl>
+            <dt>Comparative Adjectives (Karşılaştırma Sıfatları)</dt>
+            <dd>İki varlığı, yeri ya da kişiyi belirli bir nitelik bakımından kıyaslayan yapılardır ('daha büyük', 'daha hızlı'). Cümlede mutlaka <strong>than</strong> edatı eşlik eder.</dd>
+            <dt>Superlative Adjectives (En Üstünlük Sıfatları)</dt>
+            <dd>Bir varlığı bulunduğu tüm grubun içinde 'en ...' olarak niteleyen yapılardır ('en büyük', 'en pahalı'). Sıfattan önce daima <strong>the</strong> belirteci gelir.</dd>
+            <dt>Syllable Rule (Hece Kuralı)</dt>
+            <dd>Tek heceli kısa sıfatlar '-er / -est' eki alırken; iki veya daha fazla heceli uzun sıfatların önüne 'more / most' sözcükleri getirilir.</dd>
+          </dl>
+        </div>
+
+        <h3>14.1. Comparative ve Superlative Kurallar Tablosu</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Sıfat Türü</th>
+              <th>Yalın Sıfat (Positive)</th>
+              <th>Comparative (Daha ...)</th>
+              <th>Superlative (En ...)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tek Heceli Kısa Sıfatlar (-er / -est)</strong></td>
+              <td>tall (uzun)<br>fast (hızlı)<br>cheap (ucuz)</td>
+              <td>tall<strong>er than</strong><br>fast<strong>er than</strong><br>cheap<strong>er than</strong></td>
+              <td><strong>the</strong> tall<strong>est</strong><br><strong>the</strong> fast<strong>est</strong><br><strong>the</strong> cheap<strong>est</strong></td>
+            </tr>
+            <tr>
+              <td><strong>'e' ile Bitenler (-r / -st)</strong></td>
+              <td>large (geniş)<br>nice (hoş)</td>
+              <td>large<strong>r than</strong><br>nice<strong>r than</strong></td>
+              <td><strong>the</strong> large<strong>st</strong><br><strong>the</strong> nice<strong>st</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Sesli + Sessiz (Çiftleşen)</strong></td>
+              <td>big (büyük)<br>hot (sıcak)</td>
+              <td>big<strong>ger than</strong><br>hot<strong>ter than</strong></td>
+              <td><strong>the</strong> big<strong>gest</strong><br><strong>the</strong> hot<strong>test</strong></td>
+            </tr>
+            <tr>
+              <td><strong>İki Heceli ve 'y' ile Bitenler (-ier / -iest)</strong></td>
+              <td>happy (mutlu)<br>easy (kolay)<br>heavy (ağır)</td>
+              <td>happ<strong>ier than</strong><br>eas<strong>ier than</strong><br>heav<strong>ier than</strong></td>
+              <td><strong>the</strong> happ<strong>iest</strong><br><strong>the</strong> eas<strong>iest</strong><br><strong>the</strong> heav<strong>iest</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Çok Heceli Uzun Sıfatlar (more / most)</strong></td>
+              <td>expensive (pahalı)<br>beautiful (güzel)<br>important (önemli)</td>
+              <td><strong>more</strong> expensive than<br><strong>more</strong> beautiful than<br><strong>more</strong> important than</td>
+              <td><strong>the most</strong> expensive<br><strong>the most</strong> beautiful<br><strong>the most</strong> important</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>14.2. Düzensiz Sıfatlar (Irregular Adjectives) - Sınavın Vazgeçilmezi!</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Yalın Hal (Base)</th>
+              <th>Comparative (Daha ...)</th>
+              <th>Superlative (En ...)</th>
+              <th>Türkçe Anlamı</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>good</strong></td><td><strong>better than</strong></td><td><strong>the best</strong></td><td>iyi -> daha iyi -> en iyi</td></tr>
+            <tr><td><strong>bad</strong></td><td><strong>worse than</strong></td><td><strong>the worst</strong></td><td>kötü -> daha kötü -> en kötü</td></tr>
+            <tr><td><strong>far</strong></td><td><strong>farther / further than</strong></td><td><strong>the farthest / furthest</strong></td><td>uzak -> daha uzak -> en uzak</td></tr>
+            <tr><td><strong>little</strong></td><td><strong>less than</strong></td><td><strong>the least</strong></td><td>az -> daha az -> en az</td></tr>
+            <tr><td><strong>many / much</strong></td><td><strong>more than</strong></td><td><strong>the most</strong></td><td>çok -> daha çok -> en çok</td></tr>
+          </tbody>
+        </table>
+
+        <div class="box tuzak">
+          <span class="cap">Sınav Tuzağı: 'Gooder' veya 'Baddest' ASLA YOKTUR!</span>
+          <p>1. <strong>Good</strong> ve <strong>bad</strong> sıfatları asla '-er' veya 'more' ALMAZ! Karşılaştırmada <strong>better</strong> / <strong>worse</strong>; en üstünlükte <strong>the best</strong> / <strong>the worst</strong> olur.<br>
+          2. Cümlede <strong>than</strong> varsa comparative (-er veya more); boşluktan önce <strong>the</strong> varsa superlative (-est veya most) aranmalıdır!<br>
+          Örn: <em>"A car is ________ than a bicycle."</em> (than var -> <strong>faster</strong>).<br>
+          Örn: <em>"January is the ________ month of the year."</em> (the var -> <strong>coldest</strong>).</p>
+        </div>
+        
+        
+    <div class="sqhead">Ünite Sonu Değerlendirme ve Çıkmış Sınav Soruları (8 Soru)</div>
+    <div class="sqctl">
+      <button class="btn" onclick="toggleAllDetails(this)">Tüm Soruları Aç / Kapat</button>
+    </div>
+    
+        <details class="sq" data-q="1">
+          <summary>
+            <span class="sqn">1</span>
+            <span>January s the ________ month of the year n Turkey. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr? about:blank 172/174 --- PAGE 173 ---</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 14 Kitap Sonu Değerlendirme Sorusu 1</span>
+            <ul class="o">
+              <li><b>A)</b> hottest</li><li class="ok"><b>B)</b> coldest</li><li><b>C)</b> shortest</li><li><b>D)</b> longest furthest</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 14. ünite konusudur. Doğru seçenek B'dir (coldest).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="2">
+          <summary>
+            <span class="sqn">2</span>
+            <span>A car s ________ than a motorbke. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 14 Kitap Sonu Değerlendirme Sorusu 2</span>
+            <ul class="o">
+              <li><b>A)</b> drer</li><li><b>B)</b> further</li><li><b>C)</b> older</li><li><b>D)</b> more colorful</li><li class="ok"><b>E)</b> more comfortable</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: E</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 14. ünite konusudur. Doğru seçenek E'dir (more comfortable).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="3">
+          <summary>
+            <span class="sqn">3</span>
+            <span>Learnng German s ________ learnng Englsh. Cümley tamamlayan doğru seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 14 Kitap Sonu Değerlendirme Sorusu 3</span>
+            <ul class="o">
+              <li><b>A)</b> easest than</li><li class="ok"><b>B)</b> easer</li><li><b>C)</b> the easest</li><li><b>D)</b> easy</li><li><b>E)</b> easer than</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 14. ünite konusudur. Doğru seçenek B'dir (easer than).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="4">
+          <summary>
+            <span class="sqn">4</span>
+            <span>Edward s 10, Martn s 14, and Steve s 19 years old. Yukarıda yer alan blglere göre aşağıdak cümlelerden hangs doğrudur?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 14 Kitap Sonu Değerlendirme Sorusu 4</span>
+            <ul class="o">
+              <li><b>A)</b> Edward s the oldest of all.</li><li><b>B)</b> Martn s younger than Edward.</li><li class="ok"><b>C)</b> Steve s older than Martn.</li><li><b>D)</b> Martn s the oldest of all. Steve s the youngest of all. 16.09.2024 14:13 Ders : YABANCI DİL I - eKtap about:blank 173/174 --- PAGE 174 ---</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 14. ünite konusudur. Doğru seçenek C'dir (Steve s older than Martn.).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="5">
+          <summary>
+            <span class="sqn">5</span>
+            <span>He s ________ actor n the world. Cümley tamamlayan en uygun seçenek aşağıdaklerden hangsdr?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">Ünite 14 Kitap Sonu Değerlendirme Sorusu 5</span>
+            <ul class="o">
+              <li><b>A)</b> than famous</li><li><b>B)</b> famous than</li><li class="ok"><b>C)</b> famous</li><li><b>D)</b> more famous</li><li><b>E)</b> the most famous</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>AUZEF Yabancı Dil I (İngilizce I) müfredat kitabı 14. ünite konusudur. Doğru seçenek C'dir (the most famous).</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="6">
+          <summary>
+            <span class="sqn">6</span>
+            <span>A plane is ______ than a train, but it is also ______.
+Boşluklara sırasıyla hangileri getirilmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2024 Final / 2026 Bütünleme</span>
+            <ul class="o">
+              <li class="ok"><b>A)</b> faster / more expensive</li><li><b>B)</b> fast / expensive</li><li><b>C)</b> fastest / most expensive</li><li><b>D)</b> more fast / expensiver</li><li><b>E)</b> faster / most expensive</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: A</b>
+              <p>Cümlede 'than' karşılaştırması vardır. Tek heceli 'fast' -> 'faster'; çok heceli 'expensive' -> 'more expensive' comparative biçimini alır.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="7">
+          <summary>
+            <span class="sqn">7</span>
+            <span>January is the ______ month of the year in Turkey.
+Boşluğa hangisi gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025 Final</span>
+            <ul class="o">
+              <li><b>A)</b> cold</li><li><b>B)</b> colder</li><li class="ok"><b>C)</b> coldest</li><li><b>D)</b> most cold</li><li><b>E)</b> more colder</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: C</b>
+              <p>Boşluktan önce 'the' belirteci vardır ve tüm yılın ayları içindeki 'en' soğuk ay kastedilmektedir. Tek heceli sıfatın superlative hali '-est' eklenerek 'coldest' olur.</p>
+            </div>
+          </div>
+        </details>
+        
+        <details class="sq" data-q="8">
+          <summary>
+            <span class="sqn">8</span>
+            <span>This restaurant is ______ than the other one. The food is much ______.
+Boşluklara sırasıyla hangileri gelmelidir?</span>
+          </summary>
+          <div class="sqbody">
+            <span class="sqtag rep">2025-2026 Güz Bütünleme</span>
+            <ul class="o">
+              <li><b>A)</b> gooder / better</li><li class="ok"><b>B)</b> better / better</li><li><b>C)</b> best / good</li><li><b>D)</b> more good / better</li><li><b>E)</b> better / best</li>
+            </ul>
+            <div class="coz">
+              <b class="cap">Detaylı Akademik Çözüm & Doğru Cevap: B</b>
+              <p>'Good' sıfatı düzensizdir. Comparative hali her zaman 'better'dır. 'Gooder' veya 'more good' İngilizcede yoktur.</p>
+            </div>
+          </div>
+        </details>
+        
+    
+      </div>
+      <div class="pager">
+        <button class="btn" onclick="goUnit(12)" >← Önceki Ünite</button>
+        <button class="btn" onclick="goUnit(14)" disabled>Sonraki Ünite →</button>
+      </div>
+    </section>
+    
+  </main>
+
+  <footer class="foot">
+    <p><b>YABANCI DİL I (ODYD0001 - İNGİLİZCE I)</b> • İstanbul Üniversitesi AUZEF Müfredatına Tam Uyumlu Kapsamlı Ders Notu & Soru Bankası.</p>
+    <p>Toplam 14 Ünite, 102 Açıklamalı Soru (Bölüm Sonu Değerlendirme + 2023-2026 Çıkmış Sınav Soruları). Sıfır Özetleme Kuralı ile Hazırlanmıştır.</p>
+  </footer>
+</div>
+
+<button id="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Yukarı Çık">↑</button>
+
+<script>
+let curUnit = 0;
+const totalUnits = 14;
+
+function init() {
+  const hash = window.location.hash;
+  if(hash && hash.startsWith('#u')) {
+    const n = parseInt(hash.replace('#u',''));
+    if(!isNaN(n) && n >= 0 && n < totalUnits) curUnit = n;
+  }
+  goUnit(curUnit, false);
+
+  const savedTheme = localStorage.getItem('agy_theme');
+  if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+  const savedDev = localStorage.getItem('agy_device');
+  if(savedDev) setDevice(savedDev, false);
+
+  window.addEventListener('scroll', () => {
+    const topBtn = document.getElementById('top');
+    if(window.scrollY > 300) topBtn.classList.add('show');
+    else topBtn.classList.remove('show');
+  });
+}
+
+function goUnit(idx, push=true) {
+  if(idx < 0 || idx >= totalUnits) return;
+  curUnit = idx;
+  document.querySelectorAll('.unit').forEach((u, i) => {
+    u.classList.toggle('on', i === idx);
+  });
+  document.getElementById('unitSel').value = idx;
+  if(push) {
+    window.location.hash = '#u' + idx;
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+function toggleAllDetails(btn) {
+  const parentUnit = btn.closest('.unit');
+  const details = parentUnit.querySelectorAll('details.sq');
+  const anyOpen = Array.from(details).some(d => d.open);
+  details.forEach(d => d.open = !anyOpen);
+  btn.textContent = anyOpen ? 'Tüm Soruları Aç' : 'Tüm Soruları Kapat';
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+
+function toggleDevMenu() {
+  document.getElementById('devMenu').classList.toggle('show');
+}
+
+function setDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.device-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  document.getElementById('devMenu').classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+
+document.addEventListener('click', (e) => {
+  const menuWrap = document.querySelector('.device-menu-wrap');
+  if(menuWrap && !menuWrap.contains(e.target)) {
+    document.getElementById('devMenu').classList.remove('show');
+  }
+});
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
