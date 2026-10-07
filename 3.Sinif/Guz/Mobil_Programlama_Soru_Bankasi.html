@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobil Programlama — Genişletilmiş Çıkmış Soru Bankası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F3F6; --card:#FFFFFF; --raise:#F8FAFB; --gutter:#F4F7F9;
+  --ink:#1B2A41; --ink-2:#4C5C70; --ink-3:#8894A4;
+  --line:#E3E8ED; --line-2:#EEF1F5;
+  --blue:#22364F; --blue-soft:#E9EFF6;
+  --ok:#12805C; --ok-soft:#E3F4EE; --ok-bd:#B5DFD0; --ok-dim:#F3FAF7; --ok-ink:#2A5344;
+  --no:#E0473C; --no-soft:#FDECEA;
+  --amber:#E2620E; --amber-soft:#FCEEE2; --bar:#F5B301;
+  --on-accent:#FFFFFF;
+  --shadow:0 1px 2px rgba(27,42,65,.05), 0 6px 20px -14px rgba(27,42,65,.3);
+}
+[data-theme="dark"]{
+  --paper:#151C25; --card:#1C2530; --raise:#222D3A; --gutter:#1A222C;
+  --ink:#E2E8F0; --ink-2:#A3B0C0; --ink-3:#75838F;
+  --line:#2E3A48; --line-2:#26313D;
+  --blue:#7FA8D8; --blue-soft:#22303F;
+  --ok:#5FC49C; --ok-soft:#172B25; --ok-bd:#2E4E43; --ok-dim:#121F1B; --ok-ink:#A8CCBE;
+  --no:#EF8B84; --no-soft:#2E1C1B;
+  --amber:#E9A65C; --amber-soft:#2C2316; --bar:#C99612;
+  --on-accent:#111820;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -18px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:960px;margin:0 auto;padding:0 18px 90px}
+
+/* ---------- başlık ---------- */
+.topbar{height:6px;background:var(--bar)}
+.mast{padding:34px 0 22px}
+.eyebrow{
+  font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--amber); font-weight:800; margin:0 0 10px;
+}
+h1{font-size:clamp(27px,5vw,40px); line-height:1.12; letter-spacing:-.02em; font-weight:800; margin:0 0 12px}
+h1 span{color:var(--amber)}
+.lede{color:var(--ink-2); max-width:62ch; margin:0 0 22px; font-size:16px}
+.stats{display:flex;flex-wrap:wrap;gap:9px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:9px 14px;min-width:92px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:22px;line-height:1.15;font-weight:800}
+.stat span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+
+/* ---------- araç çubuğu ---------- */
+.bar{position:sticky;top:0;z-index:40;margin:0 -18px;padding:12px 18px;
+  background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);}
+.bar-in{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.btn{
+  font:inherit;font-size:14px;font-weight:800;cursor:pointer;border:none;
+  padding:11px 16px;border-radius:7px;background:var(--blue);color:#fff;
+  display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:.15s;
+  box-shadow:var(--shadow);
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.orange{background:var(--amber)}
+.btn.red{background:var(--no)}
+.btn.ghost{background:var(--card);color:var(--ink-2);border:1px solid var(--line);font-weight:700}
+.btn.ghost:hover{color:var(--ink);border-color:var(--blue)}
+.btn[aria-pressed="true"]{outline:3px solid color-mix(in srgb,var(--blue) 25%,transparent)}
+select.btn{appearance:none;padding-right:34px;
+  background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%);
+  background-position:calc(100% - 18px) 53%,calc(100% - 13px) 53%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+.search{position:relative;flex:1;min-width:0}
+.search input{width:100%;padding:13px 14px 13px 40px;border-radius:9px;font:inherit;font-size:14.5px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.search input::placeholder{color:var(--ink-3)}
+.search .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.75}
+.spacer{flex:1}
+.count{font-size:13px;color:var(--ink-3);white-space:nowrap;font-weight:700}
+.count b{color:var(--ink)}
+
+/* ---------- skor ---------- */
+.score{display:none;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0 0;padding:11px 16px;
+  border-radius:9px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);font-size:14px;font-weight:700}
+.score.show{display:flex}
+.score .t{color:var(--ok)} .score .f{color:var(--no)}
+.score .rate{margin-left:auto;color:var(--ink-2);font-weight:600}
+.linkbtn{background:none;border:none;font:inherit;font-size:13px;color:var(--amber);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;padding:0;font-weight:800}
+
+/* ---------- soru kartı ---------- */
+.list{margin-top:22px;display:flex;flex-direction:column;gap:15px}
+.cell{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--blue);
+  border-radius:9px;box-shadow:var(--shadow);padding:17px 19px 19px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+.tag{font-size:12px;font-weight:800;padding:4px 10px;border-radius:5px;background:var(--blue);color:#fff;white-space:nowrap}
+.tag.kind{background:var(--blue-soft);color:var(--blue);border:1px solid color-mix(in srgb,var(--blue) 22%,transparent)}
+.tag.rep{background:var(--no)}
+.q{font-size:16.5px;font-weight:800;letter-spacing:-.005em;margin:0 0 14px;line-height:1.45}
+.q .num{margin-right:4px}
+.q u{text-underline-offset:3px}
+.opts{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;text-align:left;font:inherit;cursor:pointer;font-size:15px;line-height:1.5;
+  padding:12px 16px;border-radius:8px;border:1px solid var(--line-2);background:var(--raise);
+  color:var(--ink);transition:.13s;word-break:break-word;overflow-wrap:anywhere;display:block;font-weight:600}
+.opt:hover:not(.locked){border-color:var(--blue);background:var(--blue-soft)}
+.opt.locked{cursor:default}
+.opt.correct{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:800}
+.opt.wrong{background:var(--no-soft);border-color:var(--no);color:var(--no)}
+.reveal{width:100%;font:inherit;font-size:14.5px;font-weight:800;cursor:pointer;padding:12px;border-radius:7px;
+  border:none;background:var(--blue);color:#fff;transition:.15s}
+.reveal:hover{filter:brightness(1.12)}
+.out{display:none;margin-top:13px}
+.out.show{display:block;animation:fade .18s ease-out}
+@keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.ans,.exp{border:1px solid var(--ok-bd);border-left:4px solid var(--ok);border-radius:0 8px 8px 0;padding:11px 14px}
+.ans{background:var(--ok-soft);margin:0 0 10px}
+.exp{background:var(--ok-dim);border-left-style:dashed;margin:0}
+.mini{display:block;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ok);font-weight:800;margin-bottom:5px}
+.ans .val{display:block;font-size:15px;font-weight:800;color:var(--ok);line-height:1.5}
+.exp .val{display:block;font-size:14.8px;line-height:1.65;color:var(--ok-ink);font-weight:600}
+.exp .val b{color:var(--ok);font-weight:800}
+
+/* ---------- soru içi varlıklar ---------- */
+.assets{margin:0 0 14px;display:flex;flex-direction:column;gap:10px}
+.asset{margin:0;max-width:100%;overflow-x:auto}
+table.df{border-collapse:collapse;font-size:13px;background:var(--raise);border:1px solid var(--line);
+  border-radius:9px;overflow:hidden;min-width:min(100%,240px);font-weight:600}
+table.df figcaption,table.df caption{caption-side:top;text-align:left;padding:8px 12px 7px;font-size:11.5px;
+  letter-spacing:.04em;color:var(--blue);font-weight:800;background:var(--gutter);border-bottom:1px solid var(--line)}
+table.df th,table.df td{padding:7px 13px;text-align:left;border-bottom:1px solid var(--line-2);white-space:nowrap}
+table.df td.l,table.df th.l{white-space:normal}
+table.df thead th{background:var(--gutter);color:var(--ink);font-weight:800;border-bottom:1px solid var(--line)}
+table.df tbody th{color:var(--ink-2);font-weight:800;background:var(--gutter)}
+table.df tbody tr:last-child td,table.df tbody tr:last-child th{border-bottom:none}
+table.df tr.hi td,table.df tr.hi th{background:var(--ok-soft);color:var(--ok)}
+.mark-no{color:var(--no);font-weight:800}
+.figbox{background:var(--raise);border:1px solid var(--line);border-radius:9px;padding:12px;color:var(--ink-2)}
+.figbox svg{display:block;width:100%;max-width:340px;height:auto;margin:0 auto;color:var(--ink-2)}
+.figbox text.tx{font-size:9px;fill:var(--ink-3);font-weight:700}
+figcaption{margin-top:9px;font-size:11.5px;color:var(--ink-3);text-align:center;font-weight:700}
+.mock{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;max-width:330px;margin:0 auto}
+.mock .shot{height:74px;border-radius:6px;border:1px solid var(--line-2);
+  background:linear-gradient(150deg,var(--blue-soft),var(--gutter));display:flex;align-items:center;
+  justify-content:center;color:var(--ink-3);font-size:10.5px;font-weight:700}
+.mock h4{margin:10px 0 4px;font-size:14px;line-height:1.3;font-weight:800}
+.mock p{margin:0 0 12px;font-size:11.5px;color:var(--ink-2);line-height:1.45;font-weight:600}
+.mock .btns{display:flex;gap:9px}
+.mock .btn{padding:7px 18px;border-radius:4px;background:#2f7fd4;color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.08em;box-shadow:none}
+.navmock{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card);max-width:340px;margin:0 auto}
+.navmock div{flex:1;text-align:center;padding:9px 2px;font-size:9px;color:var(--ink-3);
+  border-right:1px solid var(--line-2);font-weight:700}
+.navmock div:last-child{border-right:none}
+.navmock div.on{color:var(--blue);background:var(--blue-soft)}
+.navmock div b{display:block;font-size:15px;margin-bottom:3px;font-weight:400}
+
+.empty{text-align:center;padding:56px 20px;color:var(--ink-3);border:1px dashed var(--line);
+  border-radius:10px;margin-top:22px;background:var(--card);font-weight:700}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
+.foot{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-3);font-weight:600}
+.top{position:fixed;right:18px;bottom:18px;z-index:50;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--line);background:var(--card);color:var(--ink-2);cursor:pointer;box-shadow:var(--shadow);
+  display:none;align-items:center;justify-content:center;font-size:18px}
+.top.show{display:flex}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+mark{background:#FDECC8;color:inherit;border-radius:3px;padding:0 2px}
+[data-theme="dark"] mark{background:#4A3B14;color:#F3E2B5}
+
+@media (max-width:640px){
+  .wrap{padding:0 12px 80px}
+  .bar{margin:0 -12px;padding:10px 12px}
+  .cell{padding:14px 15px 16px}
+  .q{font-size:15.5px}
+  .opt{font-size:14.3px;padding:11px 13px}
+  .stat{flex:1 1 calc(50% - 5px);min-width:0}
+  .count{width:100%}
+  table.df{font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{.bar,.top,.reveal,.score,.topbar{display:none!important}body{background:#fff}.out{display:block!important}.cell{break-inside:avoid;box-shadow:none}}
+
+pre.code{background:#0F1722;color:#DCE6F2;border:1px solid var(--line);border-radius:9px;padding:12px 14px;overflow-x:auto;
+  font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:12.5px;line-height:1.55;font-weight:500;
+  margin:0;white-space:pre;tab-size:2}
+[data-theme="dark"] pre.code{background:#0B1119;border-color:#2E3A48}
+.q code,.exp code,.ans code{background:var(--gutter);border:1px solid var(--line-2);border-radius:4px;padding:1px 5px;
+  font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:.9em;font-weight:600}
+@media (max-width:640px){pre.code{font-size:11.5px}}
+
+/* =========================================================
+   CİHAZ UYARLAMA VE E-KİTAP MODU (DEVICE ADAPTIVE & E-INK)
+   ========================================================= */
+:root {
+    --paper-bg: var(--paper, var(--bg, #f4f6f8));
+    --card-surface: var(--card, var(--card-bg, var(--c, #ffffff)));
+    --main-text: var(--ink, var(--text, var(--t, #2d3436)));
+    --border-color: var(--line, var(--border, var(--b, #dfe6e9)));
+}
+
+[data-theme="dark"] {
+    --bg: #151c25 !important;
+    --paper: #151c25 !important;
+    --card: #1c2530 !important;
+    --card-bg: #1c2530 !important;
+    --c: #1c2530 !important;
+    --raise: #222d3a !important;
+    --gutter: #1a222c !important;
+    --text: #e2e8f0 !important;
+    --ink: #e2e8f0 !important;
+    --ink-2: #a3b0c0 !important;
+    --ink-3: #75838f !important;
+    --t: #e2e8f0 !important;
+    --border: #2e3a48 !important;
+    --line: #2e3a48 !important;
+    --line-2: #26313d !important;
+    --b: #2e3a48 !important;
+    --primary: #8fb3e0 !important;
+    --blue: #8fb3e0 !important;
+    --blue-soft: #232f42 !important;
+    --p: #8fb3e0 !important;
+    --secondary: #232f42 !important;
+    --s: #232f42 !important;
+}
+
+[data-theme="dark"] body {
+    background-color: #151c25 !important;
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .container,
+[data-theme="dark"] .wrap,
+[data-theme="dark"] .page-wrap {
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .question-card,
+[data-theme="dark"] .tips-card,
+[data-theme="dark"] .view-mode-bar,
+[data-theme="dark"] .box {
+    background-color: #1c2530 !important;
+    color: #e2e8f0 !important;
+    border-color: #2e3a48 !important;
+}
+
+[data-theme="dark"] .opt li,
+[data-theme="dark"] .sqbody ul.o li {
+    background-color: #222d3a !important;
+    color: #e2e8f0 !important;
+    border-color: #2e3a48 !important;
+}
+
+[data-theme="dark"] .answer-area,
+[data-theme="dark"] .ans-box,
+[data-theme="dark"] .sqbody .coz {
+    background-color: #172b25 !important;
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .header,
+[data-theme="dark"] .uhead {
+    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+    border-bottom: 4px solid #f39c12 !important;
+}
+
+[data-theme="dark"] .btn,
+[data-theme="dark"] .tab-btn {
+    background-color: #222d3a !important;
+    color: #e2e8f0 !important;
+    border-color: #2e3a48 !important;
+}
+
+/* E-INK ORTAK: Animasyon, geçiş, gölge ve efektleri kapat */
+[data-device^="eink-"] *,
+[data-device^="eink-"] *::before,
+[data-device^="eink-"] *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: none !important;
+}
+
+/* 6 inç Siyah-Beyaz E-Okuyucu (Kindle, Kobo vb. E-Kitap Modu) */
+[data-device="eink-6-bw"] {
+    --bg: #FFFFFF !important;
+    --paper: #FFFFFF !important;
+    --card: #FFFFFF !important;
+    --card-bg: #FFFFFF !important;
+    --c: #FFFFFF !important;
+    --raise: #FFFFFF !important;
+    --gutter: #FFFFFF !important;
+    --text: #000000 !important;
+    --ink: #000000 !important;
+    --ink-2: #111111 !important;
+    --ink-3: #333333 !important;
+    --t: #000000 !important;
+    --border: #000000 !important;
+    --line: #000000 !important;
+    --line-2: #000000 !important;
+    --b: #000000 !important;
+    --primary: #000000 !important;
+    --blue: #000000 !important;
+    --blue-soft: #FFFFFF !important;
+    --p: #000000 !important;
+    --secondary: #000000 !important;
+    --s: #000000 !important;
+}
+[data-device="eink-6-bw"] body {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-family: Georgia, 'Bookerly', 'Charis SIL', serif, system-ui !important;
+    font-size: 17px !important;
+    line-height: 1.6 !important;
+    padding: 6px !important;
+}
+[data-device="eink-6-bw"] .container,
+[data-device="eink-6-bw"] .wrap,
+[data-device="eink-6-bw"] .page-wrap {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+[data-device="eink-6-bw"] .header,
+[data-device="eink-6-bw"] .uhead {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    border-radius: 4px !important;
+}
+[data-device="eink-6-bw"] .card,
+[data-device="eink-6-bw"] .question-card,
+[data-device="eink-6-bw"] .view-mode-bar,
+[data-device="eink-6-bw"] details.sq,
+[data-device="eink-6-bw"] .box {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    border-radius: 4px !important;
+    margin-bottom: 12px !important;
+    padding: 12px !important;
+}
+[data-device="eink-6-bw"] .opt li,
+[data-device="eink-6-bw"] .sqbody ul.o li {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+    font-size: 16px !important;
+}
+[data-device="eink-6-bw"] .btn,
+[data-device="eink-6-bw"] button,
+[data-device="eink-6-bw"] select {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    border-radius: 4px !important;
+}
+[data-device="eink-6-bw"] .answer-area,
+[data-device="eink-6-bw"] .ans-box,
+[data-device="eink-6-bw"] .sqbody .coz {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+/* 6 inç Renkli E-Okuyucu */
+[data-device="eink-6-color"] body {
+    font-size: 16.5px !important;
+}
+[data-device="eink-6-color"] .card,
+[data-device="eink-6-color"] .btn,
+[data-device="eink-6-color"] .view-mode-bar,
+[data-device="eink-6-color"] details.sq {
+    border: 1.5px solid #2d3436 !important;
+}
+
+/* 10.3 inç Siyah-Beyaz Tablet (Boox, Remarkable vb.) */
+[data-device="eink-10-bw"] {
+    --bg: #FFFFFF !important;
+    --paper: #FFFFFF !important;
+    --card: #FFFFFF !important;
+    --card-bg: #FFFFFF !important;
+    --text: #000000 !important;
+    --border: #000000 !important;
+    --line: #000000 !important;
+}
+[data-device="eink-10-bw"] body {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-family: Georgia, 'Bookerly', serif, system-ui !important;
+    font-size: 17.5px !important;
+    line-height: 1.65 !important;
+}
+[data-device="eink-10-bw"] .container,
+[data-device="eink-10-bw"] .wrap {
+    max-width: 1100px !important;
+}
+[data-device="eink-10-bw"] .card,
+[data-device="eink-10-bw"] .view-mode-bar,
+[data-device="eink-10-bw"] details.sq {
+    border: 2px solid #000000 !important;
+}
+
+/* Mobil Profil */
+[data-device="mobile"] body {
+    padding: 10px !important;
+    font-size: 15px !important;
+}
+[data-device="mobile"] .header,
+[data-device="mobile"] .mast {
+    padding: 15px 10px !important;
+}
+[data-device="mobile"] .card,
+[data-device="mobile"] .box {
+    padding: 14px !important;
+}
+
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+<div class="wrap">
+
+    <!-- CİHAZ PROFİLİ VE GÖRÜNÜM MODU BAR -->
+    <div class="view-mode-bar" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:10px 14px; background:var(--card-bg, #fff); border:1px solid var(--border, #dfe6e9); border-radius:10px; margin-bottom:16px;">
+        <a href="../index.html" style="display:inline-flex; align-items:center; gap:6px; color:inherit; text-decoration:none; font-weight:800; font-size:13.5px;">
+            &larr; Sınıf Derslerine Dön
+        </a>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <label for="deviceProfileSelect" style="font-size:12px; font-weight:800; text-transform:uppercase; color:inherit;">Görünüm:</label>
+            <select id="deviceProfileSelect" onchange="setAuzefDeviceProfile(this.value)" style="padding:6px 10px; font-weight:700; font-size:13px; border-radius:8px; border:1px solid var(--border, #dfe6e9); background:var(--card-bg, #fff); color:inherit; cursor:pointer;">
+                <option value="auto">🔄 Otomatik</option>
+                <option value="web">💻 Masaüstü Web</option>
+                <option value="mobile">📱 Mobil Cihaz</option>
+                <option value="eink-6-bw">📖 6" E-Okuyucu (E-Kitap Modu)</option>
+                <option value="eink-6-color">🎨 6" E-Okuyucu (Renkli)</option>
+                <option value="eink-10-bw">📝 10.3" Tablet (S/B)</option>
+                <option value="eink-10-color">🖍️ 10.3" Tablet (Renkli)</option>
+            </select>
+            <button id="auzefThemeToggleBtn" type="button" onclick="toggleAuzefTheme()" style="padding:6px 12px; font-weight:800; font-size:13px; border-radius:8px; border:1px solid var(--border, #dfe6e9); background:var(--card-bg, #fff); color:inherit; cursor:pointer;" title="Koyu / Açık Tema">
+                🌙 Tema
+            </button>
+        </div>
+    </div>
+
+  <header class="mast">
+    <p class="eyebrow">Flutter · Dart · Widget · Navigator · Provider</p>
+    <h1>Mobil Programlama<br><span>Çıkmış Soru Bankası</span></h1>
+    <p class="lede">2022'den 2025-26'ya kadar <b>vize, final, bütünleme ve tek ders</b> sınavlarından derlendi.
+    Aynı soru birden fazla sınavda çıktıysa tek kayıtta birleştirildi; hangi sınavlarda sorulduğu 🔥 etiketlerinden görülür.
+    Kod, komut, tablo ve widget görselleri sınav kâğıdına sadık kalınarak yeniden çizildi. Cevaplar kitapçık/anahtara dayanır;
+    açıklamalar ve "Görüşüm" notları konuyu anlaman için eklendi.</p>
+    <div class="stats">
+      <div class="stat"><b id="s-all">0</b><span>Toplam soru</span></div>
+      <div class="stat"><b id="s-vize">0</b><span>Vize</span></div>
+      <div class="stat"><b id="s-final">0</b><span>Final</span></div>
+      <div class="stat"><b id="s-but">0</b><span>Büt / Tek ders</span></div>
+      <div class="stat"><b id="s-rep">0</b><span>Tekrar eden</span></div>
+    </div>
+  </header>
+
+  <nav class="bar" aria-label="Filtreler">
+    <div class="bar-in">
+      <div class="row">
+        <label class="search">
+          <span class="ico">🔍</span>
+          <input id="q" type="search" placeholder="Soru, şık, kod veya açıklamada ara..." autocomplete="off" aria-label="Ara">
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn" data-val="all">Tümü <span id="c-btn-all" style="opacity:.7;font-weight:600;font-size:0.9em;margin-left:4px">0</span></button>
+        <button class="btn ghost" data-val="vize">Vize <span id="c-btn-vize" style="opacity:.7;font-weight:600;font-size:0.9em;margin-left:4px">0</span></button>
+        <button class="btn ghost" data-val="final">Final <span id="c-btn-final" style="opacity:.7;font-weight:600;font-size:0.9em;margin-left:4px">0</span></button>
+        <button class="btn ghost" data-val="but">Büt/Tek <span id="c-btn-but" style="opacity:.7;font-weight:600;font-size:0.9em;margin-left:4px">0</span></button>
+        <button class="btn orange" id="toggle" aria-pressed="false">Cevapları göster</button>
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="rep" aria-pressed="false">🔥 Banko / Tekrar edenler</button>
+        <select class="btn ghost" id="year" aria-label="Sınava göre filtrele"><option value="">Tüm dönemler</option></select>
+        <button class="btn ghost" id="shuffle">🔀 Karıştır</button>
+        <button class="btn ghost" id="reset-order" hidden>↩ Sıraya dön</button>
+        <button class="btn ghost" id="theme">🌙 Gece</button>
+        <span class="spacer"></span>
+        <span class="count"><b id="shown">0</b> soru görüntüleniyor
+          <span id="c-all" hidden></span><span id="c-vize" hidden></span><span id="c-final" hidden></span><span id="c-but" hidden></span>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="score" id="score">
+    <span>Doğru <span class="t" id="sc-t">0</span></span>
+    <span>Yanlış <span class="f" id="sc-f">0</span></span>
+    <span class="rate" id="sc-r"></span>
+    <button class="linkbtn" id="sc-reset">sıfırla</button>
+  </div>
+
+  <main class="list" id="list"></main>
+  <div class="empty" id="empty" hidden><b>Eşleşen soru yok</b>Aramayı sadeleştir ya da filtreleri temizle.</div>
+
+  <footer class="foot">
+    Kaynak: paylaşılan 15 sınav kâğıdı (vize · final · bütünleme · tek ders; 2022–2025-26 dönemleri). Aynı soru farklı sınavlarda
+    çıktığında tek kayıtta birleştirildi ve 🔥 <b>Banko</b> olarak işaretlendi. Cevaplar; anahtarı basılı (CEVAPLI) kâğıtlarda resmî
+    anahtara, cevap tablosu verilen kâğıtlarda o tabloya, kalanlarda ise ders içeriğine dayanır. Birkaç soruda iki yılın anahtarı
+    çeliştiği için (ör. child'sız Container'ın ekranı kaplaması) doğru cevap davranışa göre verilip fark açıklamada belirtilmiştir.
+    Kod blokları, terminal komutları, pubspec/yaml yapıları ve widget görselleri sınav kâğıdına sadık kalınarak yeniden oluşturuldu.
+    "Görüşüm" notları çalışırken dikkat çekmesi gereken tuzakları vurgular. Cevaplarda hata görürsen kâğıttaki resmî anahtarı esas al.
+  </footer>
+</div>
+<button class="top" id="top" aria-label="Başa dön">↑</button>
+<script>
+const DATA = [{"tags": ["2023-24 vize", "2023-24 büt"], "q": "Adlandırılmış (named) parametreli <code>void gorunum({bool kalin=false, bool gizli=false})</code> fonksiyonu <code>gorunum(kalin: true);</code> şeklinde çağrılırsa aşağıdakilerden hangisi doğrudur?", "o": ["A) gizli parametresi daha sonra gorunum.gizli = true; ile atanır.", "B) gizli parametresi true değeri alır.", "C) gizli parametresi false değeri alır.", "D) gizli verilmediği için sentaks hatası verir.", "E) gizli parametresi null değeri alır."], "a": "C) gizli parametresi false değeri alır.", "e": "Adlandırılmış parametreye <b>varsayılan değer</b> (<code>= false</code>) verildiği için, çağrıda yazılmazsa o varsayılanı alır. <code>kalin: true</code> yalnızca kalin'i değiştirir; gizli olduğu gibi <code>false</code> kalır. <b>Görüşüm:</b> Varsayılanı olduğu için ne hata verir ne de null olur — tuzak burada.", "as": ["code_gorunum"], "ks": ["vize", "but"], "k": "vize", "id": 1}, {"tags": ["2023-24 vize"], "q": "Aşağıdaki değişken tanımlamalarından hangisi <b>hem int hem de double</b> türü değer saklayabilir?", "o": ["A) var x = 0;", "B) final double x;", "C) num x;", "D) double x;", "E) int x;"], "a": "C) num x;", "e": "<code>num</code>, hem <code>int</code> hem <code>double</code>'ın ortak üst tipidir; ikisini de tutabilir. <code>var x = 0;</code> ise ilk atamayla <b>int</b>'e sabitlenir, sonradan double alamaz.", "as": [], "ks": ["vize"], "k": "vize", "id": 2}, {"tags": ["2023-24 vize"], "q": "Dart'a getirilen <b>Null-Safety</b> özelliği ne ifade etmektedir?", "o": ["A) Aynı isimli iki sınıftan ikincisi null ile sembolize edilir.", "B) Tüm sınıfların Null'dan miras alındığını.", "C) Değişkenlerin oluşturulunca sadece null alabileceğini.", "D) Değişken tanımının sadece sınıf içinde yapılabileceğini.", "E) Bir değişkenin kullanılmadan önce (null olamayacaksa) bir değer atanmış olması gerektiğini."], "a": "E) Bir değişkenin kullanılmadan önce içine bir atama yapılması gerektiğini.", "e": "Null-Safety, <b>null olamaz (non-nullable)</b> bir değişkenin kullanılmadan önce mutlaka bir değere sahip olmasını zorunlu kılar. Böylece \"null reference\" hataları derleme zamanında yakalanır. Null olabilir tür için sona <code>?</code> eklenir (<code>int?</code>).", "as": [], "ks": ["vize"], "k": "vize", "id": 3}, {"tags": ["2023-24 vize", "2023-24 büt"], "q": "String sınıfı için <b>genişletme metotları</b> (extension methods) yazacağımız kod bloğu hangisiyle doğru tanımlanır?", "o": ["A) extension BenimBlogum with String { .... }", "B) extension String mixin BenimBlogum { .... }", "C) extension String with BenimBlogum { .... }", "D) extension BenimBlogum on String { .... }", "E) extension String on BenimBlogum { .... }"], "a": "D) extension BenimBlogum on String { .... }", "e": "Söz dizimi: <code>extension &lt;UzantıAdı&gt; on &lt;Tür&gt; { ... }</code>. Yani uzantının adı önce, genişletilen tür <code>on</code>'dan sonra gelir. <b>Görüşüm:</b> \"on\" kelimesi anahtar; with/mixin çeldiricileri kalıtım kavramlarıyla karıştırmak için konmuş.", "as": ["code_extension_opts"], "ks": ["vize", "but"], "k": "vize", "id": 4}, {"tags": ["2023-24 vize"], "q": "Dart programlama dili için aşağıdaki ifadelerden hangisi <u>yanlıştır</u>?", "o": ["A) implements ile birden fazla sınıftan (arayüz gibi) miras alınır.", "B) extends ile tek bir sınıftan miras alınır.", "C) abstract ile tanımlanan sınıfların örnekleri oluşturulamaz.", "D) Tüm sınıflar Null sınıfından miras alınarak türetilir.", "E) with ile birden fazla mixin'den miras alınır."], "a": "D) Tüm sınıflar Null sınıfından miras alınarak türetilir.", "e": "Dart'ta tüm sınıfların atası <b>Object</b>'tir, Null değil. Diğer maddeler doğrudur: implements çoklu arayüz, extends tekil kalıtım, abstract örneklenemez, with çoklu mixin.", "as": [], "ks": ["vize"], "k": "vize", "id": 5}, {"tags": ["2023-24 vize"], "q": "Dart programlama dili için aşağıdaki ifadelerden hangisi <u>yanlıştır</u>? (fonksiyonlar)", "o": ["A) Fonksiyona isim verilmesi zorunlu değildir (anonim fonksiyon).", "B) Geri dönüş türünün yazılması zorunlu değildir.", "C) Return ile geri dönüş yoksa fonksiyon null döner.", "D) Çağrıda normal (konumsal) parametrelere değer girilmesi zorunlu değildir.", "E) Parametre türlerinin belirtilmesi zorunlu değildir."], "a": "D) Çağrıda normal parametrelere değer girilmesi zorunlu değildir.", "e": "Normal (konumsal, zorunlu) parametreler çağrıda mutlaka verilmelidir; opsiyonel yapmak için <code>[ ]</code> ya da adlandırılmış <code>{ }</code> kullanılır. Diğer maddeler Dart için doğrudur.", "as": [], "ks": ["vize"], "k": "vize", "id": 6}, {"tags": ["2024-25 vize", "2025-26 vize"], "q": "Aşağıdaki kod bloğunun ekran çıktısı nedir?", "o": ["A) NaN", "B) 3", "C) null", "D) 5", "E) 0"], "a": "D) 5", "e": "<code>islem</code>, gövdesinde <code>x ?? i</code> döndüren bir fonksiyon (closure) üretir. <code>nullli=islem(null)</code> → <code>(i)=&gt;null??i = i</code> (birim fonksiyon), <code>nullsiz=islem(5)</code> → <code>(i)=&gt;5??i = 5</code> (hep 5). <code>nullli(3)=3</code>, <code>nullsiz(3)=5</code>. Çıktı: <b>5</b>. <b>Görüşüm:</b> Kapanış (closure) + null-birleştirme operatörünü birlikte test eden güzel bir soru.", "as": ["code_islem_null"], "ks": ["vize"], "k": "vize", "id": 7}, {"tags": ["2024-25 vize", "2025-26 vize"], "q": "Bir sınıfta tanımlanan aşağıdaki <code>noSuchMethod</code> kod bloğunun çağrılma zamanı hangisidir?", "o": ["A) Sınıfın bellekte ilk örneği oluşturulurken", "B) Örnek bellekten silinirken", "C) Sınıf için tanımlı olmayan bir fonksiyon çağrılırsa", "D) Her örnek oluşturulurken", "E) Yapıcı fonksiyonlar çağrıldıktan sonra"], "a": "C) Sınıf için tanımlı olmayan bir fonksiyon çağrılırsa", "e": "<code>noSuchMethod</code>, nesnede <b>var olmayan</b> bir üyeye/metoda erişilmeye çalışıldığında devreye girer. Yakalanan çağrının bilgisi <code>Invocation</code> ile gelir. Yapıcı/yıkıcı ile ilgisi yoktur.", "as": ["code_nosuchmethod"], "ks": ["vize"], "k": "vize", "id": 8}, {"tags": ["2024-25 vize", "2025-26 vize"], "q": "Aşağıdaki veri türlerinden hangisi <b>Jenerik (Generic)</b> bir türdür?", "o": ["A) double", "B) List", "C) Object", "D) Null", "E) Boolean"], "a": "B) List", "e": "<code>List&lt;T&gt;</code> gibi türler, tuttukları eleman tipini <b>tür parametresiyle</b> alır — bu jenerikliktir. double/Object/Null/bool ise somut türlerdir.", "as": [], "ks": ["vize"], "k": "vize", "id": 9}, {"tags": ["tek ders 2025"], "q": "Dart'ta bir değişken tanımının <b>alt çizgi (_)</b> ile başlaması ne anlama gelir?", "o": ["A) object olarak tanımlandığını", "B) sabit (değiştirilemez) olduğunu", "C) private olduğunu, kütüphane/sınıf dışından erişilemediğini", "D) static olduğunu", "E) public olduğunu"], "a": "C) private olduğunu, sınıf/kütüphane dışından erişilemediğini", "e": "Dart'ta erişim belirteci anahtar kelimesi yoktur; bir üye adının başına <code>_</code> konması onu <b>private</b> (bulunduğu kütüphaneye özel) yapar.", "as": [], "ks": ["but"], "k": "but", "id": 10}, {"tags": ["2024-25 final", "2024-25 büt"], "q": "<code>double get right =&gt; left + width;</code> kodu bir sınıf içinde hangi işlevi yerine getirir?", "o": ["A) right salt-okunur (get) bir tanımlama olarak eklenir.", "B) left ve width güncellenmek istendiğinde bu satır çalışır.", "C) get adında yeni bir değişken tanımlar.", "D) right adında yeni bir değişken tanımlar.", "E) right salt-yazılır bir tanımlama olarak eklenir."], "a": "A) right salt-okunur (get) bir tanımlama olarak eklenir.", "e": "Bu bir <b>hesaplanan getter</b>'dır: <code>right</code> okunduğunda <code>left + width</code> hesaplanır. Kendisine değer atanamaz (salt-okunur). Alanda yer tutmaz.", "as": ["code_get_right"], "ks": ["final", "but"], "k": "final", "id": 11}, {"tags": ["2023-24 büt", "2025-26 final", "tek ders 2025"], "q": "pubspec.yaml'daki <b>dependencies</b> kısmında, paket yönetiminin en güncel sürümü bulması için versiyon numarasının önüne hangi sembol gelir?", "o": ["A) ?", "B) ^", "C) +", "D) %", "E) *"], "a": "B) ^", "e": "<code>^</code> (caret), \"sonraki büyük sürüme kadar uyumlu güncellemelere izin ver\" demektir. Örn. <code>^1.2.0</code> → &gt;=1.2.0 &lt;2.0.0. Sık çıkan bir bilgidir.", "as": [], "ks": ["but", "final"], "k": "but", "id": 12}, {"tags": ["2024-25 büt"], "q": "Bir paketin <b>belli bir sürümünün</b> kullanımı zorunluysa bunu pubspec.yaml'da hangi başlık ile belirtiriz?", "o": ["A) dependency_must", "B) dependency_overrides", "C) dependency_mandatory", "D) dependency_downgrade", "E) dependency_chosen"], "a": "B) dependency_overrides", "e": "<code>dependency_overrides</code>, alt paketlerin talep ettiği sürümleri ezerek projede <b>tek ve zorunlu</b> bir sürümü dayatmak için kullanılır. Çakışan bağımlılıkları çözmenin yoludur.", "as": [], "ks": ["but"], "k": "but", "id": 13}, {"tags": ["tek ders 2025"], "q": "Dart'ta <b>arka planda çalışacak bir iş parçacığı</b> (multi-thread yaklaşımı) için kullanılan bileşen hangisidir?", "o": ["A) thread", "B) channel", "C) background", "D) process", "E) isolate"], "a": "E) isolate", "e": "Dart tek iş parçacıklıdır; paralellik <b>isolate</b> ile sağlanır. Isolate'lar belleği paylaşmaz, birbirleriyle mesajlaşarak haberleşir. Bu, veri yarışı (race condition) sorununu tasarımdan çözer.", "as": [], "ks": ["but"], "k": "but", "id": 14}, {"tags": ["2024-25 final"], "q": "Sınıfların <b>hangi türden miras aldığını</b> bulmak için kullanılan tür kontrol operatörü hangisidir?", "o": ["A) to", "B) as", "C) in", "D) with", "E) like"], "a": "B) as", "e": "Ders anahtarına göre cevap <code>as</code>'tir. <b>Görüşüm:</b> Teknik olarak tür kontrolü <code>is</code> ile, tür dönüştürme <code>as</code> ile yapılır; şıklarda <code>is</code> olmadığı için sınav <code>as</code>'i işaretlemiş. Gerçek kodda \"şu türden mi?\" için <code>if (x is Tur)</code> kullanın.", "as": [], "ks": ["final"], "k": "final", "id": 15}, {"tags": ["2025-26 final", "2023-24 büt"], "q": "dart:convert kütüphanesinde bir <b>objeyi JSON metnine</b> çevirmek için hangi fonksiyon kullanılır?", "o": ["A) serialize()", "B) toJson()", "C) jsonDecode()", "D) fromJson()", "E) jsonEncode()"], "a": "E) jsonEncode()", "e": "<code>jsonEncode()</code> obje → JSON metni; tersi <code>jsonDecode()</code> JSON metni → obje. <code>toJson/fromJson</code> ise genelde model sınıfında elle yazdığımız yardımcı metotlardır.", "as": [], "ks": ["final", "but"], "k": "final", "id": 16}, {"tags": ["2024-25 final", "2025-26 final"], "q": "dart:convert kütüphanesinde bir <b>JSON metnini objeye</b> çevirmek için hangi fonksiyon kullanılır?", "o": ["A) fromJson()", "B) jsonEncode()", "C) serialize()", "D) jsonDecode()", "E) toJson()"], "a": "D) jsonDecode()", "e": "<code>jsonDecode()</code> JSON metnini Dart nesnesine (Map/List) çevirir. Kodlama yönü ise <code>jsonEncode()</code> ile yapılır.", "as": [], "ks": ["final"], "k": "final", "id": 17}, {"tags": ["2023-24 büt", "2025-26 final"], "q": "Dart'ta mixin kullanarak miras alma yapılacaksa, mixin adları hangi anahtar kelimeden sonra sıralanır?", "o": ["A) extends", "B) parent", "C) implements", "D) with", "E) on"], "a": "D) with", "e": "Bir sınıf mixin'leri <code>with</code> ile ekler: <code>class C extends A with M1, M2 { }</code>. (Mixin'in kendisi <code>mixin M on X</code> ile tanımlanır — o farklı bir kullanımdır.)", "as": [], "ks": ["but", "final"], "k": "but", "id": 18}, {"tags": ["2023-24 büt"], "q": "Aşağıdaki operatörlerden hangisi bir listedeki içeriği başka bir listeye <b>kopyalamak</b> için kullanılır?", "o": ["A) ??= (iki soru işareti eşittir)", "B) : (iki nokta üst üste)", "C) ...? (üç nokta soru işareti)", "D) .. (iki nokta)", "E) => (eşittir büyüktür)"], "a": "C) ...? (üç nokta soru işareti)", "e": "Yayma (spread) operatörü bir listenin elemanlarını başka listeye kopyalar. <b>Görüşüm:</b> Saf yayma <code>...</code>'tür; <code>...?</code> ise null-güvenli yaymadır (liste null olabilirse). Ders anahtarı <code>...?</code>'i işaretlemiş. <code>..</code> cascade, farklı bir amaçladır.", "as": [], "ks": ["but"], "k": "but", "id": 19}, {"tags": ["2023-24 vize"], "q": "Windows işletim sisteminde <b>masaüstü</b> Flutter uygulaması geliştirme desteği için hangisinin kurulması gerekir?", "o": ["A) Visual Studio 2019 Geliştirme Ortamı", "B) Android Studio", "C) IntelliJ IDEA", "D) Firefox İnternet Tarayıcısı", "E) Visual Studio Code"], "a": "A) Visual Studio 2019 Geliştirme Ortamı", "e": "Windows masaüstü hedefi C++ araç zincirini gerektirir; bunu <b>Visual Studio</b> (VS Code değil!) sağlar. VS Code sadece bir editördür, C++ build araçlarını içermez.", "as": [], "ks": ["vize"], "k": "vize", "id": 20}, {"tags": ["2023-24 vize", "2023-24 büt"], "q": "<code>flutter create name1</code> komutu çalıştırıldığında ne yapar?", "o": ["A) name1 adında bir sınıf oluşturur.", "B) name1 adında bir dart dosyası oluşturur.", "C) name1 adında bir proje klasörü oluşturur.", "D) name1 adında bir değişken oluşturur.", "E) name1 adında bir kütüphane oluşturur."], "a": "C) name1 adında bir proje klasörü oluşturur.", "e": "<code>flutter create</code>, verilen isimde iskelet dosyaları içeren yeni bir <b>proje klasörü</b> üretir (lib/, pubspec.yaml, android/, ios/ ...).", "as": ["code_flutter_create"], "ks": ["vize", "but"], "k": "vize", "id": 21}, {"tags": ["2024-25 vize", "2025-26 vize", "2024-25 büt"], "q": "\"<code>--enable-windows-desktop</code>\" ifadesi hangi terminal komutuna <b>parametre</b> olarak yazılır?", "o": ["A) flutter config", "B) flutter platform", "C) flutter create", "D) flutter doctor", "E) flutter enable"], "a": "A) flutter config", "e": "<code>flutter config --enable-windows-desktop</code>, masaüstü Windows hedefini etkinleştirir. <code>config</code>, Flutter araç ayarlarını değiştiren komuttur.", "as": [], "ks": ["vize", "but"], "k": "vize", "id": 22}, {"tags": ["2023-24 vize", "2024-25 vize"], "q": "<code>flutter doctor</code> çıktısının son satırında \"<b>Connected device (3 available)</b>\" ifadesi görülüyorsa bu kurulum için ne söylenebilir?", "o": ["A) Uygulamayı çalıştırabileceğimiz üç opsiyon bulunmaktadır.", "B) Üç farklı işletim sistemi kuruludur.", "C) Üç farklı geliştirme ortamı (IDE) kuruludur.", "D) Çalışan üç adet Flutter uygulaması vardır.", "E) Bilgisayara bağlı üç çevre birimi vardır."], "a": "A) Uygulamayı çalıştırabileceğimiz üç opsiyon bulunmaktadır.", "e": "\"Connected device\", uygulamanın <b>çalıştırılabileceği hedefleri</b> (emülatör, tarayıcı, masaüstü, fiziksel cihaz vb.) listeler. 3 available = 3 çalıştırma seçeneği hazır demektir.", "as": ["code_flutter_doctor"], "ks": ["vize"], "k": "vize", "id": 23}, {"tags": ["2023-24 vize", "tek ders 2025"], "q": "VS Code IDE'sinde <b>aktif Flutter çalıştırma kipi</b> (device) ana ekranda nerede görüntülenir?", "o": ["A) Karşılama (Welcome) ekranında", "B) Sol alt köşede", "C) Sağ alt köşede", "D) Sol üst köşede", "E) Sağ üst köşede"], "a": "C) Sağ alt köşede", "e": "VS Code'un <b>sağ alt köşesindeki durum çubuğunda</b> aktif hedef cihaz (ör. \"Chrome (web)\") görünür; tıklayıp değiştirilebilir.", "as": ["fig_vscode_runmode"], "ks": ["vize", "but"], "k": "vize", "id": 24}, {"tags": ["2023-24 vize"], "q": "Aşağıdakilerden hangisi ile bir Flutter uygulaması <u>çalıştırılamaz</u>?", "o": ["A) VS Code'da Run menüsü → \"Start Debugging\"", "B) Terminalde proje klasöründe \"flutter create\"", "C) VS Code'da main.dart açıkken \"F5\"", "D) VS Code'da \"Run Without Debugging\"", "E) Terminalde proje klasöründe \"flutter run\""], "a": "B) Terminalde proje klasöründe \"flutter create\"", "e": "<code>flutter create</code> yeni proje <b>oluşturur</b>, çalıştırmaz. Çalıştırmak için <code>flutter run</code>, F5 veya Run menüsü kullanılır.", "as": [], "ks": ["vize"], "k": "vize", "id": 25}, {"tags": ["2025-26 vize", "2023-24 büt", "2024-25 final"], "q": "<code>https://pub.dev</code> internet adresi hangi amaçla hizmet verir?", "o": ["A) Dart dilinin dokümantasyonunun bulunduğu yer", "B) Android/iOS özelliklerinin anlatıldığı yer", "C) Flutter ve Dart için açık kaynak kütüphanelerin paylaşıldığı yer", "D) Flutter çerçevesi dokümantasyonu", "E) Flutter/Dart uygulamalarının çevrimiçi çalıştırıldığı yer"], "a": "C) Flutter ve Dart için açık kaynak kütüphanelerin paylaşıldığı yer", "e": "<b>pub.dev</b>, Dart/Flutter paketlerinin (kütüphanelerin) resmî deposudur. Çevrimiçi çalıştırma <b>DartPad</b>, doküman ise <b>docs.flutter.dev</b>'dedir.", "as": [], "ks": ["vize", "but", "final"], "k": "vize", "id": 26}, {"tags": ["2023-24 final"], "q": "Flutter ve Dart için kullanılabilecek <b>kütüphaneler ve eklentiler</b>, açıklamalarıyla birlikte bulunabilecek özel internet sitesi hangisidir?", "o": ["A) github.io", "B) flutter.dev", "C) dartpad.dev", "D) pub.dev", "E) developer.android.com"], "a": "D) pub.dev", "e": "Paketleri arama, sürüm, örnek ve puanlarıyla görme yeri <b>pub.dev</b>'dir.", "as": [], "ks": ["final"], "k": "final", "id": 27}, {"tags": ["2023-24 vize"], "q": "Bir Flutter projesinde <b>lib klasörü</b> altındaki kod dosyasının uzantısı nedir?", "o": ["A) .yaml", "B) .bin", "C) .flutter", "D) .dart", "E) .json"], "a": "D) .dart", "e": "Uygulama kaynak kodu <code>lib/</code> altında <b>.dart</b> uzantılı dosyalarda yer alır.", "as": [], "ks": ["vize"], "k": "vize", "id": 28}, {"tags": ["tek ders 2024"], "q": "Flutter projelerinde <b>.dart uzantılı</b> dosyalar hangi klasörde bulunur?", "o": ["A) lib", "B) android", "C) src", "D) ios", "E) build"], "a": "A) lib", "e": "Dart kaynak dosyalarının standart yeri <code>lib/</code> klasörüdür. android/ ve ios/ platforma özel, build/ ise üretilen çıktı klasörüdür.", "as": [], "ks": ["but"], "k": "but", "id": 29}, {"tags": ["2023-24 final", "2024-25 final"], "q": "pubspec.yaml'a yeni bir <b>paket bağımlılığı</b> tanımlandığında kullanıma hazır olması için terminalde hangi komut çalıştırılır?", "o": ["A) flutter pub get", "B) flutter run", "C) flutter work", "D) flutter build apk", "E) flutter create package"], "a": "A) flutter pub get", "e": "<code>flutter pub get</code>, pubspec'te tanımlı bağımlılıkları indirir ve projeye bağlar.", "as": [], "ks": ["final"], "k": "final", "id": 30}, {"tags": ["2023-24 final", "2023-24 büt"], "q": "Aşağıdaki <b>flutter/assets</b> satırları hangi dosyada yer alır?", "o": ["A) assets.dart", "B) flutter.yaml", "C) pubspec.yaml", "D) main.dart", "E) launch.json"], "a": "C) pubspec.yaml", "e": "Uygulamaya dahil edilecek varlıklar (assets) <code>pubspec.yaml</code> içindeki <code>flutter: assets:</code> bloğunda listelenir.", "as": ["code_pubspec_assets"], "ks": ["final", "but"], "k": "final", "id": 31}, {"tags": ["2023-24 vize", "2023-24 büt"], "q": "Resim dosyalarının Flutter projesine dahil edilmesi için, bulunduğu klasör/dosya adı hangi dosya altında belirtilir?", "o": ["A) main.dart", "B) pubspec.yaml", "C) assets.dart", "D) launch.json", "E) assets.yaml"], "a": "B) pubspec.yaml", "e": "Tüm assets tanımları (resimler, fontlar) <code>pubspec.yaml</code>'da yapılır; başka bir \"assets.yaml\" dosyası yoktur.", "as": [], "ks": ["vize", "but"], "k": "vize", "id": 32}, {"tags": ["2023-24 final"], "q": "Komut satırına <code>code ./</code> girilirse ne olur?", "o": ["A) Klasördeki dart dosyalarının dökümü alınır.", "B) Klasördeki Flutter projesi çalıştırılır.", "C) Klasördeki Flutter projesi derlenir.", "D) Yeni Flutter projesi oluşturulur.", "E) Bulunulan klasör hedeflenerek VS Code çalıştırılır."], "a": "E) Bulunulan klasör hedeflenerek VS Code çalıştırılır.", "e": "<code>code</code> VS Code'un komut satırı aracıdır; <code>code ./</code> içinde bulunduğun klasörü VS Code'da açar. Proje derleme/çalıştırma ile ilgisi yoktur.", "as": ["code_code_dot"], "ks": ["final"], "k": "final", "id": 33}, {"tags": ["2023-24 final", "2024-25 final"], "q": "<code>flutter build apk --analyze-size</code> komutu çalıştırılınca ne elde edilir?", "o": ["A) Uygulamanın Android platform uyumluluğu", "B) Uygulamanın içerdiği kodların uzunluğu", "C) Uygulamanın performansına etki eden ekranlar", "D) Android platformunda çalışma performansı", "E) Uygulamanın içerdiği dosyaların bölümlere ayrılmış kapladığı alan özetleri"], "a": "E) Uygulamanın içerdiği dosyaların bölümlere ayrılmış kapladığı alan özetleri", "e": "<code>--analyze-size</code>, üretilen paketin <b>hangi bileşeninin ne kadar yer kapladığını</b> raporlar; boyut optimizasyonu için kullanılır.", "as": ["code_build_apk_analyze"], "ks": ["final"], "k": "final", "id": 34}, {"tags": ["2024-25 final"], "q": "Aşağıdaki komutlardan hangisi bir Flutter uygulamasının <b>Android dağıtımını</b> oluşturur?", "o": ["A) flutter make apk", "B) flutter appbundle apk", "C) flutter build apk", "D) flutter profile appbundle", "E) flutter create apk"], "a": "C) flutter build apk", "e": "<code>flutter build apk</code> Android APK paketini üretir. (Play Store için önerilen <code>flutter build appbundle</code>'dır.)", "as": [], "ks": ["final"], "k": "final", "id": 35}, {"tags": ["2023-24 final", "tek ders 2025"], "q": "Bir uygulamanın kodlarının dağıtım sürümünde <b>tersine mühendislikle</b> çözülmesini engellemek için derlemede kullanılan etiket hangisidir?", "o": ["A) --clear-code", "B) --fix", "C) --mix-code", "D) --obfuscate", "E) --refactor"], "a": "D) --obfuscate", "e": "<code>--obfuscate</code>, sembol adlarını karıştırarak kodun geri mühendislikle okunmasını zorlaştırır (genelde <code>--split-debug-info</code> ile birlikte).", "as": [], "ks": ["final", "but"], "k": "final", "id": 36}, {"tags": ["2025-26 final"], "q": "Aşağıdakilerden hangisi Flutter uygulama boyutunu azaltmak için kullanılan yöntemlerden biri <u>değildir</u>?", "o": ["A) Kütüphanelerden yüklenen kaynakların en aza indirilmesi", "B) Android ve iOS SDK sürümlerinin düşük tutulması", "C) PNG ve JPEG dosyalarını sıkıştırarak kullanma", "D) Kullanılmayan kaynakların projeden çıkarılması", "E) --split-debug-info etiketinin kullanımı"], "a": "B) Android ve iOS SDK sürümlerinin düşük tutulması", "e": "SDK sürümünü düşürmek boyut azaltmanın bir yöntemi değildir (hatta uyumluluk/güvenlik sorunları doğurur). Boyut; kullanılmayan kaynakları atma, görsel sıkıştırma ve debug bilgisini ayırma ile azaltılır.", "as": [], "ks": ["final"], "k": "final", "id": 37}, {"tags": ["2023-24 final", "2025-26 final"], "q": "Flutter uygulamasının performansını incelemek için kullanılan <b>derleme modeli</b> hangisidir?", "o": ["A) Profile", "B) Release", "C) Debug", "D) Perform", "E) Publish"], "a": "A) Profile", "e": "<b>Profile</b> modu, debug ek yükü olmadan gerçeğe yakın performans ölçümü sağlar. Debug geliştirme, Release ise dağıtım içindir.", "as": [], "ks": ["final"], "k": "final", "id": 38}, {"tags": ["2024-25 vize"], "q": "Flutter projesinin en <b>hızlı güncellemelerini</b> alacağımız kanal hangisidir?", "o": ["A) Trouble", "B) Master", "C) Stable", "D) Beta", "E) Dev"], "a": "B) Master", "e": "<b>Master (main)</b> kanalı en güncel (ama en az test edilmiş) değişiklikleri içerir. Üretim için <b>Stable</b> önerilir.", "as": [], "ks": ["vize"], "k": "vize", "id": 39}, {"tags": ["2024-25 vize", "2024-25 büt"], "q": "2010–2020 istatistiklerine göre 2020 civarında akıllı telefon pazarında en fazla kullanılan işletim sistemi hangisidir?", "o": ["A) HarmonyOS", "B) iOS", "C) WindowsPhone", "D) Android", "E) SymbianOS"], "a": "D) Android", "e": "2020'lerde küresel pazar payında <b>Android</b> açık ara lider olmuştur (~%70+).", "as": [], "ks": ["vize", "but"], "k": "vize", "id": 40}, {"tags": ["2025-26 vize", "2023-24 büt", "2025-26 final"], "q": "Aşağıdakilerden hangisi 2021 yılında Flutter'ın <u>desteklemediği</u> bir ortam (işletim sistemi) adıdır?", "o": ["A) Linux", "B) Android", "C) HarmonyOS", "D) Windows", "E) iOS"], "a": "C) HarmonyOS", "e": "2021'de Flutter Android, iOS, Web, Windows, macOS ve Linux'u destekliyordu; <b>HarmonyOS</b> resmî hedefler arasında değildi.", "as": [], "ks": ["vize", "but", "final"], "k": "vize", "id": 41}, {"tags": ["2023-24 vize", "2025-26 vize", "2023-24 büt"], "q": "Akıllı telefonları, önceki dönem klasik cep telefonlarından ayıran <b>belirgin özellik</b> hangisidir?", "o": ["A) Destekledikleri donanımsal özellikler", "B) Dünya pazarındaki yayılma şekli", "C) 3G şebekesini kullanması", "D) Sonradan uygulama yükleme imkânı", "E) Yapay zekâ modülü içermeleri"], "a": "D) Sonradan uygulama yükleme imkânı", "e": "Akıllı telefonu tanımlayan temel fark, kullanıcının <b>mağazadan uygulama indirip kurabilmesidir</b> (programlanabilir platform). Donanım tek başına ayırt edici değildir.", "as": [], "ks": ["vize", "but"], "k": "vize", "id": 42}, {"tags": ["2023-24 vize"], "q": "Günümüzde <b>mobil programlama</b> neden daha çok önem kazanmıştır?", "o": ["A) Farklı yazılım alanlarının doyuma ulaşması", "B) Masaüstü uygulamaların web sayfasına dönüşmesinin zahmeti", "C) Yazılımcının eğitiminin mobilde kolay olması", "D) İnternet erişiminin yoğun olarak mobilden sağlanması ve akıllı telefonların dijital asistan görevi görmesi", "E) Akıllı telefonlarda çok farklı işletim sistemi kullanılması"], "a": "D) İnternet erişiminin yoğun olarak mobilden sağlanması ve akıllı telefonların dijital asistan görevi görmesi", "e": "Kullanıcıların internete çoğunlukla mobilden bağlanması ve telefonun kişisel bir asistana dönüşmesi, mobil yazılıma olan talebi artırmıştır.", "as": [], "ks": ["vize"], "k": "vize", "id": 43}, {"tags": ["2024-25 vize"], "q": "Mobil platformların kendi sundukları <b>API üzerinden</b> yazılım geliştirmeyi ifade eden mobil programlama türü hangisidir?", "o": ["A) Katmanlı (Layered)", "B) Mobil Web (Mobile Web)", "C) Çekirdek (Kernel)", "D) Cross-Platform (Çok Ortam Destekli)", "E) Doğal (Native)"], "a": "E) Doğal (Native)", "e": "<b>Native</b> geliştirme, platformun kendi dilini/SDK'sını (Android→Kotlin/Java, iOS→Swift) ve API'lerini doğrudan kullanır. Flutter ise cross-platform yaklaşımdır.", "as": [], "ks": ["vize"], "k": "vize", "id": 44}, {"tags": ["2025-26 final", "tek ders 2025"], "q": "<b>Plugin (Eklenti)</b> ile <b>Package (Paket)</b> arasındaki fark hangisidir?", "o": ["A) Package sadece Dart kodlarından oluşurken Plugin platform kodlaması ile köprü kurar.", "B) Plugin her projeye uyar, package sadece Dart uygulamalarına eklenir.", "C) Plugin sadece Dart, Package platform köprüsü kurar.", "D) Plugin'de Package'ye göre asset bulunabilir.", "E) Package daha büyük, Plugin küçüktür."], "a": "A) Package sadece Dart kodlarından oluşurken Plugin platform kodlaması ile köprü kurar.", "e": "<b>Package</b> saf Dart'tır. <b>Plugin</b> ise Android/iOS gibi platformların native koduna erişmek için köprü (platform channel) içerir (ör. kamera, GPS).", "as": [], "ks": ["final", "but"], "k": "final", "id": 45}, {"tags": ["2024-25 final"], "q": "Flutter ve Dart içinden <b>Firebase</b> özelliklerine erişmek için kullanılan kütüphaneler koleksiyonunun adı nedir?", "o": ["A) FlutterFire", "B) FireInTheHole", "C) Provider", "D) Intl", "E) Destiny"], "a": "A) FlutterFire", "e": "<b>FlutterFire</b>, Firebase servislerini (Auth, Firestore, Storage...) Flutter'a bağlayan resmî eklenti ailesidir.", "as": [], "ks": ["final"], "k": "final", "id": 46}, {"tags": ["tek ders 2025"], "q": "Firebase özelliklerinin kullanıma başlanmasından önce hangi fonksiyon çağrılmalıdır?", "o": ["A) connect()", "B) firebase_core()", "C) load()", "D) init()", "E) initializeApp()"], "a": "E) initializeApp()", "e": "Herhangi bir Firebase servisi kullanılmadan önce <code>Firebase.initializeApp()</code> ile bağlantı ilklendirilmelidir.", "as": [], "ks": ["but"], "k": "but", "id": 47}, {"tags": ["2023-24 final"], "q": "Google firmasının sunduğu bir hizmet olan <b>Firebase</b> için hangi tanım daha uygundur?", "o": ["A) Android'in Flutter ile iletişimi için ara katman", "B) Flutter kodları için bir editör", "C) Google ürünlerinin satıldığı market", "D) Veritabanı, Kimlik Doğrulama, Yapay Zeka gibi hizmetlerin sunulduğu servistir.", "E) Android'in iOS gibi davranmasını sağlayan araç"], "a": "D) Veritabanı, Kimlik Doğrulama, Yapay Zeka gibi hizmetlerin sunulduğu servistir.", "e": "Firebase, arka uç (backend) hizmetlerini (veritabanı, auth, depolama, analitik...) bulut üzerinden sunan bir BaaS platformudur.", "as": [], "ks": ["final"], "k": "final", "id": 48}, {"tags": ["2024-25 final", "2025-26 final", "tek ders 2025"], "q": "Flutter geliştiricilerinin sunduğu <b>tüm widget'ların tanıtımına</b> Flutter dokümanındaki hangi başlık altından erişilir?", "o": ["A) Deployment", "B) Flutter in Action", "C) Widget Catalog", "D) Testing and Debugging", "E) Flutter Widgets"], "a": "C) Widget Catalog", "e": "Tüm hazır widget'lar kategorileriyle <b>Widget Catalog</b> altında listelenir.", "as": [], "ks": ["final", "but"], "k": "final", "id": 49}, {"tags": ["2024-25 vize"], "q": "Flutter'daki widget'ların nasıl çalıştığını ve hangi parametreleri aldığını <b>en detaylı</b> öğrenme biçimi hangisidir?", "o": ["A) Dart dokümantasyonundan", "B) Flutter API dokümantasyonundan", "C) Android API dokümantasyonundan", "D) GitHub örneklerinden", "E) Flutter Cookbook dokümantasyonundan"], "a": "B) Flutter API dokümantasyonundan", "e": "Bir widget'ın tüm parametre ve davranışları en ayrıntılı şekilde <b>API dokümantasyonunda</b> (api.flutter.dev) yer alır.", "as": [], "ks": ["vize"], "k": "vize", "id": 50}, {"tags": ["2024-25 final", "2023-24 büt"], "q": "Flutter ekibinin kullanım için <b>önerdiği kütüphaneleri</b> sunduğu programın adı nedir?", "o": ["A) Best Practice", "B) Jet Pack", "C) Flutter Favorite", "D) Editors Choice", "E) Flutter Best"], "a": "C) Flutter Favorite", "e": "pub.dev'de kalite/bakım kriterlerini sağlayan paketlere verilen rozet <b>Flutter Favorite</b>'tır.", "as": [], "ks": ["final", "but"], "k": "final", "id": 51}, {"tags": ["2023-24 final"], "q": "Google'ın tasarladığı, <b>material.io</b>'da paylaşılan, uygulama görsellerinin nasıl olması gerektiğini anlatan konseptin genel adı nedir?", "o": ["A) Widget Design", "B) Material Design", "C) Design Basics", "D) Material Components", "E) Material Widgets"], "a": "B) Material Design", "e": "<b>Material Design</b>, Google'ın tutarlı görsel dil/etkileşim rehberidir; Flutter'daki Material widget'ları bunu uygular.", "as": [], "ks": ["final"], "k": "final", "id": 52}, {"tags": ["2024-25 vize"], "q": "<code>import 'package:flutter/material.dart';</code> ile eklenen Material Kütüphanesi bileşenleri hangi aşamada fayda sağlar?", "o": ["A) Birden fazla arayüzü aynı anda bellekte saklama", "B) Kendi özel arayüz bileşeni çözümü üretme", "C) Etkileşimlerin dokunmatik ekranla gerçekleşmesi", "D) Dart içine Java/Kotlin gömme", "E) Arayüz bileşenlerinin hazır, Android benzeri görsel şablona göre gelmesi"], "a": "E) Arayüz bileşenlerinin hazır, Android benzeri görsel şablona göre gelmesi", "e": "Material kütüphanesi; buton, AppBar, Scaffold gibi hazır ve tutarlı görünümlü bileşenleri getirir, sıfırdan tasarım yükünü kaldırır.", "as": [], "ks": ["vize"], "k": "vize", "id": 53}, {"tags": ["2023-24 vize", "2025-26 vize", "2024-25 final"], "q": "Aşağıdakilerden hangisi <b>Material düzenleyici</b> arayüz bileşenlerinden biridir?", "o": ["A) Icon", "B) FlatButton", "C) ListTile", "D) Text", "E) Asset"], "a": "C) ListTile", "e": "<b>ListTile</b>, başlık/alt başlık/ikon alanları olan hazır bir <b>liste satırı düzenleyicisidir</b>. Icon/Text görüntüleyici, Asset ise bir kaynaktır.", "as": [], "ks": ["vize", "final"], "k": "vize", "id": 54}, {"tags": ["2024-25 final"], "q": "Aşağıdakilerden hangisi Flutter çerçevesindeki bir <b>düzenleyici arayüz bileşeni</b> <u>değildir</u>?", "o": ["A) Palette", "B) Container", "C) ListView", "D) Center", "E) Align"], "a": "A) Palette", "e": "\"Palette\" bir düzenleyici (layout) widget değildir. Container, ListView, Center, Align yerleşim düzenleyicileridir.", "as": [], "ks": ["final"], "k": "final", "id": 55}, {"tags": ["2023-24 vize", "2023-24 büt"], "q": "Bir satırda <b>soldan sağa</b> birden fazla görsel bileşeni yerleştirmek için kullanılan düzenleyici widget hangisidir?", "o": ["A) Text", "B) Row", "C) Column", "D) Container", "E) Stack"], "a": "B) Row", "e": "<b>Row</b> çocuklarını yatayda (soldan sağa) dizer. Column dikeyde, Stack üst üste, Container tek çocuğu sarar.", "as": ["tbl_layout"], "ks": ["vize", "but"], "k": "vize", "id": 56}, {"tags": ["2023-24 vize", "2025-26 vize", "2023-24 büt"], "q": "Aşağıdaki ihtiyaçlardan hangisi için arayüz bileşenlerinizi bir <b>Container</b> içine <u>toplamazsınız</u>?", "o": ["A) İç kenar boşluğu (padding) ayarlamak", "B) İçerdiği objeleri yan yana (soldan sağa) sıralamak", "C) Kenar özellikleri (border) ayarlamak", "D) Dış kenar boşluğu (margin) ayarlamak", "E) Arkaplan rengi (color) ayarlamak"], "a": "B) İçerdiği objeleri yan yana (soldan sağa) sıralamak", "e": "Container <b>tek bir çocuk</b> alır; birden fazla objeyi yan yana dizmek <b>Row</b>'un işidir. padding/margin/border/renk ise Container'ın öz işlevleridir.", "as": [], "ks": ["vize", "but"], "k": "vize", "id": 57}, {"tags": ["2023-24 vize", "2025-26 vize"], "q": "<code>Container(width: 100, height: 100, color: red)</code> sayfanın en üst bileşeni olduğunda ekranın tamamını kaplar. Sebebi nedir?", "o": ["A) color parametresinin tanımlanmış olması", "B) Üst seviyedeki kısıtın kendisini buna zorlaması", "C) padding parametresinin tanımlanmamış olması", "D) decoration parametresinin tanımlanmamış olması", "E) child parametresinin verilmemiş olması"], "a": "E) child parametresinin verilmemiş olması", "e": "Çocuğu olmayan bir Container, üstündeki kısıtın izin verdiği kadar <b>en büyük boyutu almaya</b> çalışır ve ekranı doldurur. <b>Görüşüm:</b> Bu soru iki yılda iki farklı anahtarla çıktı — 2023-24 booklet'ında \"üst kısıt zorluyor (B)\" işaretlenmişti; ikisi de aynı davranışı anlatır. child verildiğinde Container o çocuğun boyutuna uyar.", "as": ["code_container_fill"], "ks": ["vize"], "k": "vize", "id": 58}, {"tags": ["2024-25 vize", "2024-25 final", "2024-25 büt"], "q": "<b>Kullanıcı etkileşimi olmayacak</b> kendi arayüz bileşenimizi tasarlamak için hangi sınıftan miras almak uygundur?", "o": ["A) Scaffold", "B) StatelessWidget", "C) Container", "D) MaterialApp", "E) Widget"], "a": "B) StatelessWidget", "e": "Durumu (state) değişmeyen, sadece verilen girdiyle çizilen bileşenler için <b>StatelessWidget</b> uygundur. Etkileşim/durum değişimi gerekiyorsa StatefulWidget seçilir.", "as": [], "ks": ["vize", "final", "but"], "k": "vize", "id": 59}, {"tags": ["2023-24 vize"], "q": "Aşağıdakilerden hangisi <b>kullanıcı etkileşimi</b> yapabilen interaktif arayüz bileşenlerinden biri <u>değildir</u>?", "o": ["A) Container", "B) FloatingActionButton", "C) Switch", "D) TextField", "E) Slider"], "a": "A) Container", "e": "Container yalnızca bir düzenleyici/kaptır, kullanıcı etkileşimi sağlamaz. Buton, Switch, TextField, Slider ise etkileşimlidir.", "as": [], "ks": ["vize"], "k": "vize", "id": 60}, {"tags": ["2023-24 vize"], "q": "Arayüz bileşeni ağacında <b>hiyerarşik olarak</b> altında başka bir bileşen <u>bulunamayacak</u> (yaprak) widget hangisidir?", "o": ["A) Row", "B) Icon", "C) Scaffold", "D) Container", "E) Column"], "a": "B) Icon", "e": "<b>Icon</b> bir yaprak (leaf) widget'tır; child almaz. Row/Column/Container/Scaffold ise altında başka widget'lar barındırır.", "as": [], "ks": ["vize"], "k": "vize", "id": 61}, {"tags": ["2024-25 final", "2023-24 büt"], "q": "Flutter'da tüm arayüz bileşenlerinin miras alarak oluşturulduğu <b>kök sınıf</b> hangisidir?", "o": ["A) Component", "B) Widget", "C) Form", "D) Frame", "E) Field"], "a": "B) Widget", "e": "Flutter'da her görsel öğe nihayetinde <b>Widget</b> sınıfından türer.", "as": [], "ks": ["final", "but"], "k": "final", "id": 62}, {"tags": ["2023-24 vize", "2024-25 vize"], "q": "StatefulWidget'tan türeyen bir bileşende, <code>@override</code> ile yeniden yazılması gereken <code>createState()</code> fonksiyonunun <b>geri dönüş türü</b> ne olmalıdır?", "o": ["A) StatefulWidget", "B) Function&lt;void&gt;", "C) List&lt;TapboxA&gt;", "D) State&lt;TapboxA&gt;", "E) Widget"], "a": "D) State&lt;TapboxA&gt;", "e": "<code>createState()</code>, ilgili widget'ın durumunu tutan <code>State&lt;TapboxA&gt;</code> nesnesini döndürür.", "as": ["code_tapbox_createstate"], "ks": ["vize"], "k": "vize", "id": 63}, {"tags": ["2023-24 vize", "2024-25 final"], "q": "StatefulWidget'tan miras alarak oluşturacağımız bir bileşende <code>setState()</code> fonksiyonu nerede olmalıdır?", "o": ["A) Arayüz güncellemesinin gerektiği yerdeki kodu sarmalayacak yerde.", "B) Sınıfın yapıcı fonksiyonu içinde.", "C) createState() metodu içinde.", "D) build metodu içinde.", "E) Sınıf içinde değil, runApp içinde."], "a": "A) Arayüz güncellemesinin gerektiği yerdeki kodu sarmalayacak yerde.", "e": "<code>setState(() { ... })</code>, durumu değiştiren kodu sarmalar ve çerçeveye \"yeniden çiz\" sinyali verir. build içinde doğrudan çağrılırsa sonsuz döngü olur.", "as": [], "ks": ["vize", "final"], "k": "vize", "id": 64}, {"tags": ["2024-25 vize"], "q": "<code>class TabboxA extends StatefulWidget { ... }</code> ile başlayan bir sınıf için hangi seçenek <b>her zaman doğrudur</b>?", "o": ["A) İçerisinde setState() ile arayüz güncellemesi tetiklenebilir.", "B) Kullanıcı ile etkileşimde bulunmak zorundadır.", "C) En dış katmandaki widget'tır.", "D) En iç katmandaki widget'tır.", "E) Bir Container içinde yer almalıdır."], "a": "A) İçerisinde setState() ile arayüz güncellemesi tetiklenebilir.", "e": "StatefulWidget olduğu için durumu vardır ve <code>setState()</code> ile yeniden çizim tetikleyebilir. Katman konumu ya da etkileşim zorunluluğu türünden çıkarılamaz.", "as": [], "ks": ["vize"], "k": "vize", "id": 65}, {"tags": ["2024-25 vize", "tek ders 2025"], "q": "Column widget'ındaki <code>crossAxisAlignment</code> parametresi ne için düzenleme sağlar?", "o": ["A) Dikey taşma yapmaması için", "B) Yatay taşma yapmaması için", "C) İçerdiği elemanların dikeyde yerleşimi için", "D) Eleman sayısının çalışma zamanı tespiti için", "E) İçerdiği elemanların yatayda yerleşimi için"], "a": "E) İçerdiği elemanların yatayda yerleşimi için", "e": "Column'un ana ekseni dikeydir; <b>çapraz (cross) ekseni yataydır</b>. Dolayısıyla <code>crossAxisAlignment</code> çocukların yatay hizasını ayarlar. (mainAxisAlignment dikeydeki dağılımı ayarlar.)", "as": [], "ks": ["vize", "but"], "k": "vize", "id": 66}, {"tags": ["2024-25 final", "2023-24 büt", "tek ders 2024"], "q": "<b>GridView</b> düzenleyici arayüz bileşeni için hangi tanım uygundur?", "o": ["A) Kaydırılabilir bir ızgara (tablo) görünümü sağlar.", "B) Köşeleri yuvarlatılmış, gölgeli bir çerçeve sağlar.", "C) padding/margin/border/renk atamayı sağlar.", "D) Kaydırılabilir bir liste görünümü sağlar.", "E) İçeriğin üst üste bindirilmesini sağlar."], "a": "A) Kaydırılabilir bir ızgara (tablo) görünümü sağlar.", "e": "<b>GridView</b> öğeleri ızgara (grid) halinde ve kaydırmalı gösterir. Tek sütun liste ListView, üst üste bindirme Stack'tir.", "as": ["tbl_layout"], "ks": ["final", "but"], "k": "final", "id": 67}, {"tags": ["2023-24 final"], "q": "<b>Expanded</b> arayüz bileşeninin hangi parametresi ekran paylaşım oranını belirler?", "o": ["A) state", "B) child", "C) flex", "D) children", "E) key"], "a": "C) flex", "e": "<code>Expanded(flex: n)</code>, kardeşleri arasında kalan alanı <b>flex oranına</b> göre paylaştırır (2:1 gibi).", "as": [], "ks": ["final"], "k": "final", "id": 68}, {"tags": ["2024-25 final"], "q": "Sayfaya yerleştirilen resmin, sayfadaki boşluğu <b>dolduracak şekilde</b> kaplaması istenirse Image objesi hangi widget içine alınmalıdır?", "o": ["A) Expanded", "B) Container", "C) GestureDetector", "D) Center", "E) Stack"], "a": "A) Expanded", "e": "<code>Expanded</code>, çocuğunu (Image) kalan boş alanı doldurmaya zorlar. (Aynı işi <code>Flexible</code> daha esnek biçimde yapar.)", "as": [], "ks": ["final"], "k": "final", "id": 69}, {"tags": ["2025-26 final", "2024-25 büt"], "q": "<b>Scaffold</b> bileşeni için aşağıdaki ifadelerden hangisi <u>yanlıştır</u>?", "o": ["A) Android'in klasik uygulama ana ekranını oluşturur.", "B) home adında bir parametresi vardır.", "C) Arayüz ağacında olması zorunlu değildir.", "D) body adında bir parametresi vardır.", "E) appBar adında bir parametresi vardır."], "a": "B) home adında bir parametresi vardır.", "e": "Scaffold'ta <code>appBar</code>, <code>body</code>, <code>floatingActionButton</code> gibi parametreler vardır ama <b>home</b> yoktur — <code>home</code> MaterialApp'in parametresidir.", "as": [], "ks": ["final", "but"], "k": "final", "id": 70}, {"tags": ["2024-25 final", "2024-25 büt"], "q": "AppBar'ın altında bir liste varken sayfa aşağı kaydırılınca <b>başlığın gizlenmesi</b> isteniyorsa her iki bileşeni de hangi widget türünden yapmak gerekir?", "o": ["A) Gold", "B) Silver", "C) Platinum", "D) Dust", "E) Bronze"], "a": "B) Silver", "e": "Kaydırmayla daralan/gizlenen başlık ve listeler <b>Sliver</b> ailesiyle (SliverAppBar, SliverList) yapılır. Sınav bunu \"Silver\" olarak yazmış.", "as": [], "ks": ["final", "but"], "k": "final", "id": 71}, {"tags": ["2025-26 final"], "q": "<b>StatefulWidget</b> ile ilgili aşağıdaki ifadelerden hangisi <u>yanlıştır</u>?", "o": ["A) Bir projede birden fazla StatefulWidget tanımlanamaz.", "B) StatefulWidget içinde StatelessWidget bulunabilir.", "C) Tüm ağaç runApp() parametresinden başlar.", "D) setState(), güncelleme gereken kodu sarmalar.", "E) StatelessWidget güncelleme için yeniden oluşturulur."], "a": "A) Bir projede birden fazla StatefulWidget tanımlanamaz.", "e": "Bir projede istediğin kadar StatefulWidget olabilir; \"birden fazla tanımlanamaz\" ifadesi yanlıştır. Diğer maddeler doğrudur.", "as": [], "ks": ["final"], "k": "final", "id": 72}, {"tags": ["2023-24 vize"], "q": "Arayüzün yenilenmesi gerektiğinde hazırlanan bileşenin StatefulWidget olması gerekir. Performans açısından StatefulWidget hiyerarşide <b>nerede</b> olmalıdır?", "o": ["A) SetState içinde çağrılacak şekilde yerleştirilmelidir.", "B) Etkileşim sonucu güncellenmesi gereken tüm bileşenleri saracak en alt seviyede olmalıdır.", "C) En alt seviyede yaprak eleman olarak olmalıdır.", "D) Ağacı oluşturan bileşenlerin en üstünde kök eleman olmalıdır.", "E) Scaffold'un hemen altında olmalıdır."], "a": "B) Etkileşim sonucu güncellenmesi gereken tüm bileşenleri saracak en alt seviyede olmalıdır.", "e": "setState tüm alt ağacı yeniden çizdiği için StatefulWidget'ı <b>mümkün olduğunca dar kapsamlı</b> (sadece değişen kısmı saracak şekilde) alta yerleştirmek gereksiz yeniden çizimi azaltır → performans artar.", "as": [], "ks": ["vize"], "k": "vize", "id": 73}, {"tags": ["2024-25 final"], "q": "<b>AnimatedContainer</b> ile bir animasyon oluşturulursa, bu animasyon aşağıdaki özelliklerden hangisini <u>değiştiremez</u>?", "o": ["A) Border (Kenarlık)", "B) Font Size (Font Boyutu)", "C) Color (Renk)", "D) Padding (İç Boşluk)", "E) Margin (Dış Boşluk)"], "a": "B) Font Size (Font Boyutu)", "e": "AnimatedContainer, container'a ait görsel özellikleri (renk, kenarlık, boşluk, boyut) animasyonla değiştirir; ama <b>metin font boyutu</b> container'ın değil Text'in özelliğidir, bu yüzden değiştiremez.", "as": [], "ks": ["final"], "k": "final", "id": 74}, {"tags": ["2023-24 vize"], "q": "Flutter'da sayfalar arası gezinti için temel kütüphanelerde gelen ve <b>Navigator API</b>'nin basit kullanımını sunan bileşen hangisidir?", "o": ["A) Material", "B) MaterialApp", "C) SizeArea", "D) Scaffold", "E) Container"], "a": "B) MaterialApp", "e": "<b>MaterialApp</b>, <code>routes</code>/<code>onGenerateRoute</code> parametreleriyle Navigator'ı hazır sunar; basit sayfa geçişleri bunun üzerinden yapılır.", "as": [], "ks": ["vize"], "k": "vize", "id": 75}, {"tags": ["2023-24 vize", "2024-25 final"], "q": "Navigator API içinde, bulunulan sayfadan <b>bir önceki sayfaya dönmeyi</b> sağlayan fonksiyon çağrısı hangisidir?", "o": ["A) Navigator.back", "B) Navigator.return", "C) Navigator.pop", "D) Navigator.push", "E) Navigator.move"], "a": "C) Navigator.pop", "e": "<code>Navigator.pop</code>, yığından en üstteki route'u atar ve bir önceki ekran görünür olur. <code>push</code> ise yeni sayfa ekler.", "as": [], "ks": ["vize", "final"], "k": "vize", "id": 76}, {"tags": ["2023-24 final"], "q": "\"Navigator API'de <code>Navigator.pop()</code> fonksiyon çağrısı ......\" cümlesini tamamlayan hangisidir?", "o": ["A) Uygulamanın ilk sayfasını ekrana getirir.", "B) Tüm sayfaların listesini ekrana getirir.", "C) Ayarlar sayfasını getirir.", "D) Uygulama kullanılırken son açılan sayfayı kapatıp bir önceki sayfaya döner.", "E) Adı verilen yeni sayfayı ekrana getirir."], "a": "D) Uygulama kullanılırken son açılan sayfayı kapatıp bir önceki sayfaya döner.", "e": "<code>pop</code>, mevcut (en üstteki) sayfayı kapatır ve altındaki önceki sayfayı gösterir.", "as": [], "ks": ["final"], "k": "final", "id": 77}, {"tags": ["2023-24 vize"], "q": "<code>Navigator.push(context, MaterialPageRoute&lt;bool?&gt;( ... ){ ... });</code> çağrısında ikinci parametrenin dönüş türünün <code>MaterialPageRoute&lt;bool?&gt;</code> olması ne ifade eder?", "o": ["A) Açılan sayfanın bool? türünde bir geri dönüş yapacağı", "B) Açılan sayfanın her zaman en üstte görüntüleneceği", "C) Kapatılınca önceki sayfanın gösterileceği", "D) Açılan sayfanın bool? türünde parametre alacağı", "E) Kapatılınca uygulamanın kapanacağı"], "a": "A) Açılan sayfanın bool? türünde bir geri dönüş yapacağı", "e": "Route'un jeneriği (<code>&lt;bool?&gt;</code>), o sayfa <code>pop</code> edilirken geri döndüreceği değerin türünü belirtir. Yani açılan sayfa kapanırken <code>bool?</code> döndürebilir.", "as": ["code_navigator_push"], "ks": ["vize"], "k": "vize", "id": 78}, {"tags": ["2023-24 vize"], "q": "Navigator API'de <code>Navigator.pushNamed()</code> fonksiyonunun hangi parametresi ile açılan sayfaya <b>veri gönderilebilir</b>?", "o": ["A) key", "B) title", "C) parameters", "D) home", "E) arguments"], "a": "E) arguments", "e": "<code>Navigator.pushNamed(context, '/detay', arguments: veri)</code> — hedef sayfada <code>ModalRoute.of(context).settings.arguments</code> ile bu <code>arguments</code> okunur.", "as": [], "ks": ["vize"], "k": "vize", "id": 79}, {"tags": ["2024-25 final"], "q": "<code>Navigator.pushNamed(context, '/b');</code> kod parçacığının işlevi nedir?", "o": ["A) '/b' ile belirtilen içeriği RAM'de arar.", "B) Bellekte bir Map içinde '/b'yi saklar.", "C) '/b'nin RAM'e yüklenmesini sağlar.", "D) '/b' ile belirtilen sayfayı arayüze çizer.", "E) Ekranda bir TextField içine '/b' yazar."], "a": "D) '/b' ile belirtilen sayfayı arayüze çizer.", "e": "<code>pushNamed</code>, önceden tanımlı <code>/b</code> rotasına karşılık gelen sayfayı yığına ekleyip ekrana getirir.", "as": ["code_pushnamed_b"], "ks": ["final"], "k": "final", "id": 80}, {"tags": ["2024-25 final"], "q": "Navigator API içinde <b>isimlendirilmiş bir yolu</b> çağırmak (ekrana getirmek) için kullanılan fonksiyon hangisidir?", "o": ["A) Navigator.popNamed", "B) Navigator.moveNamed", "C) Navigator.returnNamed", "D) Navigator.pushNamed", "E) Navigator.backNamed"], "a": "D) Navigator.pushNamed", "e": "İsimli rotalar <code>Navigator.pushNamed(context, '/yol')</code> ile açılır.", "as": [], "ks": ["final"], "k": "final", "id": 81}, {"tags": ["2024-25 vize", "2025-26 vize", "2024-25 büt"], "q": "Aşağıdakilerden hangisi Flutter <b>Navigator API</b>'ında bulunan temel bileşenlerden biri <u>değildir</u>?", "o": ["A) Screen", "B) Route", "C) Router", "D) Navigator", "E) Page"], "a": "A) Screen", "e": "Navigator API bileşenleri: Navigator, Route, Router, Page. <b>Screen</b> Navigator API'da bir bileşen değildir — çeldiricidir.", "as": ["tbl_navigator"], "ks": ["vize", "but"], "k": "vize", "id": 82}, {"tags": ["2025-26 final", "2024-25 büt"], "q": "Aşağıdakilerden hangisi <b>Navigator 2.0</b> API ile gelen bileşenlerden biri <u>değildir</u>?", "o": ["A) Page", "B) RouterInformationParser", "C) Router", "D) RouterDelegate", "E) Scaffold"], "a": "E) Scaffold", "e": "Navigator 2.0: Router, RouterDelegate, RouteInformationParser, Page. <b>Scaffold</b> bir sayfa iskeletidir, yönlendirme bileşeni değildir.", "as": [], "ks": ["final", "but"], "k": "final", "id": 83}, {"tags": ["2025-26 vize"], "q": "MaterialApp arayüz bileşeninin <code>routes</code> parametresinin aldığı değer türü hangisidir?", "o": ["A) List&lt;Widget&gt;", "B) Map&lt;int, Widget&gt;", "C) Map&lt;String, WidgetBuilder&gt;", "D) List&lt;WidgetBuilder&gt;", "E) Map&lt;String, Widget&gt;"], "a": "C) Map&lt;String, WidgetBuilder&gt;", "e": "<code>routes</code>, \"yol adı → o sayfayı kuran fonksiyon\" eşlemesidir: <code>Map&lt;String, WidgetBuilder&gt;</code>. Değer bir Widget değil, Widget üreten <b>builder</b>'dır.", "as": [], "ks": ["vize"], "k": "vize", "id": 84}, {"tags": ["2025-26 vize"], "q": "Detaylı navigasyon için tanımlanabilecek <code>onGenerateRoute</code> parametresi aşağıdaki bileşenlerden hangisinde vardır?", "o": ["A) StatefulWidget", "B) Scaffold", "C) GestureDetector", "D) CupertinoApp", "E) Container"], "a": "D) CupertinoApp", "e": "<code>onGenerateRoute</code>, uygulama kökündeki <b>MaterialApp/CupertinoApp</b> gibi App bileşenlerinde bulunur; rota adına göre dinamik sayfa üretir.", "as": [], "ks": ["vize"], "k": "vize", "id": 85}, {"tags": ["tek ders 2025"], "q": "MaterialApp'in <code>onGenerateRoute</code> parametresi, parametresi .......... olan bir fonksiyon alır. Boşluğa ne gelir?", "o": ["A) rootBundle", "B) NavigatorSettings", "C) AssetBundle", "D) RouteSettings", "E) Page"], "a": "D) RouteSettings", "e": "<code>onGenerateRoute: (RouteSettings settings) { ... }</code> — istenen yolun adı ve argümanları <b>RouteSettings</b> ile gelir.", "as": [], "ks": ["but"], "k": "but", "id": 86}, {"tags": ["2024-25 final"], "q": "Navigator API'de <code>ModalRoute.of()</code> metodu ile .......... erişilir. Boşluğa ne gelir?", "o": ["A) Açılır ekran boyutuna", "B) Sayfanın theme (şablon) özelliklerine", "C) Sayfaya gönderilen argümanlara", "D) Gezinti yapılan uygulamalar listesine", "E) Cihaz konfigürasyon bilgilerine"], "a": "C) Sayfaya gönderilen argümanlara", "e": "<code>ModalRoute.of(context)!.settings.arguments</code> ile <code>pushNamed(..., arguments: ...)</code>'daki verilere hedef sayfada erişilir.", "as": [], "ks": ["final"], "k": "final", "id": 87}, {"tags": ["2023-24 büt"], "q": "Flutter'da sayfalar arası gezintiyi sağlayan mekanizma hangi isimle adlandırılır?", "o": ["A) Router API", "B) PathFinder API", "C) Navigator API", "D) PageProvider API", "E) AppState"], "a": "C) Navigator API", "e": "Sayfa yığınını yöneten mekanizma <b>Navigator API</b>'dir.", "as": [], "ks": ["but"], "k": "but", "id": 88}, {"tags": ["2025-26 vize", "2024-25 final"], "q": "Flutter kodu içinde projeye dahil edilmiş <b>varlıklara (assets)</b> erişmek için .......... kullanılır. Boşluğa ne gelir?", "o": ["A) AssetBundle", "B) AssetFolder", "C) AssetStream", "D) AssetMap", "E) AssetString"], "a": "A) AssetBundle", "e": "<b>AssetBundle</b> (ör. <code>rootBundle</code>), pubspec'te tanımlı varlıklara program içinden erişimi sağlar.", "as": [], "ks": ["vize", "final"], "k": "vize", "id": 89}, {"tags": ["2024-25 vize"], "q": "<code>package:flutter/services.dart</code> üzerinden kullanılan <code>rootBundle</code> yapısının kullanılma sebebi nedir?", "o": ["A) Kamera/mikrofon/GPS gibi donanıma erişmek", "B) Widget ağacının en tepesine erişmek", "C) Uygulama içindeki tüm varlıklara (assets) erişmek", "D) Telefonun konfigürasyon verilerine erişmek", "E) RAM'de key-value çifti oluşturmak"], "a": "C) Uygulama içindeki tüm varlıklara (assets) erişmek", "e": "<code>rootBundle</code>, uygulamayla paketlenmiş varlıklara (metin, json, resim) doğrudan erişim veren varsayılan AssetBundle'dır.", "as": [], "ks": ["vize"], "k": "vize", "id": 90}, {"tags": ["2024-25 final", "2023-24 büt"], "q": "<code>AssetImage('icons/heart.png', package: 'my_icons')</code> kod parçacığının işlevi nedir?", "o": ["A) icons klasöründeki heart.png'e erişip my_icons olarak kullanır.", "B) my_icons adında kütüphane oluşturup dosyayı kopyalar.", "C) heart.png'i my_icons içine yükler.", "D) Resimlerin erişimi için bir kütüphane yolu tanımlar.", "E) my_icons kütüphanesindeki icons/heart.png resmini RAM'e çeker."], "a": "E) my_icons kütüphanesindeki icons/heart.png resmini RAM'e çeker.", "e": "<code>package:</code> parametresi, resmin <b>başka bir paketten</b> (my_icons) geldiğini belirtir; AssetImage o paketteki yoldan resmi belleğe yükler.", "as": ["code_assetimage"], "ks": ["final", "but"], "k": "final", "id": 91}, {"tags": ["2023-24 vize"], "q": "Aşağıdaki gibi bir konfigürasyonda Flutter, farklı klasörlerden uygun resmi cihazın nesine göre seçer?", "o": ["A) Cihazdaki piksel yoğunluğuna", "B) Cihazdaki ekran parlaklığına", "C) Cihazdaki ekran tipine", "D) Cihazdaki sensör sayısına", "E) Cihazdaki kamera çözünürlüğüne"], "a": "A) Cihazdaki piksel yoğunluğuna", "e": "<code>2.0x</code>, <code>3.0x</code> klasörleri, ekranın <b>piksel yoğunluğuna (dpi)</b> göre uygun çözünürlükteki resmi seçmek içindir; böylece görüntü her ekranda net görünür.", "as": ["code_image_density"], "ks": ["vize"], "k": "vize", "id": 92}, {"tags": ["2023-24 vize", "2023-24 büt"], "q": "İç içe klasörlerde aynı isimli resim varsa, en dış klasördeki resmin belirtilmesi tamamını projeye dahil eder. Flutter diğer resim dosyalarını hangi amaçla dahil etmiştir?", "o": ["A) Farklı temalarda kullanmak", "B) Dosyaların parçalı saklanmasından dolayı", "C) Farklı işletim sistemlerinde kullanmak", "D) İnternetten dosya indirmemek", "E) Farklı telefon modellerinde kullanmak"], "a": "A) Farklı temalarda kullanmak", "e": "Aynı isimli varyantlar (ör. çözünürlük/tema klasörleri) farklı bağlamlarda uygun görseli seçmek için tutulur.", "as": [], "ks": ["vize", "but"], "k": "vize", "id": 93}, {"tags": ["2023-24 büt"], "q": "<code>flutter: assets: - klasor/</code> satırlarının pubspec.yaml'da yaptığı etki nedir?", "o": ["A) \"klasor\"ün içindeki kod harici veri dosyalarını uygulamaya dahil etmek.", "B) Aynı isimli dosyalar için ayrıştırma eki eklemek.", "C) Klasörün proje klasörü olduğunu belirtmek.", "D) Klasörü derlemeden çıkartmak.", "E) İçindeki kodların derlemeye dahil olmasını sağlamak."], "a": "A) \"klasor\"ün içindeki kod harici veri dosyalarını uygulamaya dahil etmek.", "e": "<code>assets</code> girdisi, resim/font/json gibi <b>kod dışı varlıkları</b> paketleyip uygulamaya dahil eder.", "as": [], "ks": ["but"], "k": "but", "id": 94}, {"tags": ["2023-24 vize", "2025-26 vize"], "q": "Bellekte verileri <b>key-value (anahtar-değer)</b> çiftleri şeklinde saklamak için kullanılan veri türü hangisidir?", "o": ["A) Set", "B) Cache", "C) List", "D) Container", "E) Map"], "a": "E) Map", "e": "<code>Map&lt;K,V&gt;</code>, benzersiz anahtarları değerlere eşler. Set benzersiz eleman kümesi, List sıralı listedir.", "as": [], "ks": ["vize"], "k": "vize", "id": 95}, {"tags": ["2024-25 final", "2023-24 büt"], "q": "Flutter'da dosya sistemindeki <b>farklı klasörlerin yollarını</b> elde etmek için kullanılan paketin adı nedir?", "o": ["A) directory_search", "B) file_finder", "C) path_provider", "D) data_connect", "E) url_luncher"], "a": "C) path_provider", "e": "<b>path_provider</b>, platforma özel dizin yollarını (belge, geçici, önbellek) verir.", "as": [], "ks": ["final", "but"], "k": "final", "id": 96}, {"tags": ["2024-25 final", "tek ders 2025"], "q": "Kalıcı depolamada, uygulamanın <b>kendine ait klasörüne</b> path_provider ile erişmek için hangi kod kullanılır?", "o": ["A) Directory dir = await getApplicationDocumentsDirectory();", "B) Directory dir = path(\"AppFolder/Module/Data\");", "C) Directory dir = await getTemporaryDirectory();", "D) Directory dir = path(\"Data/Data\");", "E) Directory dir = getCacheDir();"], "a": "A) Directory dir = await getApplicationDocumentsDirectory();", "e": "<code>getApplicationDocumentsDirectory()</code>, uygulamaya özel kalıcı belge klasörünü verir. <code>getTemporaryDirectory()</code> ise sistemin silebileceği geçici alandır.", "as": ["code_pathprovider"], "ks": ["final", "but"], "k": "final", "id": 97}, {"tags": ["2024-25 final"], "q": "Kalıcı hafızaya <b>key-value</b> veri çiftleri şeklinde saklama için kullanılan özel yapının adı nedir?", "o": ["A) xml_data_storage", "B) shared_preferences", "C) persistence_pair", "D) pubspec_store", "E) options_file"], "a": "B) shared_preferences", "e": "<b>shared_preferences</b>, küçük anahtar-değer verilerini (ayarlar, oturum bilgisi) kalıcı olarak saklar.", "as": [], "ks": ["final"], "k": "final", "id": 98}, {"tags": ["2024-25 final", "tek ders 2025"], "q": "Flutter'da her uygulama için varsayılan bir SharedPreferences dosyasının <b>referansını</b> elde etmek için hangi kod kullanılır?", "o": ["A) final prefs = await SharedPreferences.getInstance();", "B) final prefs = File.SharedPreferences();", "C) final prefs = new SharedPreferences();", "D) final prefs = SharedPreferences.defaultInstance();", "E) final prefs = await SharedPreferences.getValue();"], "a": "A) final prefs = await SharedPreferences.getInstance();", "e": "Referans, asenkron <code>SharedPreferences.getInstance()</code> ile alınır. Yapıcı ile (<code>new</code>) örneklenmez.", "as": ["code_shared_prefs"], "ks": ["final", "but"], "k": "final", "id": 99}, {"tags": ["2024-25 final", "2025-26 final"], "q": "Flutter'da <b>veri saklama</b> konusunda aşağıdaki bilgilerden hangisi <u>yanlıştır</u>?", "o": ["A) Geçici dosyalar kullanıcı/OS tarafından silinebilir.", "B) Dosya sistemine erişimde path_provider ile yollar belirlenmelidir.", "C) Uygulamanın kendine ait dosya klasörüne getApplicationDocumentsDirectory() ile ulaşılır.", "D) Android'de uygulamanın kendine ait alanına başka uygulamalar erişemez.", "E) Flutter'da dosya sistemine dosya kaydedilemez; sqlite/shared_preferences kullanılmalıdır."], "a": "E) Flutter'da dosya sistemine dosya kaydedilemez; sqlite/shared_preferences kullanılmalıdır.", "e": "Flutter'da <code>dart:io</code> ve path_provider ile <b>dosya sistemine pekala dosya yazılabilir</b>. \"Kaydedilemez\" ifadesi yanlıştır.", "as": [], "ks": ["final"], "k": "final", "id": 100}, {"tags": ["2023-24 final"], "q": "Flutter'da <b>temel veritabanı işlemlerini</b> yapmak için kullanılan kütüphanenin adı nedir?", "o": ["A) sqflite", "B) okhttp", "C) volley", "D) provider", "E) intl"], "a": "A) sqflite", "e": "<b>sqflite</b>, Flutter'da yerel SQLite veritabanı işlemleri için kullanılan pakettir.", "as": [], "ks": ["final"], "k": "final", "id": 101}, {"tags": ["2024-25 final", "2025-26 final", "2024-25 büt"], "q": "<b>Sqlite</b> ile ilgili aşağıdaki ifadelerden hangisi <u>yanlıştır</u>?", "o": ["A) DateTime, Sqlite'ta tanımlı bir tür değildir; zaman rakam/String olarak saklanır.", "B) OS içinde sürekli açık bir sqlite servisi çalışmak zorundadır; uygulamalar bu servisle erişir.", "C) Sqlite ilişkisel bir veritabanı modeli sunar.", "D) iOS/Android'de yerel gelir, doğrudan kullanılabilir.", "E) Bir kolonda farklı satırlarda farklı tür veri saklanabilir."], "a": "B) OS içinde sürekli açık bir sqlite servisi çalışmak zorundadır.", "e": "SQLite <b>sunucusuz (serverless)</b>, dosya tabanlı bir motordur; ayrı bir servis/daemon gerektirmez, uygulamaya gömülü çalışır. Bu yüzden B yanlıştır.", "as": [], "ks": ["final", "but"], "k": "final", "id": 102}, {"tags": ["2023-24 final"], "q": "Sqflite'taki <code>openDatabase()</code> ile bağlantı kurulmak isteniyorsa, aşağıdaki parametrelerden hangisinin beslenmesi zorunludur?", "o": ["A) onResume", "B) onMigration", "C) onLoad", "D) onUpdate", "E) onCreate"], "a": "E) onCreate", "e": "Veritabanı ilk oluşturulurken tabloları kurmak için <code>onCreate</code> geri çağrısı verilmelidir.", "as": [], "ks": ["final"], "k": "final", "id": 103}, {"tags": ["2024-25 final", "2024-25 büt"], "q": "Bir sınıf değişkeni, <b>Floor</b> ile SQLite'ta bir tablodaki PrimaryKey alanı temsil ediyorsa, sınıf hangi dipnotu (annotation) kullanır?", "o": ["A) @table", "B) @entity", "C) @sqlite", "D) @database", "E) @dao"], "a": "B) @entity", "e": "Floor'da bir tabloya karşılık gelen sınıf <code>@entity</code> ile işaretlenir; birincil anahtar alanı ise <code>@primaryKey</code> alır.", "as": [], "ks": ["final", "but"], "k": "final", "id": 104}, {"tags": ["2023-24 final"], "q": "Akıllı telefonlarda veritabanı dosyalarının saklandığı varsayılan klasöre erişmek için hangi fonksiyon kullanılır?", "o": ["A) setDataPath()", "B) getDatabasesDirectory()", "C) getSqlDirectory()", "D) getSqlitePath()", "E) getDatabasesPath()"], "a": "E) getDatabasesPath()", "e": "sqflite'ta veritabanı klasörünün yolu <code>getDatabasesPath()</code> ile alınır.", "as": [], "ks": ["final"], "k": "final", "id": 105}, {"tags": ["2023-24 büt"], "q": "<b>\"Lazy Loading\"</b> kavramı hangisinde doğru ifade edilmiştir?", "o": ["A) Verinin sıra tabanlı değil rastgele çekilmesi", "B) Verinin uygulama açılırken çekilip sonra aynısının kullanılması", "C) Verinin sadece ekranda görüntülenecek kısmının çekilmesi", "D) Verinin herkes için aynı şekilde çekilmesi", "E) Verinin düzeltme içerecek şekilde çekilmesi"], "a": "C) Verinin sadece ekranda görüntülenecek kısmının çekilmesi", "e": "Lazy Loading, veriyi <b>ihtiyaç anında/görünen kısım kadar</b> yükler; hepsini baştan getirmez. Uzun listelerde performans/bellek kazandırır.", "as": [], "ks": ["but"], "k": "but", "id": 106}, {"tags": ["2024-25 final"], "q": "Dart'ta bir fonksiyonun <b>asenkron</b> olarak çalışması için ne yapılması gerekir?", "o": ["A) Bir sınıf içinde tanımlanması", "B) Global tanımlanması", "C) static tanımlanması", "D) İçinde await kullanılması", "E) Adından sonra async anahtar kelimesinin kullanılması"], "a": "E) Adından sonra async anahtar kelimesinin kullanılması", "e": "Fonksiyonu asenkron yapan şey imzadaki <code>async</code>'tir: <code>Future&lt;void&gt; f() async { ... }</code>. <code>await</code> ise ancak async gövdesinde kullanılabilir.", "as": [], "ks": ["final"], "k": "final", "id": 107}, {"tags": ["2023-24 final"], "q": "Dart'ta <b>sonuç döndürmeyecek</b> bir asenkron fonksiyonun geri dönüş türü ne olmalıdır?", "o": ["A) Future&lt;int&gt;", "B) Object", "C) void", "D) int", "E) Future&lt;void&gt;"], "a": "E) Future&lt;void&gt;", "e": "Asenkron fonksiyonlar bir <code>Future</code> döndürür; değer üretmiyorsa <code>Future&lt;void&gt;</code> uygundur.", "as": [], "ks": ["final"], "k": "final", "id": 108}, {"tags": ["2024-25 final", "2023-24 final"], "q": "http paketindeki <code>http.get()</code> fonksiyonunun <b>dönüş değeri</b> hangisidir?", "o": ["A) Future&lt;http.Request&gt;", "B) http.Response", "C) http.Request", "D) http.State", "E) Future&lt;http.Response&gt;"], "a": "E) Future&lt;http.Response&gt;", "e": "Ağ isteği asenkron olduğundan <code>get()</code>, sonucu ileride teslim edecek bir <code>Future&lt;http.Response&gt;</code> döndürür; <code>await</code> ile Response elde edilir.", "as": [], "ks": ["final"], "k": "final", "id": 109}, {"tags": ["2023-24 final"], "q": "<code>http.get()</code> metodu ..... içeren bir ..... sonucu dönecektir. Boşluklara sırasıyla ne gelir?", "o": ["A) Future – Request", "B) builder - http", "C) Response – Request", "D) Future - Stream", "E) Future – Response"], "a": "E) Future – Response", "e": "<code>get()</code> bir <b>Future</b> döndürür; bu Future çözüldüğünde içinde bir <b>Response</b> bulunur.", "as": ["code_http_blank"], "ks": ["final"], "k": "final", "id": 110}, {"tags": ["2023-24 final"], "q": "http.get() ile web servisine bağlanıldığında dönen cevap <code>response</code> değişkenine kaydedildiyse, <code>if(response.statusCode == 200)</code> hangi kontrolü yapar?", "o": ["A) Erişilen servisin başarısız cevap döndüğünü teyit eder.", "B) Dönen sonucun Json olup olmadığını teyit eder.", "C) Dönen sonucun html olup olmadığını teyit eder.", "D) Verinin 200'e eşit olup olmadığını kontrol eder.", "E) Erişilen web servisinin başarılı bir cevap döndüğünü teyit eder."], "a": "E) Erişilen web servisinin başarılı bir cevap döndüğünü teyit eder.", "e": "HTTP <b>200</b> durum kodu \"OK / başarılı\" anlamına gelir. Bu kontrol isteğin başarıyla sonuçlanıp sonuçlanmadığını doğrular.", "as": ["code_status200"], "ks": ["final"], "k": "final", "id": 111}, {"tags": ["2024-25 final"], "q": "<code>FutureBuilder&lt;Album&gt;(future: _futureAlbum, builder: (context, snapshot) { ... })</code> kod bloğu için aşağıdakilerden hangisi doğrudur?", "o": ["A) _futureAlbum, Future&lt;Album&gt; türündedir.", "B) _futureAlbum, \"Album\" türündedir.", "C) Kod, widget ilk oluştuğunda bir kez çalışır.", "D) _futureAlbum, FutureBuilder&lt;Album&gt; türündedir.", "E) \"Album\" sınıfı \"Widget\"tan miras almalıdır."], "a": "A) _futureAlbum, Future&lt;Album&gt; türündedir.", "e": "<code>FutureBuilder&lt;Album&gt;</code>'ın <code>future</code> parametresi bir <code>Future&lt;Album&gt;</code> bekler; <code>builder</code>, Future'ın durumuna göre defalarca çağrılabilir.", "as": ["code_futurebuilder"], "ks": ["final"], "k": "final", "id": 112}, {"tags": ["2023-24 büt"], "q": "Flutter'da bir <b>Future</b> objesinden dönen sonucun ekrana yansıtılması için kullanılan Widget hangisidir?", "o": ["A) FutureStream", "B) FutureWidget", "C) FutureBuilder", "D) Oracle", "E) BackToTheFuture"], "a": "C) FutureBuilder", "e": "<b>FutureBuilder</b>, bir Future'ın durumunu (bekliyor/tamam/hata) dinleyip arayüzü ona göre çizer.", "as": [], "ks": ["but"], "k": "but", "id": 113}, {"tags": ["2024-25 final", "2024-25 büt"], "q": "Aşağıdakilerden hangisi Flutter'da <b>uygulama seviyesi durum yönetimi</b> için kullanılan kütüphanenin adıdır?", "o": ["A) intl", "B) material", "C) http", "D) firebase", "E) provider"], "a": "E) provider", "e": "<b>provider</b>, uygulama genelinde durumu (state) paylaşmak/dinlemek için yaygın kullanılan kütüphanedir.", "as": [], "ks": ["final", "but"], "k": "final", "id": 114}, {"tags": ["2023-24 final"], "q": "provider ile durum yönetiminde, birden fazla veri modeli sağlanacaksa widget ağacının hangi widget ile sarmalanması gerekir?", "o": ["A) CustomProvider", "B) Providers", "C) Notifiers", "D) MultiProvider", "E) Consumers"], "a": "D) MultiProvider", "e": "<b>MultiProvider</b>, birden fazla provider'ı iç içe yazma zahmeti olmadan tek çatı altında sunar.", "as": ["code_runapp_provider"], "ks": ["final"], "k": "final", "id": 115}, {"tags": ["2023-24 final"], "q": "provider ile durum yönetiminde, ilgili widget ağacının sarmalanması için boş bırakılan yere gelecek uygun seçenek hangisidir? (tek model)", "o": ["A) Consumer", "B) ChangeNotifier", "C) Provider", "D) DataModel", "E) ChangeNotifierProvider"], "a": "E) ChangeNotifierProvider", "e": "Tek bir <code>ChangeNotifier</code> modelini ağaca sunmak için <b>ChangeNotifierProvider</b> kullanılır; model değişince dinleyiciler bilgilendirilir.", "as": [], "ks": ["final"], "k": "final", "id": 116}, {"tags": ["2023-24 final"], "q": "provider ile durum yönetiminde, veri modelindeki değişikliği takip edip widget ağacının belli bir bölgesini güncelleyen widget için boşluğa hangi seçenek gelir?", "o": ["A) Provider", "B) Consumer", "C) ChangeNotifierProvider", "D) ChangeNotifier", "E) DataModel"], "a": "B) Consumer", "e": "<b>Consumer</b>, yalnızca sardığı alt bölgeyi yeniden çizerek modeldeki değişimi yansıtır; tüm ekranı değil, sadece ilgili kısmı günceller.", "as": ["code_consumer_builder"], "ks": ["final"], "k": "final", "id": 117}, {"tags": ["2024-25 final", "2024-25 büt"], "q": "provider ile durum yönetiminde, sayfadaki <b>belli bir alanın</b> güncellenmesini hangi widget sağlar?", "o": ["A) MultiProvider", "B) Provider", "C) Listener", "D) Consumer", "E) ChangeNotifier"], "a": "D) Consumer", "e": "<b>Consumer</b>, dinlediği modele göre sadece kendi bölgesini yeniden çizer.", "as": ["tbl_provider"], "ks": ["final", "but"], "k": "final", "id": 118}, {"tags": ["2023-24 büt", "2024-25 büt"], "q": "provider ile durum yönetiminde <code>notifyListeners()</code> fonksiyon çağrısı <b>ne zaman</b> yapılır?", "o": ["A) Widget ağacında bir değişiklik olduğu zaman", "B) Yeni bir provider tanımlandığı zaman", "C) Yeni bir consumer tanımlandığı zaman", "D) Yeni bir veri modeli ekleneceği zaman", "E) Veri modelinde bir değişiklik olduğu zaman"], "a": "E) Veri modelinde bir değişiklik olduğu zaman", "e": "Model içindeki veri değiştiğinde <code>notifyListeners()</code> çağrılır; bu, dinleyen Consumer'ların yeniden çizilmesini tetikler.", "as": ["tbl_provider"], "ks": ["but"], "k": "but", "id": 119}, {"tags": ["2025-26 final"], "q": "provider kullanılarak bir veri modeli oluşturulacaksa, bu model hangi sınıftan <b>miras almalıdır</b>?", "o": ["A) Provider", "B) Consumer", "C) ChangeNotifierProvider", "D) ChangeNotifier", "E) DataModel"], "a": "D) ChangeNotifier", "e": "Veri modeli <code>ChangeNotifier</code>'dan türer; değişiklikte <code>notifyListeners()</code> çağırarak dinleyicileri uyarır.", "as": [], "ks": ["final"], "k": "final", "id": 120}, {"tags": ["2023-24 büt"], "q": "Consumer widget'ının builder parametresinin <code>child</code> parametresi hangi amaçla kullanılır?", "o": ["A) Güncellenmenin başlayacağı noktayı ifade etmek", "B) Consumer altında güncellenmesine gerek olmayan ağacı ifade etmek", "C) Hangi bileşenin yönetildiğini bildirmek", "D) Güncellenmesi gereken yeri ifade etmek", "E) Kullanıcı etkileşimlerini yakalayacak bileşenleri çizmek"], "a": "B) Consumer altında güncellenmesine gerek olmayan ağacı ifade etmek", "e": "<code>child</code>, model değişse de <b>yeniden çizilmesine gerek olmayan</b> alt ağacı bir kez oluşturup builder'a hazır verir — böylece gereksiz yeniden çizim önlenir (performans).", "as": [], "ks": ["but"], "k": "but", "id": 121}, {"tags": ["2023-24 final"], "q": "<b>\"Ephemeral State\"</b> (geçici durum) tanımı, bir widget'ın kendi üzerinde değişim yapmasını tanımlar. Flutter'da bunun için gerçekleştirilen işlem hangisidir?", "o": ["A) getState() metodunun kullanımı", "B) setState() metodunun kullanımı", "C) Provider.of&lt;T&gt; kullanımı", "D) repaint() metodunun kullanımı", "E) updateWidget() metodunun kullanımı"], "a": "B) setState() metodunun kullanımı", "e": "Sadece o widget'ı ilgilendiren yerel/geçici durum <code>setState()</code> ile yönetilir. Uygulama geneli durum için provider gibi çözümler kullanılır.", "as": [], "ks": ["final"], "k": "final", "id": 122}, {"tags": ["2024-25 final", "2025-26 final", "tek ders 2025"], "q": "Flutter'ın arayüz çizimi ile ilgili aşağıdaki yorumlardan hangisi <b>doğrudur</b>?", "o": ["A) Provider paketi internetteki ücretsiz web servislerinin bilgilerini getirir.", "B) Veri değişikliği arayüz güncellemesi gerektiriyorsa bu bir model olarak tanımlanmalı ve değişiklikler takip edilmelidir.", "C) Bir butonun içinde widget oluşturularak ağaca dinamik eklenebilir.", "D) Bağımsız bölge güncellemesi gerektiren değişimde StatefulWidget iyi çözümdür.", "E) Yeni ekran açmak için ikinciEkran.show() çağrılabilir."], "a": "B) Veri değişikliği arayüz güncellemesi gerektiriyorsa bu bir model olarak tanımlanmalı ve değişiklikler takip edilmelidir.", "e": "Bildirimsel (declarative) yaklaşımda, değişen veri bir <b>model</b> (ChangeNotifier) olarak tutulur ve değişiklikler dinlenerek ilgili arayüz otomatik güncellenir. Diğer maddeler yanlış tekniklerdir.", "as": [], "ks": ["final", "but"], "k": "final", "id": 123}, {"tags": ["tek ders 2025", "2024-25 büt"], "q": "<code>setState</code> içinde <code>_active</code> güncellenip içteki bir widget bu değere göre çiziliyor. setState, güncellenecek bileşenden <b>daha dış seviyedeyse</b>, değişen veri içteki widget'a nasıl aktarılır?", "o": ["A) StatefulWidget'ın yapıcı (constructor) fonksiyonuyla", "B) Hiyerarşide içeride kalan widget'ın yapıcı fonksiyonuyla", "C) İçteki widget'ın build fonksiyonuyla", "D) Scaffold'un child parametresine beslenecek fonksiyonla", "E) StatefulWidget'ın createState fonksiyonuyla"], "a": "B) Hiyerarşide içeride kalan widget'ın yapıcı fonksiyonuyla", "e": "setState yeniden çizim tetikleyince, dış widget içteki widget'ı yeni değerle <b>yeniden inşa eder</b>; veri, içteki widget'ın <b>yapıcısına parametre</b> olarak geçirilir (yukarıdan aşağıya veri akışı).", "as": ["code_setstate_active"], "ks": ["but"], "k": "but", "id": 124}, {"tags": ["2023-24 büt", "2024-25 final", "tek ders 2024"], "q": "flutter_test paketiyle bir <b>widget testi</b> yapılacaktır. Widget'ın test ortamında oluşturulması için hangi sınıf ve fonksiyon çifti kullanılır?", "o": ["A) Tester - pump", "B) WidgetTester - pumpWidget", "C) Finder - findWidget", "D) Matcher - findOneWidget", "E) TestWidget - tester"], "a": "B) WidgetTester - pumpWidget", "e": "Test içinde <code>WidgetTester tester</code> alınır ve <code>await tester.pumpWidget(...)</code> ile widget test ortamında çizilir.", "as": ["code_widget_test"], "ks": ["but", "final"], "k": "but", "id": 125}, {"tags": ["2025-26 final", "tek ders 2025", "2023-24 final"], "q": "Flutter test paketiyle unit test yapılırken, verilen test koşulunun (value == 1 doğrulaması) sağlanması için boşluğa ne gelir?", "o": ["A) assert", "B) find", "C) expect", "D) search", "E) lookup"], "a": "C) expect", "e": "<code>expect(gerçek, beklenen)</code>, gerçek değeri beklenenle karşılaştırıp testin başarılı/başarısız olduğunu belirler. (assert kod içi kontrol içindir, test iddiası için expect kullanılır.)", "as": ["code_expect_test"], "ks": ["final", "but"], "k": "final", "id": 126}, {"tags": ["2024-25 final"], "q": "flutter_test'teki <b>Finder</b> sınıfı ile arayüzde bir metnin varlığını test etmek için hangi fonksiyon çağrısı kullanılır?", "o": ["A) text.find()", "B) finder.string()", "C) string.find()", "D) widget.find()", "E) find.text()"], "a": "E) find.text()", "e": "<code>find.text('T')</code>, ekranda \"T\" metnini içeren widget'ı bulur; <code>expect(..., findsOneWidget)</code> ile doğrulanır.", "as": [], "ks": ["final"], "k": "final", "id": 127}, {"tags": ["2024-25 final", "tek ders 2025"], "q": "Flutter'da içeriği sürekli değişebilen veritabanı/web servisi gibi kaynaklar için unit test'in belli bir <b>anlık görüntü</b> üzerine uygulanabilmesi için kullanılan paket nedir?", "o": ["A) Filter", "B) Expresso", "C) TurkishCoffee", "D) Mockito", "E) Cappuccino"], "a": "D) Mockito", "e": "<b>Mockito</b>, gerçek kaynak yerine <b>taklit (mock)</b> nesneler üretir; testte kontrollü, sabit bir davranış sağlanır.", "as": [], "ks": ["final", "but"], "k": "final", "id": 128}, {"tags": ["2023-24 büt"], "q": "Mockito ile üretilen bir taklidin <b>davranışının belirleneceği</b> fonksiyon hangisidir?", "o": ["A) While", "B) When", "C) Where", "D) Who", "E) What"], "a": "B) When", "e": "<code>when(mock.metot()).thenReturn(...)</code> — taklit nesnenin belli bir çağrıya nasıl yanıt vereceği <b>when</b> ile tanımlanır.", "as": [], "ks": ["but"], "k": "but", "id": 129}, {"tags": ["2024-25 final"], "q": "Flutter'da uygulamanın test ve bakım süreci için aşağıdakilerden hangisi <u>yanlış</u> bir ifadedir?", "o": ["A) Uygulamanın dağıtımı profile kipinde derleme ile yapılır.", "B) Unit test senaryoları proje kökündeki test klasöründe oluşturulur.", "C) Test paketi expect ile başarıyı değerlendirir.", "D) Dağıtım boyutu platforma/cihaza göre değişebilir.", "E) Varsayılan derleme kipi debug'dır."], "a": "A) Uygulamanın dağıtımı profile kipinde derleme ile yapılır.", "e": "Dağıtım (yayın) <b>release</b> kipiyle yapılır; <b>profile</b> yalnızca performans ölçümü içindir. Bu yüzden A yanlıştır.", "as": [], "ks": ["final"], "k": "final", "id": 130}, {"tags": ["2023-24 final"], "q": "Bir Flutter uygulamasında aşağıdaki testlerden hangisi <u>gerçekleştirilemez</u>?", "o": ["A) Integration Test: Uygulamanın bütüncül çalışma testi", "B) Sandbox Test: Güvenlik ihlali testi", "C) Unit Test: Fonksiyonların tek tek testi", "D) Widget Test: Arayüz bileşenlerinin testi", "E) Unit Test: Taklit veri kaynağı ile değişen veri için test"], "a": "B) Sandbox Test: Güvenlik ihlali testi", "e": "Flutter'ın test türleri: <b>unit, widget ve integration</b> testtir. \"Sandbox Test\" diye bir Flutter test türü yoktur — çeldiricidir.", "as": [], "ks": ["final"], "k": "final", "id": 131}, {"tags": ["2025-26 final", "tek ders 2024", "2024-25 büt"], "q": "Flutter uygulamasının performansı hakkında aşağıdakilerden hangisi doğrudur?", "o": ["A) StatelessWidget'lar iç içeyken tek build() ile ekran hazırlanır, içtekilerin build'i çalışmaz.", "B) Ekranı yönetmek için geniş kapsamlı tek bir StatefulWidget performansı iyileştirir.", "C) Android/iOS paket boyutu, cihaza marketten indirilen boyuttan daha büyüktür.", "D) Uygulamalar farklı platformlar için tek bir dağıtım paketiyle paylaştırılır.", "E) Alt elemanlar değişmese de tüm alt ağaç baştan render edilmek zorundadır; çözüm yoktur."], "a": "C) Android/iOS paket boyutu, cihaza marketten indirilen boyuttan daha büyüktür.", "e": "Mağaza, cihaza özel optimizasyon/ABI ayıklaması yaptığından <b>indirilen boyut, üretilen tam paketten küçüktür</b> (yani üretilen paket daha büyüktür). Diğer maddeler yanlış performans iddialarıdır.", "as": [], "ks": ["final", "but"], "k": "final", "id": 132}, {"tags": ["2023-24 final"], "q": "Flutter'da animasyonlar için <b>varsayılan değişim eğrisi (Curve)</b> hangisidir?", "o": ["A) Curves.fastOutSlowIn", "B) Curves.slowMiddle", "C) Curves.linear", "D) Curves.bounceIn", "E) Curves.ease"], "a": "A) Curves.fastOutSlowIn", "e": "Material hareket dilinde varsayılan eğri <b>fastOutSlowIn</b>'dir (hızlı başlar, yumuşak biter).", "as": [], "ks": ["final"], "k": "final", "id": 133}, {"tags": ["2023-24 büt", "2025-26 final"], "q": "Flutter'da bir animasyonun zaman içindeki değişimindeki <b>ivmelenmesini</b> ayarladığımız bileşen hangisidir?", "o": ["A) Size", "B) Weight", "C) Velocity", "D) Curve", "E) Tween"], "a": "D) Curve", "e": "<b>Curve</b>, 0→1 ilerlemenin hızını/ivmesini biçimlendirir (ease, linear, bounce...). Tween ise aralığı iki değere eşler.", "as": ["tbl_animation"], "ks": ["but", "final"], "k": "but", "id": 134}, {"tags": ["2023-24 büt"], "q": "Flutter'da bir animasyonun geçişte kullanacağı 0.0–1.0 aralığı yerine <b>başka herhangi iki obje</b> verebilmemizi sağlayan yapı hangisidir?", "o": ["A) KeyValue", "B) Pair", "C) Couple", "D) Tween", "E) Range"], "a": "D) Tween", "e": "<b>Tween</b> (in-between), 0–1 ilerlemeyi iki uç değer (renk→renk, konum→konum) arasına dönüştürür.", "as": [], "ks": ["but"], "k": "but", "id": 135}, {"tags": ["2023-24 final", "2023-24 büt"], "q": "Aşağıdakilerden hangisi Flutter'da animasyon yapmak için kullanılan <b>temel mimari bileşenlerden</b> biri <u>değildir</u>?", "o": ["A) Curve", "B) Simulation", "C) Ticker", "D) Ruler", "E) Scheduler"], "a": "D) Ruler", "e": "Animasyon temel bileşenleri: Ticker, Simulation, Curve, Tween. <b>Ruler</b> (ve \"Scheduler\") bir animasyon bileşeni değildir — çeldiricidir.", "as": ["tbl_animation"], "ks": ["final", "but"], "k": "final", "id": 136}, {"tags": ["2023-24 final", "2023-24 büt"], "q": "\"AnimatedContainer\" gibi hazır widget'ların kullanımıyla gerçekleştirilen animasyon türü hangisidir?", "o": ["A) Hero Animations", "B) AnimatedWidget", "C) AnimationBuilder", "D) Explicit Animations", "E) Implicit Animations"], "a": "E) Implicit Animations", "e": "<b>Implicit (örtük) animasyonlar</b>, sadece hedef değeri değiştirerek geçişi otomatik yaptırır (AnimatedContainer, AnimatedOpacity). Explicit ise AnimationController ile elle yönetilir.", "as": [], "ks": ["final", "but"], "k": "final", "id": 137}, {"tags": ["tek ders 2025"], "q": "Bir animasyonda birden fazla geçiş aralığı belirlenmek isteniyorsa (renklerin sarı-yeşil-kırmızı arası homojen olmayan değişimi gibi) hangisi kullanılmalıdır?", "o": ["A) TweenColors", "B) TweenSequences", "C) MultipleTween", "D) ConstantTween", "E) TweenPairs"], "a": "B) TweenSequences", "e": "<b>TweenSequence</b>, art arda gelen farklı Tween aralıklarını (ağırlıklarıyla) tek animasyona bağlar; çok aşamalı geçişler için kullanılır.", "as": [], "ks": ["but"], "k": "but", "id": 138}, {"tags": ["2023-24 final"], "q": "Aşağıdakilerden hangisi Flutter'da animasyon durumlarını ifade eden <b>AnimationStatus</b> enum değerlerinden biri <u>değildir</u>?", "o": ["A) completed", "B) follow", "C) forward", "D) reverse", "E) dismissed"], "a": "B) follow", "e": "AnimationStatus değerleri: <b>forward, reverse, completed, dismissed</b>. \"follow\" böyle bir değer değildir.", "as": [], "ks": ["final"], "k": "final", "id": 139}, {"tags": ["2024-25 final"], "q": "JsonSerializable ile otomatik dönüşüm yapılacak model sınıfında <code>@JsonKey()</code> annotation'ı hangi amaçla kullanılır?", "o": ["A) Yazı tipi kodlaması kaynaklı çevirme ihtiyacı", "B) Bir değişkene json çevriminde ek dönüşüm işlevleri sağlanması", "C) Aynı ada sahip iki alanın ayrılması", "D) Sınıfın json serializable tarafından dikkate alınması", "E) Dosya sistemine kayıtlı veri ile eşleştirme"], "a": "B) Bir değişkene json çevriminde ek dönüşüm işlevleri sağlanması", "e": "<code>@JsonKey</code>, bir alan için özel isim/varsayılan/dönüştürücü gibi <b>ek json dönüşüm ayarları</b> tanımlar (ör. farklı JSON anahtarına eşleme).", "as": [], "ks": ["final"], "k": "final", "id": 140}, {"tags": ["2023-24 büt"], "q": "Kod üreten kütüphaneler (json_serializable) her derlemede kod üretiminin ilgili değişiklikleri takip ederek <b>otomatik</b> yapılması için terminale hangi komut yazılır?", "o": ["A) flutter pub run json_serializable watch", "B) flutter build run json_serializable watch", "C) flutter pub run build_runner build", "D) flutter pub run build_runner watch", "E) flutter pub run json_serializable build"], "a": "D) flutter pub run build_runner watch", "e": "<code>build_runner watch</code>, dosya değişikliklerini izler ve üretilen kodu <b>otomatik güncel tutar</b>. Tek seferlik üretim için <code>build</code> kullanılır.", "as": [], "ks": ["but"], "k": "but", "id": 141}, {"tags": ["2024-25 final"], "q": "Flutter'da paket bağımlılıkları belirtmek için pubspec.yaml'da kullanılan başlık hangisidir?", "o": ["A) resources:", "B) packages:", "C) requirements:", "D) dependencies:", "E) relations:"], "a": "D) dependencies:", "e": "Bağımlılıklar <code>dependencies:</code> altında listelenir (geliştirme araçları ise <code>dev_dependencies:</code>).", "as": [], "ks": ["final"], "k": "final", "id": 142}, {"tags": ["2023-24 final"], "q": "Aşağıdakilerden hangisi Dart'ta bir <b>tam sayı dizisi</b> tanımlama örneğidir?", "o": ["A) int[] list = int[1,2,3];", "B) var list&lt;int&gt; = &lt;int&gt;(1,2,3);", "C) var list[] = { 1,2,3 };", "D) var list = [1,2,3];", "E) int list = int[]{1,2,3};"], "a": "D) var list = [1,2,3];", "e": "Dart'ta liste köşeli parantezle tanımlanır: <code>var list = [1,2,3];</code> (tür çıkarımıyla List&lt;int&gt;). C/C#'taki <code>int[]</code> söz dizimi Dart'ta yoktur.", "as": [], "ks": ["final"], "k": "final", "id": 143}, {"tags": ["2023-24 final"], "q": "Aşağıdaki değişken tanımlarından hangisi bir <b>String</b> saklamak için <u>geçersiz</u> bir yöntemdir?", "o": ["A) static s = 'Can';", "B) String s = 'Can';", "C) Object s = 'Can';", "D) var s = 'Can';", "E) dynamic s = 'Can';"], "a": "A) static s = 'Can';", "e": "<code>static</code> tek başına bir tür değil, bir değiştiricidir; tür/var olmadan yerel değişken tanımı yapılamaz. Diğerleri (String/Object/var/dynamic) geçerlidir.", "as": [], "ks": ["final"], "k": "final", "id": 144}, {"tags": ["2023-24 final"], "q": "Güncel akıllı telefonlarda aşağıdaki donanım özelliklerinden hangisi <u>daha az</u> görülmektedir?", "o": ["A) Kamera", "B) GPS sensörü", "C) Fiziksel klavye", "D) İvme sensörü", "E) Mikrofon"], "a": "C) Fiziksel klavye", "e": "Dokunmatik ekranların yaygınlaşmasıyla <b>fiziksel klavye</b> akıllı telefonlarda neredeyse kalmadı; diğer donanımlar standarttır.", "as": [], "ks": ["final"], "k": "final", "id": 145}, {"tags": ["2023-24 final"], "q": "Flutter paket bağımlılıklarında bir paketi ..... arayabilir. Aşağıdakilerden hangisi bu boşluğa <u>yazılamaz</u>?", "o": ["A) Pub.dev sayfasında", "B) Github repoları içinde", "C) Dosya sisteminde", "D) Sıkıştırılmış (Zip) dosyası içinde", "E) Github repolarının alt klasörlerinde"], "a": "D) Sıkıştırılmış (Zip) dosyası içinde", "e": "Bağımlılık kaynağı pub.dev, git deposu (alt klasör dahil) ya da yerel dosya sistemi (path) olabilir; doğrudan bir <b>Zip içi</b> kaynak desteklenmez.", "as": [], "ks": ["final"], "k": "final", "id": 146}, {"tags": ["2023-24 büt"], "q": "Uygulamaya paket eklemek istiyorsanız, paketin nasıl dahil edileceği ..... sayfasında yazacaktır. Boşluğa hangisi gelmelidir?", "o": ["A) Pub.dev, installing", "B) Dart.dev, guides", "C) Flutter.dev, development", "D) Material.io, design", "E) GitHub.com, Flutter"], "a": "A) Pub.dev, installing", "e": "Her paketin <b>pub.dev</b>'deki \"Installing\" sekmesinde pubspec satırı ve kurulum adımları yer alır.", "as": [], "ks": ["but"], "k": "but", "id": 147}, {"tags": ["2023-24 büt", "2024-25 final"], "q": "pubspec.yaml'da <code>url_launcher: '&gt;=5.4.0 &lt;6.0.0'</code> satırı varsa bu paket projeye nasıl dahil olur?", "o": ["A) Bağımlılıklar 5.4.0 ila 6.0.0 arasında bir sürümü kullanır.", "B) Bağımlı paketlerde bağımlılıklar 6.0.0'a yükseltilir.", "C) 5.4.0 ile 6.0.0 arasındaki sürümler görmezden gelinir.", "D) Paket dahil edilmez, sadece sürüm aralığı takip edilir.", "E) Son sürümü kullanılır."], "a": "A) Bağımlılıklar 5.4.0 ila 6.0.0 arasında bir sürümü kullanır.", "e": "<code>&gt;=5.4.0 &lt;6.0.0</code> bir <b>sürüm aralığı</b> kısıtıdır: 5.4.0 dahil, 6.0.0 hariç olacak şekilde uygun en yüksek sürüm seçilir.", "as": ["code_urllauncher_dep"], "ks": ["but", "final"], "k": "but", "id": 148}, {"tags": ["2023-24 final"], "q": "DartDevTools içinde uygulama arayüzüne yerleşen objelerin nasıl konumlandırıldığını gördüğümüz arayüzün adı (başlığı) nedir?", "o": ["A) Gesture Detector", "B) Layout Editor", "C) Widget Inspector", "D) Form Viewer", "E) Welcome Screen"], "a": "C) Widget Inspector", "e": "<b>Widget Inspector</b>, çalışan uygulamada widget ağacını ve her widget'ın kapladığı alanı/yerleşimini görselleştirir.", "as": [], "ks": ["final"], "k": "final", "id": 149}, {"tags": ["2024-25 büt"], "q": "DartDevTools'taki <b>\"Performance View\"</b> aracı hangi işlevi görür?", "o": ["A) Ekran tazelemesi süresini ve her olayın gerçekleşme süresini gösterir.", "B) Uygulamadaki varlıkların listesini gösterir.", "C) Ayarlar ekranını gösterir.", "D) Dağıtım paketindeki eksikleri hesaplar.", "E) Her widget'ın kapladığı alanı gösterir."], "a": "A) Ekran tazelemesi süresini ve her olayın gerçekleşme süresini gösterir.", "e": "Performance View, kare süreleri (frame timing) ve olay zaman çizelgesini göstererek <b>takılma/jank</b> kaynaklarını bulmaya yarar.", "as": [], "ks": ["but"], "k": "but", "id": 150}, {"tags": ["tek ders 2024"], "q": "Bir Flutter uygulamasının <b>çalışma zamanı davranışlarını takip etmek</b> için kullanılan araç setinin adı nedir?", "o": ["A) VirtualDeviceManager", "B) DartDevTools", "C) VisualStudioCode", "D) Android SDK Manager", "E) DevelopmentTools"], "a": "B) DartDevTools", "e": "<b>DartDevTools</b> (Dart/Flutter DevTools), performans, bellek, ağ ve widget denetimi araçlarını bir arada sunar.", "as": [], "ks": ["but"], "k": "but", "id": 151}, {"tags": ["2024-25 vize"], "q": "Point bir sınıf ise, sınıf tanımı içinde <code>Point(this.x, this.y);</code> kod parçacığı hangi işlevi görür?", "o": ["A) Üye değişkenlerine ilk değer atayan yapılandırıcı (constructor) tanımlar.", "B) Sınıfın bir örneğini üretir.", "C) x ve y adlı iki örneği birleştirir.", "D) Abstract (soyut) bir metot tanımlar.", "E) \"f(x)=y\" formunda bir fonksiyon tanımlar."], "a": "A) Üye değişkenlerine ilk değer atayan yapılandırıcı (constructor) tanımlar.", "e": "<code>Point(this.x, this.y);</code>, Dart'a özgü kısa yapıcıdır: parametreleri doğrudan aynı adlı alanlara atar. Bu yüzden ayrıca gövde yazmaya gerek kalmaz.", "as": ["code_point"], "ks": ["vize"], "k": "vize", "id": 152}, {"tags": ["2023-24 vize", "2025-26 final", "2024-25 büt"], "q": "Aşağıdaki ifadelerden hangisi <b>Flutter Çerçevesi</b> için <u>yanlış</u> bir bilgidir?", "o": ["A) Dart'ta görebileceğiniz her şey bir objedir.", "B) Değişkenin herhangi türde veri tutması istenirse \"Object\" türünde oluşturulabilir.", "C) Dart güçlü tip tanımlı (strongly typed) bir dildir.", "D) Flutter, Dart'tan bağımsız ayrı bir programlama dilidir.", "E) Dart; global, yerel ve static değişken tanımlarına izin verir."], "a": "D) Flutter, Dart'tan bağımsız ayrı bir programlama dilidir.", "e": "<b>Flutter bir programlama dili değil, UI çerçevesidir</b>; Dart diliyle yazılır. Bu yüzden \"Dart'tan bağımsız ayrı bir dil\" ifadesi yanlıştır.", "as": [], "ks": ["vize", "final", "but"], "k": "vize", "id": 153}, {"tags": ["2023-24 vize"], "q": "<b>final</b> ve <b>const</b> ile sabit tanımlama yapılabilir. Bu hususta aşağıdaki ifadelerden hangisi <u>yanlıştır</u>?", "o": ["A) final değeri ilk atandıktan sonra kod içinde değiştirilemez.", "B) const, derleme zamanı (compile time) sabit tanımlamak için kullanılır.", "C) const değerinin ilk ataması, tanımlandığı satırdan daha sonra yapılabilir.", "D) final, çalışma zamanı (run time) sabit tanımlamak için kullanılır.", "E) const tanımına başka bir const ifadenin işleme sokulmuş hali atanabilir."], "a": "C) const değerinin ilk ataması, tanımlandığı satırdan daha sonra yapılabilir.", "e": "<code>const</code>, değeri <b>derleme zamanında</b> ve tanımlandığı yerde belli olmalıdır; sonraya bırakılamaz. <code>final</code> ise çalışma zamanında bir kez atanabilir.", "as": [], "ks": ["vize"], "k": "vize", "id": 154}, {"tags": ["2023-24 final", "tek ders 2025"], "q": "Flutter'ın <b>durum tabanlı arayüz çizimi</b> yaklaşımının genel tanımlaması hangisidir?", "o": ["A) declarative", "B) decorative", "C) imperative", "D) ilustrative", "E) derivative"], "a": "A) declarative", "e": "Flutter <b>bildirimsel (declarative)</b>dir: \"arayüz şu duruma göre şöyle görünsün\" dersiniz; çerçeve farkı hesaplayıp çizer. Emir kipinde (imperative) tek tek \"şunu değiştir\" demezsiniz.", "as": [], "ks": ["final", "but"], "k": "final", "id": 155}, {"tags": ["tek ders 2025"], "q": "Dart'ta <b>arka plan iş parçacığı</b> gibi konularda... (Firebase/animasyon/isolate karışık) — provider ile uygulama seviyesi durum yönetiminde veri modeli hangi sınıftan miras almalıdır? (tek ders tekrarı)", "o": ["A) Provider", "B) Consumer", "C) ChangeNotifierProvider", "D) ChangeNotifier", "E) DataModel"], "a": "D) ChangeNotifier", "e": "provider ile model <code>ChangeNotifier</code>'dan türetilir; değişiklikte <code>notifyListeners()</code> ile dinleyiciler uyarılır. (Bu soru birden çok sınavda farklı kılıflarda tekrar etti.)", "as": [], "ks": ["but"], "k": "but", "id": 156}, {"tags": ["2024-25 büt"], "q": "Android işletim sisteminde <b>İnternet erişimine</b> sahip olabilmek için <code>uses-permission INTERNET</code> kod parçacığı hangi dosyaya yazılmalıdır?", "o": ["A) Configuration.xml", "B) config.ini", "C) initialize.json", "D) pubspec.yaml", "E) AndroidManifest.xml"], "a": "E) AndroidManifest.xml", "e": "Android izinleri (INTERNET dahil) <code>AndroidManifest.xml</code> içinde <code>&lt;uses-permission&gt;</code> ile bildirilir.", "as": ["code_androidmanifest"], "ks": ["but"], "k": "but", "id": 157}];
+
+const ASSETS = {"code_islem_null": "<figure class=\"asset\"><pre class=\"code\">Function islem(int? x) {\n  return (int i) =&gt; x ?? i;\n}\n\nvoid main() {\n  var nullli  = islem(null);\n  var nullsiz = islem(5);\n  print(nullsiz(nullli(3)));\n}</pre></figure>", "code_nosuchmethod": "<figure class=\"asset\"><pre class=\"code\">@override\nvoid noSuchMethod(Invocation invocation) {\n  print('${invocation.memberName}');\n}</pre></figure>", "code_gorunum": "<figure class=\"asset\"><pre class=\"code\">void gorunum({bool kalin = false, bool gizli = false}) { ... }\n\n// çağrı:\ngorunum(kalin: true);</pre></figure>", "code_flutter_create": "<figure class=\"asset\"><pre class=\"code\">flutter create name1</pre></figure>", "code_navigator_push": "<figure class=\"asset\"><pre class=\"code\">Navigator.push(context,\n  MaterialPageRoute&lt;bool?&gt;( ....... ){ ....... });</pre></figure>", "code_container_fill": "<figure class=\"asset\"><pre class=\"code\">Container(width: 100, height: 100, color: red)</pre></figure>", "code_image_density": "<figure class=\"asset\"><pre class=\"code\">.../my_icon.png\n.../2.0x/my_icon.png\n.../3.0x/my_icon.png</pre></figure>", "code_flutter_doctor": "<figure class=\"asset\"><pre class=\"code\">$ flutter doctor\n...\n[✓] Connected device (3 available)</pre></figure>", "code_point": "<figure class=\"asset\"><pre class=\"code\">class Point {\n  int x, y;\n  Point(this.x, this.y);\n}</pre></figure>", "code_tapbox_createstate": "<figure class=\"asset\"><pre class=\"code\">class TapboxA extends StatefulWidget { ... }</pre></figure>", "code_get_right": "<figure class=\"asset\"><pre class=\"code\">double get right =&gt; left + width;</pre></figure>", "code_setstate_active": "<figure class=\"asset\"><pre class=\"code\">setState(() {\n  _active = !_active;\n});</pre></figure>", "code_shared_prefs": "<figure class=\"asset\"><pre class=\"code\">// hangisi doğru?\nfinal prefs = await SharedPreferences.getInstance();     // A\nfinal prefs = File.SharedPreferences();                  // B\nfinal prefs = new SharedPreferences();                   // C\nfinal prefs = SharedPreferences.defaultInstance();       // D\nfinal prefs = await SharedPreferences.getValue();        // E</pre></figure>", "code_pathprovider": "<figure class=\"asset\"><pre class=\"code\">// kalıcı klasöre erişim\nDirectory dir = await getApplicationDocumentsDirectory();  // A\nDirectory dir = path(\"AppFolder/Module/Data\");             // B\nDirectory dir = await getTemporaryDirectory();             // C\nDirectory dir = path(\"Data/Data\");                         // D\nDirectory dir = getCacheDir();                             // E</pre></figure>", "code_build_apk_analyze": "<figure class=\"asset\"><pre class=\"code\">flutter build apk --analyze-size</pre></figure>", "code_futurebuilder": "<figure class=\"asset\"><pre class=\"code\">FutureBuilder&lt;Album&gt;(\n  future: _futureAlbum,\n  builder: (context, snapshot) {\n    // ........... some extra code here\n  });</pre></figure>", "code_assetimage": "<figure class=\"asset\"><pre class=\"code\">AssetImage('icons/heart.png', package: 'my_icons')</pre></figure>", "code_runapp_provider": "<figure class=\"asset\"><pre class=\"code\">runApp(\n  __________________(\n    providers: [\n      ChangeNotifierProvider(create: (context) =&gt; CartModel()),\n      Provider(create: (context) =&gt; SomeOtherClass()),\n    ],\n    child: const MyApp(),\n  ),\n);</pre></figure>", "code_consumer_builder": "<figure class=\"asset\"><pre class=\"code\">return __________&lt;CartModel&gt;(\n  builder: (context, cart, child) {\n    return Text(\"Total price: ${cart.totalPrice}\");\n  },\n);</pre></figure>", "code_pubspec_assets": "<figure class=\"asset\"><pre class=\"code\">flutter:\n  assets:\n    - klasor/\n    - klasor/altklasor/</pre></figure>", "code_urllauncher_dep": "<figure class=\"asset\"><pre class=\"code\">dependencies:\n  url_launcher: '&gt;=5.4.0 &lt;6.0.0'</pre></figure>", "code_widget_test": "<figure class=\"asset\"><pre class=\"code\">void main() {\n  testWidgets('MyWidget title ve message içerir',\n      (WidgetTester tester) async {\n    await tester.pumpWidget(const MyWidget(title: 'T', message: 'M'));\n    final titleFinder   = find.text('T');\n    final messageFinder = find.text('M');\n    expect(titleFinder,   findsOneWidget);\n    expect(messageFinder, findsOneWidget);\n  });\n}</pre></figure>", "code_androidmanifest": "<figure class=\"asset\"><pre class=\"code\">&lt;uses-permission android:name=\"android.permission.INTERNET\" /&gt;</pre></figure>", "code_expect_test": "<figure class=\"asset\"><pre class=\"code\">________(value, 1);  // value değerinin 1'e eşit olduğunu doğrular</pre></figure>", "code_code_dot": "<figure class=\"asset\"><pre class=\"code\">code ./</pre></figure>", "code_pushnamed_b": "<figure class=\"asset\"><pre class=\"code\">Navigator.pushNamed(context, '/b');</pre></figure>", "code_status200": "<figure class=\"asset\"><pre class=\"code\">if (response.statusCode == 200) { ... }</pre></figure>", "code_http_blank": "<figure class=\"asset\"><pre class=\"code\">http.get() metodu ..... içeren bir ..... sonucu dönecektir.</pre></figure>", "code_extension_opts": "<figure class=\"asset\"><pre class=\"code\">extension BenimBlogum with String { .... }   // A\nextension String mixin BenimBlogum { .... }   // B\nextension String with BenimBlogum { .... }    // C\nextension BenimBlogum on String { .... }      // D\nextension String on BenimBlogum { .... }      // E</pre></figure>", "fig_vscode_runmode": "<figure class=\"asset\"><div class=\"navmock\" style=\"max-width:360px\"><div style=\"flex:3;text-align:left;padding-left:10px\">main.dart</div><div style=\"flex:1\">Ln 1</div><div class=\"on\" style=\"flex:2\"><b>&#9654;</b>Flutter · Chrome</div></div><figcaption>VS Code — aktif çalıştırma kipi (device) IDE'nin <b>sağ alt köşesinde</b> durum çubuğunda görünür</figcaption></figure>", "fig_container_fill": "<figure class=\"asset figbox\"><svg viewBox=\"0 0 200 130\" role=\"img\" aria-label=\"Container ekranı kaplıyor\"><rect x=\"20\" y=\"8\" width=\"120\" height=\"114\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" rx=\"4\"/><rect x=\"20\" y=\"8\" width=\"120\" height=\"114\" fill=\"currentColor\" opacity=\".12\"/><text x=\"80\" y=\"60\" class=\"tx\" text-anchor=\"middle\" style=\"font-size:9px\">Container</text><text x=\"80\" y=\"72\" class=\"tx\" text-anchor=\"middle\" style=\"font-size:8px\">100 x 100 istendi</text><text x=\"80\" y=\"100\" class=\"tx\" text-anchor=\"middle\" style=\"font-size:8px\">→ ama tüm ekranı kaplar</text></svg><figcaption>child verilmeyince Container, üst kısıtın (ekranın) izin verdiği en büyük alana yayılır</figcaption></figure>", "tbl_navigator": "<figure class=\"asset\"><table class=\"df\"><figcaption>Navigator API temel bileşenleri</figcaption><thead><tr><th class=\"l\">Bileşen</th><th class=\"l\">Görevi</th></tr></thead><tbody><tr><th scope=\"row\" class=\"l\">Navigator</th><td class=\"l\">Sayfa yığınını (stack) yöneten widget</td></tr><tr><th scope=\"row\" class=\"l\">Route</th><td class=\"l\">Tek bir ekran/sayfa soyutlaması</td></tr><tr><th scope=\"row\" class=\"l\">Router (2.0)</th><td class=\"l\">Bildirimsel yönlendirme kök bileşeni</td></tr><tr><th scope=\"row\" class=\"l\">Page (2.0)</th><td class=\"l\">Route'un bildirimsel karşılığı</td></tr><tr class=\"hi\"><th scope=\"row\" class=\"l\"><span class=\"mark-no\">Screen ✗</span></th><td class=\"l\">Navigator API'da böyle bir bileşen yoktur — çeldirici</td></tr></tbody></table></figure>", "tbl_animation": "<figure class=\"asset\"><table class=\"df\"><figcaption>Flutter animasyon temel mimari bileşenleri</figcaption><thead><tr><th class=\"l\">Bileşen</th><th class=\"l\">İşlevi</th></tr></thead><tbody><tr><td class=\"l\">Ticker</td><td class=\"l\">Her kareyi (frame) tetikleyen zamanlayıcı kalp atışı</td></tr><tr><td class=\"l\">Simulation</td><td class=\"l\">Fizik tabanlı değişim (yay, sürtünme)</td></tr><tr><td class=\"l\">Curve</td><td class=\"l\">Zamana göre ivmelenme eğrisi (ease, linear...)</td></tr><tr><td class=\"l\">Tween</td><td class=\"l\">0.0–1.0 aralığını iki değer arasına dönüştürür</td></tr><tr class=\"hi\"><td class=\"l\"><span class=\"mark-no\">Ruler / Scheduler ✗</span></td><td class=\"l\">Temel animasyon bileşeni değildir — çeldirici</td></tr></tbody></table></figure>", "tbl_provider": "<figure class=\"asset\"><table class=\"df\"><figcaption>provider ile durum yönetimi — kim ne yapar?</figcaption><thead><tr><th class=\"l\">Yapı</th><th class=\"l\">Rolü</th></tr></thead><tbody><tr><td class=\"l\">ChangeNotifier</td><td class=\"l\">Veri modeli bundan türer; değişince <code>notifyListeners()</code> çağırır</td></tr><tr><td class=\"l\">ChangeNotifierProvider</td><td class=\"l\">Modeli widget ağacına sunar (üst seviye sarmalar)</td></tr><tr><td class=\"l\">Consumer</td><td class=\"l\">Sadece güncellenmesi gereken alt bölgeyi yeniden çizer</td></tr><tr><td class=\"l\">notifyListeners()</td><td class=\"l\">Modelde değişiklik olduğunda dinleyicileri uyarır</td></tr></tbody></table></figure>", "tbl_layout": "<figure class=\"asset\"><table class=\"df\"><figcaption>Düzenleyici (layout) arayüz bileşenleri</figcaption><thead><tr><th class=\"l\">Widget</th><th class=\"l\">Ne yapar</th></tr></thead><tbody><tr><td class=\"l\">Row</td><td class=\"l\">Çocukları yatayda (soldan sağa) sıralar</td></tr><tr><td class=\"l\">Column</td><td class=\"l\">Çocukları dikeyde sıralar</td></tr><tr><td class=\"l\">Stack</td><td class=\"l\">Çocukları üst üste bindirir</td></tr><tr><td class=\"l\">Container</td><td class=\"l\">Tek çocuğu sarar; padding/margin/border/renk verir</td></tr><tr><td class=\"l\">ListView</td><td class=\"l\">Kaydırılabilir liste</td></tr><tr><td class=\"l\">GridView</td><td class=\"l\">Kaydırılabilir ızgara (tablo) görünümü</td></tr></tbody></table></figure>"};
+
+const KIND_LABEL = {vize:'Vize', final:'Final', but:'Büt/Tek'};
+let state = {kind:'all', year:'', rep:false, q:'', allOpen:false, order:null};
+let score = {t:0, f:0};
+const $ = s => document.querySelector(s);
+const listEl = $('#list'), emptyEl = $('#empty');
+
+const counts = {all:DATA.length, vize:0, final:0, but:0, rep:0};
+const years = new Set();
+DATA.forEach(d => {
+  d.ks.forEach(k => counts[k]++);
+  if (d.tags.length > 1) counts.rep++;
+  d.tags.forEach(t => years.add(t));
+  d._s = (d.q + ' ' + d.o.join(' ') + ' ' + d.e + ' ' + d.tags.join(' '))
+          .replace(/<[^>]+>/g,' ').toLocaleLowerCase('tr');
+});
+$('#s-all').textContent = counts.all;
+$('#s-vize').textContent = counts.vize;
+$('#s-final').textContent = counts.final;
+$('#s-but').textContent = counts.but;
+$('#s-rep').textContent = counts.rep;
+$('#c-all').textContent = counts.all;
+$('#c-vize').textContent = counts.vize;
+$('#c-final').textContent = counts.final;
+$('#c-but').textContent = counts.but;
+
+$('#c-btn-all').textContent = counts.all;
+$('#c-btn-vize').textContent = counts.vize;
+$('#c-btn-final').textContent = counts.final;
+$('#c-btn-but').textContent = counts.but;
+
+const yearSel = $('#year');
+[...years].sort().forEach(y => {
+  const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o);
+});
+
+const letter = s => (s.replace(/<[^>]+>/g,'').trim()[0] || '').toUpperCase();
+function hl(htmlStr, term){
+  if (!term) return htmlStr;
+  const low = term.toLocaleLowerCase('tr');
+  return htmlStr.split(/(<[^>]+>)/g).map(p => {
+    if (p.startsWith('<')) return p;
+    const pl = p.toLocaleLowerCase('tr');
+    let out = '', i = 0;
+    while (true){
+      const j = pl.indexOf(low, i);
+      if (j === -1){ out += p.slice(i); break; }
+      out += p.slice(i, j) + '<mark>' + p.slice(j, j + term.length) + '</mark>';
+      i = j + term.length;
+    }
+    return out;
+  }).join('');
+}
+
+function visible(){
+  const q = state.q.toLocaleLowerCase('tr').trim();
+  let rows = DATA.filter(d =>
+    (state.kind === 'all' || d.ks.includes(state.kind)) &&
+    (!state.year || d.tags.includes(state.year)) &&
+    (!state.rep || d.tags.length > 1) &&
+    (!q || d._s.includes(q))
+  );
+  if (state.order) rows = rows.slice().sort((a,b) => state.order.indexOf(a.id) - state.order.indexOf(b.id));
+  return rows;
+}
+
+function render(){
+  const rows = visible();
+  $('#shown').textContent = rows.length;
+  emptyEl.hidden = rows.length > 0;
+  const term = state.q.trim();
+
+  listEl.innerHTML = rows.map((d, i) => {
+    const correct = letter(d.a);
+    return `
+    <article class="cell" data-id="${d.id}">
+      <div class="tags">
+        ${d.ks.map(k => `<span class="tag kind">${KIND_LABEL[k]}</span>`).join('')}
+        ${d.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        ${d.tags.length > 1 ? '<span class="tag rep">🔥 Banko</span>' : ''}
+      </div>
+      <p class="q"><span class="num">${i + 1}.</span> ${hl(d.q, term)}</p>
+      ${d.as && d.as.length ? '<div class="assets">' + d.as.map(k => ASSETS[k] || '').join('') + '</div>' : ''}
+      <ul class="opts">
+        ${d.o.map(o => `<li><button class="opt" data-l="${letter(o)}" data-c="${correct}">${hl(o, term)}</button></li>`).join('')}
+      </ul>
+      <button class="reveal">Cevabı Göster</button>
+      <div class="out">
+        <div class="ans"><span class="mini">Doğru cevap</span><span class="val">${hl(d.a, term)}</span></div>
+        <div class="exp"><span class="mini">Açıklama</span><span class="val">${hl(d.e, term)}</span></div>
+      </div>
+    </article>`;
+  }).join('');
+
+  if (state.allOpen) {
+    listEl.querySelectorAll('.out').forEach(o => o.classList.add('show'));
+    listEl.querySelectorAll('.reveal').forEach(r => r.textContent = 'Cevabı Gizle');
+  }
+}
+
+listEl.addEventListener('click', e => {
+  const rev = e.target.closest('.reveal');
+  if (rev){
+    const out = rev.closest('.cell').querySelector('.out');
+    out.classList.toggle('show');
+    rev.textContent = out.classList.contains('show') ? 'Cevabı Gizle' : 'Cevabı Göster';
+    return;
+  }
+  const opt = e.target.closest('.opt');
+  if (!opt || opt.classList.contains('locked')) return;
+  const list = opt.closest('.opts');
+  const correct = opt.dataset.c, picked = opt.dataset.l;
+  list.querySelectorAll('.opt').forEach(b => {
+    b.classList.add('locked');
+    if (b.dataset.l === correct) b.classList.add('correct');
+  });
+  if (picked !== correct) opt.classList.add('wrong');
+  picked === correct ? score.t++ : score.f++;
+  updateScore();
+  const cell = opt.closest('.cell');
+  cell.querySelector('.out').classList.add('show');
+  cell.querySelector('.reveal').textContent = 'Cevabı Gizle';
+});
+
+function updateScore(){
+  const tot = score.t + score.f;
+  $('#score').classList.toggle('show', tot > 0);
+  $('#sc-t').textContent = score.t;
+  $('#sc-f').textContent = score.f;
+  $('#sc-r').textContent = tot ? Math.round(score.t / tot * 100) + '% · ' + tot + ' soru cevaplandı' : '';
+}
+$('#sc-reset').addEventListener('click', () => { score = {t:0,f:0}; updateScore(); render(); });
+
+document.querySelectorAll('.bar-in .row:nth-child(2) button[data-val]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    document.querySelectorAll('.bar-in .row:nth-child(2) button[data-val]').forEach(b => b.classList.add('ghost'));
+    e.currentTarget.classList.remove('ghost');
+    state.kind = e.currentTarget.dataset.val;
+    render();
+  });
+});
+
+yearSel.addEventListener('change', e => { state.year = e.target.value; render(); });
+$('#rep').addEventListener('click', e => {
+  state.rep = !state.rep;
+  e.currentTarget.setAttribute('aria-pressed', state.rep);
+  render();
+});
+$('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
+
+$('#toggle').addEventListener('click', e => {
+  state.allOpen = !state.allOpen;
+  e.currentTarget.setAttribute('aria-pressed', state.allOpen);
+  e.currentTarget.textContent = state.allOpen ? 'Cevapları gizle' : 'Cevapları göster';
+  listEl.querySelectorAll('.out').forEach(o => o.classList.toggle('show', state.allOpen));
+  listEl.querySelectorAll('.reveal').forEach(r => r.textContent = state.allOpen ? 'Cevabı Gizle' : 'Cevabı Göster');
+});
+
+$('#shuffle').addEventListener('click', () => {
+  const ids = visible().map(d => d.id);
+  for (let i = ids.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
+  state.order = ids; $('#reset-order').hidden = false; render(); window.scrollTo({top:0});
+});
+$('#reset-order').addEventListener('click', e => { state.order = null; e.currentTarget.hidden = true; render(); });
+
+$('#theme').addEventListener('click', e => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  if (dark) delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = 'dark';
+  e.currentTarget.textContent = dark ? '🌙 Gece' : '☀️ Gündüz';
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== $('#q')){ e.preventDefault(); $('#q').focus(); }
+  if (e.key === 'Escape' && document.activeElement === $('#q')){ $('#q').value=''; state.q=''; render(); $('#q').blur(); }
+});
+const topBtn = $('#top');
+topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+addEventListener('scroll', () => topBtn.classList.toggle('show', scrollY > 700), {passive:true});
+render();
+
+</script>
+</body>
+</html>
