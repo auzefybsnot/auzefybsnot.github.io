@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgisayar Ağları — İnteraktif Mega Soru Bankası (78 Soru)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #0984e3;
+            --success: #00b894;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --border: #dfe6e9;
+            --global-btn: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 { margin: 0 0 10px 0; font-size: 2.2em; }
+        .header p { margin: 0; font-size: 1.1em; color: #bdc3c7; }
+
+        /* Butonlar ve Kontroller */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #ecf0f1;
+            color: var(--primary);
+            border: 2px solid var(--border);
+            padding: 10px 20px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background-color: #dfe6e9; }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+        }
+
+        .global-toggle-btn {
+            background-color: var(--global-btn);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(225, 112, 85, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .global-toggle-btn:hover {
+            background-color: #d63031;
+            transform: translateY(-2px);
+        }
+
+        #quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Soru Kartları */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 25px;
+            border-left: 6px solid var(--accent);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .exam-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .exam-tag {
+            background-color: #ffeaa7;
+            color: #d63031;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .options li {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 1em;
+        }
+
+        .btn-toggle {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-toggle:hover { background-color: var(--primary); }
+
+        .answer-area {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #eafaf1;
+            border-left: 5px solid var(--success);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .correct-ans {
+            font-size: 1.1em;
+            color: var(--success);
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .exp-text { margin: 0; color: var(--text); line-height: 1.5; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+    <div style="margin-bottom: 12px;">
+        <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; transition: background 0.2s;">
+            &larr; 3. Sınıf Derslerine Dön
+        </a>
+    </div>
+
+        <div class="header">
+            <h1>AUZEF Bilgisayar Ağları</h1>
+            <p>Eksiksiz Çıkmış Soru Bankası (Vize, Final, Bütünleme)</p>
+        </div>
+
+        <div class="controls-container">
+            <button id="globalToggleBtn" class="global-toggle-btn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterQuestions('all', this)">Tüm Sorular</button>
+                <button class="tab-btn" onclick="filterQuestions('Vize', this)">Vize Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Final', this)">Final Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Bütünleme', this)">Bütünleme Soruları</button>
+            </div>
+        </div>
+
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const sorular = [
+            { q: "Geçityolu (Gateway) cihazları hakkında aşağıdaki açıklamalardan hangisi doğrudur?", options: ["A) MAC adreslerine göre yönlendirme yapar.", "B) Sadece verinin fiziksel olarak aktarımı ile ilgilenir.", "C) Farklı teknolojiye sahip cihazları/ağları birbirine bağlar.", "D) Ağdaki bilgisayarlara otomatik IP adresi dağıtır.", "E) Sadece kablosuz ağlarda sinyal güçlendirici olarak çalışır."], ans: "C) Farklı teknolojiye sahip cihazları/ağları birbirine bağlar.", exp: "Geçityolları, farklı protokolleri kullanan mimarileri birleştirmek için kullanılır. Farklı teknolojiye sahip ağların tercümanıdır.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Aşağıda yer alan cihazlardan hangisi yalnızca verinin fiziksel olarak aktarımı ile ilgilenir?", options: ["A) Yönlendirici (Router)", "B) Göbek (Hub)", "C) Anahtar (Switch)", "D) Geçityolu (Gateway)", "E) Güvenlik Duvarı (Firewall)"], ans: "B) Göbek (Hub)", exp: "Göbek cihazı, OSI modelinin 1. katmanı olan Fiziksel Katman'da çalışır. Gelen verinin içeriğine veya adresine bakmaz, tüm portlara iletir.", exams: ["Vize 2023", "Vize 2024", "Final 2025"] },
+            { q: "Herhangi bir zaman diliminde başarılı bir biçimde taşınabilen veri miktarına ne denir?", options: ["A) Bant Genişliği", "B) Yayılım Gecikmesi", "C) Verim oranı (Veri Başarımı)", "D) Gürültü", "E) Zayıflama"], ans: "C) Verim oranı (Veri Başarımı)", exp: "Ağ üzerinden belirli bir sürede kayıpsız ve başarılı bir şekilde hedefe ulaşan gerçek veri miktarını ifade eder (Throughput).", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Verinin taşınması için ışığın taşıyıcı olarak kullanıldığı kablo türü aşağıdakilerden hangisidir?", options: ["A) Koaksiyel kablo", "B) Fiber optik kablo", "C) Çift burgulu (Twisted Pair) kablo", "D) UTP kablo", "E) STP kablo"], ans: "B) Fiber optik kablo", exp: "Fiber optik kablolar, veriyi elektrik sinyalleri yerine cam veya plastik kıllar üzerinden ışık hüzmeleri şeklinde iletir.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Aşağıdakilerden hangisi kablosuz olarak verinin taşınması amacıyla kullanılan teknolojilerdir?", options: ["A) Ethernet, Fiber, Koaksiyel", "B) ADSL, VDSL, Fiber", "C) Bluetooth, RFID, Zigbee", "D) Token Ring, FDDI, ATM", "E) UTP, STP, FTP"], ans: "C) Bluetooth, RFID, Zigbee", exp: "Bluetooth, RFID ve Zigbee kablosuz iletişim protokolleridir. Diğer şıklardakiler kabloludur.", exams: ["Vize 2023"] },
+            { q: "Ölçeklerine göre bilgisayar ağları sınıflandırıldığında aşağıdakilerden hangisi bu ağ türlerinden biri değildir?", options: ["A) LAN (Yerel Ağ)", "B) WAN (Geniş Alan Ağı)", "C) MAN (Şehirsel Ağ)", "D) Hücresel Alan Ağı", "E) PAN (Kişisel Alan Ağı)"], ans: "D) Hücresel Alan Ağı", exp: "Bilgisayar ağları coğrafi ölçeklerine göre PAN, LAN, MAN ve WAN olarak sınıflandırılır. Hücresel ağ mobil iletişim mimarisidir.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Göbek (hub) cihazları bir bilgisayar ağı içerisinde yer alan bilgisayarlara..... yol sunarlar. / Birden çok cihazı bağlayarak paylaşımlı bir yol sunulmak istenmektedir. Hangi cihaz kullanılmalıdır?", options: ["A) Yönlendirici", "B) Anahtar", "C) Göbek (Hub) / Paylaşımlı", "D) Ağ Geçidi", "E) Köprü"], ans: "C) Göbek (Hub) / Paylaşımlı", exp: "Hub cihazı gelen sinyali ağdaki tüm cihazlara yayınlar (broadcast). Bu nedenle tüm cihazlar aynı iletişim yolunu (bant genişliğini) paylaşır.", exams: ["Vize 2023", "Bütünleme 2024"] },
+            { q: "Dış ortamlardan (elektromanyetik parazit, gürültü vb.) daha fazla etkilenen sinyal türü aşağıdakilerden hangisidir?", options: ["A) Dijital", "B) Analog", "C) Optik", "D) Ayrık", "E) Kuantum"], ans: "B) Analog", exp: "Analog sinyaller sürekli dalga formunda oldukları için dış ortamdaki en ufak elektriksel gürültü direkt olarak sinyalin yapısına karışır.", exams: ["Vize 2023", "Bütünleme 2024"] },
+            { q: "Bir yerleşke (kampüs) içerisinde laboratuvarlar vardır. Her biri için birer ağ oluşturulacaktır. Aynı zamanda yerleşke içerisinde de bu laboratuvarları birbirine bağlayıcı bir ağ oluşturulacaktır. Bu senaryo için en uygun iki ağ türü sırasıyla hangisidir?", options: ["A) PAN - WAN", "B) MAN - LAN", "C) LAN - MAN", "D) LAN - WAN", "E) CAN - LAN"], ans: "E) CAN - LAN", exp: "Laboratuvarlar kendi içlerinde LAN (Yerel Alan Ağı), tüm kampüsü bağlayan çatı ağ ise CAN (Campus Area Network) olarak adlandırılır.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Ağ bileşenleri düşünüldüğünde aşağıdaki bilgilerden hangisi doğrudur?", options: ["A) Kablolar ağ bileşeni sayılmaz.", "B) Ağ cihazları ağ bileşenleri arasında yer alır.", "C) Sadece bilgisayarlar ağ bileşenidir.", "D) İşletim sistemleri fiziksel bir ağ bileşenidir.", "E) Protokoller ağ cihazı olarak adlandırılır."], ans: "B) Ağ cihazları ağ bileşenleri arasında yer alır.", exp: "Bir bilgisayar ağı; uç cihazlar, ağ cihazları (switch, router) ve iletim ortamından (kablolar) oluşan bileşenlerin bütünüdür.", exams: ["Vize 2023"] },
+            { q: "Uluslararası Standardizasyon Kuruluşu'nun kısaltması aşağıdakilerden hangisidir?", options: ["A) IEEE", "B) IETF", "C) ANSI", "D) ISO", "E) ITU"], ans: "D) ISO", exp: "ISO (International Organization for Standardization), teknoloji ve bilimde uluslararası standartları belirleyen kurumdur (OSI modelinin kurucusu).", exams: ["Vize 2023"] },
+            { q: "Protokol ve standart ilişkisi hakkında yapılan aşağıdaki açıklamalardan hangisi doğrudur?", options: ["A) Protokoller donanımdır, standartlar yazılımdır.", "B) Her standart bir protokole ihtiyaç duymaz.", "C) Standartlar, geniş kabul görmüş resmileştirilmiş protokollerdir.", "D) Protokoller yasal kurumlardır, standartlar kurallardır.", "E) Bir protokol standart haline gelemez."], ans: "C) Standartlar, geniş kabul görmüş resmileştirilmiş protokollerdir.", exp: "Sektörde yaygın olarak kullanılan ve uluslararası kurumlarca onaylanmış protokoller 'standart' haline gelir.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Sinyaller ile ilgili aşağıdaki bilgilerden hangisi yanlıştır?", options: ["A) Dijital sinyaller ayrık değerler alır.", "B) Analog sinyaller sürekli dalga yapısındadır.", "C) Sinyallerin tümü sinüzoidal dalga formundadır.", "D) Sinyaller fiziksel ortam üzerinden aktarılır.", "E) Sinyal iletimi esnasında gürültüden kaçınmaya çalışılır."], ans: "C) Sinyallerin tümü sinüzoidal dalga formundadır.", exp: "Dijital sinyaller kare dalga formunda (veya basamaklı) olabilirler. Bu yüzden 'tümü' sinüzoidaldir ifadesi yanlıştır.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "MAC adresine dayalı veri iletimi gerçekleştiren iki cihaz türü aşağıdakilerin hangisinde doğru olarak verilmiştir?", options: ["A) Göbek (Hub) - Yönlendirici (Router)", "B) Geçityolu (Gateway) - Göbek (Hub)", "C) Köprü (Bridge) - Anahtar (Switch)", "D) Yineleyici (Repeater) - Modem", "E) Tekrarlayıcı - Göbek"], ans: "C) Köprü (Bridge) - Anahtar (Switch)", exp: "OSI modelinin 2. katmanında (Veri Bağı Katmanı) çalışan cihazlar (Köprü ve Anahtar), MAC adreslerini kullanarak yönlendirme yaparlar.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Yıldız topolojinin avantajlarından birisi aşağıdakilerden hangisidir?", options: ["A) Merkezde kullanılan cihaz arızalanırsa ağ etkilenmez.", "B) En az kablo kullanılan topolojidir.", "C) Merkez harici bir yerde meydana gelecek arıza ağı etkilemez, ağda iletişim devam eder.", "D) Tüm cihazlara ait veriler ortak yoldan iletilir.", "E) Tüm cihazlar birbirlerinin verilerini görebilir."], ans: "C) Merkez harici bir yerde meydana gelecek arıza ağı etkilemez, ağda iletişim devam eder.", exp: "Her uç cihaz merkeze (switch) ayrı bağlıdır. Bir kablo koparsa sadece o cihaz ağdan düşer, ağın kalanı sorunsuz çalışır.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Bilgisayarlar kullanılarak kaynak paylaşılmak istenildiğinde aşağıdakilerden hangisinin yapılması zorunludur?", options: ["A) Tüm bilgisayarlara aynı işletim sisteminin kurulması.", "B) Bir bilgisayar ağı oluşturulmalı, fiziksel aktarımın sağlanabilmesi için kablolu veya kablosuz aktarım birimi kullanılmalıdır.", "C) Mutlaka tekrarlayıcı ve yönlendirici kullanılmalıdır.", "D) Mutlaka SMTP protokolü kullanılmalıdır.", "E) Mutlaka fiber optik altyapı kurulmalıdır."], ans: "B) Bir bilgisayar ağı oluşturulmalı, fiziksel aktarımın sağlanabilmesi için kablolu veya kablosuz aktarım birimi kullanılmalıdır.", exp: "Kaynak (dosya, yazıcı) paylaşımının temel şartı cihazların birbirine bağlanması ve fiziksel bir medya ile iletim sağlanmasıdır.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Aşağıdakilerden hangisi temel ağ topolojisi türlerinden biri değildir?", options: ["A) Yıldız (Star) topoloji", "B) Ağaç (Tree) topoloji", "C) Ortak yol (Bus) topolojisi", "D) Genişletilmiş halka (extended ring) topolojisi", "E) Örgü (Mesh) topoloji"], ans: "D) Genişletilmiş halka (extended ring) topolojisi", exp: "Temel topolojiler Yıldız, Ortak Yol, Ağaç, Halka ve Örgü'dür. 'Genişletilmiş Halka' diye resmi bir topoloji sınıflandırması yoktur.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "I. Geniş Alan Ağı (WAN) II. Şehirsel Alan Ağı (MAN) III. Yerel Alan Ağı (LAN) IV. Kampüs Alan Ağı (CAN) V. Kişisel Alan Ağı (PAN) Yukarıdaki ağ türlerinin kapsadıkları alanlar büyükten küçüğe sıralandığında sıralama nasıl olmalıdır?", options: ["A) I, II, IV, III, V (Geniş-Şehirsel-Kampüs-Yerel-Kişisel)", "B) II, I, III, IV, V", "C) I, II, IV, V, III", "D) I, II, III, IV, V", "E) II, I, IV, III, V"], ans: "A) I, II, IV, III, V (Geniş-Şehirsel-Kampüs-Yerel-Kişisel)", exp: "Coğrafi kapsama göre büyükten küçüğe: WAN (Ülkeler) > MAN (Şehir) > CAN (Kampüs) > LAN (Bina) > PAN (Birkaç metre).", exams: ["Vize 2023", "Final 2025"] },
+            { q: "Gürültü ile ilgili aşağıda verilenlerden hangisi doğrudur?", options: ["A) Yalnızca analog sinyalleri güçlendirmeye yarar.", "B) Gürültü, iletilmek istenilen herhangi bir verinin içerisine karışan, veri içerisinde olması istenmeyen her tür etkidir.", "C) Gürültü, yalnızca dijital sinyalin içine karışan ve 10ms gecikme yapan etkidir.", "D) Yalnızca kablolu ağlarda meydana gelir.", "E) Gürültü, yalnızca dijital sinyalin içine karışan ve 20ms gecikme yapan etkidir."], ans: "B) Gürültü, iletilmek istenilen herhangi bir verinin içerisine karışan, veri içerisinde olması istenmeyen her tür etkidir.", exp: "Gürültü her türlü sinyale karışabilen ve iletişimi bozan istenmeyen çevresel/elektriksel faktörlerdir.", exams: ["Vize 2023", "Vize 2024", "Final 2025"] },
+            { q: "Aşağıdakilerden hangisi yakın mesafede (birkaç santimetre) kullanılacak bir kablosuz teknolojidir?", options: ["A) Wi-Fi", "B) WiMAX", "C) NFC", "D) Uydu Bağlantısı", "E) LTE"], ans: "C) NFC", exp: "Yakın Alan İletişimi (NFC), genellikle temassız ödemelerde kullanılan ve birkaç santimetre mesafede çalışan teknolojidir.", exams: ["Vize 2023", "Vize 2025"] },
+            { q: "Bir sinyalin bulunduğu ortam (kablo, hava vb.) boyunca hareket etmesi için gereken minimum süreye ne denir?", options: ["A) Yayın penceresi", "B) Yayılım gecikmesi (Propagation Delay)", "C) İletim Oranı", "D) Yayın gecikmesi", "E) İşleme Gecikmesi"], ans: "B) Yayılım gecikmesi (Propagation Delay)", exp: "Bir sinyalin iletim ortamı üzerinde kaynaktan hedefe doğru fiziki yolculuk süresine yayılım gecikmesi denir.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Wi-Fi olarak bilinen ve ilk olarak 1997 yılında geliştirilmiş olan standart aşağıdakilerden hangisidir?", options: ["A) IEEE 802.3", "B) IEEE 802.15", "C) IEEE 802.11", "D) IEEE 802.16", "E) IEEE 802.1x"], ans: "C) IEEE 802.11", exp: "802.11, Kablosuz Yerel Ağ (WLAN) ve dolayısıyla Wi-Fi standartlarını belirleyen komitenin ve teknolojinin adıdır.", exams: ["Vize 2023"] },
+            { q: "Aşağıdakilerden hangisi standart ortaya koyan bir kuruluştur?", options: ["A) Bluetooth", "B) WiFi", "C) NIC", "D) INSA", "E) ANSI"], ans: "E) ANSI", exp: "ANSI (Amerikan Ulusal Standartlar Enstitüsü), endüstriyel ve teknolojik ürünler için standartlar belirleyen kuruluştur.", exams: ["Vize 2023", "Vize 2024", "Vize 2025"] },
+            { q: "Bir şehir içerisinde yer alan tüm kişilerin hizmet alabileceği bir ağ ve şehir içerisinde yer alan belediye binaları içerisine ayrı birer özel ağ yapısı oluşturulacaktır. Senaryodaki iki ağ türü hangisidir?", options: ["A) MAN, SAN", "B) TAN, SAN", "C) MAN, LAN", "D) MAN, WAN", "E) MAN, PAN"], ans: "C) MAN, LAN", exp: "Şehir çapında geniş ağ MAN (Metropolitan Area Network), binaların kendi iç ağları ise LAN (Local Area Network) olur.", exams: ["Vize 2024", "Vize 2025"] },
+            { q: "Aşağıda yer alan cihazlardan hangisi sinyalin yeniden üretilmesini sağlar?", options: ["A) Aktarıcı", "B) Göbek", "C) Tekrarlayıcı (Repeater)", "D) Transfer edici", "E) Üretici"], ans: "C) Tekrarlayıcı (Repeater)", exp: "Tekrarlayıcı, mesafe uzadıkça zayıflayan sinyali alır ve orijinal gücüne getirerek (yeniden üreterek) iletişimi uzatır.", exams: ["Vize 2024", "Vize 2025", "Final 2024"] },
+            { q: "I. Geniş Alan Ağı (WAN), II. Şehirsel Alan Ağı (MAN), III. Kişisel Alan Ağı (PAN). Yukarıdaki ağ türlerinden hangisi/hangileri farklı binalar arasında iletişim kurma amacıyla kullanılabilir?", options: ["A) Yalnız III", "B) I ve II", "C) II ve III", "D) Yalnız II", "E) I ve III"], ans: "B) I ve II", exp: "MAN (Şehirsel) ve WAN (Geniş) ağlar binalar, şehirler veya ülkeler arası iletişime uygundur. PAN ise sadece kişisel kısacık mesafeler içindir.", exams: ["Vize 2024", "Vize 2025"] },
+            { q: "Çift bükümlü kablolar kaça ayrılmaktadır?", options: ["A) 3", "B) 6", "C) 4", "D) 2", "E) 5"], ans: "D) 2", exp: "Çift bükümlü (Twisted Pair) kablolar Korumasız (UTP) ve Korumalı (STP) olmak üzere temel olarak 2'ye ayrılır.", exams: ["Vize 2024", "Vize 2025", "Final 2023"] },
+            { q: "Ağda aynı anda yalnızca tek bir kullanıcının iletişim yapabilmesi istenmektedir. Taşınan verilerin komşu cihazlar üzerinden gönderilmesi istenmekte ve yüksek kurulum maliyeti istenmemektedir. Hangi topoloji türü uygundur?", options: ["A) Ağaç topolojisi", "B) Ortak yol topolojisi", "C) Yıldız topolojisi", "D) Halka topoloji (ring topology)", "E) Örgü topoloji"], ans: "D) Halka topoloji (ring topology)", exp: "Halka topolojisinde veriler cihazdan cihaza tek yönde akar. 'Jeton (Token)' ile çalıştığı için aynı anda tek kişi iletişim kurar ve kurulumu ucuzdur.", exams: ["Vize 2024", "Vize 2025", "Final 2023"] },
+            { q: "Bir verinin iletilmesinde taşıma sisteminin performansı aşağıda yer alan alanlardan hangisine bağlı değildir?", options: ["A) Bant genişliği", "B) Verim oranı", "C) Veri genişliği", "D) Fiziksel aktarım birimi", "E) Yayılım gecikmesi"], ans: "C) Veri genişliği", exp: "Ağ performansı bant genişliği, gecikme, verim ve fiziksel ortama bağlıdır. 'Veri genişliği' geçerli bir ağ metrik terimi değildir.", exams: ["Final 2023", "Final 2025"] },
+            { q: "Aşağıdakilerden hangisi durumsuz bir uygulama katmanı protokolüdür?", options: ["A) TCP", "B) ICMP", "C) IP", "D) HTTP", "E) UDP"], ans: "D) HTTP", exp: "HTTP (Hypertext Transfer Protocol), istemci ve sunucu arasındaki önceki istekleri hatırlamayan 'durumsuz' (stateless) bir protokoldür.", exams: ["Final 2023"] },
+            { q: "Aşağıda yer alan protokollerden hangisi akış kontrol mekanizmasına sahiptir?", options: ["A) IP", "B) ICMP", "C) Ethernet", "D) TCP", "E) UDP"], ans: "D) TCP", exp: "TCP, alıcının veri işleme kapasitesini aşmamak için veri gönderim hızını düzenleyen 'akış kontrol' mekanizmasına sahiptir.", exams: ["Final 2023"] },
+            { q: "Aşağıda yer alan protokol ikilisinden hangisi verinin uçtan uca taşınması için kullanılan protokollerdir?", options: ["A) TCP, IP", "B) TCP, UDP", "C) IP, ICMP, TCP", "D) MAC, SMTP", "E) SMTP, FTP"], ans: "B) TCP, UDP", exp: "Verinin uçtan uca (uygulamadan uygulamaya) taşınması OSI 4. Katmanının görevidir. Bunun ana protokolleri TCP ve UDP'dir.", exams: ["Final 2023", "Final 2025"] },
+            { q: "1-PAN II-WAN III-MAN IV-CAN Bir bina içerisinde yer alan ağ türlerinden hangisi veya hangileri kurulabilir?", options: ["A) Sadece I (PAN)", "B) II ve IV", "C) I, II ve III", "D) I, III, IV", "E) II ve III"], ans: "A) Sadece I (PAN)", exp: "PAN, bir oda/bina içindeki çok kısa mesafeli cihazları bağlar. WAN, MAN ve CAN bina dışına taşan devasa ölçekli ağlardır.", exams: ["Final 2023"] },
+            { q: "Aşağıdakilerden hangisi Uluslararası Telekominikasyon Birliği'ne ait kısaltmadır?", options: ["A) TUII", "B) ITU", "C) TUI", "D) UTI", "E) IITU"], ans: "B) ITU", exp: "Uluslararası Telekomünikasyon Birliği'nin kısaltması 'International Telecommunication Union'dan gelen ITU'dur.", exams: ["Final 2023"] },
+            { q: "İki ağı birbirine bağlamak için aşağıdakilerden hangisi kullanılır?", options: ["A) Üretici", "B) Köprü (Bridge)", "C) Bağlayıcı", "D) Tekrarlayıcı", "E) Yönetici"], ans: "B) Köprü (Bridge)", exp: "Köprüler, aynı yapıdaki iki farklı ağ parçasını (LAN'ı) birleştirerek tek bir ağ gibi çalışmalarını sağlarlar.", exams: ["Final 2023", "Bütünleme 2024"] },
+            { q: "Hata düzeltme teknikleri OSI referans modelinin hangi katmanında tanımlıdır?", options: ["A) 5", "B) 2", "C) 3", "D) 6", "E) 4"], ans: "B) 2", exp: "Düğümden düğüme hata sezme ve düzeltme (FCS/CRC) işlemleri OSI 2. Katman olan Veri Bağı Katmanı'nda gerçekleşir.", exams: ["Final 2023", "Bütünleme 2024"] },
+            { q: "Katmanlı mimari yapı içerisinde veri, hangi katmanda çerçeve (frame) olarak anılmaktadır?", options: ["A) Fiziksel katman", "B) Sunum katmanı", "C) Taşıma katmanı", "D) Oturum katmanı", "E) Veri bağı katmanı"], ans: "E) Veri bağı katmanı", exp: "IP paketlerinin başına MAC adresleri eklenerek 'çerçeve' (frame) oluşturulması Veri Bağı Katmanında gerçekleşir.", exams: ["Final 2023", "Final 2025", "Bütünleme 2024"] },
+            { q: "Hattın kullanıcıya rezerve edildiği anahtarlama türü aşağıdakilerden hangisidir?", options: ["A) Parça anahtarlama", "B) Paket anahtarlama", "C) Devre anahtarlama", "D) Sabit anahtarlama", "E) Örgü anahtarlama"], ans: "C) Devre anahtarlama", exp: "İletişim başlamadan önce uçtan uca özel ve fiziksel bir hat rezerve ediliyorsa buna Devre Anahtarlama (Circuit Switching) denir.", exams: ["Final 2023"] },
+            { q: "Üç yollu el sıkışma (three way handshake) için aşağıda yer alan açıklamalardan hangisi doğrudur?", options: ["A) Kullanımı zaman maliyetini etkilemez.", "B) Kullanımı zaman maliyetini 10ms düşürür.", "C) Kullanımı zaman maliyetini yükseltir.", "D) Kullanımı zaman maliyetini 10ms yükseltir.", "E) Kullanımı zaman maliyetini düşürür."], ans: "C) Kullanımı zaman maliyetini yükseltir.", exp: "TCP'nin bağlantı kurarken ekstra paket alışverişi yapması (SYN, SYN-ACK, ACK) veri transferi öncesi gecikmeye sebep olur, yani maliyeti yükseltir.", exams: ["Final 2023"] },
+            { q: "Telefon altyapısını yansıtan anahtarlama türü aşağıdakilerden hangisidir?", options: ["A) Örgü anahtarlama", "B) Parça anahtarlama", "C) Paket anahtarlama", "D) Devre anahtarlama", "E) Sabit anahtarlama"], ans: "D) Devre anahtarlama", exp: "Geleneksel telefon sistemleri, görüşme boyunca iki kişi arasında özel bir hattın tahsis edildiği Devre Anahtarlama altyapısını kullanır.", exams: ["Final 2023"] },
+            { q: "Aşağıdakilerden hangisi HTTP protokolü cevap mesajları içerisinde yer alabilecek durum kodlarından biridir?", options: ["A) 403 Not Found", "B) 400 Not Found", "C) 401 Not Found", "D) 404 Not Found", "E) 402 Not Found"], ans: "D) 404 Not Found", exp: "Web'de aranan sayfa sunucuda bulunmadığında dönen standart hata kodu '404 Not Found'dur.", exams: ["Final 2023"] },
+            { q: "Aşağıdakilerden hangisi veri bağı katmanının görevlerindendir?", options: ["A) Akış kontrolü", "B) Verilerin yeniden boyutlandırılması", "C) Veri şifreleme", "D) Verilerin sıkıştırılması", "E) Şifrelenen verinin şifresinin çözülmesi"], ans: "A) Akış kontrolü", exp: "Veri Bağı katmanı, bir cihazdan diğerine veri gönderirken MAC adresi tabanlı donanımsal akış ve hata kontrolü sağlar.", exams: ["Final 2023"] },
+            { q: "Bir yönlendirici içerisinde aşağıdakilerden hangisi yer alır?", options: ["A) Tekrarlayıcı", "B) Fiber optik kablo", "C) Giriş bağlantı noktası / Anahtarlama Yapısı", "D) Geçit yolu", "E) Göbek"], ans: "C) Giriş bağlantı noktası / Anahtarlama Yapısı", exp: "Yönlendiriciler fiziksel olarak Giriş portları, Anahtarlama yapısı (Switching Fabric), Çıkış portları ve İşlemciden oluşur.", exams: ["Final 2023", "Final 2024", "Final 2025"] },
+            { q: "Aşağıdakilerden hangisi TCP segment biçimi arasında yer alır?", options: ["A) time to live", "B) destination IP address", "C) hop limit", "D) source IP address", "E) receive window: alınan pencere boyut"], ans: "E) receive window: alınan pencere boyut", exp: "TCP başlığında, alıcının ne kadar veriyi kabul edebileceğini belirten 'pencere boyutu' (receive window) yer alır.", exams: ["Final 2023"] },
+            { q: "Heterojen ağlar arasında iletişimin desteklenebilmesi için destek sağlayan katman aşağıdakilerden hangisidir?", options: ["A) Fiziksel katman", "B) Uygulama katmanı", "C) Ağ katmanı", "D) Veribağı katmanı", "E) Taşıma katmanı"], ans: "C) Ağ katmanı", exp: "Farklı yerel ağ teknolojilerine sahip cihazların (Ethernet, WiFi) IP adresi ile ortak bir dilde iletişim kurmasını Ağ Katmanı (Katman 3) sağlar.", exams: ["Final 2023"] },
+            { q: "Aşağıdakilerden hangisi itme prensibi ile çalışan uygulama katmanı protokolüdür?", options: ["A) FTP", "B) DNS", "C) SMTP", "D) Telnet", "E) HTTP"], ans: "C) SMTP", exp: "SMTP, e-postaları kullanıcının cihazından sunucuya doğru zorla gönderdiği için 'itme' (push) prensibiyle çalışır.", exams: ["Final 2023", "Final 2025", "Bütünleme 2024"] },
+            { q: "Katmanlı mimari yapısı içersinde verilerin yanına protokollerin gerektirdiği bilgiler eklenir. Bu bilgilerin adı aşağıdakilerden hangisidir?", options: ["A) Ek (Attachment)", "B) Sağlama (Checksum)", "C) Veri (Data)", "D) Yük (Payload)", "E) Başlık (Header)"], ans: "E) Başlık (Header)", exp: "Her katmanın ana verinin (payload) önüne kendi görevleri için eklediği kontrol bloğuna Başlık (Header) denir.", exams: ["Final 2023", "Final 2025", "Bütünleme 2024"] },
+            { q: "OSI referans modelinin hangi katmanlarında güvenilirlik sunulmaktadır?", options: ["A) 1, 2", "B) 5, 6", "C) 2, 4", "D) 4, 5", "E) 2, 3"], ans: "C) 2, 4", exp: "Güvenilirlik ve hata kontrolü Düğümden düğüme 2. Katmanda (Veri Bağı) ve Uçtan uca 4. Katmanda (Taşıma - TCP) sağlanır.", exams: ["Final 2023"] },
+            { q: "25 numaralı bağlantı noktasını kullanan uygulama katmanı protokolü aşağıdakilerden hangisidir?", options: ["A) Telnet", "B) DNS", "C) FTP", "D) HTTP", "E) SMTP"], ans: "E) SMTP", exp: "E-posta gönderimi için kullanılan SMTP protokolü, varsayılan olarak TCP 25 numaralı portu kullanır.", exams: ["Final 2024"] },
+            { q: "Bir segment içerisinde S bitinin (SYN) 1 olması ne anlama gelmektedir?", options: ["A) İlgili verinin, veri parçasının son verisi olduğu", "B) İlgili verinin, veri iletimini durdurma amacıyla gönderildiği", "C) İlgili verinin, veri alındığına dair onay amacıyla gönderildiği", "D) İlgili verinin, üç yollu el sıkışma amacıyla gönderildiği", "E) Ağda öncelikli olarak taşınması istendiği"], ans: "D) İlgili verinin, üç yollu el sıkışma amacıyla gönderildiği", exp: "SYN (Synchronize) biti, TCP bağlantısı kurarken 'Üç Yollu El Sıkışma' sürecini başlatır.", exams: ["Final 2024"] },
+            { q: "Aşağıdakilerden hangisi bir ortam erişim kontrolü protokolü (MAC protokolü) türüdür?", options: ["A) Çarpışma desteği protokolü", "B) Sıra bölümleme protokolü", "C) Kanal erişim protokolü", "D) Rastgele erişim protokolü", "E) Kanal tespit protokolü"], ans: "D) Rastgele erişim protokolü", exp: "MAC protokolleri Kanal Bölümleme, Sırayla Alma ve Rastgele Erişim (CSMA/CD gibi) olmak üzere üçe ayrılır.", exams: ["Final 2024"] },
+            { q: "Aşağıdakilerden hangisi standartlaştırılmış bir teknolojidir?", options: ["A) IP", "B) Intercat", "C) SMTP", "D) TCP", "E) Bluetooth"], ans: "E) Bluetooth", exp: "Bluetooth, IEEE (802.15.1) gibi kurumlar tarafından onaylanmış bir donanım/iletişim 'standartı' ve teknolojisidir. Diğerleri protokoldür.", exams: ["Final 2024"] },
+            { q: "Aşağıda yer alan protokollerden hangisi taşıma katmanında çalışmaktadır?", options: ["A) ICMP", "B) TCP", "C) IP", "D) SMTP", "E) DNS"], ans: "B) TCP", exp: "TCP ve UDP verilerin uçtan uca güvenilir iletiminden sorumlu Taşıma Katmanı protokolleridir.", exams: ["Final 2024", "Final 2025"] },
+            { q: "Aşağıdakilerden hangisi paylaşımı bir hat kullanımına dayanan anahtarlama türüdür?", options: ["A) Parça anahtarlama", "B) Paket anahtarlama", "C) Örgü anahtarlama", "D) Sabit anahtarlama", "E) Devre anahtarlama"], ans: "B) Paket anahtarlama", exp: "İnternet gibi paket anahtarlamalı ağlarda hat tek kişiye ayrılmaz; veri paketleri aynı hattı ortaklaşa ve paylaşımlı kullanır.", exams: ["Final 2024"] },
+            { q: "Aşağıdakilerden hangisi verilerin aktarılması için iki TCP bağlantısı açılmasını gerektiren uygulama katmanı protokolüdür?", options: ["A) FTP", "B) HTTP", "C) SMTP", "D) Telnet", "E) DNS"], ans: "A) FTP", exp: "FTP (Dosya Aktarım Protokolü), biri komut/kontrol (Port 21) diğeri veri (Port 20) olmak üzere iki TCP bağlantısı açar.", exams: ["Final 2024"] },
+            { q: "Aşağıdakilerden hangisi yönlendiriciler üzerinde çalışan yönlendirme protokollerinden biridir?", options: ["A) OSPF", "B) ARP", "C) TCP", "D) SMTP", "E) Ethernet"], ans: "A) OSPF", exp: "OSPF (İlk Açık En Kısa Yol), router'ların en hızlı yolu bulmasını sağlayan bir iç ağ yönlendirme protokolüdür.", exams: ["Final 2024"] },
+            { q: "OSI referans modelinin 4. katmanı aşağıdakilerden hangisidir?", options: ["A) Veri bağı katmanı", "B) Sunum katmanı", "C) Fiziksel katman", "D) Taşıma katmanı", "E) Ağ katmanı"], ans: "D) Taşıma katmanı", exp: "OSI modeli sırasıyla: 1-Fiziksel, 2-Veri Bağı, 3-Ağ, 4-Taşıma, 5-Oturum, 6-Sunum, 7-Uygulama şeklindedir.", exams: ["Final 2024"] },
+            { q: "Aşağıda yer alan topolojilerden hangisi fazla güç tüketimi dezavantajına sahiptir?", options: ["A) Ağaç topoloji", "B) Halka topoloji", "C) Örgü (Mesh) topoloji", "D) Yıldız topoloji", "E) Ortak yol topolojisi"], ans: "C) Örgü (Mesh) topoloji", exp: "Örgü topolojide her cihaz diğer tüm cihazlara ayrı ayrı fiziksel kablo ile bağlanmak zorunda olduğu için donanım/maliyet ve güç tüketimi aşırı yüksektir.", exams: ["Final 2024"] },
+            { q: "Aşağıdakilerden hangisi UDP segment biçimi içerisinde yer alır?", options: ["A) Flags: Bayraklar", "B) Sequence number", "C) Dest port: Hedef bağlantı noktası", "D) Acknowledgement number", "E) Time to live"], ans: "C) Dest port: Hedef bağlantı noktası", exp: "Basit bir yapısı olan UDP başlığında yalnızca Kaynak Port, Hedef Port (Dest Port), Uzunluk ve Sağlama bulunur.", exams: ["Final 2024", "Bütünleme 2024"] },
+            { q: "Devre anahtarlamalı ağlarda veri aktarımı gerçekleştirme faz adedi aşağıdakilerden hangisidir?", options: ["A) 4", "B) 2", "C) 5", "D) 1", "E) 3"], ans: "E) 3", exp: "Bağlantı Kurulumu -> Veri Transferi -> Bağlantının Sonlandırılması olmak üzere toplam 3 fazdan oluşur.", exams: ["Final 2024", "Final 2025"] },
+            { q: "IPv4 ve IPv6 adreslerine ait bit sayıları sırasıyla aşağıdakilerden hangisinde doğru olarak verilmiştir?", options: ["A) 32 bit, 64 bit", "B) 32 bit, 128 bit", "C) 64 bit, 32 bit", "D) 128 bit, 256 bit", "E) 32 bit, 256 bit"], ans: "B) 32 bit, 128 bit", exp: "Klasik IPv4 adresleri 32 bit, yeni nesil IPv6 adresleri ise çok daha fazla cihazı desteklemek için 128 bittir.", exams: ["Final 2024"] },
+            { q: "Bir segment içerisinde R bitinin 1 olması ne anlama gelmektedir?", options: ["A) Onay amacıyla gönderildiği", "B) Üç yollu el sıkışma amacıyla gönderildiği", "C) Mevcut bağlantıyı sonlandırarak yeni bir bağlantı başlatmak", "D) Son verisi olduğu", "E) Öncelikli taşınması istendiği"], ans: "C) Mevcut bağlantıyı sonlandırarak yeni bir bağlantı başlatmak", exp: "TCP'deki R (Reset) bayrağı, hatalı giden bir iletişimi acilen koparmak/sıfırlamak için kullanılır.", exams: ["Final 2025"] },
+            { q: "Acknowledgement number olarak bilinen bilgilendirme (onay) numarası alanı aşağıdakilerden hangisi için kullanılmaktadır?", options: ["A) Veri içeriğini değiştirmesine onay verildiğini", "B) Veriyi iletmesini durdurmak", "C) Veri iletimini geciktirmesi", "D) Veri sayısının azaltılmasının onaylandığını", "E) İlettiği verinin alıcı tarafından elde edildiği (başarı) bilgisini taşımak"], ans: "E) İlettiği verinin alıcı tarafından elde edildiği (başarı) bilgisini taşımak", exp: "ACK, paketin hatasız ve başarılı bir şekilde alıcıya teslim edildiğini kanıtlamak için geri yollanan mesajdır.", exams: ["Final 2025", "Bütünleme 2024"] },
+            { q: "Aşağıdakilerden hangisi İnternet Mühendisliği Görev Grubu'na ait kısaltmadır?", options: ["A) IETG", "B) IEGG", "C) IENF", "D) IETF", "E) EIGF"], ans: "D) IETF", exp: "Internet Engineering Task Force (IETF), internet protokollerinin standartlarını geliştiren yetkili kuruluştur.", exams: ["Final 2025"] },
+            { q: "Aşağıdakilerden hangisi ethernet yapısı içerisinde yer alan ortam erişim kontrolü (MAC) protokolüdür?", options: ["A) FDMA", "B) TDMA", "C) CDMA", "D) Jetonlu halka", "E) CSMA/CD"], ans: "E) CSMA/CD", exp: "Kablolu Ethernet ağları, veri çarpışmalarını yönetmek için Taşıyıcı Dinlemeli Çoklu Erişim / Çarpışma Tespiti (CSMA/CD) sistemini kullanır.", exams: ["Final 2025"] },
+            { q: "İnternet altyapısını yansıtan anahtarlama türü aşağıdakilerden hangisidir?", options: ["A) Paket anahtarlama", "B) Sabit anahtarlama", "C) Parça anahtarlama", "D) Devre anahtarlama", "E) Örgü anahtarlama"], ans: "A) Paket anahtarlama", exp: "İnternet, verilerin küçük paketlere bölünüp yönlendiriciler üzerinden ortaklaşa hatları kullandığı 'Paket Anahtarlama' kullanır.", exams: ["Final 2025"] },
+            { q: "FTP protokolünün kullanım amacı aşağıdakilerden hangisidir?", options: ["A) Alan adlarına karşılık gelen IP adreslerinin bulunması", "B) E-posta aktarımı", "C) Uçtan uca bağlantı açılması", "D) Dosya aktarımı", "E) Web sayfalarının görüntülenmesi"], ans: "D) Dosya aktarımı", exp: "FTP (File Transfer Protocol), bilgisayarlar arasında dosya gönderimi/alımı yapmak amacıyla kullanılır.", exams: ["Final 2025"] },
+            { q: "Aşağıdakilerden hangisi OSI referans modeli ağ katmanında çalışan protokollerden biridir?", options: ["A) FTP", "B) DNS", "C) MAC", "D) TCP", "E) ICMP"], ans: "E) ICMP", exp: "ICMP (İnternet Kontrol Mesajı Protokolü), ağdaki hataları ve bağlantı durumlarını (Ping gibi) bildiren 3. Katman (Ağ) protokolüdür.", exams: ["Final 2025"] },
+            { q: "Jetonlu Halka (Token Ring) ne tür bir Ortam Erişim Kontrolü (MAC) protokolüdür?", options: ["A) Kanal bölümleme protokolü", "B) İlk erişim protokolü", "C) Son erişim protokolü", "D) Sıra beklemeli protokol", "E) Rastgele erişim protokolü"], ans: "D) Sıra beklemeli protokol", exp: "Jeton kimdeyse onun konuştuğu ve diğer cihazların sıralarını beklediği yapı, literatürde 'Taking Turns' yani Sıra Beklemeli olarak geçer.", exams: ["Final 2025"] },
+            { q: "Aşağıdakilerden hangisi bir kablosuz teknolojidir?", options: ["A) Token Ring", "B) Ethernet", "C) Wimax", "D) MAC", "E) NIC"], ans: "C) Wimax", exp: "WiMAX, geniş alanlarda yüksek hızlı kablosuz internet erişimi sağlayan IEEE 802.16 standardıdır.", exams: ["Bütünleme 2024"] },
+            { q: "Aşağıdakilerden hangisi IPv4 paket yapısı içerisinde yer alan alanlardan biridir?", options: ["A) Time to order", "B) Time to live: Yaşam süresi", "C) Time to acknowledge", "D) Time to attach", "E) Time to receive"], ans: "B) Time to live: Yaşam süresi", exp: "IPv4 başlığında paketin ağda sonsuz döngüye girmesini engellemek için TTL (Time to Live) alanı yer alır.", exams: ["Bütünleme 2024"] },
+            { q: "Canlı akış uygulamalarında kullanımı avantaj sağlayan anahtarlama türü aşağıdakilerden hangisidir?", options: ["A) Parça anahtarlama", "B) Paket anahtarlama", "C) Devre anahtarlama", "D) Dairesel anahtarlama", "E) Örgü anahtarlama"], ans: "C) Devre anahtarlama", exp: "Hattın rezerve edildiği Devre Anahtarlama, paket bekleme gecikmesi olmadığı için kesintisiz ses/video akışlarında teorik olarak daha avantajlıdır.", exams: ["Bütünleme 2024"] },
+            { q: "TDMA ne tür bir Ortam Erişim Kontrolü (MAC) protokolüdür?", options: ["A) Sıra beklemeli protokol", "B) Rastgele erişim protokolü", "C) İlk erişim protokolü", "D) Son erişim protokolü", "E) Kanal bölümleme protokolü"], ans: "E) Kanal bölümleme protokolü", exp: "Zaman Bölmeli Çoklu Erişim (TDMA), frekans kanalını zaman dilimlerine bölerek (slot) kullanan Kanal Bölümleme protokolüdür.", exams: ["Bütünleme 2024"] },
+            { q: "HTTP protokolü kullanılarak erişilmek istenen sunucu ve ilgili alana daha önce erişildiği durumda, HTTP cevap mesajında aşağıdaki kodlardan hangisi görülür?", options: ["A) 304 Not Modified", "B) 301 Moved Permanently", "C) 404 Not Changed", "D) 304 Not Changed", "E) 404 Not Modified"], ans: "A) 304 Not Modified", exp: "Tarayıcının önbelleğindeki sayfa güncelse sunucu veriyi baştan yollamak yerine '304 Not Modified' döner.", exams: ["Bütünleme 2024"] },
+            { q: "OSI referans modelinde ağ katmanı hangi katmanlarla etkileşim halindedir?", options: ["A) Fiziksel katman, veri bağı katmanı", "B) Taşıma katmanı, oturum katmanı", "C) Fiziksel katman, uygulama katmanı", "D) Oturum katmam, sunum katmanı", "E) Veri bağı katmanı, taşıma katmanı"], ans: "E) Veri bağı katmanı, taşıma katmanı", exp: "Ağ (3. Katman), hemen altındaki Veri Bağı (2. Katman) ve hemen üstündeki Taşıma (4. Katman) ile doğrudan etkileşim halindedir.", exams: ["Bütünleme 2024"] },
+            { q: "Aşağıdakilerden hangisi paket anahtarlamalı ağların avantajlarındandır?", options: ["A) Son beş aktarım yeniden elde edilebilir.", "B) Son iki aktarım yeniden elde edilebilir.", "C) Son üç aktarım yeniden elde edilebilir.", "D) Veri aktarımı nispeten güvenlidir.", "E) Bant genişliği efektif olarak kullanılabilir."], ans: "E) Bant genişliği efektif olarak kullanılabilir.", exp: "Paket anahtarlamada hat rezerve edilmediği için boşta kalan hatlar başka paketler tarafından anında kullanılır, bu da verimliliği artırır.", exams: ["Bütünleme 2024"] },
+            { q: "DNS protokolünün kullanım amacı aşağıdakilerden hangisidir?", options: ["A) Web üzerinde gezinmek", "B) Veri güvenliğinin sağlanması", "C) Alan adı çevrimi", "D) Dosya indirmek", "E) Uzak oturum açılması"], ans: "C) Alan adı çevrimi", exp: "DNS (Domain Name System), www.google.com gibi alan adlarını IP adreslerine çevirme (çözümleme) işlevini görür.", exams: ["Bütünleme 2024"] },
+            { q: "Herhangi bir bilgisayarın IP adresini öğrenmek için kullanılabilecek komut aşağıdakilerden hangisidir?", options: ["A) ipfind", "B) searchip", "C) findip", "D) ipconfig", "E) ipsearch"], ans: "D) ipconfig", exp: "Windows sistemlerde ağ konfigürasyonlarını ve IP adresini görüntülemek için 'ipconfig' komutu kullanılır.", exams: ["Bütünleme 2024"] }
+        ];
+
+        let allAnswersVisible = false;
+
+        function filterQuestions(type, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            let filtered = sorular;
+            if (type !== 'all') {
+                filtered = sorular.filter(soru => 
+                    soru.exams.some(exam => exam.toLowerCase().includes(type.toLowerCase()))
+                );
+            }
+
+            filtered.forEach((soru, index) => {
+                let tagsHtml = soru.exams.map(exam => `<span class="exam-tag">${exam}</span>`).join('');
+                let optionsHtml = soru.options.map(opt => `<li>${opt}</li>`).join('');
+                
+                let displayState = allAnswersVisible ? 'block' : 'none';
+                let btnText = allAnswersVisible ? 'Cevabı ve Açıklamayı Gizle' : 'Cevabı ve Açıklamayı Göster';
+                let btnColor = allAnswersVisible ? '#34495e' : '#0984e3';
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="exam-tags">${tagsHtml}</div>
+                    </div>
+                    <p class="question-text">${index + 1}. ${soru.q}</p>
+                    <ul class="options">${optionsHtml}</ul>
+                    <button class="btn-toggle" style="background-color: ${btnColor}" onclick="toggleSingleAnswer(this)">${btnText}</button>
+                    <div class="answer-area" style="display: ${displayState}">
+                        <p class="correct-ans">✔️ Doğru Cevap: ${soru.ans}</p>
+                        <p class="exp-text">💡 <strong>Açıklama:</strong> ${soru.exp}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleSingleAnswer(btn) {
+            const targetDiv = btn.nextElementSibling;
+            if (targetDiv.style.display === 'none' || targetDiv.style.display === '') {
+                targetDiv.style.display = 'block';
+                btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                btn.style.backgroundColor = '#34495e';
+            } else {
+                targetDiv.style.display = 'none';
+                btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                btn.style.backgroundColor = '#0984e3';
+            }
+        }
+
+        function toggleAllAnswers() {
+            allAnswersVisible = !allAnswersVisible;
+            const globalBtn = document.getElementById('globalToggleBtn');
+            const allAnswerAreas = document.querySelectorAll('.answer-area');
+            const allToggleBtns = document.querySelectorAll('.btn-toggle');
+
+            if (allAnswersVisible) {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Gizle';
+                globalBtn.style.backgroundColor = '#34495e';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'block');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                    btn.style.backgroundColor = '#34495e';
+                });
+            } else {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Göster';
+                globalBtn.style.backgroundColor = 'var(--global-btn)';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'none');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                    btn.style.backgroundColor = '#0984e3';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const allBtn = document.querySelector('.tab-btn.active');
+            filterQuestions('all', allBtn);
+        });
+    </script>
+</body>
+</html>

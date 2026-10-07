@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilimsel Araştırma Teknikleri — Hızlı Soru & Cevap Quiz (144 Soru)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #0984e3;
+            --success: #00b894;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --border: #dfe6e9;
+            --global-btn: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 { margin: 0 0 10px 0; font-size: 2.2em; }
+        .header p { margin: 0; font-size: 1.1em; color: #bdc3c7; }
+
+        /* Butonlar ve Kontroller */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #ecf0f1;
+            color: var(--primary);
+            border: 2px solid var(--border);
+            padding: 10px 20px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background-color: #dfe6e9; }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+        }
+
+        .global-toggle-btn {
+            background-color: var(--global-btn);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(225, 112, 85, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .global-toggle-btn:hover {
+            background-color: #d63031;
+            transform: translateY(-2px);
+        }
+
+        #quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Soru Kartları */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 25px;
+            border-left: 6px solid var(--accent);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .exam-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .exam-tag {
+            background-color: #ffeaa7;
+            color: #d63031;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .exam-tag.freq-tag {
+            background-color: #e17055;
+            color: white;
+        }
+
+        .question-text {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .options li {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 1em;
+        }
+
+        .btn-toggle {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-toggle:hover { background-color: var(--primary); }
+
+        .answer-area {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #eafaf1;
+            border-left: 5px solid var(--success);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .correct-ans {
+            font-size: 1.1em;
+            color: var(--success);
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .exp-text { margin: 0; color: var(--text); line-height: 1.5; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+    <div style="margin-bottom: 12px;">
+        <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; transition: background 0.2s;">
+            &larr; 3. Sınıf Derslerine Dön
+        </a>
+    </div>
+
+        <div class="header">
+            <h1>Bilimsel Araştırma Teknikleri</h1>
+            <p>Tüm Vize, Final ve Bütünleme Çıkmış Soru Havuzu (144 Soru - Tamamı Çözümlü)</p>
+        </div>
+
+        <div class="controls-container">
+            <button id="globalToggleBtn" class="global-toggle-btn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterQuestions('all', this)">Tüm Havuz</button>
+                <button class="tab-btn" onclick="filterQuestions('Vize', this)">Vize Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Final', this)">Final Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Büt', this)">Bütünleme Soruları</button>
+                <button class="tab-btn" style="background-color: #ffeaa7; color: #d63031;" onclick="filterQuestions('Kez Çıktı', this)">🔥 Banko Sorular (Tekrarlar)</button>
+            </div>
+        </div>
+
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const sorular = [
+            {
+                q: "Ahmet ve Berk'in yaşları ve eğitimlerinin kaydedilmesiyle elde edilen yaş ve eğitim değişkeni aşağıdaki hangi tür değişken veriye örnek olur?",
+                options: ["A) Sürekli ve oransal değişken", "B) Kesikli ve sayısal değişken", "C) Sayısal ve isimsel değişken", "D) İsimsel ve kategorik değişken", "E) Nitel ve ordinal değişken"],
+                ans: "C) Sayısal ve isimsel değişken",
+                exp: "Yaş sayısal (nicel) bir değişkendir. Eğitim durumu ise rakamsal büyüklük ifade etmeyen isimsel (nominal/nitel) bir değişkendir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Özellikle okuma yazma bilmeyenler ve küçük çocuklar üzerinde uygulanan, cevapların kelime halinde değil şekiller ve skeçlerle verildiği ölçek türü aşağıdakilerden hangisidir?",
+                options: ["A) İkili Karşılaştırmalı Ölçekler", "B) Sabit-Toplam Ölçekleri", "C) Sıralama Ölçekleri", "D) Grafiksel/Şekilsel Ölçekler", "E) Kategorili Ölçekler"],
+                ans: "D) Grafiksel/Şekilsel Ölçekler",
+                exp: "Katılımcıların yazılı ifadelere anlam veremediği durumlarda, gülen yüz-somurtan yüz gibi görsellerle hazırlanan ölçek türüdür.",
+                exams: ["2020-2021 Vize", "2023 Vize", "25-26 Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi kayıp değerleri (eksik cevaplar) düzeltme yöntemlerinden biri değildir?",
+                options: ["A) Örneği silme", "B) İkili silme", "C) Rastgele cevap verme", "D) Nötr değer verme", "E) Emsal cevap verme"],
+                ans: "C) Rastgele cevap verme",
+                exp: "Ankette boş bırakılan verilere bilimsel hiçbir dayanağı olmadan 'rastgele' bir cevap uydurmak araştırmanın geçerliliğini ve güvenilirliğini bozar.",
+                exams: ["2020-2021 Final", "2024 Final", "2025 Final", "25-26 Final", "4 Kez Çıktı!"]
+            },
+            {
+                q: "Diğer tüm ölçeklerden daha güçlü olan ve tüm aritmetik işlemlerin yapılabildiği ölçüm seviyesi aşağıdakilerden hangisidir?",
+                options: ["A) Nominal", "B) Oransal", "C) Eşit aralıklı", "D) Sıralama", "E) Sınıflandırma"],
+                ans: "B) Oransal",
+                exp: "Gerçek/mutlak bir sıfır noktasına sahip olan ve çarpma, bölme dahil tüm istatistiksel işlemlerin yapılabildiği en güçlü düzeye Oransal (Ratio) seviye denir.",
+                exams: ["2024 Final", "2025 Final", "25-26 Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Nesnelerin sadece gruplandırıldığı bir ölçme seviyesidir. En kısıtlı ve en güçsüz ölçektir. Yukarıda bahsedilen ölçek türü aşağıdakilerden hangisidir?",
+                options: ["A) Eşit aralıklı", "B) Sıralama", "C) Sınıflandırma", "D) Oransal", "E) Mukayeseli"],
+                ans: "C) Sınıflandırma",
+                exp: "Sınıflandırma (Nominal) ölçeği, verileri sadece kategorilere ayırır. Matematiksel ağırlığı olmadığı için en kısıtlı seviyedir.",
+                exams: ["2024 Büt", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "I. Soru içeriği II. Anketin konuya uygunluğu ve dili III. Hipotezlerin test edilmesi IV. Soru yerleşimi. Yukarıda verilenlerden hangisi veya hangileri anket tasarımı aşamaları arasındadır?",
+                options: ["A) Yalnız II", "B) II, III ve IV", "C) I, II ve III", "D) Yalnız I", "E) I, II ve IV"],
+                ans: "E) I, II ve IV",
+                exp: "Hipotezleri test etmek (III) anket toplandıktan sonra SPSS ile yapılan istatistiksel analiz sürecidir. Fiziksel tasarıma girmez.",
+                exams: ["2024 Final", "2025 Final", "25-26 Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Toplanan verilerin ........ ve ölçülen olayın veya değişkenin niteliklerine ........ ölçüsüdür. Geçerlilikle ilgili bu ifadede boşluklara ne gelmelidir?",
+                options: ["A) çokluğunun - denkliğinin", "B) azlığının - denkliğinin", "C) tarafsızlığının - uygunluğunun", "D) çokluğunun - sahip olmasının", "E) eksikliğinin - uygunluğunun"],
+                ans: "C) tarafsızlığının - uygunluğunun",
+                exp: "Geçerlilik (validity), testin ölçmek istediği kavramı dış etkenlere kaymadan tarafsızca tespit etmesi ve amaca uygunluk durumudur.",
+                exams: ["2020-2021 Final", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi veri hazırlama işleminin adımlarından biri değildir?",
+                options: ["A) Sonuçları yorumlama", "B) Verilerin doğruluğunun kontrolü", "C) Verileri dönüştürme", "D) Verilerin kaydı", "E) Verileri düzenleme"],
+                ans: "A) Sonuçları yorumlama",
+                exp: "Sonuçları yorumlama, veriler kodlanıp istatistiksel analizler bittikten sonra raporlama aşamasında yapılır.",
+                exams: ["2020-2021 Final", "2025 Final", "25-26 Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Araştırma tasarımı belirlenirken izlenecek yollarla ilgili aşağıda verilen ifadelerden hangisi yanlıştır?",
+                options: ["A) Diğer araştırma tasarımlarıyla ortaya konan hipotezler keşfedici bir araştırma ile test edilebilir.", "B) Araştırma keşfedici ile başlayıp tanımlayıcı ile devam edebilir.", "C) Keşfedici araştırma genellikle önceki bir adımdır.", "D) Problem hakkında az bilgi varsa keşfedici uygundur.", "E) Keşfedici araştırmalar devamında da yer alabilir."],
+                ans: "A) Diğer araştırma tasarımlarıyla ortaya konan hipotezler keşfedici bir araştırma ile test edilebilir.",
+                exp: "Keşfedici araştırmalar istatistiksel kanıt sunmazlar, bu yüzden hipotez 'test' edemezler. Görevleri problemi anlayıp yeni hipotez üretmektir.",
+                exams: ["2025 Vize", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Ölçme birimi miktarı değişiklik göstermeyen hatalara ne ad verilmektedir?",
+                options: ["A) Sabit hata", "B) Tesadüfi hata", "C) Sistematik hata", "D) Muhtemel hata", "E) Tahmini hata"],
+                ans: "A) Sabit hata",
+                exp: "Bir ölçüm aletinin her ölçümde, ölçülen değerden bağımsız olarak sürekli aynı miktarda hata yapmasına Sabit Hata denir.",
+                exams: ["2020-2021 Final", "2025 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Telif hakları ihlalleri ........ tarafından takip edilir. Boşluğa ne gelmelidir?",
+                options: ["A) enstitüler", "B) okullar", "C) yönetmelikler", "D) üniversiteler", "E) yasalar"],
+                ans: "E) yasalar",
+                exp: "İntihal üniversiteler/etik kurullar tarafından takip edilirken; maddi bir fikri mülkiyet olan Telif Hakları doğrudan 'yasalar' (mahkemeler) tarafından takip edilir.",
+                exams: ["2025 Final"]
+            },
+            {
+                q: "Ana kütle bireylerinin tam sayımı yapılsa dahi verilerin tanımlanmasında, toplanmasında ortaya çıkan hatalar kapsamında ele alınır. Boşluğa ne gelmelidir?",
+                options: ["A) sistematik hata", "B) tesadüfi hata", "C) kapsam hatası", "D) seçim hatası", "E) sabit hata"],
+                ans: "A) sistematik hata",
+                exp: "Tam sayımda örnekleme (seçim) hatası sıfırdır. Ancak çeviri hatası gibi nedenlerle tüm verilere aynı oranda yansıyan ölçüm hatalarına Sistematik Hata denir.",
+                exams: ["2020-2021 Final", "2024 Final", "2024 Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Bir ankette tüm mümkün cevapların önceden belirlendiği soru türüne ne ad verilir?",
+                options: ["A) Varsayıma dayalı sorular", "B) Hileli sorular", "C) Yapısal sorular", "D) Negatif sorular", "E) Yapısal olmayan sorular"],
+                ans: "C) Yapısal sorular",
+                exp: "Katılımcının seçeneklerin (A, B, C gibi) önceden araştırmacı tarafından belirlendiği kapalı uçlu soru formatına Yapısal Sorular denir.",
+                exams: ["2024 Final", "2025 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi birincil verinin avantajları arasında yer almaz?",
+                options: ["A) Birincil verinin yanlış olma olasılığının az olması", "B) Özel amaçlara göre toplandığında ihtiyaçlara tam cevap vermesi", "C) Anket yapmanın hiçbir maliyetinin olmaması", "D) Birincil verinin eski olma olasılığının az olması", "E) Bizzat araştırmacı tarafından toplanarak yapılması"],
+                ans: "C) Anket yapmanın hiçbir maliyetinin olmaması",
+                exp: "Birincil veriler günceldir ancak saha çalışması yapmak son derece pahalı ve zaman alıcıdır. Maliyetsiz olması imkansızdır.",
+                exams: ["2025 Final"]
+            },
+            {
+                q: "I. Çözülebilir ve görgül yollarla incelenebilir olma II. Önemli olma III. Yenilik getirici olma IV. Genellenebilir olma. İyi bir araştırma problemi için hangileri asgari olarak karşılanmalıdır?",
+                options: ["A) Yalnız III", "B) I, II ve III", "C) I ve II", "D) III ve IV", "E) Yalnız I"],
+                ans: "C) I ve II",
+                exp: "Bilimsel bir araştırmanın asgari şartı, problemin verilerle test edilebilir (çözülebilir) ve bilime katkı sağlayacak kadar önemli olmasıdır.",
+                exams: ["2024 Final", "2025 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Geçerlikte yapılan işlem amaca ne kadar uygun olursa geçerlik o kadar ........ amaçtan ne kadar uzak olursa geçerlik o kadar ........ olur.",
+                options: ["A) az/çok", "B) yüksek/düşük", "C) değersiz/değerli", "D) kötü/iyi", "E) düşük/yüksek"],
+                ans: "B) yüksek/düşük",
+                exp: "Geçerlilik amaca tam uygun ölçüm yapma becerisidir. Araç amaca ne kadar uygunsa geçerlilik skoru o kadar 'yüksek' olur.",
+                exams: ["2020-2021 Final", "2024 Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Yanıtlayıcıdan, anketörden, etkileşiminden ve anket formundan kaynaklanan hatalar nedeniyle gerçek değer ile kaydedilen değer arasındaki farka ne ad verilir?",
+                options: ["A) Kapsam hatası", "B) Örnekleme dışı hata", "C) Seçim hatası", "D) Sistematik hata", "E) Sabit hata"],
+                ans: "B) Örnekleme dışı hata",
+                exp: "Sahada anketörün veya katılımcının yalan söylemesi, yanlış kodlaması gibi veri toplama sırasındaki sapmalara 'Örnekleme Dışı Hata' denir.",
+                exams: ["2020-2021 Final", "2024 Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Varyansın karekökü olan ve gruptaki dağılımın ne kadar tutarlı olduğunu belirlemek için kullanılan tanımlayıcı istatistik hangisidir?",
+                options: ["A) Medyan", "B) Mod", "C) Harmonik ortalama", "D) Standart sapma", "E) Geometrik ortalama"],
+                ans: "D) Standart sapma",
+                exp: "Varyansın birimi kareli olduğu için (örn: kg²), bunu tekrar normal birime (kg) döndürmek amacıyla alınan matematiksel kareköküne Standart Sapma denir.",
+                exams: ["2024 Büt", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Türkiye'de yazılmış olan yüksek lisans ve doktora tezlerinin bulunduğu ve kullanıcıların erişimine açık olan Ulusal Tez Merkezi hangi kuruluş bünyesinde hizmet vermektedir?",
+                options: ["A) ULAKBİM", "B) TÜBİTAK", "C) MEB", "D) YÖK", "E) ÖSYM"],
+                ans: "D) YÖK",
+                exp: "Türkiye'deki tüm üniversitelerde üretilen akademik tezler, Yükseköğretim Kurulu (YÖK) Ulusal Tez Merkezi üzerinden erişime sunulur.",
+                exams: ["2024 Büt"]
+            },
+            {
+                q: "Araştırmalarda değişimin beklendiği araştırma konusu olan değişkenlerin genel adı nedir?",
+                options: ["A) Bağımlı değişken", "B) Bağımsız değişken", "C) Karar değişkeni", "D) Model değişken", "E) Kontrol değişkeni"],
+                ans: "A) Bağımlı değişken",
+                exp: "Diğer faktörlerden etkilenen, sonucu temsil eden ve üzerinde bir değişim gözlenmesi beklenen ana değişkene Bağımlı Değişken denir.",
+                exams: ["2025 Final"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi örnekleme sürecinin aşamalarından biri değildir?",
+                options: ["A) Veri analizi", "B) Örnekleme yöntemini saptama", "C) Ana kütleyi tanımlama", "D) Örnekleri seçme", "E) Örnekleme bireylerini saptama"],
+                ans: "A) Veri analizi",
+                exp: "Örnekleme, sahada kimlerden veri toplanacağını belirleme sürecidir. Veri analizi ise anketler bitip veriler bilgisayara girildikten sonra yapılır.",
+                exams: ["2020-2021 Final", "2024 Final", "2025 Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: "I. Kolayda örnekleme II. Kasıtlı örnekleme III. Kota örnekleme IV. Kümelere göre örnekleme V. Sistematik örnekleme. Hangileri tesadüfi olmayan örnekleme teknikleridir?",
+                options: ["A) I, II ve III", "B) IV ve V", "C) II ve V", "D) I ve V", "E) I ve IV"],
+                ans: "A) I, II ve III",
+                exp: "Sistematik ve Küme olasılığa dayalıdır (rassaldır). Araştırmacının inisiyatif kullandığı Kolayda, Kasıtlı (Amaçlı) ve Kota örneklemeleri ise tesadüfi değildir.",
+                exams: ["2024 Büt", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "........ veri toplama ve araştırma projesinin aşamalarının analizine yol gösteren plandır. Toplanacak bilginin tipini ve sürecini belirleyen çatıdır.",
+                options: ["A) Araştırma problemi", "B) Araştırmanın hipotezi", "C) Araştırma tasarımı", "D) Araştırma modeli", "E) Araştırmanın yöntemi"],
+                ans: "C) Araştırma tasarımı",
+                exp: "Araştırma tasarımı, bir araştırmanın başından sonuna kadar hangi araçların kullanılacağını gösteren genel plandır (çatıdır).",
+                exams: ["2020 Vize", "2020-2021 Final", "2025 Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Bir konuyu aynı konuyla ilgili başka bir yerle bağlantılı kılma, orayı işaret etme, oraya bakılmasını isteme olarak tanımlanan işleme ne ad verilir?",
+                options: ["A) Muvazaa", "B) İntihal", "C) İşaretleme", "D) Açımlama", "E) Atıf"],
+                ans: "E) Atıf",
+                exp: "Bilimsel bir eserde, yazarın bilginin kaynağını göstermek amacıyla başka bir kaynağa (yazara) gönderme yapmasına Atıf (Referans) denir.",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Telif hakları sadece eserleri koruyor iken intihal kavramı ........ korur. Boşluğa ne gelmelidir?",
+                options: ["A) ürün bildirileri de", "B) somut tezleri de", "C) kitap/makaleleri de", "D) somut fikirleri de", "E) soyut kitapları da"],
+                ans: "D) somut fikirleri de",
+                exp: "Telif yasası sadece somut eseri korur. Bilimsel etikteki intihal ise bir düşünce henüz 'fikir' aşamasında olsa bile onu izinsiz almayı yasaklar.",
+                exams: ["2024 Büt", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Büyüklüklerine göre sıralanmış gözlemler grubunun merkezî değeri aşağıdakilerden hangisidir?",
+                options: ["A) Ortalama", "B) Medyan", "C) Mod", "D) Standart sapma", "E) Varyans"],
+                ans: "B) Medyan",
+                exp: "Bir veri seti küçükten büyüğe sıralandığında, tam ortada kalan ve seriyi iki eşit parçaya bölen değere Medyan (Ortanca) denir.",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi anket yöntemlerini değerlendirme ölçütleri arasında yer almaz?",
+                options: ["A) Cevaplama oranı", "B) Verilerin analiz yöntemi", "C) Hız", "D) Veri miktarı", "E) Görüşmeci hatası"],
+                ans: "B) Verilerin analiz yöntemi",
+                exp: "Anketin posta mı yoksa yüz yüze mi yapılacağına karar verilirken hız, maliyet ve hata payı dikkate alınır. SPSS ile nasıl analiz edileceği seçme ölçütü değildir.",
+                exams: ["2025 Vize", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Raporların okuyanlar tarafından kolayca bulunmasını sağlamak amacıyla yazılan, temel kavramların belirtildiği kısma ne ad verilir?",
+                options: ["A) Özet", "B) Giriş", "C) Önsöz", "D) Anahtar kelimeler", "E) Kapak"],
+                ans: "D) Anahtar kelimeler",
+                exp: "Elektronik veritabanlarında araştırmanın kolayca bulunabilmesi için seçilen spesifik kavramlara Anahtar Kelimeler (Keywords) denir.",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Cronbach Alpha (a) değeri araştırmalarda aşağıdakilerden hangisi için kullanılır?",
+                options: ["A) Geçerliliği belirlemek için", "B) Objektifliği sağlamak için", "C) Güvenirliliği belirlemek için", "D) Bilimsel olmak için", "E) Sistematikliği sağlamak için"],
+                ans: "C) Güvenirliliği belirlemek için",
+                exp: "Likert tipi ölçeklerdeki soruların kendi içlerinde birbirleriyle tutarlı olup olmadığını ölçen istatistiksel katsayıdır ve Güvenilirliği belirler.",
+                exams: ["2024 Büt"]
+            },
+            {
+                q: "Sayısal hâle dönüştürülmüş değişkenlerin incelenmesine, ilişkilerin ve neden-sonuçların ortaya konmasına dayanan araştırmalara ne ad verilir?",
+                options: ["A) Kuramsal araştırma", "B) Sözel araştırma", "C) Kantitatif araştırma", "D) Kalitatif araştırma", "E) Nominal araştırma"],
+                ans: "C) Kantitatif araştırma",
+                exp: "Değişkenlerin sayılara dönüştürülüp hesaplanarak neden-sonuç ilişkilerinin arandığı pozitivist metoda Kantitatif (Nicel) Araştırma denir.",
+                exams: ["2020-2021 Final", "2024 Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Araştırmacı olay ve olguları yakından izler, katılımcı öznel bir tavır geliştirir. Bu ifade hangi araştırma türüne aittir?",
+                options: ["A) Standardize edilmiş veri", "B) Kalitatif (Nitel) araştırma", "C) Deneysel Araştırma", "D) Nesnel araştırma", "E) Nicel araştırma"],
+                ans: "B) Kalitatif (Nitel) araştırma",
+                exp: "Nitel araştırmalarda katı bir nesnellik aranmaz. Araştırmacı katılımcılarla etkileşime girer, yorumlar katar ve derinlemesine öznel veri toplar.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "Literatür taramasında SN 1K Kuralı kullanılarak çalışmalar özetlendiğinde, hangi başlığın tabloda olmasına gerek yoktur?",
+                options: ["A) Ne?", "B) Neden?", "C) Nasıl?", "D) Kim?", "E) Ne kadar?"],
+                ans: "E) Ne kadar?",
+                exp: "5N1K kuramında 'Ne kadar?' (ölçü sorusu) standart bir başlık değildir. Literatür taraması konunun doğasını ve aktörlerini özetler.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Değişkenler arasındaki ilişkinin yazılı olarak temsil edildiği araştırma modeli aşağıdakilerden hangisidir?",
+                options: ["A) Analitik model", "B) Sözel model", "C) Sayısal model", "D) Nicel model", "E) Grafiksel model"],
+                ans: "B) Sözel model",
+                exp: "Değişken ilişkileri metinlerle, kelimelerle ifade ediliyorsa sözel; şekillerle çiziliyorsa grafiksel; formüllerle yazılıyorsa analitik model adını alır.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bilimsel araştırmalarda kullanılan temel kavramlardan biri değildir?",
+                options: ["A) Kuram (Teori)", "B) Hipotez", "C) Değişken", "D) Olgu", "E) Kurgu"],
+                ans: "E) Kurgu",
+                exp: "Bilimsel araştırma gerçeklere (olgulara), değişkenlere ve hipotezlere dayanır. Kurgu edebiyatın ve sanatın alanına girer, bilimin değil.",
+                exams: ["2024 Vize"]
+            },
+            {
+                q: "Anakütlede yer alan bütün elemanların yazılı olduğu listeye ne denir?",
+                options: ["A) İdeal Evren", "B) Örneklem", "C) Sayım", "D) Anakütle", "E) Örnekleme Çerçevesi"],
+                ans: "E) Örnekleme Çerçevesi",
+                exp: "Araştırma yapılacak kitlenin tam listesine (isimler, numaralar vb.) Örnekleme Çerçevesi denir. Bu liste olmadan rassal örneklem çekilemez.",
+                exams: ["Önceki AUZEF Finali"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi rapor yazmada dikkat edilecek ana ilkelerden biri değildir?",
+                options: ["A) Bilgi birbirini tamamlamalıdır.", "B) Araştırma literatür ile ilişkilendirilmelidir.", "C) Herhangi bir takvime bağlı olmadan doğaçlama çalışılmalıdır.", "D) Zaman iş takvimi ile planlanmalıdır.", "E) Bölümler zaman açısından planlanmalıdır."],
+                ans: "C) Herhangi bir takvime bağlı olmadan doğaçlama çalışılmalıdır.",
+                exp: "Bilimsel araştırmalar sistemli süreçlerdir. Mutlaka bir iş takvimine bağlanmalıdır, ilham bekleyerek (doğaçlama) ilerlenmez.",
+                exams: ["2020-2021 Final", "2024 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi araştırma sonuçlarının yorumlanması ile ilgili yanlış bir bilgidir?",
+                options: ["A) Karar alınmasında yardımcı olur.", "B) Amacın gerçekleştirildiği bölümdür.", "C) Araştırmacı önerilerde bulunabilir.", "D) Verilerin çözümlenmesinden sonraki aşamadır.", "E) Elde edilen bilgiler genellenebilir olmak zorunda değildir."],
+                ans: "E) Elde edilen bilgiler genellenebilir olmak zorunda değildir.",
+                exp: "Pozitivist/Nicel araştırmalarda örneklemden elde edilen sonuçları anakütleye 'genellemek' bilimin temel amacıdır.",
+                exams: ["2024 Büt"]
+            },
+            {
+                q: "I. Derinlemesine görüşme II. Gözlem III. Odak grup IV. Yansıtma (projektif) teknikler. Hangileri dolaylı kalitatif araştırmalarda kullanılan yöntemlerdir?",
+                options: ["A) II ve III", "B) Yalnız I", "C) I, II ve IV", "D) II ve IV", "E) I ve II"],
+                ans: "D) II ve IV",
+                exp: "Katılımcının araştırma amacını tam bilmediği yöntemler 'dolaylı' yöntemlerdir. Gözlem ve projektif (yansıtma) teknikleri dolaylıdır.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2025 Vize", "3 Kez Çıktı!"]
+            },
+            {
+                q: "Bilimsel araştırmanın temel amacı aşağıdakilerden hangisidir?",
+                options: ["A) Sadece yeni bilgiler üretmek", "B) Varsayımları doğrulamak", "C) Gerçekleri sistematik ve nesnel biçimde ortaya koymak", "D) Araştırmacının fikirlerini savunmak", "E) Popüler konularda yazı hazırlamak"],
+                ans: "C) Gerçekleri sistematik ve nesnel biçimde ortaya koymak",
+                exp: "Bilimsel araştırma, nesnellik ve sistematiklik üzerine kuruludur. Araştırmacının kendi fikrini savunması veya popüler yazı hazırlaması bilimsellik ölçütü değildir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bilimsel araştırmanın özelliklerinden biri değildir?",
+                options: ["A) Sistematik olması", "B) Deneysel verilere dayanması", "C) Subjektif yargılar içermesi", "D) Kontrol edilebilir olması", "E) Tekrarlanabilir olması"],
+                ans: "C) Subjektif yargılar içermesi",
+                exp: "Bilimsel araştırmalar objektif (nesnel) olmak zorundadır. Subjektif yargılar araştırmanın güvenilirliğini zedeler.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Bilimsel araştırma sürecinin ilk aşaması aşağıdakilerden hangisidir?",
+                options: ["A) Veri toplama", "B) Hipotez kurma", "C) Problem belirleme", "D) Sonuçların raporlanması", "E) Analiz aşaması"],
+                ans: "C) Problem belirleme",
+                exp: "Araştırma süreci her zaman ortadaki bir sorunun veya ihtiyacın (problemin) tespit edilmesiyle başlar.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Bir şehirde hava kirliliği düzeyinin artışıyla solunum yolu hastalıkları arasında ilişki var mıdır?\" sorusu hangi tür araştırmaya örnektir?",
+                options: ["A) Deneysel", "B) Betimsel", "C) Nedensel-ilişkisel", "D) Tarihsel", "E) Nitel"],
+                ans: "C) Nedensel-ilişkisel",
+                exp: "İki değişken arasındaki sebep-sonuç veya korelasyon durumunu incelediği için nedensel-ilişkiseldir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Araştırma probleminin açık, net ve ölçülebilir olması hangi özelliği ifade eder?",
+                options: ["A) Geçerlilik", "B) Nesnellik", "C) Tanımlanabilirlik", "D) Sınırlılık", "E) Tutarlılık"],
+                ans: "C) Tanımlanabilirlik",
+                exp: "Bir problemin herkes tarafından aynı şekilde anlaşılması ve sınırlarının çizilmiş olması onun 'tanımlanabilir' olduğunu gösterir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bilimsel araştırmada kullanılan veri toplama yöntemlerinden değildir?",
+                options: ["A) Anket", "B) Görüşme", "C) Gözlem", "D) Yorumlama", "E) Deney"],
+                ans: "D) Yorumlama",
+                exp: "Anket, görüşme, gözlem ve deney veri toplama araçlarıdır. Yorumlama ise analiz edildikten sonraki çıkarım aşamasıdır.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Bir hipotezin reddedilmesi ne anlama gelir?",
+                options: ["A) Araştırma hatalıdır", "B) Hipotez yanlışlanmıştır", "C) Veri eksiktir", "D) Yeni hipotez kurulamaz", "E) Araştırma sona erer"],
+                ans: "B) Hipotez yanlışlanmıştır",
+                exp: "Ortaya atılan geçici varsayımın eldeki verilerle desteklenmediğini gösterir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Evren\" kavramı bilimsel araştırmada neyi ifade eder?",
+                options: ["A) Araştırmanın konusu", "B) Tüm bireylerin oluşturduğu grup", "C) Verilerin kaynağı", "D) Örneklemin alt kümesi", "E) Araştırma değişkeni"],
+                ans: "B) Tüm bireylerin oluşturduğu grup",
+                exp: "Evren (popülasyon), araştırma sonuçlarının genelleneceği en geniş gruptur.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Araştırmada \"örneklem\" aşağıdakilerden hangisidir?",
+                options: ["A) Evrenin tamamı", "B) Araştırma sorusu", "C) Evreni temsil eden grup", "D) Veri toplama yöntemi", "E) Hipotez"],
+                ans: "C) Evreni temsil eden grup",
+                exp: "Araştırma evreninin tamamı yerine bu evreni en iyi yansıtacak seçilmiş daha küçük gruba örneklem denir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi olasılığa dayalı örnekleme yöntemidir?",
+                options: ["A) Kolayda örnekleme", "B) Amaçlı örnekleme", "C) Tabakalı örnekleme", "D) Gönüllü örnekleme", "E) Kartopu örnekleme"],
+                ans: "C) Tabakalı örnekleme",
+                exp: "Tabakalı örnekleme rassal (olasılığa dayalı) bir yöntemdir. Kolayda, amaçlı ve kartopu rassal değildir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Anlam derinliği, bağlam analizi ve katılımcı gözlem\" hangi araştırma yaklaşımına özgüdür?",
+                options: ["A) Nicel", "B) Nitel", "C) Deneysel", "D) Karma", "E) Tarihsel"],
+                ans: "B) Nitel",
+                exp: "Derinlemesine bağlam analizi nitel araştırmanın temelidir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Bir değişkenin başka bir değişken üzerindeki etkisini ölçen araştırma türü aşağıdakilerden hangisidir?",
+                options: ["A) Betimsel", "B) Deneysel", "C) Tarihsel", "D) Nitel", "E) Tarama"],
+                ans: "B) Deneysel",
+                exp: "Etki ve neden-sonuç ölçümleri deneysel araştırmalarla yapılır.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Bilimsel araştırmalarda geçerlilik neyi ifade eder?",
+                options: ["A) Ölçüm aracının tutarlılığı", "B) Ölçülenin gerçekten ölçülmek istenen kavramı yansıtması", "C) Ölçümlerin tekrarlanabilirliği", "D) Araştırmanın uzunluğu", "E) Katılımcı sayısı"],
+                ans: "B) Ölçülenin gerçekten ölçülmek istenen kavramı yansıtması",
+                exp: "Geçerlilik amaca tam uygun ölçüm yapma (isabet ettirme) becerisidir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Araştırmanın her aşamasında aynı sonuçlara ulaşılması\" hangi kavramla ilgilidir?",
+                options: ["A) Güvenirlik", "B) Geçerlilik", "C) Tutarlılık", "D) Deneysel kontrol", "E) Nesnellik"],
+                ans: "A) Güvenirlik",
+                exp: "Aynı testi uyguladığınızda her defasında istikrarlı sonuç elde edilmesine güvenirlik denir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Literatür taramasının amacı nedir?",
+                options: ["A) Yeni kavramlar üretmek", "B) Araştırmayı uzatmak", "C) Konuyla ilgili önceki çalışmaları analiz etmek", "D) Deney yapmak", "E) Hipotez reddetmek"],
+                ans: "C) Konuyla ilgili önceki çalışmaları analiz etmek",
+                exp: "Geçmiş bilgi birikimini ve o konuda yapılanları incelemektir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bilimsel araştırmalarda kullanılan veri türlerinden biridir?",
+                options: ["A) Varsayım verisi", "B) Kalitatif veri", "C) Deneysel olmayan veri", "D) İmaj verisi", "E) Duygu verisi"],
+                ans: "B) Kalitatif veri",
+                exp: "Kantitatif (nicel) ve kalitatif (nitel) temel veri türleridir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Araştırma bulgularının başka ortamlara genellenebilmesi\" hangi özelliğe işaret eder?",
+                options: ["A) Güvenirlik", "B) Dış geçerlilik", "C) İç geçerlilik", "D) Nesnellik", "E) Bağımsızlık"],
+                ans: "B) Dış geçerlilik",
+                exp: "Sonuçların evrene veya farklı gruplara uyarlanabilme kapasitesi dış geçerliliktir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Hipotez \"Bağımsız değişken bağımlı değişkeni etkiler.\" biçiminde kurulmuşsa, araştırma hangi türdedir?",
+                options: ["A) Deneysel", "B) Betimsel", "C) Taramalı", "D) Nitel", "E) Gözlemsel"],
+                ans: "A) Deneysel",
+                exp: "Bağımsız değişken manipüle edilerek bağımlı değişkendeki etkinin ölçüldüğü araştırmalar deneyseldir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Bir araştırmada katılımcılara soru formu uygulanmıştır.\" ifadesi hangi veri toplama yöntemine aittir?",
+                options: ["A) Gözlem", "B) Anket", "C) Deney", "D) Odak grup", "E) Belge inceleme"],
+                ans: "B) Anket",
+                exp: "Soru formları (açık veya kapalı uçlu) anket yönteminin aracıdır.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi birincil veri kaynağıdır?",
+                options: ["A) Ansiklopediler", "B) Makale özetleri", "C) Deneysel veriler", "D) İstatistik raporları", "E) İnceleme yazıları"],
+                ans: "C) Deneysel veriler",
+                exp: "Deneysel veriler araştırmacının bizzat ürettiği ilk elden birincil verilerdir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Araştırma raporunun \"tartışma bölümü\" neyi kapsar?",
+                options: ["A) Bulguların özetini", "B) Bulguların yorumunu", "C) Hipotezleri", "D) Veri kaynaklarını", "E) Yöntem açıklamasını"],
+                ans: "B) Bulguların yorumunu",
+                exp: "Bulguların (analiz sonuçlarının) ne anlama geldiği ve literatürle kıyası bu bölümde yapılır.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Araştırmalarda etik dışı davranışlardan biri aşağıdakilerden hangisidir?",
+                options: ["A) Kaynakça vermek", "B) İntihal yapmak", "C) Anonim veri toplamak", "D) Katılımcı onayı almak", "E) Doğrulama yapmak"],
+                ans: "B) İntihal yapmak",
+                exp: "Başkasına ait eser ve fikirleri izinsiz kullanmak intihaldir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bilimsel araştırma raporunun bölümlerinden değildir?",
+                options: ["A) Giriş", "B) Yöntem", "C) Bulgular", "D) Deneme", "E) Sonuç"],
+                ans: "D) Deneme",
+                exp: "Deneme (Essay) edebi bir türdür, bilimsel araştırma raporunun bir bölümü değildir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi nitel araştırmalarda veri analiz yöntemlerinden biridir?",
+                options: ["A) Regresyon analizi", "B) Korelasyon", "C) İçerik analizi", "D) Varyans analizi", "E) T-testi"],
+                ans: "C) İçerik analizi",
+                exp: "Metinlerin ve sözlü ifadelerin analizinde (nitel araştırmalarda) içerik analizi kullanılır.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Bir araştırmanın bilimsel olabilmesi için aynı koşullarda tekrarlanabilir olması gerekir.\" Bu ifade hangi özelliğe aittir?",
+                options: ["A) Güvenirlik", "B) Geçerlilik", "C) Tarafsızlık", "D) Tutarlılık", "E) Özgünlük"],
+                ans: "A) Güvenirlik",
+                exp: "Güvenirlik tekrarlanabilirlik ve her tekrarda tutarlı sonuç elde etmektir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Nicel araştırmaların en belirgin özelliği aşağıdakilerden hangisidir?",
+                options: ["A) Gözlem ve yorumlama", "B) Sayısal veri kullanımı", "C) Sözlü ifade analizi", "D) Esnek yöntemler", "E) Küçük örneklem"],
+                ans: "B) Sayısal veri kullanımı",
+                exp: "Nicel (Kantitatif) araştırmalar matematiksel/sayısal veriler ve istatistik üzerine kuruludur.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Bir araştırmada araştırmacının görüşleri sürece etki etmez.\" ifadesi hangi ilkeyi açıklar?",
+                options: ["A) Nesnellik", "B) Öznelcilik", "C) Kapsayıcılık", "D) Yönlendiricilik", "E) Yorumlayıcılık"],
+                ans: "A) Nesnellik",
+                exp: "Araştırmacının taraf tutmaması, yorum katmadan veriyi olduğu gibi analiz etmesi nesnelliktir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Araştırma sonucunda elde edilen bilgilerin benzer durumlarda kullanılabilir olması hangi özelliğe işaret eder?",
+                options: ["A) Uygulanabilirlik", "B) Denetlenebilirlik", "C) Genellenebilirlik", "D) Esneklik", "E) Özgünlük"],
+                ans: "C) Genellenebilirlik",
+                exp: "Örneklemden elde edilen sonucun tüm evrene veya benzer evrenlere uyarlanabilmesi genellenebilirliktir.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Araştırmanın sonuç bölümünde aşağıdakilerden hangisine yer verilmez?",
+                options: ["A) Bulguların yorumu", "B) Sonuçların özeti", "C) Öneriler", "D) Kaynakça", "E) Araştırmanın sınırlılıkları"],
+                ans: "D) Kaynakça",
+                exp: "Kaynakça raporun metni bittikten sonra, sonuç bölümünün dışında, en arkada bağımsız olarak yer alır.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "Bilimsel araştırmada \"yöntem\" bölümünün temel amacı nedir?",
+                options: ["A) Bulguları tartışmak", "B) Hipotezleri açıklamak", "C) Araştırmanın nasıl yürütüldüğünü göstermek", "D) Verileri yorumlamak", "E) Teorileri açıklamak"],
+                ans: "C) Araştırmanın nasıl yürütüldüğünü göstermek",
+                exp: "Verilerin kimden, nasıl ve hangi araçlarla toplandığını anlatan operasyonel bölümdür.",
+                exams: ["2022-2023 Vize"]
+            },
+            {
+                q: "\"Bir problemi, olayı bilimsel yöntemlerle irdeleyerek çözüme ulaştıran ve insanlığın yararına sunan kişi ....\" Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?",
+                options: ["A) bilim insanıdır.", "B) uzmandır.", "C) filozoftur.", "D) teknisyendir.", "E) profesördür."],
+                ans: "A) bilim insanıdır.",
+                exp: "Bilimsel yöntemi kullanarak sistematik bilgi üreten ve bunu toplumsal/evrensel bir faydaya dönüştüren araştırmacılara bilim insanı denir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Araştırma tasarımı ile ilgili aşağıdakilerden hangisi doğrudur?",
+                options: ["A) Bir araştırma tasarısı oluşturmaktadır.", "B) Sadece verileri analiz eder.", "C) Sonuçları yazar.", "D) Yalnızca ankettir.", "E) Felsefi bir süreçtir."],
+                ans: "A) Bir araştırma tasarısı oluşturmaktadır.",
+                exp: "Araştırma tasarımı, problemi cevaplamak için kullanılacak yöntemin genel bir tasarı (şablon) oluşturma sürecidir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdaki kalitatif (nitel) ve kantitatif araştırma yöntemlerinin karşılaştırmasına yönelik verilen ifadelerden hangisi doğrudur?",
+                options: ["A) Veri analizi; kalitatif araştırmalarda istatistiksel değil, kantitatif araştırmalarda ise istatistikseldir.", "B) Nitel araştırma geneller.", "C) Kantitatif yoruma dayalıdır.", "D) Kalitatif sayısaldır.", "E) Her ikisi de felsefidir."],
+                ans: "A) Veri analizi; kalitatif araştırmalarda istatistiksel değil, kantitatif araştırmalarda ise istatistikseldir.",
+                exp: "Nitel araştırmalar istatistiksel analiz kullanmaz. Nicel (kantitatif) araştırmalar ise sayısal veriler ve istatistiksel testler üzerine kuruludur.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Yanlışlanma olasılığı olmayan gerçek bilgiye verilen ad aşağıdakilerden hangisidir?",
+                options: ["A) Yasa", "B) Teori", "C) Kuram", "D) Varsayım", "E) Hipotez"],
+                ans: "A) Yasa",
+                exp: "Bilimde yasa (kanun), aynı şartlar altında her zaman aynı sonucu veren, doğruluğu kesinleşmiş evrensel gerçekliklerdir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Anket yöntemleri hız açısından karşılaştırıldığında en yavaş olanı aşağıdakilerden hangisidir?",
+                options: ["A) Posta ile anket", "B) Telefonla anket", "C) Yüzyüze anket", "D) Online anket", "E) Mobil anket"],
+                ans: "A) Posta ile anket",
+                exp: "Telefon veya çevrimiçi anketler anında geri dönüş sağlarken; posta anketlerinde formun gönderilmesi ve geri postalanması haftalar sürebilir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi araştırma projesi içinde yer almaz?",
+                options: ["A) Felsefi değerlendirme", "B) Bütçe planı", "C) Yöntem", "D) Zaman çizelgesi", "E) Veri analizi"],
+                ans: "A) Felsefi değerlendirme",
+                exp: "Araştırma projesi operasyonel adımlardan oluşur. Felsefi değerlendirme projenin standart teknik adımları arasında yer almaz.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "I. Basın Yayın Kaynakları, II. Diğer Finansal Kaynaklar, III. Bölgesel Yayınlar, IV. Ticari Kaynaklar, V. Doğal Kaynaklar. Yukarıda verilenlerden hangisi ikincil verinin elde edildiği harici kaynaklardandır?",
+                options: ["A) I, II, III, IV", "B) I ve V", "C) Yalnız V", "D) II, IV, V", "E) I, II, III, IV, V"],
+                ans: "A) I, II, III, IV",
+                exp: "Doğal kaynaklar veri kaynağı değil, coğrafi bir kavramdır.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi mekanik gözlem esnasında katılımcıların dahil olması gereken araçlar arasında yer almaz?",
+                options: ["A) Nielsen odyometresi", "B) Göz bebek izleyici", "C) Psikogalvanometre", "D) Ses kaydedici", "E) Ses perdesi"],
+                ans: "A) Nielsen odyometresi",
+                exp: "Nielsen odyometresi, televizyon izleme alışkanlıklarını kaydeder ve katılımcının aktif olarak cihaza müdahale etmesini gerektirmez.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "I. Dış değişkenlerin kontrolü nitel araştırmalarda çok önemlidir. II. Araştırma ögelerine ilişkin tanımlar araştırmanın başında açıklığa kavuşturulur. III. Araştırmanın geçerliliği değerlendirilemez. IV. Dış değişkenlerin kontrolü nicel araştırmalarda çok önemlidir. Hangileri kantitatif araştırmanın temel özellikleridir?",
+                options: ["A) II ve IV", "B) I ve III", "C) I, II ve IV", "D) II ve III", "E) Yalnız IV"],
+                ans: "A) II ve IV",
+                exp: "Kantitatif (nicel) araştırmalar dış değişkenleri sıkı kontrol eder (IV) ve değişkenleri baştan tanımlar (II).",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Kuram üretmeyi ve / veya sınamayı hedefleyen bilimsel araştırmalara verilen ad aşağıdakilerden hangisidir?",
+                options: ["A) Temel araştırmalar", "B) Uygulamalı araştırmalar", "C) Aksiyon araştırması", "D) Olgubilim araştırması", "E) Saha araştırması"],
+                ans: "A) Temel araştırmalar",
+                exp: "Pratik sorunu çözmekten ziyade, bilgi birikimini artırmak ve teori üretmek amacıyla yapılan çalışmalara temel araştırma denir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi keşfedici araştırmaların kullanılma amaçlarından biri değildir?",
+                options: ["A) Grupların yüzdesini tahminleme", "B) Hipotez geliştirme", "C) Problemi anlama", "D) Esnek bilgi toplama", "E) Yeni fikirler üretme"],
+                ans: "A) Grupların yüzdesini tahminleme",
+                exp: "Keşfedici araştırmalar fikir edinmek içindir. 'Yüzde tahminlemek' ise kesin ölçüm gerektirir ve betimsel araştırmaların görevidir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Literatür taramasında SN IK Kuralı kullanılarak çalışmalar bir tabloda özetlendiğinde, aşağıda belirtilen başlıklardan hangisinin tabloda olmasına gerek yoktur?",
+                options: ["A) Ne kadar?", "B) Ne?", "C) Nerede?", "D) Kim?", "E) Ne zaman?"],
+                ans: "A) Ne kadar?",
+                exp: "5N1K kuralında (Ne, Nerede, Ne zaman, Nasıl, Neden, Kim) 'Ne kadar?' ölçü sorusu standart bir başlık olarak yer almaz.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi kontrollü deney tasarımı çeşitlerinden biri değildir?",
+                options: ["A) Latin Kare", "B) Test öncesi kontrol", "C) Solomon dört gruplu", "D) Test sonrası kontrol", "E) Gerçek deney"],
+                ans: "A) Latin Kare",
+                exp: "Latin Kare, dışsal değişkenleri kontrol etmek için kullanılan istatistiksel bir bloklama tekniğidir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Gelecek başkanlık seçimlerinde erkek ve kadın seçmenlerinin yüzde kaçının Demokrat adaya, yüzde kaçının ise Cumhuriyetçi adaya oy vereceğini belirleyip mukayese etmeye yönelik araştırma hangi türdür?",
+                options: ["A) İlişkisel", "B) Deneysel", "C) Keşfedici", "D) Tarihsel", "E) Nitel"],
+                ans: "A) İlişkisel",
+                exp: "Cinsiyet ile oy verme tercihi arasındaki korelasyonu ölçtüğü ve iki durumu kıyasladığı için ilişkiseldir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "I. Derinlemesine görüşme, II. Gözlem, III. Odak grup, IV. Yansıtma (projektif) teknikler. Yukarıdaki veri toplama yöntemlerinden hangileri dolaylı kalitatif araştırmalarda kullanılan yöntemler arasındadır?",
+                options: ["A) II-IV", "B) I-III", "C) Yalnız II", "D) Yalnız IV", "E) I-II-III-IV"],
+                ans: "A) II-IV",
+                exp: "Katılımcının araştırma amacını tam bilmediği veya pasif izlendiği yöntemler (gözlem ve yansıtma) dolaylıdır.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2025 Vize", "3 Kez Çıktı!"]
+            },
+            {
+                q: "I. Gerçekçilik nesneldir. II. Asıl olan çalışılan durumdur. III. Nedensellik ilişkisini açıklar. IV. Değişkenler karmaşık ve iç içe geçmiştir. Hangileri kantitatif araştırma yöntemlerine aittir?",
+                options: ["A) I-II-III", "B) I-III", "C) Yalnız IV", "D) II-IV", "E) I-IV"],
+                ans: "A) I-II-III",
+                exp: "Nicel (Kantitatif) araştırmalar nesnel gerçekliğe (I) ve nedensellik ilişkisine (III) odaklanır.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "I. Kullanılmış olma olasılığının olmaması, II. Veri toplama maliyetinin yüksek olması, III. Özel amaçlara göre toplanıp ihtiyaçlara tam cevap verilmesi, IV. Bizzat araştırmacı tarafından toplanarak yapılması. Hangileri birincil verinin avantajlarıdır?",
+                options: ["A) I, III, IV", "B) I ve II", "C) Yalnız III", "D) II ve IV", "E) I, II, III, IV"],
+                ans: "A) I, III, IV",
+                exp: "Birincil veri doğrudan toplanır, amaca tam uyar (III) ve kontrol altındadır (IV). Yüksek maliyet (II) bir dezavantajdır.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Ahmet ve Berk'in yaş ve boylarının kaydedilmesiyle elde edilen yaş ve boy değişkenleri aşağıdaki hangi tür veriye örnek olur?",
+                options: ["A) Sayısal veri", "B) Nitel veri", "C) İsimsel veri", "D) Kategorik veri", "E) Ordinal veri"],
+                ans: "A) Sayısal veri",
+                exp: "Yaş (yıl) ve boy (cm) matematiksel işlem yapılabilen metrik niceliklerdir. Bu sebeple sayısal veridir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Serbest araştırmalarında merak uyandıran en az kaç değişken bulunur?",
+                options: ["A) 2", "B) 1", "C) 3", "D) 4", "E) 5"],
+                ans: "A) 2",
+                exp: "Bir nedenselliğin/ilişkinin kurulabilmesi için en az bir bağımlı ve bir bağımsız olmak üzere iki değişkene ihtiyaç vardır.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi araştırma yapısı içerisinde yer almaz?",
+                options: ["A) Grup oluşturma", "B) Hipotez", "C) Problem", "D) Veri analizi", "E) Yöntem"],
+                ans: "A) Grup oluşturma",
+                exp: "Grup oluşturma daha çok spesifik bir deneysel yöntem adımıdır, genel teorik yapıda yer almaz.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Bir araç satın almaya niyetlendiğinizi varsayalım. Gideceğiniz yol, araç hızı, araç ağırlığı, yolun eğimi ve yakıt tüketimi gibi değişkenler var. Aracı almanıza sebep olabilecek bağımlı değişken aşağıdakilerden hangisi olabilir?",
+                options: ["A) Araç ağırlığı", "B) Yakıt tüketimi", "C) Yol eğimi", "D) Araç hızı", "E) Gidilecek yol"],
+                ans: "A) Araç ağırlığı",
+                exp: "Verilen bu akademik senaryodaki AUZEF kabulü araç ağırlığı yönündedir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Bilimsel araştırmalarda gelen duruma ait olan yasalar ve kuralları ifade eden kavram aşağıdakilerden hangisidir?",
+                options: ["A) Nomotetik", "B) İdiyografik", "C) Egzistansiyel", "D) Fenomenolojik", "E) Ontolojik"],
+                ans: "A) Nomotetik",
+                exp: "Bilimde genellenebilir, evrensel doğa yasaları ve kurallar bulma çabasını ifade eden yaklaşıma Nomotetik yaklaşım denir.",
+                exams: ["2020-2021 Vize", "2023 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi araştırma yönteminin seçiminde yanıt verilmesi gereken sorulardan biri değildir?",
+                options: ["A) Stratejiniz nedir?", "B) Araştırmanın yapılacağı alan neresidir?", "C) Yöntem gerekli mi?", "D) Örneklem nasıl oluşturulmuştur?", "E) Hangi veri elde etme tekniği kullanılacaktır?"],
+                ans: "C) Yöntem gerekli mi?",
+                exp: "Bilimsel araştırmanın temel şartı yönteme dayanmasıdır. 'Yöntem gerekli mi?' sorusu tartışmaya kapalı bir ön kabuldür.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "I. Değişik ölçütler kullanarak konu araştırılabilecek şekle getirilir. II. Çok genel anlamda konu bulunur. III. Genel araştırma soruları ifade edilir. IV. Araştırmanın amaçları belirlenir. Bu cümlelerin doğru sıralaması nedir?",
+                options: ["A) I-II-III-IV", "B) I-IV-III-II", "C) III-I-II-IV", "D) II-I-III-IV", "E) IV-I-III-II"],
+                ans: "D) II-I-III-IV",
+                exp: "Önce geniş konu bulunur (II), konu sınırlandırılır (I), genel sorular oluşturulur (III) ve son olarak amaçlar belirlenir (IV).",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi araştırma konusunun belirlenmesi için atılması gereken önemli adımlardan biri değildir?",
+                options: ["A) Yeni ufuklar açabilecek konuları gündeme taşımak", "B) Yeni konular bulmak", "C) İkilemde bırakacak analizleri dile getirmek", "D) Bir gerçeği açığa çıkartmak", "E) Var olan problemlere çözüm aramak"],
+                ans: "C) İkilemde bırakacak analizleri dile getirmek",
+                exp: "Bilim dünyasını kasıtlı olarak çözümsüz bir ikilemde (paradoksta) bırakmak bilimsel bir hedef olamaz.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Bilimsel bilgiyi büyü, fal, din, edebiyat ve sanat gibi diğer bilgi türlerinden ayıran en önemli ölçüt bilimin konusunun .......................... olmasıdır. Boşluğa ne gelmelidir?",
+                options: ["A) sezgisel ve öznel gerçeklik", "B) sezgisel ve nesnel", "C) ampirik ve öznel gerçeklik", "D) septik ve nesnel", "E) ampirik ve nesnel gerçeklik"],
+                ans: "E) ampirik ve nesnel gerçeklik",
+                exp: "Bilimsel bilgi, gözleme ve deneye dayalı (ampirik) ve kişiden kişiye değişmeyen (nesnel) olmalıdır.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bir olgu değildir?",
+                options: ["A) Yer çekimi", "B) İdeolojik tavırlar", "C) Fırtına", "D) Zeka", "E) Zamanın başlangıcı"],
+                ans: "B) İdeolojik tavırlar",
+                exp: "Olgu nesnel gerçekliklerdir. İdeolojik tavırlar kişilerin öznel değer yargılarıdır, nesnel olgu değillerdir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Aşağıda verilen sınıflandırma ölçütü - tür eşleştirmelerinden hangisi yanlıştır?",
+                options: ["A) Zaman boyutu - Anlık", "B) Benimsenen bilim mantığı - Pozitivist", "C) Katılımcılar - Yorumlayıcı", "D) Amaçlarına göre - Tanımlayıcı", "E) Katılımcılar - Deneysel"],
+                ans: "C) Katılımcılar - Yorumlayıcı",
+                exp: "Yorumlayıcı yaklaşım, katılımcılara göre yapılan bir sınıflandırma değil, bilim mantığına (paradigmaya) göredir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Pozitivizm için aşağıda verilen ifadelerden hangisi yanlıştır?",
+                options: ["A) Pozitivist yaklaşımın amacı metafiziği dışlamaktır.", "B) Bize ait olmayan bağımsız sosyal dünya nesnel yöntemle ölçülmelidir.", "C) Pozitivist yaklaşımın temelleri 10. yüzyıla dayanmaktadır.", "D) Doğruluk duyumların ortaya çıkıp çıkmadığına bağlıdır.", "E) Temel amaç bilimi felsefi spekülasyondan kurtarmaktır."],
+                ans: "C) Pozitivist yaklaşımın temelleri 10. yüzyıla dayanmaktadır.",
+                exp: "Pozitivist felsefenin temelleri 10. yüzyılda değil, 19. yüzyılda Auguste Comte tarafından atılmıştır.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "I. Alana katkı sağlama II. Araştırmacıyla örtüşebilme III. Uygulama ve kuramsal anlamlı olma IV. Sadece deneye dayalı olma. Hangisi veya hangileri iyi bir konunun belirleyicisi değildir?",
+                options: ["A) Yalnız I", "B) I, II ve III", "C) I ve III", "D) I ve IV", "E) Yalnız IV"],
+                ans: "E) Yalnız IV",
+                exp: "İyi bir araştırma 'sadece' deneye dayalı olmak zorunda değildir; betimsel veya nitel araştırmalar da çok değerlidir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Karar alma sürecinin ilk aşamalarında yapılan, problemi tanımlama ve hipotez geliştirme çalışmalarıdır. Hangi modeldir?",
+                options: ["A) Nedensel Araştırma Modeli", "B) Keşifsel Araştırma Modeli", "C) Tanımlayıcı Araştırma Modeli", "D) Yönetsel Araştırma Modeli", "E) Kavramsal Araştırma Modeli"],
+                ans: "B) Keşifsel Araştırma Modeli",
+                exp: "Yeterli bilginin olmadığı durumlarda problemi daha iyi tanımlamak amacıyla yapılan ön çalışmalara keşifsel araştırma denir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "I. Tek doğru yöntem söz konusu değildir. II. Kanaatleri temel almak istatistiki yöntemleri temel almayla eş değer değildir. III. Bilim metafizik temellere dayandırılamaz. IV. Hiçbir aşama değer yargılarından bağımsız değildir. Hangileri post-pozitivizm özelliklerindendir?",
+                options: ["A) II ve III", "B) I, II ve IV", "C) I, III ve IV", "D) I ve IV", "E) I ve II"],
+                ans: "D) I ve IV",
+                exp: "Post-pozitivizm, tek bir mutlak yöntem olmadığını (I) ve araştırmacının değer yargılarının süreci etkilediğini (IV) savunur.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "I. Yanlış usavurum, muhakeme ve çıkarım II. Yanlış denek seçimi III. Dış etkiyi azaltma IV. Yetersiz mülakat ve gözlemler. Hangileri yaygın hatalardandır?",
+                options: ["A) III ve IV", "B) I, II ve IV", "C) I, III ve IV", "D) Yalnız III", "E) I ve IV"],
+                ans: "B) I, II ve IV",
+                exp: "Dış etkiyi azaltma (III) bir hata değil, bilimsel olarak nedensellik için yapılması gereken olumlu bir eylemdir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Paradigmalarla ilgili aşağıdaki ifadelerden hangisi doğrudur?",
+                options: ["A) Paradigma değişiminde psikolojik yapı önemsizdir.", "B) Paradigmalar arasında eş ölçülemezlik söz konusudur.", "C) Paradigmalar arası ilişki kurulamaz.", "D) Olguların izlenmesi tek başına paradigma değiştirir.", "E) Dışsal kıstaslar vardır."],
+                ans: "B) Paradigmalar arasında eş ölçülemezlik söz konusudur.",
+                exp: "Thomas Kuhn'un eş ölçülemezlik kavramı, farklı paradigmaların birbirlerinin kavramlarıyla anlaşılamayacağını ifade eder.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "........ sınırlı sayıda örneğe bakarak genel hakkında kanaat sahibi olunmasını sağlar. Buna karşılık ........ tümel önermelerden tikel önermelerin çıkarılmasını sağlayan yöntemdir. Boşluklara ne gelmelidir?",
+                options: ["A) Tümevarım - tümdengelim", "B) Tümdengelim - tümevarım", "C) Tamlama - tümleme", "D) Tamdangelim - tümevarım", "E) Tümdengelim - tamavarım"],
+                ans: "A) Tümevarım - tümdengelim",
+                exp: "Özelden genele (parçadan bütüne) ulaşmaya tümevarım; genel yasalardan özel durumlara ulaşmaya tümdengelim denir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "I. Tanımlayıcı araştırmalarda araştırmacı hangi soruları soracağını bilir. II. Tanımsal araştırmaya bilgi ihtiyacı belirlendikten sonra başlanır. III. Tanımsal araştırmaya hipotezler oluşturulmada önce başlanır. Hangileri doğrudur?",
+                options: ["A) Yalnız II", "B) I ve II", "C) Yalnız III", "D) Yalnız I", "E) II ve III"],
+                ans: "B) I ve II",
+                exp: "Hipotezler araştırma verileri toplanmadan 'önce' oluşturulmuş olur, bu yüzden III. öncül akademik olarak kusurludur.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bilimsel araştırmalarda kullanılan temel kavramlardan biri değildir?",
+                options: ["A) Kuram (Teori)", "B) Hipotez", "C) Değişken", "D) Olgu", "E) Kurgu"],
+                ans: "E) Kurgu",
+                exp: "Bilimsel araştırma gerçeklere ve test edilebilir kavramlara dayanır. Kurgu sanatın alanına girer.",
+                exams: ["2024 Güz Vize", "2024 Vize", "2 Kez Çıktı!"]
+            },
+            {
+                q: "I. Gözlemsel eleştirellik II. Mantıksal eleştirellik III. Öz eleştiri IV. Saf eleştiri. Kaynak incelemesinde eleştirelliğe dair hususlara bakılacak olursa hangisi bu konuyu karşılamaz?",
+                options: ["A) I, II, III", "B) I, III, IV", "C) I, II, IV", "D) Yalnız III", "E) Yalnız I"],
+                ans: "E) Yalnız I",
+                exp: "Sistem test mantığında 'Saf Eleştiri' veya 'Öz Eleştiri' kaynak kritiği yöntemlerini karşılamaz. Doğru kabul budur.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "I. Hipotez içerme II. Tutarlı olma III. Yasa içerme IV. Kendi bildiğini uygulama. Hangisi veya hangileri kuram tanımına karşılık gelmez?",
+                options: ["A) Yalnız IV", "B) Yalnız III", "C) II ve IV", "D) Yalnız I", "E) I ve II"],
+                ans: "A) Yalnız IV",
+                exp: "Araştırmacının 'kendi bildiğini uygulaması' öznellik ve dogmatizmdir; kuram sistematiğine aykırıdır.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Araştırmalara ilişkin olarak aşağıdaki ifadelerden hangisi doğrudur?",
+                options: ["A) Araştırmalar amaca yönelik yapılmak zorunda değildir.", "B) Araştırma konusunun özgün olması gerekmez.", "C) Kitaplar verileri yenileme konusunda esnektir.", "D) Kabul edilmiş her tez mutlak kaliteyi garantilemez.", "E) Araştırma konularının genelleştirilmesi gerekir."],
+                ans: "D) Kabul edilmiş her tez mutlak kaliteyi garantilemez.",
+                exp: "Jüriden geçmiş bir tez asgari standartları sağlasa da eleştirilemez veya 'mutlak kusursuz' olduğu anlamına gelmez.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Bilim ile ilgili olarak aşağıdaki ifadelerden hangisi yanlıştır?",
+                options: ["A) Bilim insanları arasında anlaşmazlık olması doğası gereğidir.", "B) Bilimsel uzmanlık ile toplum kaygıları arasında köprü kurulmalıdır.", "C) Normal bilimin yerini şirketleşmiş bilime bırakma olasılığı artmıştır.", "D) Riskin arttığı günümüzde geleneksel bilim bilgi eksikliğini tam anlamıyla doldurabilmektedir.", "E) Bilimsel çalışmanın değerlendirilmesi sadece bilim insanlarına bırakılmaz."],
+                ans: "D) Riskin arttığı günümüzde geleneksel bilim bilgi eksikliğini tam anlamıyla doldurabilmektedir.",
+                exp: "Modern dünya çok hızlı değişmektedir. Geleneksel bilim bu hızın gerisinde kalabilir, bilgi eksikliğini 'tam anlamıyla' gideremeyebilir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Olguların belli bir andaki durumunu ortaya koymaya yönelik olabilir. Amaç, olgunun belli bir anda resmini çekmektir. Bu araştırma türü hangisidir?",
+                options: ["A) Anlık (cross-sectional) araştırmalar", "B) Dönemlik (longitudinal) çalışmalar", "C) Açıklayıcı araştırmalar", "D) Keşfedici çalışmalar", "E) Saptayıcı çalışmalar"],
+                ans: "A) Anlık (cross-sectional) araştırmalar",
+                exp: "Zamana yayılmadan, sadece belirli bir 'zaman kesitinde' ölçülüp veri toplanmasına anlık/kesitsel (cross-sectional) araştırma denir.",
+                exams: ["2024 Güz Vize"]
+            },
+            {
+                q: "Ana kütlenin tüm özelliklerini içeren ve temsil yeteneğine sahip bir örneklem aşağıdaki örnekleme yöntemlerinden hangisiyle seçilmiş olabilir?",
+                options: ["A) Kolayda örnekleme yöntemi ile yapılmış olabilir."],
+                ans: "A) Kolayda örnekleme yöntemi ile yapılmış olabilir.",
+                exp: "Metinde yer alan doğrulanmış kabul edilen cevap (Diğer şıklar sağlanmamıştır).",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "Yüzey geçerliliği ile ilgili aşağıdaki yargılardan hangisi doğrudur?",
+                options: ["A) Hesaplanan yüzde ne kadar yüksekse araç o düzeyde yüz geçerliliğine sahiptir."],
+                ans: "A) Hesaplanan yüzde ne kadar yüksekse araç o düzeyde yüz geçerliliğine sahiptir.",
+                exp: "Metinde yer alan doğrulanmış kabul edilen cevap (Diğer şıklar sağlanmamıştır).",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "Özellikle bir çerçevenin mevcut olmaması ya da oluşturulmasının imkansız oldugu durumlarda faydalı bir yöntem olan ve bireyin genellikle rassal olarak seçilmesiyle başlayan örnekleme yöntemi aşağıdakilerden hangisidir?",
+                options: ["A) Kartopu örneklemesi"],
+                ans: "A) Kartopu örneklemesi",
+                exp: "Evrenin bir listesinin (çerçevenin) olmadığı durumlarda ulaşılan bir denek üzerinden diğerine geçilmesine kartopu örnekleme denir.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bilginin tanımlarından değildir?",
+                options: ["A) Bir olguyu açıklamaya kestirmeye veya kontrol etmeye yarayan ilişkili ilkeler bütünüdür."],
+                ans: "A) Bir olguyu açıklamaya kestirmeye veya kontrol etmeye yarayan ilişkili ilkeler bütünüdür.",
+                exp: "Bu tanım bilginin değil, 'kuramın (teorinin)' tanımıdır.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: ".......... değişen........... değişken tarafından etkilenen değişkendir. Yukarıdaki cümlede boş bırakılan yerlere sırasıyla aşağıdakilerden hangileri getirilmelidir?",
+                options: ["A) Bağımlı - bağımsız"],
+                ans: "A) Bağımlı - bağımsız",
+                exp: "Bağımsız değişken etkileyen, bağımlı değişken ise ondan etkilenen ve değişen sonuç değişkenidir.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "Birbirleriyle çok yakın ilişkide olan araştırmalarda bilgiye nasıl ulaşacağımızın felsefesini içeren kavram aşağıdakilerden hangisidir?",
+                options: ["A) Epistemoloji"],
+                ans: "A) Epistemoloji",
+                exp: "Bilgi felsefesine, bilginin doğasını ve sınırlarını inceleyen felsefe dalına epistemoloji denir.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "I. Kaynaklar genellikle makale, bildiri gibi kısa akademik metinlerde kullanılır. II. Kaynakçada yararlanılan tüm kaynaklara yer verilir. III. Kaynaklar listesi kaynakçaya göre daha uzundur. IV. Kaynaklar listesi araştırmacılara yardımcı olmak bakımından daha uzundur. Hangisi dogrudur?",
+                options: ["A) I ve II"],
+                ans: "A) I ve II",
+                exp: "Kısa metinlerde 'Kaynaklar' kullanılır (I) ve hazırlanan 'Kaynakça'da yararlanılan tüm eserler listelenir (II).",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "Belirli uyarıcılar karşısında bırakıldıklarında şu ya da bu şekilde tepkide bulunma hareketi hazır olma durumuna verilen ad aşağıdakilerden hangisidir?",
+                options: ["A) Tutum"],
+                ans: "A) Tutum",
+                exp: "Bireylerin belirli bir nesneye veya kişiye karşı sahip oldukları önceden hazırlıklı olma (tepki verme) eğilimine tutum denir.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "Medeni durum bekar evli dol ve benzeri aşağıdaki değişken sınıflarından hangisine aittir?",
+                options: ["A) Kesikli değişken - nitel değişken"],
+                ans: "A) Kesikli değişken - nitel değişken",
+                exp: "Medeni durum rakamsal bir değer taşımaz, isimseldir (nitel). Ayrıca buçuklu (ondalıklı) değer alamayacağı için kesikli değişkendir.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "SPSS'te değişkenleri oluşturmak ve tanımlamak amacıyla aşağıdaki hangi sekme kullanılır?",
+                options: ["A) Variable view"],
+                ans: "A) Variable view",
+                exp: "SPSS yazılımında değişkenlerin (soruların) isim, tür ve özelliklerinin tanımlandığı arka ekrana 'Variable View' denir.",
+                exams: ["2020-2021 Final"]
+            },
+            {
+                q: "I. Veri toplama maliyetinin oldukça düşük olması II. Verilerin elde edilme süresinin kısa olması III. Yetenekli araştırmacılar bulma güçlüğünü ortadan kaldırması IV. Veri elde etmek için daha çok emek harcanması. Hangileri ikincil verinin avantajlarıdır?",
+                options: ["A) I-II-III", "B) II-III", "C) I-III-IV", "D) I-II", "E) Yalnız II"],
+                ans: "A) I-II-III",
+                exp: "İkincil veriler önceden toplanmış verilerdir. 'Daha çok emek harcanması' ikincil değil birincil verinin dezavantajıdır.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi projektif araştırma tekniklerinden biri değildir?",
+                options: ["A) Benzerlikler", "B) Cümle tamamlama", "C) Kelime çağrışım", "D) Resimler ve kelimeler", "E) Matematiksel tahminlemeler"],
+                ans: "E) Matematiksel tahminlemeler",
+                exp: "Projektif teknikler bilinçaltındaki duyguları dolaylı açığa çıkaran nitel yöntemlerdir. Matematiksel tahminlemeler ise niceldir.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "I. X ve Y'deki değişmeler arasında bir ilgi olmalıdır. II. X'deki değişme Y'deki değişmeden zaman içinde daha önce meydana gelmelidir. III. Y'ye etki etmesi muhtemel diğer faktörlerin tümü elenmelidir. IV. X'in Y'ye etki ettiğini saptayan ilgili bir teori bulunmamalıdır. Nedensel araştırmalar için hangileri doğrudur?",
+                options: ["A) I, II ve III", "B) I ve III", "C) I ve II", "D) II ve III", "E) I, III ve IV"],
+                ans: "A) I, II ve III",
+                exp: "Nedensel araştırmalar tamamen kuramsal (teorik) bir temele dayanmak ZORUNDADIR (IV yanlıştır).",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi elektronik ortamda literatür tarama sistemleri arasında yer almaz?",
+                options: ["A) İndeksler", "B) Konu katalogları", "C) Dizinler", "D) Arama motoru", "E) Televizyon"],
+                ans: "E) Televizyon",
+                exp: "Literatür taraması akademik veri tabanlarında (indeksler, dizinler) yapılır. Televizyon akademik sistem değildir.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Araştırma türleri ile ilgili aşağıdaki ifadelerden hangisi yanlıştır?",
+                options: ["A) Temel araştırmalar teori geliştirmek amacıyla yapılır.", "B) Uygulamalı araştırmalar özel sektör tarafından yürütülür.", "C) Temel bilimsel araştırmalarda elde edilen verilerin pratikte kullanılması sakıncalıdır ve bunlar kullanılmamalıdır.", "D) Temel araştırmalar bilim adamları tarafından yürütülür.", "E) Uygulamalı araştırmalar günlük sorunlara pratik çözümler bulmak içindir."],
+                ans: "C) Temel bilimsel araştırmalarda elde edilen verilerin pratikte kullanılması sakıncalıdır ve bunlar kullanılmamalıdır.",
+                exp: "Temel araştırmalarda elde edilen verilerin pratikte kullanılması kesinlikle 'sakıncalı' değildir.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Aşağıda verilenlerden hangisi iyi bir literatür taramasında bulunması gereken özelliklerden biri değildir?",
+                options: ["A) Görüşlerin güçlü ve zayıf yönlerini göstererek değerlendirebilmelidir.", "B) Araştırma problemiyle doğrudan ilgili olmalıdır.", "C) İlgili literatürde üzerinde uzlaşılmayan (ihtilaflı) alanları göstermemelidir.", "D) Bilinen ve bilinmeyen şeyleri özetleyen bir sentez oluşturabilmelidir.", "E) Daha fazla araştırma gerektiren soruları ortaya koyabilmelidir."],
+                ans: "C) İlgili literatürde üzerinde uzlaşılmayan (ihtilaflı) alanları göstermemelidir.",
+                exp: "İyi bir literatür taraması alanındaki fikir ayrılıklarını ve ihtilafları gizlemez; bu alanları belirginleştirmelidir.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Tanımlayıcı araştırmalar ile ilgili aşağıdakilerden hangisi yanlıştır?",
+                options: ["A) Problemin tanımlanması aşamasından önce başlanabilir.", "B) Amaç anakütleye yönelik tanımlamaları yapmaktır.", "C) Genellikle en az iki değişken arasındaki etkileşimin tanımlanmasını hedeflemektedir.", "D) Genellikle araştırılan konunun bir özelliğini tanımlar.", "E) Temel amaç olayın resmini çekmektir."],
+                ans: "C) Genellikle en az iki değişken arasındaki etkileşimin tanımlanmasını hedeflemektedir.",
+                exp: "İki değişkenin birbirini nasıl etkilediğini araştırmak 'İlişkisel' veya 'Nedensel' araştırmaların görevidir.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "I. Karar alıcılarla görüşmek II. Alanın uzmanlarıyla mülakatlar yapmak III. Yapısal veri analizi IV. Kalitatif araştırma. Hangisi bir araştırmacının problem belirleme sürecinde yapması gerekenleri belirtir?",
+                options: ["A) Yalnız IV", "B) I, II ve III", "C) I ve II", "D) I, II ve IV", "E) Yalnız I"],
+                ans: "D) I, II ve IV",
+                exp: "Keşifsel aşamada uzmanlarla görüşülür ve esnek olan nitel (kalitatif) araştırmalara başvurulur. Yapısal veri analizi (III) ise ileriki sonuçlandırma aşamasına aittir.",
+                exams: ["2025 Vize", "25-26 Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi problemlere güvenilir çözümler aramak amacıyla planlı ve sistemli olarak verilerin toplanması, çözümlenmesi ve rapor edilmesi sürecidir?",
+                options: ["A) Deney", "B) Bilim", "C) Bilimsel araştırma", "D) İstatistik", "E) Hipotez"],
+                ans: "C) Bilimsel araştırma",
+                exp: "Soru metni doğrudan 'Bilimsel araştırma'nın akademik ve pratik tanımını vermektedir.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Aşağıda verilen notasyonlar ile ilgili açıklamalardan hangisi yanlıştır?",
+                options: ["A) E: Deney etkisini gösterir.", "B) O: Test edilecek değişkenin gözlemlendiğini gösterir.", "C) CG: Kontrol grubunu gösterir.", "D) R: Bağımsız değişken üzerinde bir manipülasyon yapıldığını gösterir.", "E) EG: Deney grubunu gösterir."],
+                ans: "D) R: Bağımsız değişken üzerinde bir manipülasyon yapıldığını gösterir.",
+                exp: "Deneysel tasarımda 'R' harfi (Randomization), deneklerin gruplara rassal/rastgele atandığını gösterir.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi gözlem ve ölçmelerin tekrarlanabildiği ve objektif yapıldığı araştırmalardır?",
+                options: ["A) Kantitatif Araştırma", "B) Deneyimsel Araştırma", "C) Nedensel Araştırma", "D) Kalitatif Araştırma", "E) Nitel Araştırma"],
+                ans: "A) Kantitatif Araştırma",
+                exp: "Pozitivist felsefeye dayanan kantitatif (nicel) araştırmalar sayısal verilere, aynı şartlarda tekrarlandığında aynı sonuçları verecek katı objektif ölçümlere dayanır.",
+                exams: ["2025 Vize"]
+            },
+            {
+                q: "Aşağıdakilerden hangisi bir araştırma raporunun metin kısmında yer alan bölümlerden biridir?",
+                options: ["A) Ekler", "B) Kaynakça", "C) Giriş", "D) Kısaltmalar", "E) Dizin"],
+                ans: "C) Giriş",
+                exp: "Bir raporun gövdesi (metin kısmı) Giriş, Yöntem, Bulgular ve Sonuç bölümlerinden oluşur. Kaynakça, Ekler ve Dizin metin bittikten sonra arka kısımda yer alır.",
+                exams: ["2024 Bütünleme"]
+            },
+            {
+                q: "I. Soru gerekli mi? II. Cevaplayıcı soruyu anlıyor mu? III. Soru talep edilen bilgiyi ortaya çıkarmada yeterli olacak mı? IV. Soru ile elde edilen veri kolay biçimde analiz edilebilecek mi? Hangileri anketteki soruların içeriğine bakarken sorulması gereken sorular arasında yer alır?",
+                options: ["A) I, II ve III", "B) II ve III", "C) II, III ve IV", "D) I, III ve IV", "E) I, II ve IV"],
+                ans: "A) I, II ve III",
+                exp: "Analizin 'kolay olması' sorunun içeriğini belirlemede bilimsel bir kıstas olamaz; gerekiyorsa zor analiz edilecek soru da sorulmalıdır.",
+                exams: ["2024 Bütünleme"]
+            },
+            {
+                q: "Bir yazarın intihalden kaçınmak için gerekli becerilere sahip olmamasına veya başkasına ait olan fikirleri iyice özümseyerek kendisine aitmiş gibi zannetmesine bağlı olarak yapılmış olan intihale ne ad verilir?",
+                options: ["A) Kasti aşırma", "B) Benzetme", "C) Kendinden intihal", "D) Özümseme", "E) Bilinçsiz intihal"],
+                ans: "E) Bilinçsiz intihal",
+                exp: "Akademik yazım kurallarını tam bilmemekten veya okuduğu bir fikri unutup kendi fikriymiş gibi düşünmesinden (kriptomnezi) kaynaklanan duruma Bilinçsiz İntihal denir.",
+                exams: ["2024 Bütünleme"]
+            },
+            {
+                q: "Anketin konuya uygunluğu ve dili ile ilgili aşağıda verilen ifadelerden hangisi yanlıştır?",
+                options: ["A) Soruların anlatım biçimlerinde belirsizlikten uzak durulmalıdır.", "B) '-ecek,-acak' gibi eklerden oluşan sorulardan kaçınılmalıdır.", "C) Tahminleme veya genelleştirme için sorulan sorular sonuca yönelik doğru tahminler elde edilmesine imkan verir.", "D) Cümleleri kısa tutmak soruların daha rahat anlaşılmasını sağlar.", "E) Negatif tasarımlı sorular şaşırtıcı olabilir."],
+                ans: "C) Tahminleme veya genelleştirme için sorulan sorular sonuca yönelik doğru tahminler elde edilmesine imkan verir.",
+                exp: "Anket soruları gerçek tutumları ölçmelidir. 'Sizce 10 yıl sonra şu nasıl olur?' gibi genelleme/tahmin isteyen sorular doğru ve güvenilir veri sağlamaz.",
+                exams: ["2024 Bütünleme"]
+            },
+            {
+                q: "Araştırmanın planlaması aşamasında aşağıdaki başlıklardan hangisi yer almaz?",
+                options: ["A) Araştırma hipotezlerinin belirlenmesi", "B) Araştırma raporunun yazılması", "C) Araştırma probleminin ve sorularının belirlenmesi", "D) Araştırmanın amacının, içeriği ve kısıtlarının belirlenmesi", "E) Araştırma konusunun belirlenmesi"],
+                ans: "B) Araştırma raporunun yazılması",
+                exp: "Planlama, bir işe başlamadan 'önce' yapılan tasarım evresidir. Raporun yazılması ise araştırmanın her şeyi bittikten 'sonra' kaleme alınan final basamağıdır.",
+                exams: ["2024 Bütünleme"]
+            },
+            {
+                q: "Araştırma etiği ile ilgili aşağıdaki ifadelerden hangisi yanlıştır?",
+                options: ["A) Fırsatlardan yararlanarak etik olmayan faaliyetleri yerine getiren araştırmacılar mevcuttur.", "B) Dürüst araştırmacılar bile bazı durumlarda etik açıdan şüpheli uygulamalarda bulunabilmektedirler.", "C) Yanlış bir inanç oluşturmak amacıyla eksik bilgi sunmak aldatmadır.", "D) Araştırma yapılacak konunun derinlemesine cevaplayıcıya anlatılması objektif bir araştırmanın açıklık ilkesine aykırıdır.", "E) Verilen cevapları değiştirmek etik olarak yanlıştır."],
+                ans: "D) Araştırma yapılacak konunun derinlemesine cevaplayıcıya anlatılması objektif bir araştırmanın açıklık ilkesine aykırıdır.",
+                exp: "Bilimsel etik gereği katılımcılardan 'Aydınlatılmış Onam' alınır; yani onlara araştırmanın amacı anlatılır. Bu, açıklık ilkesine aykırı olmak bir yana o ilkenin temelidir.",
+                exams: ["2024 Bütünleme"]
+            },
+            {
+                q: "Araştırmaya katılan bireylerde araştırma süresince meydana gelen değişiklikler sonucu oluşan geçersizlik kaynağına ne ad verilir?",
+                options: ["A) Geçmişin etkisi", "B) Araç etkisi", "C) Test etkisi", "D) Seçim etkisi", "E) Olgunlaşma etkisi"],
+                ans: "E) Olgunlaşma etkisi",
+                exp: "Özellikle uzun süren çalışmalarda, deneklerin zaman içinde biyolojik veya psikolojik olarak yaşlanması veya sıkılması sebebiyle test sonuçlarının değişmesine 'Olgunlaşma (Maturation) Etkisi' denir.",
+                exams: ["2024 Bütünleme"]
+            },
+            {
+                q: "Aşağıda anket ile ilgili verilen bilgilerden hangisi yanlıştır?",
+                options: ["A) Gerekli olan verilerin toplanması için düzenlenen bir dizi senaryodan oluşmaktadır.", "B) Anket soruları cevaplayıcı tarafından açıkça anlaşılabilmelidir.", "C) Cevaplayıcılardan bilgi almak için soru kümelerini barındıran formlardır.", "D) Anketin yapısı, cevaplayıcıyı cevap vermeye teşvik edecek şekilde hazırlanmalıdır.", "E) Gerekli olan verilerin toplanması için düzenlenen bir dizi sorulardan oluşmaktadır."],
+                ans: "A) Gerekli olan verilerin toplanması için düzenlenen bir dizi senaryodan oluşmaktadır.",
+                exp: "Anket soru dizilerinden oluşur. Katılımcıya 'senaryolar' sunularak davranışlarının incelendiği metotlar anket değil, vaka analizleri veya deneylerdir.",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Özellikle kendi kendine doldurulan anketlerde yani posta anketlerinde gözlemlenen, her zaman olası bir belirsizlik oluşturan hata kaynağı aşağıdakilerden hangisidir?",
+                options: ["A) Gözlem hataları", "B) Kolay hatalar", "C) Kayıt hataları", "D) Kapsam dışı hatalar", "E) Tepkisiz hatalar/Cevaplandırma hatası"],
+                ans: "E) Tepkisiz hatalar/Cevaplandırma hatası",
+                exp: "Araştırmacının başında bulunmadığı posta anketlerinin en büyük zayıflığı, anket formunun katılımcı tarafından hiç doldurulmadan atılmasıdır (Cevapsızlık hatası).",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Araştırmalarda karşılaşılan hataları önlemek için uygulanması gereken hususlara dair aşağıdaki ifadelerden hangisi yanlıştır?",
+                options: ["A) Araştırmanın başında amaçlar, hipotezler ve istatistiksel teknikler doğru belirlenmelidir.", "B) İstatistiksel teknikler hakkında temel düzeyde bilgi edinilmelidir.", "C) Örneklem seçilirken ana kütlenin sınırları ve özellikleri bilinmez.", "D) Problemler ve hipotezler, değişken türüne uygun olarak yazılmalıdır.", "E) Araştırmanın uygulama aşamasında bir istatistik uzmanından yardım alınabilir."],
+                ans: "C) Örneklem seçilirken ana kütlenin sınırları ve özellikleri bilinmez.",
+                exp: "Bilimsel bir örneklem seçebilmek için içinden seçim yapılacak ana kütlenin sınırlarının ve temel demografik özelliklerinin araştırmacı tarafından mutlaka BİLİNMESİ gerekir.",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Eş zamanı olarak geliştirilen ölçekten elde edilen puanlarla, belirlenen kriter arasındaki korelasyon ........................... olarak değerlendirilir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?",
+                options: ["A) Yapı geçerliliği", "B) Görünüş geçerliliği", "C) Uyum geçerliği", "D) Kapsam geçerliliği", "E) Kestirimsel geçerlilik"],
+                ans: "C) Uyum geçerliği",
+                exp: "Yeni testinizin sonuçlarını, 'aynı anda' (eş zamanlı) uyguladığınız güvenilirliği kanıtlanmış başka bir eski testin sonuçlarıyla karşılaştırıyorsanız bu 'Uyum (Eşzamanlı) Geçerliği'dir.",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Araştırmada, çalışmanın hazırlandığı ortamda karşılaşılan güçlükler, çalışmada emeği geçen kişiler, varsa eksik ya da sınırlı kalan konuların belirtildiği ve zorunlu olmayan bölüme ne ad verilir?",
+                options: ["A) Dizin", "B) Sonuç", "C) Özet", "D) Giriş", "E) Ön söz"],
+                ans: "E) Ön söz",
+                exp: "Tezin veya kitabın en başında yer alan, yazarın kendi kişisel sürecini anlattığı ve teşekkür ettiği gayriresmî bölüme 'Ön Söz' adı verilir.",
+                exams: ["25-26 Final"]
+            },
+            {
+                q: "Aşağıda verilen araştırmacılardan hangisi değişkenlerin ölçümü üzerine çalışmamışıdır?",
+                options: ["A) Gay ve Diehl", "B) Saunders", "C) Adams", "D) Bell ve Waters", "E) Fromm"],
+                ans: "E) Fromm",
+                exp: "Erich Fromm bir psikanalist, sosyolog ve filozoftur. Diğer isimler ise bilimsel araştırma yöntemleri, istatistik ve örnekleme üzerine akademik kitapları olan uzmanlardır.",
+                exams: ["Önceki AUZEF Finali"]
+            }
+        ];
+
+        let allAnswersVisible = false;
+
+        function filterQuestions(type, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            let filtered = sorular;
+            if (type !== 'all') {
+                filtered = sorular.filter(soru => 
+                    soru.exams.some(exam => exam.toLowerCase().includes(type.toLowerCase()))
+                );
+            }
+
+            filtered.forEach((soru, index) => {
+                let tagsHtml = soru.exams.map(exam => {
+                    if(exam.includes("Kez Çıktı")) {
+                        return `<span class="exam-tag freq-tag">🔥 ${exam}</span>`;
+                    }
+                    return `<span class="exam-tag">${exam}</span>`;
+                }).join('');
+
+                let optionsHtml = soru.options.map(opt => `<li>${opt}</li>`).join('');
+                
+                // Ekran yenilendiğinde "Tümünü Göster" durumuna göre div'leri aç/kapat
+                let displayState = allAnswersVisible ? 'block' : 'none';
+                let btnText = allAnswersVisible ? 'Cevabı ve Açıklamayı Gizle' : 'Cevabı ve Açıklamayı Göster';
+                let btnColor = allAnswersVisible ? '#34495e' : '#0984e3';
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="exam-tags">${tagsHtml}</div>
+                    </div>
+                    <p class="question-text">${index + 1}. ${soru.q}</p>
+                    <ul class="options">${optionsHtml}</ul>
+                    <button class="btn-toggle" style="background-color: ${btnColor}" onclick="toggleSingleAnswer(this)">${btnText}</button>
+                    <div class="answer-area" style="display: ${displayState}">
+                        <p class="correct-ans">✔️ Doğru Cevap: ${soru.ans}</p>
+                        <p class="exp-text">💡 <strong>Açıklama:</strong> ${soru.exp}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Tekil buton kontrolü
+        function toggleSingleAnswer(btn) {
+            const targetDiv = btn.nextElementSibling;
+            if (targetDiv.style.display === 'none' || targetDiv.style.display === '') {
+                targetDiv.style.display = 'block';
+                btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                btn.style.backgroundColor = '#34495e';
+            } else {
+                targetDiv.style.display = 'none';
+                btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                btn.style.backgroundColor = '#0984e3';
+            }
+        }
+
+        // Global (Tümünü Göster/Gizle) buton kontrolü
+        function toggleAllAnswers() {
+            allAnswersVisible = !allAnswersVisible;
+            const globalBtn = document.getElementById('globalToggleBtn');
+            const allAnswerAreas = document.querySelectorAll('.answer-area');
+            const allToggleBtns = document.querySelectorAll('.btn-toggle');
+
+            if (allAnswersVisible) {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Gizle';
+                globalBtn.style.backgroundColor = '#34495e';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'block');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                    btn.style.backgroundColor = '#34495e';
+                });
+            } else {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Göster';
+                globalBtn.style.backgroundColor = 'var(--global-btn)';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'none');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                    btn.style.backgroundColor = '#0984e3';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const allBtn = document.querySelector('.tab-btn.active');
+            filterQuestions('all', allBtn);
+        });
+    </script>
+</body>
+</html>

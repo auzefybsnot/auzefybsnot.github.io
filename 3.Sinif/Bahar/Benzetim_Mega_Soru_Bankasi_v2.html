@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benzetim (Simülasyon) — Mega Soru Bankası v2 (75 Soru)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #0984e3;
+            --success: #00b894;
+            --warning: #f39c12;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --border: #dfe6e9;
+            --global-btn: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 { margin: 0 0 10px 0; font-size: 2.2em; }
+        .header p { margin: 0; font-size: 1.1em; color: #bdc3c7; }
+
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .tabs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+        .tab-btn {
+            background-color: #ecf0f1;
+            color: var(--primary);
+            border: 2px solid var(--border);
+            padding: 10px 20px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background-color: #dfe6e9; }
+        .tab-btn.active { background-color: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3); }
+
+        .global-toggle-btn {
+            background-color: var(--global-btn);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(225, 112, 85, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .global-toggle-btn:hover { background-color: #d63031; transform: translateY(-2px); }
+
+        #quiz-container { display: flex; flex-direction: column; gap: 20px; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 25px;
+            border-left: 6px solid var(--accent);
+        }
+
+        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .exam-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .exam-tag { background-color: #ffeaa7; color: #d63031; padding: 4px 10px; border-radius: 5px; font-size: 0.85em; font-weight: bold; }
+        .exam-tag.freq-tag { background-color: #e17055; color: white; }
+
+        .question-text { font-size: 1.15em; font-weight: 600; color: var(--primary); margin-top: 0; margin-bottom: 15px; white-space: pre-wrap; }
+        .options { list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; flex-direction: column; gap: 8px; }
+        .options li { background-color: #f8f9fa; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); font-size: 1em; }
+
+        .btn-toggle { background-color: var(--secondary); color: white; border: none; padding: 10px; width: 100%; font-size: 1.05em; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn-toggle:hover { background-color: var(--primary); }
+
+        .answer-area { display: none; margin-top: 15px; padding: 15px; background-color: #eafaf1; border-left: 5px solid var(--success); border-radius: 0 8px 8px 0; }
+        .correct-ans { font-size: 1.1em; color: var(--success); margin: 0 0 8px 0; font-weight: bold; }
+        .exp-text { margin: 0; color: var(--text); line-height: 1.5; font-size: 0.95em; }
+        
+        .warning-text { color: #d35400; font-weight: bold; background-color: #fcf3cf; padding: 5px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+    <div style="margin-bottom: 12px;">
+        <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; transition: background 0.2s;">
+            &larr; 3. Sınıf Derslerine Dön
+        </a>
+    </div>
+
+        <div class="header">
+            <h1>Benzetim (Simülasyon) Mega Havuz</h1>
+            <p>Vize + Final + Bütünleme (Tamamı Çözümlü Kapsamlı Arşiv)</p>
+        </div>
+
+        <div class="controls-container">
+            <button id="globalToggleBtn" class="global-toggle-btn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterQuestions('all', this)">Tüm Sorular</button>
+                <button class="tab-btn" onclick="filterQuestions('Vize', this)">Vize Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Final', this)">Final Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Büt', this)">Büt. Soruları</button>
+                <button class="tab-btn" style="background-color: #ffeaa7; color: #d63031;" onclick="filterQuestions('Kez Çıktı', this)">🔥 Banko Sorular</button>
+                <button class="tab-btn" style="background-color: #fcf3cf; color: #d35400; border-color: #d35400;" onclick="filterQuestions('Dikkat', this)">⚠️ Dikkat Edilmesi Gerekenler</button>
+            </div>
+        </div>
+
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const sorular = [
+            {
+                q: `Aşağıdaki ikililerden hangisi sürekli-kesikli dağılım ikilisidir?`,
+                options: ["A) Normal - Poisson", "B) Binom - Geometrik", "C) Üstel - Normal", "D) Bernoulli - Poisson", "E) Üçgen - Normal"],
+                ans: "A) Normal - Poisson",
+                exp: `Normal dağılım sonsuz ondalıklı değer alabilen sürekli bir dağılımdır. Poisson ise olay sayısını (0,1,2...) ifade eden tam sayılardan oluşan kesikli bir dağılımdır.`,
+                exams: ["Vize", "Final", "Büt", "9 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi örnek benzetim yazılımlarından biri değildir?`,
+                options: ["A) Arena", "B) Witness", "C) Flexsim", "D) AutoCAD", "E) Promodel"],
+                ans: "D) AutoCAD",
+                exp: `AutoCAD bir simülasyon yazılımı değil, statik teknik çizim (CAD) programıdır. Arena, Witness, Flexsim ve ProModel endüstriyel simülasyon yazılımlarıdır.`,
+                exams: ["Vize", "Final", "Büt", "7 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi bir banka kuyruk modelinin servisi olamaz?`,
+                options: ["A) Vezne", "B) Güvenlik görevlisi", "C) Mobil bankacılık bilgisayarı", "D) ATM", "E) Telefon bankacılığı kabini"],
+                ans: "B) Güvenlik görevlisi",
+                exp: `Kuyruk teorisinde servis (sunucu), müşterinin talep ettiği asıl işlemi gerçekleştiren ve kuyruğu eriten birimdir. Güvenlik görevlisi bankacılık işlemi yapmaz.`,
+                exams: ["Vize", "Final", "Büt", "7 Kez Çıktı!"]
+            },
+            {
+                q: `Benzetim hakkında aşağıdakilerden hangisi yanlıştır?`,
+                options: ["A) Zamana bağlı işleyişlerin taklit edilmesidir.", "B) Birçok bilim dalında uygulama alanı geniştir.", "C) Sadece bilgisayar tabanlı bir yöntemdir.", "D) Akademik araştırmalarda ve iş dünyasında sıkça rastlanır.", "E) Sistemle ilgili kabullerden oluşur."],
+                ans: "C) Sadece bilgisayar tabanlı bir yöntemdir.",
+                exp: `Benzetim (simülasyon) sadece bilgisayarlarla yapılmaz; zarlar ve tablolarla (manuel Monte Carlo), fiziksel maketlerle veya rüzgar tünelleriyle de yapılabilir.`,
+                exams: ["Vize", "Final", "Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `X0 = 4283 başlangıç sayısı olsun. Orta kare yöntemi ile X1 değeri hangi seçenekte doğru verilmiştir?`,
+                options: ["A) 4089", "B) 3440", "C) 1834", "D) 8344", "E) 4408"],
+                ans: "B) 3440",
+                exp: `Orta kare yönteminde (Mid-Square) sayı kendisiyle çarpılır:\n4283 x 4283 = 18344089.\nÇıkan 8 haneli sonucun tam ortasındaki 4 hane yeni sayıdır: 3440.`,
+                exams: ["Vize", "Final", "Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `Tek taraflı hipotez testi için sıfır hipotezi (H0) işareti aşağıdakilerden hangisi olabilir?`,
+                options: ["A) Eşit değildir", "B) = veya <", "C) >", "D) <", "E) = veya >"],
+                ans: "E) = veya > (Sınavlarda 'B' şıkkı = veya < da doğru kabul edilmiştir)",
+                exp: `Sıfır hipotezi (H0) mevcut durumu (statükoyu) koruduğu için her zaman 'eşitlik' ibaresini (=, ≤, ≥) içermek zorundadır. Sadece büyüktür (>) veya küçüktür (<) olamaz.`,
+                exams: ["Vize", "Final", "Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki senaryolardan hangisi için benzetim kullanılmaz?`,
+                options: ["A) Arabaların aerodinamiğinin incelenmesi", "B) Denizin kıyı şeridindeki etkisinin incelenmesi", "C) Enflasyonun ülke ekonomisi üzerindeki etkilerini tahmin etmek", "D) Fabrikalarda makinelerin arıza oranlarını iyileştirmek", "E) Mevcut futbol ligi tablolarını takip etmek"],
+                ans: "E) Mevcut futbol ligi tablolarını takip etmek",
+                exp: `Mevcut tabloları takip etmek sadece veriyi statik olarak okumaktır, 'Ne olur eğer' (What-if) analizi barındırmadığı için simülasyon modellemesi gerektirmez.`,
+                exams: ["Vize", "Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Bir simülasyonun çıktısındaki başlangıç önyargısı (initial bias) ile nasıl başa çıkılabilir?`,
+                options: ["A) Birden çok çoğaltma yapmak", "B) Modeli ısınma süresi boyunca çalıştırmak", "C) Girdi parametrelerini değiştirmek", "D) Çoğaltma sayısını arttırmak", "E) Bir güven aralığı hesaplamak"],
+                ans: "B) Modeli ısınma süresi boyunca çalıştırmak",
+                exp: `Simülasyon ilk başladığında sistem boş olduğu için gerçekçi olmayan sonuçlar (önyargı) üretir. Bunu engellemek için sistem veri toplamaya başlamadan önce belirli bir 'ısınma (warm-up)' periyodunda kendi kendine çalıştırılır.`,
+                exams: ["Vize", "Final", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki simülasyon yazılımlarından hangisi Optimizasyon aracı olarak OPTQUEST kullanmamaktadır?`,
+                options: ["A) ARENA", "B) QUEST", "C) AUTOMOD", "D) PROMODEL", "E) Micro Saint"],
+                ans: "E) Micro Saint",
+                exp: `Endüstri standardı olan OptQuest sezgisel optimizasyon motoru Arena, Quest, AutoMod ve ProModel'de dahili olarak kullanılırken Micro Saint bu aracı standart barındırmaz.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `SİMAN dili iki sınıftan oluşmaktadır. Aşağıdakilerden hangisi SİMAN sınıflarından Bloklara örnek değildir?`,
+                options: ["A) SEIZE", "B) RELEASE", "C) RESOURCE", "D) ASSIGN", "E) DELAY"],
+                ans: "C) RESOURCE",
+                exp: `RESOURCE (Kaynak) bir işlem bloğu değil, Arena'nın altyapısı olan SIMAN dilinde tanımlanan ve varlıkların üzerine işlem yaptığı durağan bir 'elemandır' (element). SEIZE, RELEASE, ASSIGN dinamik bloklardır.`,
+                exams: ["Vize", "Final", "Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi ADVANCED PROCESS paneli modülü değildir?`,
+                options: ["A) REQUEST", "B) DELAY", "C) HOLD", "D) PICKUP", "E) SIGNAL"],
+                ans: "B) DELAY",
+                exp: `DELAY (Geciktirme) modülü, Arena'nın en temel bileşenlerindendir ve Basic Process (Temel İşlemler) paneli altında yer alır. İleri düzey (Advanced) panelde yer almaz.`,
+                exams: ["Vize", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Faaliyetlerin meydana gelmesinde görev alan personel, alet, alan, enerji, zaman, para gibi birimler aşağıdakilerden hangisidir?`,
+                options: ["A) Faaliyet", "B) Kaynak", "C) Kontrol", "D) Özellik", "E) Varlık"],
+                ans: "B) Kaynak",
+                exp: `Simülasyon modellemesinde kapasitesi sınırlı olan ve varlıklara (müşterilere/parçalara) hizmet üretmek için kullanılan fiziksel veya ekonomik tüm birimlere Kaynak (Resource) denir.`,
+                exams: ["Vize", "Final", "Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `Bir havaalanı sisteminin (veya fabrika sisteminin) benzetim modeli aşağıdaki tanımlardan hangisi ile ifade edilmektedir?`,
+                options: ["A) Sonlu ufuklu simülasyon", "B) Kalıcı durum simülasyonu", "C) Kararsız durum simülasyonu", "D) Geçici durum simülasyonu", "E) Sonsuz ufuklu simülasyon"],
+                ans: "E) Sonsuz ufuklu simülasyon",
+                exp: `Havaalanı, hastane acil servisi veya dev fabrikalar gibi 7/24 kesintisiz çalışan, belli bir boşalma/kapanış saati bulunmayan sistemler 'Sonsuz Ufuklu (Non-terminating)' simülasyon olarak modellenir.`,
+                exams: ["Vize", "Final", "Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Bir üretim tesisinin benzetim modelinde makine kullanımları için arızalara kadar geçen süreyi modelleyen dağılım aşağıdakilerden hangisidir?`,
+                options: ["A) Normal", "B) Poisson", "C) Weibull", "D) Geometrik", "E) Düzgün"],
+                ans: "C) Weibull",
+                exp: `Makinelerin zamanla aşınması, yıpranması, bozulması ve güvenilirlik (Arızalar Arası Ortalama Süre - MTBF) süreçleri evrensel olarak Weibull Dağılımı ile modellenir.`,
+                exams: ["Vize", "Final", "Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi darboğaz (bottleneck) tanımına uygun bir örnektir?`,
+                options: ["A) Makinelerin kapasitesinin altında çalışması", "B) Üretim atölyelerinde ara stokların artması", "C) İşçilerin vardiya değişim sürelerinin kısalması", "D) Kuyrukta bekleyen kimsenin olmaması", "E) Sisteme geliş hızının düşmesi"],
+                ans: "B) Üretim atölyelerinde ara stokların artması",
+                exp: `Sistemde bir makine veya istasyon tıkanırsa (işleri eritme hızından daha hızlı iş gelirse), işlenmeyi bekleyen ürünler (ara stoklar - WIP) o makinenin önünde yığılmaya başlar. Bu darboğazın en net fiziksel göstergesidir.`,
+                exams: ["Vize", "Final", "Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi "son giren ilk çıkar" prensibine göre servis veren kuyruk disiplini kısaltmasıdır?`,
+                options: ["A) FIFO", "B) SIRO", "C) PRI", "D) LIFO", "E) SPT"],
+                ans: "D) LIFO",
+                exp: `İngilizce Last In, First Out kelimelerinin baş harflerinden oluşan LIFO, sisteme en son giren müşterinin veya parçanın ilk olarak hizmet aldığı sistemleri tanımlar.`,
+                exams: ["Vize", "Final", "Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Bağımsız olaylar arasındaki zamanı veya hafızasız bir işlem süresini modelleyen dağılım aşağıdakilerden hangisidir?`,
+                options: ["A) Poisson", "B) Düzgün", "C) Weibull", "D) Üstel", "E) Normal"],
+                ans: "D) Üstel",
+                exp: `İstatistik biliminde 'Hafızasızlık (Memoryless property)' özelliğine sahip olan, yani geçmişin geleceği etkilemediği tek sürekli dağılım Üstel Dağılımdır.`,
+                exams: ["Vize", "Final", "Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi deterministik - stokastik sistem ikilisine örnektir?`,
+                options: ["A) Zar atma - Yazı tura", "B) Diferansiyel denklem - Meteoroloji", "C) Meteoroloji - Diferansiyel denklem", "D) Borsa tahmini - Rulet", "E) Fabrika üretimi - Trafik ışıkları"],
+                ans: "B) Diferansiyel denklem - Meteoroloji",
+                exp: `Diferansiyel denklemler aynı girdilerle %100 aynı ve kesin sonuçları verir (Deterministik). Meteoroloji (hava durumu) ise rastlantısallık, şans ve olasılık barındırır (Stokastik).`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi Arena şablon paneli değildir?`,
+                options: ["A) ADVANCED PROCESS", "B) BASIC PROCESS", "C) ADVANCED TRANSPORT", "D) REPORTS", "E) BASIC TRANSPORT"],
+                ans: "E) BASIC TRANSPORT",
+                exp: `Arena yazılımında taşıma işlemleri (konveyör, forklift vb.) oldukça karmaşık yapılar olduğu için Advanced Transfer (veya Advanced Transport) paneli altında toplanmıştır. Basit (Basic Transport) adında bir panel yoktur.`,
+                exams: ["Final", "Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Bir bankaya gelen müşterilerin %20'si fatura yatırmaktadır ve %80'i para çekmektedir. Bu müşteri tipleri ASSIGN modülü ile tanımlanmıştır. Bu işlemler farklı personeller tarafından gerçekleştirildiğinden DECIDE modülü ile bu müşteriler farklı PROCESS modüllerine yönlendirilecektir.
+Buna göre DECIDE modüle yazılacak koşul/condition aşağıdakilerden hangisidir?`,
+                options: ["A) %20", "B) TIP-%20", "C) TIP=0,8", "D) DISC(2,1)", "E) TIP=1"],
+                ans: "E) TIP=1",
+                exp: `Müşteri tipleri Assign modülü ile bir niteliğe (Attribute) atandıktan sonra (Örn: Fatura için TIP=1), Decide modülü artık olasılığa göre değil bu koşula göre (Entity.TIP == 1 mantığıyla) yönlendirme yapar. D şıkkı gibi olasılık atamaları Decide'ın 'Condition' özelliği olamaz.`,
+                exams: ["Final", "Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `En iyi senaryoyu belirlemek için istatistiksel bir prosedür sağlayan ARENA programı aracı aşağıdakilerden hangisidir?`,
+                options: ["A) FACTORY ANALYZER", "B) OUTPUT ANALYZER", "C) INPUT ANALYZER", "D) OPTQUEST", "E) PROCESS ANALYZER"],
+                ans: "E) PROCESS ANALYZER",
+                exp: `Farklı girdi parametreleriyle oluşturduğunuz birden fazla senaryoyu aynı anda çalıştırıp, sonuçların ortalama ve varyanslarını istatistiksel olarak karşılaştırarak senaryo analizi yapan araç Process Analyzer (PAN)'dır. OptQuest doğrudan optimumu arar.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `RECORD modülündeki TYPE alanında üretilecek olan istatistiklerin tipi belirlenir. Aşağıdakilerden hangisi modüle gelen varlıklar arasındaki zamanı kayıt altına alır?`,
+                options: ["A) Time Interval", "B) Count", "C) Entity Statistics", "D) Time Between", "E) Expression"],
+                ans: "D) Time Between",
+                exp: `Arka arkaya sisteme giriş yapan veya modülden geçen iki varlık arasındaki süreyi (geçiş aralığını) ölçmek için 'Time Between' seçilir. Time Interval ise baştan o ana kadar geçen toplam süreyi ölçer.`,
+                exams: ["Final", "Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Kendall (1953)'de kuyruk sistemi modellerini sınıflandırmak için kullandığı A/B/c/N/K notasyonundaki 'c' aşağıdakilerden hangisini temsil etmektedir?`,
+                options: ["A) Servis prosesi", "B) Müşterinin geldiği yığının genişliği", "C) Varış prosesi", "D) Servis sayısı", "E) İzin verilen müşteri sayısı"],
+                ans: "D) Servis sayısı",
+                exp: `Notasyonda:\nA = Varış dağılımı\nB = Servis dağılımı\nc = Servis/Sunucu/Vezne sayısı\nN = Sistem Kapasitesi\nK = Yığın büyüklüğüdür.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `ARENA programında RUN açılır menüsünden seçilen SETUP penceresindeki REPLICATION PARAMETERS sekmesi ile aşağıdakilerden hangisi belirlenemez?`,
+                options: ["A) Koşum sayısı", "B) Isınma periyodu süresi", "C) Koşum uzunluğu", "D) Sonlandırma şartları", "E) Yürütme hızı"],
+                ans: "E) Yürütme hızı",
+                exp: `Yürütme hızı (Run Speed), simülasyonun istatistiksel/matematiksel bir parametresi değil, ekrandaki animasyonun görsel akış hızıdır ve Run Control (veya Run Speed) sekmesinden ayarlanır.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki ikililerden hangisi her ARENA modülünde/modelinde bulunmalıdır?`,
+                options: ["A) Create - Record", "B) Process - Record", "C) Create - Dispose", "D) Create - Process", "E) Process - Dispose"],
+                ans: "C) Create - Dispose",
+                exp: `Geçerli ve hata vermeden çalışabilecek bir simülasyon modelinde varlıkların yaratılarak sisteme sokulması (Create) ve işlemler bitince sistemden tamamen çıkarılması/yok edilmesi (Dispose) zorunludur. Arada işlem olmasa bile döngü bu ikisiyle tamamlanır.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Histogram ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?`,
+                options: ["A) Verilerin frekans dağılımını gösteren grafiksel bir araçtır.", "B) Sürekli verilerin histogramı, dağılımın olasılık kütle fonksiyonuna karşılık gelir.", "C) Sınıf aralıkları (bin) ile oluşturulur.", "D) Veri setinin merkezi eğilimini görselleştirmeye yardımcı olur.", "E) Verilerdeki çarpıklığı (skewness) tespit etmede kullanılır."],
+                ans: "B) Sürekli verilerin histogramı, dağılımın olasılık kütle fonksiyonuna karşılık gelir.",
+                exp: `Olasılık Kütle Fonksiyonu (PMF) sadece tam sayılardan oluşan 'kesikli' veriler için kullanılır. Sürekli (ondalıklı) verilerin histogramı Olasılık Yoğunluk Fonksiyonuna (PDF) karşılık gelir.`,
+                exams: ["Vize", "Final", "Büt", "5 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi kuyruk sistemlerinde kullanılan performans ölçütlerinden değildir?`,
+                options: ["A) Ortalama kuyrukta bekleyen müşteri sayısı", "B) Sistemde harcanan ortalama süre", "C) Trafik yoğunluğu / Kaynak kullanım oranı", "D) Müşterilerin ait olduğu yığın", "E) Kuyrukta harcanan ortalama süre"],
+                ans: "D) Müşterilerin ait olduğu yığın",
+                exp: `Müşterilerin ait olduğu yığın (Popülasyon), sistemin çalışması sonucunda elde edilen bir 'çıktı' veya performans/başarı ölçütü değildir. Sistemin en başındaki fiziksel/yapısal bir girdidir.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi ne zaman başladığı ve bittiği bilinen belli uzunluktaki bir süreyi temsil eder?`,
+                options: ["A) Olay (Event)", "B) Gecikme (Delay)", "C) Faaliyet (Activity)", "D) Sistem Saati", "E) Durum Değişkeni"],
+                ans: "C) Faaliyet (Activity)",
+                exp: `Faaliyet (Activity): Önceden belirlenmiş deterministik veya istatistiksel bir zaman dilimidir (Örn: 5 dakika sürecek bir montaj işlemi). Olay ise anlık bir sıçramadır.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Müşterilerin toplam bekleme süresi 142 dakikadır ve sistemde 6 müşteri bulunmaktadır. Bu varsayıma göre müşterilerin sistemde ortalama bekleme süresi kaç dakikadır?`,
+                options: ["A) 26.33", "B) 14.2", "C) 16.33", "D) 13.66", "E) 23.66"],
+                ans: "E) 23.66",
+                exp: `Temel aritmetik ortalama hesabı: Toplam bekleme süresi (142) / Sistemdeki müşteri sayısı (6) = 23,666...`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Gözlemlerin düz bir doğru etrafında yayılım gösterip göstermediğine bakılarak verinin belirlenen dağılımdan gelip gelmediği hakkında sonuca varılan girdi analizi yöntemi aşağıdakilerden hangisidir?`,
+                options: ["A) P-P Grafikleri", "B) Kolmogorov-Smirnov Testi", "C) Ki-kare Testi", "D) Q-Q Grafikleri", "E) Histogram"],
+                ans: "D) Q-Q Grafikleri",
+                exp: `Q-Q (Quantile-Quantile) grafikleri, veri setinin teorik bir dağılıma (örn: Normal Dağılım) uyup uymadığını görsel olarak test eder. Uyum varsa noktalar 45 derecelik düz bir referans çizgisi etrafında toplanırlar.`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `19, 2, 16, 7, 5, 18, 13, 9, 14, 8 \nYukarıda verilen serinin medyanı aşağıdakilerden hangisidir?`,
+                options: ["A) 10", "B) 11", "C) 9", "D) 7", "E) 5"],
+                ans: "B) 11",
+                exp: `<span class='warning-text'>⚠️ DİKKAT!</span> Medyan bulmak için sayılar mutlaka küçükten büyüğe sıralanmalıdır: 2, 5, 7, 8, 9, 13, 14, 16, 18, 19. Çift sayıda (10 adet) veri olduğundan tam ortadaki iki değerin (9 ve 13) ortalaması alınır: (9+13)/2 = 11.`,
+                exams: ["Vize", "Final", "Büt", "2 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Bir acil servise saatte ortalama 4 hasta gelmektedir. Her bir hastaya ortalama müdahale süresi 12 dakikadır. Bu durumda hastaların sistemde ortalama geçirdiği süre aşağıdakilerden hangisidir?`,
+                options: ["A) 20 dk", "B) 60 dk", "C) 30 dk", "D) 40 dk", "E) 80 dk"],
+                ans: "B) 60 dk",
+                exp: `M/M/1 Kuyruk Modeli Formülü:\nGeliş Hızı (λ) = Saatte 4.\nServis Süresi 12 dk ise, Saatte Servis Hızı (μ) = 60/12 = 5.\nSistemde geçirilen toplam süre (Ws) = 1 / (μ - λ) = 1 / (5 - 4) = 1 Saat = 60 Dakika.`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Müşteri gelişlerinin ortalaması 9 dk, standart sapması 3 dk olan normal dağılıma uyduğu belirlenmiştir. Rassal sayı tablosundan RS=0,5 seçildiğinde müşteri geliş süresi kaç dakikadır?`,
+                options: ["A) 11", "B) 10", "C) 9,5", "D) 10,5", "E) 9"],
+                ans: "E) 9",
+                exp: `Normal dağılım çan eğrisi şeklindedir ve tam ortası (%50'si / 0.5 olasılığı) doğrudan "Ortalama" değere eşittir. Rassal Sayı 0,5 olarak verildiğinde, denklem sapma göstermez ve ortalamaya (9'a) eşit olur. Standart sapmanın önemi yoktur.`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `PROCESS ANALYZER için tanımlanabilecek bir CONTROL (Kontrol) değişkeni aşağıdakilerden hangisi olamaz?`,
+                options: ["A) Replikasyon sayısı", "B) Kaynak kapasiteleri", "C) Replikasyon uzunluğu", "D) Personel sayısı", "E) Müşterilerin bekleme süresi"],
+                ans: "E) Müşterilerin bekleme süresi",
+                exp: `<span class='warning-text'>⚠️ DİKKAT!</span> Kontrol (Control) değişkenleri sizin sisteme verdiğiniz ve değiştirebildiğiniz girdilerdir (personel, kapasite vb.). Bekleme süresi bir girdi değil, sistemin kendi ürettiği bir Çıktı/Yanıt (Response) değişkenidir.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Birikimli olasılık fonksiyonu F(x) = e^(x^3 * B) - a olarak verilen dağılımın tersi dönüşüm fonksiyonu aşağıdakilerden hangisidir?`,
+                options: ["A) Xi = ln(Ri) + a", "B) Xi = küpkök(ln(Ri + a) - B)", "C) Xi = e^Ri - B", "D) Xi = karekök(Ri - a)", "E) Xi = ln(Ri - a) / B"],
+                ans: "B) Xi = küpkök(ln(Ri + a) - B) (Kök içinde işlem)",
+                exp: `Ters Dönüşüm Yöntemi kuralı: Denklemi R'ye (Rassal Sayı) eşitleyip x'i yalnız bırakmalıyız. Matematikte 'e'nin (üstel) ters işlemi ln (doğal logaritma), küpün (x^3) tersi ise küpköktür.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi doğrusal eşlik yönteminde tam periyot elde etmek için kullanılan Hull-Dobell teoremi şartlarındandır?`,
+                options: ["A) m ve c aralarında asal olmalıdır.", "B) b, m'den büyük olmalıdır.", "C) m sayısının bölünebildiği bütün asal sayılara b-1 de bölünebilmelidir.", "D) Başlangıç sayısı olan X0 sıfır olmalıdır.", "E) c sayısı 4'e tam bölünmelidir."],
+                ans: "C) m sayısının bölünebildiği bütün asal sayılara b-1 de bölünebilmelidir.",
+                exp: `Hull-Dobell teoreminin 3 kuralı vardır: 1) c ve m aralarında asal olmalı. 2) m'yi bölen her asal sayı, b-1'i de bölmek zorundadır. 3) m, 4'e bölünüyorsa b-1 de 4'e bölünmelidir. C şıkkı 2. kuralı verir.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki modüllerden hangisi bir taşıyıcı birimin durumunu devre dışı olarak değiştirmek için kullanılır?`,
+                options: ["A) STORE", "B) HOLD", "C) ACCESS", "D) UNSTORE", "E) HALT"],
+                ans: "E) HALT",
+                exp: `Arena'da Transporter (Taşıyıcı - Örn: Forklift) birimlerini mola, arıza veya şarj gibi nedenlerle sistemden geçici olarak çekmek (inactive/devre dışı yapmak) için Halt modülü kullanılır.`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Monte Carlo Yöntemi büyük sayıların ......... kanununa dayanır. Boşluğa ne gelmelidir?`,
+                options: ["A) Zayıf", "B) Güçlü", "C) Olasılıksal", "D) Bağımsız", "E) Markovian"],
+                ans: "B) Güçlü",
+                exp: `Akademik literatürde ve vize cevap anahtarlarında Monte Carlo'nun istatistiksel tutarlılığı garanti altına almak için 'Büyük Sayıların Güçlü Kanununa' (Strong Law of Large Numbers) dayandığı belirtilmiştir.`,
+                exams: ["Vize", "Final", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki görseller hangi iki dağılım ailesine aittir? (Görsel: Solda azalan kesikli sütunlar ve Sağda düz yatay çizgi)`,
+                options: ["A) Geometrik - Düzgün", "B) Üstel - Düzgün", "C) Binom - Geometrik", "D) Normal - Üstel", "E) Üçgen - Düzgün"],
+                ans: "A) Geometrik - Düzgün",
+                exp: `Giderek azalan kesikli sütunlar (başarı olasılığının ilk denemelerde yüksek olduğu durumlar) Geometrik dağılımı, yatay düz çizgi ise (her olasılığın eşit olduğu) Uniform (Düzgün) dağılımı gösterir.`,
+                exams: ["Vize", "Final", "Büt", "6 Kez Çıktı!"]
+            },
+            {
+                q: `Kolmogorov Smirnov testi ile verilerin normal dağılıma uyup uymadığı test edilmiş ve D=0,1408 < Kritik Değer(0,272) sonucu elde edilmiştir. Karar ne olur?`,
+                options: ["A) Normal dağılıma uymakta olduğu reddedilir.", "B) Normal dağılıma uymakta olduğu kabul edilir.", "C) Düzgün dağılıma uyar.", "D) Yeni test yapılır.", "E) Veriler silinir."],
+                ans: "B) Normal dağılıma uymakta olduğu kabul edilir.",
+                exp: `Hesaplanan test istatistik değeri (D), tablodaki referans kritik değerden küçük olduğu için Sıfır Hipotezi (uygunluk hipotezi) kabul edilir. Veriler hedeflenen dağılıma uymaktadır.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Kolmogorov Smirnov testi ile normal dağılıma uyup uymadığı test edilmiş ve D=0,3207 > 0,294 (Kritik Değer) elde edilmiştir. Kararınız ne olur?`,
+                options: ["A) Normal dağılıma uymakta olduğu kabul edilir.", "B) Normal dağılıma uymadığı reddedilir.", "C) Test yetersizdir.", "D) Örneklem çapı artırılmalıdır.", "E) Poisson dağılımına uyar."],
+                ans: "A) Verilerin normal dağılıma uymakta olduğu kabul edilir.",
+                exp: `<span class='warning-text'>⚠️ DİKKAT!</span> Teorik istatistikte hesaplanan değer kritik değerden büyükse hipotez reddedilir (Dağılıma Uymaz denir). Ancak AUZEF'in resmi belge anahtarında bu soru için A şıkkı (Kabul edilir) doğru sayılmıştır. Sınavda çıkarsa puan almak için ezberden A şıkkı işaretlenmelidir.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Bir hastane benzetim çalışmasında cerrahi ameliyatlara giren personel, 'ekipler' halinde tanımlanmaktadır. PROCESS modülünde RESOURCES tanımları için açılan pencerede hangisi Type alanında seçilir?`,
+                options: ["A) Resource", "B) Set", "C) Variable", "D) Expression", "E) Attribute"],
+                ans: "B) Set (Küme/Grup)",
+                exp: `İşlemi yapmak için tek bir spesifik makine/kişi değil de, birbirine denk alternatiflerden oluşan bir 'ekip' veya makine grubu kullanılıyorsa, bu kaynaklar SET (Küme) olarak tanımlanır.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `OUTPUT ANALYZER aracı ile farklı senaryolarda çalıştırılan modellerin ortalamalarının karşılaştırılması için aşağıdakilerden hangisi kullanılır?`,
+                options: ["A) Correlogram", "B) Compare Variances", "C) Compare Means", "D) Conf.Interval", "E) ANOVA"],
+                ans: "C) Compare Means",
+                exp: `İsminden de anlaşılacağı üzere istatistiksel ortalamaları (Means) kıyaslamak için 'Compare Means' (Ortalamaları Karşılaştır) aracı kullanılır. Varyanslar için Compare Variances kullanılır.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Bir karayolu gişesi veya süpermarket kuyruğunda bekleyen ortalama müşteri sayısı güven aralığı [9.1 - 10.5] olarak belirlenmiştir. Gözlemlenen gerçek sistemde ortalama 11 müşteri belirlenmiştir. Hata toleransı = 1 için inceleme sonucu nedir?`,
+                options: ["A) Model geçerli kabul edilir.", "B) En iyi hata > 1'dir. Model reddedilir.", "C) En iyi durum hatası <= 1'dir ancak en kötü durum hatası > 1'dir. Ek simülasyon yapılmalıdır.", "D) Hata sıfırdır.", "E) Simülasyon modeli yeterince yakındır."],
+                ans: "C) En iyi durum hatası <= 1'dir ancak en kötü durum hatası > 1'dir. Ek simülasyon yapılmalıdır.",
+                exp: `Gerçek değer 11.\nEn iyi durum hatası (Aralığa en yakın olduğu nokta): 11 - 10.5 = 0.5 (0.5 <= 1 şartı sağlanır).\nEn kötü durum hatası (Aralığa en uzak olduğu nokta): 11 - 9.1 = 1.9 (1.9 > 1 şartı ihlal edilir).\nBir uç kurtarıp diğeri kurtarmadığı için net karar verilemez, daha fazla koşum/veri gereklidir.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Gelecekteki olaylar için bildirimlerin meydana gelme zamanına göre sıralanması işlemine ne ad verilir?`,
+                options: ["A) Kuyruk", "B) Olay listesi (Event List)", "C) Liste (Set)", "D) Sistem Saati", "E) Durum Değişkeni"],
+                ans: "B) Olay listesi (Event List)",
+                exp: `Ayrık Olay Simülasyonunda sistem saatinin bir sonraki olayın yaşanacağı zamana atlayarak ilerleyebilmesi için tüm gelecek olayların kronolojik olarak dizildiği bu yapıya Olay Listesi denir.`,
+                exams: ["Final", "1 Kez Çıktı!"]
+            },
+            {
+                q: `Bir gazete bayiine gelen müşterilerin %20'si A, %25'i B, %15'i C ve %40'ı D gazetesini almaktadır. Benzetim Modelinde ASSIGN modülü ile DISC Fonksiyonu yazılırken format nasıl olmalıdır?`,
+                options: ["A) DISC(0.2,1,0.25,2,0.15,3,0.4,4)", "B) DISC(0.2,1,0.45,2,0.6,3,1,4)", "C) DISC(0.4,1,0.25,2,0.2,3,0.15,4)", "D) DISC(0.15,1,0.20,2,0.25,3,0.4,4)", "E) DISC(1,0.2,2,0.45,3,0.6,4,1)"],
+                ans: "B) DISC(0.2 , 1 , 0.45 , 2 , 0.6 , 3 , 1 , 4)",
+                exp: `<span class='warning-text'>⚠️ DİKKAT!</span> Arena'da DISC (Discrete Probability - Ayrık Olasılık) fonksiyonunda yüzdeler ayrı ayrı DEĞİL, kümülatif olarak (toplanarak) yazılmak zorundadır.\nA = %20 -> 0.2\nB = %20+%25 = %45 -> 0.45\nC = %45+%15 = %60 -> 0.60\nD = %60+%40 = %100 -> 1.0`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!", "⚠️ Dikkat!"]
+            },
+            {
+                q: `Kesikli X rassal değişkeni aralıkları verilmiştir: X=1 (0-0.25), X=2 (0.25-0.55), X=3 (0.55-0.7), X=4 (0.7-1). Buna göre ters dönüşüm aralıklarından hangisi DOĞRUDUR?`,
+                options: ["A) 0 < R < 0,24 ise X=1", "B) 0,25 < R < 0,54 ise X=2", "C) 0,55 < R < 0,69 ise X=3", "D) 0,7 <= R < 1 ise X=4", "E) R=0.55 ise X=2"],
+                ans: "D) 0,7 <= R < 1 ise X=4",
+                exp: `Matematiksel olarak eşitsizlik aralıklarının arasında boşluk kalmadan tam ve doğru ifade edildiği tek seçenek D şıkkıdır. (Diğer şıklarda 0.24, 0.54 gibi yuvarlama hataları yapılarak boşluklar bırakılmıştır).`,
+                exams: ["Büt", "1 Kez Çıktı!"]
+            },
+            {
+                q: `I. Uygun dağılımı seçmek\nII. Veri değerlerini içeren bir metin dosyası oluşturmak\nIII. Oluşturulan dağılım ifadesini Arena modelinde uygun alana kopyalamak\nIV. Verilere bir veya daha fazla dağılım uygunluğu için deney (Fit All) yapmak\nINPUT ANALYZER kullanmak için gereken eylemlerin doğru sıralaması aşağıdakilerden hangisidir?`,
+                options: ["A) II-IV-I-III", "B) I-II-III-IV", "C) II-IV-III-I", "D) III-II-I-IV", "E) IV-I-II-III"],
+                ans: "A) II - IV - I - III",
+                exp: `Önce sahada tutulan süreler not defterine (.txt) kaydedilir (II).\nBu dosya programa yüklenip Fit (Uyum) testleri koşturulur (IV).\nTest sonucunda Square Error değeri en küçük olan dağılım seçilir (I).\nÇıkan denklem Arena programındaki modüle kopyalanır (III).`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Bir havalimanında check-in yaptıran yolculara dair bir benzetim çalışması yapılmıştır. Sistem ARENA yardımıyla modellenirken CREATE modülünde "yolcu" bilgisi hangi pencereye yazılmalıdır?`,
+                options: ["A) Name", "B) Value", "C) Max Arrivals", "D) Entities per Arrival", "E) Entity Type"],
+                ans: "E) Entity Type (Varlık Türü)",
+                exp: `Sisteme giren birimin ne olduğunu (Müşteri, Parça, Yolcu vb.) belirten ve animasyonda görünecek ikonu değiştirmemizi sağlayan veri alanı Entity Type'dır. Name sadece modülün ismidir.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Bilgisayar üreten bir firma ürünlerinin dayanıklılık süresini değerlendirmek istemektedir. 100 tane rassal olarak seçilen bilgisayarın standart sapması 120 gün, ortalama dayanıklılık süreleri de 1440 gündür. %90 güvenle (Z=1,65) anakütle ortalama dayanıklılık süresi güven aralığı nedir?`,
+                options: ["A) [1320 - 1560]", "B) [1202.4 - 1667.6]", "C) [1420.2 - 1459.8]", "D) [1398.5 - 1481.5]", "E) [1400 - 1471]"],
+                ans: "C) [1420.2 - 1459.8]",
+                exp: `Güven Aralığı Formülü: Ortalama ± Z * (Standart Sapma / Karekök(Örneklem))\nHata Payı = 1.65 * (120 / Kök(100)) = 1.65 * 12 = 19.8.\nAlt sınır: 1440 - 19.8 = 1420.2\nÜst sınır: 1440 + 19.8 = 1459.8`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `ARENA çalışma sonuçları raporlarından Resources (Kaynaklar) raporunda aşağıdakilerden hangisi bir kaynağın meşgul birimlerinin sayısını ifade eder?`,
+                options: ["A) TOTAL NUMBER SEIZED", "B) INSTANTANEOUS UTILIZATION", "C) NUMBER SCHEDULED", "D) SCHEDULED UTILIZATION", "E) NUMBER BUSY"],
+                ans: "E) NUMBER BUSY",
+                exp: `Raporlarda Number Busy, o an aktif olarak çalışan/meşgul (busy) olan personel veya makine sayısını ifade eder.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Bir faaliyetin süresi aşağıdakilerden hangisi ile karakterize edilmez?`,
+                options: ["A) İstatistiksel işlev", "B) Varlık özniteliklerine bağlı işlev", "C) Sistem saatine bağlı işlev", "D) Sistem değişkenlerine bağlı işlev", "E) Deterministik işlev"],
+                ans: "C) Sistem saatine bağlı işlev",
+                exp: `Süre, ne kadar zaman harcandığını (örneğin 5 dakika) ifade eder. Sistem Saati (örneğin saat 14:30) ise mutlak bir andır, bir sürenin kendisi olarak kullanılamaz.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Simülasyon modellerinde gruplama mekanizması olarak çalışan modül aşağıdakilerden hangisidir?`,
+                options: ["A) DECIDE", "B) SEPARATE", "C) PROCESS", "D) BATCH", "E) ASSIGN"],
+                ans: "D) BATCH",
+                exp: `Birden fazla varlığı tek bir geçici veya kalıcı paket (kutu, palet vb.) haline getirmek için 'Gruplama' yapan modül BATCH (Parti) modülüdür.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki önerilerden hangisi doğrulama sürecinde kullanılabilir? (Soru kökünde muhtemelen 'kullanılamaz/yanlıştır' sorulmak istenmiştir)`,
+                options: ["A) Benzetim çalışmasının sonunda girdi parametreleri yazdırılmalıdır.", "B) Doğrulama için grafik ara yüzler kullanılmalıdır.", "C) Uygulanan model mümkün olduğunca kendi kendini belgeleyen hale getirilmelidir.", "D) Bir benzetim uygulaması ilerledikçe izlenmelidir.", "E) Uygulanan model sadece uzman bir yazılımcı tarafından kontrol edilmelidir."],
+                ans: "E) Uygulanan model sadece uzman bir yazılımcı tarafından kontrol edilmelidir.",
+                exp: `Simülasyonun doğrulaması "sadece" kod yazan uzman tarafından yapılamaz. Sistemi asıl kullanan operatörler ve saha mühendislerinin de katılımıyla ortak bir kontrol yapılmalıdır.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Müşterilerin varış zamanları tabloda: 1.Müşteri->0, 2.Müşteri->3, 3.Müşteri->5, 4.Müşteri->2, 5.Müşteri->6. Araçlar 4 dakikada yıkanıyor ve 2 araç yıkama alanı var ise 4. müşteri sistemden hangi dakikada ayrılır?`,
+                options: ["A) 4", "B) 5", "C) 6", "D) 8", "E) 10"],
+                ans: "C) 6",
+                exp: `Sisteme gelişleri kronolojik sıralarız: 0. dakikada 1. Müşteri 1 Nolu alana girer. 2. dakikada 4. Müşteri gelir ve 2 Nolu alan boş olduğu için direk içeri girer. 4. müşteri 2. dakikada işleme başladı, yıkama 4 dk sürdüğü için 2 + 4 = 6. dakikada sistemden çıkar.`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Arena Programı ile ilgili aşağıdakilerden hangisi yanlıştır?`,
+                options: ["A) Modüle çift tıklandığında modüle özgü pencere açılır.", "B) İstatistiksel hesaplama araçları barındırır.", "C) Sürükle bırak mantığıyla çalışır.", "D) Arena programı karmaşık sistemlerin modellenmesinde esneklik sağlamamaktadır.", "E) Girdi-Çıktı analizleri yapar."],
+                ans: "D) Arena programı karmaşık sistemlerin modellenmesinde esneklik sağlamamaktadır.",
+                exp: `Arena piyasadaki en kapsamlı benzetim dillerinden biri olan SIMAN altyapısını kullanır. Basit kuyruklardan devasa liman veya hastane ağlarına kadar son derece karmaşık sistemler için yüksek esneklik SAĞLAR.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `1979-1986 yıllarını kapsayan simülasyon tarihçesi dönemi aşağıdakilerden hangisidir?`,
+                options: ["A) Gelişim dönemi", "B) Konsolidasyon ve yenileme dönemi", "C) Arama dönemi", "D) Entegre ortamlar dönemi", "E) Biçimlendirici dönem"],
+                ans: "B) Konsolidasyon ve yenileme dönemi",
+                exp: `Kişisel bilgisayarların (PC) ortaya çıkışı ve simülasyon dillerinin oturduğu bu döneme konsolidasyon ve yenileme dönemi denir.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Arena'da gelen varlığı çoğaltmak ('Duplicate Original') veya grupları ayırmak için hangi modül kullanılır?`,
+                options: ["A) BATCH", "B) PROCESS", "C) SEPARATE", "D) DECIDE", "E) ASSIGN"],
+                ans: "C) SEPARATE",
+                exp: `SEPARATE modülü varlıkların birebir kopyalarını (Duplicate) üretmek veya önceden Batch yapılmış grupları ayırmak için kullanılır.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Vardiya çizelgesine göre saat 13:00 - 14:00 arasında kaç personel görev yapmaktadır? (Not: Grafik 12:00-14:00 arası zirve yapıyor)`,
+                options: ["A) 2", "B) 4", "C) 6", "D) 8", "E) 10"],
+                ans: "E) 10",
+                exp: `Görsel okuma sorusudur. Grafikte 12:00 ile 14:00 arasındaki sütunun tavan seviyesi 10 kapasitesine ulaşmaktadır.`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Birisi 5 dk ortalamalı Üstel dağılıma, diğeri 5 dk. ortalama 0.4 dk. standart sapma ile Normal dağılıma uyan gelişler arası süreye sahip iki farklı hammaddenin montajlanıp depoya kaldırıldığı bir sistemin ARENA modeli hangisidir?`,
+                options: ["A) 1 Create - 2 Process - 1 Dispose", "B) 2 Create - 1 Process - 1 Dispose", "C) 2 Create - 2 Process - 2 Dispose", "D) 1 Create - 1 Process - 2 Dispose", "E) 1 Create - 1 Decide - 1 Dispose"],
+                ans: "B) 2 Create - 1 Process - 1 Dispose",
+                exp: `İki farklı hammadde olduğu için iki ayrı CREATE modülü gerekir. Bunlar birleşip montajlandığı için tek bir PROCESS (veya Batch) modülü kullanılır. Depoya kalktığı için tek bir DISPOSE modülü ile sistemden çıkarlar.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `PROCESS modülündeki Action penceresindeki seçeneklerden değildir?`,
+                options: ["A) Seize Delay Release", "B) Seize Delay", "C) Delay Release", "D) Delay", "E) Random"],
+                ans: "E) Random",
+                exp: `Delay, Seize Delay, Seize Delay Release varlığın kaynağa yapacağı Eylemlerdir (Action). 'Random' ise bir gecikme tipi olabilir ancak bir Eylem değildir.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `AutoMod ürün ailesindeki çalıştırma yöneticisi ve istatistiksel analiz ürünü aşağıdakilerden hangisidir?`,
+                options: ["A) SimRunner", "B) OptQuest", "C) AutoStat", "D) Process Analyzer", "E) Output Analyzer"],
+                ans: "C) AutoStat",
+                exp: `AutoMod yazılımının entegre istatistik aracı AutoStat'tır. SimRunner ProModel'in, Analyzer'lar ise Arena'nındır.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki simülasyon yazılımlarından hangisi 1993 yılında ilk defa piyasaya sürülmüştür?`,
+                options: ["A) EXTEND", "B) AUTOMOD", "C) SIMUL8", "D) PROMODEL", "E) ARENA"],
+                ans: "E) ARENA",
+                exp: `Arena simülasyon yazılımının ilk ticari sürümü 1993 yılında Systems Modeling Corporation tarafından çıkarılmıştır.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `En düşük işlem süresine sahip varlığın ilk işlem görmesini sağlayacak kuyruk disiplini hangisidir?`,
+                options: ["A) FIFO", "B) LIFO", "C) Highest Attribute Value", "D) Lowest Attribute Value", "E) Random"],
+                ans: "D) Lowest Attribute Value",
+                exp: `Kısa sürecek işleri öne alma (Shortest Processing Time - SPT) mantığı Arena'da işlem süresi bir niteliğe (Attribute) atandıktan sonra kuyruk kuralı 'Lowest Attribute Value' seçilerek uygulanır.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Triyaj işlemi bekleme süresi Average: 0.2686, Half Width: 0.0334'tür. Güven aralığı nedir?`,
+                options: ["A) 0.2620 - 0.3420", "B) 0.0400 - 0.3020", "C) 0.2352 - 0.3020", "D) 0.2356 - 0.3887", "E) 0.0400 - 0.3887"],
+                ans: "C) 0.2352 - 0.3020",
+                exp: `Güven Aralığı = Ortalama ± Yarı Genişlik (Half Width).\nAlt Sınır: 0.2686 - 0.0334 = 0.2352.\nÜst Sınır: 0.2686 + 0.0334 = 0.3020.`,
+                exams: ["Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Gözlemler sonucu hastaların ortalama 20 dk bekledikleri gözlemlenmiştir. Sistemin modeli 8 saatlik 10 bağımsız koşumda çalıştırılmıştır. Örneklem ortalaması 23.75, standart sapması 3.41'dir. Hipotez testi t0 formülü nedir?`,
+                options: ["A) t0 = (20 - 23.75) / (3.41 / Kök(10))", "B) t0 = (23.75 - 20) / (3.41 / Kök(10))", "C) t0 = (23.75 - 20) / (3.41 / Kök(8))", "D) t0 = (23.75 - 20) / (10 / Kök(3.41))", "E) t0 = (20 - 23.75) / (8 / Kök(10))"],
+                ans: "B) t0 = (23.75 - 20) / (3.41 / Kök(10))",
+                exp: `Tek örneklem T-Testi formülü: (Örneklem Ort. - Gerçek Ort.) / (Standart Sapma / Kök(Koşum Sayısı)).\nBurada n=10'dur, 8 saat sadece kafa karıştırıcı bir metindir.\nFormül: (23.75 - 20) / (3.41 / √10).`,
+                exams: ["Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Simülasyonun ısınma periyodu ne zaman sona ererek kararlı duruma ulaşmıştır? (Grafik sorusu - Dalgalanmalar 50'de duruyor)`,
+                options: ["A) 10", "B) 20", "C) 30", "D) 40", "E) 50"],
+                ans: "E) 50",
+                exp: `Isınma periyodu (warm-up) grafiğinde dalgalanmaların bittiği ve çizginin yatay bir dengeye (steady-state) oturduğu nokta sorunun cevabıdır (50. saat).`,
+                exams: ["Final", "Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Input Analyzer - Fit All Summary raporuna göre verilere en uygun dağılım aşağıdakilerden hangisidir? (Raporda Sq Error Sütunu: Normal 0.0017, Beta 0.00177, Weibull 0.00208 ... Exponential 0.0735)`,
+                options: ["A) Erlang", "B) Normal", "C) Exponential", "D) Beta", "E) Gamma"],
+                ans: "B) Normal",
+                exp: `Kural: Sq Error (Karesel Hata) değeri en düşük olan, yani listenin en üstünde yer alan dağılım her zaman verilere en uygun (best fit) dağılımdır.`,
+                exams: ["Final", "Büt", "4 Kez Çıktı!"]
+            },
+            {
+                q: `Bir karayolu gişesinde oluşan trafik yoğunluğu ile ilgili benzetim çalışması yapılmıştır. Gişelere gelen araçların cuma günü 17-22 saatleri arasında ortalaması 15 dk., standart sapması 2 dk. olan normal dağılıma uyduğu belirlenmiştir. CREATE modülüne girilecek bilgiler hangisinde doğru verilmiştir.`,
+                options: ["A) Schedule - NORM(15,2) - Minutes", "B) Expression - Minutes", "C) Expression - NORM(15,2) - Minutes", "D) Constant - UNIF(15,2) - Minutes", "E) Constant - Minutes"],
+                ans: "C) Expression - NORM(15,2) - Minutes",
+                exp: `Normal Dağılım matematiksel bir ifadedir, bu yüzden Tür (Type) olarak 'Expression' seçilmeli ve değer kutusuna Normal Dağılımın formül karşılığı olan NORM(Ortalama, Standart Sapma) yani NORM(15,2) yazılmalıdır.`,
+                exams: ["Vize", "Final", "Büt", "3 Kez Çıktı!"]
+            },
+            {
+                q: `Rejeneratif yöntemler hakkında aşağıdaki bilgilerden hangisi yanlıştır?`,
+                options: ["A) Rejeneratif yenileme aralıkları birbirinden bağımsızdır.", "B) Rejeneratif yenileme aralıkları üzerindeki kısmi işlem geçmişleri yaratılır.", "C) Farklı rejeneratif aralıklar üzerinden toplanan istatistiksel tahminler elde edilmektedir.", "D) Genel olarak karmaşık bir sistemde yenilenme noktalarının belirlenmesi zordur.", "E) Rejeneratif yöntemler merkezi limit teoreminden yararlanmaktadır."],
+                ans: "B) Rejeneratif yenileme aralıkları üzerindeki kısmi işlem geçmişleri yaratılır.",
+                exp: `Rejeneratif yöntemin en temel kuralı, sistemin kendini sıfırladığı noktalarda geçmişin (hafızanın) tamamen silinmesidir. Sistem geçmişten bağımsız hale gelir, 'işlem geçmişi yaratılmaz'.`,
+                exams: ["Vize", "Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdaki önerilerden hangisi doğrulama sürecinde kullanılabilir? (Soruda yanlıştır kastedilmektedir)`,
+                options: ["A) Benzetim çalışmasının sonunda girdi parametreleri yazdırılmalıdır.", "B) Doğrulama için grafik ara yüzler kullanılmalıdır.", "C) Uygulanan model mümkün olduğunca kendi kendini belgeleyen hale getirilmelidir.", "D) Bir benzetim uygulaması ilerledikçe izlenmelidir.", "E) Uygulanan model sadece uzman bir yazılımcı tarafından kontrol edilmelidir."],
+                ans: "E) Uygulanan model sadece uzman bir yazılımcı tarafından kontrol edilmelidir.",
+                exp: `Bir simülasyon modelinin doğrulaması 'sadece' kod yazan uzman tarafından yapılamaz. Sistemi asıl kullanan operatörler ve saha mühendislerinin de katılımıyla ortak kontrol yapılmalıdır.`,
+                exams: ["Vize", "Final", "Büt", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi çıktı analizi ile ele alınan ana sorunlardan değildir?`,
+                options: ["A) Sistem problemlerinin optimizasyonu", "B) Alternatif karşılaştırmalar için deney tasarımı", "C) Performans ölçütlerinin tahmini", "D) Replikasyon tasarımı", "E) Sistem analizi"],
+                ans: "E) Sistem analizi",
+                exp: `"Sistem analizi", henüz bilgisayara geçmeden veya model kurmadan önce gerçek sistemin incelendiği ilk başlangıç aşamasıdır. Simülasyon çalıştırıldıktan sonra yapılan "çıktı" aşamasının bir parçası değildir.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Model Kurulumuyla ilgili aşağıdakilerden hangisi söylenemez?`,
+                options: ["A) Model Kurulumunun ikinci aşaması Kavramsal modelin tasarlanmasıdır.", "B) Veri toplamak tek başına sistem davranışını anlama için yeterlidir.", "C) Kuruluma dair izlenmesi gereken iç adım doğrusal işlemler dizisi olarak kabul edilemez.", "D) Son adım ise kurgulanan modelin uygulanmasıdır.", "E) Model kurulumunun ilk aşaması veri toplanmasıdır."],
+                ans: "B) Veri toplamak tek başına sistem davranışını anlama için yeterlidir.",
+                exp: `Sadece süre veya sayıları (veri) toplamak sistemi anlamak için yeterli değildir. Verilerin yanı sıra kuyruk disiplini, fiziksel kısıtlar, iş akış mantığı (yapısal varsayımlar) da analiz edilmelidir.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi simülasyonla ilgili araçlara ve Arena parametrelerine erişim sağlar?`,
+                options: ["A) Dosya menüsü", "B) Düzenle Menüsü", "C) Çalıştır Menüsü", "D) Araçlar Menüsü", "E) Nesne Menüsü"],
+                ans: "D) Araçlar Menüsü",
+                exp: `Arena'da Input Analyzer, Output Analyzer, OptQuest gibi yardımcı optimizasyon araçlarına ve genel parametre ayarlarına Araçlar (Tools) menüsünden erişilir.`,
+                exams: ["Vize", "Final", "2 Kez Çıktı!"]
+            },
+            {
+                q: `Aşağıdakilerden hangisi modül bağlantılarını ve alt model oluşturmayı destekler?`,
+                options: ["A) Düzenle menüsü", "B) Dosya menüsü", "C) Nesne menüsü", "D) Araçlar menüsü", "E) Çalıştır menüsü"],
+                ans: "C) Nesne menüsü",
+                exp: `Karmaşık bir üretim hattını ana ekranda tek bir kutu gibi göstermek (Alt Model/Submodel oluşturmak) veya modüller arası bağlantı (Connect) hatlarını yönetmek Nesne (Object) menüsünün görevidir.`,
+                exams: ["Vize", "Final", "Büt", "4 Kez Çıktı!"]
+            }
+        ];
+
+        let allAnswersVisible = false;
+
+        function filterQuestions(type, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            let filtered = sorular;
+            if (type !== 'all') {
+                filtered = sorular.filter(soru => 
+                    soru.exams.some(exam => exam.toLowerCase().includes(type.toLowerCase()))
+                );
+            }
+
+            filtered.forEach((soru, index) => {
+                let tagsHtml = soru.exams.map(exam => {
+                    if(exam.includes("Kez Çıktı")) {
+                        return `<span class="exam-tag freq-tag">🔥 ${exam}</span>`;
+                    } else if(exam.includes("Dikkat")) {
+                        return `<span class="exam-tag" style="background-color: #fcf3cf; color: #d35400; border: 1px solid #d35400;">${exam}</span>`;
+                    }
+                    return `<span class="exam-tag">${exam}</span>`;
+                }).join('');
+
+                let optionsHtml = soru.options.map(opt => `<li>${opt}</li>`).join('');
+                
+                // Display property depends on global state
+                let displayState = allAnswersVisible ? 'block' : 'none';
+                let btnText = allAnswersVisible ? 'Cevabı ve Açıklamayı Gizle' : 'Cevabı ve Açıklamayı Göster';
+                let btnColor = allAnswersVisible ? '#34495e' : '#0984e3';
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="exam-tags">${tagsHtml}</div>
+                    </div>
+                    <p class="question-text">${index + 1}. ${soru.q}</p>
+                    <ul class="options">${optionsHtml}</ul>
+                    <button class="btn-toggle" style="background-color: ${btnColor}" onclick="toggleSingleAnswer(this)">${btnText}</button>
+                    <div class="answer-area" style="display: ${displayState}">
+                        <p class="correct-ans">✔️ Doğru Cevap: ${soru.ans}</p>
+                        <p class="exp-text">💡 <strong>Açıklama:</strong> ${soru.exp}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Tekil buton kontrolü
+        function toggleSingleAnswer(btn) {
+            const targetDiv = btn.nextElementSibling;
+            if (targetDiv.style.display === 'none' || targetDiv.style.display === '') {
+                targetDiv.style.display = 'block';
+                btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                btn.style.backgroundColor = '#34495e';
+            } else {
+                targetDiv.style.display = 'none';
+                btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                btn.style.backgroundColor = '#0984e3';
+            }
+        }
+
+        // Global (Tümünü Göster/Gizle) buton kontrolü
+        function toggleAllAnswers() {
+            allAnswersVisible = !allAnswersVisible;
+            const globalBtn = document.getElementById('globalToggleBtn');
+            const allAnswerAreas = document.querySelectorAll('.answer-area');
+            const allToggleBtns = document.querySelectorAll('.btn-toggle');
+
+            if (allAnswersVisible) {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Gizle';
+                globalBtn.style.backgroundColor = '#34495e';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'block');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                    btn.style.backgroundColor = '#34495e';
+                });
+            } else {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Göster';
+                globalBtn.style.backgroundColor = 'var(--global-btn)';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'none');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                    btn.style.backgroundColor = '#0984e3';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const allBtn = document.querySelector('.tab-btn.active');
+            filterQuestions('all', allBtn);
+        });
+    </script>
+</body>
+</html>

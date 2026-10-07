@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgi Sistemleri Proje Yönetimi — İnteraktif Mega Soru Bankası (169 Soru)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #0984e3;
+            --success: #00b894;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --border: #dfe6e9;
+            --global-btn: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 { margin: 0 0 10px 0; font-size: 2.2em; }
+        .header p { margin: 0; font-size: 1.1em; color: #bdc3c7; }
+
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #ecf0f1;
+            color: var(--primary);
+            border: 2px solid var(--border);
+            padding: 10px 20px;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background-color: #dfe6e9; }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+        }
+
+        .global-toggle-btn {
+            background-color: var(--global-btn);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(225, 112, 85, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .global-toggle-btn:hover {
+            background-color: #d63031;
+            transform: translateY(-2px);
+        }
+
+        #quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 25px;
+            border-left: 6px solid var(--accent);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .exam-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .exam-tag {
+            background-color: #ffeaa7;
+            color: #d63031;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .exam-tag.freq-tag {
+            background-color: #e17055;
+            color: white;
+        }
+
+        .question-text {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .options li {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 1em;
+        }
+
+        .btn-toggle {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            font-size: 1.05em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-toggle:hover { background-color: var(--primary); }
+
+        .answer-area {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #eafaf1;
+            border-left: 5px solid var(--success);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .correct-ans {
+            font-size: 1.1em;
+            color: var(--success);
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .exp-text { margin: 0; color: var(--text); line-height: 1.5; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+    <div style="margin-bottom: 12px;">
+        <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; transition: background 0.2s;">
+            &larr; 3. Sınıf Derslerine Dön
+        </a>
+    </div>
+
+        <div class="header">
+            <h1>AUZEF Bilgi Sistemleri Proje Yönetimi</h1>
+            <p>168 Soruluk Eksiksiz Çıkmış Soru Havuzu (Vize, Final, Büt)</p>
+        </div>
+
+        <div class="controls-container">
+            <button id="globalToggleBtn" class="global-toggle-btn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterQuestions('all', this)">Tüm Havuz</button>
+                <button class="tab-btn" onclick="filterQuestions('Vize', this)">Vize Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Final', this)">Final Soruları</button>
+                <button class="tab-btn" onclick="filterQuestions('Büt', this)">Bütünleme Soruları</button>
+                <button class="tab-btn" style="background-color: #ffeaa7; color: #d63031;" onclick="filterQuestions('Kez Çıktı', this)">🔥 Banko Sorular (Tekrarlar)</button>
+            </div>
+        </div>
+
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const sorular = [
+            // ================= 2020-2021 ONLİNE VİZE =================
+            { q: "Proje kavramı için aşağıdakilerden hangisi doğrudur?", options: ["A) Sürekli tekrarlanan işlerdir", "B) Rutin faaliyetlerdir", "C) Belirli süre ve bütçeye sahiptir", "D) Standart ürünler üretir", "E) Süresizdir"], ans: "C) Belirli süre ve bütçeye sahiptir", exp: "Projenin en temel tanımı; belirli bir başlangıç ve bitiş tarihi olan (süreli), kendine has bir bütçesi ve kaynakları bulunan özgün çabalardır. Sürekli tekrarlanan, rutin, süresiz ve standart olan işler proje değil, günlük 'operasyon' (işletme) faaliyetleridir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi projeyi günlük işlerden ayıran bir özelliktir?", options: ["A) Süreklilik", "B) Rutinlik", "C) Tekrarlanabilirlik", "D) Benzersizlik", "E) Sabit maliyet"], ans: "D) Benzersizlik", exp: "Bir projenin sonucunda ortaya çıkan ürün, hizmet veya sonuç 'özgündür' (benzersizdir). Daha önce tam anlamıyla aynı şartlarda yapılmamıştır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje üçgenini oluşturan temel unsurlar hangileridir?", options: ["A) Zaman - İnsan - Kalite", "B) Bütçe - İnsan - Kapsam", "C) Zaman - Bütçe - Kapsam", "D) Kapsam - Risk - Kalite", "E) Zaman - Teknoloji - İnsan"], ans: "C) Zaman - Bütçe - Kapsam", exp: "Proje yönetiminin 'Demir Üçgeni' (Iron Triangle) Kapsam, Zaman ve Bütçe unsurlarından oluşur.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi projenin başarısız olma nedenlerinden biridir?", options: ["A) Net hedefler", "B) Güçlü iletişim", "C) Deneyimli ekip", "D) Gereksinimlerin yanlış tanımlanması", "E) Yeterli dokümantasyon"], ans: "D) Gereksinimlerin yanlış tanımlanması", exp: "Müşterinin ne istediğinin doğru analiz edilmemesi, projenin tamamen yanlış bir ürün üreterek hüsranla sonuçlanmasına (kapsam kaymasına) neden olan en büyük faktörüdür.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje fikri hangi aşamayı ifade eder?", options: ["A) Tamamlanmış proje", "B) Uygulama süreci", "C) Taslak düşünce", "D) Test aşaması", "E) Devreye alma"], ans: "C) Taslak düşünce", exp: "Fikir aşaması, henüz ortada bir plan veya resmi onay yokken ortaya çıkan ilk 'taslak düşünce' evresidir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Mevcut durum analizi neden yapılır?", options: ["A) Projeyi iptal etmek için", "B) Sorunu doğru anlamak için", "C) Kod yazmak için", "D) Test yapmak için", "E) Zaman uzatmak için"], ans: "B) Sorunu doğru anlamak için", exp: "Bir problemi çözmeden önce 'şu an neredeyiz ve sorun tam olarak ne?' sorusuna cevap vermek için mevcut durum analizi yapılır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Paydaşlar kimlerdir?", options: ["A) Sadece proje ekibi", "B) Sadece müşteriler", "C) Projeden etkilenen tüm kişi ve kurumlar", "D) Sadece yöneticiler", "E) Sadece sponsorlar"], ans: "C) Projeden etkilenen tüm kişi ve kurumlar", exp: "Paydaş (Stakeholder), projenin sonucundan veya yürütülmesinden olumlu ya da olumsuz etkilenebilecek tüm kişi ve kurumlardır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Ölçülebilir, ulaşılabilir, gerçekçi hedefler hangi analizde tanımlanır?", options: ["A) Paydaş analizi", "B) Sorun analizi", "C) Hedef analizi", "D) Risk analizi", "E) Mevcut durum analizi"], ans: "C) Hedef analizi", exp: "Gelecekte ulaşılmak istenen durumun SMART kriterlerine göre belirlenmesi doğrudan 'Hedef Analizi'nin konusudur.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje hedeflerine ulaşmak için yöntemlerin belirlendiği aşama hangisidir?", options: ["A) Planlama", "B) Strateji analizi", "C) Sorun analizi", "D) Kapsam analizi", "E) Test"], ans: "B) Strateji analizi", exp: "Hedeflere nasıl ve hangi yöntemle ulaşılacağının seçildiği analize Strateji Analizi denir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje yaşam döngüsünde ilk aşama hangisidir?", options: ["A) Yürütme", "B) Kontrol", "C) Başlatma", "D) Kapatma", "E) Test"], ans: "C) Başlatma", exp: "PMI standartlarına göre döngü: Başlatma -> Planlama -> Yürütme -> İzleme/Kontrol -> Kapanış.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje yönetimi kaç temel süreç grubundan oluşur?", options: ["A) 3", "B) 4", "C) 5", "D) 6", "E) 7"], ans: "C) 5", exp: "5 temel süreç grubu vardır: 1. Başlangıç, 2. Planlama, 3. Yürütme, 4. İzleme ve Kontrol, 5. Kapanış.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje yöneticisinin temel sorumluluğu hangisidir?", options: ["A) Kod yazmak", "B) Grafik tasarlamak", "C) Zaman, maliyet ve kapsamı dengelemek", "D) Donanım kurmak", "E) Test yapmak"], ans: "C) Zaman, maliyet ve kapsamı dengelemek", exp: "Proje yöneticisinin asıl işi operasyonel işleri yapmak değil, demir üçgen kısıtlarını dengede tutarak süreci yönetmektir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Yönetici ile lider arasındaki temel fark nedir?", options: ["A) Lider plan yapmaz", "B) Yönetici vizyon sahibidir", "C) Lider değişimi teşvik eder", "D) Yönetici ekip yönetmez", "E) Lider sorumluluk almaz"], ans: "C) Lider değişimi teşvik eder", exp: "Yönetici mevcut düzeni korur, 'Lider' ise vizyon sunar, insanları etkiler ve değişime öncülük eder.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Henry Fayol hangi yönetim akımının öncüsüdür?", options: ["A) Bilimsel yönetim", "B) İnsan ilişkileri", "C) Genel yönetim", "D) Süreç tabanlı", "E) Bilgi çağı"], ans: "C) Genel yönetim", exp: "Henry Fayol, 14 yönetim ilkesini ortaya koyan 'Genel Yönetim' (Yönetim Süreci) yaklaşımının kurucusudur.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Kumanda birliği ilkesi neyi ifade eder?", options: ["A) Birden fazla yöneticiden emir", "B) Herkesin lider olması", "C) Çalışanın tek yöneticiden emir alması", "D) Ekip çalışması", "E) Yetki devri"], ans: "C) Çalışanın tek yöneticiden emir alması", exp: "Fayol'un ilkesine göre karmaşayı önlemek için bir çalışan sadece bir üst amirinden emir almalıdır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Bilimsel yönetim akımının öncüsü kimdir?", options: ["A) Fayol", "B) Deming", "C) Taylor", "D) Mayo", "E) Drucker"], ans: "C) Taylor", exp: "İşleri ölçen ve verimliliği artırmak için 'Bilimsel Yönetim' ilkelerini ortaya koyan Frederick Winslow Taylor'dır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "İnsan ilişkileri okuluna göre verimliliği en çok etkileyen faktör hangisidir?", options: ["A) Maaş", "B) Teknoloji", "C) Sosyal ilişkiler", "D) Donanım", "E) Planlama"], ans: "C) Sosyal ilişkiler", exp: "Elton Mayo'nun Hawthorne deneylerine göre; çalışma ortamındaki sosyal ilişkiler ve psikolojik faktörler verimliliği en çok artıran unsurlardır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Bilgi çağı yönetiminde ön plana çıkan unsur hangisidir?", options: ["A) Fiziksel güç", "B) Standart üretim", "C) Bilgi ve teknoloji", "D) Hiyerarşi", "E) Tek yönlü iletişim"], ans: "C) Bilgi ve teknoloji", exp: "Endüstri çağından Bilgi çağına geçişle birlikte en değerli sermaye fiziksel güçten çıkıp entelektüel sermayeye (bilgi) kaymıştır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Fonksiyonel örgütlenmenin özelliği nedir?", options: ["A) Proje yöneticisi tüm yetkilere sahiptir", "B) Departmanlara göre yapılandırılır", "C) Herkes projeye bağlıdır", "D) Esneklik çok yüksektir", "E) Geçici yapıdır"], ans: "B) Departmanlara göre yapılandırılır", exp: "Fonksiyonel örgütlenmede şirket; muhasebe, pazarlama, yazılım gibi uzmanlık alanlarına (departmanlara) göre yapılandırılır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje odaklı örgütlenmede yetki kimdedir?", options: ["A) Fonksiyonel yönetici", "B) Üst yönetim", "C) Proje yöneticisi", "D) Müşteri", "E) Sponsor"], ans: "C) Proje yöneticisi", exp: "Tüm kaynaklar projelere atandığı için bütçe, ekip ve süreç üzerindeki en yüksek otorite Proje Yöneticisine aittir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Matris örgütlenmenin dezavantajı nedir?", options: ["A) Kaynak yetersizliği", "B) İletişim kopukluğu", "C) Çift yöneticiden emir alma", "D) Esneklik", "E) Hız"], ans: "C) Çift yöneticiden emir alma", exp: "Matris yapıda bir çalışan hem departman müdürüne hem de proje yöneticisine bağlıdır, bu çift başlılık dezavantajdır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Planlama neden gereklidir?", options: ["A) Zaman kaybettirir", "B) Projeyi karmaşıklaştırır", "C) Kontrol ve koordinasyon sağlar", "D) Motivasyonu düşürür", "E) Gereksizdir"], ans: "C) Kontrol ve koordinasyon sağlar", exp: "Planlama işlerin sırasını belirler, ekipler arası koordinasyon sağlar ve sapmaların tespit edilmesini mümkün kılar.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Planlama yapılmazsa ne olur?", options: ["A) Verim artar", "B) Proje daha hızlı biter", "C) Zaman ve bütçe izlenemez", "D) Risk azalır", "E) Kalite artar"], ans: "C) Zaman ve bütçe izlenemez", exp: "Başlangıçta belirlenmiş bir temel çizgi yoksa, ne kadar geç kalındığı veya bütçenin ne kadar aşıldığı izlenemez.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Yazılım projelerinde büyüklük arttıkça ne olur?", options: ["A) Maliyet azalır", "B) Süre kısalır", "C) Karmaşıklık artar", "D) Planlama ihtiyacı azalır", "E) Risk azalır"], ans: "C) Karmaşıklık artar", exp: "Projeler büyüdükçe parçalar arasındaki bağımlılıklar artar, bu da projeyi çok daha karmaşık hale getirir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Kapsam planı neyi tanımlar?", options: ["A) Zaman çizelgesini", "B) Maliyetleri", "C) Yapılacak ve yapılmayacak işleri", "D) Testleri", "E) Kaynakları"], ans: "C) Yapılacak ve yapılmayacak işleri", exp: "Kapsam (Scope), projede nelerin yapılacağını ve nelerin projenin dışında kalıp yapılmayacağını netleştirir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Risk planının amacı nedir?", options: ["A) Riskleri yok saymak", "B) Riskleri artırmak", "C) Olası tehditleri yönetmek", "D) Zamanı uzatmak", "E) Maliyeti artırmak"], ans: "C) Olası tehditleri yönetmek", exp: "Risk yönetimi potansiyel olumsuz olayları önceden belirleyip etkilerini azaltmak için strateji geliştirmektir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Kalite güvencesi ne zaman yapılır?", options: ["A) Ürün bittikten sonra", "B) Ürün üretilmeden önce", "C) Sadece testte", "D) Devreye almada", "E) Bakımda"], ans: "B) Ürün üretilmeden önce", exp: "Kalite Güvencesi (QA), hatayı oluşmadan önlemek için süreçleri ürün üretilmeden önce veya üretim sürerken belirler.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Test planı neyi belirler?", options: ["A) Kapsamı", "B) Riskleri", "C) Testin nasıl ve ne zaman yapılacağını", "D) Bütçeyi", "E) Organizasyonu"], ans: "C) Testin nasıl ve ne zaman yapılacağını", exp: "Test planı; test stratejisini, metodolojisini ve bunların ne zaman koşulacağını belirler.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Devreye alma planı neyi kapsar?", options: ["A) Kod yazımı", "B) Analiz", "C) Gerçek ortamda kurulum", "D) Tasarım", "E) Test"], ans: "C) Gerçek ortamda kurulum", exp: "Devreye alma (Deployment), bitmiş uygulamanın gerçek/canlı sunucu ortamına aktarılması ve kurulmasıdır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Yazılım projelerinde ürün neden zordur?", options: ["A) Fizikseldir", "B) Standarttır", "C) Soyut ve görünmezdir", "D) Değişmezdir", "E) Kolay ölçülür"], ans: "C) Soyut ve görünmezdir", exp: "İnşaatın aksine, yazılım (kod) fiziksel bir varlığı olmayan soyut bir üründür. Bu yüzden ilerlemeyi ölçmek zordur.", exams: ["Vize", "1 Kez Çıktı!"] },
+
+            // ================= 2022-2023 VİZE (İlk Bölüm) =================
+            { q: "Yazılım projelerinde en zor izlenen unsur hangisidir?", options: ["A) Donanım", "B) İnsan", "C) Ürün", "D) Bütçe", "E) Test"], ans: "C) Ürün", exp: "Yazılımda ortaya fiziksel/somut bir şey çıkmadığı için ilerlemeyi ve ürünü izlemek diğer sektörlere göre çok daha zordur.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Yazılım projelerinde süreç neden standart değildir?", options: ["A) Donanım farklıdır", "B) İnsan yoktur", "C) Teknoloji ve ekipler değişkendir", "D) Planlama yapılmaz", "E) Test yoktur"], ans: "C) Teknoloji ve ekipler değişkendir", exp: "Her yazılım projesi kendine özgüdür. Gereksinimler, teknolojiler ve ekipler değiştiği için sabit bir süreç standardı oturtulamaz.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Kodla ve düzelt yaklaşımı hangi modeldir?", options: ["A) Şelale", "B) V Modeli", "C) Kod eksenli", "D) Spiral", "E) Scrum"], ans: "C) Kod eksenli", exp: "Build-and-Fix (Yap ve Düzelt) yaklaşımı literatürde 'Kod Eksenli Geliştirme Modeli' olarak geçer.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Kod eksenli modelin en büyük sorunu nedir?", options: ["A) Hızlı olması", "B) Dokümantasyon eksikliği", "C) Kullanıcı memnuniyeti", "D) Düşük maliyet", "E) Basitlik"], ans: "B) Dokümantasyon eksikliği", exp: "Hiçbir plan/tasarım olmadan koda başlandığı için sistemin mimarisine dair belge (dokümantasyon) üretilmez.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Şelale modelinin temel varsayımı nedir?", options: ["A) Gereksinimler değişkendir", "B) Aşamalar geri dönüşlüdür", "C) Gereksinimler sabittir", "D) Test en sonda yapılmaz", "E) Kullanıcı sürekli değişir"], ans: "C) Gereksinimler sabittir", exp: "Şelale modeli en başta analizlerin eksiksiz yapıldığını ve projenin sonuna kadar müşterinin fikrini değiştirmeyeceğini (sabit kalacağını) varsayar.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Şelale modelinin en büyük dezavantajı hangisidir?", options: ["A) Planlama", "B) Dokümantasyon", "C) Esnek olmaması", "D) Yönetim kolaylığı", "E) Netlik"], ans: "C) Esnek olmaması", exp: "Geriye dönüş zor olduğu için yeni müşteri taleplerine veya teknolojik değişimlere karşı şelale modeli esnek değildir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "V Modeli'nde analiz aşamasının karşılığı hangi testtir?", options: ["A) Birim testi", "B) Entegrasyon testi", "C) Kabul testi", "D) Performans testi", "E) Sistem testi"], ans: "C) Kabul testi", exp: "V modelinde en üstteki 'Gereksinim Analizi' aşamasının sağ taraftaki (doğrulama) karşılığı 'Kabul Testleri'dir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Yinelemeli modellerin en önemli avantajı nedir?", options: ["A) Sabit gereksinim", "B) Geç ürün", "C) Erken çalışan ürün", "D) Yüksek maliyet", "E) Katı yapı"], ans: "C) Erken çalışan ürün", exp: "Ürün parça parça geliştirildiği için tüm projenin bitmesi beklenmeden erken aşamalarda 'çalışan bir ürün' sunulur.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Artımlı modelde her artım neyi temsil eder?", options: ["A) Taslak", "B) Kod parçası", "C) Çalışan sürüm", "D) Test sonucu", "E) Doküman"], ans: "C) Çalışan sürüm", exp: "Artımlı modelde her bir modül geliştirilip eklendiğinde ortaya teste açık ve müşteriye sunulabilir çalışan bir sürüm çıkar.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Sarmal model hangi yaklaşıma dayanır?", options: ["A) Zaman odaklı", "B) Risk odaklı", "C) Maliyet odaklı", "D) Doküman odaklı", "E) Kullanıcı odaklı"], ans: "B) Risk odaklı", exp: "Barry Boehm tarafından geliştirilen Sarmal (Spiral) modelin merkezinde 'Risk Analizi' yatar.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Çevik yaklaşımların temel değeri hangisidir?", options: ["A) Ayrıntılı dokümantasyon", "B) Sözleşmeler", "C) Çalışan yazılım", "D) Katı planlar", "E) Uzun süreçler"], ans: "C) Çalışan yazılım", exp: "Çevik Manifesto'ya göre kapsamlı dokümantasyon yerine 'çalışan yazılıma' daha çok değer verilir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Scrum'da sprint süresi genellikle ne kadardır?", options: ["A) 6 ay", "B) 3-5 ay", "C) 1-4 hafta", "D) 1 yıl", "E) Belirsiz"], ans: "C) 1-4 hafta", exp: "Scrum'da işler kısa döngülerde yapılır. Sprint süreleri genellikle 1 hafta ile 4 hafta (1 ay) arasındadır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Modüler geliştirme ne sağlar?", options: ["A) Karmaşıklık artışı", "B) Yönetim zorluğu", "C) Esneklik ve yönetilebilirlik", "D) Tek ekip zorunluluğu", "E) Uzun süre"], ans: "C) Esneklik ve yönetilebilirlik", exp: "Sistemi bağımsız modüllere bölmek bir hatanın diğerlerini etkilemesini önler (esneklik) ve yönetmeyi kolaylaştırır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Servis tabanlı mimarinin en önemli avantajı nedir?", options: ["A) Platform bağımlılığı", "B) Entegrasyon zorluğu", "C) Platform bağımsızlığı", "D) Güvensizlik", "E) Yavaşlık"], ans: "C) Platform bağımsızlığı", exp: "SOA'da uygulamalar standart protokoller üzerinden konuştuğu için farklı platformlarda çalışıyor olsalar bile haberleşebilirler.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Yazılım projelerinde en kritik kaynak hangisidir?", options: ["A) Donanım", "B) Yazılım", "C) İnsan", "D) Zaman", "E) Para"], ans: "C) İnsan", exp: "Kodu yazacak ve analizi yapacak yetenekli insan gücü olmadan hiçbir yazılım ürünü ortaya çıkarılamaz.", exams: ["Vize", "1 Kez Çıktı!"] },
+
+            // ================= 2022-2023 VİZE =================
+            { q: "Proje yöneticisinin doğru kararları alabilmesi ve liderlik yapabilmesi için aşağıdaki verilen hangi özelliğe sahip olmaması gerekir?", options: ["A) Kararlılık", "B) Sorumluluk alma", "C) Ekibi üzerinde etkili olma", "D) Azim", "E) İçe dönük olma"], ans: "E) İçe dönük olma", exp: "Liderlik ve kriz yönetimi için proje yöneticisinin dışa dönük ve iletişime açık olması beklenir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Birçok birimin birlikte çalışmasıyla gerçekleştirilen örgütlenme tipi aşağıdakilerden hangisidir?", options: ["A) Proje odaklı örgütlenme", "B) Matris tipi örgütlenme", "C) Fonksiyonel örgütlenme", "D) Ürün odaklı örgütlenme", "E) Çalışan odaklı örgütlenme"], ans: "B) Matris tipi örgütlenme", exp: "Çalışanların hem fonksiyonel yöneticilerine hem de proje yöneticisine rapor verdiği karma yapıya Matris örgütlenme denir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi yazılım projelerinin yönetimini zorlaştıran nedenlerden birisi değildir?", options: ["A) Çok az sayıda unsurdan etkilenmesi", "B) Metodoloji ve teknolojilerin sürekli değişmesi", "C) Yapılan hataların kolay bir biçimde fark edilememesi", "D) Soyut nitelik taşıması", "E) Kişi sayısının genellikle diğer projelerden az olması"], ans: "A) Çok az sayıda unsurdan etkilenmesi", exp: "Yazılım projeleri donanım, ağ, güvenlik gibi çok fazla unsurdan etkilendiği için yönetimi zordur.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden davranışlardan hangisi ekip ruhunu zedelemez?", options: ["A) İşi aşırı sahiplenmek", "B) Kişiselleştirmek", "C) Yeterince plan yapmamak", "D) Hatayı kişilerde görmek", "E) Ortak hedefler benimsemek"], ans: "E) Ortak hedefler benimsemek", exp: "Ortak hedefler benimsemek takımı bir arada tutar ve takım ruhunu güçlendirir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi Çevik Yazılım Geliştirme Modelleri'nin temel prensiplerinden biri değildir?", options: ["A) Müşteriyle doğrudan iletişim dolaylı yollara tercih edilir.", "B) Planı katı şekilde takip etmek yerine değişimlere cevap verilir.", "C) Risk yönetimi, yazılım geliştirme sürecine entegre edilir.", "D) Kişiler ve kişilerarası etkileşime, süreç ve araçtan daha çok önem verilir.", "E) Çalışan yazılıma ayrıntılı belgelemeden daha çok önem verilir."], ans: "C) Risk yönetimi, yazılım geliştirme sürecine entegre edilir.", exp: "Risk yönetimi Agile Manifesto'nun değiştirilemez 4 temel maddesinden biri olarak yer almaz.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdaki yazılım geliştirme modellerinden hangisi gerçek anlamda bir yazılım geliştirme modeli olarak görülmemektedir?", options: ["A) Servis Tabanlı Geliştirme Modelleri", "B) Doğrusal Geliştirme Modelleri", "C) Kod Eksenli Geliştirme Modeli", "D) Yinelemeli Geliştirme Modelleri", "E) Modüler Geliştirme Modelleri"], ans: "C) Kod Eksenli Geliştirme Modeli", exp: "Hiçbir planlama/tasarım yapmadan kod yazmaya başlamak mühendislik değil plansızlıktır.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Yazılım sürecindeki aşamaların birbirini ileriye doğru takip ettiği ve fazla bir geri dönüş yaşanamayacağı varsayımından yola çıkarak önerilen modellerin genel ismi aşağıdakilerden hangisidir?", options: ["A) Yinelemeli geliştirme modelleri", "B) Kod eksenli geliştirme modelleri", "C) V modelleri", "D) Şelale modelleri", "E) Doğrusal geliştirme modelleri"], ans: "D) Doğrusal geliştirme modelleri", exp: ".", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım geliştirilirken en çok aranan özellikler arasında yer almaz?", options: ["A) Standartlaşma", "B) Tekrar kullanılabilirlik", "C) İzlenebilme", "D) Süreklilik", "E) Güvenlik"], ans: "D) Süreklilik", exp: "Süreklilik IT servis yönetiminin bir konusudur, kod veya mimari kalite standartlarının doğrudan aranan bir özelliği değildir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Paydaş analiz gruplandırmasında aşağıdakilerden hangisi bulunmamaktadır?", options: ["A) Etkin proje tarafı olabilecek gruplar", "B) Potansiyel destekçiler", "C) Potansiyel çekimser gruplar", "D) Potansiyel karşıtlar", "E) Projeden faydalananlar"], ans: "C) Potansiyel çekimser gruplar", exp: "Çekimserlik anlık bir durumdur. Paydaşlar destekçiler, karşıtlar veya faydalananlar gibi ana kategorilere ayrılır.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Bir projede yapılabilecek işlemler ile ilgili aşağıdakilerden hangisi doğrudur?", options: ["A) Kuruluşların yapısında değişiklik yapılabilir.", "B) Bina ya da alt yapı inşa edilemez.", "C) Mevcut ürün ya da süreç yenilenemez.", "D) Projeyi etkileyebilecek varsayımlar kabul edilemez.", "E) Yenilenmiş bir bilgi sistemi geliştirilemez."], ans: "A) Kuruluşların yapısında değişiklik yapılabilir.", exp: "Projeler değişim yaratmak içindir. Şirketin yapısı, süreçleri değiştirilebilir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Yazılım projesi geliştirme aşamalarından biri olan ve öncelikle dikkat edilmesi gereken planlama aşaması ile ilgili aşağıdakilerden hangisi yanlıştır?", options: ["A) İzlenecek yöntemin seçilmesi", "B) Süre takvimlerinin belirlenmesi", "C) Belirlenmiş süre ve mali kısıtların dikkate alınması", "D) Müşteri ve üst yönetimin gözden geçirmesi", "E) Kullanılacak kaynakların belirlenmesi"], ans: "D) Müşteri ve üst yönetimin gözden geçirmesi", exp: "Gözden geçirme planlamada değil, izleme ve kontrol evrelerinde yapılır.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Bilgi çağı yönetim akımı hangi tarihten sonra tam anlamıyla bir bilim şeklini almıştır?", options: ["A) 1975", "B) 1930", "C) 1945", "D) 1950", "E) 1964"], ans: "D) 1950", exp: "Bilgi çağı yönetimi 1950 sonrasında disiplin haline gelmeye başlamıştır.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesinde ilk olarak düşünülen ve ele alınan maliyet kalemlerinden biri değildir?", options: ["A) Teslimat", "B) Yönetim", "C) Geliştirme ekibi", "D) Yazılım altyapısı", "E) Reklam ve satış giderleri"], ans: "E) Reklam ve satış giderleri", exp: "Reklam ve satış işletme (operasyonel) maliyetidir. Proje bütçesinde ilk düşünülen üretim kalemlerinden değildir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Her bir gereksinimin projedeki bir ihtiyacı nasıl karşıladığını açıklayan teknik aşağıdakilerden hangisidir?", options: ["A) Grup yaratıcılık teknikleri", "B) Gereksinim dokümantasyonu", "C) Görüşmeler", "D) Fikir/zihin haritalama", "E) Odak grupları"], ans: "B) Gereksinim dokümantasyonu", exp: "İhtiyaçların yazılım işlevlerine nasıl dönüştüğünü detaylandırmak ve belgelendirmek dokümantasyonun görevidir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bireysel proje sınıflandırılmasına örnek gösterilebilir?", options: ["A) Doğum günü daveti organize etmek", "B) Yeni bir araba tasarlamak", "C) Otoyol inşa etmek", "D) Fabrika yapmak", "E) Yeni bir işletim sistemi tasarlamak"], ans: "A) Doğum günü daveti organize etmek", exp: "Kurumsal kaynak gerektirmeyen, kişisel yürütülen aktiviteler bireysel projedir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir kaynak türü değildir?", options: ["A) Proje personeli", "B) Önceki projelerden elde edilen tecrübeler", "C) Malzemeler", "D) Malî varlıklar", "E) Proje taslağı"], ans: "E) Proje taslağı", exp: "Proje taslağı bir belge/çıktıdır. İnsan, para ve bilgi birer kaynaktır.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi yazılım projeleri üzerinde test yapılmasının amaçlarından biri değildir?", options: ["A) Yazılım sürecini baştan başlatmak", "B) Ürüne ve geliştiriciye saygınlık kazandırmak", "C) Yapılan hataların tekrarlanmasını önlemek", "D) Ürün çalıştırılmadan önce kalitesini ölçmek", "E) Zaman ve maliyet tasarrufu yapmak"], ans: "A) Yazılım sürecini baştan başlatmak", exp: "Testin amacı hataları bulup iyileştirmektir, tüm projeyi çöpe atıp süreci sıfırlamak değildir.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi ISO 21500 toplantısına katılımcı ülkeler arasında bulunmamaktadır?", options: ["A) Türkiye", "B) Finlandiya", "C) Türkiye", "D) Japonya", "E) Brezilya"], ans: "A) Türkiye", exp: "Türkiye komite listesinde standart katılımcı olarak bulunmamaktadır.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Proje Kapsam Yönetimi'nde Ayrıştırma aktiviteleri ile ilgili aşağıdakilerden hangisi söylenemez?", options: ["A) Teslimatların saptanması", "B) İş Kırılım Yapısı'nın bileşenleri için tanımlama kodlarının oluşturulması ve atanması", "C) Çalışanların toplanma derecesinin gerekli ve yeterli olduğunun doğrulanması", "D) Bağlantılı çalışmaların düzenlenmesi", "E) İş Kırılım Yapısı'nın yapılandırılması ve düzenlenmesi"], ans: "C) Çalışanların toplanma derecesinin gerekli ve yeterli olduğunun doğrulanması", exp: "Ayrıştırma (Decomposition) işleri bölmek içindir. Ekibin toplanması insan kaynaklarının konusudur.", exams: ["Vize", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım proje ekibinde genellikle yer almaz?", options: ["A) Takım lideri", "B) Proje yöneticisi", "C) Üretim müdürü", "D) Destekleyici", "E) Sistem analisti"], ans: "C) Üretim müdürü", exp: "Üretim müdürü, fiziksel ürün üreten seri imalat fabrikalarında (bant üretiminde) kullanılan bir unvandır.", exams: ["Vize", "2 Kez Çıktı!"] },
+
+            // ================= 2024-2025 VİZE =================
+            { q: "Aşağıdaki yazılım geliştirme modellerinden hangisi gerçek anlamda bir yazılım geliştirme modeli olarak görülmemektedir?", options: ["A) Modüler Geliştirme Modelleri", "B) Yinelemeli Geliştirme Modelleri", "C) Doğrusal Geliştirme Modelleri", "D) Kod Eksenli Geliştirme Modeli", "E) Servis Tabanlı Geliştirme Modelleri"], ans: "D) Kod Eksenli Geliştirme Modeli", exp: "Kod Eksenli model plansızlıktır.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi yazılım projelerinin yönetimini zorlaştıran nedenlerden birisi değildir?", options: ["A) Çok az sayıda unsurdan etkilenmesi", "B) Metodoloji ve teknolojilerin sürekli değişmesi", "C) Soyut nitelik taşıması", "D) Yapılan hataların kolay bir biçimde fark edilememesi", "E) Kişi sayısının genellikle diğer projelerden az olması"], ans: "A) Çok az sayıda unsurdan etkilenmesi", exp: "Yazılım projeleri donanım, ağ, güvenlik gibi çok fazla unsurdan etkilenir.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Yazılım projesi geliştirme aşamalarından biri olan ve öncelikle dikkat edilmesi gereken planlama aşaması ile ilgili aşağıdakilerden hangisi yanlıştır?", options: ["A) İzlenecek yöntemin seçilmesi", "B) Kullanılacak kaynakların belirlenmesi", "C) Müşteri ve üst yönetimin gözden geçirmesi", "D) Süre takvimlerinin belirlenmesi", "E) Belirlenmiş süre ve mali kısıtların dikkate alınması"], ans: "C) Müşteri ve üst yönetimin gözden geçirmesi", exp: "Gözden geçirme planlamadan sonra yapılır.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden davranışlardan hangisi ekip ruhunu zedelemez?", options: ["A) Ortak hedefler benimsemek", "B) Yeterince plan yapmamak", "C) İşi aşırı sahiplenmek", "D) Kişiselleştirmek", "E) Hatayı kişilerde görmek"], ans: "A) Ortak hedefler benimsemek", exp: "Ortak hedefler takım ruhunu besler.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Bilgi çağı yönetim akımı hangi tarihten sonra tam anlamıyla bir bilim şeklini almıştır?", options: ["A) 1964", "B) 1950", "C) 1945", "D) 1930", "E) 1975"], ans: "B) 1950", exp: "1950'ler bilgi çağı yönetiminin miladıdır.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Paydaş analiz gruplandırmasında aşağıdakilerden hangisi bulunmamaktadır?", options: ["A) Potansiyel çekimser gruplar", "B) Projeden faydalananlar", "C) Potansiyel destekçiler", "D) Potansiyel karşıtlar", "E) Etkin proje tarafı olabilecek gruplar"], ans: "A) Potansiyel çekimser gruplar", exp: "Çekimserlik genel bir paydaş kategorisi değildir.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje yönetim süreçlerinden biri değildir?", options: ["A) Kapanış", "B) Geri bildirim", "C) İzleme ve kontrol etme", "D) Yürütme", "E) Planlama"], ans: "B) Geri bildirim", exp: "Geri bildirim süreçlerin içinde kullanılan bir araçtır, ana süreç grubu (faz) değildir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "\"......, paydaş ihtiyaç ve beklentilerin ayrıntılı şekilde tanımlanmasıdır.\" cümlesinde bırakılan boşluğa aşağıdakilerden hangisi gelmelidir?", options: ["A) Tutarlılık", "B) Doğrulanabilme", "C) Çözümleri değil istekleri ifade etme", "D) Gerçekleştirebilme", "E) Analiz"], ans: "E) Analiz", exp: "İhtiyaçları tanımlama süreci 'Analiz'dir.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi Çevik Yazılım Geliştirme Modelleri'nin temel prensiplerinden biri değildir?", options: ["A) Kişiler ve kişilerarası etkileşime, süreç ve araçtan daha çok önem verilir.", "B) Çalışan yazılıma ayrıntılı belgelemeden daha çok önem verilir.", "C) Müşteriyle doğrudan iletişim dolaylı yollara tercih edilir.", "D) Risk yönetimi, yazılım geliştirme sürecine entegre edilir.", "E) Planı katı şekilde takip etmek yerine değişimlere cevap verilir."], ans: "D) Risk yönetimi, yazılım geliştirme sürecine entegre edilir.", exp: "Risk yönetimi Agile manifestonun çekirdek bir değeri olarak geçmez.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi yazılım projeleri üzerinde test yapılmasının amaçlarından biri değildir?", options: ["A) Ürün çalıştırılmadan önce kalitesini ölçmek", "B) Yapılan hataların tekrarlanmasını önlemek", "C) Ürüne ve geliştiriciye saygınlık kazandırmak", "D) Yazılım sürecini baştan başlatmak", "E) Zaman ve maliyet tasarrufu yapmak"], ans: "D) Yazılım sürecini baştan başlatmak", exp: "Projenin tümünü baştan başlatmak testin amacı olamaz.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Bir yazılım projesi gözden geçirilirken aşağıdaki yöntemlerin hangisine başvurulmaz?", options: ["A) Kod teftişi", "B) Satır satır inceleme", "C) Denetim", "D) Genel gözden geçirme", "E) Müşteri incelemesi"], ans: "E) Satır satır inceleme", exp: "Müşteri teknik kod incelemesi değil, ürün kabul incelemesi yapar.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Proje yöneticisinin doğru kararları alabilmesi ve liderlik yapabilmesi için aşağıdaki verilen hangi özelliğe sahip olmaması gerekir?", options: ["A) İçe dönük olma", "B) Azim", "C) Sorumluluk alma", "D) Kararlılık", "E) Ekibi üzerinde etkili olma"], ans: "A) İçe dönük olma", exp: "Liderin dışa dönük iletişime ihtiyacı vardır.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Proje yönetim planındaki kapsam kontrolü içinde aşağıdakilerden hangisi yer almaz?", options: ["A) Değişiklik yönetimi planı", "B) Yapılandırma yönetimi planı", "C) Maliyet gider planı", "D) Gereksinim yönetimi planı", "E) Kapsam temel çizgisi"], ans: "C) Maliyet gider planı", exp: "Maliyet kapsamın değil, Maliyet Yönetiminin konusudur.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Her bir gereksinimin projedeki bir ihtiyacı nasıl karşıladığını açıklayan teknik aşağıdakilerden hangisidir?", options: ["A) Görüşmeler", "B) Gereksinim dokümantasyonu", "C) Odak grupları", "D) Fikir/zihin haritalama", "E) Grup yaratıcılık teknikleri"], ans: "B) Gereksinim dokümantasyonu", exp: "İhtiyaç ve işlevlerin belgelenmesi dokümantasyonla yapılır.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Yazılım sürecindeki aşamaların birbirini ileriye doğru takip ettiği ve fazla bir geri dönüş yaşanamayacağı varsayımından yola çıkarak önerilen modellerin genel ismi aşağıdakilerden hangisidir?", options: ["A) Kod eksenli geliştirme modelleri", "B) Şelale modelleri", "C) V modelleri", "D) Yinelemeli geliştirme modelleri", "E) Doğrusal geliştirme modelleri"], ans: "B) Doğrusal geliştirme modeller", exp: "", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bireysel proje sınıflandırılmasına örnek gösterilebilir?", options: ["A) Yeni bir işletim sistemi tasarlamak", "B) Yeni bir araba tasarlamak", "C) Doğum günü daveti organize etmek", "D) Fabrika yapmak", "E) Otoyol inşa etmek"], ans: "C) Doğum günü daveti organize etmek", exp: "Kişisel ve bütçesiz projeler bireyseldir.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım proje ekibinde genellikle yer almaz?", options: ["A) Sistem analisti", "B) Takım lideri", "C) Üretim müdürü", "D) Proje yöneticisi", "E) Destekleyici"], ans: "C) Üretim müdürü", exp: "Üretim müdürü fabrika/imalat terimidir.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesinde ilk olarak düşünülen ve ele alınan maliyet kalemlerinden biri değildir?", options: ["A) Geliştirme ekibi", "B) Yazılım altyapısı", "C) Teslimat", "D) Yönetim", "E) Reklam ve satış giderleri"], ans: "E) Reklam ve satış giderleri", exp: "Reklam operasyonel giderdir, projenin üretim maliyeti değildir.", exams: ["Vize", "3 Kez Çıktı!"] },
+            { q: "Bir yazılım projesinde donanım ve ağ altyapısı gibi yapıların belirlendiği plan türü hangisidir?", options: ["A) Kalite güvence planı", "B) Test planı", "C) Risk planı", "D) Devreye alma planı", "E) Eğitim planı"], ans: "D) Devreye alma planı", exp: "Yazılımın canlıya çıkması için gereken kurulum adımları Devreye Alma planıdır.", exams: ["Vize", "1 Kez Çıktı!"] },
+            { q: "Bir projede yapılabilecek işlemler ile ilgili aşağıdakilerden hangisi doğrudur?", options: ["A) Bina ya da alt yapı inşa edilemez.", "B) Projeyi etkileyebilecek varsayımlar kabul edilemez.", "C) Yenilenmiş bir bilgi sistemi geliştirilemez.", "D) Mevcut ürün ya da süreç yenilenemez.", "E) Kuruluşların yapısında değişiklik yapılabilir."], ans: "E) Kuruluşların yapısında değişiklik yapılabilir.", exp: "Projeler kurumların yapısını (departman, süreç) değiştirebilir.", exams: ["Vize", "3 Kez Çıktı!"] },
+
+            // ================= 2022-2023 FİNAL =================
+            { q: "Bilgi çağı yönetim akımı hangi tarihten sonra tam anlamıyla bir bilim şeklini almıştır?", options: ["A) 1975", "B) 1930", "C) 1950", "D) 1945", "E) 1964"], ans: "C) 1950", exp: "Bilgi çağı yönetimi II. Dünya Savaşı sonrasında 1950'lerde disiplinleşti.", exams: ["Final", "4 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir kaynak türü değildir?", options: ["A) Malzemeler", "B) Mali varlıklar", "C) Proje taslağı", "D) Önceki projelerden elde edilen tecrübeler", "E) Proje personeli"], ans: "C) Proje taslağı", exp: "Proje taslağı kaynak değildir.", exams: ["Final", "4 Kez Çıktı!"] },
+            { q: "Yazılım projesi geliştirme aşamalarından biri olan ve öncelikle dikkat edilmesi gereken planlama aşaması ile ilgili aşağıdakilerden hangisi yanlıştır?", options: ["A) Süre takvimlerinin belirlenmesi.", "B) Müşteri ve üst yönetimin gözden geçirilmesi.", "C) Kullanılacak kaynakların belirlenmesi.", "D) Belirlenmiş süre ve mali kısıtların dikkate alınması.", "E) İzlenecek yöntemin seçilmesi."], ans: "B) Müşteri ve üst yönetimin gözden geçirilmesi.", exp: "Gözden geçirme planlamadan sonra gelir.", exams: ["Final", "4 Kez Çıktı!"] },
+            { q: "Proje kapsam yönetiminde Ayrıştırma aktiviteleri ile ilgili aşağıdakilerden hangisi söylenemez?", options: ["A) Teslimatların saptanması.", "B) İş Kırılım Yapısı'nın yapılandırılması ve düzenlenmesi.", "C) Bağlantılı çalışmaların düzenlenmesi.", "D) İş Kırılım Yapısı'nın bileşenleri için tanımlama kodlarının oluşturulması ve atanması.", "E) Çalışanların toplanma derecesinin gerekli ve yeterli olduğunun doğrulanması."], ans: "E) Çalışanların toplanma derecesinin gerekli ve yeterli olduğunun doğrulanması.", exp: "Ayrıştırma işleri bölmek içindir, çalışanların toplanması değil.", exams: ["Final", "4 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi çevik yöntemlerin ilkelerinden birisi değildir?", options: ["A) Sponsor yazılım ilerlemesinin birincil ölçüsüdür.", "B) Sürdürülebilir geliştirmeyi teşvik etmektedir.", "C) Teknik mükemmeliyet ve iyi tasarım konusundaki sürekli özen ve çevikliği artırır.", "D) Projenin temelinde motive olmuş bireyler yer almalıdır.", "E) Bir yazılım takımında bilgi alışverişinin en etkili yöntemi yüz yüze iletişimdir."], ans: "A) Sponsor yazılım ilerlemesinin birincil ölçüsüdür.", exp: "Çevik manifestoya göre sponsor değil, 'Çalışan yazılım' birincil ilerleme ölçütüdür.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Projenin kullanıcı istek, teknik gereksinim ve standartlarını karşılayacak şekilde hatasız geliştirilmesi için gerekli kontrol testleri yapmaktan sorumlu olan kişi aşağıdakilerden hangisidir?", options: ["A) Yardımcı ürün geliştirici", "B) Ürün yöneticisi", "C) Arayüz geliştirici", "D) Kalite / Test mühendisi", "E) Sistem analisti"], ans: "D) Kalite / Test mühendisi", exp: "Kalite Güvence ve Test Mühendislerinin görevidir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Kalite bir ürün veya hizmetin belirlenen veya olabilecek ........... karşılama kabiliyetine dayanan özelliklerin toplamıdır. Şeklinde verilen tamamlamada boş bırakılan alana aşağıdakilerden hangisi getirilmelidir?", options: ["A) Listeleri", "B) İhtiyaçları", "C) Paydaşları", "D) Analizleri", "E) Verileri"], ans: "B) İhtiyaçları", exp: "Kalite ürünün müşteri ihtiyaçlarına uygunluğudur.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Yazılım projelerinde maliyetler aşağıdakilerden hangisi ile ifade edilmez?", options: ["A) Klasik para birimleri", "B) Kullanılan teçhizatlar", "C) Kod-Satır sayısı", "D) Personelin Çalışma günleri", "E) Personelin çalışma saatleri"], ans: "C) Kod-Satır sayısı", exp: "Kod satır sayısı projenin ebatını ölçer, maliyetini (para) değil.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Bir Üniversitenin gelirlerini artıracak yeni bir bölüm açmaya / yaratmaya yönelik projeye onay verilmesi aşağıdakilerden hangisi ile ifade edilir?", options: ["A) Çevre üzerinde etkiler", "B) Organizasyonun ihtiyacı", "C) Teknolojik İlerleme", "D) Pazardaki talep", "E) Müşterilerin talebi"], ans: "B) Organizasyonun ihtiyacı", exp: "Kurumun finansal hedefi kendi organizasyonel ihtiyacıdır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesinin iletişim yönetimi kısmında yargıya dayalı metotlar arasında yer almaz?", options: ["A) Örneksel öngörü", "B) Anketler", "C) Tahminsel öngörüler", "D) Delphi tekniği", "E) Senaryo kurma"], ans: "B) Anketler", exp: "Anketler uzman yargısına değil kitle istatistiğine dayanır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir projenin operasyon grubuna veya bir sonraki aşamaya aktarıldığını gösteren resmi dokümantasyondur?", options: ["A) Proje dosyaları", "B) Proje kapanış belgeleri", "C) Tarihsel bilgiler", "D) Proje takvimleri", "E) Risk listeleri"], ans: "B) Proje kapanış belgeleri", exp: "İşin bittiğini gösteren resmi onaylar kapanış belgeleridir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi projede risk yönetiminin nasıl yaptırılacağını ve gerçekleşeceğinin açıklamak için izlenen yoldur?", options: ["A) Risk kırılım yapısı", "B) Risk kategorileri", "C) Risklerin tanımlanması", "D) Risk yönetim planı", "E) Risk olasılığı ve etkisinin tanımlanması"], ans: "D) Risk yönetim planı", exp: "Sürecin nasıl işleyeceğini kurala bağlayan belge Risk Yönetim Planıdır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Genellikle doğruluğu güvence altına almak için ürün kapsam tanımının çoğu zaman projede gözden geçirmeye imkan sağlayan girdi türü aşağıdakilerden hangisidir?", options: ["A) Araç ve teknikler", "B) Öncelik şeması metodu", "C) Organizasyonel süreç varlıkları", "D) Proje kapsam bildirimi", "E) Süreç varlıkları"], ans: "D) Proje kapsam bildirimi", exp: "Sınırları çizen belge Proje Kapsam Bildirimidir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "\"..........tarihsel bilgiler ile diğer değişkenler arasındaki istatistiksel ilişki kullanılarak maliyet, süre gibi aktivite parametreleri için tahmini değerler hesaplanır.\" Şeklinde verilen tanım aşağıdaki hangi tekniği açıklamaktadır?", options: ["A) Uzman görüşü", "B) Örneksel tahmin", "C) Parametrik tahmin", "D) Yedek süre analizi", "E) Üç nokta tahminleri"], ans: "C) Parametrik tahmin", exp: "Geçmiş verilere formül uygulamak (parametre) parametrik tahmindir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "\"Seçilen satıcı en düşük sahip olma maliyetini sağlayacak mı? Yoksa başka sebeplerden dolayı mı bu satıcı seçildi?\" gibi soruların cevabını veren seçim kriteri hangisidir?", options: ["A) Teknik kaynaklar", "B) Yöntem yaklaşımı", "C) Risk", "D) İhtiyacın anlaşılması", "E) Yaşam döngüsü maliyeti"], ans: "E) Yaşam döngüsü maliyeti", exp: "Ürünün satın alınması ve uzun vadeli tüm bakım maliyetleri Yaşam Döngüsü Maliyeti (TCO) ile ölçülür.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje yönetimi planının güncellenebilecek öğelerinden birisi değildir?", options: ["A) Performans temel çizgisi", "B) Kapsam temel çizgisi", "C) Maliyet temel çizgisi", "D) Tedarik yönetim planı", "E) Zaman çizelgesi temel çizgisi"], ans: "A) Performans temel çizgisi", exp: "Performans çizgisi bağımsız bir belge değildir, diğer 3 çizginin sonucudur.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi üst ve alt tanımlama sınırları, taraflar arasında yapılan sözleşmelere dayanan tekniktir?", options: ["A) Kıyaslama", "B) Kontrol grafikleri", "C) İstatistiksel örnekleme", "D) Akış şeması", "E) Deney tasarımı"], ans: "B) Kontrol grafikleri", exp: "Kalite kontrol sınırlarını (alt/üst) belirten teknik Kontrol Grafikledir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi risk yönetiminin olumlu sonuçlarından biri değildir?", options: ["A) Kontrolü sağlar", "B) Kayıpları önler", "C) Güvence sağlar", "D) Belirsizliği önler", "E) Üretimi yavaşlatır"], ans: "E) Üretimi yavaşlatır", exp: "Üretimi yavaşlatmak risk yönetiminin amacı olamaz.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi fayda / maliyet analizinin avantajlarından birisi değildir?", options: ["A) Paydaş memnuniyetinde azalış", "B) Aynı işin baştan yapılma durumlarının azaltılması", "C) Üretkenlik artışı", "D) Maliyetlerin düşmesi", "E) Gereksiz maliyetlerin öngörülmesi"], ans: "A) Paydaş memnuniyetinde azalış", exp: "Memnuniyetin azalması avantaj değil başarısızlıktır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje maliyetlerinin tahminine en çok etki eden faktörlerden birisi değildir?", options: ["A) Yapılabilirlik", "B) Proje süresi", "C) Organizasyon politikaları", "D) Proje takımının deneyimi", "E) Yönetimsel faktörler"], ans: "A) Yapılabilirlik", exp: "Yapılabilirlik (fizibilite) proje onayından önce yapılır. Tahmin ise onay sonrası süreçtir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesinin iletişim yönetimi kısmında gerçekleşen ilerlemeyi, planlanan ilerleme ile karşılaştırmalı olarak değerlendirmeye olanak sağlayan tekniktir?", options: ["A) Proje yönetim planı", "B) Organizasyon süreç varlıkları", "C) Çalışma performans bilgileri", "D) Çalışma performans ölçümleri", "E) Bütçe tahminleri"], ans: "D) Çalışma performans ölçümleri", exp: "Gerçek durumu planla kıyaslayan teknik Çalışma Performans Ölçümleridir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi risklerin tanımlanması kısmında kullanılan bir girdi değildir?", options: ["A) Çevresel İşletme Faktörleri", "B) Eski Risk Analizleri", "C) Maliyet Yönetimi Planı", "D) Paydaş Listesi", "E) Zaman Çizelgesi Yönetimi Planı"], ans: "B) Eski Risk Analizleri", exp: "Eski riskler doğrudan bir plan girdisi değil, genel süreç arşivinin (varlıklarının) parçasıdır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Projenin başlangıcından tamamlanmasına kadar, maliyet alternatiflerinin tanımlanmasını ve değerlendirmesini kapsayan sürece ne ad verilir?", options: ["A) Proje maliyet tahmini", "B) Aktivite maliyet tahmini", "C) İşgücü maliyet tahmini", "D) Yedek maliyet tahmini", "E) Uzman tahmini"], ans: "A) Proje maliyet tahmini", exp: "Sürecin tümüne doğrudan 'Proje Maliyet Tahmini' denir.", exams: ["Final", "1 Kez Çıktı!"] },
+
+            // ================= 2024-2025 BAHAR FİNAL A =================
+            { q: "Aşağıdakilerden hangisi bir projede kalite planlanması kısmındaki girdilerden biri değildir?", options: ["A) Risk listesi", "B) Fayda-maliyet analizi", "C) Çevresel işletme faktörleri", "D) Maliyet performansı temel çizgisi", "E) Zaman çizelgesi temel çizgisi"], ans: "B) Fayda-maliyet analizi", exp: "Fayda-maliyet analizi kalite planına giren bir doküman değil, planı üretirken kullanılan bir Araç ve Tekniktir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "\"Proje türleri çeşitli olduğundan, projeler için gerçekleştirilecek plan türleri de oldukça çeşitlidir. Bir projenin içerisinde de birçok farklı plan yapmak gerekebilir.\" şeklindeki bir ifade aşağıdakilerden hangisi için söylenebilir?", options: ["A) Planın Kaynakları", "B) Planın Yönetimi", "C) Planın Zamanı", "D) Planın Bütçesi", "E) Planın Planı"], ans: "E) Planın Planı", exp: "Projedeki farklı planların da nasıl yönetileceğini belirten çatı kavram 'Planın Planı'dır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "...... projenin başlatılması, yönetilmesi, yürütülmesi, izlenmesi, kontrolü ve kapatılmasını içermektedir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", options: ["A) Proje zaman yönetimi", "B) Entegrasyon yönetimi", "C) Proje risk yönetimi", "D) Plan yönetimi", "E) Organizasyon yönetimi"], ans: "B) Entegrasyon yönetimi", exp: "Tüm süreçleri ve fazları bir orkestra gibi birleştiren bilgi alanı Entegrasyon Yönetimidir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Bir yazılım projesinde herhangi bir kaynağın maliyet olarak kabul edilebilmesi için aşağıdakilerden hangisinin gerçekleşmesi gerekmektedir?", options: ["A) Belli bir ücretin üzerinde olması", "B) Yazılımın tamamına yayılmış olması", "C) Matematiksel şekilde formülize edilmiş olması", "D) Parasal olarak ifade edilmesi", "E) Yazılımın başında belirlenmiş olması"], ans: "D) Parasal olarak ifade edilmesi", exp: "Bir eforun veya teçhizatın maliyet sayılabilmesi için finansal (parasal) bir karşılığa çevrilebilmesi gerekir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Belli bir anda bir yazılım projesinin ne kadarının tamamlandığı, ne kadarının tamamlanmadığı net bir biçimde ölçülemez. Bunun sebebi yazılım projelerinin sahip olduğu özellik aşağıdakilerden hangisidir?", options: ["A) Müşteri bağımlı olması", "B) Karmaşık olması", "C) Esnek olması", "D) Standart olmaması", "E) Görünür bir ürün olmaması"], ans: "E) Görünür bir ürün olmaması", exp: "Fiziksel bir ilerleme olmadığı için yazılımın tamamlanma oranını gözle ölçmek zordur.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje yönetimi planının güncellenebilecek ögelerinden biri değildir?", options: ["A) Maliyet temel çizgisi", "B) Performans temel çizgisi", "C) Kapsam temel çizgisi", "D) Zaman çizelgesi temel çizgisi", "E) Tedarik yönetimi planı"], ans: "B) Performans temel çizgisi", exp: "Performans çizgisi diğer üç çizginin (kapsam, maliyet, zaman) kümülatif sonucudur.", exams: ["Final", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje yöneticilerinin sahip olması beklenen kişisel bir özellik değildir?", options: ["A) Güçlü motivasyon", "B) Sosyal beceri", "C) Maliyet odaklı olma", "D) Güvenilirlik ve güçlü karakter", "E) Analitik yetenekler"], ans: "C) Maliyet odaklı olma", exp: "Maliyeti yönetmek mesleki bir görevdir ancak 'maliyet odaklı olma' yöneticinin sahip olması gereken bir sosyal/davranışsal beceri (soft skill) değildir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "\"Seçilen satıcı en düşük sahip olma maliyetini sağlayacak mı? Yoksa başka sebeplerden dolayı mı bu satıcı seçildi?\" gibi soruların cevabını veren seçim kriteri aşağıdakilerden hangisidir?", options: ["A) Risk", "B) Yöntem yaklaşımı", "C) İhtiyacın anlaşılması", "D) Teknik kaynaklar", "E) Yaşam döngüsü maliyeti"], ans: "E) Yaşam döngüsü maliyeti", exp: "Uzun vadeli bakım dahil tüm maliyeti ele alan kavram Yaşam Döngüsü Maliyetidir.", exams: ["Final", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılımın kabul kriteri olabilir?", options: ["A) Modül isimleri", "B) Modül sayısı", "C) Modül uzunlukları", "D) Modül geliştirme süreleri", "E) Modüllerin hızı"], ans: "E) Modüllerin hızı", exp: "Sistemin işleyiş performansı (hızı), müşterinin sistemi teslim almak için aradığı fonksiyonel bir kabul kriteridir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Yazılım projelerinde maliyetler aşağıdakilerden hangisi ile ifade edilmez?", options: ["A) Klasik para birimleri", "B) Kullanılan teçhizatlar", "C) Personelin çalışma günleri", "D) Kod-satır sayısı", "E) Personelin çalışma saatleri"], ans: "D) Kod-satır sayısı", exp: "Kod-satır sayısı maliyeti değil ebatı ölçer.", exams: ["Final", "2 Kez Çıktı!"] },
+            { q: "Proje iletişim gereksinimlerinin belirlenmesinde aşağıda verilen bilgilerin hangisi kullanılamaz?", options: ["A) Organizasyon şemaları", "B) Projede yer alacak disiplinler", "C) Projenin süresi", "D) Bölümler ve uzmanlıklar", "E) Dâhili bilgi ihtiyaçları"], ans: "C) Projenin süresi", exp: "Projenin uzun/kısa olması paydaşların birbirleriyle olan iletişim ihtiyacı bağlarını doğrudan değiştirmez.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi projenin kapatılması kısmında kontrol edilmesi gereken hususlardan biri değildir?", options: ["A) Projenin hedeflerine ulaşması", "B) Projenin müşteri ihtiyaçlarını sağlaması", "C) Proje çalışmalarının tamamlanması", "D) Projenin maliyetinin hesaplanması", "E) Proje modüllerinin sonuçlanması"], ans: "D) Projenin maliyetinin hesaplanması", exp: "Maliyet planlama ve kontrol evrelerinde hesaplanır; kapanışta maliyet yeniden hesaplanmaz, sadece hedefler denetlenir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesinin iletişim yönetimi kısmında gerçekleşen ilerlemeyi, planlanan ilerlemeyle karşılaştırmalı olarak değerlendirmeye olanak sağlayan tekniktir?", options: ["A) Organizasyonel süreç varlıkları", "B) Çalışma performans bilgileri", "C) Çalışma performans ölçümleri", "D) Proje yönetim planı", "E) Bütçe tahminleri"], ans: "C) Çalışma performans ölçümleri", exp: "Durumu planla kıyaslama işlemine Çalışma Performans Ölçümleri (EVM) denir.", exams: ["Final", "2 Kez Çıktı!"] },
+            { q: "Bazı durumlarda proje yöneticisi bir işin süresini tahmin ederken eğer kendi deneyimlerine güvenmiyorsa veya süre tahminiyle ilgili fikir danışması gerektiğini düşünüyorsa farklı kişilerin görüşlerine de başvurur. Aşağıdakilerden hangisi yukarıda ifade edilen yöntemlerden biridir?", options: ["A) Yedek süre analizi", "B) Uzman görüşü", "C) Üç nokta tahmini", "D) Parametrik tahmin", "E) Örneksel tahmin"], ans: "B) Uzman görüşü", exp: "Alanında deneyimli kişilere (danışman vb.) danışarak yapılan tahmine Uzman Görüşü denir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Risklerin projeyi etkileyebileceğini belirleme ve bunların özelliklerini belgeleme sürecine verilen ad aşağıdakilerden hangisidir?", options: ["A) Risklerin tanımlanması", "B) Revize edilmiş paydaş toleransları", "C) Risk kırılım yapısı", "D) Olasılık ve etki matrisi", "E) Risk olasılığı ve etkisinin tanımları"], ans: "A) Risklerin tanımlanması", exp: "Riskleri bulup risk listesine kaydetme sürecine 'Risklerin Tanımlanması' denir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Proje bütçesi ile ilgili gerçekleştirilen yedek maliyet analizi ile ilgili aşağıdakilerden hangisi yanlıştır?", options: ["A) Aktivite maliyet tahmininin hazırlanmasında kullanılır.", "B) Proje hakkında daha kesin bilgilere ulaşıldığında güncellenir.", "C) Maliyetlerdeki belirsizliği ele almak için kullanılır.", "D) Zaman çizelgesi belgelerinde belirtilmektedir.", "E) Yedek maliyet tahminî maliyetin bir yüzdesi ya da sabit bir sayı olabilir."], ans: "D) Zaman çizelgesi belgelerinde belirtilmektedir.", exp: "Yedek Maliyet bütçe/para ile ilgilidir, zaman belgelerinde (takvimlerde) değil Maliyet Temel Çizgisinde belirtilir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdaki kavram kısaltması ve eşleştirmelerden hangisi yanlıştır?", options: ["A) BPA: Binary Process Accept İkilik İşlem Kabulü", "B) BPM: Business Process Management - İş Süreç Yönetim Araçları", "C) XML: Extensible Markup Language - Genişletilebilir İşaretleme Dili", "D) CMMI: Capability Maturity Model Integrated - Entegre Yeteneklilik Olgunluğu Modeli", "E) BPMS: Business Process Management Suite - Bütünleşik İş Süreç Yönetim Araçları"], ans: "A) BPA: Binary Process Accept İkilik İşlem Kabulü", exp: "BPA'nın açılımı Business Process Analysis'tir. Binary Process Accept uydurma bir tanımdır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Bilimsel Yönetim akımı ile ilgili aşağıdaki hangi prensip tanımı doğru verilmiştir?", options: ["A) İşlerin geliştirilmesinde standart yöntemler kullanılması", "B) Alınacak işçilerin seçiminde geleneksel yöntemlerden faydalanılması", "C) Gruplar arası iletişimin azaltılması", "D) Yönetim ve işçi görevleri arasında fonksiyonel ayrımın yapılması", "E) İşbirliğinin bulunmaması"], ans: "D) Yönetim ve işçi görevleri arasında fonksiyonel ayrımın yapılması", exp: "Taylor'ın Bilimsel Yönetim yaklaşımında işin düşünülmesi (yönetim) ile uygulanması (işçi) kesin sınırlarla ayrılır.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi fayda-maliyet analizinde ele alınacak bir durumdur?", options: ["A) Ortaya çıkacak olan faydanın getireceği ek maliyetler", "B) Analizler sonucunda ortaya çıkacak olan faydalar", "C) Kalite gereksinimlerine uyulmasının başlıca faydaları", "D) Harcanan maliyetin getireceği faydalar", "E) Analizler sonucunda ortaya çıkacak olan ek maliyetler"], ans: "C) Kalite gereksinimlerine uyulmasının başlıca faydaları", exp: "Kalite yönetimi süreçlerinde kalite standartlarına uymanın getireceği avantajlar fayda maliyet analizinde değerlendirilir.", exams: ["Final", "1 Kez Çıktı!"] },
+            { q: "Kritik yol metoduyla analiz edilmiş olan bir zaman çizelgesine uygulanan tekniğe verilen ad aşağıdakilerden hangisidir?", options: ["A) Zaman çizelgesini sıkıştırma", "B) Kritik yol yöntemi", "C) Kritik zincir metodu", "D) Kaynak dengeleme", "E) Zaman çizelgesi ağ analizi"], ans: "A) Zaman çizelgesini sıkıştırma", exp: "Projeyi hızlandırmak için paralel çalışma (fast-tracking) veya kaynak ekleyerek zamanı sıkıştırma tekniği uygulanır.", exams: ["Final", "1 Kez Çıktı!"] },
+
+            // ================= 2023-2024 BÜTÜNLEME =================
+            { q: "Aşağıdaki çiftlerden hangisi kalite kontrolünde kullanılan ve birbirlerinin özel bir türü olan yapılardır?", options: ["A) Neden-Sonuç Diyagramı - Organizasyonel Süreç Varlığı", "B) Kontrol Grafiği - Akış Şeması", "C) Onaylanmış Değişiklik Talebi - Çalışma Performansı Ölçümleri", "D) Histogram - Pareto Grafiği", "E) Eğilim Grafiği - Dağılım Şeması"], ans: "D) Histogram - Pareto Grafiği", exp: "Pareto Grafiği (80/20 kuralını gösteren grafik), çubuklarla frekans gösteren standart bir 'Histogram'ın özel sıralanmış halidir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir projede kalite planlanması kısmındaki girdilerden biri değildir?", options: ["A) Çevresel işletme faktörleri", "B) Zaman çizelgesi temel çizgisi", "C) Maliyet performansı temel çizgisi", "D) Fayda-maliyet analizi", "E) Risk listesi"], ans: "D) Fayda-maliyet analizi", exp: "Fayda-Maliyet analizi bir plan girdisi (doküman) değil, plan yaparken kullanılan araçtır.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Proje yönetimi ile ilgili kimi senaryolarda zaman çizelgesi hazırlanırken sınırlı kaynaklar hesaba katılır ve sonuç olarak bu zaman çizelgesi ileride değişebilecek bir özellik taşıyacak şekilde hazırlanır. Yukarıda ifade edilen tekniğe ne ad verilmektedir?", options: ["A) Kritik zincir metodu", "B) Zaman çizelgesi ağ analizi", "C) Kritik yol metodu", "D) Çevresel işletme faktörleri", "E) Paralel çalışma"], ans: "A) Kritik zincir metodu", exp: "Kaynak kısıtlılıklarını ve tamponları hesaba katarak zamanı esnek planlayan teknik Kritik Zincir Metodudur.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje maliyetine doğrudan etki eden bir faktör değildir?", options: ["A) Projenin büyüklüğü", "B) Piyasa ve ekonomik koşullar", "C) Proje süresi", "D) Projede kullanılan teknolojiler", "E) Projede çalışan kişiler"], ans: "B) Piyasa ve ekonomik koşullar", exp: "Piyasa koşulları (enflasyon vs.) dışsal/çevresel faktörlerdir. Ekip ve ebat ise projenin doğrudan üretim kalemleridir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Bir cep telefonu firmasının büyük veri vb. gelişmelerin ardından daha hafif ve daha yüksek bellekli bir cep telefonu üretmek için yeni bir projeye onay vermesi aşağıdakilerden hangisi ile ifade edilebilir?", options: ["A) Müşterilerin talebi", "B) Çevre üzerindeki etkiler", "C) Teknolojik ilerleme", "D) Pazardaki talep", "E) Organizasyonun ihtiyacı"], ans: "C) Teknolojik ilerleme", exp: "Yeni teknolojilerin ortaya çıkmasıyla firmaların uyum projesi başlatması 'Teknolojik İlerleme'dir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "...... projenin başlatılması, yönetilmesi, yürütülmesi, izlenmesi, kontrolü ve kapatılmasını içermektedir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", options: ["A) Entegrasyon yönetimi", "B) Proje zaman yönetimi", "C) Plan yönetimi", "D) Organizasyon yönetimi", "E) Proje risk yönetimi"], ans: "A) Entegrasyon yönetimi", exp: "Projedeki tüm süreçleri orkestra şefi gibi birbiriyle uyumlu hale getiren bilgi alanı Entegrasyon Yönetimidir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi ürün kapsam tanımı, hizmet tanımı, sonuç tanımı kabul kriterleri hakkında önemli bilgiler içeren girdi olarak gösterilmektedir?", options: ["A) İş birliği anlaşmaları", "B) Kapsam temel çizgisi", "C) Gereksinim dokümantasyonu", "D) Risk analizi", "E) Projenin diğer planlama çizelgeleri"], ans: "B) Kapsam temel çizgisi", exp: "Kapsam bildirimlerini içinde barındıran ve onaylı sınırları belirten asıl doküman Kapsam Temel Çizgisidir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Projelerdeki zaman ilişkileri belirlenirken en çok kullanılan öncel ilişkisi türü aşağıdakilerden hangisidir?", options: ["A) İzleme-kontrol", "B) Gelişme-bitiş", "C) Değerlendirme-sonuç", "D) Bitiş-başlangıç", "E) Başlangıç-başlangıç"], ans: "D) Bitiş-başlangıç", exp: "Aktivitelerin birbirine bağlanmasında varsayılan ve en yaygın ilişki 'Bitiş-Başlangıç' (A bitmeden B başlayamaz) türüdür.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi projelerde bütçenin belirlenmesi kısmındaki girdiler den biri değildir?", options: ["A) Aktivite maliyet tahminleri", "B) Proje zaman çizelgesi", "C) Kaynak takvimleri", "D) Tahminlerin temeli", "E) Ortak maliyetler"], ans: "E) Ortak maliyetler", exp: "Ortak maliyetler muhasebesel bir terimdir, bütçe belirleme sürecinin resmi PMBOK girdisi (dokümanı) değildir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdaki kısaltma ve eşleştirmelerden hangisi yanlıştır?", options: ["A) BPMS: Business Process Management Suite - Bütünleşik İş Süreç Yönetim Araçları", "B) BPA: Binary Process Accept - İkilik İşlem Kabulü", "C) CMMI: Capability Maturity Model Integrated - Entegre Yeteneklilik Olgunluğu Modeli", "D) XML: Extensible Markup Language - Genişletilebilir İşaretleme Dili", "E) BPM: Business Process Management - İş Süreç Yönetim Araçları"], ans: "B) BPA: Binary Process Accept - İkilik İşlem Kabulü", exp: "BPA'nın gerçek açılımı Business Process Analysis (İş Süreçleri Analizi) şeklindedir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "I. Risk listesi belirlenirken rakipleri incelemeye gerek yoktur. II. Yasal düzenlemeler risk olasılıklarını etkiler. III. Kur değişimleri maliyet riskleri arasında yer alır. Yukarıdaki ifadelerden hangisi veya hangileri doğrudur?", options: ["A) I ve II", "B) Yalnız III", "C) II ve III", "D) Yalnız II", "E) Yalnız I"], ans: "C) II ve III", exp: "Yasal değişimler ve kurlar risktir. Rakipleri incelememek ise hatadır, rekabet en büyük dış risklerden biridir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "..... proje teslimatlarının, çalışmaların ve teslimatların çalışma paketi seviyesinde tanımlandığı noktaya ulaşılana kadar daha küçük ve daha yönetilebilir bileşenlere bölünmesidir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", options: ["A) Ayrıştırma", "B) Proje kapsam bildirimi", "C) Proje belgesi güncellemeleri", "D) Organizasyonel süreç varlıkları", "E) Uzman görüşü"], ans: "A) Ayrıştırma", exp: "Büyük işleri daha küçük ve yönetilebilir paketlere (work packages) bölme işine 'Ayrıştırma' denir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje yönetimi planının güncellenebilecek ögelerinden biri değildir?", options: ["A) Kapsam temel çizgisi", "B) Zaman çizelgesi temel çizgisi", "C) Tedarik yönetimi planı", "D) Maliyet temel çizgisi", "E) Performans temel çizgisi"], ans: "E) Performans temel çizgisi", exp: "Performans çizgisi diğer üç temel çizginin toplamıdır, tek başına güncellenen bir belge değildir.", exams: ["Büt", "3 Kez Çıktı!"] },
+            { q: "Aşağıdaki eşleştirmelerden hangisi yanlıştır?", options: ["A) Proje kısıtları: Projenin gerçekleşmesi için dikkat edilmesi gereken hususlar", "B) Ayrıştırma: Projenin daha küçük parçalara bölünmesi", "C) Odak grubu: Önceden belirlenmiş paydaşlar", "D) Paydaş: Projeden etkilenen kişiler", "E) Diktatörlük: Tek bir kişinin grup adına karar vermesi"], ans: "A) Proje kısıtları: Projenin gerçekleşmesi için dikkat edilmesi gereken hususlar", exp: "Kısıtlar sadece dikkat edilecek hususlar değil, bütçe ve zaman gibi kesin aşılamaz sınırlardır.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesinde teknolojik anlamda oluşabilecek risklerden biri değildir?", options: ["A) Başarı olasılığı", "B) Maliyet tahminleri", "C) Ürün yapılabilirliği", "D) Tasarımın başarısı", "E) Müşteri beklentileri"], ans: "B) Maliyet tahminleri", exp: "Maliyet tahminleri finansal/yönetsel risktir. Teknolojik riskler ürünün fizibilitesi, tasarımı ve teknik başarısı ile ilgilidir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Proje yöneticisi nasıl kullanıcıya bir adım yakın duruyorsa, kurum üst yönetimi de benzer şekilde, adaletten ayrılmamak şartıyla, proje yöneticisine bir adım yakın durmalıdır. Yukarıdaki ifade ile aşağıdaki ilkelerden hangisi eşleştirilebilir?", options: ["A) Tahmin etmek", "B) Kalite standartlarını belirlemek", "C) Yetki ve sorumluluk dengesi kurmak", "D) Proje durumunu bilmek", "E) Kullanıcıya bir adım yakın durmak"], ans: "C) Yetki ve sorumluluk dengesi kurmak", exp: "Proje yöneticisine bütün işin sorumluluğu yüklenirken yönetimin de ona uygun yetki vermesi denge kurmaktır.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Merkezîleşme ne anlama gelmektedir?", options: ["A) Her projede özel olarak uzmanlaşmaya ihtiyaç duyulmasıdır.", "B) Yönetimin bütünleşmesi ve kararların en üst seviyede alınmasıdır.", "C) Planı sadece bir kişinin yapması, diğerlerinin uygulamasıdır.", "D) İş sırasında sadece tek bir faaliyetin düşünülmesidir.", "E) Proje yöneticilerinin otoriteye sahip olmasıdır."], ans: "B) Yönetimin bütünleşmesi ve kararların en üst seviyede alınmasıdır.", exp: "Tüm kritik kararların ve otoritenin şirketin en tepe noktasında (merkezde) toplandığı yönetim biçimidir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesindeki bir iç risk değildir?", options: ["A) Proje sponsorunun projeye bütçe ayırmaktan vazgeçmesi", "B) Yazılım geliştiricilerin modülleri uyumsuz şekilde geliştirmesi", "C) Kullanılan yazılım ortamının programlama diline uymaması", "D) Proje ekibinden birinin hastalanması ve işe ara vermek zorunda kalması", "E) Yanlış veri seti kullanılması"], ans: "A) Proje sponsorunun projeye bütçe ayırmaktan vazgeçmesi", exp: "Sponsorun bütçeyi kesmesi proje takımının kontrolü dışında olan, üst yönetiminden kaynaklanan dışsal bir risktir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir paydaş sınıflandırma modeli değildir?", options: ["A) Güç/katılım tablosu", "B) Güç, aciliyet ve meşruiyet düzeylerini ele alan model", "C) Güç çıkar tablosu", "D) Katılım/etki tablosu", "E) Analiz modeli"], ans: "E) Analiz modeli", exp: "Analiz Modeli hiçbir spesifik yöntemi tarif etmeyen genel bir kelimedir. Diğer şıklar PMBOK matrisleridir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Yazılım projelerinin esnek olması ne anlama gelmektedir?", options: ["A) Bir yazılımın nasıl geliştirilmesi gerektiği ile ilgili herhangi bir standart bulunmaması", "B) Çoğu yazılım projesinin bir defalık proje olması", "C) Yazılımın görünür bir ürün olmaması", "D) Yazılım geliştirme sürecinin standart olmaması", "E) Yazılım ürünlerinde kolayca değişiklik yapılabilmesi"], ans: "E) Yazılım ürünlerinde kolayca değişiklik yapılabilmesi", exp: "Fiziksel ürünlerin aksine, sadece kod değiştirilerek yazılım mimarisinde kolayca değişiklik yapılabilir.", exams: ["Büt", "1 Kez Çıktı!"] },
+
+            // ================= 2024-2025 BAHAR BÜTÜNLEME =================
+            { q: "Aşağıdakilerden hangisi proje tedarik yönetiminde çevresel işletme faktörlerinden biri değildir?", options: ["A) Tedarikçiler", "B) Pazarda mevcut olan ürünler", "C) Kaynak seçimi kriterleri", "D) Bölgeye özgü gereksinimler", "E) Hizmetler ve sonuçlar"], ans: "C) Kaynak seçimi kriterleri", exp: "Kaynak seçimi kriterleri dışsal bir pazar faktörü değil, proje ekibi tarafından üretilen bir iç belgedir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje maliyetine doğrudan etki eden bir faktör değildir?", options: ["A) Piyasa ve ekonomik koşullar", "B) Projenin büyüklüğü", "C) Projede çalışan kişiler", "D) Projede kullanılan teknolojiler", "E) Proje süresi"], ans: "A) Piyasa ve ekonomik koşullar", exp: "Piyasa koşulları maliyeti etkileyen dışsal faktörlerdir, proje ekibinin harcadığı doğrudan üretim maliyeti değildir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi proje zaman yönetiminde zaman çizelgesinin geliştirilmesi kısmında güncellenebilecek hususlardan biri değildir?", options: ["A) Aktivite özellikleri", "B) Kaynaklar", "C) Aktivite kaynak gereksinimleri", "D) Risk listesi", "E) Takvim"], ans: "B) Kaynaklar", exp: "Zaman çizelgesi geliştirildiğinde güncellenen şeyler 'kaynak gereksinimi' gibi belgelerdir; kaynakların fiziksel kendisi (insan/makine) değil.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Benzin sıkıntısına çözüm olarak yakıtı daha verimli kullanan otomobiller üretmek hangi sosyal ihtiyacın sonucu olarak oluşturulmuştur?", options: ["A) Rakiplerdeki talep", "B) Çevre üzerindeki etkiler", "C) Sektördeki genel talep", "D) Müşterilerdeki talep", "E) Organizasyondaki ihtiyaç"], ans: "B) Çevre üzerindeki etkiler", exp: "Doğal kaynakların tükenmesi gibi ekolojik sorunlara üretilen çözümler 'Çevre Üzerindeki Etkiler' kategorisine girer.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi özel bir teknik olan kök analizini kapsamaktadır?", options: ["A) İstatistiksel analiz", "B) Kalite denetimleri", "C) Süreç analizi", "D) Fayda/maliyet analizi", "E) Kalite kontrol ölçümleri"], ans: "C) Süreç analizi", exp: "Bir hatanın temeline inmek için yapılan kök neden analizi, 'Süreç Analizi' başlığının altında gerçekleştirilir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Projenin kullanıcı istek, teknik gereksinim ve standartlarını karşılayacak şekilde hatasız geliştirilmesi için gerekli kontrol testlerini yapmaktan sorumlu olan kişi aşağıdakilerden hangisidir?", options: ["A) Ürün yöneticisi", "B) Arayüz geliştirici", "C) Kalite/test mühendisi", "D) Yardımcı ürün geliştirici", "E) Sistem analisti"], ans: "C) Kalite/test mühendisi", exp: "Hataları ve kaliteyi denetlemek Kalite Güvence (QA) ve Test Mühendisinin görevidir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir yazılım projesinin iletişim yönetimi kısmında yargıya dayalı metotlar arasında yer almaz?", options: ["A) Anketler", "B) Senaryo kurma", "C) Örneksel öngörü", "D) Tahminsel öngörüler", "E) Delphi tekniği"], ans: "A) Anketler", exp: "Anketler nicel verilere ve kitleye dayanır; uzman yargısına dayanan nitel bir metot değildir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi projelerde bütçenin belirlenmesi kısmında görüşü alınabilecek uzmanlardan biri değildir?", options: ["A) Sektör grupları", "B) Proje yöneticisi", "C) Mesleki ve teknik birlikler", "D) Müşteriler", "E) Danışmanlar"], ans: "D) Müşteriler", exp: "Bütçe belirlenirken maliyetlerin ne tutacağı müşteriye değil; danışman, yönetici veya sektör kurumlarına (uzman görüşü) sorulur.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Projelerdeki zaman ilişkileri belirlenirken en çok kullanılan öncel ilişkisi türü aşağıdakilerden hangisidir?", options: ["A) Başlangıç-başlangıç", "B) Değerlendirme-sonuç", "C) İzleme-kontrol", "D) Bitiş-başlangıç", "E) Gelişme-bitiş"], ans: "D) Bitiş-başlangıç", exp: "Yazılımlarda en sık kullanılan standart ilişki 'Bitiş-Başlangıç' (Finish-to-Start) türüdür.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi gerçekleştirme aşamasının unsurlarından birisi değildir?", options: ["A) Kullanıcı ara yüzleri", "B) Kod teftişi", "C) Veri tabanı dosyaları", "D) Bileşenler", "E) Raporlar"], ans: "B) Kod teftişi", exp: "Kod teftişi gerçekleştirme (inşa) evresinin değil, sonrasındaki 'Test / Kalite Kontrol' aşamasının unsurudur.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Bir cep telefonu firmasının büyük veri vb. gelişmelerin ardından daha hafif ve daha yüksek bellekli bir cep telefonu üretmek için yeni bir projeye onay vermesi aşağıdakilerden hangisi ile ifade edilebilir?", options: ["A) Teknolojik ilerleme", "B) Organizasyonun ihtiyacı", "C) Çevre üzerindeki etkiler", "D) Pazardaki talep", "E) Müşterilerin talebi"], ans: "A) Teknolojik ilerleme", exp: "Büyük veri vb. yeni teknolojilere ayak uydurmak 'Teknolojik İlerleme' kaynaklı projedir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdaki modellerin hangileri aynı kategori içerisinde yer alır?", options: ["A) Şelale Modeli - V Model", "B) Modüler Geliştirme Modelleri - Spiral Model", "C) Evrimsel Geliştirme Modeli - Spiral Model", "D) V Model- Spiral Model", "E) Kod Eksenli Geliştirme Modeli - Evrimsel Geliştirme Modeli"], ans: "A) Şelale Modeli - V Model", exp: "İkisi de aşamaların birbirini izlediği Geleneksel/Doğrusal (Linear) modeller kategorisindedir.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi bir paydaş sınıflandırma modeli değildir?", options: ["A) Güç/katılım tablosu", "B) Analiz modeli", "C) Katılım/etki tablosu", "D) Güç çıkar tablosu", "E) Güç, aciliyet ve meşruiyet düzeylerini ele alan model"], ans: "B) Analiz modeli", exp: "Analiz Modeli PMI'da geçen özel bir matris adı değil, aşırı genel uydurma bir tanımdır.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi risklerin tanımlanması kısmında kullanılan bir girdi değildir?", options: ["A) Çevresel İşletme Faktörleri", "B) Maliyet Yönetimi Planı", "C) Paydaş Listesi", "D) Zaman Çizelgesi Yönetimi Planı", "E) Eski Risk Analizleri"], ans: "E) Eski Risk Analizleri", exp: "Eski analizler Organizasyonel Süreç Varlıklarının içine gömülüdür, doğrudan ayrı bir plan girdisi belgesi değildir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi ayrıntılı proje kapsam bildiriminde bulunan maddelerden biri değildir?", options: ["A) Proje teslimatları", "B) Ürün kabul kriterleri", "C) Proje kısıtları", "D) Proje varsayımları", "E) Ürün reklam çalışmaları"], ans: "E) Ürün reklam çalışmaları", exp: "Reklam, pazarlamanın işidir. Teknik sınırları çizen proje kapsam bildiriminde bulunmaz.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Projede risk yönetiminin nasıl yapılandırılacağını ve gerçekleşeceğini açıklamak için izlenen yol aşağıdakilerden hangisidir?", options: ["A) Risk olasılığı ve etkisinin tanımlanması", "B) Risk kategorileri", "C) Risk kırılım yapısı", "D) Risklerin tanımlanması", "E) Risk yönetim planı"], ans: "E) Risk yönetim planı", exp: "Risk bütçesinin ve sürecin kurallarını belirleyen ana belge 'Risk Yönetim Planı'dır.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi ürün kapsam tanımı, hizmet tanımı, sonuç tanımı kabul kriterleri hakkında önemli bilgiler içeren girdi olarak gösterilmektedir?", options: ["A) Kapsam temel çizgisi", "B) Risk analizi", "C) İş birliği anlaşmaları", "D) Projenin diğer planlama çizelgeleri", "E) Gereksinim dokümantasyonu"], ans: "A) Kapsam temel çizgisi", exp: "Kapsam bildirimlerini içinde barındıran onaylı sınır dokümanı Kapsam Temel Çizgisidir.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Kalite, bir ürün veya hizmetin belirlenen veya olabilecek..... karşılama kabiliyetine dayanan özelliklerin toplamıdır. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", options: ["A) listeleri", "B) analizleri", "C) verileri", "D) paydaşları", "E) ihtiyaçları"], ans: "E) ihtiyaçları", exp: "Kalite, ürünün müşteri veya sistemin 'ihtiyaçlarına' uygun olma durumudur.", exams: ["Büt", "2 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi yazılım proje yönetiminde yer alan bir plan değildir?", options: ["A) Test planı", "B) Zaman planı", "C) Risk planı", "D) Satın alma planı", "E) Maliyet planı"], ans: "D) Satın alma planı", exp: "Proje yönetimi evraklarında 'satın alma' değil 'Tedarik Yönetimi Planı' terimi kullanılır.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi İnsan İlişkileri Okulu'ndaki temel prensiplerden biri değildir?", options: ["A) Ürünler mutlaka standartlaştırılmalıdır.", "B) Parasal kazanç ve çevre şartları, gruba aidiyet kadar önemli değildir.", "C) Gayri resmi ve kendi kendine oluşan gruplar güçlü etkilere sahiptir.", "D) Yöneticinin kendisiyle ilgilendiğini hissetmek, kişinin çalışma verimini arttırır.", "E) Kişiler tecrit edilemez. Grup olarak görülmelidir."], ans: "A) Ürünler mutlaka standartlaştırılmalıdır.", exp: "İnsanı değil, ürünün ve işin standartlaşmasını merkeze alan okul Taylor'ın 'Bilimsel Yönetim' okuludur.", exams: ["Büt", "1 Kez Çıktı!"] },
+            { q: "Aşağıdakilerden hangisi ISO 21500 toplantısına katılımcı ülkeler arasında bulunmamaktadır?", options: ["A) İsrail", "B) Finlandiya", "C) Türkiye", "D) Japonya", "E) Brezilya"], ans: "A) Türkiye", exp: "Türkiye, ISO 21500 standart komitesinde yer alan ülkeler listesinde sayılmamaktadır.", exams: ["Vize", "2 Kez Çıktı!"] }
+
+        ];
+
+        let allAnswersVisible = false;
+
+        function filterQuestions(type, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            let filtered = sorular;
+            if (type !== 'all') {
+                filtered = sorular.filter(soru => 
+                    soru.exams.some(exam => exam.toLowerCase().includes(type.toLowerCase()))
+                );
+            }
+
+            filtered.forEach((soru, index) => {
+                let tagsHtml = soru.exams.map(exam => {
+                    if(exam.includes("Kez Çıktı")) {
+                        return `<span class="exam-tag freq-tag">🔥 ${exam}</span>`;
+                    }
+                    return `<span class="exam-tag">${exam}</span>`;
+                }).join('');
+
+                let optionsHtml = soru.options.map(opt => `<li>${opt}</li>`).join('');
+                
+                let displayState = allAnswersVisible ? 'block' : 'none';
+                let btnText = allAnswersVisible ? 'Cevabı ve Açıklamayı Gizle' : 'Cevabı ve Açıklamayı Göster';
+                let btnColor = allAnswersVisible ? '#34495e' : '#0984e3';
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="q-header">
+                        <div class="exam-tags">${tagsHtml}</div>
+                    </div>
+                    <p class="question-text">${index + 1}. ${soru.q}</p>
+                    <ul class="options">${optionsHtml}</ul>
+                    <button class="btn-toggle" style="background-color: ${btnColor}" onclick="toggleSingleAnswer(this)">${btnText}</button>
+                    <div class="answer-area" style="display: ${displayState}">
+                        <p class="correct-ans">✔️ Doğru Cevap: ${soru.ans}</p>
+                        <p class="exp-text">💡 <strong>Açıklama:</strong> ${soru.exp}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleSingleAnswer(btn) {
+            const targetDiv = btn.nextElementSibling;
+            if (targetDiv.style.display === 'none' || targetDiv.style.display === '') {
+                targetDiv.style.display = 'block';
+                btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                btn.style.backgroundColor = '#34495e';
+            } else {
+                targetDiv.style.display = 'none';
+                btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                btn.style.backgroundColor = '#0984e3';
+            }
+        }
+
+        function toggleAllAnswers() {
+            allAnswersVisible = !allAnswersVisible;
+            const globalBtn = document.getElementById('globalToggleBtn');
+            const allAnswerAreas = document.querySelectorAll('.answer-area');
+            const allToggleBtns = document.querySelectorAll('.btn-toggle');
+
+            if (allAnswersVisible) {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Gizle';
+                globalBtn.style.backgroundColor = '#34495e';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'block');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Gizle';
+                    btn.style.backgroundColor = '#34495e';
+                });
+            } else {
+                globalBtn.textContent = 'Tüm Cevapları ve Açıklamaları Göster';
+                globalBtn.style.backgroundColor = 'var(--global-btn)';
+                
+                allAnswerAreas.forEach(area => area.style.display = 'none');
+                allToggleBtns.forEach(btn => {
+                    btn.textContent = 'Cevabı ve Açıklamayı Göster';
+                    btn.style.backgroundColor = '#0984e3';
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const allBtn = document.querySelector('.tab-btn.active');
+            filterQuestions('all', allBtn);
+        });
+    </script>
+</body>
+</html>
