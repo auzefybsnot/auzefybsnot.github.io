@@ -952,7 +952,8 @@ footer a:hover { color: var(--amber); }
   <div class="tabs">
     <button class="tab-btn active" id="tab-guz" onclick="switchTab('guz')">🍂 Güz Dönemi (7 Ders • 7/7 Tamamlandı)</button>
     <button class="tab-btn" id="tab-bahar" onclick="switchTab('bahar')">🌸 Bahar Dönemi (7 Ders • 7/7 Tamamlandı)</button>
-  </div>
+    <button class="tab-btn" id="tab-all" onclick="switchTab('all')">📚 Tüm Dönemler</button>
+</div>
 
   <!-- Güz Paneli -->
   <div id="panel-guz">
@@ -1357,25 +1358,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script>
 function switchTab(t) {
-  const isGuz = (t === 'guz');
-  document.getElementById('panel-guz').style.display = isGuz ? 'block' : 'none';
-  document.getElementById('panel-bahar').style.display = isGuz ? 'none' : 'block';
-  document.getElementById('tab-guz').classList.toggle('active', isGuz);
-  document.getElementById('tab-bahar').classList.toggle('active', !isGuz);
+  const panelGuz = document.getElementById('panel-guz');
+  const panelBahar = document.getElementById('panel-bahar');
+  const tabGuz = document.getElementById('tab-guz');
+  const tabBahar = document.getElementById('tab-bahar');
+  const tabAll = document.getElementById('tab-all');
+  
+  if (t === 'bahar') {
+    if (panelBahar) panelBahar.style.display = 'block';
+    if (panelGuz) panelGuz.style.display = 'none';
+    if (tabBahar) tabBahar.classList.add('active');
+    if (tabGuz) tabGuz.classList.remove('active');
+    if (tabAll) tabAll.classList.remove('active');
+  } else if (t === 'guz') {
+    if (panelBahar) panelBahar.style.display = 'none';
+    if (panelGuz) panelGuz.style.display = 'block';
+    if (tabGuz) tabGuz.classList.add('active');
+    if (tabBahar) tabBahar.classList.remove('active');
+    if (tabAll) tabAll.classList.remove('active');
+  } else {
+    // all
+    if (panelBahar) panelBahar.style.display = 'block';
+    if (panelGuz) panelGuz.style.display = 'block';
+    if (tabAll) tabAll.classList.add('active');
+    if (tabBahar) tabBahar.classList.remove('active');
+    if (tabGuz) tabGuz.classList.remove('active');
+  }
 }
 
 const classSearch = document.getElementById('class-search');
 if (classSearch) {
   classSearch.addEventListener('input', function(e) {
     const q = e.target.value.trim().toLowerCase();
-    document.querySelectorAll('.course-card').forEach(function(card) {
-      const s = card.getAttribute('data-search') || '';
-      if (!q || s.includes(q)) {
+    const panelGuz = document.getElementById('panel-guz');
+    const panelBahar = document.getElementById('panel-bahar');
+    
+    if (q) {
+      if (panelGuz) panelGuz.style.display = 'block';
+      if (panelBahar) panelBahar.style.display = 'block';
+      document.querySelectorAll('.course-card').forEach(function(card) {
+        const s = (card.getAttribute('data-search') || '') + ' ' + card.innerText.toLowerCase();
+        if (s.includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    } else {
+      const activeTab = document.querySelector('.tab-btn.active');
+      if (activeTab && activeTab.id === 'tab-bahar') switchTab('bahar');
+      else if (activeTab && activeTab.id === 'tab-all') switchTab('all');
+      else switchTab('guz');
+      document.querySelectorAll('.course-card').forEach(function(card) {
         card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
-    });
+      });
+    }
   });
 }
+
+window.addEventListener('DOMContentLoaded', function() {
+  const hash = (window.location.hash || '').toLowerCase();
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get('tab');
+  if (hash === '#bahar' || tab === 'bahar') {
+    switchTab('bahar');
+  } else if (hash === '#all' || tab === 'all') {
+    switchTab('all');
+  }
+});
 </script>
