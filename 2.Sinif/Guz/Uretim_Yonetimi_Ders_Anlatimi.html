@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Üretim Yönetimi (AYBS3004) - AUZEF Kapsamlı Ders Anlatımı ve Soru Havuzu</title>
+<style>
+:root {
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --text: #1A202C;
+  --text-muted: #4A5568;
+  --border: #E2E8F0;
+  --primary: #2B6CB0;
+  --primary-light: #EBF8FF;
+  --accent: #C05621;
+  --accent-light: #FEEBC8;
+  --success: #276749;
+  --success-light: #F0FFF4;
+  --danger: #9B2C2C;
+  --danger-light: #FFF5F5;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Georgia", "Bookerly", serif;
+  --font-mono: "Consolas", "Courier New", monospace;
+  --font-size: 16px;
+  --line-height: 1.65;
+  --max-w: 1040px;
+}
+
+[data-theme="dark"] {
+  --bg: #1A202C;
+  --surface: #2D3748;
+  --text: #F7FAFC;
+  --text-muted: #A0AEC0;
+  --border: #4A5568;
+  --primary: #63B3ED;
+  --primary-light: #2A4365;
+  --accent: #F6AD55;
+  --accent-light: #7B341E;
+  --success: #68D391;
+  --success-light: #22543D;
+  --danger: #FEB2B2;
+  --danger-light: #742A2A;
+}
+
+/* DEVICE PROFILES */
+[data-device="eink-6-bw"] {
+  --bg: #FFFFFF !important;
+  --surface: #FFFFFF !important;
+  --text: #000000 !important;
+  --text-muted: #222222 !important;
+  --border: #000000 !important;
+  --primary: #000000 !important;
+  --primary-light: #EEEEEE !important;
+  --accent: #000000 !important;
+  --accent-light: #EEEEEE !important;
+  --font-body: var(--font-serif) !important;
+  --font-size: 17px !important;
+  --max-w: 600px !important;
+}
+[data-device="eink-6-bw"] * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+[data-device="eink-6-color"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 16.5px !important;
+  --max-w: 640px !important;
+}
+
+[data-device="eink-10-bw"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 18px !important;
+  --max-w: 860px !important;
+}
+
+[data-device="mobile"] {
+  --font-size: 15px !important;
+  --max-w: 100% !important;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  padding-bottom: 80px;
+}
+
+.shell { max-width: var(--max-w); margin: 0 auto; padding: 0 16px; }
+
+/* TOP BAR */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  margin-bottom: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.bar-left, .bar-right { display: flex; align-items: center; gap: 8px; }
+.back-btn {
+  text-decoration: none; color: var(--text); font-weight: 700; font-size: 13px;
+  padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg); display: inline-flex; align-items: center; gap: 4px;
+}
+.back-btn:hover { border-color: var(--primary); color: var(--primary); }
+.sel {
+  padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font-size: 13px; font-weight: 600;
+  max-width: 280px;
+}
+.btn {
+  cursor: pointer; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600;
+}
+.btn:hover { background: var(--bg); }
+
+/* DEVICE MENU */
+.device-menu-wrap { position: relative; }
+.device-menu {
+  display: none; position: absolute; right: 0; top: calc(100% + 6px);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12); min-width: 220px; z-index: 200; overflow: hidden;
+}
+.device-menu.open { display: block; }
+.device-menu-head {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-muted);
+  padding: 8px 12px; background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.device-opt {
+  display: block; width: 100%; text-align: left; padding: 8px 12px; border: none;
+  background: none; font-size: 13px; color: var(--text); cursor: pointer;
+}
+.device-opt:hover { background: var(--primary-light); color: var(--primary); }
+
+/* BANNER */
+.course-banner {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.eyebrow { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 6px; }
+.course-banner h1 { font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+.course-meta { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+/* UNITS */
+.unit { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 30px; }
+.unit.on { display: block; }
+.uhead { border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
+.uhead .num { display: inline-block; font-size: 12px; font-weight: 800; color: var(--accent); background: var(--accent-light); padding: 3px 8px; border-radius: 4px; margin-bottom: 6px; }
+.uhead h2 { font-size: 22px; font-weight: 800; color: var(--text); }
+.lead-box { background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 15px; }
+
+h3 { font-size: 18px; font-weight: 800; color: var(--primary); margin: 24px 0 12px; border-left: 3px solid var(--accent); padding-left: 10px; }
+h4 { font-size: 15px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
+p { margin-bottom: 12px; }
+ul, ol { margin: 10px 0 16px 24px; }
+li { margin-bottom: 6px; }
+
+/* BOXES */
+.box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; border: 1px solid var(--border); }
+.box.formul { background: var(--surface); border-left: 4px solid var(--primary); }
+.box.tuzak { background: var(--danger-light); border-color: var(--danger); border-left: 4px solid var(--danger); }
+.box.tuzak h4 { color: var(--danger); }
+.box.ornek { background: var(--primary-light); border-left: 4px solid #1976D2; }
+.f { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; background: var(--surface); }
+th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { background: var(--bg); font-weight: 800; color: var(--text); }
+
+/* QUESTIONS */
+details.sq {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  margin: 12px 0; overflow: hidden;
+}
+details.sq summary {
+  padding: 12px 16px; cursor: pointer; font-weight: 600; list-style: none;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+details.sq summary::-webkit-details-marker { display: none; }
+.qno { font-size: 11px; font-weight: 800; background: var(--primary); color: #fff; padding: 2px 7px; border-radius: 4px; }
+.qtitle { flex: 1; font-size: 14px; color: var(--text); }
+.qtag { font-size: 11px; background: var(--border); color: var(--text-muted); padding: 2px 6px; border-radius: 4px; }
+.sqbody { padding: 14px 16px; background: var(--surface); border-top: 1px solid var(--border); }
+ul.o { list-style: none; margin: 0 0 12px 0; }
+ul.o li { padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 14px; }
+ul.o li.ok { background: var(--success-light); color: var(--success); font-weight: 700; border: 1px solid var(--success); }
+.exp { font-size: 13px; line-height: 1.5; color: var(--text); background: var(--bg); padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--success); }
+
+/* UNIT PAGER */
+.unit-pager {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header class="top-bar">
+    <div class="bar-left">
+      <a href="../../2.Sinif/index.html" class="back-btn" title="2. Sınıf Ders Listesine Dön">← 2. Sınıf Portal</a>
+      <select id="unitSel" class="sel" onchange="goUnit(parseInt(this.value))">
+        <option value="0">1. Ünite: İşlemler Yönetimi: Temel Kavramlar ve Verimlilik</option><option value="1">2. Ünite: Küreselleşme ve Üretim Stratejileri</option><option value="2">3. Ünite: Rekabet Stratejileri ve Operasyonel Öncelikler</option><option value="3">4. Ünite: Üretimde Stratejik Kararlar ve Süreç Seçimi</option><option value="4">5. Ünite: Ürün ve Hizmet Tasarımı (Eşzamanlı Mühendislik)</option><option value="5">6. Ünite: Proses ve Teknoloji: İş Tasarımı ve Metot Etüdü</option><option value="6">7. Ünite: Tesis Yeri Seçimi ve Tesis Yerleşimi Düzenleri</option><option value="7">8. Ünite: Proje Yönetimi: CPM ve PERT Ağ Analizleri</option><option value="8">9. Ünite: Tedarik Zinciri Yönetimi ve Kamçı (Bullwhip) Etkisi</option><option value="9">10. Ünite: Talep Tahmin Yöntemleri (Nitel ve Nicel Modeller)</option><option value="10">11. Ünite: Kapasite Yönetimi ve Toplam Planlama</option><option value="11">12. Ünite: Stok Yönetimi ve Ekonomik Sipariş Miktarı (EOQ)</option><option value="12">13. Ünite: Malzeme İhtiyaç Planlaması (MRP) ve JIT / Yalın Üretim</option><option value="13">14. Ünite: Kurumsal Kaynak Planlaması (ERP) ve Toplam Kalite Yönetimi</option>
+      </select>
+    </div>
+    <div class="bar-right">
+      <div class="device-menu-wrap">
+        <button class="btn icon" id="devBtn" onclick="toggleDevMenu()" title="Cihaz Profili">📱 Mod</button>
+        <div class="device-menu" id="devMenu">
+          <div class="device-menu-head">Cihaz Görünüm Profili</div>
+          <button class="device-opt" onclick="setDevice('desktop')">💻 Masaüstü Web</button>
+          <button class="device-opt" onclick="setDevice('mobile')">📱 Mobil Ekran</button>
+          <button class="device-opt" onclick="setDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B Bookerly)</button>
+          <button class="device-opt" onclick="setDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+          <button class="device-opt" onclick="setDevice('eink-10-bw')">📝 10.3" Tablet (S/B)</button>
+        </div>
+      </div>
+      <button class="btn icon" id="themeBtn" onclick="toggleTheme()" title="Koyu / Açık Tema">🌓 Tema</button>
+    </div>
+  </header>
+
+  <div class="course-banner">
+    <p class="eyebrow">AUZEF &middot; Yönetim Bilişim Sistemleri &middot; 2. Sınıf Güz (AYBS3004)</p>
+    <h1>Üretim Yönetimi</h1>
+    <p class="course-meta">Eksiksiz 14 Ünite Ders Notları • Süreç Seçimi • Tesis Yerleşimi • CPM/PERT • EOQ Stok ve Tahmin Modelleri • Çözümlü Çıkmış Sorular</p>
+  </div>
+
+  <main id="content">
+    
+<section class="unit on" data-i="0" id="u0">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 01</span>
+    <h2>İşlemler (Üretim) Yönetimi: Temel Kavramlar ve Verimlilik</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Üretim (işlemler) yönetimi; girdilerin (hammadde, işgücü, sermaye, enerji, bilgi) dönüştürme süreci aracılığıyla müşterilere değer katan çıktılara (mal ve hizmetlere) dönüştürülmesi faaliyetlerinin planlanması, organize edilmesi ve kontrolüdür.</p>
+  </div>
+
+  <h3>1.1. Üretim Sistemi Modeli</h3>
+  <div class="box formul">
+    <p style="text-align:center; font-size:16px; font-weight:800;">
+      GİRDİLER &rarr; DÖNÜŞTÜRME SÜRECİ &rarr; ÇIKTILAR (Geri Bildirim / Kontrol)
+    </p>
+    <ul>
+      <li><strong>Girdiler:</strong> İnsan kaynakları, hammadde, makine/teçhizat, tesisler, enerji, finansal sermaye, bilgi.</li>
+      <li><strong>Dönüştürme Süreci:</strong> Fiziksel (imalat), yer değiştirme (ulaşım/lojistik), depolama (antrepo), sahiplik değişimi (perakende), fizyolojik (sağlık/hastane), psikolojik (eğlence).</li>
+      <li><strong>Çıktılar:</strong> Somut mallar veya soyut hizmetler.</li>
+    </ul>
+  </div>
+
+  <h3>1.2. İmalat (Mal) Üretimi ile Hizmet Üretiminin Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Ölçüt</th>
+        <th>İmalat (Mal Üretimi)</th>
+        <th>Hizmet Üretimi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Çıktının Niteliği</strong></td>
+        <td>Somut (Gözle görülür, elle tutulur)</td>
+        <td>Soyut (Hissedilir, yaşanır)</td>
+      </tr>
+      <tr>
+        <td><strong>Müşteri Teması</strong></td>
+        <td>Düşük (Fabrika müşteriden uzaktadır)</td>
+        <td>Yüksek (Müşteri dönüşüm sürecinin içindedir)</td>
+      </tr>
+      <tr>
+        <td><strong>Stoklanabilirlik</strong></td>
+        <td>Depolanabilir, stoklanabilir</td>
+        <td>Depolanamaz, tüketildiği anda yok olur</td>
+      </tr>
+      <tr>
+        <td><strong>Kalite Ölçümü</strong></td>
+        <td>Kolay ve objektif standartlar</td>
+        <td>Zor ve sübjektif algı</td>
+      </tr>
+      <tr>
+        <td><strong>Üretim ve Tüketim</strong></td>
+        <td>Üretim ve tüketim zaman/mekan olarak ayrıdır</td>
+        <td>Üretim ve tüketim eşzamanlıdır</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.3. Verimlilik (Productivity) Hesaplamaları</h3>
+  <div class="box formul">
+    <h4>Verimlilik Formülü:</h4>
+    <p style="text-align:center; font-size:18px; font-weight:800;">
+      <span class="f">Verimlilik = Üretilen Çıktı Miktarı / Kullanılan Girdi Miktarı</span>
+    </p>
+    <ul>
+      <li><strong>Kısmi Verimlilik:</strong> Tek bir girdiye göre (örn. İşgücü Verimliliği = Çıktı / Çalışma Saati).</li>
+      <li><strong>Çok Faktörlü Verimlilik:</strong> Birden fazla girdiye göre (örn. Çıktı / [İşgücü + Malzeme + Enerji]).</li>
+      <li><strong>Toplam Verimlilik:</strong> Toplam Çıktı Değeri / Toplam Girdi Değeri.</li>
+    </ul>
+  </div>
+
+  <div class="box ornek">
+    <h4>Sayısal Örnek: Verimlilik Artışı</h4>
+    <p>Bir atölye haftada 40 saat çalışan 4 işçi ile 800 adet parça üretmektedir. İşçi sayısı 5'e çıkarıldığında üretim 1.200 adede yükselmiştir. İşgücü verimliliği nasıl değişmiştir?</p>
+    <ol class="adim">
+      <li><strong>Önceki Durum:</strong> Toplam saat = 4 &times; 40 = 160 saat. Verimlilik<sub>1</sub> = <span class="f">800 / 160 = 5 parça/saat</span></li>
+      <li><strong>Sonraki Durum:</strong> Toplam saat = 5 &times; 40 = 200 saat. Verimlilik<sub>2</sub> = <span class="f">1.200 / 200 = 6 parça/saat</span></li>
+      <li><strong>Artış Oranı:</strong> [(6 &minus; 5) / 5] &times; 100 = <span class="f">%20 verimlilik artışı</span> sağlanmıştır.</li>
+    </ol>
+  </div>
+
+  
+  <h3>1.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Üretim sisteminde girdilerin çıktılara dönüştürülmesinde aşağıdakilerden hangisi bir dönüştürme türü DEĞİLDİR?</span>
+      <span class="qtag">Ünite 1 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Fiziksel dönüşüm</li>
+<li><strong>B)</strong> Yer değiştirme</li>
+<li><strong>C)</strong> Depolama</li>
+<li class="ok"><strong>D)</strong> Tüketim</li>
+<li><strong>E)</strong> Fizyolojik dönüşüm</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Tüketim bir girdi-dönüşüm faaliyeti değil, nihai kullanıcı eylemidir. Doğru seçenek <strong>D</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Haftada 40 saat çalışan 4 işçi ile 800 adet ürün üreten bir atölyede işgücü verimliliği kaçtır?</span>
+      <span class="qtag">Ünite 1 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> 4 parça/saat</li>
+<li class="ok"><strong>B)</strong> 5 parça/saat</li>
+<li><strong>C)</strong> 6 parça/saat</li>
+<li><strong>D)</strong> 8 parça/saat</li>
+<li><strong>E)</strong> 10 parça/saat</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Toplam saat = 4 * 40 = 160 saat. Verimlilik = 800 / 160 = 5 parça/saattir. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="1" id="u1">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 02</span>
+    <h2>Küreselleşme ve Üretim Stratejileri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Küreselleşme; ticaret engellerinin azalması, taşımacılık ve iletişim maliyetlerinin düşmesiyle işletmelerin tedarik, üretim ve satış operasyonlarını dünya çapında optimize etmesini zorunlu kılmıştır.</p>
+  </div>
+
+  <h3>2.1. Küreselleşmenin Üretim Yönetimine Etkileri</h3>
+  <ul>
+    <li><strong>Dış Kaynak Kullanımı (Offshoring / Outsourcing):</strong> Düşük işgücü maliyeti veya uzmanlık avantajı olan ülkelere üretimin kaydırılması.</li>
+    <li><strong>Küresel Tedarik Zincirleri:</strong> Hammaddenin bir ülkeden, parçaların başka ülkeden temin edilip üçüncü bir ülkede montajlanması.</li>
+    <li><strong>Kültürel ve Yasal Uyum:</strong> Farklı ülkelerin çevre, iş güvenliği ve kalite standartlarına entegrasyon.</li>
+  </ul>
+
+  
+  <h3>2.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Bir işletmenin temel yetenekleri dışındaki faaliyetlerini başka uzman firmalara devretmesine ne ad verilir?</span>
+      <span class="qtag">Ünite 2 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Offshoring</li>
+<li class="ok"><strong>B)</strong> Dış Kaynak Kullanımı (Outsourcing)</li>
+<li><strong>C)</strong> Downsizing</li>
+<li><strong>D)</strong> Benchmarking</li>
+<li><strong>E)</strong> Reengineering</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        İşletmenin uzman olmadığı işleri dışarıya yaptırması Dış Kaynak Kullanımıdır. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="2" id="u2">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 03</span>
+    <h2>Rekabet Stratejileri ve Operasyonel Öncelikler</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>İşletmeler pazarda rekabet avantajı elde edebilmek için operasyonel stratejilerini belirli temel rekabet öncelikleri etrafında kurgularlar.</p>
+  </div>
+
+  <h3>3.1. Dört Temel Rekabet Önceliği (Boyutu)</h3>
+  <ol class="adim">
+    <li><strong>1. Maliyet (Düşük Fiyat):</strong> Ölçek ekonomisi, yüksek kapasite kullanımı, israfın önlenmesi ve otomasyon ile rakiplerden ucuza üretme (Ryanair, Walmart, BİM).</li>
+    <li><strong>2. Kalite:</strong>
+      <ul>
+        <li><em>Tasarım Kalitesi:</em> Ürünün üstün performans, lüks ve seçkin özellikleri (Mercedes, Apple).</li>
+        <li><em>Uygunluk Kalitesi:</em> Ürünün belirlenen spesifikasyonlara ve toleranslara kusursuz uyması (Hatasız üretim, Six Sigma).</li>
+      </ul>
+    </li>
+    <li><strong>3. Zaman (Hız ve Güvenilirlik):</strong> Hızlı teslimat, yeni ürünü pazara sunma hızı ve söz verilen teslimat tarihine tam uyum (Amazon Prime, Zara hızlı moda).</li>
+    <li><strong>4. Esneklik:</strong>
+      <ul>
+        <li><em>Ürün Esnekliği:</em> Müşteri talebine göre ürünü özelleştirebilme kabiliyeti.</li>
+        <li><em>Hacim Esnekliği:</em> Talepteki ani artış veya azalışlara üretim kapasitesini hızla uyarlayabilme.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: Sipariş Kazandıran vs. Sipariş Niteleyen Kriterler (Terry Hill)</h4>
+    <ul>
+      <li><strong>Sipariş Niteleyen (Order Qualifiers):</strong> İşletmenin o pazarda bir tedarikçi olarak dikkate alınabilmesi için sağlaması gereken <em>asgari şartlardır</em> (örn. ISO belgesi, temel güvenlik). Siparişi tek başına kazandırmaz!</li>
+      <li><strong>Sipariş Kazandıran (Order Winners):</strong> Müşterinin rakip yerine doğrudan o işletmeyi tercih etmesini sağlayan <em>fark yaratan üstün kriterdir</em> (örn. en düşük fiyat veya en hızlı teslimat).</li>
+    </ul>
+  </div>
+
+  
+  <h3>3.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Müşterinin rakip işletmeler yerine doğrudan belirli bir işletmeyi tercih etmesini sağlayan üstün kritere ne ad verilir? (Çıkmış Soru)</span>
+      <span class="qtag">Ünite 3 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Sipariş niteleyen kriter</li>
+<li class="ok"><strong>B)</strong> Sipariş kazandıran kriter</li>
+<li><strong>C)</strong> Temel kriter</li>
+<li><strong>D)</strong> Gereklilik kriteri</li>
+<li><strong>E)</strong> Operasyonel kriter</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Siparişi fiilen kazandıran faktör 'Order Winner' (Sipariş Kazandıran Kriter)'dir. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="3" id="u3">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 04</span>
+    <h2>Üretimde Stratejik Kararlar ve Süreç Seçimi (Proses Tipleri)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Süreç seçimi; üretilecek ürünün çeşidine ve talep hacmine bağlı olarak fabrikanın fiziksel ve teknolojik yapısının nasıl organize edileceğini belirler.</p>
+  </div>
+
+  <h3>4.1. Dört Temel Proses Tipi</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Proses Tipi</th>
+        <th>Ürün Çeşidi</th>
+        <th>Üretim Hacmi</th>
+        <th>Ekipman Yapısı</th>
+        <th>Örnekler</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Proje Tipi</strong></td>
+        <td>Tekil, eşsiz ürün</td>
+        <td>Çok düşük (1 adet)</td>
+        <td>Sabit konumlu, hareketli ekipman</td>
+        <td>Gemi inşası, köprü, baraj, bina yapımı.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Atölye Tipi (Job Shop)</strong></td>
+        <td>Çok yüksek çeşitlilik</td>
+        <td>Çok düşük hacim (ısmarlama)</td>
+        <td>Genel amaçlı makineler, kalifiye işçi</td>
+        <td>Özel terzi, oto tamirhanesi, makine kalıp atölyesi.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Parti Tipi (Batch)</strong></td>
+        <td>Orta çeşitlilik</td>
+        <td>Orta hacim (partiler halinde)</td>
+        <td>Genel ve özel amaçlı karma</td>
+        <td>Fırınlar (ekmek/pasta partileri), ilaç üretimi, konfeksiyon.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Seri / Akış Tipi (Kütle / Montaj Hattı)</strong></td>
+        <td>Düşük çeşitlilik (Standart)</td>
+        <td>Çok yüksek hacim</td>
+        <td>Özel amaçlı makineler, konveyör bantlar</td>
+        <td>Otomobil montajı, televizyon fabrikası, beyaz eşya.</td>
+      </tr>
+      <tr>
+        <td><strong>5. Sürekli Akış Tipi</strong></td>
+        <td>Tek tip standart ürün</td>
+        <td>Kesintisiz, devasa hacim</td>
+        <td>Tam otomatik boru/tank sistemleri</td>
+        <td>Petrol rafinerisi, çimento, şeker, kimya tesisleri.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>4.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Tek tip ve son derece büyük miktarlarda kesintisiz üretimin yapıldığı petrol rafinerisi veya çimento fabrikası hangi proses tipine örnektir?</span>
+      <span class="qtag">Ünite 4 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Atölye Tipi</li>
+<li><strong>B)</strong> Parti Tipi</li>
+<li><strong>C)</strong> Montaj Hattı</li>
+<li class="ok"><strong>D)</strong> Sürekli Akış Tipi</li>
+<li><strong>E)</strong> Proje Tipi</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Petrol, kimya, çimento gibi kesintisiz tek tip akışlar Sürekli Proseslerdir. Doğru seçenek <strong>D</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="4" id="u4">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 05</span>
+    <h2>Ürün ve Hizmet Tasarımı: Eşzamanlı Mühendislik ve Tasarım İlkeleri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Ürün tasarımı; bir fikrin üretilebilir, satılabilir ve müşteri ihtiyaçlarını tatmin eden bir ürüne dönüştürülmesidir. Ürün maliyetinin %70-80'i henüz tasarım aşamasında belirlenir.</p>
+  </div>
+
+  <h3>5.1. Eşzamanlı Mühendislik (Concurrent Engineering)</h3>
+  <p>Geleneksel ardışık tasarımda Ar-Ge tasarımı bitirir, ardından üretime atar ("duvarın üzerinden fırlatma" yaklaşımı). Eşzamanlı mühendislikte ise <strong>pazarlama, tasarım, üretim, satın alma ve finans ekipleri baştan itibaren aynı anda</strong> çalışarak hataları önler ve pazara çıkış süresini kısaltır.</p>
+
+  <h3>5.2. İleri Tasarım İlkeleri</h3>
+  <ul>
+    <li><strong>Modüler Tasarım:</strong> Bağımsız parçaların (modüllerin) farklı kombinasyonlarla birleştirilerek çeşitlilik yaratılması (Bilgisayar toplama, IKEA mobilyaları).</li>
+    <li><strong>İmalat ve Montaj İçin Tasarım (DFMA):</strong> Parça sayısını azaltarak kolay ve hatasız monte edilebilir ürünler tasarlamak.</li>
+    <li><strong>Kalite Fonksiyonu Yayılımı (QFD - Kalite Evi):</strong> Müşterinin sesini (isteklerini) mühendislik parametrelerine dönüştüren matris yöntemi.</li>
+  </ul>
+
+  
+  <h3>5.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Pazarlama, tasarım, üretim ve satın alma ekiplerinin baştan itibaren birlikte çalıştığı modern tasarım yaklaşımı hangisidir?</span>
+      <span class="qtag">Ünite 5 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Tersine Mühendislik</li>
+<li class="ok"><strong>B)</strong> Eşzamanlı Mühendislik</li>
+<li><strong>C)</strong> Değer Analizi</li>
+<li><strong>D)</strong> Modüler Tasarım</li>
+<li><strong>E)</strong> Klasik Tasarım</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Tüm disiplinlerin paralel çalıştığı yaklaşım Eşzamanlı Mühendisliktir. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="5" id="u5">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 06</span>
+    <h2>Proses ve Teknoloji: İş Tasarımı ve Metot Etüdü</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>İş tasarımı; bireylerin veya grupların iş yerindeki görev, yetki ve çalışma koşullarını belirlerken; metot etüdü ve iş ölçümü gereksiz hareketleri eleyerek standart çalışma sürelerini tespit etmeyi amaçlar.</p>
+  </div>
+
+  <h3>6.1. Metot Etüdü ve İş Ölçümü (Zaman Etüdü)</h3>
+  <ol class="adim">
+    <li><strong>Metot Etüdü:</strong> Mevcut iş yapış şeklinin akış şemaları ve işlem şemalarıyla analiz edilerek gereksiz adımların atılması, birleştirilmesi veya sadeleştirilmesidir (F.W. Taylor & Gilbreth hareket analizi).</li>
+    <li><strong>Zaman Etüdü:</strong> Kalifiye bir işçinin normal bir tempoda belirli bir işi tamamlaması için gereken <strong>STANDART ZAMANI</strong> kronometre ölçümleriyle belirleme tekniğidir.</li>
+  </ol>
+
+  <div class="box formul">
+    <h4>Standart Zaman Formülü:</h4>
+    <p style="text-align:center;"><span class="f">Normal Zaman (NZ) = Ortalama Gözlenen Zaman &times; Performans (Tempo) Derecesi</span></p>
+    <p style="text-align:center;"><span class="f">Standart Zaman (SZ) = Normal Zaman &times; (1 + Tolerans Payı Oranı)</span></p>
+    <p style="font-size:13px; color:var(--ink-2); text-align:center;">*(Tolerans payları: kişisel ihtiyaçlar, yorgunluk ve kaçınılmaz gecikmeler)*</p>
+  </div>
+
+  
+  <h3>6.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Bir işin normal şartlarda kalifiye bir işçi tarafından yapılması için gereken standart süreyi belirleyen çalışma hangisidir?</span>
+      <span class="qtag">Ünite 6 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Metot Etüdü</li>
+<li class="ok"><strong>B)</strong> Zaman Etüdü (İş Ölçümü)</li>
+<li><strong>C)</strong> Ergonomi</li>
+<li><strong>D)</strong> İş Genişletme</li>
+<li><strong>E)</strong> İş Zenginleştirme</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Süre tespiti Zaman Etüdü (İş Ölçümü) ile yapılır. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="6" id="u6">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 07</span>
+    <h2>Tesis Yeri Seçimi ve Tesis Yerleşimi Düzenleri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Tesis yeri seçimi, işletmenin kuruluş yerinin pazara, hammaddeye ve işgücüne yakınlığı optimize edilerek belirlenmesidir. Tesis yerleşimi ise fabrika içindeki makinelerin ve departmanların malzeme akışını hızlandıracak şekilde konumlandırılmasıdır.</p>
+  </div>
+
+  <h3>7.1. Dört Temel Tesis İçi Yerleşim Düzeni</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Yerleşim Türü</th>
+        <th>Tanımı ve Özellikleri</th>
+        <th>Avantaj ve Dezavantajları</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Ürüne Göre (Akış Tipi / Hat) Yerleşim</strong></td>
+        <td>Makineler ürünün üretim işlem sırasına göre düz veya U şeklinde bir hat boyunca dizilir (Montaj hattı).</td>
+        <td><strong>Avantaj:</strong> Yüksek hız, düşük birim maliyet, minimum taşıma.<br><strong>Dezavantaj:</strong> Esneklik yok; hatta bir makine durursa tüm hat durur.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Sürece (Prosese / Fonksiyona) Göre Yerleşim</strong></td>
+        <td>Aynı işi yapan benzer makineler aynı bölümde toplanır (Tornalar bölümü, presler, boyahane).</td>
+        <td><strong>Avantaj:</strong> Yüksek ürün esnekliği, makine arızasında iş başka tezgaha kaydırılır.<br><strong>Dezavantaj:</strong> Malzeme taşıma maliyeti yüksek, ara stoklar çoktur.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Sabit Konumlu Yerleşim</strong></td>
+        <td>Ürün sabit bir yerde durur; işçiler, makineler ve malzemeler ürünün yanına getirilir.</td>
+        <td>Gemi yapımı, köprü, bina, uçak montajı.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Hücresel (Grup Teknolojisi) Yerleşim</strong></td>
+        <td>Farklı makineler benzer parça ailelerini üretmek üzere "U" şeklindeki hücrelerde birleştirilir.</td>
+        <td>Proses yerleşiminin esnekliği ile ürün yerleşiminin verimliliğini birleştirir.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>7.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aynı tür makinelerin ve fonksiyonların aynı bölümde toplandığı yerleşim düzeni hangisidir? (Çıkmış Soru)</span>
+      <span class="qtag">Ünite 7 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Ürüne Göre Yerleşim</li>
+<li class="ok"><strong>B)</strong> Prosese (Sürece) Göre Yerleşim</li>
+<li><strong>C)</strong> Sabit Konumlu Yerleşim</li>
+<li><strong>D)</strong> Hücresel Yerleşim</li>
+<li><strong>E)</strong> Montaj Hattı</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Fonksiyonel benzerliklere dayalı yerleşim Prosese Göre Yerleşimdir. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="7" id="u7">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 08</span>
+    <h2>Proje Yönetimi: CPM ve PERT Ağ Analizleri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Karmaşık projelerin zamanında ve bütçe dahilinde tamamlanabilmesi için faaliyetlerin öncelik-sonralık ilişkilerini gösteren ağ diyagramları (CPM ve PERT) kullanılır.</p>
+  </div>
+
+  <h3>8.1. CPM (Kritik Yol Yöntemi) ve Temel Kavramlar</h3>
+  <div class="box formul">
+    <dl>
+      <dt>Kritik Yol (Critical Path)</dt>
+      <dd>Ağ diyagramında baştan sona giden ve <strong>EN UZUN SÜREYİ</strong> alan faaliyetler zinciridir. Projenin minimum tamamlanma süresini belirler. Kritik yol üzerindeki faaliyetlerdeki herhangi bir gecikme projenin tamamını doğrudan geciktirir!</dd>
+      <dt>Bolluk (Aylak Zaman - Slack Time)</dt>
+      <dd>Bir faaliyetin projeyi geciktirmeden ne kadar ertelenebileceğini gösterir: <span class="f">Bolluk = En Geç Başlama &minus; En Erken Başlama = LF &minus; EF</span>. <strong>Kritik yol üzerindeki faaliyetlerin bolluğu DAİMA SIFIRDIR (Slack = 0)!</strong></dd>
+    </dl>
+  </div>
+
+  <h3>8.2. CPM ile PERT Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Ölçüt</th>
+        <th>CPM (Kritik Yol Yöntemi)</th>
+        <th>PERT (Program Değerlendirme ve Gözden Geçirme)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Süre Tahmini</strong></td>
+        <td><strong>Deterministik (Kesin):</strong> Faaliyet süreleri geçmiş deneyimlerden kesin olarak bilinir (İnşaat, bakım).</td>
+        <td><strong>Olasılıklı (Stokastik):</strong> Faaliyet süreleri belirsizdir; 3 farklı zaman tahmini yapılır (Ar-Ge projeleri).</td>
+      </tr>
+      <tr>
+        <td><strong>PERT Süre Formülü</strong></td>
+        <td>Tek süre kullanılır.</td>
+        <td><span class="f">Beklenen Süre (t<sub>e</sub>) = (a + 4m + b) / 6</span><br>*(a: İyimser, m: En olası, b: Kötümser süre)*</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>8.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Proje ağ diyagramında projenin minimum tamamlanma süresini belirleyen en uzun yola ne ad verilir? (Çıkmış Soru)</span>
+      <span class="qtag">Ünite 8 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li class="ok"><strong>A)</strong> Kritik Yol</li>
+<li><strong>B)</strong> Bolluk Yolu</li>
+<li><strong>C)</strong> Gevşek Yol</li>
+<li><strong>D)</strong> Aylak Yol</li>
+<li><strong>E)</strong> Optimum Yol</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        En uzun süreli zincir Kritik Yoldur; bolluğu daima sıfırdır. Doğru seçenek <strong>A</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="8" id="u8">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 09</span>
+    <h2>Tedarik Zinciri Yönetimi ve Kamçı (Bullwhip) Etkisi</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Tedarik zinciri; hammadde tedarikçisinden nihai tüketiciye kadar mal, hizmet ve bilgi akışını sağlayan kurumlar ağıdır.</p>
+  </div>
+
+  <h3>9.1. Kamçı (Kırbaç / Bullwhip) Etkisi</h3>
+  <div class="box formul">
+    <h4>Kamçı Etkisi Nedir?</h4>
+    <p>Nihai tüketici talebindeki küçük bir dalgalanmanın, tedarik zincirinde perakendeciden toptancıya, üreticiye ve hammaddeciye doğru yukarı çıktıkça <strong>katlanarak büyümesi ve devasa sipariş dalgalanmalarına dönüşmesi</strong> olgusudur.</p>
+    <h4>Nedenleri:</h4>
+    <ul>
+      <li>Talep tahminlerinin birbirinden bağımsız güncellenmesi,</li>
+      <li>Parti büyüklükleri ve ölçek ekonomisi siparişleri,</li>
+      <li>Fiyat dalgalanmaları ve promosyonlar,</li>
+      <li>Eksik bilgi paylaşımı ve tedarikçi güven eksikliği.</li>
+    </ul>
+    <h4>Çözüm Yolları:</h4>
+    <p>Tedarik zinciri boyunca bilgi paylaşımı (POS veri entegrasyonu), Satıcı Tarafından Yönetilen Envanter (VMI - Vendor Managed Inventory) ve küçük parti siparişleri.</p>
+  </div>
+
+  
+  <h3>9.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Tüketici talebindeki küçük bir dalgalanmanın tedarik zinciri boyunca yukarı çıktıkça devasa sipariş dalgalanmalarına dönüşmesine ne denir?</span>
+      <span class="qtag">Ünite 9 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Kelebek Etkisi</li>
+<li class="ok"><strong>B)</strong> Kamçı (Bullwhip) Etkisi</li>
+<li><strong>C)</strong> Pareto Kuralı</li>
+<li><strong>D)</strong> JIT Etkisi</li>
+<li><strong>E)</strong> Domino Etkisi</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Tedarik zincirindeki bilgi çarpıklığı Kamçı (Bullwhip) etkisidir. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="9" id="u9">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 10</span>
+    <h2>Talep Tahmin Yöntemleri: Nitel ve Nicel Tahmin Modelleri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Üretim planlaması, kapasite ve stok kararları gelecekteki talebin tahmin edilmesine dayanır. Tahmin yöntemleri nitel (sezgisel) ve nicel (matematiksel) olmak üzere ikiye ayrılır.</p>
+  </div>
+
+  <h3>10.1. Nitel (Kalitatif) Tahmin Yöntemleri</h3>
+  <ul>
+    <li><strong>Delphi Yöntemi:</strong> Bir grup uzmanın yüz yüze gelmeden, koordinatör aracılığıyla anonim anket turlarıyla ortak uzlaşmaya (konsensüs) varması tekniğidir (Baskın kişiliklerin etkisini önler).</li>
+    <li><strong>Yönetici Görüşü:</strong> Üst düzey yöneticilerin bilgi ve deneyimlerini birleştirerek karar alması.</li>
+    <li><strong>Satış Gücü Tahmini:</strong> Sahadaki satış temsilcilerinin müşteri geri bildirimlerine dayalı tahminleri.</li>
+    <li><strong>Pazar Araştırması:</strong> Tüketici anketleri ve mülakatları.</li>
+  </ul>
+
+  <h3>10.2. Nicel (Zaman Serisi) Tahmin Modelleri ve Formülleri</h3>
+
+  <h4>1. Basit Hareketli Ortalama:</h4>
+  <div class="box formul">
+    <p style="text-align:center;"><span class="f">F<sub>t</sub> = (A<sub>t-1</sub> + A<sub>t-2</sub> + ... + A<sub>t-n</sub>) / n</span></p>
+  </div>
+
+  <h4>2. Üssel Düzeltme (Eksponansiyel Düzeltme) Modeli:</h4>
+  <div class="box formul">
+    <p style="text-align:center; font-size:18px; font-weight:800;">
+      <span class="f">F<sub>t</sub> = F<sub>t-1</sub> + &alpha; &times; (A<sub>t-1</sub> &minus; F<sub>t-1</sub>)</span>
+    </p>
+    <ul>
+      <li>F<sub>t</sub>: Gelecek dönemin tahmini,</li>
+      <li>F<sub>t-1</sub>: Önceki dönemin tahmini,</li>
+      <li>A<sub>t-1</sub>: Önceki dönemin gerçekleşen fiili talebi,</li>
+      <li>&alpha;: Düzeltme katsayısı (0 &le; &alpha; &le; 1). &alpha; büyükse son verilere ağırlık verilir; &alpha; küçükse tahmin geçmişe karşı daha kararlıdır (stabil).</li>
+    </ul>
+  </div>
+
+  <div class="box ornek">
+    <h4>Sayısal Örnek: Üssel Düzeltme</h4>
+    <p>Geçen ayın tahmini 100 adet, gerçekleşen fiili satış 120 adettir. &alpha; = 0,20 olduğuna göre bu ayın tahmini kaçtır?</p>
+    <ol class="adim">
+      <li><strong>Adım 1:</strong> <span class="f">F<sub>t</sub> = 100 + 0,20 &times; (120 &minus; 100)</span></li>
+      <li><strong>Adım 2:</strong> <span class="f">F<sub>t</sub> = 100 + 0,20 &times; (20)</span></li>
+      <li><strong>Adım 3:</strong> <span class="f">F<sub>t</sub> = 100 + 4 = 104 adet</span> olarak hesaplanır.</li>
+    </ol>
+  </div>
+
+  
+  <h3>10.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Uzmanların bir araya gelmeden anonim anket turlarıyla ortak konsensüse vardığı nitel tahmin yöntemi hangisidir? (Çıkmış Soru)</span>
+      <span class="qtag">Ünite 10 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li class="ok"><strong>A)</strong> Delphi Yöntemi</li>
+<li><strong>B)</strong> Yönetici Görüşü</li>
+<li><strong>C)</strong> Pazar Testi</li>
+<li><strong>D)</strong> Satış Gücü</li>
+<li><strong>E)</strong> Üssel Düzeltme</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Anonim anket turlarıyla uzman görüşü toplama Delphi yöntemidir. Doğru seçenek <strong>A</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="10" id="u10">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 11</span>
+    <h2>Kapasite Yönetimi ve Toplam Planlama</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Kapasite; bir üretim sisteminin belirli bir zaman diliminde üretebileceği maksimum çıktı miktarıdır. Kapasite yetersizliği pazar kaybına, aşırı kapasite ise atıl maliyetlere yol açar.</p>
+  </div>
+
+  <h3>11.1. Üç Temel Kapasite Düzeyi</h3>
+  <div class="box formul">
+    <dl>
+      <dt>1. Tasarım (Teorik) Kapasitesi</dt>
+      <dd>İdeal çalışma koşullarında, hiçbir arıza, bakım ve duruş olmadan ulaşılabilecek maksimum teorik çıktıdır.</dd>
+      <dt>2. Efektif (Pratik) Kapasite</dt>
+      <dd>Planlı bakımlar, molalar, ürün değişimleri ve çalışma programı dikkate alındığında beklenen gerçekçi kapasitedir (Daima tasarım kapasitesinden küçüktür!).</dd>
+      <dt>3. Fiili Çıktı</dt>
+      <dd>Belirli bir dönemde fiilen üretilen gerçekleşmiş parça sayısıdır.</dd>
+    </dl>
+  </div>
+
+  <h3>11.2. Kapasite Kullanım Oranı ve Verimlilik Formülleri</h3>
+  <div class="box formul">
+    <h4>Kapasite Kullanım Oranı (Utilization):</h4>
+    <p style="text-align:center;"><span class="f">Kullanım Oranı = (Fiili Çıktı / Tasarım Kapasitesi) &times; 100</span></p>
+    <h4>Sistem Verimliliği (Efficiency):</h4>
+    <p style="text-align:center;"><span class="f">Verimlilik = (Fiili Çıktı / Efektif Kapasite) &times; 100</span></p>
+  </div>
+
+  <div class="box ornek">
+    <h4>Sayısal Örnek</h4>
+    <p>Bir fırının teorik tasarım kapasitesi günde 1.000 ekmek, efektif kapasitesi 800 ekmektir. Fırın dün fiilen 720 ekmek üretmiştir:</p>
+    <ol class="adim">
+      <li><strong>Kullanım Oranı:</strong> <span class="f">(720 / 1.000) &times; 100 = %72</span></li>
+      <li><strong>Verimlilik:</strong> <span class="f">(720 / 800) &times; 100 = %90</span> olarak bulunur.</li>
+    </ol>
+  </div>
+
+  
+  <h3>11.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Tasarım kapasitesi 1.000 adet, efektif kapasitesi 800 adet olan bir tesiste fiili üretim 720 adet ise verimlilik (efficiency) yüzde kaçtır?</span>
+      <span class="qtag">Ünite 11 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> %72</li>
+<li><strong>B)</strong> %80</li>
+<li class="ok"><strong>C)</strong> %90</li>
+<li><strong>D)</strong> %85</li>
+<li><strong>E)</strong> %75</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Verimlilik = Fiili Çıktı / Efektif Kapasite = (720 / 800) * 100 = %90'dır. Doğru seçenek <strong>C</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="11" id="u11">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 12</span>
+    <h2>Stok Yönetimi ve Ekonomik Sipariş Miktarı (EOQ) Modeli</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Stoklar; arz ve talep arasındaki zaman uyumsuzluklarını dengelemek için tutulan hammaddeler, yarı mamuller ve bitmiş ürünlerdir. Stok yönetiminin temel amacı sipariş verme maliyeti ile stokta tutma maliyetinin toplamını minimize etmektir.</p>
+  </div>
+
+  <h3>12.1. Stok Maliyet Bileşenleri</h3>
+  <ul>
+    <li><strong>Sipariş Verme (Hazırlık) Maliyeti (S):</strong> Her siparişte sabit olan kırtasiye, taşıma ve makine ayar maliyetleri. Sipariş miktarı arttıkça yıllık toplam sipariş maliyeti <em>azalır</em>.</li>
+    <li><strong>Elde Tutma (Depolama) Maliyeti (H):</strong> Kira, sigorta, bozulma, faiz ve sermaye maliyeti. Sipariş miktarı arttıkça ortalama stok artacağı için elde tutma maliyeti <em>artar</em>.</li>
+  </ul>
+
+  <h3>12.2. Klasik Ekonomik Sipariş Miktarı (EOQ) Formülü</h3>
+  <div class="box formul">
+    <p style="text-align:center; font-size:20px; font-weight:800;">
+      <span class="f">EOQ (Q*) = &radic;[ (2 &times; D &times; S) / H ]</span>
+    </p>
+    <ul>
+      <li><strong>D:</strong> Yıllık toplam talep miktarı (adet/yıl),</li>
+      <li><strong>S:</strong> Sipariş başına sabit maliyet (TL/sipariş),</li>
+      <li><strong>H:</strong> Birim ürünün yıllık elde tutma maliyeti (TL/adet/yıl).</li>
+    </ul>
+    <p><strong>EOQ Noktasında:</strong> <span class="f">Yıllık Sipariş Maliyeti = Yıllık Elde Tutma Maliyeti</span> birbirine eşittir!</p>
+  </div>
+
+  <div class="box ornek">
+    <h4>Sayısal Örnek: EOQ Hesabı</h4>
+    <p>Yıllık talep D = 10.000 adet, sipariş maliyeti S = 50 TL, birim elde tutma maliyeti H = 4 TL ise ekonomik sipariş miktarı kaçtır?</p>
+    <ol class="adim">
+      <li><strong>Adım 1:</strong> <span class="f">Q* = &radic;[ (2 &times; 10.000 &times; 50) / 4 ]</span></li>
+      <li><strong>Adım 2:</strong> <span class="f">Q* = &radic;[ 1.000.000 / 4 ] = &radic;250.000</span></li>
+      <li><strong>Adım 3:</strong> <span class="f">Q* = 500 adet</span> olarak hesaplanır.</li>
+    </ol>
+  </div>
+
+  
+  <h3>12.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Ekonomik Sipariş Miktarı (EOQ) modelinde optimum sipariş noktasında hangi iki maliyet birbirine eşittir?</span>
+      <span class="qtag">Ünite 12 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Hammadde maliyeti - İşçilik maliyeti</li>
+<li class="ok"><strong>B)</strong> Yıllık sipariş verme maliyeti - Yıllık elde tutma maliyeti</li>
+<li><strong>C)</strong> Satın alma maliyeti - Taşıma maliyeti</li>
+<li><strong>D)</strong> Sabit maliyet - Değişken maliyet</li>
+<li><strong>E)</strong> Üretim maliyeti - Satış maliyeti</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        EOQ noktasında yıllık sipariş maliyeti ile yıllık elde tutma maliyeti tam eşittir. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="12" id="u12">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 13</span>
+    <h2>Malzeme İhtiyaç Planlaması (MRP) ve Tam Zamanında Üretim (JIT / Yalın Üretim)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Bağımlı talep yapısına sahip montaj ürünlerinde Malzeme İhtiyaç Planlaması (MRP); israfı sıfırlamaya ve stoksuz üretime odaklanan sistemlerde ise Japon Yalın Üretim (JIT / Toyota Üretim Sistemi) kullanılır.</p>
+  </div>
+
+  <h3>13.1. MRP Sisteminin 3 Temel Girdisi</h3>
+  <ol class="adim">
+    <li><strong>Ana Üretim Çizelgesi (MPS):</strong> Hangi nihai üründen ne zaman ve kaç adet üretileceğini gösteren master plandır.</li>
+    <li><strong>Ürün Ağacı (BOM - Bill of Materials):</strong> Bir nihai ürünü oluşturan tüm parça, hammadde ve alt bileşenlerin hiyerarşik listesidir.</li>
+    <li><strong>Stok Durum Dosyası (Envanter Kayıtları):</strong> Depoda mevcut stok miktarı, yoldaki siparişler ve temin süreleri (Lead time).</li>
+  </ol>
+
+  <h3>13.2. İtme Sistemi (MRP) vs. Çekme Sistemi (JIT / Kanban)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Ölçüt</th>
+        <th>İtme Sistemi (Geleneksel / MRP)</th>
+        <th>Çekme Sistemi (JIT / Kanban)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Üretim Tetikleyicisi</strong></td>
+        <td>Tahminlere dayalı plana göre üretilir ve bir sonraki istasyona itilir.</td>
+        <td>Sonraki istasyon ihtiyaç duyduğunda önceki istasyondan parçayı <strong>çeker</strong> (Müşteri siparişiyle başlar).</td>
+      </tr>
+      <tr>
+        <td><strong>Stok Seviyesi</strong></td>
+        <td>Güvenlik ve parti stoku tutulur (Just-in-case).</td>
+        <td>Stok israftır, <strong>sıfır stok</strong> hedeflenir (Just-in-time).</td>
+      </tr>
+      <tr>
+        <td><strong>Kontrol Aracı</strong></td>
+        <td>Merkezi bilgisayar yazılımı (MRP).</td>
+        <td>Görsel sinyal kartları (<strong>KANBAN</strong>).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>13.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Japon JIT (Tam Zamanında Üretim) sisteminde istasyonlar arasında malzeme çekişini kontrol eden fiziksel görsel kartlara ne ad verilir?</span>
+      <span class="qtag">Ünite 13 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> BOM</li>
+<li><strong>B)</strong> MPS</li>
+<li class="ok"><strong>C)</strong> KANBAN</li>
+<li><strong>D)</strong> Kaizen</li>
+<li><strong>E)</strong> Poka-Yoke</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Japonca görsel kart anlamına gelen çekme aracı Kanban'dır. Doğru seçenek <strong>C</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="13" id="u13">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 14</span>
+    <h2>Kurumsal Kaynak Planlaması (ERP) ve Toplam Kalite Yönetimi (TKY)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>ERP sistemleri işletmenin üretim, finans, satın alma ve insan kaynakları süreçlerini tek bir entegre veri tabanında birleştirirken; Toplam Kalite Yönetimi müşteri odaklılık ve sürekli iyileştirme (Kaizen) felsefesini kurum geneline yayar.</p>
+  </div>
+
+  <h3>14.1. Toplam Kalite Yönetiminin (TKY) Temel İlkeleri</h3>
+  <ul>
+    <li><strong>Müşteri Odaklılık:</strong> Kaliteyi belirleyen tek nihai merci müşteridir.</li>
+    <li><strong>Sürekli İyileştirme (KAIZEN):</strong> Küçük, kademeli ve hiç bitmeyen sürekli gelişim felsefesi.</li>
+    <li><strong>Tam Katılım:</strong> En üst yöneticiden en alt kademedeki mavi yakalı işçiye kadar herkesin kalite sorumluluğu taşıması.</li>
+    <li><strong>PUKÖ Döngüsü (Deming Döngüsü):</strong> Planla &rarr; Uygula &rarr; Kontrol Et &rarr; Önlem Al.</li>
+    <li><strong>Hatanın Kaynağında Önlenmesi (Poka-Yoke):</strong> Hatalı ürünlerin sonradan ayıklanması değil, sistemi hatasız tasarlayarak hata yapılmasının fiziksel olarak imkansız hale getirilmesi (Ahmak geçirmezlik).</li>
+  </ul>
+
+  
+  <h3>14.4. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Sistemleri insanların hata yapmasını fiziksel olarak imkansız kılacak şekilde tasarlama felsefesine ne ad verilir?</span>
+      <span class="qtag">Ünite 14 Çıkmış Sınav Sorusu</span>
+    </summary>
+    <div class="sqbody">
+      <ul class="o">
+        <li><strong>A)</strong> Kaizen</li>
+<li class="ok"><strong>B)</strong> Poka-Yoke (Ahmak Geçirmezlik)</li>
+<li><strong>C)</strong> Kanban</li>
+<li><strong>D)</strong> Six Sigma</li>
+<li><strong>E)</strong> 5S Kuralı</li>
+
+      </ul>
+      <div class="exp">
+        <strong>Açıklamalı Çözüm:</strong><br>
+        Hatanın kaynağında önlenmesi mekanizmasına Poka-Yoke denir. Doğru seçenek <strong>B</strong>'dir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+  </main>
+
+  <div class="unit-pager">
+    <button class="btn" id="prevBtn" onclick="prevUnit()">← Önceki Ünite</button>
+    <span id="pageInfo" style="font-size:13px; font-weight:700; color:var(--text-muted);">Ünite 1 / 14</span>
+    <button class="btn" id="nextBtn" onclick="nextUnit()">Sonraki Ünite →</button>
+  </div>
+</div>
+
+<script>
+let curUnit = 0;
+const totalUnits = 14;
+
+function init() {
+  const hash = window.location.hash;
+  if(hash && hash.startsWith('#u')) {
+    const n = parseInt(hash.replace('#u',''));
+    if(!isNaN(n) && n >= 0 && n < totalUnits) curUnit = n;
+  }
+  goUnit(curUnit, false);
+
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  const savedDev = localStorage.getItem('device') || 'desktop';
+  document.documentElement.setAttribute('data-device', savedDev);
+}
+
+function goUnit(idx, pushHash=true) {
+  if(idx < 0 || idx >= totalUnits) return;
+  curUnit = idx;
+  document.querySelectorAll('.unit').forEach((el, i) => {
+    el.classList.toggle('on', i === curUnit);
+  });
+  document.getElementById('unitSel').value = curUnit;
+  document.getElementById('pageInfo').textContent = `Ünite ${curUnit + 1} / ${totalUnits}`;
+  document.getElementById('prevBtn').disabled = (curUnit === 0);
+  document.getElementById('nextBtn').disabled = (curUnit === totalUnits - 1);
+  if(pushHash) window.location.hash = '#u' + curUnit;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevUnit() { goUnit(curUnit - 1); }
+function nextUnit() { goUnit(curUnit + 1); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const nxt = cur === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', nxt);
+  localStorage.setItem('theme', nxt);
+}
+
+function toggleDevMenu() {
+  document.getElementById('devMenu').classList.toggle('open');
+}
+
+function setDevice(dev) {
+  document.documentElement.setAttribute('data-device', dev);
+  localStorage.setItem('device', dev);
+  document.getElementById('devMenu').classList.remove('open');
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.device-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    document.getElementById('devMenu').classList.remove('open');
+  }
+});
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

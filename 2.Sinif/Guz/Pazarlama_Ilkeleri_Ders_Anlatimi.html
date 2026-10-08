@@ -1,0 +1,3192 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Pazarlama İlkeleri (AYBS3002) - AUZEF Kapsamlı Ders Anlatımı ve Soru Havuzu</title>
+<style>
+:root {
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --text: #1A202C;
+  --text-muted: #4A5568;
+  --border: #E2E8F0;
+  --primary: #C53030;
+  --primary-light: #FFF5F5;
+  --accent: #DD6B20;
+  --accent-light: #FEEBC8;
+  --success: #276749;
+  --success-light: #F0FFF4;
+  --danger: #9B2C2C;
+  --danger-light: #FFF5F5;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Georgia", "Bookerly", serif;
+  --font-mono: "Consolas", "Courier New", monospace;
+  --font-size: 16px;
+  --line-height: 1.65;
+  --max-w: 1040px;
+}
+
+[data-theme="dark"] {
+  --bg: #1A202C;
+  --surface: #2D3748;
+  --text: #F7FAFC;
+  --text-muted: #A0AEC0;
+  --border: #4A5568;
+  --primary: #FC8181;
+  --primary-light: #742A2A;
+  --accent: #F6AD55;
+  --accent-light: #7B341E;
+  --success: #68D391;
+  --success-light: #22543D;
+  --danger: #FEB2B2;
+  --danger-light: #742A2A;
+}
+
+/* DEVICE PROFILES */
+[data-device="eink-6-bw"] {
+  --bg: #FFFFFF !important;
+  --surface: #FFFFFF !important;
+  --text: #000000 !important;
+  --text-muted: #222222 !important;
+  --border: #000000 !important;
+  --primary: #000000 !important;
+  --primary-light: #EEEEEE !important;
+  --accent: #000000 !important;
+  --accent-light: #EEEEEE !important;
+  --font-body: var(--font-serif) !important;
+  --font-size: 17px !important;
+  --max-w: 600px !important;
+}
+[data-device="eink-6-bw"] * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+[data-device="eink-6-color"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 16.5px !important;
+  --max-w: 640px !important;
+}
+
+[data-device="eink-10-bw"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 18px !important;
+  --max-w: 860px !important;
+}
+
+[data-device="mobile"] {
+  --font-size: 15px !important;
+  --max-w: 100% !important;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  padding-bottom: 80px;
+}
+
+.shell { max-width: var(--max-w); margin: 0 auto; padding: 0 16px; }
+
+/* TOP BAR */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  margin-bottom: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.bar-left, .bar-right { display: flex; align-items: center; gap: 8px; }
+.back-btn {
+  text-decoration: none; color: var(--text); font-weight: 700; font-size: 13px;
+  padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg); display: inline-flex; align-items: center; gap: 4px;
+}
+.back-btn:hover { border-color: var(--primary); color: var(--primary); }
+.sel {
+  padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font-size: 13px; font-weight: 600;
+  max-width: 280px;
+}
+.btn {
+  cursor: pointer; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600;
+}
+.btn:hover { background: var(--bg); }
+
+/* DEVICE MENU */
+.device-menu-wrap { position: relative; }
+.device-menu {
+  display: none; position: absolute; right: 0; top: calc(100% + 6px);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12); min-width: 220px; z-index: 200; overflow: hidden;
+}
+.device-menu.open { display: block; }
+.device-menu-head {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-muted);
+  padding: 8px 12px; background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.device-opt {
+  display: block; width: 100%; text-align: left; padding: 8px 12px; border: none;
+  background: none; font-size: 13px; color: var(--text); cursor: pointer;
+}
+.device-opt:hover { background: var(--primary-light); color: var(--primary); }
+
+/* BANNER */
+.course-banner {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.eyebrow { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 6px; }
+.course-banner h1 { font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+.course-meta { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+/* UNITS */
+.unit { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 30px; }
+.unit.on { display: block; }
+.uhead { border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
+.uhead .num { display: inline-block; font-size: 12px; font-weight: 800; color: var(--accent); background: var(--accent-light); padding: 3px 8px; border-radius: 4px; margin-bottom: 6px; }
+.uhead h2 { font-size: 22px; font-weight: 800; color: var(--text); }
+.lead-box { background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 15px; }
+
+h3 { font-size: 18px; font-weight: 800; color: var(--primary); margin: 24px 0 12px; border-left: 3px solid var(--accent); padding-left: 10px; }
+h4 { font-size: 15px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
+p { margin-bottom: 12px; }
+ul, ol { margin: 10px 0 16px 24px; }
+li { margin-bottom: 6px; }
+
+/* BOXES */
+.box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; border: 1px solid var(--border); }
+.box.formul { background: var(--surface); border-left: 4px solid var(--primary); }
+.box.tuzak { background: var(--danger-light); border-color: var(--danger); border-left: 4px solid var(--danger); }
+.box.tuzak h4 { color: var(--danger); }
+.f { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; background: var(--surface); }
+th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { background: var(--bg); font-weight: 800; color: var(--text); }
+
+/* QUESTIONS */
+details.sq {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  margin: 12px 0; overflow: hidden;
+}
+details.sq summary {
+  padding: 12px 16px; cursor: pointer; font-weight: 600; list-style: none;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+details.sq summary::-webkit-details-marker { display: none; }
+.qno { font-size: 11px; font-weight: 800; background: var(--primary); color: #fff; padding: 2px 7px; border-radius: 4px; }
+.qtitle { flex: 1; font-size: 14px; color: var(--text); }
+.qtag { font-size: 11px; background: var(--border); color: var(--text-muted); padding: 2px 6px; border-radius: 4px; }
+.sqbody { padding: 14px 16px; background: var(--surface); border-top: 1px solid var(--border); }
+.exp { font-size: 13px; line-height: 1.5; color: var(--text); background: var(--bg); padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--success); }
+
+/* UNIT PAGER */
+.unit-pager {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header class="top-bar">
+    <div class="bar-left">
+      <a href="../../2.Sinif/index.html" class="back-btn" title="2. Sınıf Ders Listesine Dön">← 2. Sınıf Portal</a>
+      <select id="unitSel" class="sel" onchange="goUnit(parseInt(this.value))">
+        <option value="0">1. Ünite: Pazarlamaya Giriş ve Temel Kavramlar</option><option value="1">2. Ünite: Pazarlama Anlayışının Gelişimi ve Pazarlama Felsefeleri</option><option value="2">3. Ünite: Tüketici Pazarı ve Tüketici Davranışı</option><option value="3">4. Ünite: Örgütsel Pazarlar ve Endüstriyel Alıcı Davranışları</option><option value="4">5. Ünite: Müşteri İlişkileri Yönetimi (CRM) ve Müşteri Değeri</option><option value="5">6. Ünite: Pazarlamada Çevresel Unsurlar (Mikro ve Makro Çevre)</option><option value="6">7. Ünite: Pazar Bölümlendirme, Hedef Pazar ve Konumlandırma (STP)</option><option value="7">8. Ünite: Pazarlamada Strateji Kaynakları (4P)</option><option value="8">9. Ünite: Hizmet Pazarlaması ve Genişletilmiş Karma (7P)</option><option value="9">10. Ünite: Pazarlama Bilgi Sistemi ve Pazarlama Araştırması</option><option value="10">11. Ünite: Elektronik Pazarlama (E-Pazarlama)</option><option value="11">12. Ünite: Doğrudan Pazarlama ve E-Ticaret Modelleri</option><option value="12">13. Ünite: Uluslararası Pazarlama ve Dış Pazarlara Giriş Stratejileri</option><option value="13">14. Ünite: Sürdürülebilir Pazarlama, Sosyal Sorumluluk ve Etik</option>
+      </select>
+    </div>
+    <div class="bar-right">
+      <div class="device-menu-wrap">
+        <button class="btn icon" id="devBtn" onclick="toggleDevMenu()" title="Cihaz Profili">📱 Mod</button>
+        <div class="device-menu" id="devMenu">
+          <div class="device-menu-head">Cihaz Görünüm Profili</div>
+          <button class="device-opt" onclick="setDevice('desktop')">💻 Masaüstü Web</button>
+          <button class="device-opt" onclick="setDevice('mobile')">📱 Mobil Ekran</button>
+          <button class="device-opt" onclick="setDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B Bookerly)</button>
+          <button class="device-opt" onclick="setDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+          <button class="device-opt" onclick="setDevice('eink-10-bw')">📝 10.3" Tablet (S/B)</button>
+        </div>
+      </div>
+      <button class="btn icon" id="themeBtn" onclick="toggleTheme()" title="Koyu / Açık Tema">🌓 Tema</button>
+    </div>
+  </header>
+
+  <div class="course-banner">
+    <p class="eyebrow">AUZEF &middot; Yönetim Bilişim Sistemleri &middot; 2. Sınıf Güz (AYBS3002)</p>
+    <h1>Pazarlama İlkeleri</h1>
+    <p class="course-meta">Eksiksiz 14 Ünite Ders Notları • Karşılaştırma Tabloları • 4P & 7P Karması • Tüketici Davranışları • 140 Çözümlü Sınav Sorusu</p>
+  </div>
+
+  <main id="content">
+    
+<section class="unit on" data-i="0" id="u0">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 01</span>
+    <h2>Pazarlamaya Giriş ve Pazarlama ile İlgili Temel Kavramlar</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Modern pazarlama; yalnızca üretilen malı satmak veya reklam yapmak değil; tüketici ihtiyaçlarını doğru tespit ederek değer yaratma, sunma ve müşteri ilişkilerini yönetme sürecidir.</p>
+  </div>
+
+  <h3>1.1. Pazarlamanın Tanımı ve Değişim (Mübadele) İlişkisi</h3>
+  <p>Amerikan Pazarlama Derneği (AMA) tanımına göre pazarlama; müşteriler, paydaşlar ve genel olarak toplum için değer yaratan, sunan ve ileten kurumlar, faaliyetler ve süreçler bütünüdür. Pazarlamanın gerçekleşebilmesi için bir <strong>değişim (mübadele)</strong> ortamı şarttır.</p>
+
+  <div class="box formul">
+    <h4>Mübadelenin (Değişimin) 5 Zorunlu Koşulu:</h4>
+    <ol class="adim">
+      <li>En az iki tarafın bulunması,</li>
+      <li>Her iki tarafın da diğerinin ilgisini çekecek bir değere (mal, hizmet, para vb.) sahip olması,</li>
+      <li>Tarafların birbirleriyle iletişim kurabilme ve teslimat yapabilme yeteneğine sahip olması,</li>
+      <li>Her tarafın teklifi kabul veya reddetmekte tamamen serbest (özgür) olması,</li>
+      <li>Tarafların karşı tarafla iş yapmanın uygun ve arzu edilir olduğuna inanması gerekir.</li>
+    </ol>
+  </div>
+
+  <h3>1.2. Pazarlamanın Çekirdek Kavramları Sözlüğü</h3>
+  <div class="box formul">
+    <dl>
+      <dt>İhtiyaç (Gereksinim)</dt>
+      <dd>İnsanın doğasından kaynaklanan temel yoksunluk hissidir (Açlık, susuzluk, barınma, güvenlik). Pazarlamacılar ihtiyaç yaratamazlar, var olan ihtiyacı açığa çıkarırlar.</dd>
+      <dt>İstek (Talep Yönü)</dt>
+      <dd>İhtiyaçların bireyin kültürü ve kişiliği tarafından şekillendirilmiş tatmin edilme biçimidir (Açlık ihtiyacını ekmekle gidermek yerine pizza istemek).</dd>
+      <dt>Talep</dt>
+      <dd>Satın alma gücü (para) ile desteklenmiş istektir. Satın alma gücü olmayan istek pazarlama açısından talep sayılmaz.</dd>
+      <dt>Değer ve Müşteri Memnuniyeti</dt>
+      <dd>Müşterinin elde ettiği faydalar ile katlandığı maliyetler (para, zaman, çaba) arasındaki farktır (Değer = Toplam Fayda / Toplam Maliyet).</dd>
+    </dl>
+  </div>
+
+  <h3>1.3. Pazarlama Karması (4P)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Bileşen</th>
+        <th>İngilizce Karşılığı</th>
+        <th>Kapsamı ve Kararları</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Ürün</strong></td>
+        <td>Product</td>
+        <td>Fiziksel ürün özellikleri, kalite, tasarım, marka adı, ambalaj, garanti, satış sonrası servis.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Fiyat</strong></td>
+        <td>Price</td>
+        <td>Liste fiyatı, indirimler, iskontolar, ödeme vadeleri, kredi koşulları (Gelir getiren tek bileşendir!).</td>
+      </tr>
+      <tr>
+        <td><strong>3. Dağıtım</strong></td>
+        <td>Place</td>
+        <td>Dağıtım kanalları, toptancılar, perakendeciler, lojistik, depolama, fiziksel sevkiyat.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Tutundurma</strong></td>
+        <td>Promotion</td>
+        <td>Reklam, kişisel satış, halkla ilişkiler (PR), satış geliştirme (promosyon), doğrudan pazarlama.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: İhtiyaç vs. İstek Ayrımı</h4>
+    <p>Sınavlarda sıkça <em>"Pazarlamacılar insanlarda yeni ihtiyaçlar yaratır"</em> ifadesi tuzak olarak verilir. Pazarlamacılar ihtiyaç yaratmazlar; biyolojik/psikolojik olarak var olan ihtiyaçları belirli ürünlerle giderme <strong>İSTEĞİ</strong> yaratırlar!</p>
+  </div>
+
+  
+  <h3>1.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Pazarlamacıların, tüket c ler n  ht yaçlarını karşılamak  ç n sunduğu değer  fade eden öner ler arasında aşağıdak lerden hang s  yoktur? Mal H zmet Para Deney m F k r</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Para<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Tüket c ler n  sted kler  ürünler   sted kler  yerlerde bulunab l r hale get rmek, pazarlamanın hang  faydası  le  fade ed lmekted r? Şek l Faydası Yer Faydası Zaman faydası Mülk yet faydası İlet ş m faydası</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Yer Faydası<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Pazarlama  le  lg l  aşağıdak lerden hang s  doğru değ ld r? Pazarlama sadece organ zasyonlar tarafından gerçekleşt r leb l r faal yetler   çer r. Pazarlama b r  şlem/etk leş m aracılığıyla etk lenen herkese değer sunar. Pazarlama, üret m önces nden başlayıp, satış sonrası süreçlere kadar  lerleyen b r sürec  kapsar. Tanımlanmış b r alanda veya departmandak  b r grup  nsan tarafından serg lenen akt v telerden çok daha fazlasını  çer r. Pazarlama tüket c lere sadece ürün/h zmet ve/veya f k rler  satmayı değ l değer ve fayda ulaştırmaya odaklanan süreçler  kapsar</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Pazarlama sadece organ zasyonlar tarafından gerçekleşt r leb l r faal yetler   çer r.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">B r tüket c n n mevcut durumu  le  deal durumu veya arzu ett ğ  durum arasındak  fark ..........................................  fade etmekted r. Yukarıdak  boşluğa geleb lecek uygun seçeneğ  bel rt n z. ? İht yaç Güdü İstek Arzu Talep</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İht yaç<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">İstekler satın alma gücü  le desteklend ğ  zaman ................... oluşur. Yukarıdak  boşluğa geleb lecek uygun seçeneğ  bel rt n z. ? Tatm n Fayda Değer Talep İht yaç</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Talep<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Tüket c n n  ht yacının tatm n   ç n b r ürüne yönel k duyduğu arzuya ne den r? Arz İht yaç Tatm n Fayda İstek</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İstek<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">B r pazarlama öner s , b r  ht yaç veya  steğ  tatm n ett ğ  zaman ortaya çıkan duruma ne ad ver l r? Değer Fayda Tatm n Talep Arz</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Fayda<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıdak lerden hang s  fayda türler nden b r  değ ld r? Karma fayda Şek l faydası Yer faydası Zaman faydası Mülk yet faydası</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Karma fayda<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Kend s , a les  veya b r yakınının kullanımı  ç n mal ve h zmetler  satın alan k ş lere ne tür tüket c n  olarak tanımlanmaktadır? Karma tüket c  Çoklu tüket c  Toplumsal tüket c  Örgütsel tüket c  B reysel tüket c </span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B reysel tüket c <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Aşağıdak lerden hang s  değ ş m n gerçekleşeb lmes   ç n gereken koşullardan b r  değ ld r? Tarafların her b r n n, d ğer taraf  ç n değerl  olab lecek b r şeylere sah p olması gerekl d r. Tarafların her b r n n  let ş m ve sevk yat/tesl m kapas tes  olmalıdır. En az üç taraf olmalıdır. Tarafların her b r  değ ş m tekl f n  kabul veya red etmekte özgür olmalıdır. Tarafların her b r  d ğer tarafın  ş n  görmen n arzu ed len veya  stenen b r durum olduğuna  nanmalıdır.</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> En az üç taraf olmalıdır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 1. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="1" id="u1">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 02</span>
+    <h2>Pazarlama Anlayışının Tarihsel Gelişimi ve Pazarlama Felsefeleri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Sanayi devriminden günümüze işletmelerin üretim ve müşteriye bakış açıları 5 temel aşamadan geçerek "Ne üretirsem satarım" anlayışından "Tüketicinin istediğini üret" felsefesine evrilmiştir.</p>
+  </div>
+
+  <h3>2.1. Pazarlama Anlayışının 5 Evrimi</h3>
+  <ol class="adim">
+    <li><strong>1. Üretim Anlayışı (19. Yüzyıl - 1930):</strong> "Ne üretirsem satarım" felsefesidir. Talep arzdan çok fazladır. Temel amaç seri üretimle maliyetleri düşürmek ve ürünün her yerde bulunmasını sağlamaktır (Henry Ford: 'Siyah olmak şartıyla istediğiniz renk araba alabilirsiniz').</li>
+    <li><strong>2. Ürün Anlayışı:</strong> "Kaliteli ürün kendi kendini satar" varsayımıdır. Tüketicilerin en kaliteli ve en iyi performanslı ürünü tercih edeceği düşünülür. <em>Pazarlama Miyopluğu</em> (pazarın gerçek ihtiyacını göremeyip ürüne aşık olma) tehlikesi taşır.</li>
+    <li><strong>3. Satış Anlayışı (1930 - 1950):</strong> "Yeterince reklam ve baskı yaparsam her şeyi satarım" anlayışıdır. Arz talebi aşmıştır; işletmeler agresif satış teknikleri, satıcı orduları ve promosyonlara odaklanır. Müşteri memnuniyeti değil, anlık işlem önemlidir.</li>
+    <li><strong>4. Modern Pazarlama Anlayışı (1950 Sonrası):</strong> "Tüketici ihtiyaçlarını rakiplerden daha iyi tatmin ederek kâr sağlama" felsefesidir. Müşteri odaklılık, bütünleşik pazarlama ve müşteri tatmini esastır.</li>
+    <li><strong>5. Toplumsal (Sosyal) Pazarlama Anlayışı (Günümüz):</strong> Tüketici tatmini, işletme kârı ve <strong>toplumun uzun vadeli refahı/çevre bilincinin</strong> dengelenmesidir.</li>
+  </ol>
+
+  <h3>2.2. Satış Anlayışı ile Modern Pazarlama Anlayışının Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Karşılaştırma Boyutu</th>
+        <th>Satış Anlayışı</th>
+        <th>Modern Pazarlama Anlayışı</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Başlangıç Noktası</strong></td>
+        <td>Fabrika (İşletme içi)</td>
+        <td>Pazar (Müşteri ihtiyaçları)</td>
+      </tr>
+      <tr>
+        <td><strong>Odak Noktası</strong></td>
+        <td>Mevcut üretilmiş ürünler</td>
+        <td>Müşteri gereksinim ve istekleri</td>
+      </tr>
+      <tr>
+        <td><strong>Kullanılan Araçlar</strong></td>
+        <td>Satış baskısı, reklam ve promosyon</td>
+        <td>Bütünleşik pazarlama karması (4P)</td>
+      </tr>
+      <tr>
+        <td><strong>Hedef ve Kâr Yolu</strong></td>
+        <td>Satış hacmi (ciro) yoluyla kâr elde etme</td>
+        <td>Müşteri memnuniyeti ve sadakati yoluyla kâr</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>2.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">“Anla ve yanıtla” anlayışı hang  pazarlama anlayışı kapsamında ele alınab l r? Üret m Anlayışı Ürün Anlayışı Satış Anlayışı Modern Pazarlama Anlayışı Toplumsal Pazarlama Anlayışı</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Modern Pazarlama Anlayışı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Satış anlayışı  le  lg l  aşağıdak lerden hang s  yanlıştır? B r  çten-dışa bakış açısıdır. İy  tanımlanmış b r pazar  le başlar. İşletmen n var olan ürünler ne odaklanır. Karlı satışlar elde edeb lmek  ç n baskın k ş sel satış ve reklama başvurur. Öncel kl  amaç tüket c n n  lg s n  çekmeye odaklanmaktır.</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İy  tanımlanmış b r pazar  le başlar.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Modern pazarlama anlayışının farklı tanımlarına bakıldığında aşağıdak lerden hang ler  öncel kl  değ ld r? Müşter  değer  Müşter  yönlülük Uzun döneml   l şk ler Müşter  karlılığı Satış tutundurma</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Satış tutundurma<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Satıcıların pazara hak m olduğu, büyük m ktarlarda ve ucuza mal üretmen n temel sorun olduğu dönem aşağıdak lerden hang s d r? Üret m Anlayışı Ürün Anlayışı Satış Anlayışı Modern Pazarlama Anlayışı Toplumsal Pazarlama Anlayışı</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Üret m Anlayışı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Ç ft taraflı değer elde etme sürec nde aşağıdak lerden hang s  gerçekleşt r lmez? Ürünler n özell kler n  bel rlemek Müşter   stek ve  ht yaçlarını bel rlemek Müşter  odaklı pazarlama stratej ler  gel şt rmek Bütünleş k pazarlama faal yetler  gerçekleşt rmek Müşter  memnun yet  gel şt rmek</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ürünler n özell kler n  bel rlemek<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Satış anlayışı ____________________ başlayıp ____________________ odaklanırken, pazarlama anlayışı ____________________ başlayıp ____________________ odaklanmaktadır.” İfades nde boş bırakılan yerlere aşağıdak   fadelerden hang ler  gelmel d r? fabr kada, mevcut ürünlere / pazarda, tüket c   ht yaçlarına fabr kada, tüket c   ht yaçlarına / pazarda, mevcut ürünlere pazarda, mevcut ürünlere / fabr kada, tüket c   ht yaçlarına pazarda, tüket c   ht yaçlarına / fabr kada, mevcut ürünlere pazarda, satışa / fabr kada, esk  ürünlere</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> fabr kada, mevcut ürünlere / pazarda, tüket c   ht yaçlarına<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">İkl m değ ş kl ğ , ozon tabakasının del nmes , enerj  kaynaklarının kıtlığı, çevren n k rlenmes , tüket c ler n sağlıklarında meydana gelen problemler, toplumsal kurallar g b  unsurları d kkate almayı gerekt ren pazarlama anlayışı aşağıdak lerden hang s d r? Üret m anlayışı Ürün anlayışı Pazarlama anlayışı Satış anlayışı Toplumsal pazarlama anlayışıdır</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Toplumsal pazarlama anlayışıdır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıda ver len pazarlama anlayışı  le odak noktası eşleşt rmeler nden hang s  yanlıştır? Üret m Anlayışı : B z ne üreteb l r z veya en  y  ne yapab l r z? Ürün Anlayışı : B z pazarlamayı en  y  nasıl yaparız? Satış Anlayışı : B z nasıl daha saldırganca satış yapab l r z? Pazarlama Anlayışı : Tüket c ler n  stek ve  ht yacı ned r? Toplumsal Pazarlama Anlayışı: Tüket c ler n  stek ve  ht yacı ned r ve topluma nasıl fayda sağlayab l r z?</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ürün Anlayışı : B z pazarlamayı en  y  nasıl yaparız?<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdak lerden hang s  pazarlama sürec  model n n basamaklarından b r  değ ld r? Pazarı ve müşter   stek ve  ht yaçlarını anlamak Müşter  odaklı pazarlama stratej ler  gel şt rmek Kar etme hedef nde olmama, karı önemsememe Üstün değer  ç n bütünleş k pazarlama Karlı  l şk ler gel şt rme ve müşter  memnun yet  oluşturma</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kar etme hedef nde olmama, karı önemsememe<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Satış anlayışı, ____________________ araçlarını kullanarak __________________ artırmayı hedeflemekted r.? bütünleş k pazarlama / satış hacm  ve karlılığı satış ve tutundurma / müşter  memnun yet  bütünleş k pazarlama / müşter  memnun yet  satış ve tutundurma / satış hacm n  ve karlılığını satış / tüket c   ht yaçlarını</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> satış ve tutundurma / satış hacm n  ve karlılığını<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 2. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="2" id="u2">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 03</span>
+    <h2>Tüketici Pazarı ve Tüketici Davranışları</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Tüketici pazarı; kişisel veya ailevi kullanım amacıyla mal ve hizmet satın alan nihai bireylerden oluşur. Tüketicilerin satın alma kararları kültürel, sosyal, kişisel ve psikolojik faktörlerin etkisi altındadır.</p>
+  </div>
+
+  <h3>3.1. Tüketici Satın Alma Karar Sürecinin 5 Aşaması</h3>
+  <ol class="adim">
+    <li><strong>1. İhtiyacın (Problemin) Ortaya Çıkması:</strong> Tüketicinin mevcut durumu ile arzu ettiği ideal durum arasındaki farkı hissetmesi (içsel veya dışsal uyarıcılarla).</li>
+    <li><strong>2. Bilgi Arama:</strong> İhtiyacı giderebilecek alternatifler hakkında kişisel (aile, arkadaşlar), ticari (reklam, satıcılar), kamusal veya deneyimsel kaynaklardan bilgi toplanması.</li>
+    <li><strong>3. Alternatiflerin Değerlendirilmesi:</strong> Toplanan alternatiflerin marka imajı, fiyat, kalite, performans gibi kriterlere göre karşılaştırılması.</li>
+    <li><strong>4. Satın Alma Kararı:</strong> En uygun bulunan alternatifin satın alınması niyeti ve eylemi (araya başkalarının tutumları veya beklenmedik durumlar girebilir).</li>
+    <li><strong>5. Satın Alma Sonrası Davranış:</strong> Ürünün beklentileri karşılayıp karşılamadığına göre memnuniyet veya memnuniyetsizlik yaşanması. Eğer memnun kalınmazsa <strong>Bilişsel Çelişki (Satın Alma Sonrası Pişmanlık / Cognitive Dissonance)</strong> ortaya çıkar.</li>
+  </ol>
+
+  <h3>3.2. Tüketici Davranışını Etkileyen Faktörler</h3>
+  <ul>
+    <li><strong>Kültürel Faktörler:</strong> Kültür, alt kültür (etnik, dini gruplar), sosyal sınıf.</li>
+    <li><strong>Sosyal Faktörler:</strong> Referans (danışma) grupları, aile, roller ve statüler.</li>
+    <li><strong>Kişisel Faktörler:</strong> Yaş, yaşam döngüsü aşaması, meslek, ekonomik gelir düzeyi, yaşam tarzı, kişilik.</li>
+    <li><strong>Psikolojik Faktörler:</strong> Motivasyon (Maslow İhtiyaçlar Hiyerarşisi), algılama, öğrenme, inanç ve tutumlar.</li>
+  </ul>
+
+  
+  <h3>3.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdak lerden hang s  tüket c  pazarının oluşab lmes   ç n gerekl  şartlar arasında değ ld r? Ortak  stek ve  ht yacı paylaşan  nsanlar olmalı Bu  stek ve  ht yacı g derme heves  olmalı Bu heves  paylaşacak  nsanlar olmalı Satın alma gücüne sah p olmalı (para) Bu gücü kullanma yetk s ne sah p olmalı</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bu heves  paylaşacak  nsanlar olmalı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Aşağıdak lerden hang s  Tüket c  Kara Kutusu model n n b leşenler nden değ ld r? İşletmen n Yetenekler  Pazarlama Uyarıcıları Tüket c  Özell kler  Tüket c  Karar Sürec  Tüket c n n Tepk ler </span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İşletmen n Yetenekler <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Aşağıdak lerden hang s  Tüket c  Karar Sürec  aşamalarından b r  değ ld r? Problem tanımlama B lg  arama Alternat fler  değerlend rme Karar S par ş verme</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> S par ş verme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Tüket c ler n algıladığı r sklerden f z ksel r sk  ç n en uygun örnek hang s d r? Satın aldığımız laptop  sted ğ m z performansta olmayab l r. Ürün hem  nsanlara, hem de d ğer eşyalara zarar vereb l r Yapılan satınalma beş duyumuza zarar vereb l r Tesl matta gec kme yaşanab l r veya tad latı uzayab l r. Ürüne normalde eder nden daha fazla para ödeyeb l r z</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ürün hem  nsanlara, hem de d ğer eşyalara zarar vereb l r<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aşağıdak  kaynaklardan hang s  tüket c n n b lg  toplama aşamasında başvurduğu kaynaklar arasındadır? A le fertler  Reklamlar Arkadaşlar K tle  let ş m araçları Heps </span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Heps <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  tüket c n n b lg  toplama aşamasında, ürüne ve sürece yönel k algıladığı r sklerden b r  değ ld r? Performans R sk  F nansal R sk Zaman R sk  F z ksel R sk Olgunlaşmış r sk</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Olgunlaşmış r sk<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Aşağıdak lerden hang s  tüket c n n algıladığı r skler  en aza  nd rmek  ç n faydalandığı farklı b lg  kaynaklarından b r  değ ld r? K ş sel kaynaklar Madd  kaynaklar T car  kaynaklar Kamu (genel) kaynakları Tecrübe c ns nden kaynaklar</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Madd  kaynaklar<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıdak lerden hang s  tüket c  davranışını etk leyen faktörler arasında yer almaz? Kültürel Sosyal K ş sel F z ksel faktörler Ps koloj k</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> F z ksel faktörler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Sosyal sınıf, b r toplum  çer s nde, b rb r ne benzeyen özell kler  doğrultusunda d ğer gruplardan ayrılan; gel r, meslek, eğ t m, refah ve d ğer değ şkenlere göre şek llenmekte olan gruplara ne ad ver lmekted r? Referans grupları A le Sosyal sınıf Dış çevre Çevre</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sosyal sınıf<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">S gorta, barınma, korunma, alarm s stemler  vb  hty açlar Malow’a göre hang  sınıfta yer alır? Güvenl k  ht yacı F zyoloj k  ht yaçlar A t olma ve sevg   ht yacı Saygınlık  ht yacı Kend n  gerçekleşt rme  ht yacı</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Güvenl k  ht yacı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 3. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="3" id="u3">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 04</span>
+    <h2>Örgütsel Pazarlar ve Endüstriyel Alıcı Davranışları</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Örgütsel (endüstriyel) pazarlar; başka mal veya hizmetlerin üretiminde kullanmak, yeniden satmak ya da kiralamak amacıyla mal ve hizmet satın alan kurum ve işletmelerden oluşur (B2B pazarlar).</p>
+  </div>
+
+  <h3>4.1. Tüketici Pazarları (B2C) ile Örgütsel Pazarların (B2B) Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Özellik</th>
+        <th>Tüketici Pazarları (B2C)</th>
+        <th>Örgütsel Pazarlar (B2B)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Alıcı Sayısı</strong></td>
+        <td>Çok sayıda, dağınık bireysel alıcılar</td>
+        <td>Az sayıda fakat büyük ölçekli kurumsal alıcılar</td>
+      </tr>
+      <tr>
+        <td><strong>Alım Miktarı</strong></td>
+        <td>Küçük miktarlarda münferit alımlar</td>
+        <td>Büyük partiler halinde yüksek bütçeli alımlar</td>
+      </tr>
+      <tr>
+        <td><strong>Talep Yapısı</strong></td>
+        <td>Doğrudan talep</td>
+        <td><strong>Türemiş Talep</strong> (Tüketici talebine bağlı olarak doğar)</td>
+      </tr>
+      <tr>
+        <td><strong>Talebin Fiyat Esnekliği</strong></td>
+        <td>Genellikle daha esnektir</td>
+        <td>Kısa vadede esnek değildir (Fiyat artsa da üretim için almak zorundadır)</td>
+      </tr>
+      <tr>
+        <td><strong>Karar Verme Süreci</strong></td>
+        <td>Duygusal, hızlı, bireysel karar</td>
+        <td>Rasyonel, profesyonel, uzun süreli, komite kararı (Satın alma merkezi)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.2. Örgütsel Satın Alma Türleri</h3>
+  <ol class="adim">
+    <li><strong>Doğrudan Yeniden Satın Alma:</strong> Daha önce alınmış standart bir malın hiçbir değişiklik yapılmadan rutin olarak tekrar sipariş edilmesidir (en düşük risk).</li>
+    <li><strong>Değiştirilmiş Yeniden Satın Alma:</strong> Ürünün teknik özelliklerinde, fiyatında, teslimat koşullarında veya tedarikçisinde değişiklik yapılarak sipariş edilmesidir.</li>
+    <li><strong>Yeni Görev (İlk Kez Satın Alma):</strong> İşletmenin ilk kez karşılaştığı ve daha önce satın almadığı karmaşık bir ürün veya sistemi almasıdır (en yüksek risk ve bilgi ihtiyacı).</li>
+  </ol>
+
+  
+  <h3>4.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdak lerden hang s  örgütsel pazarlarda alıcı türler  arasında yer almaz? Eğ t m kurumları Vakıflar Beled yeler Perakendec ler Tüket c ler</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Tüket c ler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Amaçlar ve prosedürler, endüstr yel alıcıların satın alma davranışlarını etk leyen ana faktörlerden hang s   ç nde yer almaktadır? K ş lerarası faktörler Örgütsel faktörler K ş sel faktörler K tlesel Faktörler Satınalıcıya Özgü faktörler</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Örgütsel faktörler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Endüstr yel pazarlarda rut n satınalım durumlarında, endüstr yel alıcıların satın alma sürec n n katılımcılarından hang ler  b rb rler ne çok benzerd r? Kullanıcılar ve Etk ley c ler Etk ley c ler ve Satın Alıcılar Satın Alıcılar ve Karar Ver c ler Karar Ver c ler ve Eş k Bekç ler  Kullanıcılar ve Eş k Bekç ler </span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Satın Alıcılar ve Karar Ver c ler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Aşağıdak lerden hang s  endüstr yel alıcıların satın alma davranışını etk leyen faktörler arasında yer almaz? İşletmen n  ç İşley ş  K ş lerarası d nam kler Tedar k koşulları K ş l k F k r L derler </span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> F k r L derler <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Endüstr yel satınalma karar sürec nde, satın alınacak ürünün sunumunun yapılması  stend ğ  aşama aşağıdak lerden hang s d r? Tedar kç  Araştırması Tekl f Alma Tedar kç  Seç m  S par ş Prosedürünün Bel rlenmes  Performansın Değerlend r lmes </span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Tekl f Alma<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  örgütsel alıcıların satın alma davranışı model nde örgütsel alıcının cevapları arasında yer almaz? Mal ve h zmet seç m  Ürünün en az 2 yıl garant ye sah p olması Tedar kç  seç m  Tesl m koşulları ve ödeme S par ş m ktarı</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ürünün en az 2 yıl garant ye sah p olması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Aşağıdak lerden hang s  endüstr yel alıcıların satın alma davranışını etk leyen örgütsel faktörlerden b r  değ ld r? Amaçlar Stratej k Örgütün yapısı Stratej ler Pol t k/yasal etkenler</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Pol t k/yasal etkenler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıdak lerden hang s  endüstr yel satın alma sürec n n katılımcılarından b r  değ ld r? Kullanıcılar Etk ley c ler Kara ver c ler Borsa uzmanları Satın alıcılar</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Borsa uzmanları<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdak lerden hang s  endüstr yel alıcıların karar süreçler  arasında yer almaz? Problem n Tanımlanması Ürün N tel kler n n Bel rlenmes  N ha  tüket c ye danışılması Tedar kç  Araştırması Tekl f Alma</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> N ha  tüket c ye danışılması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">İşletme satın alma merkez ndek   lg l  karar alıcıların, tedar kç ler n görecel  önemler n  tesp t etmek amacıyla değerlend rmeye tutulması ve aralarından seç m yapılması  şlem  endüstr yel kara süreçler nden hang s nde yapılan  şlemlerd r? Tedar kç  Seç m  Tekl f Alma Tedar kç  Araştırması S par ş Prosedürünün Bel rlenmes  Performansın Değerlend r lmes </span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Tedar kç  Seç m <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 4. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="4" id="u4">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 05</span>
+    <h2>Müşteri İlişkileri Yönetimi (CRM) ve Müşteri Değeri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Müşteri İlişkileri Yönetimi (CRM); yeni müşteri kazanmanın maliyetinin mevcut müşteriyi elde tutmaktan kat kat yüksek olduğu gerçeğinden hareketle, müşteri sadakati oluşturmayı hedefleyen stratejik yönetim felsefesidir.</p>
+  </div>
+
+  <h3>5.1. CRM ve Müşteri Yaşam Boyu Değeri</h3>
+  <div class="box formul">
+    <dl>
+      <dt>Müşteri Yaşam Boyu Değeri (CLV / LTV)</dt>
+      <dd>Bir müşterinin işletmeyle olan tüm ilişki süresi boyunca işletmeye kazandıracağı toplam net nakit akışının bugünkü değeridir.</dd>
+      <dt>Müşteri Sadakati Piramidi</dt>
+      <dd>Potansiyel Müşteri &rarr; İlk Kez Satın Alan &rarr; Düzenli Müşteri &rarr; Destekçi Müşteri &rarr; Ortak (Marka Savunucusu).</dd>
+    </dl>
+  </div>
+
+  <h3>5.2. İşlemsel Pazarlama vs. İlişkisel Pazarlama</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Ölçüt</th>
+        <th>Geleneksel (İşlemsel) Pazarlama</th>
+        <th>İlişkisel Pazarlama (CRM Odaklı)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Odak Noktası</strong></td>
+        <td>Tek seferlik tekil satış işlemi</td>
+        <td>Sürekli müşteri ilişkisi ve sadakati</td>
+      </tr>
+      <tr>
+        <td><strong>Zaman Ufku</strong></td>
+        <td>Kısa vadeli</td>
+        <td>Uzun vadeli</td>
+      </tr>
+      <tr>
+        <td><strong>Müşteri Hizmeti</strong></td>
+        <td>Düşük öncelikli</td>
+        <td>Yüksek öncelikli ve kişiselleştirilmiş</td>
+      </tr>
+      <tr>
+        <td><strong>İletişim Şekli</strong></td>
+        <td>Tek yönlü (işletmeden müşteriye)</td>
+        <td>Çift yönlü ve etkileşimli diyalog</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>5.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">B r k ş n n beklent ler  ve ürüne  l şk n algılanan performans değerlend rmeler  arasında yapılan karşılaştırmanın sonucuna ________den r.? değer tatm n fayda gereks n m talep</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> tatm n<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">B r  şletmen n müşter   l şk ler  yönet m  uygulayarak aşağıdak lerden hang s   le  l şk ler n  gel şt rmes  mümkün değ ld r? Müşter ler  İş ortakları Çalışanları Tedar kç ler  Rak pler </span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Rak pler <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Müşter   l şk ler  yönet m  aşağıdak  anlayışlardan hang s   le daha çok  l şk l d r? Üret m Müşter  deney m  yönet m  Satış Kar amacı olmayan yaklaşım Toplumsal pazarlama</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Toplumsal pazarlama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Aşağıdak lerden hang s  müşter   l şk ler  yönet m  kapsamında anahtar kel meler arasında yer almaz? Müşter  Değer  Müşter  Tatm n  K tlesel Pazarlama Müşter  Beklent ler  Müşter  Sadakat </span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> K tlesel Pazarlama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aşağıdak lerden hang s  Müşter  İl şk ler  Yönet m n n Amaçları arasında yer almaz? Müşter   l şk ler n n karlı hale get r lmes  İşletme ver m n n artırılması Müşter  talepler n n karşılanması Mal yet maks m zasyonunun sağlanması Farklılaşmanın sağlanması</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Mal yet maks m zasyonunun sağlanması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">“Müşter  tatm n  yaklaşımı,  şletmen n mal ve h zmet n  kullananların ___________ üzer nde yoğunlaşırken, müşter ye değer sağlama yaklaşımı  se rak p  şletmeler arasında müşter ler n _____________ üzer nde yoğunlaşmaktadır.” İfades nde boş bırakılan yerlere aşağıdak lerden hang s  get r lmel d r? tahm n ed lmes  / n ç n seç m yaptığı tatm n ed lmes  / nasıl seç m yaptığı tatm n ed lmes  / ne zaman seç m yaptığı tatm n ed lmes  / nerede seç m yaptığı tahm n ed lmes  / neden seç m yaptığı</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> tatm n ed lmes  / nasıl seç m yaptığı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">7. Ürün performansı  le beklent ler n b rb r ne eş t olduğu durumlarda müşter n n  ç nde bulunduğu durum nasıl tanımlanır? Tatm n Tatm ns zl k Hoşnut Memnun Ne tatm n olmuş ne de tatm n olmamış</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ne tatm n olmuş ne de tatm n olmamış<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Müşter n n b r seç m hakkı olduğunda aynı markayı satın alma ya da her zamank  sıklıkla aynı mağazayı terc h etme eğ l m  ve eylem ne ne den r? Müşter  değer  Müşter  tatm n  Müşter  sadakat  Müşter  beklent s  Müşter   steğ </span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Müşter  sadakat <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdak lerden hang s  müşter   l şk ler yönet m n  (MİY) ortaya çıkarak nedenlerden b r  değ ld r? K tlesel pazarlamanın g tt kçe ucuz b r müşter  kazanma yolu olması Pazar payının değ l müşter  payının öneml  hale gelmes , Yoğun rekabet ortamı, Müşter  memnun yet  ve müşter  sadakat  kavramlarının önem kazanması, Var olan müşter n n değer n n anlaşılması ve bu müşter y  elde tutma çabalarına gerek duyulması,</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> K tlesel pazarlamanın g tt kçe ucuz b r müşter  kazanma yolu olması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">“Müşter n n  şletmeden yaşamı boyunca yaptığı alımlar  ç n harcadığı paralardan;  şletmen n sunduğu mal, h zmet ve müşter  tutmak  ç n harcadığı paraların çıkarılmasıyla elde ed len rakam” olarak tanımlanan kavram aşağıdak lerden hang s d r? Müşter  yaşam boyu değer  Müşter  tatm n  Müşter  sadakat  Müşter  memnun yet  Müşter  beklent ler </span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Müşter  yaşam boyu değer <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 5. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="5" id="u5">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 06</span>
+    <h2>Pazarlamada Çevresel Unsurlar: Mikro Çevre ve Makro Çevre Analizi</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>İşletmeler kapalı sistemler değildir; çevreleriyle sürekli etkileşim halindedir. Pazarlama çevresi, işletmenin hedef müşterileriyle başarılı ilişkiler kurma ve sürdürme yeteneğini etkileyen iç ve dış aktörler ile güçlerden oluşur.</p>
+  </div>
+
+  <h3>6.1. Mikro Çevre vs. Makro Çevre Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Çevre Düzeyi</th>
+        <th>Tanımı ve Özelliği</th>
+        <th>Bileşenleri</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Mikro Çevre (Yakın Çevre)</strong></td>
+        <td>İşletmenin müşterilerine hizmet etme yeteneğini doğrudan etkileyen ve işletmenin belirli ölçüde kontrol edebildiği veya etkileyebildiği aktörlerdir.</td>
+        <td>
+          1. İşletme İçi Birimler (Üretim, Finans, Ar-Ge)<br>
+          2. Tedarikçiler<br>
+          3. Pazarlama Aracıları (Toptancı, perakendeci, ajanslar)<br>
+          4. Müşteriler<br>
+          5. Rakipler<br>
+          6. Kamuoyları (Finansal, medya, yerel çevreler)
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Makro Çevre (Uzak Çevre - PESTLE)</strong></td>
+        <td>Mikro çevrenin tamamını etkileyen, işletmenin kontrol edemediği ancak uyum sağlamak zorunda olduğu geniş toplumsal güçlerdir.</td>
+        <td>
+          1. Demografik Çevre (Nüfus artışı, yaş yapısı)<br>
+          2. Ekonomik Çevre (Gelir düzeyi, enflasyon, faiz)<br>
+          3. Doğal/Fiziksel Çevre (Hammadde, iklim, enerji)<br>
+          4. Teknolojik Çevre (Yapay zeka, e-ticaret, otomasyon)<br>
+          5. Politik/Yasal Çevre (Kanunlar, regülasyonlar)<br>
+          6. Sosyo-Kültürel Çevre (Değerler, inançlar, yaşam tarzı)
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>6.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdak  trendlerden hang s  doğal çevre sorunlarından b r  değ ld r? Hammadde yeters zl ğ  Enerj  f yatlarındak  artış Tüket c  satın alma davranışındak  değ ş m Artan nüfus Hükümet n doğal kaynak yönet m ne müdahales </span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Tüket c  satın alma davranışındak  değ ş m<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Telev zyon reklamlarının mal yet  hang  pazarlama çevres  unsuruyla  lg l d r? Sosyo-kültürel çevre Pol t k yasal çevre Teknoloj k çevre Rekabet Çevres  Ekonom k çevre</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ekonom k çevre<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">F rmanın h zmet n  etk leyen yakın çevres nde yer alan f rma, tedar kç ler, pazarlama aracıları, rak pler, gruplar ve müşter ler g b  aktörler  aşağıdak lerden hang s  açıklar? Makro çevre M kro çevre Pazarlama çevres  Demograf k çevre Küresel çevre</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> M kro çevre<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Pazarlamacılar  ç n g rd  olarak gereken veya pazarlama faal yetler nden etk lenen doğal kaynaklara ________ den r. ? Hammadde pazarı Doğal çevre Teknoloj k çevre Yeş l hareket Üret m faktörler </span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Doğal çevre<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aşağıdak lerden hang s  pazarlama yönet m n n hedef müşter ler   le başarılı  l şk ler kurma ve koruma yeteneğ n  etk leyen pazarlama dış güçler n  tanımlamak  ç n kullanılır? Pazarlama çevres  Kültürel çevre Stratej k planlama Hedef pazarlar Pazarlama karması</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Pazarlama çevres <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">İşletmeye üret m faktörler   le malları sağlayan ve mal ve/veya h zmetler n  şletmeden hedef pazarlara akışına yardımcı olan bağımsız  şletmelere ne ad ver l r? Aracı kuruluşlar Tedar kç ler Rak pler Müşter ler Tüket c ler</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Aracı kuruluşlar<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Aşağıdak lerden hang s  makro çevreye a t faktörlerden b r  değ ld r? Demograf k Ekonom k Örgüt yapısı Pol t k - Yasal Teknoloj k</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Örgüt yapısı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıdak lerden hang s  başlıca demograf k çevre faktörler nden b r  değ ld r? Dünya ve ülke nüfusu Nüfusun kadın, erkek ve çocuk dağılımı Nüfusun coğraf  dağılım Nüfusun eğ t m düzey  Ülken n yönet m b ç m </span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ülken n yönet m b ç m <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdak lerden hang s  pol t k ve yasal çevre değ şkenler nden b r  değ ld r? Ant  tekel yasalar Verg  yasaları Yabancı sermaye düzenlemeler  Teknoloj k gel şmeler S yas   st krar</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Teknoloj k gel şmeler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">I. İk  kıtaya yayılan coğrafyası II. B rçok  mparatorluğa ev sah pl ğ  yapmış olması III. Değ ş k d n ve ırklardan oluşan b r nüfusa sah p olması Yukarıda ver lenlerden hang ler  ülkem z n sosyal ve kültürel çevres n  oluşturan zeng nl klerdend r? I I-II-III II II-III I-II</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> I-II-III<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 6. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="6" id="u6">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 07</span>
+    <h2>Pazar Bölümlendirme, Hedef Pazar Seçimi ve Konumlandırma (STP Modeli)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Modern pazarlamanın kalbini STP süreci oluşturur: Pazarı homojen alt gruplara bölmek (Segmentation), bu gruplardan işletmenin en iyi hizmet verebileceklerini seçmek (Targeting) ve tüketici zihninde rakiplerden farklı, üstün bir yer edinmek (Positioning).</p>
+  </div>
+
+  <h3>7.1. Pazar Bölümlendirme Kriterleri (4 Temel Boyut)</h3>
+  <ol class="adim">
+    <li><strong>Coğrafi Bölümlendirme:</strong> Ülke, bölge, şehir büyüklüğü, iklim, kırsal/kentsel alanlar.</li>
+    <li><strong>Demografik Bölümlendirme:</strong> En yaygın kullanılan ölçüttür. Yaş, cinsiyet, aile büyüklüğü, gelir, meslek, eğitim, din, kuşaklar (X, Y, Z Kuşağı).</li>
+    <li><strong>Psikografik Bölümlendirme:</strong> Sosyal sınıf, yaşam tarzı (AIO: Faaliyetler, İlgiler, Fikirler) ve kişilik özellikleri.</li>
+    <li><strong>Davranışsal Bölümlendirme:</strong> Tüketicilerin ürüne ilişkin bilgi, tutum ve tepkileri:
+      <ul>
+        <li>Kullanım Durumu (Hiç kullanmayan, eski kullanıcı, düzenli kullanıcı),</li>
+        <li>Kullanım Oranı (Hafif, orta, ağır kullanıcılar - 80/20 kuralı),</li>
+        <li>Marka Sadakati (Sadık, değişken, fırsatçı alıcılar),</li>
+        <li>Aranan Faydalar (Fiyat odaklı, kalite odaklı, statü odaklı).</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>7.2. Hedef Pazar Seçim Stratejileri</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Strateji Adı</th>
+        <th>Uygulama Şekli</th>
+        <th>Özellikleri</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Farklılaştırılmamış (Kitlesel) Pazarlama</strong></td>
+        <td>Tüm pazara tek bir pazarlama karması (tek ürün, tek fiyat) sunulur.</td>
+        <td>Farklılıklar yok sayılır, maliyet tasarrufu sağlar (Tuz, şeker, ilk model arabalar).</td>
+      </tr>
+      <tr>
+        <td><strong>Farklılaştırılmış Pazarlama</strong></td>
+        <td>Birkaç farklı pazar bölümü seçilir ve her bölüme özel farklı ürün ve 4P sunulur.</td>
+        <td>Toplam satışları artırır ancak maliyetleri yükseltir (Binek araç, SUV, ticari araç üreten otomotiv firmaları).</td>
+      </tr>
+      <tr>
+        <td><strong>Yoğunlaştırılmış (Niş) Pazarlama</strong></td>
+        <td>Büyük bir pazarın tek bir dar alt bölümüne odaklanılır.</td>
+        <td>Kısıtlı kaynaklara sahip işletmeler için uygundur; uzmanlaşma sağlar (Organik bebek maması, lüks el yapımı saatler).</td>
+      </tr>
+      <tr>
+        <td><strong>Mikro Pazarlama (Bireysel)</strong></td>
+        <td>Ürünlerin belirli bireylerin zevkine göre kişiselleştirilmesidir (Kişiye özel parfüm, ısmarlama ayakkabı).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.3. Konumlandırma ve Algılama Haritaları</h3>
+  <p>Konumlandırma; bir ürünün hedef tüketicilerin <strong>zihninde</strong> rakiplerine kıyasla işgal ettiği yerdir. Konumlandırma algılama haritalarıyla analiz edilir (örn. Yüksek Fiyat - Yüksek Kalite vs. Düşük Fiyat - Ekonomik).</p>
+
+  
+  <h3>7.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">________ pazarlamada, f rma çeş tl  pazar bölümler ne g derek her b r pazar bölümü  ç n farklı ürünler sunar.? Bölümlenm ş Farklılaşmamış Farklılaşmış Coğraf -demograf k N ş</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Farklılaşmış<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Değ şken  ht yaç ve  steklere sah p farklı gruplardak  tüket c ler n tanımlanması ve prof ller n n bel rlenmes ________olarak tanımlanır.? Bölümlend rme b rleşme odaklanma hedefleme  l şk  yönet m </span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bölümlend rme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">B r ________ benzer  stek ve  ht yaçları olan müşter lerden oluşur. ? pazar hedef  pazar konumu pazar bölümü pazar potans yel  pazar düzey </span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> pazar bölümü<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">________ tüket c ler sosyal sınıfa, yaşam tarzına ve k ş l k özell kler ne göre farklı gruplara bölünür. ? Ps kograf k bölümlend rmede Demograf k bölümlend rmede Coğraf  bölümlend rmede Davranışsal bölümlend rmede Çoklu bölümlend rmede</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ps kograf k bölümlend rmede<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Her b r pazar bölümü  ç n pazar bölümler n n benzers z  ht yaç ve özell kler ne göre b r değer tekl f n n oluşturulması ve bu değer tekl f n n tüket c  z hn nde yer ed nmes ne  l şk n stratej k karara ne den r? İht yaç temell  bölümlend rme Pazar bölümünü tanımlama Pazar çek c l ğ n  bel rleme Özell k temell  bölümlend rme Konumlandırma</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Konumlandırma<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  hedef pazarlama sürec n n aşamalarından b r  değ ld r? İht yaçları tatm n ed lmem ş pazarları tanımlamak Pazarı bölümlend rmek Üret m yapmak Hedeflenecek pazarı seçmek Pazarlama stratej ler  doğrultusunda konumlandırma</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Üret m yapmak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">İşletme, değ ş k pazar bölümler n n farklılıklarını görmezl kten gel p, b r tek pazarlama karması  le bütün pazarı kaplamak  sted ğ nde ne tür pazarlama stratej s   zlem ş olur? Farklılaştırılmış Yoğunlaştırılmış Kategor lend r lm ş Tek lleşt r lm ş Farklılaştırılmamış</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Farklılaştırılmamış<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıdak lerden hang s  hedef pazar bel rleme stratej ler n n seç m ne etk  eden faktörler yer almamalıdır? Yönet c n şahs   stekler  İşletme kaynakları Ürün değ şkenl ğ  Ürünün hayat evres nde bulunduğu aşama Pazarın değ şkenl ğ </span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Yönet c n şahs   stekler <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdak lerden hang s  konumlandırma özell kler nden, “Konumlandırma düşünces  net olarak  fade ed lmel d r”  fades n n karşılığıdır? G zl l k Açıklık Kompleks olma Bas tl k Rekabet Edeb lme Özell ğ </span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Açıklık<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Aşağıdak lerden hang s  yen den konumlandırmanın başlıca nedenler nden b r  değ ld r? İlk konumlandırmada başarısız olunmuşsa, Ulaşılmak  sten len konumda çabalanılmasına rağmen başarısız olunmuşsa Aynı konumlandırmada çok fazla ve güçlü rak pler mevcutsa, Mevcut konumlandırma çok başarılı olmuşsa, Yen  b r n ş pazar bulunmuşsa ve bundan avantaj sağlanmak  sten yorsa.</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Mevcut konumlandırma çok başarılı olmuşsa,<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 7. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="7" id="u7">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 08</span>
+    <h2>Pazarlamada Strateji Kaynakları ve 4P Yönetimi</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Ürün yaşam eğrisi analizi, fiyatlandırma stratejileri, dağıtım kanalı seçimleri ve tutundurma karması bileşenleri stratejik pazarlama planlamasının merkezindedir.</p>
+  </div>
+
+  <h3>8.1. Ürün Yaşam Eğrisi (PLC) Aşamaları</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Aşama</th>
+        <th>Satışlar</th>
+        <th>Kâr Durumu</th>
+        <th>Müşteriler</th>
+        <th>Pazarlama Stratejisi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Giriş</strong></td>
+        <td>Yavaş artar</td>
+        <td>Negatiftir (Yüksek Ar-Ge ve tanıtım maliyeti)</td>
+        <td>Yenilikçiler</td>
+        <td>Ürün farkındalığı yaratma, deneme satın alımlarını teşvik etme.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Büyüme</strong></td>
+        <td>Hızla yükselir</td>
+        <td>Zirveye doğru çıkar</td>
+        <td>Erken benimseyenler</td>
+        <td>Pazar payını artırma, dağıtım kanallarını genişletme, yeni modeller ekleme.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Olgunluk</strong></td>
+        <td>Zirveye ulaşır, yavaşlar</td>
+        <td>Yüksek ama gerilemeye başlar (Fiyat rekabeti)</td>
+        <td>Çoğunluk</td>
+        <td>Pazar payını koruma, ürün farklılaştırma, marka sadakati oluşturma.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Düşüş</strong></td>
+        <td>Hızla azalır</td>
+        <td>Düşer veya zarara döner</td>
+        <td>Gelenekçiler</td>
+        <td>Ürünü budama (hasat etme), pazardan çekilme veya son nişlere odaklanma.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>8.2. Fiyatlandırma Stratejileri</h3>
+  <ul>
+    <li><strong>Pazarın Kaymağını Alma (Skimming):</strong> Pazara ilk girişte yüksek fiyat uygulayıp yenilikçi müşterilerden yüksek kâr elde etmek, ardından zamanla fiyatı kademeli düşürmek (Yeni teknolojik ürünler, iPhone lansmanları).</li>
+    <li><strong>Pazara Nüfuz Etme (Penetration):</strong> Pazara ilk girişte çok düşük fiyat uygulayarak hızla yüksek pazar payı ve müşteri tabanı yakalamak.</li>
+  </ul>
+
+  
+  <h3>8.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Otomob l ve ev g b  tüket c ler n hayatları boyunca sadece b rkaç kez satın aldıkları ve b r m f yatları oldukça yüksek ürünler hang  kategor ye g rerler? Kolayda ürünler Beğenmel  ürünler Özell ğ  olan ürünler Aranan ürünler Aranmayan ürünler</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Özell ğ  olan ürünler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Buzdolabı satan b r  şletmen n buzdolabına 2 yıl garant  vermes , tesl matını yapması ve satış sonrası h zmetler  vermes  ürünün hang  düzey ne h tap etmekted r? Zeng nleşt r lm ş ürün Çek rdek ürün Somut ürün Soyut ürün Beğenmel  ürün</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Zeng nleşt r lm ş ürün<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">____________, b r satıcının mal ve h zmetler n  tanımlayan veya bunları rak pler n mal ve h zmetler nden ayıran b r  s m, ter m, sembol, tasarım veya herhang  başka b r özell kt r.? Patent Logo L sans Marka Tesc l</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Marka<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Aşağıdak  b lg lerden hang s  yanlıştır? Sınırlı sayıda müşter  varsa bu durumda k ş sel satış reklama göre daha avantajlıdır. K ş sel satış f rmada gel r get ren unsurdur. Çok sayıda müşter  var  se reklam k ş sel satışa göre kullanım üstünlüğüne sah pt r. Satış tems lc ler  aynı zamanda f rma  majını da taşırlar. Reklam ç ft yönlü b r  let ş m aracıdır.</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Reklam ç ft yönlü b r  let ş m aracıdır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Pazarlama karması elemanlarından hang s  pazarlamanın sağladığı faydaların (zaman, şek l, yer, mülk yet) tümünü de sağlar? Ürün F yat Dağıtım Tutundurma Duyurum</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Dağıtım<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">B r satıcının mal ve h zmetler n  tanımlayan veya bunları rak pler n mal ve h zmetler nden ayıran b r  s m, ter m, sembol, tasarım veya herhang  başka b r özell k olarak tanımlanmakta olan kavrama ne ad ver l r? Nesne Ürün Marka F yat C s m</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Marka<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Aşağıda ver lenlerden hang s  ürün f yatlandırma kararlarını etk leyen faktörlerden b r  değ ld r? Pazarın yapısı Müşter ler n özell kler  Mal yet Teknoloj k gel şmeler Rak pler</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Teknoloj k gel şmeler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">B r ürünün satış f yatı, toplam b r m mal yet üzer ne, bel rl  b r b r m kar eklenerek elde ed len f yatlama türü ned r? Rekabete dayalı f yatlandırma Talebe dayalı f yatlandırma Esnekl ğe dayalı f yatlandırma Arza dayalı f yatlandırma Mal yete dayalı f yatlandırma</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Mal yete dayalı f yatlandırma<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Pazarın kaymağını alma stratej s nde f yata _________ pazarlarda ürüne yüksek f yat koyarak ________ oranda kâr sağlamak amaçlanmaktadır.? az duyarlı / yüksek az duyarlı / düşük çok duyarlı / yüksek çok duyarlı / düşük duyarsız / yüksek</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> az duyarlı / yüksek<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Tüket m ürünler , tüket c ler n satınalma alışkanlıkları d kkate alınarak dört sınıfa ayrılmaktadır. Aşağıdak lerden hang s  bunlardan b r  değ ld r? Teknoloj k ürünler Beğenmel  ürünler Kolayda ürünler Özell kl  ürünler Aranmayan ürünler</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Teknoloj k ürünler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 8. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="8" id="u8">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 09</span>
+    <h2>Hizmet Pazarlaması: Hizmetlerin Özellikleri ve Genişletilmiş Karma (7P)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Hizmetler, fiziksel mallardan farklı olarak elle tutulamayan, üretildiği anda tüketilen ve sahiplik devri yaratmayan soyut ekonomik faaliyetlerdir.</p>
+  </div>
+
+  <h3>9.1. Hizmetlerin 4 Temel Özelliği (IHIP Modeli)</h3>
+  <ol class="adim">
+    <li><strong>1. Soyutluk (Dokunulamazlık - Intangibility):</strong> Hizmetler satın alınmadan önce görülemez, tadılamaz, koklanamaz veya dokunulamaz (Eğitim, bankacılık, sağlık). Bu durum müşteri için riski artırır; pazarlamacılar fiziksel kanıtlarla soyutluğu somutlaştırmalıdır.</li>
+    <li><strong>2. Ayrılmazlık (Eşzamanlılık - Inseparability):</strong> Hizmetin üretimi ile tüketimi aynı anda gerçekleşir. Hizmeti sunan kişi ile hizmet birbirinden ayrılamaz (Kuaför, diş hekimi, cerrahi operasyon).</li>
+    <li><strong>3. Değişkenlik (Heterojenlik - Variability):</strong> Hizmetin kalitesi kime, ne zaman, nerede ve nasıl sunulduğuna bağlı olarak kişiden kişiye değişir (Aynı oteldeki iki farklı personelin servis kalitesi). Standardizasyon zordur.</li>
+    <li><strong>4. Dayanıksızlık (Stoklanamazlık - Perishability):</strong> Hizmetler depolanamaz veya gelecekte kullanılmak üzere stoklanamaz (Boş giden bir uçak koltuğu veya otel odası o an satılmazsa potansiyel gelir sonsuza dek kaybolur).</li>
+  </ol>
+
+  <h3>9.2. Hizmet Pazarlaması Karması (Genişletilmiş 7P)</h3>
+  <p>Geleneksel 4P'ye (Ürün, Fiyat, Dağıtım, Tutundurma) ek olarak 3 yeni P eklenir:</p>
+  <ul>
+    <li><strong>5. İnsan (People):</strong> Hizmeti sunan tüm çalışanlar ve personelin tutumu, eğitimi, kılık kıyafeti.</li>
+    <li><strong>6. Süreç (Process):</strong> Hizmetin müşteriye ulaştırılmasındaki adımlar, bekleme süreleri, akış şemaları ve prosedürler.</li>
+    <li><strong>7. Fiziksel Kanıtlar (Physical Evidence):</strong> Hizmetin sunulduğu fiziksel çevre, dekorasyon, logo, binalar, broşürler ve ambiyans.</li>
+  </ul>
+
+  
+  <h3>9.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">___________ f z ksel olarak sah p olunamayan b r  ş, hareket ve çabayı  çeren soyut mamullerd r. Yukarıdak  boşluğu dolduracak en uygun  fade aşağıdak lerden hang s d r?. F k r Olay H zmet Deney m Fayda</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> H zmet<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">_______, b r ürünün mal veya h zmet olarak sınıflandırılmasında kullanılan anahtar faktördür. Yukarıdak  boşluğu dolduracak en uygun  fade aşağıdak lerden hang s d r? B reysell k Pas f  zleneb lme Algılama Soyutluk Örgütsell k</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Soyutluk<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Aşağıdak lerden hang s  b r arama tam rc s n n soyut b lenler nden b r d r? Yedek parçalar Çalışanların ün formaları Yağların Depolandığı Var l Müşter  bekleme alanı Tam rc ler n aldığı eğ t m</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Tam rc ler n aldığı eğ t m<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Aşağıdak lerden hang  b r h zmet  şletmes  örneğ  değ ld r? Departmanlı Mağaza Lunapark Otel Banka Kağıt Fabr kası</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kağıt Fabr kası<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">H zmetler n en ayırt ed c  özell ğ  aşağıdak lerden hang s d r? Heterojenl k Bozulab l rl k Soyutluk Karşılaştırılab l rl k Bölüneb lme</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Soyutluk<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  h zmet üret m ve tüket m n n eş zamanlı olmasından kaynaklanan sorunlardan b r  değ ld r? H zmet  satın almadan önce müşter ler, değerlend rme yapma sansına sah p olmayab l r. H zmet alan müşter ler n d ğer müşter ler tarafından  zlenmes  olumsuz durumlarda b le faydalıdır. Müşter , h zmet sürec ne genell kle f z ksel olarak katıldığı  ç n h zmet aksaklıklarını daha önceden ortaya çıkarmak ve düzeltmek oldukça güçtür. Müşter ler n varlığı ve katılımı, h zmet sunanlar açısından b reyler arası etk l  b r  l şk n n önem n  doğurmaktadır H zmet ortamında bulunan müşter ler n serg led ğ  davranış, aynı anda o ortamda bulunan d ğer müşter ler n h zmet deney mler n  azaltab lmekted r.</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> H zmet alan müşter ler n d ğer müşter ler tarafından  zlenmes  olumsuz durumlarda b le faydalıdır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">I. İnsan (Katılımcılar) II. F z ksel ortam III. Süreç IV. F yat V. Tutundurma Yukarıdak lerden hang s  h zmet pazarlamasının kend ne özel durumundan kaynaklanarak pazarlama karmasına eklenen elemanlardır? I-II-III III-IV II-IV I-V I-II-V</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> I-II-III<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıdak lerden hang s  düşük temas h zmetler n n özell kler nden b r  değ ld r? Ayrıca d ğer temas noktaları  le h zmet üreten  şletme, tüket c   le temas hal nde olab lecekt r Posta, self serv s ek pman, telefon,  nternet s tes  vb  le temas hal nde olacaktır. Tüket c  h zmet üret m sürec n  yak nen görmekted r. H zmet personel  ve d ğer tüket c lerle temas olmamaktadır. Tüket c  h zmet üret m sürec n  görmemekted r.</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Tüket c  h zmet üret m sürec n  yak nen görmekted r.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">H zmet n sunulduğu  şletme  le müşter n n etk leş mde bulunduğu çevre ve koşulları  fade eden pazarlama karması elemanı hang s d r? Ürün Dağıtım İnsan F z ksel ortam F yat</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> F z ksel ortam<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">H zmet n tüket c n n  ht yaç duyduğu zamanda hazır bulundurulması ve tutarlı kal tede sunulmasını kapsayan pazarlama karması elemanı hang s d r? F yat İnsan Tutundurma Ürün Süreç Yönet m </span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Süreç Yönet m <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 9. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="9" id="u9">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 10</span>
+    <h2>Pazarlama Bilgi Sistemi (MIS) ve Pazarlama Araştırması</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Pazarlama yöneticilerinin doğru, zamanında ve geçerli kararlar alabilmeleri için ihtiyaç duydukları bilgilerin düzenli olarak toplanması, analiz edilmesi ve dağıtılmasını sağlayan yapıya Pazarlama Bilgi Sistemi denir.</p>
+  </div>
+
+  <h3>10.1. Pazarlama Bilgi Sisteminin 4 Alt Bileşeni</h3>
+  <ol class="adim">
+    <li><strong>İç Kayıtlar Sistemi:</strong> İşletmenin kendi bünyesinde oluşan satış raporları, faturalar, stok düzeyleri, maliyet verileri ve müşteri sipariş kayıtları.</li>
+    <li><strong>Pazarlama İstihbarat Sistemi:</strong> Pazarlama çevresindeki gelişmeler hakkında günlük, genel bilgilerin toplanması (Rakiplerin hamleleri, ticari yayınlar, fuarlar).</li>
+    <li><strong>Pazarlama Araştırması Sistemi:</strong> İşletmenin karşılaştığı <em>belirli ve münferit bir probleme</em> yönelik olarak sistematik veri toplanması ve analizi.</li>
+    <li><strong>Pazarlama Karar Destek Sistemleri (MDSS):</strong> İstatistiksel yazılımlar ve modeller aracılığıyla karmaşık verilerin analiz edilerek karar vericilere simülasyon sunulması.</li>
+  </ol>
+
+  <h3>10.2. Pazarlama Araştırması Sürecinin Adımları</h3>
+  <p>Problemin tanımlanması &rarr; Araştırma planının geliştirilmesi (Birincil vs İkincil veriler) &rarr; Verilerin toplanması (Anket, mülakat, odak grup) &rarr; Verilerin analizi &rarr; Bulguların raporlanması.</p>
+
+  
+  <h3>10.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">İşletmen n ver  tabanlarından toplanan b lg  ________ ver lere b r örnekt r. Yukarıdak  boşluğu dolduracak en uygun  fade aşağıdak lerden hang s d r? b r nc l  k nc l gözlemsel deneysel etnograf k</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong>  k nc l<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">İk nc l ver  ________ . Yukarıdak  boşluğu dolduracak en uygun  fade aşağıdak lerden hang s d r? çoğunlukla anket yoluyla toplanır. toplamak pahalıdır. dış tedar kç lerden satın alınmaz. b r nc l ver ler  desteklemek  ç n her zaman gerekl d r. güncel olmayab l r.</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> güncel olmayab l r.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Araştırmacı,  nsanların b lg  vermeye  steks z ya da b lg n n toplanmasının mümkün olmadığı durumlarda hang  yöntem  kullanab l r? Gözlem anket deney odak grup k ş sel mülakat</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Gözlem<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Pazarlama araştırması aşağıdak lerden hang s n  kapsar? Pazarlama fırsatlarının bulunması ve tanımlanması. Pazarlama faal yetler n n değerlend r lmes . Pazarlama performansının gözlenmes . Pazarlamanın, b r süreç olarak anlaşılmasına katkıda bulunmak. Yukarıdak ler n heps .</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Yukarıdak ler n heps .<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Pazarlama kararı almak  ç n ş rket  ç ndek  ver  kaynaklarını araştırılması hang  tür kaynağı  fade etmekted r? çevr m ç   çsel dışsal kamu b r nc l</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong>  çsel<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">I. Yön gözetmeyen  nceleme II. Durumsal  nceleme III. Resm  olmayan araştırma IV. Resm  araştırma Yukarıda ver lenlerden hang ler  pazarlama çevres nde  st hbaratın b lg  yöntemler ndend r? I II I-III I-II-III-IV II-III</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> I-II-III-IV<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Pazarlama karar alma sürec   ç n b lg sayar teknoloj s n  kullanarak, hızlı b lg  sağlamak üzere, ver ler,  stat st kler, modelleme ve serg leme formatlarının b r araya get r lmes   le oluşturulan bütünleş k b r s steme ne ad ver l r? Pazar araştırması Pazarlama karması Pazarlama karar destek s stem  Ger b ld r m Araştırma s stem </span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Pazarlama karar destek s stem <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">B r araştırma planının tasarımı, aşağıdak  hususlardan hang s n  kapsamaz? F rma bütçes  Araştırma yaklaşımları Araştırma araçları Örnekleme planı ve örneklem b r m   le  l şk  kurma yöntemler  B lg  kaynakları</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> F rma bütçes <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Özel b r amaç veya proje  ç n toplanan b lg lere ___________, farklı amaçlar  ç n toplanmış veya mevcut olan b lg lere  se _____________den r.?  k nc l ver ler / b r nc l ver ler b r nc l ver ler /  k nc l ver ler kal tat f ver  / kant tat f ver  kant tat f ver  / kal tat f ver  tanımlayıcı ver  / kal tat f ver </span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> b r nc l ver ler /  k nc l ver ler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">I- Yüz-yüze anket II- Posta anket  III- Telefon anket  IV- İnternet anket  Yukarıda bel rt lenlerden hang ler  en çok kullanılan anket yöntemler d r? I II III IV Heps </span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Heps <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 10. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="10" id="u10">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 11</span>
+    <h2>Elektronik Pazarlama (E-Pazarlama) ve Dijital Kanallar</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Elektronik pazarlama; internet, mobil teknolojiler ve dijital medya kanalları aracılığıyla müşteri ihtiyaçlarının belirlenmesi, tatmin edilmesi ve etkileşimli ilişkilerin kurulması sürecidir.</p>
+  </div>
+
+  <h3>11.1. Geleneksel Pazarlama ile E-Pazarlamanın Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Ölçüt</th>
+        <th>Geleneksel Pazarlama</th>
+        <th>E-Pazarlama (Dijital)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>İletişim Yönü</strong></td>
+        <td>Tek yönlü (Monolog - TV, radyo, gazete)</td>
+        <td>Çift yönlü ve etkileşimli (Diyalog, sosyal medya)</td>
+      </tr>
+      <tr>
+        <td><strong>Kişiselleştirme</strong></td>
+        <td>Kitlesel, homojen mesajlar</td>
+        <td>Bireyselleştirilmiş, veriye dayalı dinamik içerik</td>
+      </tr>
+      <tr>
+        <td><strong>Coğrafi Sınırlar</strong></td>
+        <td>Bölgesel veya ulusal sınırlar</td>
+        <td>7/24 kesintisiz küresel erişim</td>
+      </tr>
+      <tr>
+        <td><strong>Ölçümlenebilirlik</strong></td>
+        <td>Zor ve gecikmeli (Reyting, tiraj tahminleri)</td>
+        <td>Anlık, net ve kesin metrikler (Tıklama, dönüşüm oranı)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>11.2. Dijital Pazarlama Kanalları</h3>
+  <ul>
+    <li><strong>Arama Motoru Pazarlaması (SEM & SEO):</strong> Organik sıralama (SEO) ve ücretli tıklama reklamları (Google Ads / PPC).</li>
+    <li><strong>Sosyal Medya Pazarlaması (SMM):</strong> Tüketicilerle etkileşim ve topluluk yönetimi.</li>
+    <li><strong>İçerik Pazarlaması:</strong> Değerli ve eğitici içeriklerle müşteri çekme.</li>
+    <li><strong>E-Posta Pazarlaması:</strong> İzinli pazarlama (Permission marketing) esasına dayalı sadakat iletişimi.</li>
+  </ul>
+
+  
+  <h3>11.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdak lerden hang s   nternet n pazarlama açısından  şletmelere ve tüket c lere sağladığı faydalar arasında yer almaz? Fırsat eş tl ğ  Zeng n b lg  ve karşılıklı etk leş m Uluslararası er ş m B lg ler n daha kolay değerlend r lmes  Kontrol ed leb l r satın alma sürec </span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B lg ler n daha kolay değerlend r lmes <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">______________ mal ve h zmetler n b r hedef pazara yönel k olarak  nternet veya d j tal araçlar yoluyla oluşturulmasını, dağıtılmasını, tutundurulmasını ve f yatlandırılmasını  çeren stratej k süreçt r.? Elektron k pazarlama Sosyal Medya pazarlaması Ver  tabanlı pazarlama Mult medya Pazarlaması V ral Pazarlama</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Elektron k pazarlama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Aşağıdak lerden hang s  elektron k pazarlamanın avantajları arasında yer almaz? Yen   ş fırsatları yaratması Reklâm mal yetler n  azaltması S par şler n n değerlend r lmes nde etk nl k sağlaması Stok mal yetler n  düşürmes  Rekabet n yoğunluğunu azaltması</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Rekabet n yoğunluğunu azaltması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Aşağıdak lerden hang s  elektron k pazarlama yöntemler  arasında yer almaz? Banner Arama motorları Bağlılık, referans ve üyel k programları Çok Katlı pazarlama Blog</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Çok Katlı pazarlama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">________ anket ve form g b  yöntemlerle tüket c lerden kend   stekler   le alınan şahs  b lg ler n kullanılarak onların  lg  alanları ve  ht yaçlarına göre yapılan pazarlama faal yetler n  kapsar.? İz nl  pazarlama İl şk sel pazarlama Ver  tabanlı pazarlama B reb r pazarlama Doğrudan Pazarlama</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İz nl  pazarlama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  elektron k pazarlamanın avantajları arasında yer almaz? Uluslararası pazarlara kolay er ş m Reklâm mal yetler n  azaltması Stok mal yetler n  düşürmes  İnternet s teler ne günün bel rl  saatler nde er ş leb lmes  Pazar hakkında b lg  ed nme olanağı</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İnternet s teler ne günün bel rl  saatler nde er ş leb lmes <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Aşağıdak lerden hang s  blogların pazarlama faal yetler nde kullanılmasının  şletmeye sağlayab leceğ  faydalardan b r  değ ld r? Bloglar aracılığıyla müşter lerle düzenl   l şk ler kurulab l r, müşter  tatm n  ve sadakat  artırılab l r. Bloglar aracılığıyla müşter ler n  lg  alanlarına  l şk n b lg  elde ed leb l r ve bu b lg ye göre  şletmeler pazar stratej s  gel şt reb l r. Blogların arama motorlarında genelde üst sıralarda olmaları sebeb yle ürün ve marka b l n rl ğ n  artırır. Müşter ler  le sürekl  kurulan karşılıklı  l şk  sayes nde müşter   şletmen n ürün ve h zmetler n şek llend r lmes ne katkı sağlayab l r. Bu da markaya olan güven  artırab l r. Bloglar sayes nde ürün  le  lg l  olarak çıkab lecek olası ded kodular hızla yayılab l r.</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bloglar sayes nde ürün  le  lg l  olarak çıkab lecek olası ded kodular hızla yayılab l r.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Katılımcılarının onl ne ortamlarda kend ler n   fade etme,  let ş me geçme, gruplara katılma ve bu ortamlara f k r, yorum ve yayınlarıyla katkıda bulunma  mkanı sağlayan sosyal  çer kl  web s teler ne ne ad ver l r? Sosyal medya İnternet E-t caret E-pazarlama V ral pazarlama</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sosyal medya<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdak lerden hang s  sosyal medya pazarlamasının 5 temel amacından b r  değ ld r? Müşter lerde marka farkındalığı oluşturma, Markayı tak p eden k ş  sayısını yükseltme, Müşter lerle  let ş m  engelleme Markanın web s tes nde traf ğ  artırma, İlg l  l nkler  web s ten ze yönlend rme,</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Müşter lerle  let ş m  engelleme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Sosyal medya araçları 5 grup altında sınıflandırılab l r. Aşağıdak lerden hang s  bu sınıflardan b r  değ ld r? Sosyal haber s teler  Alışver ş s teler  Sosyal paylaşım s teler ; Sosyal ağ s teler  Sosyal cevaplama s teler </span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Alışver ş s teler <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 11. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="11" id="u11">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 12</span>
+    <h2>Doğrudan Pazarlama ve E-Ticaret Modelleri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Doğrudan pazarlama; aracı kullanmadan, doğrudan hedeflenen bireysel tüketicilerle doğrudan temas kurarak anında ölçülebilir bir tepki almayı amaçlayan pazarlama yöntemidir.</p>
+  </div>
+
+  <h3>12.1. Başlıca Doğrudan Pazarlama Araçları</h3>
+  <ol class="adim">
+    <li><strong>Doğrudan Posta ve Katalog Pazarlaması:</strong> Seçilmiş adreslere broşür, bülten veya ürün kataloğu gönderilmesi.</li>
+    <li><strong>Telepazarlama (Telefonla Pazarlama):</strong> Gelen (Inbound) ve giden (Outbound) çağrı merkezleri aracılığıyla satış ve destek.</li>
+    <li><strong>Doğrudan Tepkili Televizyon Pazarlaması (DRTV):</strong> Bilgilendirici reklamlar (infomercials) ve anında sipariş hatları.</li>
+    <li><strong>Kiosk Pazarlaması:</strong> Mağazalarda veya kamuya açık alanlarda dokunmatik ekranlı sipariş makineleri.</li>
+  </ol>
+
+  <h3>12.2. E-Ticaret İş Modelleri</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>İş Modeli</th>
+        <th>Açılımı</th>
+        <th>Tanımı ve Örneği</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>B2C</strong></td>
+        <td>Business to Consumer</td>
+        <td>İşletmeden nihai tüketiciye online satış (Amazon, Hepsiburada, Trendyol).</td>
+      </tr>
+      <tr>
+        <td><strong>B2B</strong></td>
+        <td>Business to Business</td>
+        <td>İşletmeler arası hammadde, toptan mal ticareti (Alibaba).</td>
+      </tr>
+      <tr>
+        <td><strong>C2C</strong></td>
+        <td>Consumer to Consumer</td>
+        <td>Tüketiciden tüketiciye ikinci el veya münferit satış (Sahibinden, Letgo, eBay).</td>
+      </tr>
+      <tr>
+        <td><strong>C2B</strong></td>
+        <td>Consumer to Business</td>
+        <td>Tüketicinin teklif sunduğu veya içerik ürettiği modeller (Freelance siteleri, Shutterstock).</td>
+      </tr>
+      <tr>
+        <td><strong>B2G / G2C</strong></td>
+        <td>İşletme - Devlet / Devlet - Vatandaş</td>
+        <td>Kamu ihaleleri, e-Devlet ödemeleri.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+  <h3>12.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Doğrudan pazarlama uygulamalarının terc h ed lmes nde en öneml  faktör aşağıdak lerden hang s d r? Ölçüleb l rl k Kontrol ed leb l rl k Ulaşılab l rl k Düşük mal yet Güven l rl k</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ölçüleb l rl k<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Doğrudan satış  le  lg l  aşağıdak   fadelerden hang s  yanlıştır? Satış gücü yaratma ve elde tutma mal yet  yüksekt r Her b r müşter yle ayrı ayrı  lg len lmes  gerek r Perakende satış noktası sayılmayacak yerlerde gerçekleşt r l r Doğrudan pazarlamadan b raz daha farklı özell klere sah pt r. Satış tems lc s   le müşter  arasında doğrudan temasın olması gerekmez.</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Satış tems lc s   le müşter  arasında doğrudan temasın olması gerekmez.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Doğrudan pazarlamada kullanılan  let ş m araçları arasında aşağıdak lerden hang s  yer almaz? Tr gger ve zem n reklamları SMS K osk Kataloglar Alışver ş Merkezler </span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Alışver ş Merkezler <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">___________,  nternet n ve web’ n, t caret n yapılması  ç n kullanılmasıdır.? Modern t caret E-T caret İnternet pazarlaması Elektron k pazarlama İşlem pazarlaması</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E-T caret<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aşağıdak lerden elektron k t caret türler  arasında yer almaz? İşletmeden Tüket c ye E-t caret İşletmeden İşletmeye E-t caret Çalışanlar arası E-T caret Tüket c den Tüket c ye E-t caret Vatandaş  le hükümet arası E-t caret</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Çalışanlar arası E-T caret<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  e-t caret sürec n  oluşturan eylemlerden b r  değ ld r? Satış sonrası bakım, destek, h zmetler n n satıcının sorumluluğundan çıkması. T caret önces   şletmeler n elektron k ortamda b lg lenmes  ve araştırma yürütmes , İşletmeler n elektron k ortamda buluşması, Ödeme sürec n n yer ne get r lmes , Taahhüdün yer ne get r lmes , mal veya h zmet n müşter ye tesl m ,</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Satış sonrası bakım, destek, h zmetler n n satıcının sorumluluğundan çıkması.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">İşletmeler n d ğer  şletmelere  nternet ve bağlı teknoloj ler vasıtasıyla satış yapmaya odaklandığı e- t caret hang s d r? B2C B2B C2C SSL SET</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B2B<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Network ( nternet) üzer ndek  b lg  transfer  sırasında güvenl k ve g zl l ğ n sağlanması amacıyla Netscape tarafından gel şt r lm ş b r güvenl k protokolü hang s d r? SET ATM SQL SSL IBM</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> SSL<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdak lerden hang s  kapalı ve açık ağlar kullanılarak yapılab lecek  ş ve t caret akt v teler nden b r  değ ld r? Mal ve h zmetler n elektron k alışver ş , Elektron k banka  şlemler  ve fon transfer , Elektron k para  le  lg l   şlemler, Elektron k h sse alışver ş  ve borsa, Gayr menkul tapusu alım ve satım  şlemler </span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Gayr menkul tapusu alım ve satım  şlemler <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Aşağıdak lerden hang s  e-t caret n yararlarından b r  değ ld r? Müşter ler ev nden veya of s nden günün her saat nde alış ver ş yapab lme  mkanı vermekted r. Tüket c ler  nternet sayes nde, yen  mamul ve ürün b lg ler ne kolay ulaşab lmekte, b lg  sah b  olmakta ve alternat f ürünler  karşılaştırarak, kolayca satın alab lmekted r. T car   şlemler n elektron k ortamda yürütülmes  çok zaman kaybına neden olmaktadır. E-T caret, t car  faal yetler n tabana yayılmasını sağlamış, pazar alanını gen şletm ş ve ekonom k yoğunlaşmaya yol açmıştır. Tüket c ler  ç n  şlem mal yetler  ve nakl ye masrafları düşmekted r.</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> T car   şlemler n elektron k ortamda yürütülmes  çok zaman kaybına neden olmaktadır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 12. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="12" id="u12">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 13</span>
+    <h2>Uluslararası Pazarlama ve Küresel Pazara Giriş Stratejileri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Uluslararası pazarlama, bir işletmenin pazarlama faaliyetlerini ulusal sınırların ötesinde birden fazla ülkede planlaması ve yürütmesidir.</p>
+  </div>
+
+  <h3>13.1. Dış Pazarlara Giriş Stratejileri (Risk ve Kontrol Düzeyine Göre)</h3>
+  <p>En düşük riskten en yüksek riske doğru sıralanmıştır:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Giriş Stratejisi</th>
+        <th>Finansal Taahhüt ve Risk</th>
+        <th>Kontrol Düzeyi</th>
+        <th>Açıklaması</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. İhracat (Dolaylı / Doğrudan)</strong></td>
+        <td>En DÜŞÜK</td>
+        <td>En DÜŞÜK</td>
+        <td>Yurtiçinde üretilen malların aracı kurumlarla (dolaylı) veya doğrudan yabancı alıcılara satılması.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Lisans Anlaşması (Licensing)</strong></td>
+        <td>Düşük</td>
+        <td>Orta</td>
+        <td>Patent, marka, ticari sır veya üretim hakkının telif karşılığı yabancı bir üreticiye verilmesi.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Franchising</strong></td>
+        <td>Düşük / Orta</td>
+        <td>Orta</td>
+        <td>Tüm işletme sisteminin, markanın ve iş modelinin standartlar dahilinde kullandırılması (McDonald's, Starbucks).</td>
+      </tr>
+      <tr>
+        <td><strong>4. Ortak Girişim (Joint Venture)</strong></td>
+        <td>Orta / Yüksek</td>
+        <td>Paylaşımlı Kontrol</td>
+        <td>Yerel bir yabancı ortakla bir araya gelerek yeni bir ortak şirket kurulması. Risk ve kâr paylaşılır.</td>
+      </tr>
+      <tr>
+        <td><strong>5. Doğrudan Yatırım (Doğrudan Mülkiyet)</strong></td>
+        <td>En YÜKSEK</td>
+        <td>Tam Kontrol (%100)</td>
+        <td>Yabancı ülkede sıfırdan fabrika kurmak (Greenfield) veya mevcut yabancı bir şirketi satın almak.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>13.2. Standardizasyon vs. Uyarlama (Adaptasyon)</h3>
+  <ul>
+    <li><strong>Standardizasyon (Küreselleşme):</strong> Ürün ve pazarlama karmasının tüm dünya pazarlarında aynı şekilde sunulması (Maliyet tasarrufu, küresel marka imajı).</li>
+    <li><strong>Uyarlama (Yerelleşme):</strong> Ürün ve pazarlama karmasının hedef ülkenin kültürel, yasal, dilsel ve ekonomik şartlarına göre değiştirilmesi.</li>
+  </ul>
+
+  
+  <h3>13.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdak lerden hang s   şletmeler  uluslararası pazarlara yönelten nedenler arasında yer almaz? Dünya pazarlarının sunduğu potans yel Teknoloj n n gel ş m  İç pazardak  taleb n azalması Pazarın gel şt r lmek  stenmes  İç pazarlardak  rak pler n azlığı</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İç pazarlardak  rak pler n azlığı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Uluslararası pazarlara en kolay g r ş yolu aşağıdak lerden hang s d r? İhracat L sans Verme Franch s ng Ortak g r ş m Doğrudan yatırım</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İhracat<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Bağımsız uluslararası pazarlama aracılarını kullanarak gerçekleşt r len uluslararası pazarlama faal yet  hang s d r? Doğrudan  hracat Dolaylı  hracat L sans verme Franch s ng Ortak g r ş m</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Dolaylı  hracat<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">_______________ uluslararası pazarlara g rmek  steyen b r  şletme tarafından, yurt dışındak  yerel b r üret c ye üret m ve/veya satış  zn  veya yetk s  ver lmes d r.? Doğrudan  hracat Dolaylı  hracat L sans verme Franch s ng Ortak g r ş m</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> L sans verme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Her ülken n sah p olduğu örf, adet, gelenek, norm ve tabular aşağıda yer alan uluslararası pazarlama çevres n n hang s   le  l şk l d r? Ekonom k çevre Pol t k ve Yasal çevre Kültürel çevre Rekabet çevres  M kro çevre</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kültürel çevre<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  uluslararası pazarlara açılmak  steyen  şlemeler n önündek  farklı g r ş yöntemler nden b r  değ ld r? İhracat L sans verme İthalat Ortak g r ş m Doğrudan yatırım</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İthalat<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Yabancı b r ülke pazarına g rmen n en bas t ve kolay yolu ned r? L sans verme İhracat Doğrudan yatırım Ortak g r ş m İthalat</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İhracat<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Dış pazarlara g rmede, endüstr yel ya da t car  uzmanlığın, bell  b r bedel karşılığında, k ralanması ya da satın alınmasını sağlayacak anlaşmaya ne ad ver l r? İhracat İthalat Ortak g r ş m L sans verme Doğrudan yatırım</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> L sans verme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Üret c  veya  hracatçı  şletmen n yurtdışında faal yet gösteren başka b r  şletmeyle hatta bazen rak p b r  şletmeyle t car  b r amaç  ç n ortaklık kurmasına ne ad ver l r? İhracat Kooperat f Doğrudan yatırım B rl k Ortak g r ş m</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ortak g r ş m<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Üret c   şletmen n r sk  tek başına üstlenerek, uzun sürel  kalab leceğ ne  nandığı yabancı ülke pazarında üret m, tutundurma, satış ve dağıtım faal yetler n  kend s n n yürütmes ne ne ad ver l r? Doğrudan yatırım Kooperat f B rl k İhracat İthalat</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Doğrudan yatırım<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 13. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+<section class="unit" data-i="13" id="u13">
+  
+  <div class="uhead">
+    <span class="num">ÜNİTE 14</span>
+    <h2>Sürdürülebilir Pazarlama, Sosyal Sorumluluk ve Pazarlama Etiği</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Sürdürülebilir pazarlama; günümüz tüketicilerinin ve işletmelerinin ihtiyaçlarını, gelecek nesillerin kendi ihtiyaçlarını karşılama yeteneklerini tehlikeye atmadan karşılama anlayışıdır.</p>
+  </div>
+
+  <h3>14.1. Pazarlamaya Yönelik Toplumsal Eleştiriler</h3>
+  <ul>
+    <li>Yüksek fiyatlar (aşırı dağıtım kârları, yüksek reklam maliyetleri),</li>
+    <li>Aldatıcı uygulamalar (fiyat, promosyon veya ambalajda yanıltma),</li>
+    <li>Yüksek baskılı satış taktikleri,</li>
+    <li>Kalitesiz veya güvensiz ürünler,</li>
+    <li>Planlı eskitme (ürünlerin kasıtlı olarak kısa ömürlü tasarlanması),</li>
+    <li>Tüketimcilik ve aşırı materyalizm körüklenmesi.</li>
+  </ul>
+
+  <h3>14.2. Tüketicilik (Konsümerizm) ve Çevrecilik Akımları</h3>
+  <div class="box formul">
+    <dl>
+      <dt>Konsümerizm (Tüketici Hakları Akımı)</dt>
+      <dd>Tüketicilerin satıcılar karşısındaki haklarını ve gücünü korumak ve geliştirmek amacıyla örgütlenmiş vatandaş ve kamu hareketidir (Kennedy'nin 4 Tüketici Hakkı: Güvenlik hakkı, Bilgilenme hakkı, Seçme hakkı, Sesini duyurma hakkı).</dd>
+      <dt>Yeşil Pazarlama (Çevrecilik)</dt>
+      <dd>Ürün tasarımı, üretimi, ambalajı ve bertarafında çevreye minimum zarar veren veya fayda sağlayan ekolojik pazarlama uygulamalarıdır.</dd>
+    </dl>
+  </div>
+
+  
+  <h3>14.3. Ünite Değerlendirme ve Sınav Soruları</h3>
+  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve çözümleri:</p>
+  
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdak lerden hang s  tüket c ler n ürün boyutu açısından karşılaştırdıkları et k sorunlar arasında yer almaz? Zararlı ürünler Yeters z tam r-bakım serv sler  Bozuk ürünler Et ket f yatının yüksek tutulması Yeters z et ket b lg s </span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Et ket f yatının yüksek tutulması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">______________, pazarlama faal yetler n  sürdürürken, ver len kararların ve oluşturulan stratej ler n toplumun öngördüğü norm ve kurallara uygun olmasıdır.? B l nçl  pazarlama Pazarlama et ğ  Felsef  pazarlama Duyarlı pazarlama Sürdürüleb l rl k</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Pazarlama et ğ <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">________________ tüket c ler, sosyal çevre ve doğal çevre  le sürdürüleb l r  l şk ler kurmak ve devam ett rmekt r. ? B l nçl  pazarlama Çevre pazarlaması Sürdürüleb l r pazarlama Uzun vadel  pazarlama Kar Amacı Gütmeyen pazarlama</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sürdürüleb l r pazarlama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Aşağıdak lerden hang s  sosyal pazarlama karması elemanlarından b r  değ ld r? Kamu Ortaklık Kurallar Pol t kalar Fon</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kurallar<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Güvenl  ürünler n tasarlanması, üret lmes , paketlenmes , tüket c ye ürünle  lg l  yeterl  b lg n n ver lmes , reklâmlarda aldatıcı b lg den kaçınılması g b  faal yetler  _________________ alanındadır.? Sosyal sorumluluk Sponsorluk B l nçl  pazarlama Sürdürüleb l rl k Modern pazarlama</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sosyal sorumluluk<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdak lerden hang s  sürdürüleb l r pazarlamanın gerekl l kler nden b r  değ ld r? Ger  dönüşüm ve atık ayırma  şlemler n n engellenmes , Sürdürüleb l r tüket m kalıplarını halka öğretecek kurumların kurulması, İsrafa yol açacak tüket m kalıplarının değ şmes , Yen  sosyal ve ekonom k kurumlarla alternat f s stemler n oluşturulması ve toplumu çevreyle  lg l  davranışlara teşv k etmes , Yerel ekonom ler n,  thalat yapmak yer ne  kames  olarak yerel ürünler n kullanılması,</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ger  dönüşüm ve atık ayırma  şlemler n n engellenmes ,<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Aşağıdak lerden hang s  sürdürüleb l r pazarlamaya geç ş sürec nde, pazarlama stratej ler  oluşturulurken ele alınan ele alınan konulardan b r  değ ld r? Atık Çalışanların ev yaşam şartları K rlenme Küresel ısınma İşyer nde çalışma şartları</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Çalışanların ev yaşam şartları<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Pazarlama faal yetler n  sürdürürken, ver len kararların ve oluşturulan stratej ler n toplumun öngördüğü norm ve kurallara uygun olmasına ne ad ver l r? Pazarlama sürec  Pazarlama stratej s  Pazarlama et ğ  Pazarlama kuralı Pazarlama  lkes </span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Pazarlama et ğ <br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Ürünler n bell  pazarda yetk  ver lmem ş  şletmeler tarafından dağıtımının yapılmasına ne ad ver l r? Yeş l pazarlama S yah pazarlama Beyaz pazarlama Gr  pazarlama Kırmız pazarlama</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Gr  pazarlama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Reklamda ürünün olduğundan daha  y  kal tede olduğunun vurgulanması, b l msel olduğunun  ma ed lmes , ürünün  ç ndek  çeş tl  k myasalların vurgulayarak kal te  majının uyandırılması durumu nasıl tanımlanır? Pazarlama gereğ  Satış gereğ  Ürün tanıtımı gereğ  T car  gereks n m Et k dışı</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Et k dışı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Pazarlama İlkeleri müfredatı 14. ünite akademik standartları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+
+</section>
+
+  </main>
+
+  <div class="unit-pager">
+    <button class="btn" id="prevBtn" onclick="prevUnit()">← Önceki Ünite</button>
+    <span id="pageInfo" style="font-size:13px; font-weight:700; color:var(--text-muted);">Ünite 1 / 14</span>
+    <button class="btn" id="nextBtn" onclick="nextUnit()">Sonraki Ünite →</button>
+  </div>
+</div>
+
+<script>
+let curUnit = 0;
+const totalUnits = 14;
+
+function init() {
+  const hash = window.location.hash;
+  if(hash && hash.startsWith('#u')) {
+    const n = parseInt(hash.replace('#u',''));
+    if(!isNaN(n) && n >= 0 && n < totalUnits) curUnit = n;
+  }
+  goUnit(curUnit, false);
+
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  const savedDev = localStorage.getItem('device') || 'desktop';
+  document.documentElement.setAttribute('data-device', savedDev);
+}
+
+function goUnit(idx, pushHash=true) {
+  if(idx < 0 || idx >= totalUnits) return;
+  curUnit = idx;
+  document.querySelectorAll('.unit').forEach((el, i) => {
+    el.classList.toggle('on', i === curUnit);
+  });
+  document.getElementById('unitSel').value = curUnit;
+  document.getElementById('pageInfo').textContent = `Ünite ${curUnit + 1} / ${totalUnits}`;
+  document.getElementById('prevBtn').disabled = (curUnit === 0);
+  document.getElementById('nextBtn').disabled = (curUnit === totalUnits - 1);
+  if(pushHash) window.location.hash = '#u' + curUnit;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevUnit() { goUnit(curUnit - 1); }
+function nextUnit() { goUnit(curUnit + 1); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const nxt = cur === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', nxt);
+  localStorage.setItem('theme', nxt);
+}
+
+function toggleDevMenu() {
+  document.getElementById('devMenu').classList.toggle('open');
+}
+
+function setDevice(dev) {
+  document.documentElement.setAttribute('data-device', dev);
+  localStorage.setItem('device', dev);
+  document.getElementById('devMenu').classList.remove('open');
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.device-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    document.getElementById('devMenu').classList.remove('open');
+  }
+});
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

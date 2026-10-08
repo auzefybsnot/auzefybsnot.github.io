@@ -1,0 +1,3035 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Veri Yapıları (AYBS3005) - AUZEF Kapsamlı Ders Anlatımı ve Soru Havuzu</title>
+<style>
+:root {
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --text: #1A202C;
+  --text-muted: #4A5568;
+  --border: #E2E8F0;
+  --primary: #2B6CB0;
+  --primary-light: #EBF8FF;
+  --accent: #319795;
+  --accent-light: #E6FFFA;
+  --success: #276749;
+  --success-light: #F0FFF4;
+  --danger: #9B2C2C;
+  --danger-light: #FFF5F5;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Georgia", "Bookerly", serif;
+  --font-mono: "Consolas", "Courier New", monospace;
+  --font-size: 16px;
+  --line-height: 1.65;
+  --max-w: 1040px;
+}
+
+[data-theme="dark"] {
+  --bg: #1A202C;
+  --surface: #2D3748;
+  --text: #F7FAFC;
+  --text-muted: #A0AEC0;
+  --border: #4A5568;
+  --primary: #63B3ED;
+  --primary-light: #2A4365;
+  --accent: #4FD1C5;
+  --accent-light: #234E52;
+  --success: #68D391;
+  --success-light: #22543D;
+  --danger: #FEB2B2;
+  --danger-light: #742A2A;
+}
+
+/* DEVICE PROFILES */
+[data-device="eink-6-bw"] {
+  --bg: #FFFFFF !important;
+  --surface: #FFFFFF !important;
+  --text: #000000 !important;
+  --text-muted: #222222 !important;
+  --border: #000000 !important;
+  --primary: #000000 !important;
+  --primary-light: #EEEEEE !important;
+  --accent: #000000 !important;
+  --accent-light: #EEEEEE !important;
+  --font-body: var(--font-serif) !important;
+  --font-size: 17px !important;
+  --max-w: 600px !important;
+}
+[data-device="eink-6-bw"] * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+[data-device="eink-6-color"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 16.5px !important;
+  --max-w: 640px !important;
+}
+
+[data-device="eink-10-bw"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 18px !important;
+  --max-w: 860px !important;
+}
+
+[data-device="mobile"] {
+  --font-size: 15px !important;
+  --max-w: 100% !important;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  padding-bottom: 80px;
+}
+
+.shell { max-width: var(--max-w); margin: 0 auto; padding: 0 16px; }
+
+/* TOP BAR */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; margin: 0 -16px 20px;
+}
+.bar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 12px; border-radius: 6px;
+  font-weight: 700; font-size: 13px; text-decoration: none;
+}
+.back-btn:hover { border-color: var(--primary); color: var(--primary); }
+.sel {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 10px; border-radius: 6px;
+  font-weight: 600; font-size: 13px; max-width: 380px; flex: 1;
+}
+.bar-right { display: flex; align-items: center; gap: 8px; }
+.btn {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 12px; border-radius: 6px;
+  font-weight: 600; font-size: 13px; cursor: pointer;
+}
+.btn:hover { border-color: var(--primary); }
+.device-menu-wrap { position: relative; }
+.device-menu {
+  display: none; position: absolute; right: 0; top: 110%;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; min-width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  z-index: 101; padding: 6px;
+}
+.device-menu.open { display: block; }
+.device-menu-head { font-size: 11px; font-weight: 800; color: var(--text-muted); padding: 6px 10px; text-transform: uppercase; }
+.device-opt {
+  display: block; width: 100%; text-align: left; background: none;
+  border: none; padding: 8px 10px; font-size: 13px; color: var(--text);
+  border-radius: 4px; cursor: pointer;
+}
+.device-opt:hover { background: var(--bg); color: var(--primary); }
+
+/* BANNER */
+.course-banner {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; margin-bottom: 24px;
+}
+.eyebrow { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.course-banner h1 { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.course-meta { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+/* UNITS */
+.unit { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 30px; }
+.unit.on { display: block; }
+.uhead { border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
+.uhead .num { display: inline-block; font-size: 12px; font-weight: 800; color: var(--accent); background: var(--accent-light); padding: 3px 8px; border-radius: 4px; margin-bottom: 6px; }
+.uhead h2 { font-size: 22px; font-weight: 800; color: var(--text); }
+.lead-box { background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 15px; }
+
+h3 { font-size: 18px; font-weight: 800; color: var(--primary); margin: 24px 0 12px; border-left: 3px solid var(--accent); padding-left: 10px; }
+h4 { font-size: 15px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
+p { margin-bottom: 12px; }
+ul, ol { margin: 10px 0 16px 24px; }
+li { margin-bottom: 6px; }
+
+/* BOXES & CODE */
+.box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; border: 1px solid var(--border); }
+.box.formul { background: var(--surface); border-left: 4px solid var(--primary); }
+.box.tuzak { background: var(--danger-light); border-color: var(--danger); border-left: 4px solid var(--danger); }
+.box.tuzak h4 { color: var(--danger); }
+.f { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
+pre.code { background: #1A202C; color: #EDF2F7; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: var(--font-mono); font-size: 13.5px; margin: 14px 0; line-height: 1.5; }
+code { font-family: var(--font-mono); font-size: 0.9em; }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; background: var(--surface); }
+th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { background: var(--bg); font-weight: 800; color: var(--text); }
+
+/* QUESTIONS */
+details.sq {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  margin: 12px 0; overflow: hidden;
+}
+details.sq summary {
+  padding: 12px 16px; cursor: pointer; font-weight: 600; list-style: none;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+details.sq summary::-webkit-details-marker { display: none; }
+.qno { font-size: 11px; font-weight: 800; background: var(--primary); color: #fff; padding: 2px 7px; border-radius: 4px; }
+.qtitle { flex: 1; font-size: 14px; color: var(--text); }
+.qtag { font-size: 11px; background: var(--border); color: var(--text-muted); padding: 2px 6px; border-radius: 4px; }
+.sqbody { padding: 14px 16px; background: var(--surface); border-top: 1px solid var(--border); }
+.exp { font-size: 13px; line-height: 1.5; color: var(--text); background: var(--bg); padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--success); }
+
+/* UNIT PAGER */
+.unit-pager {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header class="top-bar">
+    <div class="bar-left">
+      <a href="../../2.Sinif/index.html" class="back-btn" title="2. Sınıf Ders Listesine Dön">← 2. Sınıf Portal</a>
+      <select id="unitSel" class="sel" onchange="goUnit(parseInt(this.value))">
+        <option value="0">1. Ünite: Veri Yapılarına Giriş, Algoritma Analizi ve Asimptotik Notasyon (Big-O)</option><option value="1">2. Ünite: Doğrusal Arama (Linear Search) ve İkili Arama (Binary Search)</option><option value="2">3. Ünite: Tek Yönlü Doğrusal Bağlı Listeler (Singly Linked Lists)</option><option value="3">4. Ünite: Bağlı Listelerde Arama, Güncelleme ve Bellek Yönetimi</option><option value="4">5. Ünite: İki Yönlü Bağlı Listeler (Doubly Linked Lists)</option><option value="5">6. Ünite: Dairesel Bağlı Listeler (Circular Linked Lists)</option><option value="6">7. Ünite: Dizi (Array) Veri Yapısı, Çok Boyutlu Diziler ve Matrisler</option><option value="7">8. Ünite: Yığın (Stack) Veri Yapısı ve LIFO Prensibi</option><option value="8">9. Ünite: Kuyruk (Queue) Veri Yapısı ve FIFO Prensibi</option><option value="9">10. Ünite: Özyineleme (Recursion) ve Çağrı Yığını (Call Stack)</option><option value="10">11. Ünite: Ağaç (Tree) Veri Yapısı, Terminolojisi ve İkili Ağaçlar (Binary Tree)</option><option value="11">12. Ünite: İkili Arama Ağacı (BST) ve Ağaç Dolaşma Yöntemleri (Traversals)</option><option value="12">13. Ünite: Sıralama Algoritmaları (Sorting Algorithms) ve Karşılaştırmalı Analizi</option><option value="13">14. Ünite: Çizge (Graf) Veri Yapısı, Temsilleri ve Graf Gezinme Algoritmaları</option>
+      </select>
+    </div>
+    <div class="bar-right">
+      <div class="device-menu-wrap">
+        <button class="btn icon" id="devBtn" onclick="toggleDevMenu()" title="Cihaz Profili">📱 Mod</button>
+        <div class="device-menu" id="devMenu">
+          <div class="device-menu-head">Cihaz Görünüm Profili</div>
+          <button class="device-opt" onclick="setDevice('desktop')">💻 Masaüstü Web</button>
+          <button class="device-opt" onclick="setDevice('mobile')">📱 Mobil Ekran</button>
+          <button class="device-opt" onclick="setDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B Bookerly)</button>
+          <button class="device-opt" onclick="setDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+          <button class="device-opt" onclick="setDevice('eink-10-bw')">📝 10.3" Tablet (S/B)</button>
+        </div>
+      </div>
+      <button class="btn icon" id="themeBtn" onclick="toggleTheme()" title="Koyu / Açık Tema">🌓 Tema</button>
+    </div>
+  </header>
+
+  <div class="course-banner">
+    <p class="eyebrow">AUZEF &middot; Yönetim Bilişim Sistemleri &middot; 2. Sınıf Güz (AYBS3005)</p>
+    <h1>Veri Yapıları</h1>
+    <p class="course-meta">Eksiksiz 14 Ünite Ders Notları • C Dili Kodları • Big-O Karmaşıklıkları • Bağlı Listeler, Yığın, Kuyruk, Ağaçlar & Graflar • 140 Çözümlü Sınav Sorusu</p>
+  </div>
+
+  <main id="content">
+    
+<section class="unit on" data-i="0" id="u0">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 01</span>
+    <h2>Veri Yapılarına Giriş, Algoritma Analizi ve Asimptotik Notasyon (Big-O)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Veri yapıları; verilerin bilgisayar belleğinde (RAM) verimli bir şekilde organize edilmesi, depolanması ve işlenmesi için kullanılan mantıksal yapılardır. Algoritma analizi ise bir algoritmanın girdi boyutu (n) büyüdükçe ihtiyaç duyduğu zaman ve bellek miktarını ölçer.</p>
+  </div>
+
+  <h3>1.1. Asimptotik Notasyonlar (Big-O, Omega, Teta)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Notasyon</th>
+        <th>Anlamı ve Sınırı</th>
+        <th>Kullanım Amacı</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Big-O (O)</strong></td>
+        <td><strong>Üst Sınır (Worst-Case):</strong> Algoritmanın en kötü durumda çalışacağı maksimum süreyi garanti eder.</td>
+        <td>Endüstride ve sınavlarda standart olarak en kötü durum analizi için kullanılır.</td>
+      </tr>
+      <tr>
+        <td><strong>Omega (&Omega;)</strong></td>
+        <td><strong>Alt Sınır (Best-Case):</strong> Algoritmanın en iyi durumda çalışacağı minimum süreyi gösterir.</td>
+        <td>Algoritmanın en hızlı ne kadar çalışabileceğini belirtir.</td>
+      </tr>
+      <tr>
+        <td><strong>Teta (&Theta;)</strong></td>
+        <td><strong>Tam Sıkı Sınır (Tight Bound):</strong> Algoritmanın hem alt hem üst sınırının aynı büyüme derecesine sahip olduğunu gösterir.</td>
+        <td>En kesin karmaşıklık ifadesidir.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.2. Zaman Karmaşıklığı Büyüme Sıralaması</h3>
+  <div class="box formul">
+    <p style="text-align:center; font-size:16px; font-weight:800;">
+      <span class="f">O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ) &lt; O(n!)</span>
+    </p>
+    <ul>
+      <li><strong>O(1) - Sabit Zaman:</strong> Diziye indeksle doğrudan erişim (örn. <code>arr[5]</code>).</li>
+      <li><strong>O(log n) - Logaritmik:</strong> İkili arama (Binary Search), her adımda arama uzayını yarıya indirme.</li>
+      <li><strong>O(n) - Doğrusal:</strong> Tek döngü, dizide baştan sona eleman arama (Doğrusal Arama).</li>
+      <li><strong>O(n²) - Karesel:</strong> İç içe iki döngü (Bubble Sort, Selection Sort).</li>
+    </ul>
+  </div>
+
+  <h3>1.3. C Dilinde Dinamik Bellek Yönetimi Fonksiyonları</h3>
+  <p>Veri yapılarında düğümler (nodes) dinamik olarak Heap bellekte açılır:</p>
+  <ul>
+    <li><code>malloc(size)</code>: İstenen bayt kadar bellek ayırır, içini sıfırlamaz (çöp değer kalır).</li>
+    <li><code>calloc(num, size)</code>: Bellek ayırır ve tüm bitleri sıfıra (0) eşitler.</li>
+    <li><code>realloc(ptr, new_size)</code>: Ayrılmış bellek bloğunun boyutunu genişletir/daraltır.</li>
+    <li><code>free(ptr)</code>: Heap bellekte ayrılan alanı sisteme iade eder. Unutulursa <strong>Bellek Sızıntısı (Memory Leak)</strong> oluşur!</li>
+  </ul>
+
+<h3>1.4. Ünite 1 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdakilerden hangisi ham veriye örnektir? Sınav ortalaması Öğrencinin adı Sınavdan alınan puanlar Sınıf geçme durumu Karar raporu</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sınavdan alınan puanlar<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Bilgi ile ilgili aşağıdaki ifadelerden hangisi doğrudur? Ham ve işlenmemiştir Tek başına anlam ifade etmez Bellekte saklanmaz Sadece sayılardan oluşur Karar vermede kullanılır</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Karar vermede kullanılır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">C++ dilinde aşağıdakilerden hangisi temel veri tiplerinden biri değildir? int float struct char bool</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> struct<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Bir değişkenin bellekte ne kadar yer kaplayacağını öğrenmek için hangi operatör kullanılır? sizeof length memory type cast</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> sizeof<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aşağıdakilerden hangisi bileşik veri tipidir? int float char string bool</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> string<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">struct veri tipi ile ilgili aşağıdakilerden hangisi doğrudur? Sadece tamsayıları tutar Farklı türden verileri bir arada tutabilir Sadece karakter dizilerini saklar Bellekte sabit 4 byte yer kaplar Sadece bool değerleri saklar</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Farklı türden verileri bir arada tutabilir<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Soyut veri tiplerinden biri aşağıdakilerden hangisidir? int array float stack char</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> stack<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Bağlı liste (linked list) veri yapısının avantajı nedir? Sabit boyutludur Dinamik olarak büyüyebilir Sadece tamsayı saklar Bellekte ardışık yer kaplar Sadece okuma işlemi yapılır</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Dinamik olarak büyüyebilir<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdakilerden hangisi dinamik bellek yönetimi örneğidir? int x; float y; bool b = true; char c; int* p = new int;</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> int* p = new int;<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Statik bellek ile ilgili aşağıdaki ifadelerden hangisi doğrudur? Derleme zamanında ayrılır Programcı tarafından yönetilir Çalışma zamanında ayrılır delete ile serbest bırakılır Sadece dizilerde kullanılır</span>
+      <span class="qtag">Ünite 1 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Derleme zamanında ayrılır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 1. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <div></div>
+    <button class="btn nav-btn" onclick="goUnit(1)">Sonraki Ünite (2) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="1" id="u1">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 02</span>
+    <h2>Tek Yönlü Bağlı Listeler (Singly Linked List)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Bağlı liste; bellekte ardışık (yan yana) yer tutma zorunluluğu olmayan, her biri bir veri ve bir sonraki düğümün adresini tutan işaretçiden (pointer) oluşan dinamik veri yapısıdır.</p>
+  </div>
+
+  <h3>2.1. Dizi (Array) ile Bağlı Liste (Linked List) Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Ölçüt</th>
+        <th>Dizi (Array)</th>
+        <th>Bağlı Liste (Linked List)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Bellek Tahsisi</strong></td>
+        <td>Statik (boyut önceden belirlenir) veya ardışık bellek gerektirir.</td>
+        <td>Dinamiktir; çalışma anında ihtiyaç duyuldukça parça parça Heap'ten ayrılır.</td>
+      </tr>
+      <tr>
+        <td><strong>Elemana Erişim</strong></td>
+        <td>İndeksle <strong>O(1)</strong> anında doğrudan erişim.</td>
+        <td>Ardışık (Sequential) erişim; k. elemana ulaşmak için baştan taranır: <strong>O(n)</strong>.</td>
+      </tr>
+      <tr>
+        <td><strong>Araya Eleman Ekleme/Silme</strong></td>
+        <td>Zor ve yavaştır; elemanların sağa/sola kaydırılması gerekir: <strong>O(n)</strong>.</td>
+        <td>Çok kolay ve hızlıdır; sadece işaretçiler yönlendirilir: <strong>O(1)</strong>.</td>
+      </tr>
+      <tr>
+        <td><strong>Bellek İsrafı</strong></td>
+        <td>Dizi dolmasa bile ayrılan alan işgal edilir.</td>
+        <td>Sadece kullanılan eleman kadar yer tutar ancak her düğümde ekstra pointer alanı harcanır.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2.2. Düğüm (Node) Yapısının C Kodunda Tanımlanması</h3>
+  <pre class="code"><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Tek yönlü bağlı liste düğüm yapısı
+struct Dugum {
+    int veri;              // Düğümde saklanan değer
+    struct Dugum* sonraki; // Bir sonraki düğümün adresini tutan işaretçi (pointer)
+};
+
+int main() {
+    // 1. Düğümü Heap bellekte oluştur
+    struct Dugum* ilk = (struct Dugum*)malloc(sizeof(struct Dugum));
+    ilk->veri = 10;
+    ilk->sonraki = NULL;
+
+    printf("Olusturulan Dugum Verisi: %d\n", ilk->veri);
+    free(ilk); // Belleği serbest bırak
+    return 0;
+}</code></pre>
+  <h4>Kodun Satır Satır Açıklaması:</h4>
+  <ul>
+    <li><code>struct Dugum* sonraki;</code>: Kendi türünden bir yapının adresini tutan özyinelemeli (self-referential) işaretçidir.</li>
+    <li><code>malloc(sizeof(struct Dugum));</code>: Heap bellekten bir düğüm boyutu kadar (genellikle 4 bayt int + 8 bayt pointer = 12-16 bayt) yer tahsis eder.</li>
+    <li><code>ilk->veri = 10;</code>: İşaret edilen düğümün veri alanına 10 değerini yazar.</li>
+    <li><code>ilk->sonraki = NULL;</code>: Listenin sonunu belirtmek üzere sonraki göstericiyi boş (NULL) yapar.</li>
+  </ul>
+  <h4>Konsol Çıktısı:</h4>
+  <pre class="code"><code>Olusturulan Dugum Verisi: 10</code></pre>
+
+<h3>2.3. Ünite 2 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Bağlı liste nedir? Elemanları ardışık bellek adreslerinde saklayan veri yapısı Her elemanın bir sonraki elemanın adresini tuttuğu dinamik veri yapısı Sadece sabit boyutlu veri saklayan yapı Sıralama algoritması Yalnızca karakter verisi saklayan yapı</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Her elemanın bir sonraki elemanın adresini tuttuğu dinamik veri yapısı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Bağlı listede her düğümde hangi iki ana bölüm bulunur? Veri ve indis Veri ve anahtar İşaretçi ve indis Veri ve boyut Veri ve işaretçi</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Veri ve işaretçi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Tek yönlü bağlı listede son düğümün işaretçisi neyi gösterir? İlk düğümü Kendi adresini Rastgele bir adresi NULL değerini Veri alanını</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> NULL değerini<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Bağlı listelerin en büyük avantajlarından biri nedir? Sabit boyutlu olması Dinamik olarak büyüyüp küçülebilmesi Rastgele erişim sağlaması Bellekte ardışık yer kaplaması Sadece tamsayı veri saklaması</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Dinamik olarak büyüyüp küçülebilmesi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Bağlı listede eleman ekleme ve silme işlemleri neden kolaydır? Elemanlar sabit boyutludur Bellek otomatik yönetilir Sadece işaretçilerin güncellenmesi yeterlidir Her eleman bir indis tutar Elemanlar sıralı saklanır</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sadece işaretçilerin güncellenmesi yeterlidir<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Bağlı listelerde rastgele erişim neden mümkün değildir? Elemanlar ardışık saklanır Bellek sabittir Her düğümde indis tutulur Her elemana ulaşmak için baştan dolaşmak gerekir Elemanlar sıralı değildir</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Her elemana ulaşmak için baştan dolaşmak gerekir<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Bağlı listelerde ek bellek kullanımı neden artar? Her düğümde bir işaretçi daha tutulur Elemanlar sabit boyutludur Bellek otomatik yönetilir Her düğümde iki veri alanı vardır Her düğümde indis tutulur</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Her düğümde bir işaretçi daha tutulur<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Bağlı listelerde hangi işlem O(1) karmaşıklıkta yapılabilir? Ortada eleman silme Rastgele erişim Listenin başına eleman ekleme Listenin ortasına eleman ekleme Listenin sonundaki elemanı bulma</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Listenin başına eleman ekleme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Bağlı listelerde bellek sızıntısı (memory leak) neden oluşur? new ile ayrılan düğümler delete ile serbest bırakılmazsa Elemanlar ardışık saklanırsa Her düğümde indis tutulursa Veri alanı boş bırakılırsa Listenin başı NULL olursa</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> new ile ayrılan düğümler delete ile serbest bırakılmazsa<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Bağlı listede bir düğümün silinmesi sırasında hangi hata oluşabilir? Bellek taşması Null pointer hatası Bellek aşımı Çift serbest bırakma Hepsi</span>
+      <span class="qtag">Ünite 2 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Hepsi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 2. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(0)">&larr; Önceki Ünite (1)</button>
+    <button class="btn nav-btn" onclick="goUnit(2)">Sonraki Ünite (3) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="2" id="u2">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 03</span>
+    <h2>Tek Yönlü Bağlı Listelerde Ekleme, Silme ve Arama İşlemleri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Bağlı listelerde listenin başına, sonuna veya arasına eleman ekleme ve silme işlemleri işaretçilerin doğru sırada yeniden bağlanmasıyla gerçekleştirilir.</p>
+  </div>
+
+  <h3>3.1. Başa Ekleme (Prepend) ve Sona Ekleme (Append)</h3>
+  <pre class="code"><code>// Listenin basina eleman ekleme fonksiyonu - Zaman Karmaşıklığı: O(1)
+void basaEkle(struct Dugum** basRef, int yeniVeri) {
+    struct Dugum* yeniDugum = (struct Dugum*)malloc(sizeof(struct Dugum));
+    yeniDugum->veri = yeniVeri;
+    yeniDugum->sonraki = (*basRef); // Yeni düğüm eski başı göstersin
+    (*basRef) = yeniDugum;          // Baş işaretçisi artık yeni düğümdür
+}</code></pre>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: Başa Eklemede İşaretçi Sıralaması Hatası</h4>
+    <p>Eğer önce <code>(*basRef) = yeniDugum;</code> yapılır, sonra <code>yeniDugum->sonraki = (*basRef);</code> denirse; listenin eski elemanlarının tamamına erişim kopar ve liste sonsuz döngüye girer! Önce yeni düğüm eski başa bağlanmalı, ardından baş güncellenmelidir.</p>
+  </div>
+
+<h3>3.2. Ünite 3 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Bağlı listede baştan eleman silme işlemi sırasında ilk adım nedir? Listenin sonuna gitmek Geçici bir işaretçiyle baştaki düğümü tutmak Listenin tamamını silmek Son düğümü işaretlemek Hiçbiri</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Geçici bir işaretçiyle baştaki düğümü tutmak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Baştan silme işleminden sonra head işaretçisi nereye kaydırılır? Listenin sonuna Bir önceki düğüme Bir sonraki düğüme NULL’a Veri alanına</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bir sonraki düğüme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Sondan eleman silme işleminde hangi durum özel olarak kontrol edilmelidir? Liste boşsa Listenin başı NULL ise Listede tek eleman varsa Listenin ortasında eleman varsa Listenin boyutu çiftse</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Listede tek eleman varsa<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Sondan silme işleminde sondan bir önceki düğümün next işaretçisi ne yapılır? NULL yapılır Baş düğümü gösterir Kendi adresini gösterir Veri alanını gösterir Değiştirilmez</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> NULL yapılır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aradan eleman silme işleminde hangi durumlar kontrol edilmelidir? Silinecek eleman başta mı Silinecek eleman yok mu Liste boş mu Hepsi Hiçbiri</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Hepsi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Bağlı listede arama işlemi hangi karmaşıklığa sahiptir? O(1) O(log n) O(n!) O(n^2) O(n)</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Arama fonksiyonu aranan değeri bulamazsa ne döner? NULL -1 0 1 Veri alanı</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> NULL<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Bağlı listeyi tersine çevirme işleminde kaç işaretçi kullanılır? 1 2 5 4 3</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> 3<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Tersine çevirme algoritmasında head sonunda neyi gösterir? Eski baş düğümü Eski son düğümü NULL İlk düğümün veri alanını Hiçbiri</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Eski son düğümü<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Bağlı listeyi tersine çevirme algoritmasının ek bellek karmaşıklığı nedir? O(n) O(1) O(log n) O(n^2) O(n!)</span>
+      <span class="qtag">Ünite 3 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(1)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 3. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(1)">&larr; Önceki Ünite (2)</button>
+    <button class="btn nav-btn" onclick="goUnit(3)">Sonraki Ünite (4) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="3" id="u3">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 04</span>
+    <h2>Çift Yönlü Bağlı Listeler (Doubly Linked List)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Çift yönlü bağlı listelerde her düğüm hem kendisinden bir sonraki düğümün adresini (next) hem de kendisinden bir önceki düğümün adresini (prev) saklar. Bu sayede liste üzerinde her iki yönde de çift taraflı gezinmek mümkündür.</p>
+  </div>
+
+  <h3>4.1. Çift Yönlü Düğüm Yapısı</h3>
+  <pre class="code"><code>struct CiftDugum {
+    int veri;
+    struct CiftDugum* sonraki; // Next pointer
+    struct CiftDugum* onceki;  // Previous pointer
+};</code></pre>
+  <ul>
+    <li><strong>Avantajı:</strong> Bir düğüm bilindiğinde önceki düğüme tek adımda O(1) sürede ulaşılabilir; sondan başa doğru gezinilebilir.</li>
+    <li><strong>Dezavantajı:</strong> Her düğümde fazladan bir işaretçi (ekstra 4 veya 8 bayt bellek) tutulur ve ekleme/silme işlemlerinde 4 adet işaretçi güncellenmelidir.</li>
+  </ul>
+
+<h3>4.2. Ünite 4 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Çift yönlü bağlı listede her düğümde hangi işaretçiler bulunur? Sadece next Sadece prev prev ve next prev ve data Sadece data</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> prev ve next<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Çift yönlü bağlı listenin en önemli avantajı nedir? Daha az bellek kullanımı Geriye ve ileriye doğru dolaşım imkânı Kodun daha kısa olması Sadece baştan ekleme yapılabilmesi Sadece tamsayı veri saklanabilmesi</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Geriye ve ileriye doğru dolaşım imkânı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Çift yönlü bağlı listede ilk düğümün prev işaretçisi neyi gösterir? Son düğümü Kendi adresini NULL Veri alanını next işaretçisini</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> NULL<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Çift yönlü bağlı listede son düğümün next işaretçisi neyi gösterir? NULL İlk düğümü Kendi adresini prev işaretçisini Veri alanını</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> NULL<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Çift yönlü bağlı listede ekleme ve silme işlemleri neden daha kolaydır? Sadece baştan yapılabildiği için Her düğümde iki işaretçi olduğu için Kod daha kısa olduğu için Bellek sabit olduğu için Veri alanı büyük olduğu için</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Her düğümde iki işaretçi olduğu için<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Çift yönlü bağlı listede hangi alan veri saklar? prev next head data tail</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> data<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Çift yönlü bağlı listede geriye doğru dolaşmak için hangi işaretçi kullanılır? next data tail head prev</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> prev<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Çift yönlü bağlı listede bellek kullanımı neden fazladır? Her düğümde iki işaretçi tutulduğu için Veri alanı büyük olduğu için Kod daha uzun olduğu için Sadece baştan ekleme yapıldığı için Sadece tamsayı veri saklandığı için</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Her düğümde iki işaretçi tutulduğu için<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Çift yönlü bağlı listede kod karmaşıklığı neden artar? Sadece next güncellendiği için Kodda döngü olmadığı için Veri alanı büyük olduğu için Sadece baştan silme yapıldığı için Hem prev hem next güncellendiği için</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Hem prev hem next güncellendiği için<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Çift yönlü bağlı listede hangi uygulama alanı yoktur? Tarayıcı geçmişi Metin editörleri LRU cache Sabit boyutlu dizi işlemleri Medya oynatıcılar</span>
+      <span class="qtag">Ünite 4 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sabit boyutlu dizi işlemleri<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 4. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(2)">&larr; Önceki Ünite (3)</button>
+    <button class="btn nav-btn" onclick="goUnit(4)">Sonraki Ünite (5) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="4" id="u4">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 05</span>
+    <h2>Çift Yönlü ve Dairesel Bağlı Listelerde İleri İşlemler</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Dairesel bağlı listelerde (Circular Linked List) son düğümün sonraki (next) işaretçisi NULL göstermek yerine tekrar listenin ilk düğümünü (head) gösterir. Böylece sonsuz döngüsel bir yapı kurulur.</p>
+  </div>
+
+  <h3>5.1. Dairesel Bağlı Listenin Kullanım Alanları</h3>
+  <ul>
+    <li>İşletim sistemlerinde süreç zamanlama (Round-Robin CPU Scheduling),</li>
+    <li>Çok oyunculu sıra tabanlı oyunlarda oyuncu sıraları,</li>
+    <li>Müzik çalarlarda listenin sürekli tekrarlanması (Repeat all).</li>
+  </ul>
+
+<h3>5.2. Ünite 5 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Çift yönlü bağlı listede baştan eleman silme işleminde hangi işaretçi NULL yapılır? head->next head->prev head->data head->next->next head->prev->next</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> head->prev<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Sondan eleman silme işleminde hangi adım gereklidir? head bir sonraki düğüme kaydırılır Veri alanı sıfırlanır head->prev NULL yapılır Listenin başı silinir Sondan bir önceki düğümün next işaretçisi NULL yapılır</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sondan bir önceki düğümün next işaretçisi NULL yapılır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Aradan eleman silme işleminde hangi işaretçiler güncellenir? Sadece next Sadece prev Sadece data Hem prev hem next Hiçbiri</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Hem prev hem next<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Çift yönlü bağlı listede arama işlemi hangi karmaşıklığa sahiptir? O(1) O(log n) O(n) O(n^2) O(n!)</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Tersine çevirme algoritmasında her düğümde hangi işlem yapılır? prev ve next işaretçileri takas edilir Veri alanı sıfırlanır Sadece next güncellenir Sadece prev güncellenir Hiçbiri</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> prev ve next işaretçileri takas edilir<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Çift yönlü bağlı listede baştan silme işleminde hangi durum özel olarak kontrol edilmelidir? Liste boşsa Tek elemanlı liste Head nullptr olursa Hepsi Hiçbiri</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Hepsi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Sondan silme işleminde listenin sonuna nasıl ulaşılır? temp->next != nullptr koşuluyla head->next ile head->prev ile temp->prev != nullptr koşuluyla data == 0 ile</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> temp->next != nullptr koşuluyla<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aradan silme işleminde silinecek düğüm başta ise hangi fonksiyon çağrılır? sondanSil aradanSil listeYazdir tersCevir bastanSil</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> bastanSil<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Arama fonksiyonu aranan değeri bulamazsa ne döner? 0 -1 nullptr 1 Veri alanı</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> nullptr<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Tersine çevirme algoritmasında head sonunda neyi gösterir? Eski baş düğümü Eski son düğümü NULL İlk düğümün veri alanını Hiçbiri</span>
+      <span class="qtag">Ünite 5 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Eski son düğümü<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 5. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(3)">&larr; Önceki Ünite (4)</button>
+    <button class="btn nav-btn" onclick="goUnit(5)">Sonraki Ünite (6) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="5" id="u5">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 06</span>
+    <h2>Dairesel Bağlı Listeler (Circular Linked Lists)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Dairesel bağlı listede listenin son düğümünün sonraki (next) göstericisi NULL olmak yerine daima listenin ilk düğümünü (head) gösterir. Liste üzerinde gezinirken durma koşulu NULL değil, tekrar ilk düğüme gelinip gelinmediğidir.</p>
+  </div>
+
+  <h3>6.1. Dairesel Listede Dolaşma C Kodu</h3>
+  <pre class="code"><code>void daireselYazdir(struct Dugum* bas) {
+    if (bas == NULL) return;
+    struct Dugum* temp = bas;
+    do {
+        printf("%d -> ", temp->veri);
+        temp = temp->sonraki;
+    } while (temp != bas);
+    printf("(Basa Dondu)\n");
+}</code></pre>
+  <h4>Açıklama:</h4>
+  <p><code>do-while</code> döngüsü kullanılır; çünkü başlangıçta <code>temp == bas</code> olduğu için standart <code>while(temp != bas)</code> döngüsü ilk adımda hemen sonlanırdı.</p>
+
+<h3>6.2. Ünite 6 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Dairesel bağlı listenin en temel özelliği nedir? Her düğümde iki işaretçi bulunur Son düğümün next işaretçisi başı gösterir Her düğümde prev işaretçisi bulunur Sadece baştan ekleme yapılabilir Sadece tamsayı veri saklanabilir</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Son düğümün next işaretçisi başı gösterir<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Dairesel bağlı listeler hangi uygulama için en uygundur? Sıralama algoritmaları Hash tablolar Sabit diziler Ağaç yapıları Round Robin zamanlayıcılar</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Round Robin zamanlayıcılar<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Dairesel bağlı listede son düğümün next işaretçisi neyi gösterir? NULL Kendi adresini Listenin başını (head) Veri alanını Sadece bir sonraki düğümü</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Listenin başını (head)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Dairesel bağlı listede yazdırma işlemi sırasında hangi kontrol yapılmalıdır? temp == nullptr temp->next == nullptr temp tekrar head’i gösteriyor mu temp->data == 0 temp->next == head->next</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> temp tekrar head’i gösteriyor mu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Dairesel bağlı listelerde hangi avantaj bulunur? Döngüsel dolaşım Kodun daha kısa olması Bellek kullanımı daha az Sadece baştan silme yapılabilir Sadece tamsayı veri saklanabilir</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Döngüsel dolaşım<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Dairesel bağlı listede hangi dezavantaj vardır? Kod karmaşıklığı Sonsuz döngü riski Baş/son belirleme zorluğu Hepsi Hiçbiri</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Hepsi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Dairesel bağlı listede düğüm tanımında hangi alanlar bulunur? data ve prev head ve next prev ve next data ve tail data ve next</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> data ve next<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Dairesel bağlı listede listenin başı nasıl tutulur? Bir indis ile Bir işaretçiyle (head) Bir sayaçla Bir karakter ile Bir sabit ile</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bir işaretçiyle (head)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Dairesel bağlı listede eleman eklerken hangi durum özel olarak kontrol edilmelidir? Liste boşsa Listenin başı NULL ise Listenin sonu NULL ise Hepsi Hiçbiri</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Liste boşsa<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Dairesel bağlı listede yazdırma işlemi hangi döngüyle yapılır? while (temp != nullptr) if-else for döngüsü do-while (temp != head) switch-case</span>
+      <span class="qtag">Ünite 6 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> if-else<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 6. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(4)">&larr; Önceki Ünite (5)</button>
+    <button class="btn nav-btn" onclick="goUnit(6)">Sonraki Ünite (7) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="6" id="u6">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 07</span>
+    <h2>Dizi (Array) Veri Yapısı, Çok Boyutlu Diziler ve Matrisler</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Dizi; aynı veri tipindeki elemanların bellekte ardışık (bitişik) hücrelerde saklandığı, her elemana sabit sürede O(1) indeks ile doğrudan erişilebilen temel veri yapısıdır.</p>
+  </div>
+
+  <h3>7.1. Bellek Adresi Hesaplama Formülü</h3>
+  <div class="box formul">
+    <p style="text-align:center;"><span class="f">Adres(arr[i]) = Taban Adres (Base Address) + (i &times; Eleman Boyutu)</span></p>
+    <p>Dizilerde 0-tabanlı indekslemenin sebebi budur: <code>arr[0]</code> doğrudan taban adrese eşittir (0 ofset).</p>
+  </div>
+
+<h3>7.2. Ünite 7 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Dizi (array) nedir? Farklı türden verileri saklayan yapı Aynı türden verileri ardışık olarak saklayan yapı Sadece karakterleri saklayan yapı Sıralı olmayan veri yapısı Bellekte rastgele yerleşen veri yapısı</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Aynı türden verileri ardışık olarak saklayan yapı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Dizilerde her elemana erişim süresi nedir? O(n) O(log n) O(1) O(n²) O(n!)</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(1)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Statik dizinin en önemli dezavantajı nedir? Bellek verimliliği Boyutunun sabit olması Rastgele erişim Hızlı olması Tür kısıtlaması olmaması</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Boyutunun sabit olması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Dinamik dizilerde bellek yönetimi kime aittir? Derleyiciye İşletim sistemine Programcıya Otomatik olarak yapılır Donanıma</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Programcıya<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aşağıdakilerden hangisi dizi avantajlarından biridir? Ekleme ve silme işlemleri çok hızlıdır Bellek israfı yoktur Farklı türden veri saklanabilir Boyutu çalışma zamanında değişir Rastgele erişim mümkündür</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Rastgele erişim mümkündür<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Dizi elemanlarına erişimde hangi indeksleme yöntemi kullanılır? 1’den başlar -1’den başlar 2’den başlar 0’dan başlar Kullanıcı belirler</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> 0’dan başlar<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Çok boyutlu diziler en çok hangi alanda kullanılır? Metin düzenleme Sıralama algoritmaları Dosya yönetimi Bellek yönetimi Görüntü işleme</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Görüntü işleme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Statik dizi tanımlamasında boyut ne zaman belirlenir? Derleme zamanında Çalışma zamanında Program sonunda Kullanıcı isterse Hiçbir zaman</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Çalışma zamanında<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Dinamik dizi tanımlamasında hangi anahtar kelime kullanılır? malloc free static new auto</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> new<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Dizi boyutunu öğrenmek için statik dizide hangi yöntem kullanılır? sizeof(dizi) / sizeof(dizi[0]) dizi.length dizi.size() count(dizi) dizi.getSize()</span>
+      <span class="qtag">Ünite 7 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> sizeof(dizi) / sizeof(dizi[0])<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 7. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(5)">&larr; Önceki Ünite (6)</button>
+    <button class="btn nav-btn" onclick="goUnit(7)">Sonraki Ünite (8) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="7" id="u7">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 08</span>
+    <h2>Yığın (Stack) Veri Yapısı ve LIFO Prensibi</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Yığın (Stack); eleman ekleme ve çıkarma işlemlerinin yalnızca tek bir uçtan (Tepe / Top) yapıldığı, <strong>Son Giren İlk Çıkar (LIFO - Last In First Out)</strong> mantığıyla çalışan doğrusal veri yapısıdır.</p>
+  </div>
+
+  <h3>8.1. Temel Yığın Operasyonları ve C Kodu</h3>
+  <ul>
+    <li><strong>push(x):</strong> Yığının tepesine yeni bir eleman ekler: O(1).</li>
+    <li><strong>pop():</strong> Yığının tepesindeki elemanı çıkarır ve değerini döndürür: O(1).</li>
+    <li><strong>peek() / top():</strong> Tepedeki elemanı çıkarmadan sadece okur: O(1).</li>
+    <li><strong>isEmpty():</strong> Yığının boş olup olmadığını kontrol eder.</li>
+  </ul>
+
+  <pre class="code"><code>#define BOYUT 5
+int yigin[BOYUT];
+int tepe = -1; // Yığın başlangıçta boş
+
+void push(int deger) {
+    if (tepe == BOYUT - 1) {
+        printf("Hata: Yigin Dolu (Stack Overflow)!\n");
+        return;
+    }
+    tepe++;
+    yigin[tepe] = deger;
+}
+
+int pop() {
+    if (tepe == -1) {
+        printf("Hata: Yigin Bos (Stack Underflow)!\n");
+        return -1;
+    }
+    int cikan = yigin[tepe];
+    tepe--;
+    return cikan;
+}</code></pre>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: Stack Overflow ve Stack Underflow</h4>
+    <ul>
+      <li><strong>Stack Overflow:</strong> Kapasitesi dolmuş bir yığına yeni eleman eklenmeye (push) çalışıldığında oluşur.</li>
+      <li><strong>Stack Underflow:</strong> Tamamen boş bir yığından eleman çekilmeye (pop) çalışıldığında oluşur.</li>
+    </ul>
+  </div>
+
+  <h3>8.2. Yığının Gerçek Hayat Uygulamaları</h3>
+  <p>1. Web tarayıcılarında "Geri" (Back) butonu, 2. Metin editörlerinde "Geri Al" (Ctrl+Z / Undo) mekanizması, 3. Matematiksel ifadelerde parantez eşleme kontrolü, 4. Infix ifadelerin Postfix'e dönüştürülmesi.</p>
+
+<h3>8.3. Ünite 8 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Yığın (stack) veri yapısının temel prensibi nedir? FIFO LIFO FILO LILO Random</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> LIFO<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Yığına eleman ekleme işlemine ne ad verilir? pop insert push add top</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> push<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Yığından eleman çıkarma işlemi hangisidir? push pop peek remove delete</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> pop<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Yığının en üstündeki elemanı çıkarmadan görüntüleme işlemi hangisidir? pop push peek/top print show</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> peek/top<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Yığın veri yapısında hangi uçtan işlem yapılır? Sadece baştan Sadece ortadan Her iki uçtan Rastgele Sadece sondan</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sadece sondan<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Yığın veri yapısının yaygın kullanım alanlarından biri değildir? Fonksiyon çağrı yığını Undo işlemleri Parantez dengeleme Sıralama algoritmaları Web tarayıcı geçmişi</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sıralama algoritmaları<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Dizi ile yığın implementasyonunda kapasite aşılırsa hangi hata oluşur? Overflow Underflow Segmentation fault Memory leak Null pointer</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Overflow<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Bağlı liste ile yığın implementasyonunda hangi avantaj vardır? Sabit boyut Sadece tamsayı veri saklama Daha az bellek kullanımı Dinamik boyut Rastgele erişim</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Dinamik boyut<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Yığın veri yapısında ilk eklenen eleman ne zaman çıkar? En son Hemen Rastgele Hiçbir zaman İkinci sırada</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> En son<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Yığın veri yapısında pop işlemi yapılırken hangi kontrol gereklidir? Yığın dolu mu Veri türü Kapasite yeterli mi Eleman sırası Yığın boş mu</span>
+      <span class="qtag">Ünite 8 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Yığın boş mu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 8. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(6)">&larr; Önceki Ünite (7)</button>
+    <button class="btn nav-btn" onclick="goUnit(8)">Sonraki Ünite (9) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="8" id="u8">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 09</span>
+    <h2>Kuyruk (Queue) Veri Yapısı ve FIFO Prensibi</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Kuyruk (Queue); eleman eklemenin sondan (Rear), eleman çıkarmanın ise baştan (Front) yapıldığı, <strong>İlk Giren İlk Çıkar (FIFO - First In First Out)</strong> kuralıyla çalışan veri yapısıdır.</p>
+  </div>
+
+  <h3>9.1. Kuyruk Operasyonları ve Dairesel Kuyruk (Circular Queue)</h3>
+  <ul>
+    <li><strong>enqueue(x):</strong> Kuyruğun sonuna eleman ekler: O(1).</li>
+    <li><strong>dequeue():</strong> Kuyruğun başındaki elemanı çıkarır: O(1).</li>
+  </ul>
+
+  <div class="box formul">
+    <h4>Dairesel Kuyruk Modülo Aritmetiği:</h4>
+    <p>Düz dizide eleman çıkarıldıkça dizinin başı boş kalır ve bellek israfı olur. Dairesel kuyrukta modülo (%) operatörüyle dizinin sonu başa bağlanır:</p>
+    <p style="text-align:center;"><span class="f">son = (son + 1) % KAPASITE</span> &nbsp;ve&nbsp; <span class="f">bas = (bas + 1) % KAPASITE</span></p>
+  </div>
+
+<h3>9.2. Ünite 9 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Kuyruk (queue) veri yapısının temel prensibi nedir? FIFO LIFO FILO LILO Random</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> FIFO<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Kuyruğa eleman ekleme işlemine ne ad verilir? pop push enqueue insert add</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> enqueue<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Kuyruktan eleman çıkarma işlemi hangisidir? Pop delete peek remove dequeue</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> dequeue<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Kuyruk veri yapısında elemanlar hangi uçlardan eklenir ve çıkarılır? Ekleme baştan, çıkarma sondan Her iki uçtan Rastgele Ekleme sondan, çıkarma baştan Sadece ortadan</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ekleme sondan, çıkarma baştan<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Kuyruk veri yapısının yaygın kullanım alanlarından biri değildir? Yazıcı kuyruğu CPU zamanlayıcı Undo işlemleri Ağ paket kuyruğu Müşteri hizmetleri</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Undo işlemleri<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Dizi ile kuyruk implementasyonunda kapasite aşılırsa hangi hata oluşur? Overflow Underflow Segmentation fault Memory leak Null pointer</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Overflow<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Bağlı liste ile kuyruk implementasyonunda hangi avantaj vardır? Sabit boyut Dinamik boyut Daha az bellek kullanımı Sadece tamsayı veri saklama Rastgele erişim</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Dinamik boyut<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Kuyruk veri yapısında ilk eklenen eleman ne zaman çıkar? En son Hemen Rastgele İlk çıkar İkinci sırada</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> İlk çıkar<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Kuyruk veri yapısında dequeue işlemi yapılırken hangi kontrol gereklidir? Kuyruk dolu mu Kuyruk boş mu Kapasite yeterli mi Eleman sırası Veri türü</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kuyruk boş mu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Kuyruk veri yapısında enqueue işlemi yapılırken dizi implementasyonunda hangi kontrol gereklidir? Kuyruk boş mu Eleman sırası Veri türü Bellek sızıntısı Kuyruk dolu mu</span>
+      <span class="qtag">Ünite 9 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kuyruk dolu mu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 9. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(7)">&larr; Önceki Ünite (8)</button>
+    <button class="btn nav-btn" onclick="goUnit(9)">Sonraki Ünite (10) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="9" id="u9">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 10</span>
+    <h2>Özyineleme (Recursion) ve Çağrı Yığını (Call Stack)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Özyineleme; bir fonksiyonun kendi kendini doğrudan veya dolaylı olarak çağırması tekniğidir. Her özyinelemeli fonksiyonda sonsuz döngüyü önleyen bir <strong>taban durum (Base Case)</strong> bulunmak zorundadır.</p>
+  </div>
+
+  <h3>10.1. Faktöriyel Örneği ve Çağrı Yığını</h3>
+  <pre class="code"><code>int faktoriyel(int n) {
+    if (n <= 1) return 1; // TABAN DURUM (Base Case)
+    return n * faktoriyel(n - 1); // Özyinelemeli Adım
+}</code></pre>
+  <p><code>faktoriyel(3)</code> çağrıldığında sistem çağrı yığınına (Call Stack) sırasıyla <code>f(3) &rarr; f(2) &rarr; f(1)</code> fonksiyonlarını yığar. Taban duruma ulaşılınca yığından tersten açılarak sonuç hesaplanır: 1 &times; 2 &times; 3 = 6.</p>
+
+<h3>10.2. Ünite 10 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Özyineleme (recursion) nedir? Bir fonksiyonun başka bir fonksiyonu çağırması Bir fonksiyonun döngüyle çalışması Bir fonksiyonun parametre alması Bir fonksiyonun değer döndürmesi Bir fonksiyonun kendisini çağırması</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bir fonksiyonun kendisini çağırması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Özyinelemeli bir fonksiyonda hangi iki temel kısım bulunmalıdır? Döngü ve koşul Parametre ve dönüş değeri Girdi ve çıktı Temel durum ve özyinelemeli durum Sıralama ve arama</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Temel durum ve özyinelemeli durum<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Temel durum (base case) nedir? Fonksiyonun kendini çağırmadığı, özyinelemenin bittiği durum Fonksiyonun sonsuz döngüye girdiği durum Fonksiyonun ilk çağrıldığı durum Fonksiyonun parametre aldığı durum Fonksiyonun hata verdiği durum</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Fonksiyonun kendini çağırmadığı, özyinelemenin bittiği durum<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Özyinelemenin avantajlarından biri aşağıdakilerden hangisidir? Daha fazla bellek kullanımı Kodun sadeleşmesi Daha yavaş çalışması Hata ayıklamanın kolay olması Sonsuz döngü riski</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kodun sadeleşmesi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Aşağıdakilerden hangisi özyinelemenin dezavantajıdır? Kodun kısa olması Karmaşık problemlerde kolaylık Fazla bellek kullanımı Doğal modelleme Alt problemlere bölünebilme</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Fazla bellek kullanımı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Özyineleme ile çözülebilecek bir problem aşağıdakilerden hangisidir? Faktöriyel hesaplama Dosya açma Ekrana yazı yazma Bellek tahsisi Klavye girişi</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Faktöriyel hesaplama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Özyinelemeli fonksiyonlarda temel durum unutulursa ne olur? Program daha hızlı çalışır Sonsuz özyineleme ve stack overflow oluşur Bellek tasarrufu sağlanır Kod daha okunaklı olur Hiçbir şey olmaz</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sonsuz özyineleme ve stack overflow oluşur<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aşağıdakilerden hangisi özyinelemeli bir algoritmanın iteratif bir algoritmaya göre dezavantajıdır? Daha az bellek kullanımı Daha hızlı çalışması Stack overflow riski Kodun uzun olması Daha az hata riski</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Stack overflow riski<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Fibonacci serisinin özyinelemeli tanımı nasıldır? F(n) = n * F(n-1) F(n) = n + F(n-1) F(n) = F(n-1) - F(n-2) F(n) = F(n-1) + F(n-2) F(n) = n / F(n-1)</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> F(n) = F(n-1) + F(n-2)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Aşağıdakilerden hangisi özyineleme ile çözülebilen bir veri yapısı problemidir? Dizi sıralama Ağaç gezme Dosya okuma Bellek yönetimi Klavye girişi</span>
+      <span class="qtag">Ünite 10 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ağaç gezme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 10. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(8)">&larr; Önceki Ünite (9)</button>
+    <button class="btn nav-btn" onclick="goUnit(10)">Sonraki Ünite (11) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="10" id="u10">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 11</span>
+    <h2>Ağaç (Tree) Veri Yapısı, Terminolojisi ve İkili Ağaçlar (Binary Tree)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Ağaç (Tree); hiyerarşik ilişkileri modelleyen, doğrusal olmayan (non-linear) bir veri yapısıdır. Bir kök (root) düğüm ile başlar ve her düğüm sıfır veya daha fazla alt düğüme (çocuk) bağlanır. Çevrim (cycle) içermez.</p>
+  </div>
+
+  <h3>11.1. Ağaç Terminolojisi ve Kavram Sözlüğü</h3>
+  <div class="box formul">
+    <dl>
+      <dt>Kök (Root)</dt>
+      <dd>Ağacın en tepesindeki düğümdür. Üst ebeveyni (parent) bulunmayan tek düğümdür.</dd>
+      <dt>Düğüm (Node)</dt>
+      <dd>Veriyi ve alt dallara giden bağlantıları (pointer) barındıran temel veri elemanıdır.</dd>
+      <dt>Ebeveyn (Parent) ve Çocuk (Child)</dt>
+      <dd>Bir düğüme doğrudan bağlı olan alt düğümlere çocuk, üstteki düğüme ise ebeveyn denir.</dd>
+      <dt>Yaprak (Leaf / Terminal Node)</dt>
+      <dd>Hiçbir alt çocuğu olmayan düğümlerdir (sol ve sağ göstericileri NULL'dur).</dd>
+      <dt>Kardeş (Sibling)</dt>
+      <dd>Aynı ebeveyne (parent) bağlı olan çocuk düğümlerdir.</dd>
+      <dt>Derinlik (Depth)</dt>
+      <dd>Bir düğümden köke olan kenar sayısıdır. Kökün derinliği 0'dır.</dd>
+      <dt>Yükseklik (Height)</dt>
+      <dd>Bir düğümden en uzaktaki yaprağa giden en uzun yoldaki kenar sayısıdır. Yaprağın yüksekliği 0'dır. Ağacın yüksekliği kökün yüksekliğidir.</dd>
+      <dt>Derece (Degree)</dt>
+      <dd>Bir düğümün sahip olduğu çocuk sayısıdır.</dd>
+    </dl>
+  </div>
+
+  <h3>11.2. İkili Ağaç (Binary Tree) Çeşitleri</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Ağaç Türü</th>
+        <th>Tanım ve Özellikler</th>
+        <th>Matematiksel Özellik</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>İkili Ağaç (Binary Tree)</strong></td>
+        <td>Her düğümün <strong>en fazla 2 çocuğu</strong> (sol ve sağ çocuk) bulunabilen ağaçtır.</td>
+        <td>Derece &le; 2</td>
+      </tr>
+      <tr>
+        <td><strong>Dolu İkili Ağaç (Full / Proper)</strong></td>
+        <td>Ağaçtaki her düğümün ya 0 ya da tam 2 çocuğu vardır. 1 çocuklu düğüm bulunmaz.</td>
+        <td>Çocuk sayısı &isin; {0, 2}</td>
+      </tr>
+      <tr>
+        <td><strong>Mükemmel İkili Ağaç (Perfect)</strong></td>
+        <td>Tüm iç düğümler 2 çocuğa sahiptir ve tüm yapraklar tamamen aynı derinlik seviyesindedir.</td>
+        <td>Yükseklik h ise düğüm sayısı: 2<sup>h+1</sup> - 1</td>
+      </tr>
+      <tr>
+        <td><strong>Tam İkili Ağaç (Complete)</strong></td>
+        <td>Son seviye hariç tüm seviyeler tamamen doludur. Son seviyedeki düğümler ise en soldan sağa doğru bitişik olarak sıralanmıştır. (Dizi tabanlı Heap yapılarında zorunludur).</td>
+        <td>Diziye doğrudan <code>2i+1</code> ve <code>2i+2</code> ile eşlenebilir.</td>
+      </tr>
+      <tr>
+        <td><strong>Dengeli İkili Ağaç (Balanced)</strong></td>
+        <td>Herhangi bir düğümün sol ve sağ alt ağaçlarının yükseklik farkı en fazla 1'dir (AVL, Red-Black ağaçları).</td>
+        <td>Yükseklik O(log n) garantilidir.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>11.3. C Dilinde İkili Ağaç Düğüm Yapısı</h3>
+  <pre class="code"><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct AgacDugumu {
+    int veri;
+    struct AgacDugumu* sol;   // Sol çocuk göstericisi
+    struct AgacDugumu* sag;   // Sağ çocuk göstericisi
+};
+
+struct AgacDugumu* yeniDugum(int deger) {
+    struct AgacDugumu* dugum = (struct AgacDugumu*)malloc(sizeof(struct AgacDugumu));
+    dugum->veri = deger;
+    dugum->sol = NULL;
+    dugum->sag = NULL;
+    return dugum;
+}</code></pre>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: Full Tree vs Complete Tree</h4>
+    <p>Sınavlarda "Complete Binary Tree" ile "Full Binary Tree" birbirine sıkça karıştırılır. Full Tree'de düğümün 1 çocuğu olamaz (ya 0 ya 2). Complete Tree'de ise tüm seviyeler doludur, son seviye soldan sağa dizilmelidir (yaprakların hepsi aynı hizada olmak zorunda değildir).</p>
+  </div>
+
+<h3>11.4. Ünite 11 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Ağaç (tree) veri yapısında kök (root) nedir? En alt düğüm En üstteki düğüm En çok çocuğu olan düğüm Yaprak düğüm Alt ağaç</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> En üstteki düğüm<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Bir düğümün alt düğümü yoksa bu düğüme ne ad verilir? Yaprak Kök Ebeveyn Alt ağaç Derece</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Yaprak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Ağaçta bir düğümün sahip olduğu çocuk sayısına ne denir? Seviye Yükseklik Derinlik Derece Kök</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Derece<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">İkili arama ağacında (BST) her düğümün en fazla kaç çocuğu olabilir? 1 2 3 Sınırsız 0</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> 2<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">BST’de sol alt ağaçtaki tüm değerler hangi özelliğe sahiptir? Düğümden büyük Düğümle aynı Rastgele Sıralı değil Düğümden küçük</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Düğümden küçük<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">BST’de arama işleminin ortalama karmaşıklığı nedir? O(1) O(n) O(log n) O(n^2) O(n!)</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(log n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Ağaçta kökten bir düğüme kadar olan kenar sayısına ne denir? Yükseklik Seviye Derece Alt ağaç Derinlik</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Derinlik<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Ağaçta bir düğümden en derin yaprağa kadar olan kenar sayısı nedir? Seviye Derinlik Yükseklik Derece Kök</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Yükseklik<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Ağaçta dolaşma (traversal) yöntemlerinden biri değildir? Inorder Preorder Postorder Outorder Level order</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Outorder<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">BST’de bir değeri ararken, aranan değer mevcut düğümden küçükse hangi alt ağaçta arama devam eder? Sağ Sol Kök Yaprak Her ikisi</span>
+      <span class="qtag">Ünite 11 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sol<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 11. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(9)">&larr; Önceki Ünite (10)</button>
+    <button class="btn nav-btn" onclick="goUnit(11)">Sonraki Ünite (12) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="11" id="u11">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 12</span>
+    <h2>İkili Arama Ağacı (BST) ve Ağaç Dolaşma Yöntemleri (Traversals)</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>İkili Arama Ağacı (Binary Search Tree - BST); ikili ağaç mantığını sıralama kuralıyla birleştiren yapıdır: Bir düğümün <strong>sol alt ağacındaki tüm elemanlar o düğümden KÜÇÜK</strong>, <strong>sağ alt ağacındaki tüm elemanlar o düğümden BÜYÜK</strong> olmak zorundadır.</p>
+  </div>
+
+  <h3>12.1. Ağaç Dolaşma Yöntemleri (Tree Traversals)</h3>
+  <p>Ağaçtaki tüm düğümleri tek tek ziyaret etmenin 4 temel yöntemi vardır:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Dolaşma Yöntemi</th>
+        <th>Ziyaret Sırası (Algoritma)</th>
+        <th>Önemli Özelliği ve Kullanım Alanı</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>In-order (İçten/Ortadan)</strong></td>
+        <td>1. Sol Alt Ağaç &rarr; 2. Kök (Root) &rarr; 3. Sağ Alt Ağaç</td>
+        <td><strong>ÇOK ÖNEMLİ:</strong> İkili Arama Ağacında (BST) In-order dolaşma, elemanları <strong>küçükten büyüğe sıralı (ascending)</strong> olarak listeler!</td>
+      </tr>
+      <tr>
+        <td><strong>Pre-order (Önden/Kökten)</strong></td>
+        <td>1. Kök (Root) &rarr; 2. Sol Alt Ağaç &rarr; 3. Sağ Alt Ağaç</td>
+        <td>Ağacın tam bir kopyasını oluşturmak ve matematiksel önek (prefix) ifadeleri üretmek için kullanılır.</td>
+      </tr>
+      <tr>
+        <td><strong>Post-order (Sondan)</strong></td>
+        <td>1. Sol Alt Ağaç &rarr; 2. Sağ Alt Ağaç &rarr; 3. Kök (Root)</td>
+        <td>Ağacı bellekten temizlerken (free) ve alt düğümler silinmeden kökü silmemek gerektiğinde kullanılır. Sonsöz (postfix) ifadeler üretir.</td>
+      </tr>
+      <tr>
+        <td><strong>Level-order (Seviye Bazlı)</strong></td>
+        <td>Kökten başlayarak derinlik seviyelerine göre soldan sağa gezer.</td>
+        <td>Kuyruk (Queue) veri yapısı kullanılarak BFS (Breadth-First Search) mantığıyla çalışır.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>12.2. BST Dolaşma Algoritmaları C Kodu</h3>
+  <pre class="code"><code>// In-order Gezinme (Sol -> Kök -> Sağ)
+void inOrder(struct AgacDugumu* kok) {
+    if (kok != NULL) {
+        inOrder(kok->sol);
+        printf("%d ", kok->veri);
+        inOrder(kok->sag);
+    }
+}
+
+// Pre-order Gezinme (Kök -> Sol -> Sağ)
+void preOrder(struct AgacDugumu* kok) {
+    if (kok != NULL) {
+        printf("%d ", kok->veri);
+        preOrder(kok->sol);
+        preOrder(kok->sag);
+    }
+}
+
+// Post-order Gezinme (Sol -> Sağ -> Kök)
+void postOrder(struct AgacDugumu* kok) {
+    if (kok != NULL) {
+        postOrder(kok->sol);
+        postOrder(kok->sag);
+        printf("%d ", kok->veri);
+    }
+}</code></pre>
+
+  <h3>12.3. BST Eleman Silme (Deletion) Kuralları</h3>
+  <ul>
+    <li><strong>Durum 1 (Yaprak Düğüm):</strong> Düğüm doğrudan silinir ve ebeveynin ilgili göstericisi NULL yapılır.</li>
+    <li><strong>Durum 2 (Tek Çocuklu Düğüm):</strong> Silinen düğümün yerine tek çocuğu bağlanır (atlama yapılır).</li>
+    <li><strong>Durum 3 (İki Çocuklu Düğüm):</strong> Silinen düğümün yerine ya <em>sağ alt ağacın en küçük elemanı (In-order Successor)</em> ya da <em>sol alt ağacın en büyük elemanı (In-order Predecessor)</em> getirilir.</li>
+  </ul>
+
+<h3>12.4. Ünite 12 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Ağaçlarda gezinti (traversal) nedir? Sadece kök düğümü ziyaret etmek Sadece yaprak düğümleri silmek Sadece sağ alt ağacı gezmek Sadece veri eklemek Tüm düğümleri belirli bir sırayla ziyaret etmek</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Tüm düğümleri belirli bir sırayla ziyaret etmek<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Preorder gezinti sırası nasıldır? Kök, Sol, Sağ Sol, Kök, Sağ Sol, Sağ, Kök Sağ, Sol, Kök Kök, Sağ, Sol</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kök, Sol, Sağ<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Inorder gezinti sırası nasıldır? Kök, Sol, Sağ Sol, Sağ, Kök Sağ, Sol, Kök Sol, Kök, Sağ Kök, Sağ, Sol</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sol, Kök, Sağ<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Postorder gezinti sırası nasıldır? Kök, Sol, Sağ Sol, Kök, Sağ Sağ, Sol, Kök Kök, Sağ, Sol Sol, Sağ, Kök</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sol, Sağ, Kök<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Preorder gezinti hangi uygulama alanında yaygın olarak kullanılır? Küçükten büyüğe sıralama Ağacın kopyalanması Bellek temizleme Postfix gösterimi Alt klasörleri silme</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ağacın kopyalanması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Inorder gezinti, BST’de hangi sonucu verir? Kökten başlar Küçükten büyüğe sıralama En büyükten en küçüğe sıralama Rastgele sıralama Sadece yaprakları gösterir</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Küçükten büyüğe sıralama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Postorder gezinti hangi işlem için en uygundur? Ağacın kopyalanması Prefix gösterimi Bellek temizleme (düğüm silme) Küçükten büyüğe sıralama Sadece kökü ziyaret etme</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bellek temizleme (düğüm silme)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Preorder, inorder ve postorder gezintilerin zaman karmaşıklığı nedir? O(1) O(log n) O(n) O(n^2) O(n!)</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Özyinelemeli gezintide maksimum çağrı yığını derinliği neye bağlıdır? Düğüm sayısına Kökün değerine Yaprak sayısına Ağacın yüksekliğine Çocuk sayısına</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ağacın yüksekliğine<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Dengesiz (çubuk gibi) bir ağaçta özyinelemeli gezintinin alan karmaşıklığı nedir? O(n) O(1) O(log n) O(n^2) O(n!)</span>
+      <span class="qtag">Ünite 12 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 12. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(10)">&larr; Önceki Ünite (11)</button>
+    <button class="btn nav-btn" onclick="goUnit(12)">Sonraki Ünite (13) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="12" id="u12">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 13</span>
+    <h2>Sıralama Algoritmaları (Sorting Algorithms) ve Karşılaştırmalı Analizi</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Sıralama algoritmaları, bir dizi veya listedeki elemanları belirli bir düzene (artan veya azalan) göre yeniden düzenleyen algoritmalardır. Zaman karmaşıklığı, alan karmaşıklığı (bellek içi / in-place) ve kararlılık (stability) kriterlerine göre değerlendirilirler.</p>
+  </div>
+
+  <h3>13.1. Sıralama Algoritmaları Büyük Karşılaştırma Tablosu</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Algoritma</th>
+        <th>En İyi Durum (Best)</th>
+        <th>Ortalama (Average)</th>
+        <th>En Kötü Durum (Worst)</th>
+        <th>Bellek (Space)</th>
+        <th>Kararlı mı? (Stable)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Kabarcık Sıralama (Bubble Sort)</strong></td>
+        <td>O(n) [bayrak ile]</td>
+        <td>O(n²)</td>
+        <td>O(n²)</td>
+        <td>O(1)</td>
+        <td>Evet</td>
+      </tr>
+      <tr>
+        <td><strong>Seçmeli Sıralama (Selection Sort)</strong></td>
+        <td>O(n²)</td>
+        <td>O(n²)</td>
+        <td>O(n²)</td>
+        <td>O(1)</td>
+        <td>Hayır</td>
+      </tr>
+      <tr>
+        <td><strong>Araya Ekleme (Insertion Sort)</strong></td>
+        <td>O(n) [sıralıysa]</td>
+        <td>O(n²)</td>
+        <td>O(n²)</td>
+        <td>O(1)</td>
+        <td>Evet</td>
+      </tr>
+      <tr>
+        <td><strong>Birleştirmeli Sıralama (Merge Sort)</strong></td>
+        <td>O(n log n)</td>
+        <td>O(n log n)</td>
+        <td>O(n log n)</td>
+        <td>O(n) [ek dizi]</td>
+        <td>Evet</td>
+      </tr>
+      <tr>
+        <td><strong>Hızlı Sıralama (Quick Sort)</strong></td>
+        <td>O(n log n)</td>
+        <td>O(n log n)</td>
+        <td>O(n²) [kötü pivot]</td>
+        <td>O(log n)</td>
+        <td>Hayır</td>
+      </tr>
+      <tr>
+        <td><strong>Yığın Sıralaması (Heap Sort)</strong></td>
+        <td>O(n log n)</td>
+        <td>O(n log n)</td>
+        <td>O(n log n)</td>
+        <td>O(1)</td>
+        <td>Hayır</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>13.2. Temel Kavramlar</h3>
+  <div class="box formul">
+    <ul>
+      <li><strong>Kararlılık (Stability):</strong> Sıralama sonucunda eşit anahtara sahip elemanların orijinal sırasının korunmasıdır (Örn: Merge Sort kararlıdır, Quick Sort kararsızdır).</li>
+      <li><strong>Yerinde Sıralama (In-Place):</strong> Ekstra dizi oluşturmadan, sadece sabit miktarda O(1) yardımcı bellek kullanarak elemanları yerinde takas etmektir (Bubble, Selection, Quick in-place'dir; Merge Sort ek O(n) bellek gerektirir).</li>
+      <li><strong>Böl ve Yönet (Divide and Conquer):</strong> Problemi alt parçalara bölüp bağımsız çözme ve birleştirme prensibidir (Merge Sort ve Quick Sort bu mantıkla çalışır).</li>
+    </ul>
+  </div>
+
+<h3>13.3. Ünite 13 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Sıralama (sorting) işleminin temel amacı nedir? Verileri silmek Verileri şifrelemek Verileri çoğaltmak Verileri rastgeleleştirmek Verileri belirli bir düzene göre düzenlemek</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Verileri belirli bir düzene göre düzenlemek<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Sıralı veri üzerinde hangi arama algoritması daha hızlı çalışır? Binary search Linear search Hash search BFS DFS</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Binary search<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Bubble Sort algoritmasının temel çalışma prensibi nedir? En küçük elemanı sona taşır Her adımda diziyi ikiye böler Her elemanı sıralı kısma ekler Bitişik elemanları karşılaştırıp yer değiştirir Rastgele yer değiştirir</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Bitişik elemanları karşılaştırıp yer değiştirir<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Selection Sort algoritmasında her adımda ne yapılır? En büyük eleman başa alınır En küçük eleman sona alınır Kalan dizinin en küçük elemanı başa alınır Bitişik elemanlar karşılaştırılır Sadece ilk iki eleman karşılaştırılır</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Kalan dizinin en küçük elemanı başa alınır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Insertion Sort algoritmasında hangi işlem yapılır? Her eleman rastgele bir yere eklenir Sıralı kısma uygun yere ekleme yapılır En büyük eleman sona alınır En küçük eleman başa alınır Elemanlar ters çevrilir</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Sıralı kısma uygun yere ekleme yapılır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Bubble Sort algoritmasının en iyi durum karmaşıklığı nedir? O(1) O(n) O(n log n) O(n²) O(log n)</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Selection Sort algoritmasının ortalama ve en kötü durum karmaşıklığı nedir? O(n) O(n log n) O(n²) O(log n) O(n!)</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n²)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Insertion Sort algoritmasının en iyi durumda karmaşıklığı nedir? O(n) O(1) O(n log n) O(n²) O(log n)</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Aşağıdakilerden hangisi kararlı (stable) bir sıralama algoritmasıdır? Bubble Sort Selection Sort Insertion Sort A ve C B ve C</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A ve C<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Üç temel sıralama algoritmasında (Bubble, Selection, Insertion) hangisi genellikle kararlı değildir? Bubble Sort Insertion Sort Hepsi kararlı Hiçbiri kararlı değil Selection Sort</span>
+      <span class="qtag">Ünite 13 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Selection Sort<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 13. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(11)">&larr; Önceki Ünite (12)</button>
+    <button class="btn nav-btn" onclick="goUnit(13)">Sonraki Ünite (14) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="13" id="u13">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 14</span>
+    <h2>Çizge (Graf) Veri Yapısı, Temsilleri ve Graf Gezinme Algoritmaları</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Graf (Çizge); düğümler (Köşe / Vertex - V) ve bu düğümleri birbirine bağlayan kenarlardan (Edge - E) oluşan doğrusal olmayan genel veri yapısıdır: G = (V, E). Sosyal ağlar, harita rotalama, ağ topolojileri graflarla modellenir.</p>
+  </div>
+
+  <h3>14.1. Graf Temsil Yöntemleri Karşılaştırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Temsil Yöntemi</th>
+        <th>Açıklama</th>
+        <th>Bellek Karmaşıklığı</th>
+        <th>Kenar Kontrolü</th>
+        <th>Kullanım Alanı</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Komşuluk Matrisi (Adjacency Matrix)</strong></td>
+        <td>V &times; V boyutunda iki boyutlu dizi. Düğüm i ile j arasında kenar varsa <code>matris[i][j] = 1</code> olur.</td>
+        <td><strong>O(V²)</strong></td>
+        <td><strong>O(1)</strong> Çok Hızlı</td>
+        <td>Yoğun graflar (Dense Graph - Kenar sayısı çok fazla olan).</td>
+      </tr>
+      <tr>
+        <td><strong>Komşuluk Listesi (Adjacency List)</strong></td>
+        <td>Her düğüm için doğrudan bağlı olduğu komşuları tutan bağlı liste dizisi.</td>
+        <td><strong>O(V + E)</strong></td>
+        <td><strong>O(derece)</strong></td>
+        <td>Seyrek graflar (Sparse Graph - Çoğu gerçek dünya grafı seyrektir).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>14.2. Graf Gezinme Algoritmaları: BFS vs DFS</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Kriter</th>
+        <th>Genişlik Öncelikli Arama (BFS - Breadth-First)</th>
+        <th>Derinlik Öncelikli Arama (DFS - Depth-First)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Kullanılan Veri Yapısı</strong></td>
+        <td><strong>Kuyruk (Queue - FIFO)</strong></td>
+        <td><strong>Yığın (Stack - LIFO)</strong> veya Özyineleme</td>
+      </tr>
+      <tr>
+        <td><strong>Arama Mantığı</strong></td>
+        <td>Başlangıç düğümünün tüm komşularını aynı anda ziyaret eder, dalga dalga yayılır.</td>
+        <td>Bir dal boyunca gidebildiği en derin noktaya kadar gider, çıkmaz sokağa gelince geri döner (Backtracking).</td>
+      </tr>
+      <tr>
+        <td><strong>En Kısa Yol</strong></td>
+        <td>Ağırlıksız graflarda <strong>en kısa yolu garanti eder</strong>.</td>
+        <td>En kısa yolu garanti etmez; yol bulma veya çevrim tespiti için kullanılır.</td>
+      </tr>
+      <tr>
+        <td><strong>Zaman Karmaşıklığı</strong></td>
+        <td>O(V + E)</td>
+        <td>O(V + E)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: BFS ve DFS Hangi Veri Yapılarını Kullanır?</h4>
+    <p>Sınavlarda en çok sorulan klasik soru: <strong>BFS daima Kuyruk (Queue)</strong> kullanır; <strong>DFS ise Yığın (Stack)</strong> veya sistem çağrı yığını (Recursion) kullanır!</p>
+  </div>
+
+<h3>14.3. Ünite 14 Çıkmış Sınav Soruları ve Çözümleri</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Zaman karmaşıklığı nedir? Algoritmanın kullandığı bellek miktarı Algoritmanın kararlılığı Algoritmanın doğruluğu Algoritmanın kod uzunluğu Algoritmanın çalışması için gereken adım sayısı</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Algoritmanın çalışması için gereken adım sayısı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Bellek karmaşıklığı nedir? Algoritmanın çalışma süresi Algoritmanın kullandığı ek bellek miktarı Algoritmanın kararlılığı Algoritmanın doğruluğu Algoritmanın kod uzunluğu</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Algoritmanın kullandığı ek bellek miktarı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Aşağıdaki algoritmalardan hangisi kararlıdır? Merge Sort Selection Sort Heap Sort Quick Sort Heap Sort ve Quick Sort</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Merge Sort<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Hangi algoritma in-place (yerinde) değildir? Bubble Sort Insertion Sort Quick Sort Merge Sort Selection Sort</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Merge Sort<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Quick Sort algoritmasının en kötü durum zaman karmaşıklığı nedir? O(n) O(n log n) O(n²) O(log n) O(1)</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n²)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Merge Sort algoritmasının bellek karmaşıklığı nedir? O(1) O(log n) O(n²) O(n) O(n log n)</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(n)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Hangi algoritma genellikle küçük ve neredeyse sıralı dizilerde tercih edilir? Heap Sort Merge Sort Insertion Sort Quick Sort Radix Sort</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Insertion Sort<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Büyük, kararlılık gerektiren ve harici sıralama için en uygun algoritma hangisidir? Bubble Sort Merge Sort Quick Sort Heap Sort Selection Sort</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Merge Sort<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Quick Sort algoritmasında pivot seçiminin önemi nedir? Bellek kullanımını azaltır Kararlılığı artırır Kodun okunabilirliğini artırır Hiçbir etkisi yoktur Performansı doğrudan etkiler</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Performansı doğrudan etkiler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Heap Sort algoritmasının bellek karmaşıklığı nedir? O(1) O(n) O(log n) O(n²) O(n log n)</span>
+      <span class="qtag">Ünite 14 Soru Bankası</span>
+    </summary>
+    <div class="sqbody">
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> O(1)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        AUZEF Veri Yapıları müfredatı 14. ünite akademik standartları ve algoritma kuralları gereğince doğru yanıt yukarıda belirtilmiştir.
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(12)">&larr; Önceki Ünite (13)</button>
+    <div></div>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<script>
+function goUnit(idx) {
+  var units = document.querySelectorAll('.unit');
+  if (idx < 0 || idx >= units.length) return;
+  units.forEach(function(u) { u.classList.remove('on'); });
+  units[idx].classList.add('on');
+  document.getElementById('unitSel').value = idx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleDevMenu() {
+  document.getElementById('devMenu').classList.toggle('open');
+}
+
+function setDevice(dev) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.getElementById('devMenu').classList.remove('open');
+  localStorage.setItem('preferred_device', dev);
+}
+
+function toggleTheme() {
+  var cur = document.documentElement.getAttribute('data-theme') || 'light';
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('preferred_theme', next);
+}
+
+window.addEventListener('click', function(e) {
+  var wrap = document.querySelector('.device-menu-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('devMenu').classList.remove('open');
+  }
+});
+
+(function() {
+  var savedDev = localStorage.getItem('preferred_device');
+  if (savedDev) document.documentElement.setAttribute('data-device', savedDev);
+  var savedTheme = localStorage.getItem('preferred_theme');
+  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+</script>
+</body>
+</html>

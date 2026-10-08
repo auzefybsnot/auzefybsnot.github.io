@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Ofis Uygulamaları (AYBS8505) - AUZEF Kapsamlı Ders Anlatımı ve Soru Havuzu</title>
+<style>
+:root {
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --text: #1A202C;
+  --text-muted: #4A5568;
+  --border: #E2E8F0;
+  --primary: #2B6CB0;
+  --primary-light: #EBF8FF;
+  --accent: #D69E2E;
+  --accent-light: #FEFCBF;
+  --success: #276749;
+  --success-light: #F0FFF4;
+  --danger: #9B2C2C;
+  --danger-light: #FFF5F5;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Georgia", "Bookerly", serif;
+  --font-mono: "Consolas", "Courier New", monospace;
+  --font-size: 16px;
+  --line-height: 1.65;
+  --max-w: 1040px;
+}
+
+[data-theme="dark"] {
+  --bg: #1A202C;
+  --surface: #2D3748;
+  --text: #F7FAFC;
+  --text-muted: #A0AEC0;
+  --border: #4A5568;
+  --primary: #63B3ED;
+  --primary-light: #2A4365;
+  --accent: #F6E05E;
+  --accent-light: #744210;
+  --success: #68D391;
+  --success-light: #22543D;
+  --danger: #FEB2B2;
+  --danger-light: #742A2A;
+}
+
+/* DEVICE PROFILES */
+[data-device="eink-6-bw"] {
+  --bg: #FFFFFF !important;
+  --surface: #FFFFFF !important;
+  --text: #000000 !important;
+  --text-muted: #222222 !important;
+  --border: #000000 !important;
+  --primary: #000000 !important;
+  --primary-light: #EEEEEE !important;
+  --accent: #000000 !important;
+  --accent-light: #EEEEEE !important;
+  --font-body: var(--font-serif) !important;
+  --font-size: 17px !important;
+  --max-w: 600px !important;
+}
+[data-device="eink-6-bw"] * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+[data-device="eink-6-color"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 16.5px !important;
+  --max-w: 640px !important;
+}
+
+[data-device="eink-10-bw"] {
+  --font-body: var(--font-serif) !important;
+  --font-size: 18px !important;
+  --max-w: 860px !important;
+}
+
+[data-device="mobile"] {
+  --font-size: 15px !important;
+  --max-w: 100% !important;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  padding-bottom: 80px;
+}
+
+.shell { max-width: var(--max-w); margin: 0 auto; padding: 0 16px; }
+
+/* TOP BAR */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; margin: 0 -16px 20px;
+}
+.bar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 12px; border-radius: 6px;
+  font-weight: 700; font-size: 13px; text-decoration: none;
+}
+.back-btn:hover { border-color: var(--primary); color: var(--primary); }
+.sel {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 10px; border-radius: 6px;
+  font-weight: 600; font-size: 13px; max-width: 400px; flex: 1;
+}
+.bar-right { display: flex; align-items: center; gap: 8px; }
+.btn {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 12px; border-radius: 6px;
+  font-weight: 600; font-size: 13px; cursor: pointer;
+}
+.btn:hover { border-color: var(--primary); }
+.device-menu-wrap { position: relative; }
+.device-menu {
+  display: none; position: absolute; right: 0; top: 110%;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; min-width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  z-index: 101; padding: 6px;
+}
+.device-menu.open { display: block; }
+.device-menu-head { font-size: 11px; font-weight: 800; color: var(--text-muted); padding: 6px 10px; text-transform: uppercase; }
+.device-opt {
+  display: block; width: 100%; text-align: left; background: none;
+  border: none; padding: 8px 10px; font-size: 13px; color: var(--text);
+  border-radius: 4px; cursor: pointer;
+}
+.device-opt:hover { background: var(--bg); color: var(--primary); }
+
+/* BANNER */
+.course-banner {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; margin-bottom: 24px;
+}
+.eyebrow { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.course-banner h1 { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.course-meta { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+/* UNITS */
+.unit { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 30px; }
+.unit.on { display: block; }
+.uhead { border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
+.uhead .num { display: inline-block; font-size: 12px; font-weight: 800; color: var(--accent); background: var(--accent-light); padding: 3px 8px; border-radius: 4px; margin-bottom: 6px; }
+.uhead h2 { font-size: 22px; font-weight: 800; color: var(--text); }
+.lead-box { background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 15px; }
+
+h3 { font-size: 18px; font-weight: 800; color: var(--primary); margin: 24px 0 12px; border-left: 3px solid var(--accent); padding-left: 10px; }
+h4 { font-size: 15px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
+p { margin-bottom: 12px; }
+ul, ol { margin: 10px 0 16px 24px; }
+li { margin-bottom: 6px; }
+
+/* BOXES */
+.box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; border: 1px solid var(--border); }
+.box.formul { background: var(--surface); border-left: 4px solid var(--primary); }
+.box.tuzak { background: var(--danger-light); border-color: var(--danger); border-left: 4px solid var(--danger); }
+.box.tuzak h4 { color: var(--danger); }
+.f { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; background: var(--surface); }
+th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { background: var(--bg); font-weight: 800; color: var(--text); }
+
+/* QUESTIONS */
+details.sq {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  margin: 12px 0; overflow: hidden;
+}
+details.sq summary {
+  padding: 12px 16px; cursor: pointer; font-weight: 600; list-style: none;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+details.sq summary::-webkit-details-marker { display: none; }
+.qno { font-size: 11px; font-weight: 800; background: var(--primary); color: #fff; padding: 2px 7px; border-radius: 4px; }
+.qtitle { flex: 1; font-size: 14px; color: var(--text); }
+.qtag { font-size: 11px; background: var(--border); color: var(--text-muted); padding: 2px 6px; border-radius: 4px; }
+.sqbody { padding: 14px 16px; background: var(--surface); border-top: 1px solid var(--border); }
+.exp { font-size: 13px; line-height: 1.5; color: var(--text); background: var(--bg); padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--success); }
+
+/* UNIT PAGER */
+.unit-pager {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header class="top-bar">
+    <div class="bar-left">
+      <a href="../../2.Sinif/index.html" class="back-btn" title="2. Sınıf Ders Listesine Dön">← 2. Sınıf Portal</a>
+      <select id="unitSel" class="sel" onchange="goUnit(parseInt(this.value))">
+        <option value="0">1. Ünite: Word Uygulamasına Giriş ve Sayfa Yapısı Düzenleme</option><option value="1">2. Ünite: Word Uygulamasında Metin İşlemleri, Biçimlendirme ve Stiller</option><option value="2">3. Ünite: Word Uygulamasında İçerik Zenginleştirme: Tablolar, SmartArt ve İçindekiler</option><option value="3">4. Ünite: PowerPoint Uygulamasına Giriş, Slayt Düzenleri ve Asıl Slayt</option><option value="4">5. Ünite: PowerPoint Sunumlarını Canlandırma: Geçişler, Animasyonlar ve Gösteri</option><option value="5">6. Ünite: Excel Uygulamasına Giriş, Hücre Yapısı ve Temel Kavramlar</option><option value="6">7. Ünite: Excel'de Verilerin Analizi: Sıralama, Filtreleme ve Koşullu Biçimlendirme</option><option value="7">8. Ünite: Excel'de Formüller, Hücre Başvuruları ve Hata Kodları</option>
+      </select>
+    </div>
+    <div class="bar-right">
+      <div class="device-menu-wrap">
+        <button class="btn icon" id="devBtn" onclick="toggleDevMenu()" title="Cihaz Profili">📱 Mod</button>
+        <div class="device-menu" id="devMenu">
+          <div class="device-menu-head">Cihaz Görünüm Profili</div>
+          <button class="device-opt" onclick="setDevice('desktop')">💻 Masaüstü Web</button>
+          <button class="device-opt" onclick="setDevice('mobile')">📱 Mobil Ekran</button>
+          <button class="device-opt" onclick="setDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B Bookerly)</button>
+          <button class="device-opt" onclick="setDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+          <button class="device-opt" onclick="setDevice('eink-10-bw')">📝 10.3" Tablet (S/B)</button>
+        </div>
+      </div>
+      <button class="btn icon" id="themeBtn" onclick="toggleTheme()" title="Koyu / Açık Tema">🌓 Tema</button>
+    </div>
+  </header>
+
+  <div class="course-banner">
+    <p class="eyebrow">AUZEF &middot; Yönetim Bilişim Sistemleri &middot; 2. Sınıf Bahar (AYBS8505)</p>
+    <h1>Ofis Uygulamaları</h1>
+    <p class="course-meta">Eksiksiz 8 Ünite Ders Notları • MS Word, PowerPoint & Excel • Formüller, Kısayollar ve Hata Kodları • Sınav Tuzakları • 88 Çözümlü Sınav Sorusu</p>
+  </div>
+
+  <main id="content">
+    
+<section class="unit on" data-i="0" id="u0">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 01</span>
+    <h2>Word Uygulamasına Giriş ve Sayfa Yapısı Düzenleme</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Kelime işlemci (Word Processor); metin belgeleri oluşturma, düzenleme, biçimlendirme, tablo ve görsellerle zenginleştirme ve yazdırma işlevlerini sağlayan uygulama yazılımlarıdır.</p>
+  </div>
+
+  <h3>1.1. Kelime İşlemci Yazılımları Sınıflandırması</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Yazılım Türü</th>
+        <th>Özellikleri</th>
+        <th>Örnek Uygulamalar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Ticari / Kapalı Kaynaklı</strong></td>
+        <td>Lisans ücreti gerektiren, kaynak kodları şirketlerin mülkiyetinde olan yazılımlar.</td>
+        <td>Microsoft Word, Apple Pages.</td>
+      </tr>
+      <tr>
+        <td><strong>Açık Kaynak Kodlu & Ücretsiz</strong></td>
+        <td>Kaynak kodları herkese açık, serbestçe dağıtılabilen ve ücretsiz kullanılabilen yazılımlar.</td>
+        <td><strong>LibreOffice Writer, AbiWord, Apache OpenOffice Writer.</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Bulut Tabanlı Çevrimiçi</strong></td>
+        <td>Web tarayıcısı üzerinden çalışan ortak çalışma destekli kelime işlemciler.</td>
+        <td>Google Docs (Google Dokümanlar), Microsoft Word Online.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.2. Sayfa Yapısı ve Kesmeler (Breaks)</h3>
+  <div class="box formul">
+    <h4>Sayfa Sonu vs Bölüm Sonu (Section Break) Ayrımı:</h4>
+    <ul>
+      <li><strong>Sayfa Sonu (Page Break - Ctrl + Enter):</strong> Metin akışını bir sonraki sayfaya zorlar; ancak sayfa kenar boşlukları, yönlendirme (dikey/yatay) ve sütun ayarları değişmez.</li>
+      <li><strong>Bölüm Sonu (Section Break):</strong> Belgeyi bağımsız biçimlendirilebilir bölümlere (sections) ayırır. Bir belgenin bazı sayfalarını <em>Dikey</em>, bazı sayfalarını <em>Yatay</em> yapmak veya ilk sayfalarda roma rakamı (i, ii, iii), sonrasında normal sayfa numarası (1, 2, 3) kullanabilmek için <strong>MUTLAKA Bölüm Sonu Kesmesi</strong> eklenmelidir.</li>
+    </ul>
+  </div>
+
+<h3>1.3. Ünite 1 Çıkmış Sınav Soruları ve Çözümleri (6 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdakilerden hangisi açık kaynak kodlu ve ücretsiz bir kelime işlemci uygulamasıdır?</span>
+      <span class="qtag">2026 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) LibreOffice Writer</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Microsoft Word</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Google Docs</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Dropbox Paper</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Apple iWork-Pages</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) LibreOffice Writer<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">LibreOffice Writer ve Abiword gibi programlar açık kaynak kodlu ve ücretsizdir. Microsoft Word ve Google Docs ise şirketlere ait kapalı kaynak (ticari) yazılımlardır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Aşağıdakilerden hangisi açık kaynak kodlu bir kelime işlemci uygulamasıdır?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 2023 Bahar Final • 4 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Apple iWork-Pages</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Microsoft Word</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Abiword</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Google Docs</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Dropbox Paper</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Abiword<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Açık kaynak kodlu yazılımlar, kaynak kodları herkesin erişimine açık olan yazılımlardır. AbiWord ücretsiz ve açık kaynak kodlu bir kelime işlemcidir. Diğerleri ticari şirketlerin mülkiyetindedir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Kelime işlemci uygulamasında kelimelerin altının kırmızı dalga ile çizili olmasının nedeni aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Vize • 2025 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Metnin birleşik kelime olması</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Metnin sözlüğe yeni eklenmiş olması</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Metnin yanlış yazılmış olması</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Metnin seçilip Ctrl+K kısayol tuşuna basılmış olması</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Metnin tamamının büyük harfle yazılmış olması</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Metnin yanlış yazılmış olması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Word'ün yazım denetimi seçili dilin sözlüğünde bulamadığı kelimelerin (hatalı yazımların) altını kırmızı dalgalı çizgiyle işaretler. Dilbilgisi/gramer hataları ise mavi/yeşil çizgiyle gösterilir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">PowerPoint'te 'Eylem Ayarları' penceresinde yer alan 'Köprü' özelliğini kullanarak aşağıdakilerden hangisi yapılamaz?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Görüntülenen ilk slayda yönlendirme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sonraki slayda yönlendirme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Özel bir gösteri başlatma</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Bir web sayfasına yönlendirme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Bir Word belgesi açma</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Görüntülenen ilk slayda yönlendirme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Eylem ayarlarında 'İlk Slayt', 'Son Slayt' ve 'Görüntülenen Son Slayt' vardır. Ancak 'Görüntülenen ilk slayt' şeklinde teknik bir yönlendirme mantıken mevcut değildir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Microsoft Word uygulamasında 'Sayfa sonu' veya 'Sütun sonu' ekleyerek metni bir sonraki bölüme/sayfaya aktaran aracın adı nedir?</span>
+      <span class="qtag">2024 Bahar Vize • 2025 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sayfa Sonu / Kesmeler</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Paragraf</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Hizalama</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Kenarlık</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Satır Aralığı</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Sayfa Sonu / Kesmeler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sayfa Düzeni > Kesmeler menüsü ile sütun veya sayfa atlatmaları (break) yapılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Açık kaynak kodlu bir kelime işlemci uygulaması hangi temel özelliğe sahiptir?</span>
+      <span class="qtag">2025-2026 Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Yalnızca belirli bir işletim sisteminde çalışır ve kaynak kodu değiştirilemez.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sadece internet bağlantısı olan cihazlarda kullanılabilir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Belirli bir kullanıcı grubuna özel olarak geliştirilmiş olup, herkese açık değildir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Ticari bir şirket tarafından geliştirilir ve yalnızca ücretli sürümleri mevcuttur.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Kullanıcıların kaynak koduna erişmesine ve değiştirmesine izin verir.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Kullanıcıların kaynak koduna erişmesine ve değiştirmesine izin verir.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Açık kaynak (Open Source) yazılımların en temel özelliği, kaynak kodlarının herkesin erişimine ve geliştirilmesine açık olmasıdır.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <div></div>
+    <button class="btn nav-btn" onclick="goUnit(1)">Sonraki Ünite (2) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="1" id="u1">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 02</span>
+    <h2>Word Uygulamasında Metin İşlemleri, Biçimlendirme ve Stiller</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Metin biçimlendirme; yazı tipi, boyutu, rengi, paragraf hizalamaları, girintiler ve stiller aracılığıyla belgenin görsel hiyerarşisini ve okunabilirliğini düzenler.</p>
+  </div>
+
+  <h3>2.1. Temel Klavye Kısayolları ve İşlevleri</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Kısayol Tuşu</th>
+        <th>İşlevi</th>
+        <th>Kısayol Tuşu</th>
+        <th>İşlevi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Ctrl + S</strong></td>
+        <td>Belgeyi Kaydet (Save)</td>
+        <td><strong>Ctrl + F</strong></td>
+        <td>Gezinti / Bul (Find)</td>
+      </tr>
+      <tr>
+        <td><strong>Ctrl + Z</strong></td>
+        <td>Geri Al (Undo)</td>
+        <td><strong>Ctrl + H</strong></td>
+        <td>Bul ve Değiştir (Replace)</td>
+      </tr>
+      <tr>
+        <td><strong>Ctrl + Y</strong></td>
+        <td>Yinele (Redo)</td>
+        <td><strong>Ctrl + K</strong></td>
+        <td>Köprü (Köprü / Link Ekle)</td>
+      </tr>
+      <tr>
+        <td><strong>Ctrl + B</strong> (veya Ctrl+K)</td>
+        <td>Kalın (Bold)</td>
+        <td><strong>Shift + F3</strong></td>
+        <td>Büyük/Küçük Harf Değiştir</td>
+      </tr>
+      <tr>
+        <td><strong>Ctrl + Enter</strong></td>
+        <td>Sayfa Sonu Ekle</td>
+        <td><strong>F7</strong></td>
+        <td>Yazım ve Dilbilgisi Denetimi</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2.2. Paragraf Ayarları ve Girintiler</h3>
+  <ul>
+    <li><strong>İlk Satır Girintisi (First Line Indent):</strong> Paragrafın yalnızca ilk satırını sağa kaydırır.</li>
+    <li><strong>Asılı Girinti (Hanging Indent):</strong> Paragrafın ilk satırı solda kalırken, diğer alt satırları sağa girintilenir (Kaynakça ve bibliyografyalarda standarttır).</li>
+  </ul>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: Stil Kullanımı Sorusu</h4>
+    <p>Sınavlarda tam 5 kez sorulmuş banko soru kalıbı: <em>"Sürekli kullanılması düşünülen biçimsel özellikleri (yazı tipi, paragraf aralığı, renk) tek bir tıklamayla kolaylıkla uygulamak için ne yapılır?"</em> &rarr; <strong>Yeni bir Stil (Style) olarak kaydetmek</strong>!</p>
+  </div>
+
+<h3>2.3. Ünite 2 Çıkmış Sınav Soruları ve Çözümleri (14 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Microsoft Word'de bir metni kalın yazmak için aşağıdakilerden hangi kısayol tuşu kullanılır?</span>
+      <span class="qtag">2026 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Ctrl+U</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Ctrl+X</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Ctrl+I</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Ctrl+K</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Ctrl+C</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Ctrl+K<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Türkçe Office sürümlerinde kalın (bold) yazma kısayolu Ctrl+K'dir. (İngilizce sürümlerde Ctrl+B'dir). Ctrl+I İtalik, Ctrl+U Altı Çizili, Ctrl+C Kopyala, Ctrl+X ise Kes kısayoludur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Word'de paragraf aralığı ayarlarında kullanılan ölçü birimlerinden 1 cm kaç noktaya (nk) karşılık gelmektedir?</span>
+      <span class="qtag">2026 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) 14.17</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) 56,70</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) 24</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) 72</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) 28,35</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) 28,35<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Tipografide 1 inç = 72 nokta (nk) olarak kabul edilir. 1 inç aynı zamanda 2.54 cm'dir. Dolayısıyla 1 cm = 72 / 2.54 = 28,346... (yaklaşık 28,35 nk) değerine denk gelir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Bir Word belgesinde metni taşımak için aşağıdakilerden hangi kısayol tuşları kullanılır?</span>
+      <span class="qtag">2026 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Ctrl+F ve Ctrl+P</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Ctrl+X ve Ctrl+S</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Ctrl+N ve Ctrl+S</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Ctrl+X ve Ctrl+V</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Ctrl+C ve Ctrl+V</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Ctrl+X ve Ctrl+V<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Metni 'taşımak', kopyalamaktan farklı olarak bulunduğu yerden silip başka yere koymak demektir. Bu yüzden önce KES (Ctrl+X) sonra YAPIŞTIR (Ctrl+V) işlemi sırasıyla yapılmalıdır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Belgede sürekli kullanılması düşünülen biçimsel özellikleri, istenilen metinlere kolaylıkla uygulayabilmek için aşağıdakilerden hangisinin yapılması uygundur?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 2026 Bahar Vize • 5 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Font grubundaki araçları kullanmak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Biçimlendirmeyi temizle butonunu kullanmak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Düzen menüsünden biçimlendirmeyi hafızaya almak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Biçimsel özellikleri yeni bir stil olarak kaydetmek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Metni kopyalamak</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Biçimsel özellikleri yeni bir stil olarak kaydetmek<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Office programlarındaki 'Stiller' özelliği, yazı tipi, punto, renk, paragraf aralığı gibi birden fazla biçimlendirme ayarını tek bir paket halinde kaydedip, daha sonra istenilen metne tek tıklamayla uygulamak için kullanılır. Bu işlem uzun belgelerde tutarlılık sağlar.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Word uygulamasında bir metni kesmek için kullanılan kısayol tuşu aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Ctrl+V</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Ctrl+X</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Ctrl+Y</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Ctrl+K</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Ctrl+U</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Ctrl+X<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">İşletim sistemlerinde ve Office programlarında evrensel kesme kısayolu Ctrl+X'tir. Kopyalama Ctrl+C, Yapıştırma ise Ctrl+V'dir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Aşağıdakilerden hangisi karakter biçimlendirme ayarlarından biri değildir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 2026 Bahar Vize • 4 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Kalın yazma</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sola hizalama</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Metni alt/üst simge şeklinde yazma</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Metni vurgulama</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Yazı tipini değiştirme</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Sola hizalama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Hizalama işlemleri (Sola, sağa, ortaya yaslama) karakteri (harfi) değil, metin bloğunu bütün olarak etkilediği için karakter değil, paragraf biçimlendirme grubunda yer alır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Bir metin üzerinde vurgulama dışındaki tüm stilleri ve biçimlendirmeyi kaldırmak için kullanılan araç aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Büt • 2025 Bahar Final • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Stilleri Temizle</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Biçim Boyacısı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Biçimlendirmeyi Temizle</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Geri Al</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Biçimlendirmeyi Temizle<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Giriş sekmesindeki büyük 'A' ve silgi ikonu. Tüm kalınlık/renk ayarlarını sıfırlar fakat Metin Vurgu Rengi ile atılan fosforlu boyayı temizlemez.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Aralık Önce: 0 nk Sonra: 0 nk ayarları görüntülenen bölümden hangi işlem gerçekleştirilir?</span>
+      <span class="qtag">2024 Bahar Vize • 2025 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Satır aralarındaki boşluklar ayarlanır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sekme durakları ayarlanır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Paragrafın soldan ve sağdan girintisi ayarlanır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Paragraflar arasındaki dikey boşluklar ayarlanır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Madde imlerinin soldan ve sağdan girintisi ayarlanır.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Paragraflar arasındaki dikey boşluklar ayarlanır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sayfa Düzeni sekmesinde yer alan 'Aralık' ayarları, seçili paragrafın üstündeki ve altındaki dikey mesafeyi belirler.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Bir MS Word belgesinde tüm metinlerin aynı biçimde görünmesini sağlamak için aşağıdaki özelliklerden hangisi kullanılır?</span>
+      <span class="qtag">2025 Bahar Final • 2026 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Filigran</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Stil Kümesi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Kenarlıklar</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Bölüm Sonu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Sütunlar</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Stil Kümesi<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Tasarım sekmesindeki Stil Kümesi (Style Sets), belgedeki başlık ve gövde metinlerinin genel tasarımını tutarlı bir formata sokar.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">MS Word uygulamasında paragraf biçimlendirme işlemi aşağıdakilerden hangisini yapmanıza olanak sağlar?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Paragrafın metnini başka bir belgeye kopyalamak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Paragraflar arasında boşluk ayarlamak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Paragraf içindeki yazım hatalarını otomatik düzeltmek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Paragrafın yazı tipi boyutunu değiştirmek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Paragrafın üzerine resim eklemek</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Paragraflar arasında boşluk ayarlamak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Paragraf grubu; metin hizalama, satır aralığı, paragraf boşlukları ve girinti ayarlarını barındırır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="11">
+    <summary>
+      <span class="qno">Soru 11</span>
+      <span class="qtitle">Aşağıdakilerden hangisi MS Word uygulamasında oluşturulabilecek sekme türlerinden biri değildir?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) İki yana yasla</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sağ sekme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Sol sekme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Ondalık</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Çubuk</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) İki yana yasla<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sekme durakları (Tab) Sol, Orta, Sağ, Ondalık ve Çubuk türlerindedir. 'İki yana yasla' bir sekme durağı değil, paragraf hizalama seçeneğidir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="12">
+    <summary>
+      <span class="qno">Soru 12</span>
+      <span class="qtitle">MS Word'de cetvel üzerindeki alt dik üçgen aracının görevi nedir?</span>
+      <span class="qtag">2024 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Paragrafın son satırının başlangıç konumunu belirler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Paragrafın tamamının başlangıç konumunu belirler. (Asılı Girinti)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) İlk satır girintisini ayarlar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) İmleci metnin sol kenarına hizalar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) İmleci metnin sağ kenarına hizalar.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Paragrafın tamamının başlangıç konumunu belirler. (Asılı Girinti)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Cetveldeki üst üçgen 'İlk Satır' girintisini, alt üçgen ise ilk satır dışındaki diğer satırların (Asılı Girinti) içeriden başlamasını ayarlar.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="13">
+    <summary>
+      <span class="qno">Soru 13</span>
+      <span class="qtitle">Microsoft Word'de paragraflar arası boşlukların ayarlanmasında hangi ölçü birimi kullanılmaktadır?</span>
+      <span class="qtag">2025-2026 Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Piksel</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Milimetre</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Nokta</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) İnç</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Santimetre</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Nokta<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Word'de paragraf öncesi ve sonrası boşluklar ile satır aralıkları standart olarak 'Nokta (nk / pt)' cinsinden ifade edilir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="14">
+    <summary>
+      <span class="qno">Soru 14</span>
+      <span class="qtitle">MS PowerPoint'te kadeh/perde şeklinde gösterilen (Baştan/Slayt Gösterisi) butonun işlevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025-2026 Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Slayt gösterisini kaydeder.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Slayt gösterisini ilk slayttan başlayarak başlatır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Seçili görselin ekrana animasyonlu bir şekilde gelmesini sağlar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Seçili slaydı gizler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Slaytlara bölüm ekler.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Slayt gösterisini ilk slayttan başlayarak başlatır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Slayt Gösterisi sekmesindeki veya durum çubuğundaki bu buton (kısayolu F5), sunumu her zaman birinci slayttan itibaren tam ekran başlatır.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(0)">&larr; Önceki Ünite (1)</button>
+    <button class="btn nav-btn" onclick="goUnit(2)">Sonraki Ünite (3) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="2" id="u2">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 03</span>
+    <h2>Word Uygulamasında İçerik Zenginleştirme: Tablolar, SmartArt ve İçindekiler</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Görselleştirme araçları ve dinamik alanlar (tablolar, grafikler, SmartArt ve otomatik içindekiler tablosu) akademik ve kurumsal raporların profesyonel düzeyde üretilmesini sağlar.</p>
+  </div>
+
+  <h3>3.1. SmartArt Grafik Türleri ve Kullanım Amaçları</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>SmartArt Türü</th>
+        <th>Görsel Amacı</th>
+        <th>Tipik Örnekler</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>İşlem (Process)</strong></td>
+        <td>Bir sürecin adımlarını veya <strong>zaman içindeki değişimini/aşamalarını</strong> doğrusal göstermek.</td>
+        <td>İmalat adımları, başvuru süreçleri, zaman çizelgeleri.</td>
+      </tr>
+      <tr>
+        <td><strong>Hiyerarşi (Hierarchy)</strong></td>
+        <td>Ağaç yapısında üst-alt ilişkilerini ve basamakları göstermek.</td>
+        <td>Şirket organizasyon şemaları, karar ağaçları.</td>
+      </tr>
+      <tr>
+        <td><strong>Döngü (Cycle)</strong></td>
+        <td>Sürekli tekrarlanan kapalı süreçleri göstermek.</td>
+        <td>Su döngüsü, ürün yaşam eğrisi döngüsü.</td>
+      </tr>
+      <tr>
+        <td><strong>İlişki (Relationship)</strong></td>
+        <td>Öğeler arasındaki bağlantıları, Venn şemalarını ve çakışmaları göstermek.</td>
+        <td>Küme kesişimleri, denge şemaları.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.2. Otomatik İçindekiler Tablosu Oluşturma Kuralı</h3>
+  <div class="box formul">
+    <p>Microsoft Word'de tek tıklamayla otomatik güncellenen bir <strong>İçindekiler Tablosu (Table of Contents)</strong> oluşturabilmek için metindeki bölüm ve alt başlıklara <strong>"Başlık 1 (Heading 1)", "Başlık 2 (Heading 2)" ve "Başlık 3 (Heading 3)"</strong> stillerinin atanmış olması ZORUNLUDUR.</p>
+  </div>
+
+<h3>3.3. Ünite 3 Çıkmış Sınav Soruları ve Çözümleri (21 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Aşağıdakilerden hangisi MS PowerPoint'te yer tutucuları ile içerik zenginleştirmede kullanılabilecek görselleştirme araçlarından biri değildir?</span>
+      <span class="qtag">2026 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) SmartArt grafiği</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Infografik</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Dosyadan film (Video)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Çevrimiçi resim</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Tablo</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Infografik<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">PowerPoint slaytlarındaki (başlık ve içerik düzenindeki) standart 6'lı yer tutucu ikonları şunlardır: Tablo, Grafik, SmartArt, Resim, Çevrimiçi Resim, Video. 'İnfografik' diye standart bir yer tutucu butonu yoktur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Microsoft Word uygulamasında bir kavramın ya da sürecin zaman içerisindeki değişimini göstermek için kullanılabilecek diyagram türü aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2026 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Liste</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Matris</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) İşlem</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) İlişki</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Hiyerarşi</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) İşlem<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">SmartArt grafiklerinde adım adım ilerleyen süreçleri veya zaman içindeki değişimi (bir sürecin aşamalarını) göstermek için 'İşlem' (Process) diyagramları kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Word uygulamasında eklenen bir resim ile ilgili 'Gelişmiş Düzen' penceresinden aşağıdaki ayarlardan hangisi yapılamaz?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Metnin kaydırma stilini belirleme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Resmi döndürme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Resmi kırpma</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Resmin sayfadaki mutlak konumunu belirleme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Resmin metinden uzaklığının belirleme</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Resmi kırpma<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Gelişmiş Düzen iletişim kutusundan boyut, konum ve metin kaydırma ayarlanır. Kırpma (Crop) işlemi ise Şerit üzerindeki 'Resim Biçimi' sekmesinde yer alan 'Kırp' aracı ile doğrudan resim üzerinden yapılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Tabloda imleci bir sonraki sütuna taşımak için aşağıda verilen tuşlardan hangisi kullanılabilir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Alt+End</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Alt+Home</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Ctrl+Tab</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Shift+Tab</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Tab</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Tab<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Tablolarda hücreler arası gezinmenin en temel yolu 'Tab' tuşudur. Tab tuşuna basıldığında imleç sağdaki (bir sonraki) hücreye atlar. Shift+Tab ise imleci bir önceki (soldaki) hücreye geri götürür.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Microsoft Word uygulamasında orantılı ve hiyerarşik ilişkilerin sunulmasında kullanılabilecek diyagram türü aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Vize • 2025 Bahar Vize • 2023 Bahar Final • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) İşlem</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Hiyerarşi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Liste</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Piramit</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Matris</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Piramit<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">SmartArt grafiklerinde 'Orantılı' kelimesi doğrudan piramit modellerini işaret etmektedir. Temel veya hiyerarşik ilişkileri tabandan tepeye daralan oranlarla göstermek için kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Word uygulamasında yer alan sol üstteki küçük araç çubuğunun adı nedir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Final • 2024 Bahar Büt • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Hızlı erişim çubuğu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Yakınlaştırma çubuğu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Belge başlığı çubuğu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Durum çubuğu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Görünüm türleri çubuğu</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Hızlı erişim çubuğu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Office programlarının sol üst köşesinde yer alan, Kaydet, Geri Al gibi sık kullanılan işlemleri barındıran alana 'Hızlı Erişim Araç Çubuğu' denir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">Microsoft Word uygulamasında 'Öncü'ler ne işe yarar?</span>
+      <span class="qtag">2025 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Tablo oluşturmaya yarar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sekme tuşuna bastığınızda aradaki boşluğun nasıl doldurulacağını belirler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Belirlenen aralıkta sekme ekler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Metnin ilk satır girintisini belirler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Metinlerin başına madde imi ekler.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Sekme tuşuna bastığınızda aradaki boşluğun nasıl doldurulacağını belirler.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sekmeler ayarındaki 'Öncü' (Leader) özelliği, Tab tuşuna bastığınızda boşluğun noktalar (...), tireler (---) ile doldurulmasını sağlar. İçindekiler tablosunda sık kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">MS Word uygulamasında yukarıdaki silgi aracının görevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Vize • 2026 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Tablodaki metinleri siler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Tablodaki sekmeleri siler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Tablonun dolgu rengini siler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Tablonun arka plan resmini siler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Tablodaki kenar çizgilerini siler.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Tablodaki kenar çizgilerini siler.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Tablo Tasarımı sekmesindeki 'Silgi' aracı, tablodaki çizgilere tıklayarak o çizgiyi (kenarlığı) kaldırmak ve hücreleri birleştirmek için kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">Microsoft Word uygulamasında tablo içerisindeki en geniş verinin sığacağı şekilde tablo sütunlarını genişletmek için aşağıdaki işlemlerden hangisi yapılmalıdır?</span>
+      <span class="qtag">2025 Bahar Büt • 2026 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Hücreleri birleştir</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Pencereye Otomatik Sığdır</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Satırları Dağıt</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) İçindekileri Otomatik Sığdır</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Sabit Sütun Genişliği</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) İçindekileri Otomatik Sığdır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Tablo içindeki metnin uzunluğuna göre sütunun otomatik olarak daralıp genişlemesini sağlayan özellik 'İçindekilere Otomatik Sığdır'dır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Microsoft Word uygulamasında tabloda imleci en üst satıra/sütuna göndermek için kullanılacak tuş kombinasyonu aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Alt+Home</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Alt+Page Down</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Alt+Page Up</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Shift+Tab</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Alt+End</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Alt+Page Up<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Alt+Page Up bulunulan sütunun en üst hücresine gider. Alt+Home satırın en başına, Alt+End satırın en sonuna, Alt+Page Down sütunun en altına gider.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="11">
+    <summary>
+      <span class="qno">Soru 11</span>
+      <span class="qtitle">MS Word uygulamasında aşağıdakilerden hangisi bir belgeyi kaydetme yöntemlerinden biri değildir?</span>
+      <span class="qtag">2024 Bahar Final • 2026 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Dosya menüsünden 'Farklı Kaydet' seçeneğine tıklamak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Belge Başlığı bölümündeki Yer seçeneği</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Ctrl+S kısayol tuşu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Düzen menüsünden 'Kaydet' seçeneğine tıklamak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Hızlı erişim çubuğundan 'Kaydet'e tıklamak</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Düzen menüsünden 'Kaydet' seçeneğine tıklamak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Office arayüzünde (Ribbon) 'Düzen' adında bir sekme bulunmaz. Kaydet işlemleri her zaman 'Dosya' (File) sekmesi altındadır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="12">
+    <summary>
+      <span class="qno">Soru 12</span>
+      <span class="qtitle">Excel'de veri tablosu içerisinde vize notu 70'in üstünde olan öğrencileri yeşil renkte göstermek için kullanılan özellik aşağıdakilerden hangisidir?</span>
+      <span class="qtag">Final • Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Gelişmiş filtre</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Pivotchart ekleme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Koşullu biçimlendirme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Veri seçme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Durumu çözümleme</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Koşullu biçimlendirme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Excel'de hücrelerdeki değerlere bağlı olarak hücrenin rengini otomatik olarak değiştiren özelliğe 'Koşullu Biçimlendirme' denir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="13">
+    <summary>
+      <span class="qno">Soru 13</span>
+      <span class="qtitle">Excel'de belli bir koşula bağlı olarak işlem yapan fonksiyon aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Final • 2025 Bahar Büt • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Say()</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Bağıl()</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) =Koşul()</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) =Eğer()</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) =Şart()</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) =Eğer()<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Excel'in en temel mantıksal fonksiyonu 'EĞER' (IF) fonksiyonudur. Belirlenen koşulun doğru mu yanlış mı olduğuna bakarak iki farklı senaryoda sonuçlar döndürür.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="14">
+    <summary>
+      <span class="qno">Soru 14</span>
+      <span class="qtitle">=5+4^2*5 formülü Excel'de hangi sonucu döndürür?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) 405</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) 85</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) 1048581</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) 15</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) 105</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) 85<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Matematiksel işlem önceliği geçerlidir. Önce üs alma işlemi yapılır (4^2 = 16). Ardından çarpma işlemi yapılır (16 * 5 = 80). Son olarak toplama işlemi yapılır (5 + 80 = 85).</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="15">
+    <summary>
+      <span class="qno">Soru 15</span>
+      <span class="qtitle">Gelişmiş Filtre ekranında, Ölçüt tablosunda Sınıf='6-A' ve Türkçe Notu='>70' aynı satırda, Sınıf='6-C' ise alt satırda yazılmıştır. Hangi veriler filtrelenir?</span>
+      <span class="qtag">2024 Bahar Final • 2025 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) 6-C ve 6-A sınıfında Türkçe notu 70'in üstünde olan tüm öğrenciler</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) 6-C sınıfındaki tüm öğrenciler veya 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) 6-C sınıfındaki tüm öğrenciler ve 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) 6-C veya 6-A sınıfında Türkçe notu 70'in üstünde olan tüm öğrenciler</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) 6-C sınıfındaki tüm öğrenciler veya 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Gelişmiş Filtre'de kural şudur: Yan yana (aynı satırda) yazılanlar 'VE' bağlacı ile, alt alta (farklı satırda) yazılanlar 'VEYA' bağlacı ile birbirine bağlanır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="16">
+    <summary>
+      <span class="qno">Soru 16</span>
+      <span class="qtitle">Excel'de büyük veri kümelerinde belirli bir ölçüte göre verileri ayıklamak için kullanılan özellik aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Final • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sorgulama</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sıralama</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Filtreleme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Çözümleme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Analiz</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Filtreleme<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Tablodaki verileri belirlenen koşullara göre (örneğin sadece 2022 verilerini) gösterip diğerlerini gizleme işlemine 'Filtreleme' denir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="17">
+    <summary>
+      <span class="qno">Soru 17</span>
+      <span class="qtitle">Excel'de C1'den E4'e kadar seçim işlemi gerçekleştiğinde 'Ad Kutusu'nda aşağıdakilerden hangisi görüntülenir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) C1</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) C1-E1</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) C1:E4</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) E4</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) C1-E4</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) C1<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Ad Kutusu, çok büyük bir hücre aralığı seçilse bile her zaman fareyle seçimin yapıldığı ilk başladığınız hücreyi (Aktif Hücre) gösterir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="18">
+    <summary>
+      <span class="qno">Soru 18</span>
+      <span class="qtitle">MS Excel'de kategorilerin yanında +/- butonları olan daraltılıp genişletilebilen özet tablo görünümü elde etmek için aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Final • 2025 Bahar Final • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Mini Grafikler</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) PivotChart</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Koşullu Biçimlendirme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Pivot Table</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Hücre Stilleri</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Pivot Table<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Büyük veri yığınlarını gruplandırmak ve +/- düğmeleriyle dinamik analizler yapmak için 'Pivot Table' (Özet Tablo) kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="19">
+    <summary>
+      <span class="qno">Soru 19</span>
+      <span class="qtitle">Sayfa1'e sağ tıklandığında aşağıdaki işlemlerden hangisi gerçekleştirilemez?</span>
+      <span class="qtag">2024 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Çalışma sayfasını taşıma</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sayfayı yazdırma</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Sayfa ekleme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Sayfanın adını değiştirme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Çalışma sayfasına parola ekleme</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Sayfayı yazdırma<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sayfa (Sheet) sekmelerine sağ tıklandığında Ekle, Sil, İsim Değiştir, Taşı çıkar ancak yazdırma seçeneği çıkmaz.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="20">
+    <summary>
+      <span class="qno">Soru 20</span>
+      <span class="qtitle">MS Excel'de birden fazla ölçüte göre (örn: Önce şehir, sonra departman) sıralama işlemi yapılırken aşağıdaki araçlardan hangisi kullanılır?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) PivotTable</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sıralama ve Filtreleme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Koşullu Biçimlendirme</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Özel Sıralama</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Filtre Uygulama</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Özel Sıralama<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Kademeli sıralama yapmak için Özel Sıralama (Custom Sort) penceresi açılır ve 'Düzey Ekle' (Add Level) butonu kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="21">
+    <summary>
+      <span class="qno">Soru 21</span>
+      <span class="qtitle">Aşağıdakilerden hangisi PivotTable alan listesi içerisinde yer almaz?</span>
+      <span class="qtag">2024 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Filtreler</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Kümeler</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Satırlar</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Sütunlar</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Değerler</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Kümeler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Pivot Table (Özet Tablo) oluşturulduğunda açılan sağ panelde 4 alan bulunur: Filtreler, Sütunlar, Satırlar, Değerler. 'Kümeler' diye bir alan yoktur.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(1)">&larr; Önceki Ünite (2)</button>
+    <button class="btn nav-btn" onclick="goUnit(3)">Sonraki Ünite (4) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="3" id="u3">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 04</span>
+    <h2>PowerPoint Uygulamasına Giriş, Slayt Düzenleri ve Asıl Slayt</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Microsoft PowerPoint; bilgi, fikir ve verilerin görsel ve işitsel slaytlar halinde etkili bir sunuma dönüştürülmesini sağlayan sunu hazırlama yazılımıdır.</p>
+  </div>
+
+  <h3>4.1. Standart 6 Yer Tutucu (Placeholder) İkonu</h3>
+  <div class="box formul">
+    <p>PowerPoint "Başlık ve İçerik" slayt düzeninde kutunun ortasında yer alan standart 6 görsel içerik ekleme butonu şunlardır:</p>
+    <ol class="adim">
+      <li><strong>Tablo Ekle</strong></li>
+      <li><strong>Grafik Ekle</strong></li>
+      <li><strong>SmartArt Grafiği Ekle</strong></li>
+      <li><strong>Resim Ekle (Dosyadan)</strong></li>
+      <li><strong>Çevrimiçi Resim Ekle</strong></li>
+      <li><strong>Video / Film Ekle</strong></li>
+    </ol>
+    <p><em>(⚠️ Sınav Uyarısı: Şıklarda sıkça yer alan "İnfografik" veya "HTML resmi" standart bir yer tutucu butonu DEĞİLDİR!)</em></p>
+  </div>
+
+  <h3>4.2. Asıl Slayt (Slide Master) Mimarisi</h3>
+  <p>Asıl Slayt; sunudaki tüm slaytların yazı tipini, arka plan rengini, başlık konumunu, logosunu ve alt bilgi düzenini merkezi olarak kontrol eden hiyerarşik ana şablondur. Asıl slayta eklenen bir şirket logosu tüm sunumdaki sayfalara otomatik olarak yansır.</p>
+
+<h3>4.3. Ünite 4 Çıkmış Sınav Soruları ve Çözümleri (22 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Microsoft Word'de bir belgenin otomatik kaydedilmesi için aşağıdaki hangi bulut hizmeti kullanılır?</span>
+      <span class="qtag">2026 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) OneDrive</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Google Drive</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Yandex Drive</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Adobe Cloud</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Dropbox</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) OneDrive<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Microsoft Office programlarının (Word, Excel, PowerPoint) sol üst köşesindeki 'Otomatik Kaydet' özelliğinin çalışabilmesi için dosyanın Microsoft'un kendi bulut servisi olan 'OneDrive'a kaydedilmiş olması gerekir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Microsoft PowerPoint uygulamasında 'Yapıştırma Seçenekleri' penceresinde aşağıdakilerden hangisi bulunmaz?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Hedef temayı kullan</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Özel yapıştır</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Kaynak biçimlendirmesini koru</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) HTML resim yapıştır</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Yalnızca metni koru</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) HTML resim yapıştır<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Yapıştırma seçeneklerinde standart olarak hedef temayı kullanma, kaynak biçimlendirmesini koruma veya resmi yapıştırma vardır ama AUZEF'in klasik çeldiricisi olan 'HTML resim yapıştır' adında bir etiket menüde bulunmaz.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Microsoft PowerPoint'te sunum tasarımının oluşturulduğu alanın adı nedir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 2026 Bahar Vize • 4 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sayfa</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Çalışma kitabı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Slayt</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Notlar sayfası</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Tablo</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Slayt<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">PowerPoint'te sunumu oluşturan temel yapı taşına 'Slayt' denir. Word'de bu 'Sayfa', Excel'de ise 'Çalışma Kitabı / Sayfası'dır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">Aşağıdakilerden hangisi PowerPoint'e doğrudan eklenebilen zenginleştirme öğelerinden biri değildir?</span>
+      <span class="qtag">2023 Bahar Vize</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Tarih ve Saat</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Makro içeren Microsoft Word belgesi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Video</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Denklem</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Web 2.0 uygulaması</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Web 2.0 uygulaması<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">PowerPoint Ekle menüsünde Video, Denklem, Tarih eklenir. Başka Office belgeleri 'Nesne' olarak eklenebilir. Ancak 'Web 2.0 uygulaması' doğrudan yerleşik bir ekleme öğesi değildir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">Word uygulamasında bir metni 3 sütuna bölünmüş şekilde yazmak için kullanılan araç hangisidir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Final • 2024 Bahar Büt • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sütunlar aracı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Tablo aracı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Sayfa Düzeni aracı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Kenarlıklar</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Sütunlar aracı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Gazete ve dergilerdeki gibi metni sütunlar halinde bölmeye yarayan araç Sayfa Düzeni sekmesindeki 'Sütunlar'dır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">PowerPoint uygulamasında resim efektleri menüsünde aşağıdakilerden hangisi bulunmaz?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2025 Bahar Vize • 2024 Bahar Final • 2026 Bahar Vize • 5 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Yansıma</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Eğim</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Parlama</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Gölge</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Yumuşak geçişler</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Yumuşak geçişler<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Resim efektleri menüsünde 'Yumuşak Kenarlar' vardır ancak 'Yumuşak Geçişler' yoktur. Geçişler slaytlar arasında kullanılan ayrı bir menüdür.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">PowerPoint'te bir şekle tıklayınca Microsoft Word programını çalıştırmak için aşağıdaki araçlardan hangisi kullanılması gerekmektedir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Eylem butonu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Makro butonu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Bağlantı butonu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Nesne</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Slayt Geçişi</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Eylem butonu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Şekillere 'Eylem' (Action) atanarak tıklandığında .exe programları (Word dahil) çalıştırılabilir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">MS Word uygulamasında yazı tipi, renk gibi tüm özellikleri tek tıkla düzenleme imkânı sunan yapıya verilen ad aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Final • 2024 Bahar Büt • 2026 Bahar Vize • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Desen</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Tema</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) SmartArt</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Biçim</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Filigran</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Tema<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Temalar, belgenin renk paleti, yazı tipi seti ve efekt düzenini tek seferde topluca değiştirir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">MS Powerpoint'te sunum yaparken farklı ortamlara, uygulamalara erişmek için kullanılan araç aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Vize • 2026 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Nesne aracı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Eylem / Köprü butonu (Yıldızlı kutu veya Dünya-zincir ikonu)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Formül aracı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Animasyon aracı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Geçiş aracı</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Eylem / Köprü butonu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Slayt gösterisi sırasında başka bir dosyaya, programa veya web sitesine gitmek için 'Eylem' (Action) düğmeleri veya 'Köprü' (Hyperlink) kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">Powerpoint'te slaytlara yer tutucuların eklenebildiği görünüm türü aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2025 Bahar Final • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Slayt Sıralayıcısı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Asıl Slayt</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Okuma Görünümü</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Notlar sayfası</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Ana Hat Görünümü</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Asıl Slayt<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">PowerPoint'te tüm sunumun tema, arka plan ve 'yer tutucu' tasarımlarının standart kalıp olarak topluca yapıldığı arka plana 'Asıl Slayt' (Slide Master) denir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="11">
+    <summary>
+      <span class="qno">Soru 11</span>
+      <span class="qtitle">Powerpoint'te şekil galerisinin en altında yer alan özel şekillerin adı nedir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Final • 2024 Bahar Büt • 2026 Bahar Vize • 4 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Denklem şekilleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Akış düğmeleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Eylem düğmeleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Tasarım düğmeleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Temel Şekiller</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Eylem düğmeleri<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Ekle > Şekiller galerisinin en alt bölümünde, tıklandığında ileri gitme, ses çalma veya program açma gibi görevler atanabilen 'Eylem Düğmeleri' bulunur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="12">
+    <summary>
+      <span class="qno">Soru 12</span>
+      <span class="qtitle">PowerPoint'te 'Geçişler' sekmesinde yer alan 'Sonra: 00,00' butonunun görevi nedir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2025 Bahar Büt • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Saniye cinsinden belirtilen süre sonunda animasyon başlar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Saniye cinsinden belirtilen süre sonunda sonraki slayta gider.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Milisaniye cinsinden sonraki slayta gider.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Milisaniye cinsinden animasyon başlar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Saniye cinsinden animasyonun görüntülenmesini sağlar.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Saniye cinsinden belirtilen süre sonunda sonraki slayta gider.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Geçişler sekmesindeki 'Sonra' seçeneği, farenin tıklanmasını beklemeden slaytın saniye bazında bekleyip otomatik olarak bir sonraki slayta geçişini sağlar.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="13">
+    <summary>
+      <span class="qno">Soru 13</span>
+      <span class="qtitle">Powerpoint'te slayt geçişleri ile ilgili aşağıda verilenlerden hangisi yanlıştır?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Kullanıcılar kendi tasarladıkları animasyonları slayt geçiş efekti olarak kullanabilmektedir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) 'Tümüne uygula' seçeneği ile tüm slaytlara uygulanabilmektedir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Geçiş sırasında ses eklenebilmektedir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Efekt galerisinde kısa bilgiler görüntülenmektedir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Slayt geçişlerinin süresi saniye cinsinden ayarlanabilmektedir.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Kullanıcılar kendi tasarladıkları animasyonları slayt geçiş efekti olarak kullanabilmektedir.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Slayt geçişleri (Transitions) Office içine gömülü yerleşik efektlerdir. Kullanıcıların sıfırdan kendi geçiş animasyonlarını tasarlayıp ekleme özelliği yoktur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="14">
+    <summary>
+      <span class="qno">Soru 14</span>
+      <span class="qtitle">MS PowerPoint'te aşağıdakilerden hangisi 'Animasyonlar' sekmesinden yapılamaz?</span>
+      <span class="qtag">2024 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Seçilen animasyonun farklı yönden gelmesini sağlamak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Madde imlerini ayrı ayrı getirmek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Slayt gösterisinin 'Esc' tuşuna basıncaya kadar sürekli dönmesini sağlamak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Animasyon hareketini kendinden öncekiyle başlatmak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Bir şekle giriş animasyonu eklemek</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Slayt gösterisinin 'Esc' tuşuna basıncaya kadar sürekli dönmesini sağlamak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Gösterinin sürekli kendi kendine dönmesi ayarı 'Slayt Gösterisi' sekmesindeki 'Slayt Gösterisi Ayarla' menüsünden yapılır, Animasyonlardan değil.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="15">
+    <summary>
+      <span class="qno">Soru 15</span>
+      <span class="qtitle">MS PowerPoint'te animasyon galerisinde yer alan sarı renkli animasyon grubunun işlevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Vurgu animasyonlarıdır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Çıkış animasyonlarıdır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Giriş animasyonlarıdır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Ek animasyonlardır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Yol animasyonlarıdır.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Vurgu animasyonlarıdır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">PowerPoint'te: Yeşil Yıldız = Giriş, Sarı Yıldız = Vurgu, Kırmızı Yıldız = Çıkış animasyonudur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="16">
+    <summary>
+      <span class="qno">Soru 16</span>
+      <span class="qtitle">PowerPoint'te ortasında Kırmızı Kayıt Noktası İkonu olan butonun işlevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Final • 2025 Bahar Final • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Animasyonu kaydeder.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Geçerli slayttan başlayarak sunumu kaydetmek için kullanılır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Kırmızı daire ekler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Ekran resmi çeker.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Çıkış animasyonu ekler.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Geçerli slayttan başlayarak sunumu kaydetmek için kullanılır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Bu ikon, sesinizi, görüntü kameranızı ve zamanlamaları kaydetmeye yarayan 'Slayt Gösterisini Kaydet' özelliğidir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="17">
+    <summary>
+      <span class="qno">Soru 17</span>
+      <span class="qtitle">MS Excel'de hücreye veri girişi yapabilmek veya var olan veriyi düzenleyebilmek için aşağıdaki tuşlardan hangisi kullanılır?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) F2</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) F1</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Shift</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Esc</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) F3</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) F2<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Klavyeden F2 tuşuna basmak, imleci hücrenin içine sokar ve hücreyi düzenleme moduna alır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="18">
+    <summary>
+      <span class="qno">Soru 18</span>
+      <span class="qtitle">MS PowerPoint'teki 'Animasyon Boyacısı' aracının görevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Arka plan resmi eklemek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Hızını değiştirmek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Slayt geçiş efekti kopyalamak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Tüm slaytlara otomatik eklemek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Bir nesneye uygulanan animasyonu başka bir nesneye kopyalamak</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Bir nesneye uygulanan animasyonu başka bir nesneye kopyalamak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Word'deki 'Biçim Boyacısı'nın animasyon versiyonudur. Bir nesnedeki süre, tür ve gecikme gibi tüm animasyon ayarlarını kopyalayıp başka nesneye uygular.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="19">
+    <summary>
+      <span class="qno">Soru 19</span>
+      <span class="qtitle">MS PowerPoint'te slaytı 'Geniş Ekran' (16:9) olarak düzenlemek için aşağıdaki araçlardan hangisi kullanılmaktadır?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Slayt düzeni</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Slayt boyutu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Slayt sıralayıcısı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Slayt tasarımı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Slayt yönlendirme</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Slayt boyutu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Tasarım sekmesinde yer alan 'Slayt Boyutu' aracından standart 4:3 ve Geniş Ekran 16:9 oranları değiştirilir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="20">
+    <summary>
+      <span class="qno">Soru 20</span>
+      <span class="qtitle">Microsoft PowerPoint'teki 'Slayt Düzeni' özelliği aşağıdaki işlevlerden hangisini sağlar?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sunum temalarını değiştirmek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Slayt içeriklerini düzenlemek ve yapılandırmak için hazır şablonlar sunmak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Sunumun tamamını otomatik olarak oynatmak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Slaytlara ses ve video dosyaları eklemek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Slaytlara animasyon efektleri eklemek</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Slayt içeriklerini düzenlemek ve yapılandırmak için hazır şablonlar sunmak<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Slayt Düzeni (Layout), metin ve resim gibi 'yer tutucuların' slayt üzerinde hangi hizada duracağını ayarlayan kalıplardır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="21">
+    <summary>
+      <span class="qno">Soru 21</span>
+      <span class="qtitle">Microsoft PowerPoint'te bir slaytın arka planını düzenlerken aşağıdakilerden hangisi dolgu seçenekleri içerisinde yer almaz?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Resim veya doku dolgusu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Düz dolgu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Gradyan dolgu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Desen dolgusu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Grafik dolgusu</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Grafik dolgusu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Arka Planı Biçimlendir panelinde Düz Dolgu, Gradyan Dolgu, Resim veya Doku Dolgusu ve Desen Dolgusu olmak üzere 4 temel dolgu vardır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="22">
+    <summary>
+      <span class="qno">Soru 22</span>
+      <span class="qtitle">MS PowerPoint uygulamasının 'Geçişler' sekmesinde yer alan 'Efekt Seçenekleri' butonunun işlevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025-2026 Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Galeriden farklı animasyon efektleri seçilmesine izin verir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Seçilen slayt geçişleri ile ilgili ek animasyon ayarları yapılmasına izin verir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Seçilen slayt geçişine ses gibi ek özellikler ekler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Galeriden farklı slayt geçişleri seçilmesine izin verir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Seçilen efektin ekranda kalma süresini belirler.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Seçilen slayt geçişleri ile ilgili ek animasyon ayarları yapılmasına izin verir.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Geçişler sekmesindeki 'Efekt Seçenekleri', seçtiğiniz geçişin yönünü (örn. sağdan, soldan, yukarıdan) değiştirmek gibi ek özelleştirmeler sunar.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(2)">&larr; Önceki Ünite (3)</button>
+    <button class="btn nav-btn" onclick="goUnit(4)">Sonraki Ünite (5) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="4" id="u4">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 05</span>
+    <h2>PowerPoint Sunumlarını Canlandırma: Geçişler, Animasyonlar ve Gösteri</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Sunumların etkileyiciliğini artırmak için slaytlar arası geçiş efektleri ve slayt içi nesnelere uygulanan animasyonlar kullanılır.</p>
+  </div>
+
+  <h3>5.1. Slayt Geçişleri (Transitions) vs Animasyonlar (Animations)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Özellik</th>
+        <th>Geçişler (Transitions)</th>
+        <th>Animasyonlar (Animations)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Uygulandığı Alan</strong></td>
+        <td><strong>Slaytın tamamına</strong> (sayfanın bütününe) uygulanır.</td>
+        <td>Slayt içindeki <strong>tek tek nesnelere</strong> (metin kutusu, resim, şekil, grafik) uygulanır.</td>
+      </tr>
+      <tr>
+        <td><strong>Gerçekleşme Anı</strong></td>
+        <td>Bir slayttan diğer slayta geçerken devreye girer.</td>
+        <td>Slayt ekrandayken nesnelerin sırayla gelmesi, vurgulanması veya kaybolması için çalışır.</td>
+      </tr>
+      <tr>
+        <td><strong>Örnek Efektler</strong></td>
+        <td>Solma, İtme, Süpürme, Dönüşüm (Morph).</td>
+        <td>Uçarak Giriş, Büyüme/Küçülme, Vurgu, Çıkış, Hareket Yolları.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.2. Dört Animasyon Efekt Kategorisi</h3>
+  <ul>
+    <li><strong>1. Giriş Efektleri (Yeşil Yıldız):</strong> Nesnenin slayt açıldığında ekranda olmayıp sonradan ekrana gelmesini sağlar.</li>
+    <li><strong>2. Vurgu Efektleri (Sarı Yıldız):</strong> Zaten ekranda olan nesnenin dikkat çekmek için renk değiştirmesi, dönmesi veya büyümesidir.</li>
+    <li><strong>3. Çıkış Efektleri (Kırmızı Yıldız):</strong> Ekranda duran nesnenin slayttan kaybolup gitmesini sağlar.</li>
+    <li><strong>4. Hareket Yolları (Motion Paths):</strong> Nesnenin ekranda çizilen bir çizgi veya rota boyunca hareket etmesini sağlar.</li>
+  </ul>
+
+  <h3>5.3. Slayt Gösterisi Kısayolları ve Kiosk Modu</h3>
+  <div class="box formul">
+    <ul>
+      <li><strong>F5:</strong> Slayt gösterisini <strong>1. slayttan (en baştan)</strong> başlatır.</li>
+      <li><strong>Shift + F5:</strong> Slayt gösterisini <strong>şu anda seçili olan slayttan</strong> başlatır.</li>
+      <li><strong>Kiosk Modu (Bilgi Noktasında Gözat):</strong> Fuar veya vitrin ekranlarında kullanıcının slaytı bozamayacağı, yalnızca tam ekran döngü halinde çalışan otomatik gösteri modudur.</li>
+    </ul>
+  </div>
+
+<h3>5.4. Ünite 5 Çıkmış Sınav Soruları ve Çözümleri (4 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Resmi kırpma menüsünde aşağıdakilerden hangisi bulunmaz?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Büt • 2026 Bahar Vize • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Şekle Göre Kırp</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Doldur</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Sığdır</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Kare</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) En Boy Oranı</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Kare<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Resim Biçimi altındaki Kırp menüsünde Sığdır, Doldur, En Boy Oranı vardır. 'Kare' ise Metin Kaydırma menüsüne aittir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Microsoft Word'de sekme durakları oluşturmak için hangi klavye tuşu kullanılır?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Tab</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Enter</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Ctrl</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Shift</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Alt</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> A) Tab<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Cetveldeki sekmelere hızlıca atlamak için klavyeden 'Tab' tuşu kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Slayttaki bir görseli kıvrımlı/zigzag bir çizgi üzerinde hareket ettirmek için kullanılacak animasyon türü aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Final • 2024 Bahar Büt • 2025 Bahar Büt • 4 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Çıkış animasyonu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Vurgu animasyonu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Yol animasyonu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Karmaşık animasyon</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Giriş animasyonu</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Yol animasyonu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Bir nesnenin ekranda çizdiğiniz belirli bir güzergah (yol) üzerinde serbestçe hareket etmesini sağlayan tür 'Yol Animasyonu'dur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">'Büyüktür', 'Küçüktür', 'İlgili Tarih' gibi kurallar Koşullu Biçimlendirme'nin hangi kategorisinde yer almaktadır?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Final • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Üst/alt Kuralları</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Veri çubukları</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Simge kümeleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Renk ölçekleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Hücre vurgulama kuralları</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Hücre vurgulama kuralları<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Bu kurallar Koşullu Biçimlendirme > 'Hücre Vurgulama Kuralları'nın alt menüleridir.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(3)">&larr; Önceki Ünite (4)</button>
+    <button class="btn nav-btn" onclick="goUnit(5)">Sonraki Ünite (6) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="5" id="u5">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 06</span>
+    <h2>Excel Uygulamasına Giriş, Hücre Yapısı ve Temel Kavramlar</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Microsoft Excel; verileri satırlar ve sütunlardan oluşan ızgara tablolarında saklayan, karmaşık matematiksel formüller ve grafiklerle analiz eden elektronik tablolama yazılımıdır.</p>
+  </div>
+
+  <h3>6.1. Temel Arayüz Bileşenleri</h3>
+  <ul>
+    <li><strong>Çalışma Kitabı (Workbook):</strong> Excel dosyasının tamamıdır (.xlsx uzantılıdır).</li>
+    <li><strong>Çalışma Sayfası (Worksheet):</strong> Kitap içindeki bağımsız tablolama sayfalarıdır (Sayfa1, Sayfa2).</li>
+    <li><strong>Hücre (Cell):</strong> Satır ve sütunların kesişim noktasıdır. Adresi <em>Sütun Harfi + Satır Numarası</em> ile ifade edilir (Örn: <code>B5</code>, <code>AA100</code>).</li>
+    <li><strong>Formül Çubuğu (Formula Bar):</strong> Seçili hücredeki verinin veya formülün tam içeriğini gösteren ve düzenlemeye olanak sağlayan üst çubuktur.</li>
+  </ul>
+
+  <h3>6.2. Veri Tipleri ve Otomatik Doldurma (AutoFill)</h3>
+  <div class="box formul">
+    <ul>
+      <li><strong>Metin (Text):</strong> Varsayılan olarak hücrenin <strong>SOLUNA</strong> hizalanır.</li>
+      <li><strong>Sayı (Number) ve Tarih (Date):</strong> Varsayılan olarak hücrenin <strong>SAĞINA</strong> hizalanır.</li>
+      <li><strong>Doldurma Tutamacı (Fill Handle):</strong> Hücrenin sağ alt köşesindeki siyah minik kare tutamaçtan sürüklenerek gün (Pazartesi, Salı...), ay (Ocak, Şubat...) veya ardışık sayı dizileri otomatik tamamlanır.</li>
+    </ul>
+  </div>
+
+<h3>6.3. Ünite 6 Çıkmış Sınav Soruları ve Çözümleri (18 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Nesneleri Döndür menüsünde yer alan dairesel/dönen ok şeklindeki aracın işlevi nedir?</span>
+      <span class="qtag">2023 Bahar Vize • 2024 Bahar Vize • 2024 Bahar Final • 3 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Resmi sola 90 derece döndürür</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Resmi yatay ters çevirir</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Resmi dikey ters çevirir</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Resmi serbest şekilde döndürür</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Resmi sağa 90 derece döndürür</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Resmi serbest şekilde döndürür (Görsel ok daireselse)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Resmin tepesinde yer alan yeşil veya beyaz tekli dairesel ok, fareyle basılı tutarak nesneyi 360 derece serbest şekilde döndürmeye yarar.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Microsoft Word'de bir metin yazarken imlecin görevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sayfa numarası eklemek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Sayfayı bölmek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Yazıyı taşımak</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Yazılacak konumu göstermek</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Metni silmek</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Yazılacak konumu göstermek<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">İmleç (yanıp sönen dikey çizgi), eklenecek harfin veya nesnenin belge üzerinde nereye yerleştirileceğini gösteren kılavuzdur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="3">
+    <summary>
+      <span class="qno">Soru 3</span>
+      <span class="qtitle">Excel'de formülün başvurduğu hücrelerin silinmesi veya üzerine başka bir şey yapıştırılması durumunda ortaya çıkan hata mesajı aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) #YOK</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) #BOŞ!</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) #BAŞV!</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) #AD?</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) #DEĞER!</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) #BAŞV!<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Bir formülde referans alınan hücre tamamen silinirse, formül nereye bakacağını bilemez ve Geçersiz Başvuru anlamına gelen #BAŞV! hatası verir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="4">
+    <summary>
+      <span class="qno">Soru 4</span>
+      <span class="qtitle">MS Excel'de =MAKS(A2:A6) şeklinde bir hücreye yazılan formül aşağıdaki hangi hata mesajını döndürür?</span>
+      <span class="qtag">2024 Bahar Final • 2025 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) #YOK</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) #BAŞV!</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) #HATA!</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) #BOŞ!</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) #AD?</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) #AD?<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Türkçe Excel'de en büyük değeri bulma formülü =MAK() şeklindedir. Yanlış veya tanınmayan bir isim (=MAKS) yazıldığında Excel o formülü tanıyamadığı için #AD? (Name?) hatası döndürür.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="5">
+    <summary>
+      <span class="qno">Soru 5</span>
+      <span class="qtitle">MS Excel'de ortalamanın altında yer alan değerleri kırmızı dolgu rengi ile göstermek için aşağıdaki hangi kategorideki koşullu biçimlendirme kuralını seçmek uygun olacaktır?</span>
+      <span class="qtag">2024 Bahar Büt • 2025 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Veri çubukları</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Simge kümeleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Üst/Alt Kuralları</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Hücre vurgulama kuralları</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Renk ölçekleri</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Üst/Alt Kuralları<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Ortalama otomatik hesaplanan bütünsel bir değerdir. 'Ortalamanın Üstünde' veya 'Altında' kuralları, Koşullu Biçimlendirmede 'Üst/Alt Kuralları' kategorisi içinde bulunur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="6">
+    <summary>
+      <span class="qno">Soru 6</span>
+      <span class="qtitle">Excel'de sayfa sayısı, veri içeren hücre sayısı gibi çalışma kitabı istatistiklerinin görüntülendiği alan aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2023 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Görüntüleme seçenekleri çubuğu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Menü şeridi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Kullanıcı bilgi ekranı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Durum çubuğu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Hızlı erişim çubuğu</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Durum çubuğu<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Excel'in en altındaki yatay şeride Durum Çubuğu denir. Burada seçili hücrelerin toplamı, ortalaması, sayısı gibi anlık veriler görüntülenir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="7">
+    <summary>
+      <span class="qno">Soru 7</span>
+      <span class="qtitle">B4, B5, B6, B7, B8 hücre aralığı nasıl yazılır?</span>
+      <span class="qtag">2023 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) B4,B8</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) B4:B8</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) B4;B8</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) B4 B8</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) B4-B8</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) B4:B8<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Excel'de birbiri ardına gelen bir blok aralığı belirtmek için iki nokta üst üste (:) işareti kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="8">
+    <summary>
+      <span class="qno">Soru 8</span>
+      <span class="qtitle">Excel'de C1 hücresindeki uzun metni hücre genişliğini bozmadan alt satıra atarak sığdırmak için aşağıdaki butonlardan hangisine tıklanmalıdır?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Metni Kaydır (Wrap Text)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Birleştir ve Ortala</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Hizalama</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Metni Kaydır (Wrap Text)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Uzun metinleri hücre sınırları içerisinde alt satıra atarak göstermeye yarayan özellik 'Metni Kaydır'dır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="9">
+    <summary>
+      <span class="qno">Soru 9</span>
+      <span class="qtitle">A1 hücresinde yer alan 'Ofis Uygulamaları' yazısından 'Uygulama' kelimesini alıp B1 hücresine yazdıran formül aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) PARÇAAL(B1;6;8)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) PARÇAAL(B1;8;6)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) PARÇAAL(A1;6;8)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) PARÇAAL(A1;8;6)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) PARÇAAL(A1;19;8)</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) PARÇAAL(A1;6;8)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">PARÇAAL(Metin; Başlangıç Sırası; Kaç Karakter). Metin A1'de. Uygulamanın 'U' harfi boşlukla beraber 6. sıradadır. Kelimenin uzunluğu 8 harftir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="10">
+    <summary>
+      <span class="qno">Soru 10</span>
+      <span class="qtitle">MS Excel çalışma sayfasında 'Süpürge' kelimesinin geçme sayısını veren formül aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Final • 2025 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) SAY(B2:B17;\"Süpürge\")</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) =ÇOKEĞER(B2:B17;\"Süpürge\")</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) =SAĞDAN(B2:B17;\"Süpürge\")</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) UZUNLUK(B2:B17;\"Süpürge\")</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) =EĞERSAY(B2:B17;\"Süpürge\")"]</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>
+                ans: "E) =EĞERSAY(B2:B17;\"Süpürge\")</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>
+                exp: "Bir hücre aralığında sadece belirli bir şarta (kelimeye) uyan hücrelerin adetini saymak için EĞERSAY (COUNTIF) kullanılır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>
+                exams: ["2024 Bahar Final"]
+            }</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>
+            {
+                q: "MS Excel'de bir hücre aralığını ifade eden A1:D5 yazımı ile aşağıdakilerden hangisi belirtilir?</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>
+                options: ["A) A sütunundaki 1. hücreyi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) A1 hücresi ile D5 hücresi arasındaki dikdörtgensel alanı</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) A sütunu ile D sütunu arasındaki tüm hücreleri</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Tüm çalışma sayfasını</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) 1. satırdan 5. satıra kadar tüm hücreleri</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) A1 hücresi ile D5 hücresi arasındaki dikdörtgensel alanı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">İki nokta üst üste (:), iki hücre arasındaki kesişen tüm dikdörtgensel bloğu (matrisi) belirtmek için kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="11">
+    <summary>
+      <span class="qno">Soru 11</span>
+      <span class="qtitle">MS Excel'de bir formülde A1 hücresindeki değerin sabit kalmasını sağlamak için aşağıdaki referanslardan hangisi kullanılır?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) A1$</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) A$1</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) A1</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) $A1</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) $A$1</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) $A$1<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Bir hücre adresinin formül kopyalandığında sağa/sola/aşağı kaymasını engellemek (Mutlak Başvuru yapmak) için hem sütun hem satır ibaresinin başına dolar işareti ($) konur.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="12">
+    <summary>
+      <span class="qno">Soru 12</span>
+      <span class="qtitle">MS Excel'de imleç iki sütun arasındayken çift tıklanıldığında aşağıdaki durumlardan hangisi gerçekleşir?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Hücreye sığmayan veriler bir alt satıra kaydırılır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) İki sütun arasına yeni bir sütun eklenir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Sütun genişliği metne göre en uygun olacak şekilde ayarlanır.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Hücreye sığmayan veriler silinir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Seçili hücrenin altına yeni satır eklenir.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Sütun genişliği metne göre en uygun olacak şekilde ayarlanır.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sütun başlıklarının arasındaki çizgiye çift tıklamak, o sütundaki en uzun metne göre genişliği tam ayarlayan 'Otomatik Sığdır' özelliğini devreye sokar.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="13">
+    <summary>
+      <span class="qno">Soru 13</span>
+      <span class="qtitle">MS Excel'de filtre uygulamak istediniz verilere karmaşık ölçütler (VEYA mantığı vb.) uygulamanız gerektiğinde hangi butona tıklamanız gerekmektedir?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sayfayı Hesapla</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Durum Çözümlemesi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Gelişmiş</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Grubu Çöz</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Ad Tanımla</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Gelişmiş<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sütun başlıklarındaki standart filtrelerin yetersiz kaldığı durumlarda Veri sekmesindeki 'Gelişmiş Filtre' (Advanced Filter) aracı kullanılır.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="14">
+    <summary>
+      <span class="qno">Soru 14</span>
+      <span class="qtitle">MS Excel'de bir formül yazarken doğrudan sayılar (10+5) yerine hücre adreslerini (A1+B1) kullanmanın avantajı aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Hata mesajlarını önler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Formülü sabit değerle değiştirir.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Daha hızlı hesaplar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Formülün sabit kalmasını sağlar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Formülün dinamik olarak güncellenmesini sağlar.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) Formülün dinamik olarak güncellenmesini sağlar.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Hücre adresi kullandığınızda, hücrenin içindeki veriyi değiştirdiğiniz an formül kendini yeni değere göre otomatik olarak günceller (dinamik hesaplama).</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="15">
+    <summary>
+      <span class="qno">Soru 15</span>
+      <span class="qtitle">Excel'de formül çubuğunun solunda yer alan, C1 vb. yazan bölümün adı aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2024 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Durum çubuğu</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Yakınlaştırma bölmesi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Giriş sekmesi</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Formül çubuğu (veya Ad Kutusu)</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> Ad Kutusu ve Formül çubuğu bağlamı<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Formüllerin yazıldığı uzun çubuğa Formül Çubuğu, sol tarafında hücre ismini gösteren kısa kutucuğa ise Ad Kutusu denir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="16">
+    <summary>
+      <span class="qno">Soru 16</span>
+      <span class="qtitle">Microsoft Excel'de B1 hücresindeki =A1+$A$3 formülü aşağı doğru 4 satır sürüklenerek B5 hücresine kopyalandığında hangi sonuç formülüne ulaşılır?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) =A4+$A$3</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) =A5+$A$3</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) =A1+$A$5</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) =A5+A3</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) =A5+$A$5</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) =A5+$A$3<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">A1 formülü görecelidir ve sürüklenince A5'e kayar. Fakat $A$3 mutlak (kilitli) bir başvuru olduğundan sürüklenmekle değişmez.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="17">
+    <summary>
+      <span class="qno">Soru 17</span>
+      <span class="qtitle">Microsoft Excel'de sütunların isimlendirilme biçimi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Sembollerle</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Harflerle</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Özel karakterlerle</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Rakamlar ve harflerle</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Sayılarla</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Harflerle<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sütunlar (A, B, C...) harflerle; satırlar ise (1, 2, 3...) sayılarla isimlendirilir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="18">
+    <summary>
+      <span class="qno">Soru 18</span>
+      <span class="qtitle">Microsoft Excel'de bir hücre aralığını ifade ederken hangi sembol kullanılır?</span>
+      <span class="qtag">2025-2026 Final</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Nokta (.)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Virgül (,)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Tire (-)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Noktalı virgül (;)</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) İki nokta üst üste (:)</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> E) İki nokta üst üste (:)<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">A1:D5 örneğinde olduğu gibi, Excel'de başlangıç ve bitiş hücreleri arasındaki tüm blok aralığını ifade etmek için iki nokta üst üste (:) işareti kullanılır.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(4)">&larr; Önceki Ünite (5)</button>
+    <button class="btn nav-btn" onclick="goUnit(6)">Sonraki Ünite (7) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="6" id="u6">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 07</span>
+    <h2>Excel'de Verilerin Analizi: Sıralama, Filtreleme ve Koşullu Biçimlendirme</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Büyük veri kümelerinde aranan bilgiye hızla ulaşmak ve anormallikleri tespit etmek için sıralama, filtreleme ve görsel vurgulama kuralları uygulanır.</p>
+  </div>
+
+  <h3>7.1. Koşullu Biçimlendirme (Conditional Formatting) Menüleri</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Kural Menüsü</th>
+        <th>Kullanım Amacı</th>
+        <th>Örnek Kurallar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Hücre Vurgulama Kuralları</strong></td>
+        <td>Hücre değerinin belirli bir sayı veya metinle <strong>doğrudan matematiksel karşılaştırılması</strong>.</td>
+        <td>Büyüktür (&gt;), Küçüktür (&lt;), Arasında, Eşittir, İçeren Metin.</td>
+      </tr>
+      <tr>
+        <td><strong>Üst / Alt Kuralları</strong></td>
+        <td>Hücrenin veri kümesinin <strong>istatistiksel dağılımındaki konumuna</strong> göre vurgulanması.</td>
+        <td>İlk 10 Öğe, İlk %10, Son 10 Öğe, Ortalamanın Üstünde, Ortalamanın Altında.</td>
+      </tr>
+      <tr>
+        <td><strong>Veri Çubukları / Renk Ölçekleri</strong></td>
+        <td>Değerin büyüklüğüne göre hücre içine renkli çubuk veya ısı haritası yerleştirilmesi.</td>
+        <td>Gradyan veya Düz dolgulu çubuklar.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box tuzak">
+    <h4>⚠️ Sınav Çeldiricisi: Hücre Vurgulama vs Üst/Alt Kuralları</h4>
+    <p>Sınavlarda "Büyüktür/Küçüktür şartı hangi menüden verilir?" diye sorulur &rarr; <strong>Hücre Vurgulama Kuralları</strong>. "Ortalamanın üstündekileri renklendirmek" sorulursa &rarr; <strong>Üst/Alt Kuralları</strong> seçilmelidir!</p>
+  </div>
+
+<h3>7.2. Ünite 7 Çıkmış Sınav Soruları ve Çözümleri (2 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">MS Word uygulamasında 'Resmi Sıfırla' butonunun işlevi aşağıdakilerden hangisidir?</span>
+      <span class="qtag">2025 Bahar Final • 2026 Bahar Vize • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Resmi belgenin sol kenarına yaslar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Resmin piksellerini temizler.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Resmi belgenin sağ kenarına yaslar.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Resimde yapılan tüm değişiklikleri silerek resmi ilk haline döndürür.</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Resmi tüm kenarlarından kırpar.</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> D) Resimde yapılan tüm değişiklikleri silerek resmi ilk haline döndürür.<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Resmi Sıfırla (Reset Picture) aracı; kırpma, çerçeve, renk ve boyutlandırma gibi resme sonradan uygulanan tüm özellikleri temizleyip orijinal haline getirir.</div>
+      </div>
+    </div>
+  </details>
+  <details class="sq" data-q="2">
+    <summary>
+      <span class="qno">Soru 2</span>
+      <span class="qtitle">Word uygulamasında resimdeki gibi sayfanın arka planına eklenen soluk renkli metne veya grafiğe ne ad verilir?</span>
+      <span class="qtag">2023 Bahar Final • 2024 Bahar Büt • 2 Kez Çıktı!</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Tema</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Filigran</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) WordArt</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Öncü</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Stil</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> B) Filigran<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Sayfa arka planına kopyalanmayı önlemek veya taslak belirtmek için eklenen soluk görsellere 'Filigran' (Watermark) denir.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(5)">&larr; Önceki Ünite (6)</button>
+    <button class="btn nav-btn" onclick="goUnit(7)">Sonraki Ünite (8) &rarr;</button>
+  </div>
+</section>
+
+
+<section class="unit" data-i="7" id="u7">
+
+  <div class="uhead">
+    <span class="num">ÜNİTE 08</span>
+    <h2>Excel'de Formüller, Hücre Başvuruları ve Hata Kodları</h2>
+  </div>
+
+  <div class="lead-box">
+    <p>Excel'de tüm formüller mutlaka <strong>eşittir (=)</strong> işareti ile başlar. Formüllerde hücre başvurularının türü, formül kopyalandığında sonucun doğruluğunu belirler.</p>
+  </div>
+
+  <h3>8.1. Hücre Başvuru Türleri (F4 Tuşu)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Başvuru Türü</th>
+        <th>Örnek Yazım</th>
+        <th>Kopyalama Davranışı</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Göreli Başvuru (Relative)</strong></td>
+        <td><code>A1</code></td>
+        <td>Formül aşağı/sağa kopyalandıkça sütun ve satır adresleri <strong>otomatik olarak değişir</strong> (A1 &rarr; A2 &rarr; A3).</td>
+      </tr>
+      <tr>
+        <td><strong>Mutlak Başvuru (Absolute)</strong></td>
+        <td><code>$A$1</code></td>
+        <td>Hem sütun hem satır dolar ($) işaretiyle kilitlenmiştir. Formül nereye kopyalanırsa kopyalansın <strong>daima A1 hücresini gösterir</strong>.</td>
+      </tr>
+      <tr>
+        <td><strong>Karma Başvuru (Mixed)</strong></td>
+        <td><code>$A1</code> veya <code>A$1</code></td>
+        <td>Yalnızca biri kilitlidir: <code>$A1</code>'de sütun sabit satır serbest; <code>A$1</code>'de satır sabit sütun serbesttir.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>8.2. En Çok Kullanılan Temel Excel Fonksiyonları</h3>
+  <div class="box formul">
+    <ul>
+      <li><code>=TOPLA(A1:A10)</code> &mdash; Belirtilen aralıktaki tüm sayıları toplar.</li>
+      <li><code>=ORTALAMA(B1:B20)</code> &mdash; Aritmetik ortalamayı hesaplar.</li>
+      <li><code>=EĞER(şart; doğruysa; yanlışsa)</code> &mdash; Mantıksal koşul testi (örn: <code>=EĞER(C2&gt;=50; "Geçti"; "Kaldı")</code>).</li>
+      <li><code>=DÜŞEYARA(aranan; tablo; sütun_indis; 0)</code> &mdash; Tablonun ilk sütununda arama yapıp ilgili satırdaki istenen sütun değerini getirir.</li>
+      <li><code>=EĞERSAY(aralık; ölçüt)</code> &mdash; Belirli bir şarta uyan hücrelerin sayısını verir.</li>
+    </ul>
+  </div>
+
+  <h3>8.3. Klasik Excel Hata Kodları Sözlüğü</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Hata Kodu</th>
+        <th>Hatanın Oluşma Nedeni</th>
+        <th>Çözüm Yolu</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>#AD? (#NAME?)</strong></td>
+        <td>Formüldeki <strong>fonksiyon ismi yanlış yazıldığında</strong> (Örn: <code>=TOPLAM(A1:A5)</code> veya <code>=MAKS(A1)</code>).</td>
+        <td>Fonksiyon adının imlasını düzeltmek.</td>
+      </tr>
+      <tr>
+        <td><strong>#BAŞV! (#REF!)</strong></td>
+        <td>Formülün başvurduğu satır veya sütun <strong>tamamen silindiğinde</strong>.</td>
+        <td>Formüldeki hücre adresini yeniden tanımlamak.</td>
+      </tr>
+      <tr>
+        <td><strong>#DEĞER! (#VALUE!)</strong></td>
+        <td>Yanlış veri tipiyle matematiksel işlem yapıldığında (Metin ile sayıyı toplamak gibi).</td>
+        <td>Hücrelerdeki veri tiplerini uyumlu hale getirmek.</td>
+      </tr>
+      <tr>
+        <td><strong>#SAYI/0! (#DIV/0!)</strong></td>
+        <td>Bir sayının <strong>sıfıra veya boş bir hücreye bölünmeye</strong> çalışılması.</td>
+        <td>Bölen değerin sıfır olmamasını sağlamak.</td>
+      </tr>
+      <tr>
+        <td><strong>#####</strong></td>
+        <td>Hata değildir; <strong>sütun genişliği dar olduğu için</strong> sayı ekrana sığmamıştır.</td>
+        <td>Sütun başlığını çift tıklayarak genişletmek.</td>
+      </tr>
+    </tbody>
+  </table>
+
+<h3>8.4. Ünite 8 Çıkmış Sınav Soruları ve Çözümleri (1 Soru)</h3>
+  <details class="sq" data-q="1">
+    <summary>
+      <span class="qno">Soru 1</span>
+      <span class="qtitle">Microsoft Word'de bir metni taşırken mevcut biçimlendirmeyi korumak için aşağıdaki yapıştırma seçeneklerinden hangisi tercih edilir?</span>
+      <span class="qtag">2025 Bahar Büt</span>
+    </summary>
+    <div class="sqbody">
+      <ul style='margin:8px 0 12px 20px; list-style-type:none; padding:0;'><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>A) Normal Yapıştır</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>B) Biçimlendirmeyi Eşleştir</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>C) Kaynak Biçimlendirmesini Koru</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>D) Gelişmiş Yapıştır</li><li style='margin-bottom:4px; padding:4px 8px; border-radius:4px; background:var(--bg); border:1px solid var(--border); font-size:13.5px;'>E) Yalnızca Metni Koru</li></ul>
+      <div class="exp" style="margin-top:0;">
+        <strong>Doğru Cevap:</strong> C) Kaynak Biçimlendirmesini Koru<br><br>
+        <strong>Açıklamalı Çözüm:</strong><br>
+        <div style="white-space:pre-wrap; font-family:inherit;">Kopyalanan verinin orijinal renk ve boyutunun yeni yerde bozulmaması için yapıştırma seçeneklerinden 'Kaynak Biçimlendirmesini Koru' seçilir.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="unit-pager">
+    <button class="btn nav-btn" onclick="goUnit(6)">&larr; Önceki Ünite (7)</button>
+    <div></div>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<script>
+function goUnit(idx) {
+  var units = document.querySelectorAll('.unit');
+  if (idx < 0 || idx >= units.length) return;
+  units.forEach(function(u) { u.classList.remove('on'); });
+  units[idx].classList.add('on');
+  document.getElementById('unitSel').value = idx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleDevMenu() {
+  document.getElementById('devMenu').classList.toggle('open');
+}
+
+function setDevice(dev) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.getElementById('devMenu').classList.remove('open');
+  localStorage.setItem('preferred_device', dev);
+}
+
+function toggleTheme() {
+  var cur = document.documentElement.getAttribute('data-theme') || 'light';
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('preferred_theme', next);
+}
+
+window.addEventListener('click', function(e) {
+  var wrap = document.querySelector('.device-menu-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('devMenu').classList.remove('open');
+  }
+});
+
+(function() {
+  var savedDev = localStorage.getItem('preferred_device');
+  if (savedDev) document.documentElement.setAttribute('data-device', savedDev);
+  var savedTheme = localStorage.getItem('preferred_theme');
+  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+</script>
+</body>
+</html>
