@@ -3,47 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>Olasılık ve İstatistik (AYBS3001) - AUZEF Kapsamlı Ders Anlatımı ve Soru Havuzu</title>
+<title>Olasılık ve İstatistik (AYBS3001) - AUZEF Kapsamlı Ders Kitabı (14 Ünite Tam Metin)</title>
 <style>
 :root {
-  --bg: #F4F6F9;
+  --bg: #F8FAFC;
   --surface: #FFFFFF;
-  --text: #1B2533;
-  --text-muted: #556575;
-  --border: #DDE3EA;
-  --primary: #1A365D;
-  --primary-light: #EBF3FC;
-  --accent: #C05621;
-  --accent-light: #FEEBC8;
-  --success: #22543D;
-  --success-light: #C6F6D5;
-  --danger: #742A2A;
-  --danger-light: #FED7D7;
+  --text: #0F172A;
+  --text-muted: #475569;
+  --border: #E2E8F0;
+  --primary: #1E3A8A;
+  --primary-light: #EFF6FF;
+  --accent: #C2410C;
+  --accent-light: #FFF7ED;
+  --success: #15803D;
+  --success-light: #F0FDF4;
+  --danger: #B91C1C;
+  --danger-light: #FEF2F2;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-serif: "Georgia", "Bookerly", serif;
   --font-mono: "Consolas", "Courier New", monospace;
   --font-size: 16px;
-  --line-height: 1.65;
-  --max-w: 1040px;
+  --line-height: 1.7;
+  --max-w: 1060px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
 }
 
 [data-theme="dark"] {
-  --bg: #0F172A;
+  --bg: #0B1120;
   --surface: #1E293B;
-  --text: #F1F5F9;
+  --text: #F8FAFC;
   --text-muted: #94A3B8;
   --border: #334155;
   --primary: #60A5FA;
-  --primary-light: #1E3A8A;
-  --accent: #F97316;
+  --primary-light: #172554;
+  --accent: #FB923C;
   --accent-light: #431407;
-  --success: #34D399;
-  --success-light: #064E3B;
+  --success: #4ADE80;
+  --success-light: #052E16;
   --danger: #F87171;
   --danger-light: #450A0A;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
 }
 
-/* DEVICE PROFILES */
+/* E-INK PROFILES */
 [data-device="eink-6-bw"] {
   --bg: #FFFFFF !important;
   --surface: #FFFFFF !important;
@@ -74,7 +80,7 @@
 [data-device="eink-10-bw"] {
   --font-body: var(--font-serif) !important;
   --font-size: 18px !important;
-  --max-w: 860px !important;
+  --max-w: 880px !important;
 }
 
 [data-device="mobile"] {
@@ -99,1430 +105,2013 @@ body {
   position: sticky; top: 0; z-index: 100;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
   padding: 10px 16px;
-  margin-bottom: 24px;
-  display: flex; justify-content: space-between; align-items: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-.bar-left, .bar-right { display: flex; align-items: center; gap: 8px; }
+.top-bar-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.bar-left { display: flex; align-items: center; gap: 10px; flex: 1; }
 .back-btn {
-  text-decoration: none; color: var(--text); font-weight: 700; font-size: 13px;
-  padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
-  background: var(--bg); display: inline-flex; align-items: center; gap: 4px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  background: var(--primary-light); color: var(--primary);
+  text-decoration: none; font-weight: 600; font-size: 13.5px;
 }
-.back-btn:hover { border-color: var(--primary); color: var(--primary); }
 .sel {
-  padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
-  background: var(--surface); color: var(--text); font-size: 13px; font-weight: 600;
-  max-width: 280px;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font-size: 13.5px; font-weight: 600;
+  max-width: 380px; cursor: pointer; outline: none;
 }
+.bar-right { display: flex; align-items: center; gap: 8px; position: relative; }
 .btn {
-  cursor: pointer; border: 1px solid var(--border); background: var(--surface);
-  color: var(--text); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600;
+  padding: 7px 11px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font-size: 13px; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
 }
-.btn:hover { background: var(--bg); }
+.btn:hover { background: var(--primary-light); color: var(--primary); }
 
 /* DEVICE MENU */
-.device-menu-wrap { position: relative; }
 .device-menu {
-  display: none; position: absolute; right: 0; top: calc(100% + 6px);
-  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12); min-width: 220px; z-index: 200; overflow: hidden;
+  display: none; position: absolute; right: 0; top: calc(100% + 8px);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+  padding: 8px; min-width: 210px; z-index: 101;
 }
 .device-menu.open { display: block; }
-.device-menu-head {
-  font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-muted);
-  padding: 8px 12px; background: var(--bg); border-bottom: 1px solid var(--border);
+.dev-item {
+  width: 100%; text-align: left; padding: 7px 10px;
+  border-radius: var(--radius-sm); border: none; background: transparent;
+  color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer;
 }
-.device-opt {
-  display: block; width: 100%; text-align: left; padding: 8px 12px; border: none;
-  background: none; font-size: 13px; color: var(--text); cursor: pointer;
-}
-.device-opt:hover { background: var(--primary-light); color: var(--primary); }
+.dev-item:hover { background: var(--primary-light); color: var(--primary); }
 
-/* BANNER */
-.course-banner {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-.eyebrow { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 6px; }
-.course-banner h1 { font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
-.course-meta { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
-
-/* UNITS */
-.unit { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 30px; }
+/* ARTICLE & UNIT CONTENT */
+.unit { display: none; margin-top: 24px; }
 .unit.on { display: block; }
-.uhead { border-bottom: 2px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
-.uhead .num { display: inline-block; font-size: 12px; font-weight: 800; color: var(--accent); background: var(--accent-light); padding: 3px 8px; border-radius: 4px; margin-bottom: 6px; }
-.uhead h2 { font-size: 22px; font-weight: 800; color: var(--text); }
-.lead-box { background: var(--primary-light); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-size: 15px; }
+.unit-article {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 32px 28px;
+  box-shadow: var(--shadow);
+}
+.unit-article h2 {
+  font-size: 24px; color: var(--primary);
+  margin-bottom: 16px; border-bottom: 2px solid var(--border);
+  padding-bottom: 12px; line-height: 1.35;
+}
+.unit-lead {
+  background: var(--primary-light);
+  border-left: 4px solid var(--primary);
+  padding: 14px 18px; border-radius: var(--radius-sm);
+  margin-bottom: 28px; font-size: 15px; color: var(--text);
+}
+.unit-article section { margin-bottom: 30px; }
+.unit-article h3 {
+  font-size: 19px; color: var(--text);
+  margin: 22px 0 12px 0; border-left: 3px solid var(--primary);
+  padding-left: 10px;
+}
+.unit-article h4 {
+  font-size: 16.5px; color: var(--text);
+  margin: 16px 0 8px 0;
+}
+.unit-article p { margin-bottom: 14px; text-align: justify; }
+.unit-article ul, .unit-article ol { margin: 10px 0 16px 24px; }
+.unit-article li { margin-bottom: 6px; }
 
-h3 { font-size: 18px; font-weight: 800; color: var(--primary); margin: 24px 0 12px; border-left: 3px solid var(--accent); padding-left: 10px; }
-h4 { font-size: 15px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
-p { margin-bottom: 12px; }
-ul, ol { margin: 10px 0 16px 24px; }
-li { margin-bottom: 6px; }
-
-/* BOXES */
-.box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; border: 1px solid var(--border); }
-.box.formul { background: var(--surface); border-left: 4px solid var(--primary); }
-.box.tuzak { background: var(--danger-light); border-color: var(--danger); border-left: 4px solid var(--danger); }
-.box.tuzak h4 { color: var(--danger); }
-.box.ornek { background: var(--primary-light); border-left: 4px solid #1976D2; }
-.f { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
+/* BOXES & CARDS */
+.card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 16px 18px;
+  margin: 16px 0;
+}
+.formula-box {
+  background: var(--surface); border: 1.5px solid var(--primary);
+  border-radius: var(--radius-md); padding: 16px 20px;
+  margin: 18px 0; font-family: var(--font-mono); font-size: 15px;
+}
+.note-box {
+  background: var(--success-light); border-left: 4px solid var(--success);
+  padding: 14px 18px; border-radius: var(--radius-sm);
+  margin: 18px 0; font-size: 14.5px;
+}
+.exam-trap {
+  background: var(--danger-light); border: 1.5px solid var(--danger);
+  border-radius: var(--radius-md); padding: 18px 20px;
+  margin: 28px 0;
+}
+.exam-trap h4 { color: var(--danger); margin-top: 0; }
 
 /* TABLES */
-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; background: var(--surface); }
-th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
-th { background: var(--bg); font-weight: 800; color: var(--text); }
+.data-table {
+  width: 100%; border-collapse: collapse; margin: 20px 0;
+  font-size: 14px; background: var(--surface);
+}
+.data-table th, .data-table td {
+  border: 1px solid var(--border); padding: 10px 12px; text-align: left;
+}
+.data-table th {
+  background: var(--primary-light); color: var(--primary); font-weight: 700;
+}
 
-/* QUESTIONS */
+/* QUESTION DETAILS (SQ) */
 details.sq {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  margin: 12px 0; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); margin-bottom: 12px;
+  box-shadow: var(--shadow); overflow: hidden;
 }
 details.sq summary {
-  padding: 12px 16px; cursor: pointer; font-weight: 600; list-style: none;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding: 12px 16px; font-weight: 600; cursor: pointer;
+  background: var(--surface); display: flex; align-items: center;
+  justify-content: space-between; user-select: none;
 }
-details.sq summary::-webkit-details-marker { display: none; }
-.qno { font-size: 11px; font-weight: 800; background: var(--primary); color: #fff; padding: 2px 7px; border-radius: 4px; }
-.qtitle { flex: 1; font-size: 14px; color: var(--text); }
-.qtag { font-size: 11px; background: var(--border); color: var(--text-muted); padding: 2px 6px; border-radius: 4px; }
-.sqbody { padding: 14px 16px; background: var(--surface); border-top: 1px solid var(--border); }
-ul.o { list-style: none; margin: 0 0 12px 0; }
-ul.o li { padding: 6px 10px; border-radius: 4px; margin-bottom: 4px; font-size: 14px; }
-ul.o li.ok { background: var(--success-light); color: var(--success); font-weight: 700; border: 1px solid var(--success); }
-.exp { font-size: 13px; line-height: 1.5; color: var(--text); background: var(--bg); padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--success); }
+details.sq summary:hover { background: var(--primary-light); }
+details.sq[open] summary { border-bottom: 1px solid var(--border); }
+.sq-content { padding: 16px; background: var(--bg); }
 
-/* UNIT PAGER */
+/* PAGER */
 .unit-pager {
-  display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 24px; padding: 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: var(--shadow);
 }
 </style>
 </head>
 <body>
 
-<div class="shell">
-  <header class="top-bar">
+<header class="top-bar">
+  <div class="top-bar-inner">
     <div class="bar-left">
-      <a href="../../2.Sinif/index.html" class="back-btn" title="2. Sınıf Ders Listesine Dön">← 2. Sınıf Portal</a>
-      <select id="unitSel" class="sel" onchange="goUnit(parseInt(this.value))">
-        <option value="0">1. Ünite: İstatistiğe Giriş: Temel Kavramlar ve Tarihsel Gelişim</option><option value="1">2. Ünite: İstatistiksel Çıkarsama: Anakütle, Örneklem ve Ölçek Türleri</option><option value="2">3. Ünite: Verilerin Düzenlenmesi ve Sunumu: Tablo ve Grafikler</option><option value="3">4. Ünite: İstatistikte Önemli Notasyonlar: Toplam ve Çarpım Cebri</option><option value="4">5. Ünite: Merkezi Eğilim Ölçüleri: Aritmetik, Geometrik, Harmonik Ortalama</option><option value="5">6. Ünite: Analitik Olmayan Ortalamalar: Mod, Medyan ve Kartiller</option><option value="6">7. Ünite: Merkezi Değişim Ölçüleri: Varyans, Standart Sapma, Değişim Katsayısı</option><option value="7">8. Ünite: Standart Değişken (z), Asimetri ve Basıklık İncelemeleri</option><option value="8">9. Ünite: Momentler ve Dağılım Parametreleri</option><option value="9">10. Ünite: Olasılık Teorisine Giriş: Örneklem Uzayı ve Aksiyomlar</option><option value="10">11. Ünite: Koşullu Olasılık, Bağımsızlık ve Kesikli Dağılımlar (Binom, Poisson)</option><option value="11">12. Ünite: Sürekli Dağılımlar: Normal Dağılım ve Z Dağılımı</option><option value="12">13. Ünite: Parametrik Hipotez Testleri: Tek Anakütle Testleri</option><option value="13">14. Ünite: İki Anakütle Hipotez Testleri ve Bağımsız Örneklem Analizleri</option>
+      <a href="../index.html" class="back-btn" title="2. Sınıf Ders Listesine Dön">← 2. Sınıf Portal</a>
+      <select id="unitSel" class="sel" onchange="goUnit(this.value)">
+        <option value="0">1. Ünite: İstatistiğe Giriş ve Tarihsel Gelişim</option>
+<option value="1">2. Ünite: İstatistiksel Çıkarsama ve Temel Kavramlar</option>
+<option value="2">3. Ünite: Verilerin Derlenmesi ve Sunumu</option>
+<option value="3">4. Ünite: İstatistikte Önemli Notasyonlar</option>
+<option value="4">5. Ünite: Merkezi Eğilim Ölçüleri</option>
+<option value="5">6. Ünite: Duyarsız Ortalamalar ve Çarpıklık</option>
+<option value="6">7. Ünite: Merkezi Değişim (Dağılım) Ölçüleri</option>
+<option value="7">8. Ünite: Standart Değişken, Asimetri ve Toplanma</option>
+<option value="8">9. Ünite: Momentler ve Basıklık İncelemesi</option>
+<option value="9">10. Ünite: Olasılığa Giriş ve Temel Kavramlar</option>
+<option value="10">11. Ünite: Çekilişler, Koşullu Olasılık ve Bayes</option>
+<option value="11">12. Ünite: Sürekli Dağılımlar ve Normal Dağılım</option>
+<option value="12">13. Ünite: Hipotez Testleri (Tek Anakütle)</option>
+<option value="13">14. Ünite: Hipotez Testleri (İki Anakütle)</option>
       </select>
     </div>
     <div class="bar-right">
-      <div class="device-menu-wrap">
-        <button class="btn icon" id="devBtn" onclick="toggleDevMenu()" title="Cihaz Profili">📱 Mod</button>
-        <div class="device-menu" id="devMenu">
-          <div class="device-menu-head">Cihaz Görünüm Profili</div>
-          <button class="device-opt" onclick="setDevice('desktop')">💻 Masaüstü Web</button>
-          <button class="device-opt" onclick="setDevice('mobile')">📱 Mobil Ekran</button>
-          <button class="device-opt" onclick="setDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B Bookerly)</button>
-          <button class="device-opt" onclick="setDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
-          <button class="device-opt" onclick="setDevice('eink-10-bw')">📝 10.3" Tablet (S/B)</button>
+      <button class="btn" onclick="toggleTheme()" title="Açık / Koyu Tema">🌓 Tema</button>
+      <div class="device-menu-wrap" style="position:relative;">
+        <button class="btn" onclick="toggleDevMenu()" title="Okuma Cihaz Profili">📱 Cihaz ▾</button>
+        <div id="devMenu" class="device-menu">
+          <button class="dev-item" onclick="setDevice('desktop')">💻 Masaüstü Standart</button>
+          <button class="dev-item" onclick="setDevice('mobile')">📱 Mobil Akıllı Telefon</button>
+          <button class="dev-item" onclick="setDevice('eink-6-bw')">📖 6" E-Ink S/B (Kindle/Kobo)</button>
+          <button class="dev-item" onclick="setDevice('eink-6-color')">🎨 6" E-Ink Renkli</button>
+          <button class="dev-item" onclick="setDevice('eink-10-bw')">📑 10.3" Tablet / E-Notluk</button>
         </div>
       </div>
-      <button class="btn icon" id="themeBtn" onclick="toggleTheme()" title="Koyu / Açık Tema">🌓 Tema</button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <div class="course-banner">
-    <p class="eyebrow">AUZEF &middot; Yönetim Bilişim Sistemleri &middot; 2. Sınıf Güz (AYBS3001)</p>
-    <h1>Olasılık ve İstatistik</h1>
-    <p class="course-meta">Eksiksiz 14 Ünite Ders Notları • Matematiksel Notasyonlar • Olasılık Dağılımları • Hipotez Testleri • Çözümlü Çıkmış Sınav Soruları</p>
+<main class="shell">
+  
+    <section class="unit on" id="u0">
+      
+<article class="unit-article">
+  <h2>1. Ünite: İstatistiğe Giriş, Temel Konular ve Kavramlar, İstatistiğin Tarihten Günümüze Gelişimi</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> İstatistik biliminin kavramsal temellerini, veri analitiği ve karar alma süreçlerindeki hayati rolünü, betimsel ve çıkarımsal istatistik arasındaki metodolojik farkları, istatistiğin tarihsel dönüm noktalarını ve Türkiye'de resmi istatistik üretiminin omurgasını oluşturan Türkiye İstatistik Kurumu'nun (TÜİK) kurumsal ve yasal yapısını eksiksiz olarak kavramaktır.
   </div>
 
-  <main id="content">
+  <section>
+    <h3>1.1. İstatistik Nedir? Kavramsal ve Metodolojik Çerçeve</h3>
+    <p>İstatistik kelimesi etimolojik olarak Latince <em>"status"</em> (devlet, durum) ve İtalyanca <em>"statista"</em> (devlet adamı, siyasetçi) köklerinden türemiştir. Tarihsel başlangıcında devletlerin askeri güçlerini, vergi mükelleflerini ve tarımsal kaynaklarını kayıt altına alma sanatı olarak doğmuş, günümüzde ise veriye dayalı bütün bilimsel ve yönetsel süreçlerin evrensel metodolojisi haline gelmiştir.</p>
     
-<section class="unit on" data-i="0" id="u0">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 01</span>
-    <h2>İstatistiğe Giriş: Temel Kavramlar ve İstatistiğin Gelişimi</h2>
+    <p>Akademik literatürde istatistik iki farklı anlamda tanımlanır:</p>
+    <ul>
+      <li><strong>Dar (Sayısal Bilgi / Veri) Anlamında İstatistik:</strong> Belirli bir konuya, olguya veya döneme ilişkin toplanmış, derlenmiş ve sayılarla ifade edilmiş düzenli veriler bütünüdür (Örneğin: işsizlik istatistikleri, dış ticaret istatistikleri, enflasyon oranları, hava durumu istatistikleri).</li>
+      <li><strong>Geniş (Bilim Dalı) Anlamında İstatistik:</strong> Belirli bir amaç doğrultusunda anakütleden veya örneklemden veri toplama, toplanan verileri düzenleme, sınıflama, tablolama ve grafiklerle sunma; bu verileri analiz ederek anakütle parametreleri hakkında geçerli tahminler yapma, hipotezleri test etme ve belirsizlik altında optimal kararlar alma yöntemlerini inceleyen uygulamalı bir matematiksel bilim dalıdır.</li>
+    </ul>
+
+    <div class="note-box">
+      <strong>Akademik Vurgu:</strong> İstatistik, yalnızca geçmişte ne olduğunu kaydeden pasif bir arşivleme faaliyeti değil; mevcut durumu analiz ederek geleceğe dönük rasyonel projeksiyonlar (öngörüler) üreten ve belirsizliği olasılık kurallarıyla yönetilebilir kılan aktif bir karar bilimidir.
+    </div>
+  </section>
+
+  <section>
+    <h3>1.2. İstatistiğin Temel Konuları ve İki Ana Dalı</h3>
+    <p>İstatistik metodolojisi, araştırma hedeflerine ve veri işleme düzeyine göre iki ana çalışma alanına ayrılır:</p>
+
+    <h4>1.2.1. Betimsel (Deskriptif / Tanımlayıcı) İstatistik</h4>
+    <p>Betimsel istatistik, toplanan ham verileri anlaşılır, özet ve yorumlanabilir hale getirmek için kullanılan istatistiksel araçları kapsar. Amacı, veri kümesinin genel karakteristiklerini ortaya koymaktır.</p>
+    <ul>
+      <li><strong>Kapsadığı İşlemler:</strong> Verilerin dizilmesi, sıklık (frekans) dağılımlarının hazırlanması, histogram ve çubuk diyagramlar gibi grafiksel gösterimler, merkezi eğilim ölçüleri (aritmetik ortalama, medyan, mod) ve merkezi değişim ölçüleri (varyans, standart sapma, değişim aralığı).</li>
+      <li><strong>Kritik Kısıt:</strong> Betimsel istatistik, yalnızca incelenen mevcut veri kümesini tanımlar. Eldeki verilerin ötesine geçerek örneklemden anakütleye doğru bir genelleme YAPMAZ ve yapamaz.</li>
+    </ul>
+
+    <h4>1.2.2. Çıkarımsal (Endüktif / Yorumlayıcı) İstatistik</h4>
+    <p>Çıkarımsal istatistik, anakütlenin tamamını incelemenin maliyet, zaman veya imkânsızlık nedeniyle mümkün olmadığı durumlarda, anakütleyi temsil eden bir örneklemden elde edilen bulgulara dayanarak anakütlenin bütünü hakkında bilimsel tahminler ve genellemeler yapma sürecidir.</p>
+    <ul>
+      <li><strong>Kapsadığı İşlemler:</strong> Olasılık teorisi, örnekleme dağılımları, parametre tahmini (nokta ve aralık tahmini, güven aralıkları), hipotez testleri (Z testi, t testi, ANOVA), regresyon ve korelasyon analizleri.</li>
+      <li><strong>Kritik Özellik:</strong> Çıkarımsal istatistik, tümevarım (parçadan bütüne) mantığıyla çalışır ve yapılan tahminlerin doğruluk derecesi olasılık hesaplamalarıyla belirlenir.</li>
+    </ul>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Özellik</th>
+          <th>Betimsel İstatistik</th>
+          <th>Çıkarımsal İstatistik</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Temel Amaç</strong></td>
+          <td>Eldeki veriyi özetlemek, düzenlemek ve resmetmek</td>
+          <td>Örneklemden hareketle anakütle hakkında tahmin ve genelleme yapmak</td>
+        </tr>
+        <tr>
+          <td><strong>Analiz Kapsamı</strong></td>
+          <td>Yalnızca toplanmış ve eldeki gözlemler</td>
+          <td>Tüm anakütle (popülasyon) parametreleri</td>
+        </tr>
+        <tr>
+          <td><strong>Kullanılan Araçlar</strong></td>
+          <td>Frekans tabloları, grafikler, ortalamalar, standart sapma</td>
+          <td>Olasılık kuramları, güven aralıkları, Z/t hipotez testleri</td>
+        </tr>
+        <tr>
+          <td><strong>Belirsizlik Düzeyi</strong></td>
+          <td>Yoktur; eldeki veri kesin olarak hesaplanır</td>
+          <td>Vardır; tahminler belirli bir güven düzeyi (1 - &alpha;) ile sunulur</td>
+        </tr>
+        <tr>
+          <td><strong>Örnek Olay</strong></td>
+          <td>Bir sınıftaki 40 öğrencinin sınav not ortalamasını hesaplamak</td>
+          <td>1.000 seçmenden alınan anketle ülke genelindeki oy oranını tahmin etmek</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>1.3. İstatistiğin Tarihsel Gelişimi ve Önemli Figürler</h3>
+    <p>İstatistik tarih boyunca üç evreden geçerek bugünkü bilimsel kimliğini kazanmıştır:</p>
+    <ol>
+      <li><strong>İlk Çağlar ve Nüfus Sayımları Evresi:</strong> M.Ö. 3000'lerde Sümerler, Babilliler ve Mısır firavunları; vergilendirilebilir nüfusu, tarım arazilerini ve savaşa katılabilecek asker potansiyelini belirlemek amacıyla ilk nüfus ve toprak kayıtlarını tutmuştur. Roma İmparatorluğu'nda 5 yılda bir yapılan "Census" sayımları bu dönemin en gelişmiş örneğidir.</li>
+      <li><strong>Siyasi Aritmetik ve Yaşam Tabloları Evresi (17. Yüzyıl):</strong>
+        <ul>
+          <li><strong>John Graunt (1620-1674):</strong> Londra'daki haftalık ölüm kayıtlarını (Bills of Mortality) inceleyerek ilk kez ölüm oranları, cinsiyet oranları ve beklenen yaşam süreleri üzerine bilimsel çalışma yapmış; ilk "Mortalite Tablosu"nu (Hayat Tablosu) kurmuştur. Graunt, modern demografinin ve aktüerya biliminin kurucusu kabul edilir.</li>
+          <li><strong>William Petty (1623-1687):</strong> Sayılar, ağırlıklar ve ölçülerle devlet yönetimini analiz eden <em>"Siyasi Aritmetik"</em> yaklaşımını geliştirmiştir.</li>
+        </ul>
+      </li>
+      <li><strong>Sosyal Fizik ve Çıkarımsal Matematiksel İstatistik Evresi (19. ve 20. Yüzyıl):</strong>
+        <ul>
+          <li><strong>Adolphe Quetelet (1796-1874):</strong> Astronomi ve olasılık teorisini sosyal olaylara uygulamış, normal dağılım eğrisini insan özelliklerine uyarlayarak <em>"Ortalama İnsan" (l'homme moyen)</em> kavramını geliştirmiştir. Beden Kitle İndeksi'nin (BMI - Quetelet İndeksi) mucididir.</li>
+          <li><strong>Francis Galton, Karl Pearson ve Ronald A. Fisher:</strong> Korelasyon, regresyon, Ki-Kare testi ve Varyans Analizi (ANOVA) gibi modern çıkarımsal istatistiğin temellerini atmışlardır.</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h3>1.4. Türkiye İstatistik Kurumu (TÜİK) ve Resmi İstatistik Sistemi</h3>
+    <p>Türkiye'de istatistik faaliyetlerinin kurumsal tarihi Osmanlı İmparatorluğu dönemine kadar uzanır:</p>
+    <ul>
+      <li>1891 yılında Osmanlı'da Ticaret ve Ziraat Nezareti bünyesinde <em>"İstatistik-i Umumi İdaresi"</em> kurulmuştur.</li>
+      <li>Cumhuriyet döneminde, 1926 yılında Mustafa Kemal Atatürk'ün direktifleriyle Başbakanlığa bağlı <em>"Merkezi İstatistik Dairesi"</em> kurulmuş ve 1927 yılında Türkiye Cumhuriyeti'nin ilk genel nüfus sayımı gerçekleştirilmiştir.</li>
+      <li>1962 yılında kurum yeniden yapılandırılarak <em>"Devlet İstatistik Enstitüsü" (DİE)</em> adını almıştır.</li>
+      <li>2005 yılında çıkarılan 5429 sayılı Türkiye İstatistik Kanunu ile kurum, Avrupa Birliği İstatistik Ofisi (Eurostat) normlarına uyumlu, idari ve mali özerkliğe sahip <strong>Türkiye İstatistik Kurumu (TÜİK)</strong> adını almıştır.</li>
+    </ul>
+
+    <p><strong>TÜİK'in Görev ve Yetkileri:</strong></p>
+    <ul>
+      <li>Ülkenin ekonomik, sosyal, demografik, kültürel ve çevre alanlarındaki resmi istatistiklerini üretmek, analiz etmek ve yayınlamak.</li>
+      <li>5 yıllık dönemler için hazırlanan <em>Resmi İstatistik Programı'nı (RİP)</em> koordine etmek ve diğer kamu kurumlarının istatistiksel standartlarını denetlemek.</li>
+      <li>Enflasyon (TÜFE/ÜFE), istihdam, büyüme (GSYH), nüfus projeksiyonları gibi stratejik göstergeleri uluslararası standartlara (SNA, ESA) göre hesaplamak.</li>
+      <li><strong>Resmi Veri Gizliliği:</strong> Kanun gereğince kişilerden ve kurumlardan toplanan kişisel veriler gizlidir; hiçbir idari, mali veya adli mercie delil olarak verilemez, yalnızca toplulaştırılmış istatistiki amaçlarla kullanılabilir.</li>
+    </ul>
+  </section>
+
+  <div class="exam-trap">
+    <h4>Sınavda Karıştırılan Kritik Noktalar ve Çeldiriciler</h4>
+    <ul>
+      <li><strong>Tuzak 1:</strong> "Betimsel istatistik, eldeki örneklem verileriyle Türkiye genelinde enflasyon tahmini yapar" ifadesi KESİNLİKLE YANLIŞTIR. Tahmin ve genelleme yapmak Betimsel değil, Çıkarımsal (Endüktif) istatistiğin görevidir.</li>
+      <li><strong>Tuzak 2:</strong> John Graunt ile Adolphe Quetelet karıştırılmamalıdır. Londra ölüm kayıtları ve ilk hayat tablosu <strong>John Graunt</strong>'a; sosyal fizik ve "ortalama insan" kavramı <strong>Adolphe Quetelet</strong>'e aittir.</li>
+      <li><strong>Tuzak 3:</strong> TÜİK'in 2005 yılındaki 5429 sayılı kanundan önceki tarihi adı <strong>DİE (Devlet İstatistik Enstitüsü)</strong>'dür.</li>
+    </ul>
   </div>
+</article>
 
-  <div class="lead-box">
-    <p>İstatistik; belirsizlik içeren durumlarda doğru kararlar alabilmek amacıyla verilerin toplanması, düzenlenmesi, özetlenmesi, analiz edilmesi ve sonuçların yorumlanarak genellemelere ulaşılmasını sağlayan bilim dalıdır.</p>
-  </div>
-
-  <h3>1.1. İstatistiğin İki Temel Dalı</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>İstatistik Türü</th>
-        <th>Tanımı ve Kapsamı</th>
-        <th>Kullanılan Araçlar ve Örnekler</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Betimsel (Tasviri) İstatistik</strong></td>
-        <td>Toplanan ham verilerin anlaşılır hale getirilmesi için tablolar, grafikler ve özet ölçülerle (ortalama, standart sapma) sunulmasıdır. Genelleme yapmaz, sadece eldeki veriyi açıklar.</td>
-        <td>Frekans tabloları, çubuk/daire grafikler, histogram, aritmetik ortalama, medyan, mod, varyans.</td>
-      </tr>
-      <tr>
-        <td><strong>Çıkarımsal (Endüktif) İstatistik</strong></td>
-        <td>Örneklemden elde edilen verileri ve olasılık teorisini kullanarak temsil ettiği büyük anakütle (evren) hakkında tahminler yapma ve hipotezleri test etme sürecidir.</td>
-        <td>Güven aralıkları, parametre tahmini, Z testi, t testi, ANOVA, Ki-Kare testi, regresyon analizi.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>1.2. İstatistiğin Tarihsel Gelişimi</h3>
-  <p>İstatistik kelimesi Latince <em>"status"</em> (devlet) kelimesinden türemiştir. İlk olarak nüfus sayımları, vergi ve asker toplama amacıyla devlet idarecileri tarafından kullanılmıştır. 17. yüzyılda şans oyunları analizleriyle olasılık teorisi (Pascal, Fermat) doğmuş; 19. ve 20. yüzyıllarda Gauss, Pearson, Fisher gibi matematikçilerle modern çıkarımsal istatistiğin temelleri atılmıştır.</p>
-
-  <div class="box tuzak">
-    <h4>⚠️ Sınav Çeldiricisi: Betimsel vs. Çıkarımsal Ayrımı</h4>
-    <p>Sınavda <em>"Bir sınıftaki 40 öğrencinin not ortalamasının 68 olarak hesaplanması ve başarı grafiğinin çizilmesi"</em> sorulduğunda bu <strong>Betimsel İstatistiktir</strong>. Fakat <em>"Bu 40 öğrenciden yola çıkarak tüm üniversitedeki 10.000 öğrencinin ortalamasının tahmin edilmesi"</em> denildiğinde bu <strong>Çıkarımsal İstatistiktir</strong>.</p>
-  </div>
-
-  
-  <h3>1.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Toplanan verileri özetleyen, tablo ve grafiklerle anlaşılır kılan ancak genelleme yapmayan istatistik dalı hangisidir?</span>
-      <span class="qtag">Ünite 1 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Çıkarımsal İstatistik</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 1 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Toplanan verileri özetleyen, tablo ve grafiklerle anlaşılır kılan ancak genelleme yapmayan istatistik dalı hangisidir?</span>
+<span class="qtag">Ünite 1 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Çıkarımsal İstatistik</li>
 <li class="ok"><strong>B)</strong> Betimsel (Tasviri) İstatistik</li>
 <li><strong>C)</strong> Parametrik İstatistik</li>
 <li><strong>D)</strong> Matematiksel Modelleme</li>
 <li><strong>E)</strong> Regresyon İstatistiği</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Verileri yalnızca özetleyen, sınıflandıran ve grafiklerle betimleyen dal Betimsel İstatistiktir. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="2">
-    <summary>
-      <span class="qno">Soru 2</span>
-      <span class="qtitle">Örneklemden elde edilen bulgularla ana kütle hakkında tahmin ve genelleme yapma süreci nasıl adlandırılır?</span>
-      <span class="qtag">Ünite 1 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li class="ok"><strong>A)</strong> Çıkarımsal İstatistik</li>
+</div>
+</details>
+<details class="sq" data-q="2">
+<summary>
+<span class="qno">Soru 2</span>
+<span class="qtitle">Örneklemden elde edilen bulgularla ana kütle hakkında tahmin ve genelleme yapma süreci nasıl adlandırılır?</span>
+<span class="qtag">Ünite 1 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li class="ok"><strong>A)</strong> Çıkarımsal İstatistik</li>
 <li><strong>B)</strong> Betimsel İstatistik</li>
 <li><strong>C)</strong> Basit Seri</li>
 <li><strong>D)</strong> Histogram</li>
 <li><strong>E)</strong> Frekans Dağılımı</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Örneklemden anakütleye genelleme yapma bilimi Çıkarımsal (Endüktif) İstatistiktir. Doğru seçenek <strong>A</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u1">
+      
+<article class="unit-article">
+  <h2>2. Ünite: İstatistiksel Çıkarsama Süreci ve İstatistikte Temel Kavramlar</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Anakütle ve örneklem ilişkisini, parametre ve istatistik ayrımını, değişken türlerini, Stevens'ın dört temel ölçme ölçeğini (Nominal, Ordinal, Interval, Ratio) ve bunların matematiksel sınırlarını, istatistiksel araştırmalarda ortaya çıkan hata türlerini derinlemesine öğrenmektir.
+  </div>
+
+  <section>
+    <h3>2.1. İstatistiksel Çıkarsama Süreci: Anakütle ve Örneklem</h3>
+    <p>İstatistiksel araştırmalar evrensel bir bilgi arayışıdır. Bu arayışın temel yapı taşları şunlardır:</p>
+    
+    <h4>2.1.1. Anakütle (Popülasyon / Evren - $N$)</h4>
+    <p>Hakkında araştırma yapılan, ortak bir veya birden çok özelliği paylaşan, sınırları açıkça belirlenmiş birimlerin (insanlar, şirketler, makineler, banka işlemleri) oluşturduğu eksiksiz bütündür.</p>
+    <ul>
+      <li><strong>Sonlu Anakütle:</strong> Birim sayısı sayılabilir ve sınırlı olan anakütledir (Örneğin: İstanbul Üniversitesi'ne kayıtlı 45.000 öğrenci, Türkiye'deki 81 il).</li>
+      <li><strong>Sonsuz Anakütle:</strong> Birim sayısı teorik olarak sınırsız olan veya sayılamayacak kadar çok olan anakütledir (Örneğin: Bir üretim bandından sürekli çıkan vidalar, denizdeki balık sayısı, gelecekteki borsa işlemleri).</li>
+    </ul>
+
+    <h4>2.1.2. Örneklem ($n$) ve Örnekleme</h4>
+    <p>Anakütlenin tamamını incelemek (tam sayım / censo) çoğu zaman fahiş maliyet, aşırı zaman kaybı veya test edilen ürünün yok olması (tahribatlı muayene; örneğin bir ampulün ömrünü ölçmek için ampulü patlatmak gerekir) nedeniyle imkânsızdır. Bu nedenle anakütleyi en iyi şekilde temsil eden alt kümeye <strong>Örneklem</strong>, bu alt kümeyi seçme sürecine <strong>Örnekleme</strong> denir.</p>
+
+    <h4>2.1.3. Parametre vs. İstatistik Ayrımı</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kavram</th>
+          <th>Tanım</th>
+          <th>Kapsam</th>
+          <th>Simgeler</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Parametre</strong></td>
+          <td>Anakütlenin tamamı incelendiğinde elde edilen sabit sayısal değerdir. Genellikle bilinmez, tahmin edilmeye çalışılır.</td>
+          <td>Anakütle ($N$)</td>
+          <td>Ortalama: $\mu$, Varyans: $\sigma^2$, Standart Sapma: $\sigma$, Oran: $P$</td>
+        </tr>
+        <tr>
+          <td><strong>İstatistik (Tahmin Edici)</strong></td>
+          <td>Örneklemdeki birimlerden hesaplanan ve örneklemden örnekleme değişebilen değişken sayısal değerdir.</td>
+          <td>Örneklem ($n$)</td>
+          <td>Ortalama: $\bar{X}$, Varyans: $s^2$, Standart Sapma: $s$, Oran: $p$</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>2.2. Değişken Kavramı ve Türleri</h3>
+    <p>Birimden birime farklı değerler alabilen nitelik veya niceliksel özelliklere <strong>Değişken</strong> denir. İstatistikte değişkenler iki temel eksende sınıflandırılır:</p>
+
+    <h4>2.2.1. Niteliksel (Kalitatif / Kategorik) Değişkenler</h4>
+    <p>Sayılarla ölçülemeyen, ancak durum, sınıf veya kategori belirten değişkenlerdir. Örnek: Cinsiyet (Erkek/Kadın), Kan Grubu (A, B, AB, 0), Medeni Hal, Eğitim Durumu, İl Trafik Kodları.</p>
+
+    <h4>2.2.2. Niceliksel (Kantitatif / Sayısal) Değişkenler</h4>
+    <p>Miktar belirten, ölçülebilen veya sayılabilen değişkenlerdir. Kendi içinde ikiye ayrılır:</p>
+    <ul>
+      <li><strong>Kesikli (Ayrık / Discrete) Değişken:</strong> Yalnızca belirli tam sayı değerleri alan, sayarak elde edilen değişkenlerdir. İki değer arasında sonsuz sayıda ara değer alamaz. (Örneğin: Bir ailedeki çocuk sayısı: 1, 2, 3 olabilir ama 2.45 olamaz; kütüphanedeki kitap sayısı, hatalı ürün adedi).</li>
+      <li><strong>Sürekli (Continuous) Değişken:</strong> Belirli bir aralıkta sonsuz sayıda değer alabilen, ölçme yoluyla elde edilen değişkenlerdir. Hassas ölçüm araçlarıyla ondalıklı değerler alabilir. (Örneğin: Boy uzunluğu: 175.4 cm, vücut ağırlığı: 68.35 kg, sıcaklık: 23.7°C, sınavı bitirme süresi: 42.5 dakika).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>2.3. Stevens'ın Dört Temel Ölçme Ölçeği</h3>
+    <p>Stanley Smith Stevens (1946) tarafından geliştirilen ve istatistiksel veri analizinin temelini oluşturan dört ölçek türü şunlardır:</p>
+
+    <div class="card">
+      <h4>1. İsimsel (Nominal / Sınıflayıcı) Ölçek</h4>
+      <p>Ölçmenin en zayıf ve en ilkel düzeyidir. Birimleri sadece isimlerine veya özelliklerine göre gruplandırır. Gruplar arasında büyüklük, küçüklük, üstünlük veya öncelik ilişkisi YOKTUR. Verilen sayılar sadece birer "etiket"tir.</p>
+      <p><em>Örnekler:</em> Cinsiyet (1: Kadın, 2: Erkek), Futbolcu forma numaraları, Otomobil plakaları (34: İstanbul, 06: Ankara), Göz renkleri, Dinler.</p>
+      <p><em>Yapılabilen İşlemler:</em> Toplama, çıkarma, çarpma, bölme KESİNLİKLE YAPILAMAZ. Yalnızca frekans (sayım), yüzde ve <strong>Mod (Tepe Değeri)</strong> hesaplanabilir.</p>
     </div>
-  </details>
 
+    <div class="card">
+      <h4>2. Sıralama (Ordinal) Ölçeği</h4>
+      <p>Birimlerin ölçülen özelliğe sahip oluş derecesine göre küçükten büyüğe veya büyükten küçüğe dizilmesini sağlar. Üstünlük ve sıra ilişkisi vardır; ancak kategoriler arasındaki farkların büyüklüğü EŞİT veya ÖLÇÜLEBİLİR DEĞİLDİR.</p>
+      <p><em>Örnekler:</em> Askeri rütbeler (Teğmen &lt; Üsteğmen &lt; Yüzbaşı), Yarışma dereceleri (1., 2., 3.), Müşteri memnuniyet derecesi (1: Hiç memnun değilim ... 5: Çok memnunum - Likert ölçeği), Eğitim seviyesi (İlkokul, Ortaokul, Lise, Lisans).</p>
+      <p><em>Yapılabilen İşlemler:</em> Farklar eşit olmadığı için toplama ve aritmetik ortalama yapılamaz. Sıralama yapılabilir; <strong>Medyan (Ortanca)</strong>, Yüzdelikler ve Sıra Korelasyonu (Spearman) hesaplanabilir.</p>
+    </div>
 
-</section>
+    <div class="card">
+      <h4>3. Aralık (Interval / Eşit Aralıklı) Ölçeği</h4>
+      <p>Birimler arasındaki mesafeler eşittir. Ancak bu ölçekte MUTLAK (DOĞAL / GERÇEK) BİR SIFIR NOKTASI YOKTUR. Sıfır noktası insanların belirlediği İTİBARİ (KEYFİ / İZAFİ) bir başlangıç noktasıdır. Sıfır değeri, özelliğin tamamen yok olduğu anlamına GELMEZ.</p>
+      <p><em>Örnekler:</em> Sıcaklık derecesi (0°C suyun donma noktasıdır, ısının tamamen yok olduğu mutlak sıfır değildir; 20°C, 10°C'nin 2 katı sıcaklık demek DEĞİLDİR!), Takvim yılları (0 yılı tarihin başlangıcı değildir), IQ zekâ puanı (0 IQ zekânın hiç olmadığı anlamına gelmez).</p>
+      <p><em>Yapılabilen İşlemler:</em> Toplama ve çıkarma yapılabilir, aralıklar kıyaslanabilir. Fakat ORANLAMA (çarpma ve bölme) YAPILAMAZ. Aritmetik ortalama, standart sapma hesaplanabilir.</p>
+    </div>
 
-<section class="unit" data-i="1" id="u1">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 02</span>
-    <h2>İstatistiksel Çıkarsama Süreci: Anakütle, Örneklem, Değişken ve Ölçek Türleri</h2>
+    <div class="card">
+      <h4>4. Oran (Ratio / Oransal) Ölçeği</h4>
+      <p>Ölçmenin en gelişmiş ve en güçlü düzeyidir. Eşit aralıklara ek olarak <strong>MUTLAK, GERÇEK VE DOĞAL BİR SIFIR NOKTASI</strong> vardır. Sıfır değeri, ölçülen özelliğin kesin olarak YOKLUĞUNU ifade eder.</p>
+      <p><em>Örnekler:</em> Ağırlık (0 kg = kütle yok; 80 kg, 40 kg'ın tam 2 katıdır), Boy uzunluğu, Gelir (0 TL = gelir yok), Yaş, Hız, Üretim miktarı, Öğrenci sayısı.</p>
+      <p><em>Yapılabilen İşlemler:</em> Her türlü matematiksel işlem (toplama, çıkarma, çarpma, bölme, oranlama) yapılabilir. Geometrik ortalama, harmonik ortalama ve varyans katsayısı dahil tüm istatistiksel analizler uygulanabilir.</p>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Ölçek Türü</th>
+          <th>Sıralama</th>
+          <th>Eşit Aralık</th>
+          <th>Mutlak Sıfır</th>
+          <th>Uygun Merkezi Eğilim</th>
+          <th>Örnek Değişken</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>İsimsel (Nominal)</strong></td>
+          <td>Hayır</td>
+          <td>Hayır</td>
+          <td>Hayır</td>
+          <td>Mod</td>
+          <td>Cinsiyet, Kan grubu, Plaka</td>
+        </tr>
+        <tr>
+          <td><strong>Sıralama (Ordinal)</strong></td>
+          <td>Evet</td>
+          <td>Hayır</td>
+          <td>Hayır</td>
+          <td>Medyan</td>
+          <td>Askeri rütbe, Yarışma derecesi</td>
+        </tr>
+        <tr>
+          <td><strong>Aralık (Interval)</strong></td>
+          <td>Evet</td>
+          <td>Evet</td>
+          <td>Hayır (İtibaridir)</td>
+          <td>Aritmetik Ortalama</td>
+          <td>Sıcaklık (°C), Takvim yılı, IQ</td>
+        </tr>
+        <tr>
+          <td><strong>Oran (Ratio)</strong></td>
+          <td>Evet</td>
+          <td>Evet</td>
+          <td>Evet (Doğaldır)</td>
+          <td>Aritmetik, Geometrik, Harmonik</td>
+          <td>Gelir, Ağırlık, Boy, Yaş</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>2.4. İstatistikte Hata Kavramı ve Türleri</h3>
+    <p>Bir araştırmada ölçülen veya tahmin edilen değer ile gerçek değer arasındaki farka <strong>Hata</strong> denir. İstatistikte hatalar ikiye ayrılır:</p>
+    <ul>
+      <li><strong>Rastsal (Tesadüfi / Şans) Hataları:</strong> Örnekleme sürecinin doğasından kaynaklanan, yönü (artı veya eksi) ve büyüklüğü önceden kestirilemeyen, kontrol dışı hatalardır. Örneklem hacmi ($n$) büyüdükçe rastsal hatalar küçülür ve ortalaması sıfıra yaklaşır.</li>
+      <li><strong>Sistematik (Yanlılık / Bias) Hatalar:</strong> Ölçüm aletinin bozuk olması (örneğin terazinin daima 100 gram fazla tartması), araştırmacının taraflı davranması veya örneklem seçimindeki metodolojik kusurlardan kaynaklanan hatalardır. Hep aynı yönde etki eder ve örneklem sayısı artsa bile kendiliğinden düzelmez.</li>
+    </ul>
+  </section>
+
+  <div class="exam-trap">
+    <h4>Sınavda Karıştırılan Kritik Noktalar ve Çeldiriciler</h4>
+    <ul>
+      <li><strong>Sınav Sorusu:</strong> "Ordudaki rütbeler - Cinsiyet - Boy uzunluğu değişkenlerinin ölçek türleri sırasıyla nedir?"<br>
+      <em>Cevap:</em> Rütbe = <strong>Sıralama (Ordinal)</strong>, Cinsiyet = <strong>İsimsel (Nominal)</strong>, Boy uzunluğu = <strong>Oran (Ratio)</strong>.</li>
+      <li><strong>Tuzak Soru:</strong> "Sıfır noktasının 'yokluk' anlamına GELMEDİĞİ, izafi olduğu ölçek hangisidir?"<br>
+      <em>Cevap:</em> Kesinlikle <strong>Aralık (Interval)</strong> ölçeğidir. Termometredeki 0°C ısının bittiği anlamına gelmez!</li>
+      <li><strong>Parametre vs İstatistik:</strong> $\mu$ ve $\sigma$ parametredir (anakütle); $ar{X}$ ve $s$ istatistiktir (örneklem).</li>
+    </ul>
   </div>
+</article>
 
-  <div class="lead-box">
-    <p>İstatistiksel araştırmalarda doğru yöntemin seçilebilmesi, araştırılan birimlerin özelliklerinin hangi ölçek düzeyinde ve hangi değişken türünde ölçüldüğünün bilinmesine bağlıdır.</p>
-  </div>
-
-  <h3>2.1. Anakütle (Popülasyon) ve Örneklem Kavramları</h3>
-  <div class="box formul">
-    <dl>
-      <dt>Anakütle (Evren / Popülasyon)</dt>
-      <dd>Hakkında bilgi edinilmek istenen, araştırma kapsamına giren aynı türden tüm birimlerin oluşturduğu bütündür. Anakütleyi betimleyen sayısal değerlere <strong>PARAMETRE</strong> denir (örn. &mu;, &sigma;²).</dd>
-      <dt>Örneklem (Sample)</dt>
-      <dd>Anakütleyi temsil etmek üzere belirli örnekleme yöntemleriyle seçilen anakütlenin bir alt kümesidir. Örneklemden hesaplanan sayısal değerlere <strong>İSTATİSTİK</strong> denir (örn. x̄, s²).</dd>
-    </dl>
-  </div>
-
-  <h3>2.2. Değişken Türleri</h3>
-  <ul>
-    <li><strong>Niteliksel (Kategorik) Değişkenler:</strong> Ölçülemeyen, sınıflandırılabilen özellikler (Cinsiyet, medeni hal, kan grubu, memleket).</li>
-    <li><strong>Niceliksel (Sayısal) Değişkenler:</strong> Sayı ile ifade edilebilen özellikler:
-      <ul>
-        <li><strong>Kesikli Nicel Değişken:</strong> Sadece belirli tam sayı değerleri alabilen, sayma ile elde edilen değişkenler (Bir ailedeki çocuk sayısı, hastanedeki hasta sayısı).</li>
-        <li><strong>Sürekli Nicel Değişken:</strong> Belirli bir aralıkta sonsuz sayıda değer alabilen, ölçümle elde edilen değişkenler (Boy uzunluğu, ağırlık, sıcaklık, süre).</li>
-      </ul>
-    </li>
-  </ul>
-
-  <h3>2.3. Dört Temel Ölçme Düzeyi (Ölçek Türleri)</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Ölçek Türü</th>
-        <th>Tanımı ve Özelliği</th>
-        <th>Matematiksel İşlem</th>
-        <th>Örnekler</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>1. Nominal (Sınıflayıcı) Ölçek</strong></td>
-        <td>Birimleri sadece benzerliklerine göre gruplara ayırır. Büyüklük/küçüklük sıralaması yoktur.</td>
-        <td>Yalnızca frekans (sayma) ve mod.</td>
-        <td>Cinsiyet (Kadın/Erkek), Medeni durum, İl plaka kodları, Forma numaraları.</td>
-      </tr>
-      <tr>
-        <td><strong>2. Ordinal (Sıralayıcı) Ölçek</strong></td>
-        <td>Birimleri belirli bir özelliğe göre büyüklük/üstünlük sırasına koyar. Aralıklar eşit değildir.</td>
-        <td>Sıralama (&gt;, &lt;), medyan, yüzdelikler.</td>
-        <td>Askeri rütbeler, eğitim düzeyi (İlkokul, Lise, Lisans), unvanlar, Likert ölçekleri.</td>
-      </tr>
-      <tr>
-        <td><strong>3. Eşit Aralıklı Ölçek</strong></td>
-        <td>Ölçüm birimleri eşittir ancak mutlak (doğal) sıfır yoktur. Sıfır noktası izafidir (keyfidir).</td>
-        <td>Toplama, çıkarma, aritmetik ortalama.</td>
-        <td>Santigrat sıcaklık (0°C yokluk değildir), Takvim yılı (Milat), Zeka puanı (IQ).</td>
-      </tr>
-      <tr>
-        <td><strong>4. Oranlı Ölçek</strong></td>
-        <td>En gelişmiş ölçektir. Doğal/mutlak sıfır noktası vardır; sıfır tam yokluğu gösterir. Kat hesabı yapılabilir.</td>
-        <td>Tüm matematiksel işlemler (+, &minus;, &times;, &divide;).</td>
-        <td>Ağırlık (kg), Boy uzunluğu (cm), Gelir (TL), Yaş, Hız.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  
-  <h3>2.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Ordudaki rütbeler – Cinsiyet – Bir insanın boy uzunluğu verilerinin ölçek türleri sırasıyla hangisidir? (2025 Vize)</span>
-      <span class="qtag">Ünite 2 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Ordinal – Sürekli nicel – Nominal</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 2 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Ordudaki rütbeler – Cinsiyet – Bir insanın boy uzunluğu verilerinin ölçek türleri sırasıyla hangisidir? (2025 Vize)</span>
+<span class="qtag">Ünite 2 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Ordinal – Sürekli nicel – Nominal</li>
 <li class="ok"><strong>B)</strong> Ordinal – Nominal – Sürekli nicel</li>
 <li><strong>C)</strong> Nominal – Ordinal – Sürekli nicel</li>
 <li><strong>D)</strong> Sürekli nicel – Nominal – Ordinal</li>
 <li><strong>E)</strong> Sürekli nicel – Ordinal – Nominal</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Rütbeler sıralama bildirir (Ordinal); cinsiyet adlandırma/sınıflamadır (Nominal); boy uzunluğu ölçümle elde edilen sürekli nicel değişkendir (Oranlı/Sürekli nicel). Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="2">
-    <summary>
-      <span class="qno">Soru 2</span>
-      <span class="qtitle">Sıfır noktasının 'yokluk' anlamına GELMEDİĞİ, keyfi (itibari) olduğu ölçek türü aşağıdakilerden hangisidir?</span>
-      <span class="qtag">Ünite 2 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Oranlı Ölçek</li>
+</div>
+</details>
+<details class="sq" data-q="2">
+<summary>
+<span class="qno">Soru 2</span>
+<span class="qtitle">Sıfır noktasının 'yokluk' anlamına GELMEDİĞİ, keyfi (itibari) olduğu ölçek türü aşağıdakilerden hangisidir?</span>
+<span class="qtag">Ünite 2 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Oranlı Ölçek</li>
 <li class="ok"><strong>B)</strong> Eşit Aralıklı Ölçek</li>
 <li><strong>C)</strong> Nominal Ölçek</li>
 <li><strong>D)</strong> Ordinal Ölçek</li>
 <li><strong>E)</strong> Sıralayıcı Ölçek</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Eşit aralıklı ölçekte (Santigrat sıcaklık, takvim yılı gibi) sıfır noktası izafidir, sıcaklığın hiç olmadığı anlamına gelmez. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="3">
-    <summary>
-      <span class="qno">Soru 3</span>
-      <span class="qtitle">Bir anakütleyi temsil eden sayısal karakteristik değerlere ne ad verilir?</span>
-      <span class="qtag">Ünite 2 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> İstatistik</li>
+</div>
+</details>
+<details class="sq" data-q="3">
+<summary>
+<span class="qno">Soru 3</span>
+<span class="qtitle">Bir anakütleyi temsil eden sayısal karakteristik değerlere ne ad verilir?</span>
+<span class="qtag">Ünite 2 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> İstatistik</li>
 <li class="ok"><strong>B)</strong> Parametre</li>
 <li><strong>C)</strong> Değişken</li>
 <li><strong>D)</strong> Frekans</li>
 <li><strong>E)</strong> Sapma</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        Anakütleye ait değerlere Parametre (&mu;, &sigma;), örnekleme ait değerlere ise İstatistik (x̄, s) denir. Doğru seçenek <strong>B</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        Anakütleye ait değerlere Parametre (μ, σ), örnekleme ait değerlere ise İstatistik (x̄, s) denir. Doğru seçenek <strong>B</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u2">
+      
+<article class="unit-article">
+  <h2>3. Ünite: Verilerin Derlenmesi, Düzenlenmesi ve Sunumu</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Ham verilerin istatistiksel serilere (basit, frekans, sınıflanmış) dönüştürülme tekniklerini, sınıf büyüklüğü ve sınıf sınırlarının belirlenmesini, kümülatif frekansların mantığını ve veri türüne uygun doğru grafik gösterimlerini (Histogram, Ogiv, Box-Plot, Pasta) eksiksiz öğrenmektir.
+  </div>
+
+  <section>
+    <h3>3.1. Verilerin Düzenlenmesi ve Seri Türleri</h3>
+    <p>Toplanan ham veriler dağınık, düzensiz ve karmaşıktır. Bu verilerden anlamlı sonuçlar çıkarabilmek için veriler küçükten büyüğe dizilir ve seriler haline getirilir.</p>
+
+    <h4>3.1.1. Basit Seri</h4>
+    <p>Gözlem değerlerinin ham halde küçükten büyüğe doğru sıralanmasıyla elde edilen en temel seridir. Gözlem sayısı az olduğunda kullanılır.</p>
+    <p><em>Örnek:</em> Bir sınavdan alınan notlar: $35, 42, 50, 50, 65, 70, 75, 80, 80, 95$ ($n = 10$).</p>
+
+    <h4>3.1.2. Frekans (Sıklık) Serisi</h4>
+    <p>Her gözlem değerinin ($x_i$) kaç kez tekrarlandığını gösteren sıklıkların ($f_i$) listelendiği tablodur. Toplam frekans örneklem hacmine eşittir: $\sum f_i = n$.</p>
+    <table class="data-table" style="max-width:350px;">
+      <thead><tr><th>Gözlem ($x_i$)</th><th>Frekans ($f_i$)</th></tr></thead>
+      <tbody>
+        <tr><td>50</td><td>3</td></tr>
+        <tr><td>60</td><td>7</td></tr>
+        <tr><td>70</td><td>12</td></tr>
+        <tr><td>80</td><td>8</td></tr>
+        <tr><td><strong>Toplam</strong></td><td><strong>30</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h4>3.1.3. Sınıflanmış (Gruplanmış) Seri</h4>
+    <p>Gözlem sayısı çok fazla olduğunda veya değişken sürekli olduğunda, veriler belirli aralıklara (sınıflara) bölünür. Bu seriye <strong>Sınıflanmış Seri</strong> denir.</p>
+    <ul>
+      <li><strong>Sınıf Limitleri:</strong> Bir sınıfın alt sınırı ($Alt$) ve üst sınırıdır ($Üst$). Örneğin: $20 - 30$ sınıfında alt limit 20, üst limit 30'dur.</li>
+      <li><strong>Sınıf Büyüklüğü (Genişliği - $h$):</strong> Sınıfın üst limiti ile alt limiti arasındaki farktır: $h = Üst - Alt$.</li>
+      <li><strong>Sınıf Orta Değeri ($m_i$):</strong> O sınıfı temsil eden aritmetik ortalama değerdir:
+        $$m_i = rac{Alt + Üst}{2}$$
+      </li>
+      <li><strong>Birikimli (Kümülatif) Frekanslar:</strong>
+        <ul>
+          <li><em>'-den Az' Frekansı ($F_{az}$):</em> Belirli bir sınıfın üst sınırından daha küçük değere sahip toplam gözlem sayısıdır (Yukarıdan aşağıya frekanslar toplanarak gider). Medyan ve kartillerin hesabında kullanılır.</li>
+          <li><em>'-den Çok' Frekansı ($F_{cok}$):</em> Belirli bir sınıfın alt sınırından daha büyük değere sahip toplam gözlem sayısıdır (Aşağıdan yukarıya toplanarak gider).</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>3.2. Grafikler ve Kullanım Standartları</h3>
+    <p>İstatistiksel verilerin görselleştirilmesinde verinin türüne göre doğru grafik seçilmelidir:</p>
+
+    <div class="card">
+      <h4>1. Histogram</h4>
+      <p>Sınıflanmış sürekli veriler için kullanılır. Yatay eksende sınıf sınırları, dikey eksende frekanslar yer alır. Sütunlar <strong>BİTİŞİKTİR</strong> (aralarında boşluk yoktur), çünkü değişken süreklidir. Her bir dikdörtgenin alanı o sınıfın frekansını temsil eder.</p>
     </div>
-  </details>
 
+    <div class="card">
+      <h4>2. Çubuk (Bar) Diyagramı</h4>
+      <p>Niteliksel veya kesikli değişkenler için kullanılır. Sütunların genişlikleri eşit olup aralarında <strong>BOŞLUKLAR VARDIR</strong>. Sütunların yüksekliği frekansı gösterir.</p>
+    </div>
 
-</section>
+    <div class="card">
+      <h4>3. Frekans Poligonu</h4>
+      <p>Histogramın her bir sütununun tepe orta noktalarının düz çizgilerle birleştirilmesiyle elde edilen kırık çizgi grafiğidir. Başlangıç ve bitiş noktaları yatay eksene birleştirilerek alan kapatılır.</p>
+    </div>
 
-<section class="unit" data-i="2" id="u2">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 03</span>
-    <h2>Verilerin Düzenlenmesi ve Sunumu: Seriler, Tablolar ve Grafikler</h2>
+    <div class="card">
+      <h4>4. Ogiv Eğrisi (Kümülatif Frekans Eğrisi)</h4>
+      <p>'-den az' birikimli frekansların sınıf üst sınırlarına göre çizilmesiyle elde edilen "S" şeklindeki eğridir. Medyan ($Me$) ve kartillerin grafiksel olarak belirlenmesinde temel araçtır.</p>
+    </div>
+
+    <div class="card">
+      <h4>5. Daire (Pasta) Grafiği</h4>
+      <p>Nitel veya oransal verilerin bir bütün içindeki paylarını göstermek için kullanılır. Daire 360 derecedir. Her grubun merkez açısı şu formülle hesaplanır:</p>
+      $$lpha_i = rac{f_i}{\sum f_i} 	imes 360^\circ$$
+      <p><em>Örnek:</em> 200 kişilik bir grupta 50 kişi A kategorisindeyse, açısı: $rac{50}{200} 	imes 360^\circ = 90^\circ$ (çeyrek daire) olur.</p>
+    </div>
+
+    <div class="card">
+      <h4>6. Kutu Çizgisi (Box-and-Whisker) Grafiği</h4>
+      <p>John Tukey tarafından geliştirilen ve serinin <strong>Beş Sayılı Özetini</strong> gösteren grafiktir:
+      <ol>
+        <li>En Küçük Değer ($Min$)</li>
+        <li>Birinci Kartil ($Q_1$ - %25)</li>
+        <li>İkinci Kartil / Medyan ($Q_2$ - %50)</li>
+        <li>Üçüncü Kartil ($Q_3$ - %75)</li>
+        <li>En Büyük Değer ($Max$)</li>
+      </ol>
+      Kutu grafiği dağılımın simetrisini ve aykırı değerleri (outlier) anında gösterir.</p>
+    </div>
+  </section>
+
+  <div class="exam-trap">
+    <h4>Sınavda Karıştırılan Noktalar</h4>
+    <ul>
+      <li><strong>Histogram vs Çubuk Grafik:</strong> Sütunlar birbirine yapışık ise Histogramdır (sürekli veri); sütunlar arasında boşluk varsa Çubuk grafiktir (kategorik/kesikli veri).</li>
+      <li><strong>Ogiv Eğrisi:</strong> Birikimli frekansların grafiğidir ve medyanın grafik üzerinden bulunmasını sağlar.</li>
+    </ul>
   </div>
+</article>
 
-  <div class="lead-box">
-    <p>Toplanan ham veriler dağınık ve anlamsızdır. Verileri anlamlı hale getirmek için basit seri, frekans serisi veya gruplanmış seri haline getirilir ve uygun grafiklerle görselleştirilir.</p>
-  </div>
-
-  <h3>3.1. İstatistiksel Seri Türleri</h3>
-  <ol class="adim">
-    <li><strong>Basit Seri:</strong> Gözlem değerlerinin küçükten büyüğe (veya büyükten küçüğe) doğru ham haliyle sıralandığı dizidir (örn: 12, 15, 18, 22, 25).</li>
-    <li><strong>Frekans Serisi (Tekerrür Serisi):</strong> Gözlem değerlerinin kaçar kez tekrarlandığının (frekanslarının - f) yanına yazılarak gösterildiği seridir (özellikle kesikli değişkenlerde).</li>
-    <li><strong>Gruplanmış Seri:</strong> Sürekli değişkenlerde çok sayıda farklı gözlem değeri olduğunda, verilerin belirli sınıf aralıklarına (gruplara) bölünerek frekanslarının gösterildiği seridir (örn: 10-20 aralığı: 5 kişi, 20-30 aralığı: 12 kişi).</li>
-    <li><strong>Birikimli (Kümülatif) Frekans Serisi:</strong> Frekansların ardışık toplanarak '... den az' veya '... den fazla' şeklinde kümülatif gösterimidir.</li>
-  </ol>
-
-  <h3>3.2. Grafikler ve Kullanım Alanları</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Grafik Türü</th>
-        <th>Uygun Veri Türü</th>
-        <th>Özellikleri</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Histogram</strong></td>
-        <td>Gruplanmış sürekli nicel veriler</td>
-        <td>Birbirine bitişik dikdörtgen sütunlardan oluşur. Sütunların alanı sınıf frekansıyla orantılıdır.</td>
-      </tr>
-      <tr>
-        <td><strong>Frekans Poligonu</strong></td>
-        <td>Gruplanmış sürekli nicel veriler</td>
-        <td>Histogram sütunlarının tepe orta noktalarının düz çizgilerle birleştirilmesiyle elde edilen kapalı çokgendir.</td>
-      </tr>
-      <tr>
-        <td><strong>Çubuk (Bar) Grafik</strong></td>
-        <td>Niteliksel veya kesikli nicel veriler</td>
-        <td>Sütunlar arasında boşluk bırakılır; kategorilerin karşılaştırılmasında kullanılır.</td>
-      </tr>
-      <tr>
-        <td><strong>Daire (Pasta) Grafik</strong></td>
-        <td>Niteliksel / Oransal veriler</td>
-        <td>Bir bütünün parçalarını göstermek için kullanılır (Açı hesabı: &alpha; = (f / n) &times; 360°).</td>
-      </tr>
-    </tbody>
-  </table>
-
-  
-  <h3>3.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Verilerin sınıf (grup) büyüklüklerini dikkate alarak karşılaştırılmasını mümkün kılan bitişik sütunlu grafik hangisidir? (2025 Vize)</span>
-      <span class="qtag">Ünite 3 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Çubuk Grafik</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 3 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Verilerin sınıf (grup) büyüklüklerini dikkate alarak karşılaştırılmasını mümkün kılan bitişik sütunlu grafik hangisidir? (2025 Vize)</span>
+<span class="qtag">Ünite 3 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Çubuk Grafik</li>
 <li><strong>B)</strong> Eğri Grafik</li>
 <li class="ok"><strong>C)</strong> Histogram</li>
 <li><strong>D)</strong> Düz Grafik</li>
 <li><strong>E)</strong> Nokta Grafik</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Gruplanmış sürekli nicel verilerin sınıf aralıkları ve frekanslarını alan bazında gösteren bitişik sütunlu grafik Histogramdır. Doğru seçenek <strong>C</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="2">
-    <summary>
-      <span class="qno">Soru 2</span>
-      <span class="qtitle">Sadece gözlem değerlerinin ham haliyle küçükten büyüğe sıralandığı diziler nasıl isimlendirilir? (2025 Vize)</span>
-      <span class="qtag">Ünite 3 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Gruplanmış Seri</li>
+</div>
+</details>
+<details class="sq" data-q="2">
+<summary>
+<span class="qno">Soru 2</span>
+<span class="qtitle">Sadece gözlem değerlerinin ham haliyle küçükten büyüğe sıralandığı diziler nasıl isimlendirilir? (2025 Vize)</span>
+<span class="qtag">Ünite 3 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Gruplanmış Seri</li>
 <li><strong>B)</strong> Bileşik Seri</li>
 <li class="ok"><strong>C)</strong> Basit Seri</li>
 <li><strong>D)</strong> Kümülatif Seri</li>
 <li><strong>E)</strong> Frekans Serisi</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Gözlemlerin ham sıralı haline Basit Seri denir. Doğru seçenek <strong>C</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u3">
+      
+<article class="unit-article">
+  <h2>4. Ünite: İstatistikte Önemli Notasyonlar</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> İstatistik formüllerinin temel matematiksel dili olan Toplam Sembolünün ($\sum$) cebirsel özelliklerini, çarpım operatörünü ($\prod$), faktöriyel hesabını ve yuvarlama kurallarını hatasız biçimde uygulayabilme becerisi kazandırmaktır.
+  </div>
+
+  <section>
+    <h3>4.1. Toplam Sembolü ($\sum$ / Sigma) ve Cebirsel Kuralları</h3>
+    <p>Toplam sembolü, çok sayıda terimin toplamını kısa ve öz biçimde göstermek için kullanılan Yunan harfidir. Gösterimi:</p>
+    $$\sum_{i=1}^n x_i = x_1 + x_2 + x_3 + \dots + x_n$$
+    <p>Burada $i$ alt indis (indeks), $1$ başlangıç değeri, $n$ ise bitiş değeridir.</p>
+
+    <h4>Sigma Operatörünün Hayati Kuralları:</h4>
+    
+    <div class="formula-box">
+      <strong>Kural 1: Sabit Sayının Toplamı</strong>
+      $$\sum_{i=1}^n c = n \cdot c$$
+      <p><em>Örnek:</em> $\sum_{i=1}^5 4 = 4 + 4 + 4 + 4 + 4 = 5 	imes 4 = 20$.</p>
     </div>
-  </details>
 
+    <div class="formula-box">
+      <strong>Kural 2: Sabit Çarpanın Dışarı Alınması</strong>
+      $$\sum_{i=1}^n c \cdot x_i = c \sum_{i=1}^n x_i$$
+      <p><em>Örnek:</em> $\sum_{i=1}^3 2 x_i = 2(x_1 + x_2 + x_3)$. Eğer $\sum x_i = 15$ ise sonuç $2 	imes 15 = 30$'dur.</p>
+    </div>
 
-</section>
+    <div class="formula-box">
+      <strong>Kural 3: Toplam ve Fark Üzerine Dağılma</strong>
+      $$\sum_{i=1}^n (x_i \pm y_i) = \sum_{i=1}^n x_i \pm \sum_{i=1}^n y_i$$
+    </div>
 
-<section class="unit" data-i="3" id="u3">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 04</span>
-    <h2>İstatistikte Önemli Notasyonlar: Toplam (&sum;) ve Çarpım (&prod;) Cebri</h2>
-  </div>
+    <div class="formula-box">
+      <strong>Kural 4: Lineer Kombinasyon</strong>
+      $$\sum_{i=1}^n (a x_i + b) = a \sum_{i=1}^n x_i + n \cdot b$$
+    </div>
 
-  <div class="lead-box">
-    <p>İstatistiksel formüllerin temelini oluşturan toplam (Sigma - &sum;) ve çarpım (Pi - &prod;) sembolleri, çok sayıdaki gözlem değerinin matematiksel olarak kısa ve özlü biçimde ifade edilmesini sağlar.</p>
-  </div>
+    <div class="note-box" style="border-left-color: #C53030;">
+      <strong>EN ÇOK YAPILAN HATA: Toplamların Çarpımı ve Kareleri Kuralı</strong>
+      <ul>
+        <li>$$\sum_{i=1}^n (x_i \cdot y_i) 
+eq \left(\sum_{i=1}^n x_iight) \cdot \left(\sum_{i=1}^n y_iight)$$
+        Çarpımların toplamı, toplamların çarpımına KESİNLİKLE EŞİT DEĞİLDİR!</li>
+        <li>$$\sum_{i=1}^n x_i^2 
+eq \left(\sum_{i=1}^n x_iight)^2$$
+        Karelerin toplamı, toplamın karesine KESİNLİKLE EŞİT DEĞİLDİR!</li>
+      </ul>
+    </div>
 
-  <h3>4.1. Toplam Sembolü (&sum;) ve Temel Cebirsel Kuralları</h3>
-  <div class="box formul">
-    <p style="text-align:center; font-size:17px; font-weight:800;">
-      <span class="f">&sum;<sub>i=1</sub><sup>n</sup> X<sub>i</sub> = X<sub>1</sub> + X<sub>2</sub> + ... + X<sub>n</sub></span>
-    </p>
-    <h4>Kurallar:</h4>
-    <ol class="adim">
-      <li><strong>Sabit Sayının Toplamı:</strong> c bir sabit sayı olmak üzere, <span class="f">&sum;<sub>i=1</sub><sup>n</sup> c = n &times; c</span></li>
-      <li><strong>Sabit ile Değişken Çarpımının Toplamı:</strong> Sabit sayı toplam sembolünün dışına çarpan olarak alınabilir: <span class="f">&sum;<sub>i=1</sub><sup>n</sup> (c &times; X<sub>i</sub>) = c &times; &sum;<sub>i=1</sub><sup>n</sup> X<sub>i</sub></span></li>
-      <li><strong>Toplamların Dağılma Özelliği:</strong> <span class="f">&sum; (X<sub>i</sub> &plusmn; Y<sub>i</sub>) = &sum; X<sub>i</sub> &plusmn; &sum; Y<sub>i</sub></span></li>
-      <li><strong>Kareler Toplamı vs Toplamın Karesi:</strong> <span class="f">&sum; X<sub>i</sub><sup>2</sup> &ne; (&sum; X<sub>i</sub>)<sup>2</sup></span> (Sınavda en sık düşülen tuzaktır!)</li>
-    </ol>
-  </div>
+    <div class="formula-box">
+      <strong>Kural 5: Aritmetik Ortalamadan Farkların Toplamı Kuralı (İstatistiğin 1. Altın Kuralı)</strong>
+      $$\sum_{i=1}^n (x_i - ar{X}) = 0$$
+      <p>Gözlem değerlerinin kendi aritmetik ortalamalarından olan cebirsel farklarının toplamı <strong>HER ZAMAN SIFIRA EŞİTTİR</strong>.</p>
+      <p><em>İspat:</em> $\sum (x_i - ar{X}) = \sum x_i - \sum ar{X} = n ar{X} - n ar{X} = 0$.</p>
+    </div>
+  </section>
 
-  <div class="box ornek">
-    <h4>Örnek İşlem</h4>
-    <p>Veriler: X = {2, 4, 6} ve sabit c = 5 olsun. n = 3.</p>
+  <section>
+    <h3>4.2. Çarpım Sembolü ($\prod$ / Pi) ve Faktöriyel ($n!$)</h3>
+    <p>Çarpım sembolü ardışık terimlerin çarpımını ifade eder:</p>
+    $$\prod_{i=1}^n x_i = x_1 \cdot x_2 \cdot x_3 \cdots x_n$$
+    
+    <p><strong>Faktöriyel Tanımı:</strong> $1$'den $n$'e kadar olan ardışık pozitif tam sayıların çarpımıdır:</p>
+    $$n! = n 	imes (n-1) 	imes (n-2) 	imes \dots 	imes 2 	imes 1$$
     <ul>
-      <li><span class="f">&sum; X<sub>i</sub> = 2 + 4 + 6 = 12</span></li>
-      <li><span class="f">&sum; c = 3 &times; 5 = 15</span></li>
-      <li><span class="f">&sum; (5 &times; X<sub>i</sub>) = 5 &times; 12 = 60</span></li>
-      <li><span class="f">&sum; X<sub>i</sub><sup>2</sup> = 2² + 4² + 6² = 4 + 16 + 36 = 56</span></li>
-      <li><span class="f">(&sum; X<sub>i</sub>)<sup>2</sup> = 12² = 144</span> &rarr; Görüldüğü gibi 56 &ne; 144!</li>
+      <li><strong>Özel Tanımlar:</strong> $0! = 1$ ve $1! = 1$.</li>
+      <li>$5! = 5 	imes 4 	imes 3 	imes 2 	imes 1 = 120$.</li>
     </ul>
-  </div>
+  </section>
 
-  
-  <h3>4.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">n elemanlı bir seride sabit bir c sayısı için &sum; c ifadesinin eşiti nedir?</span>
-      <span class="qtag">Ünite 4 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> c</li>
+  <section>
+    <h3>4.3. İstatistikte Sayı Yuvarlama Kuralları</h3>
+    <p>Hesaplamalarda ondalıklı basamakların yuvarlanmasında standart bilimsel kurallar uygulanır:</p>
+    <ol>
+      <li>Atılacak ilk basamak 5'ten küçükse, önceki rakam aynen korunur. (Örnek: $4.632 ightarrow 4.63$).</li>
+      <li>Atılacak ilk basamak 5'ten büyükse, önceki rakam 1 artırılır. (Örnek: $4.638 ightarrow 4.64$).</li>
+      <li>Atılacak ilk basamak tam 5 ise ve sonrasında başka rakam yoksa:
+        <ul>
+          <li>Önceki rakam tek sayı ise 1 artırılarak çift yapılır (Örnek: $4.635 ightarrow 4.64$).</li>
+          <li>Önceki rakam çift sayı ise aynen bırakılır (Örnek: $4.625 ightarrow 4.62$). Buna <em>"Bankacı Yuvarlaması" (Çift sayı kuralı)</em> denir; yanlılığı önler.</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+</article>
+
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 4 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">n elemanlı bir seride sabit bir c sayısı için ∑ c ifadesinin eşiti nedir?</span>
+<span class="qtag">Ünite 4 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> c</li>
 <li><strong>B)</strong> n + c</li>
-<li class="ok"><strong>C)</strong> n &times; c</li>
+<li class="ok"><strong>C)</strong> n × c</li>
 <li><strong>D)</strong> c / n</li>
-<li><strong>E)</strong> n² &times; c</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        Toplam sembolünde sabit bir sayı n kez toplanıyorsa sonuç n &times; c'dir. Doğru seçenek <strong>C</strong>'dir.
+<li><strong>E)</strong> n² × c</li>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        Toplam sembolünde sabit bir sayı n kez toplanıyorsa sonuç n × c'dir. Doğru seçenek <strong>C</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="2">
-    <summary>
-      <span class="qno">Soru 2</span>
-      <span class="qtitle">Aşağıdaki cebirsel ifadelerden hangisi her zaman DOĞRU DEĞİLDİR?</span>
-      <span class="qtag">Ünite 4 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> &sum; (X + Y) = &sum; X + &sum; Y</li>
-<li><strong>B)</strong> &sum; (c &times; X) = c &times; &sum; X</li>
-<li class="ok"><strong>C)</strong> &sum; X² = (&sum; X)²</li>
-<li><strong>D)</strong> &sum; (X &minus; c) = &sum; X &minus; n&times;c</li>
-<li><strong>E)</strong> &sum; c = n &times; c</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        Kareler toplamı (&sum; X²) ile toplamın karesi [(&sum; X)²] birbirine eşit değildir! Doğru seçenek <strong>C</strong>'dir.
+</div>
+</details>
+<details class="sq" data-q="2">
+<summary>
+<span class="qno">Soru 2</span>
+<span class="qtitle">Aşağıdaki cebirsel ifadelerden hangisi her zaman DOĞRU DEĞİLDİR?</span>
+<span class="qtag">Ünite 4 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> ∑ (X + Y) = ∑ X + ∑ Y</li>
+<li><strong>B)</strong> ∑ (c × X) = c × ∑ X</li>
+<li class="ok"><strong>C)</strong> ∑ X² = (∑ X)²</li>
+<li><strong>D)</strong> ∑ (X − c) = ∑ X − n×c</li>
+<li><strong>E)</strong> ∑ c = n × c</li>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        Kareler toplamı (∑ X²) ile toplamın karesi [(∑ X)²] birbirine eşit değildir! Doğru seçenek <strong>C</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u4">
+      
+<article class="unit-article">
+  <h2>5. Ünite: Merkezi Eğilim Ölçüleri (Analitik / Duyarlı Ortalamalar)</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Bir veri kümesini tek bir temsili değerle özetleyen merkezi eğilim ölçülerinden analitik (duyarlı) olanları; yani Aritmetik Ortalama, Geometrik Ortalama, Harmonik Ortalama ve Kareli Ortalama'nın matematiksel türetimlerini, kullanım koşullarını ve aralarındaki büyüklük hiyerarşisini adım adım sayısal problemlerle öğrenmektir.
+  </div>
+
+  <section>
+    <h3>5.1. Analitik (Duyarlı) Ortalama Nedir?</h3>
+    <p>Serideki <strong>TÜM GÖZLEM DEĞERLERİNİ</strong> matematiksel hesabın içine dahil eden ortalamalara <em>Analitik (Duyarlı) Ortalamalar</em> denir. Seriye eklenecek veya seriden çıkarılacak tek bir değer bile analitik ortalamanın sonucunu değiştirir. Bu nedenle aşırı uç (çok küçük veya çok büyük) değerlere karşı son derece duyarlıdırlar.</p>
+  </section>
+
+  <section>
+    <h3>5.2. Aritmetik Ortalama ($ar{X}$ veya $\mu$)</h3>
+    <p>En yaygın kullanılan merkezi eğilim ölçüsüdür. Gözlem değerlerinin toplamının gözlem sayısına bölünmesiyle bulunur.</p>
+
+    <div class="formula-box">
+      <strong>Hesaplama Formülleri:</strong>
+      <ul>
+        <li><strong>Basit Seri İçin:</strong>
+          $$ar{X} = rac{\sum_{i=1}^n x_i}{n}$$
+        </li>
+        <li><strong>Frekans Serisi İçin:</strong>
+          $$ar{X} = rac{\sum_{i=1}^k f_i x_i}{\sum_{i=1}^k f_i} = rac{\sum f_i x_i}{n}$$
+        </li>
+        <li><strong>Sınıflanmış Seri İçin:</strong>
+          $$ar{X} = rac{\sum_{i=1}^k f_i m_i}{\sum_{i=1}^k f_i}$$
+          <em>($m_i$: Sınıf orta noktası = $rac{Alt + Üst}{2}$)</em>
+        </li>
+      </ul>
     </div>
-  </details>
 
+    <h4>Aritmetik Ortalamanın Matematiksel Özellikleri:</h4>
+    <ol>
+      <li><strong>1. Özellik:</strong> $\sum (x_i - ar{X}) = 0$ (Ortalamadan farkların toplamı sıfırdır).</li>
+      <li><strong>2. Özellik (En Küçük Kareler Kuralı):</strong> Gözlem değerlerinin aritmetik ortalamadan farklarının kareleri toplamı MİNİMUMDUR:
+        $$\sum_{i=1}^n (x_i - ar{X})^2 = 	ext{Minimum}$$
+        Eğer $ar{X}$ yerine başka herhangi bir $A$ sayısı konulursa, toplam daha büyük çıkar: $\sum (x_i - A)^2 > \sum (x_i - ar{X})^2$.
+      </li>
+      <li><strong>3. Özellik (Doğrusal Dönüşüm):</strong> Her gözleme sabit bir $c$ sayısı eklenirse ortalama $c$ kadar artar: $ar{Y} = ar{X} + c$. Her gözlem $c$ ile çarpılırsa yeni ortalama $c \cdot ar{X}$ olur.</li>
+      <li><strong>Kritik Dezavantaj:</strong> Aşırı uç değerlerden şiddetle etkilenir. Örneğin bir işletmede 9 işçi 17.002 TL, 1 patron 500.000 TL alıyorsa aritmetik ortalama 65.000 TL çıkar ki bu değer işçilerin hiçbirini temsil etmez.</li>
+    </ol>
+  </section>
 
-</section>
+  <section>
+    <h3>5.3. Geometrik Ortalama ($G$)</h3>
+    <p>Gözlem değerlerinin çarpımının gözlem sayısı derecesinden köküne eşittir:</p>
+    $$G = \sqrt[n]{x_1 \cdot x_2 \cdot x_3 \cdots x_n}$$
+    
+    <p>Hesaplama kolaylığı için logaritma kullanılır:</p>
+    $$\log G = rac{1}{n} \sum_{i=1}^n \log x_i$$
 
-<section class="unit" data-i="4" id="u4">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 05</span>
-    <h2>Merkezi Eğilim Ölçüleri: Aritmetik, Geometrik ve Harmonik Ortalama</h2>
-  </div>
+    <h4>Kullanım Alanları ve Şartları:</h4>
+    <ul>
+      <li>Zaman içinde geometrik (katlanarak) artış gösteren değişkenlerde; nüfus artış hızları, enflasyon oranları, portföy getirileri, endeks hesaplamaları ve büyüme katsayılarında zorunlu olarak kullanılır.</li>
+      <li><strong>Kısıt:</strong> Gözlem değerleri içinde $0$ veya negatif sayı varsa geometrik ortalama HESAPLANAMAZ.</li>
+    </ul>
+  </section>
 
-  <div class="lead-box">
-    <p>Merkezi eğilim ölçüleri (analitik ortalamalar); bir serideki tüm gözlem değerlerini matematiksel olarak dikkate alarak seriyi tek bir tipik değerle temsil eden ölçülerdir.</p>
-  </div>
+  <section>
+    <h3>5.4. Harmonik Ortalama ($H$)</h3>
+    <p>Gözlem değerlerinin terslerinin aritmetik ortalamasının tersidir:</p>
+    $$H = rac{n}{\sum_{i=1}^n rac{1}{x_i}} = rac{n}{rac{1}{x_1} + rac{1}{x_2} + \dots + rac{1}{x_n}}$$
 
-  <h3>5.1. Aritmetik Ortalama</h3>
-  <div class="box formul">
-    <h4>Basit Seri İçin:</h4>
-    <p style="text-align:center;"><span class="f">x̄ = (&sum; X<sub>i</sub>) / n</span></p>
-    <h4>Frekans ve Gruplanmış Seri İçin:</h4>
-    <p style="text-align:center;"><span class="f">x̄ = (&sum; f<sub>i</sub> &times; X<sub>i</sub>) / &sum; f<sub>i</sub></span> &nbsp;*(Gruplanmış seride X<sub>i</sub> sınıf orta değeridir)*</p>
-  </div>
+    <h4>Kullanım Alanları:</h4>
+    <ul>
+      <li>Birim zamanda yapılan iş, hız, verimlilik, birim fiyat gibi oranlı büyüklüklerin ortalamasında kullanılır. Özellikle yol sabitken hızların ortalaması veya para miktarı sabitken alınan mal miktarlarının ortalamasında aritmetik ortalama YANLIŞ sonuç verir, Harmonik ortalama DOĞRU sonuç verir.</li>
+      <li><strong>Kısıt:</strong> Seride sıfır ($0$) değeri varsa hesaplanamaz.</li>
+    </ul>
 
-  <h4>Aritmetik Ortalamanın 3 Kritik Matematiksel Özelliği (Sınav Sorusu):</h4>
-  <ol class="adim">
-    <li><strong>Sıfır Sapma Kuralı:</strong> Gözlem değerlerinin aritmetik ortalamadan farklarının (sapmalarının) toplamı daima <strong>SIFIRDIR</strong>:
-      <div style="text-align:center;"><span class="f">&sum; (X<sub>i</sub> &minus; x̄) = 0</span></div>
-    </li>
-    <li><strong>En Küçük Kareler Kuralı:</strong> Gözlem değerlerinin ortalamadan farklarının kareleri toplamı minimumdur (en küçüktür):
-      <div style="text-align:center;"><span class="f">&sum; (X<sub>i</sub> &minus; x̄)<sup>2</sup> = Min</span></div>
-    </li>
-    <li><strong>Aşırı Değerlere Duyarlılık:</strong> Serideki çok büyük veya çok küçük aşırı (uç) değerlerden şiddetle etkilenir.</li>
-  </ol>
+    <div class="note-box">
+      <strong>Klasik Sınav Problemi (Harmonik Ortalama):</strong>
+      <p>Bir araç A kentinden B kentine 60 km/s hızla gitmiş, aynı yoldan 40 km/s hızla geri dönmüştür. Bu aracın gidiş-dönüşteki ortalama hızı nedir?</p>
+      <p><em>Hatalı Çözüm:</em> $rac{60 + 40}{2} = 50 	ext{ km/s}$ (Aritmetik ortalama yanlıştır!).</p>
+      <p><em>Doğru Çözüm (Harmonik Ortalama):</em></p>
+      $$H = rac{2}{rac{1}{60} + rac{1}{40}} = rac{2}{rac{2 + 3}{120}} = rac{2}{rac{5}{120}} = rac{2 	imes 120}{5} = rac{240}{5} = 48 	ext{ km/s}$$
+      Aracın ortalama hızı <strong>48 km/s</strong>'dir!
+    </div>
+  </section>
 
-  <h3>5.2. Geometrik ve Harmonik Ortalama</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Ortalama Türü</th>
-        <th>Formül</th>
-        <th>Kullanım Alanı</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Geometrik Ortalama (G)</strong></td>
-        <td><span class="f">G = <sup>n</sup>&radic;(X<sub>1</sub> &times; X<sub>2</sub> &times; ... &times; X<sub>n</sub>)</span></td>
-        <td>Büyüme hızları, nüfus artış oranları, faiz oranları, geometrik artış gösteren dizilerde.</td>
-      </tr>
-      <tr>
-        <td><strong>Harmonik Ortalama (H)</strong></td>
-        <td><span class="f">H = n / &sum; (1 / X<sub>i</sub>)</span></td>
-        <td>Birim zamanda yapılan iş, hız hesaplamaları (km/saat), fiyat/miktar oranları.</td>
-      </tr>
-    </tbody>
-  </table>
+  <section>
+    <h3>5.5. Kareli Ortalama ($K$ veya $Q$)</h3>
+    <p>Gözlem değerlerinin karelerinin aritmetik ortalamasının kareköküdür:</p>
+    $$K = \sqrt{rac{\sum_{i=1}^n x_i^2}{n}}$$
+    <p>Negatif ve pozitif değerlerin birbirini yok etmesini engellemek için kullanılır. Standart sapma ve hata hesaplamalarında, fizik ve elektrik mühendisliğinde (etkin gerilim/akım) temeldir.</p>
+  </section>
 
-  <div class="box formul">
-    <h4>Ortalamalar Arasındaki Büyüklük İlişkisi:</h4>
-    <p style="text-align:center; font-size:16px; font-weight:800;">
-      <span class="f">Aritmetik Ortalama (x̄) &ge; Geometrik Ortalama (G) &ge; Harmonik Ortalama (H)</span>
-    </p>
-    <p style="text-align:center; font-size:13px; color:var(--ink-2);">(Tüm gözlem değerleri birbirine eşit olduğunda x̄ = G = H olur, aksi halde x̄ > G > H'dir).</p>
-  </div>
+  <section>
+    <h3>5.6. Ortalamalar Arasındaki Büyüklük Hiyerarşisi</h3>
+    <p>Pozitif ve birbirinden farklı sayılardan oluşan bir veri kümesinde analitik ortalamalar arasında daima şu değişmez sıralama geçerlidir:</p>
+    <div class="formula-box" style="text-align:center; font-size:18px;">
+      $$H \leq G \leq ar{X} \leq K$$
+      <p style="font-size:14px; margin-top:8px;">Harmonik Ortalama &le; Geometrik Ortalama &le; Aritmetik Ortalama &le; Kareli Ortalama</p>
+    </div>
+    <p><strong>Eşitlik Durumu:</strong> Serideki bütün gözlem değerleri birbirine eşit ise ($x_1 = x_2 = \dots = x_n$), tüm ortalamalar birbirine eşit olur: $H = G = ar{X} = K$.</p>
+  </section>
+</article>
 
-  
-  <h3>5.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Gözlem değerlerinin aritmetik ortalamadan sapmalarının toplamı [&sum; (Xi &minus; x̄)] daima kaça eşittir?</span>
-      <span class="qtag">Ünite 5 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> 1</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 5 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Gözlem değerlerinin aritmetik ortalamadan sapmalarının toplamı [∑ (Xi − x̄)] daima kaça eşittir?</span>
+<span class="qtag">Ünite 5 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> 1</li>
 <li class="ok"><strong>B)</strong> 0</li>
 <li><strong>C)</strong> n</li>
 <li><strong>D)</strong> Varyans</li>
 <li><strong>E)</strong> Standart Sapma</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Aritmetik ortalamanın birinci temel matematiksel özelliği gereğince sapmalar toplamı daima SIFIRDIR. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="2">
-    <summary>
-      <span class="qno">Soru 2</span>
-      <span class="qtitle">Büyüme hızları, enflasyon oranları ve geometrik artış gösteren dizilerde hangi ortalama kullanılır?</span>
-      <span class="qtag">Ünite 5 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Mod</li>
+</div>
+</details>
+<details class="sq" data-q="2">
+<summary>
+<span class="qno">Soru 2</span>
+<span class="qtitle">Büyüme hızları, enflasyon oranları ve geometrik artış gösteren dizilerde hangi ortalama kullanılır?</span>
+<span class="qtag">Ünite 5 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Mod</li>
 <li><strong>B)</strong> Aritmetik Ortalama</li>
 <li class="ok"><strong>C)</strong> Geometrik Ortalama</li>
 <li><strong>D)</strong> Harmonik Ortalama</li>
 <li><strong>E)</strong> Medyan</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Oransal ve geometrik artış gösteren süreçlerde Geometrik Ortalama kullanılır. Doğru seçenek <strong>C</strong>'dir.
       </div>
-    </div>
-  </details>
-
-
-</section>
-
-<section class="unit" data-i="5" id="u5">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 06</span>
-    <h2>Analitik Olmayan (Duyarsız) Ortalamalar: Mod, Medyan ve Kartiller</h2>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u5">
+      
+<article class="unit-article">
+  <h2>6. Ünite: Analitik Olmayan (Duyarsız) Ortalamalar ve Çarpıklık İncelemesi</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Aşırı uç değerlerden etkilenmeyen konum ölçülerini (Medyan, Mod, Kartiller); bunların basit, frekans ve sınıflanmış serilerde hesaplanış formüllerini ve Aritmetik Ortalama - Medyan - Mod ilişkisi üzerinden dağılımın simetri veya çarpıklık yönünün (sağa çarpık / sola çarpık) tespitini öğrenmektir.
   </div>
 
-  <div class="lead-box">
-    <p>Duyarsız ortalamalar; serideki tüm gözlem değerlerinin büyüklüklerinden doğrudan etkilenmeyen, serinin konumuna veya frekansına dayalı ölçülerdir. En büyük avantajları <strong>aşırı uç değerlerden etkilenmemeleridir</strong>.</p>
-  </div>
+  <section>
+    <h3>6.1. Analitik Olmayan (Duyarsız) Ortalama Nedir?</h3>
+    <p>Serideki bütün gözlemlerin büyüklüğünü değil, yalnızca serideki belirli bir konumu veya en yüksek sıklığı temsil eden ortalamalara <em>Analitik Olmayan (Konum / Duyarsız) Ortalamalar</em> denir.</p>
+    <p><strong>Temel Avantajı:</strong> Aşırı uç (çok büyük veya çok küçük) değerlerden <strong>HİÇBİR ŞEKİLDE ETKİLENMEZLER</strong>. Bu nedenle çarpık dağılımlarda (özellikle gelir dağılımı, servet dağılımı, konut fiyatları) aritmetik ortalamaya göre toplumu çok daha gerçekçi yansıtırlar.</p>
+  </section>
 
-  <h3>6.1. Mod (Tepe Değer)</h3>
-  <p>Bir seride en çok tekrarlanan (frekansı en yüksek olan) gözlem değeridir.</p>
-  <ul>
-    <li>Basit seride en sık geçen sayıdır (örn: 3, 5, 5, 5, 8 serisinde Mod = 5).</li>
-    <li>Tüm değerler eşit sayıda geçiyorsa serinin modu <strong>yoktur</strong>.</li>
-    <li>Birden fazla en yüksek frekansa sahip değer varsa seri <strong>çok modlu (bimodal / multimodal)</strong> olabilir.</li>
-  </ul>
+  <section>
+    <h3>6.2. Medyan (Ortanca - $Me$)</h3>
+    <p>Küçükten büyüğe sıralanmış bir seriyi tam ortadan iki eşit parçaya bölen (%50 altta, %50 üstte) değerdir.</p>
 
-  <h3>6.2. Medyan (Ortanca)</h3>
-  <p>Küçükten büyüğe sıralanmış bir seriyi tam ortadan iki eşit parçaya bölen (%50 altta, %50 üstte) değerdir.</p>
-  <div class="box formul">
-    <h4>Medyan Sıra Numarası (Konumu):</h4>
-    <p style="text-align:center;"><span class="f">Sıra = (n + 1) / 2</span></p>
+    <h4>Hesaplanışı:</h4>
     <ul>
-      <li><strong>n Tek İse:</strong> Tam ortadaki tek bir gözlem değeridir.</li>
-      <li><strong>n Çift İse:</strong> Ortadaki iki gözlem değerinin aritmetik ortalamasıdır: <span class="f">Medyan = (X<sub>n/2</sub> + X<sub>(n/2)+1</sub>) / 2</span></li>
+      <li><strong>Basit Seride $n$ Tek Sayı İse:</strong> Medyan tam ortadaki terimdir:
+        $$Sıra = rac{n + 1}{2}$$
+        <em>Örnek:</em> $10, 15, 20, 35, 90$ ($n = 5$). Sıra = $rac{5+1}{2} = 3$. eleman $ightarrow Me = 20$.
+      </li>
+      <li><strong>Basit Seride $n$ Çift Sayı İse:</strong> Tam ortadaki iki terimin aritmetik ortalamasıdır:
+        $$Me = rac{x_{rac{n}{2}} + x_{rac{n}{2} + 1}}{2}$$
+        <em>Örnek:</em> $10, 20, 30, 40$ ($n = 4$). Ortadaki 2. ve 3. terimler: $rac{20 + 30}{2} = 25 ightarrow Me = 25$.
+      </li>
+      <li><strong>Sınıflanmış Seride Medyan:</strong>
+        Önce medyan sınıfı belirlenir ($rac{n}{2}$ kümülatif frekansı kapsayan sınıf). Ardından enterpolasyon formülü uygulanır:
+        $$Me = L_m + \left( rac{rac{n}{2} - \sum f_{önce}}{f_m} ight) 	imes h$$
+        <em>($L_m$: Medyan sınıfının alt sınırı, $\sum f_{önce}$: Medyan sınıfından önceki kümülatif frekans, $f_m$: Medyan sınıfının frekansı, $h$: Sınıf büyüklüğü)</em>.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>6.3. Mod (Tepe Değeri - $Mo$)</h3>
+    <p>Bir seride en çok tekrarlanan, yani frekansı (sıklığı) en yüksek olan gözlem değeridir.</p>
+    <ul>
+      <li>Her seride mod olmak zorunda değildir. Bütün değerler birer kez tekrarlanıyorsa seri <strong>Modsuzdur</strong>.</li>
+      <li>En yüksek frekansa sahip iki farklı değer varsa seri <strong>Çift Modlu (Bimodal)</strong>'dur.</li>
+      <li><strong>Sınıflanmış Seride Mod Formülü:</strong>
+        En yüksek frekanslı sınıf tespit edilir:
+        $$Mo = L_{mo} + \left( rac{\Delta_1}{\Delta_1 + \Delta_2} ight) 	imes h$$
+        <em>($L_{mo}$: Mod sınıfının alt sınırı, $\Delta_1 = f_{mo} - f_{önce}$, $\Delta_2 = f_{mo} - f_{sonra}$, $h$: Sınıf büyüklüğü)</em>.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>6.4. Kartiller (Dörtte Birlikler - $Q_1, Q_2, Q_3$)</h3>
+    <p>Küçükten büyüğe sıralanmış seriyi dört eşit parçaya (%25'lik dilimler) bölen üç değere <strong>Kartiller</strong> denir:</p>
+    <ul>
+      <li><strong>Birinci Kartil ($Q_1$ - Alt Kartil):</strong> Gözlemlerin %25'i $Q_1$'den küçük veya eşit, %75'i büyüktür. Sırası: $rac{n+1}{4}$.</li>
+      <li><strong>İkinci Kartil ($Q_2$):</strong> Gözlemlerin %50'si altta, %50'si üsttedir. <strong>$Q_2$ doğrudan Medyana eşittir ($Q_2 = Me$)!</strong></li>
+      <li><strong>Üçüncü Kartil ($Q_3$ - Üst Kartil):</strong> Gözlemlerin %75'i $Q_3$'ten küçük, %25'i büyüktür. Sırası: $rac{3(n+1)}{4}$.</li>
+      <li><strong>Kartiller Arası Fark (Interquartile Range - $IQR$):</strong>
+        $$IQR = Q_3 - Q_1$$
+        Serinin ortadaki %50'lik diliminin yayılımını gösterir, uç değerlerden etkilenmez.
+      </li>
+      <li><strong>Kartil Sapması (Yarı Kartiller Arası Fark):</strong>
+        $$QD = rac{Q_3 - Q_1}{2}$$
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>6.5. Dağılımın Çarpıklığı (Asimetrisi) ve Ortalama İlişkileri</h3>
+    <p>Aritmetik Ortalama ($ar{X}$), Medyan ($Me$) ve Mod ($Mo$) arasındaki bağıntı dağılımın şeklini belirler:</p>
+
+    <div class="card">
+      <h4>1. Simetrik Dağılım (Normal Dağılım / Çan Eğrisi)</h4>
+      <p style="font-size:18px; font-weight:700; color:var(--success);">$$ar{X} = Me = Mo$$</p>
+      <p>Aritmetik ortalama, medyan ve mod birbirine eşittir. Tepe noktası tam merkezdedir, sağ ve sol kuyruklar birbirinin ayna görüntüsüdür.</p>
+    </div>
+
+    <div class="card">
+      <h4>2. Sağa Çarpık Dağılım (Pozitif Asimetrik)</h4>
+      <p style="font-size:18px; font-weight:700; color:var(--accent);">$$Mo < Me < ar{X}$$</p>
+      <p>Dağılımın sağ kuyruğu uzundur. Az sayıdaki aşırı büyük değer aritmetik ortalamayı sağa doğru yukarı çekmiştir. Gelir dağılımları tipik olarak sağa çarpıktır (çoğunluk asgari ücret civarında toplanır, az sayıda milyarder ortalamayı yükseltir).</p>
+    </div>
+
+    <div class="card">
+      <h4>3. Sola Çarpık Dağılım (Negatif Asimetrik)</h4>
+      <p style="font-size:18px; font-weight:700; color:var(--danger);">$$ar{X} < Me < Mo$$</p>
+      <p>Dağılımın sol kuyruğu uzundur. Az sayıdaki aşırı küçük değer aritmetik ortalamayı sola doğru aşağı çekmiştir. Kolay bir sınavda çoğu öğrencinin 90-100 alması durumunda not dağılımı sola çarpık olur.</p>
+    </div>
+  </section>
+
+  <div class="exam-trap">
+    <h4>Sınav Tuzakları</h4>
+    <ul>
+      <li><strong>Sıralama Sorusu:</strong> "Bir seride Mod = 40, Medyan = 50, Aritmetik Ortalama = 65 ise bu seri ne tür bir dağılımdır?"<br>
+      <em>Cevap:</em> $Mo < Me < ar{X}$ ($40 < 50 < 65$) olduğu için <strong>Sağa Çarpık (Pozitif Asimetrik)</strong> dağılımdır.</li>
+      <li>Medyan daima Mod ile Aritmetik Ortalamanın <strong>ORTASINDA</strong> yer alır!</li>
+      <li>$Q_2$ her zaman <strong>Medyan</strong>'a eşittir.</li>
     </ul>
   </div>
+</article>
 
-  <h3>6.3. Kartiller (Dörttebirlikler - Q1, Q2, Q3)</h3>
-  <p>Sıralı seriyi 4 eşit parçaya bölen üç değerdir:</p>
-  <ul>
-    <li><strong>Q1 (Birinci Kartil / Alt Çeyrek):</strong> Verilerin %25'ini altta, %75'ini üstte bırakır. Sırası: <span class="f">(n + 1) / 4</span></li>
-    <li><strong>Q2 (İkinci Kartil):</strong> Medyana eşittir! Verilerin %50'sini böler. Sırası: <span class="f">2(n + 1) / 4</span></li>
-    <li><strong>Q3 (Üçüncü Kartil / Üst Çeyrek):</strong> Verilerin %75'ini altta bırakır. Sırası: <span class="f">3(n + 1) / 4</span></li>
-    <li><strong>Kartiller Arası Fark (IQR):</strong> <span class="f">IQR = Q3 &minus; Q1</span> (Aşırı uç değerlerin temizlenmesinde kullanılır).</li>
-  </ul>
-
-  <h3>6.4. Dağılımın Çarpıklığı ve Ortalama İlişkileri</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Dağılım Şekli</th>
-        <th>Ortalamalar Arası Sıralama</th>
-        <th>Açıklama</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Simetrik Dağılım</strong></td>
-        <td><span class="f">Aritmetik Ortalama = Medyan = Mod</span></td>
-        <td>Çan eğrisi (Normal dağılım).</td>
-      </tr>
-      <tr>
-        <td><strong>Sağa Çarpık (Pozitif Eğimli)</strong></td>
-        <td><span class="f">Mod &lt; Medyan &lt; Aritmetik Ortalama</span></td>
-        <td>Aşırı büyük değerler ortalamayı sağa çekmiştir (Gelir dağılımı gibi). Kuyruk sağdadır.</td>
-      </tr>
-      <tr>
-        <td><strong>Sola Çarpık (Negatif Eğimli)</strong></td>
-        <td><span class="f">Aritmetik Ortalama &lt; Medyan &lt; Mod</span></td>
-        <td>Aşırı küçük değerler ortalamayı sola çekmiştir. Kuyruk soldadır.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  
-  <h3>6.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Bir seride en çok tekrarlanan (frekansı en yüksek olan) gözlem değerine ne ad verilir? (2025 Vize)</span>
-      <span class="qtag">Ünite 6 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Medyan</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 6 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Bir seride en çok tekrarlanan (frekansı en yüksek olan) gözlem değerine ne ad verilir? (2025 Vize)</span>
+<span class="qtag">Ünite 6 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Medyan</li>
 <li><strong>B)</strong> Aritmetik Ortalama</li>
 <li class="ok"><strong>C)</strong> Mod (Tepe Değer)</li>
 <li><strong>D)</strong> Kartil</li>
 <li><strong>E)</strong> Varyans</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         En çok tekrarlanan değer Mod (Tepe Değer)'dir. Doğru seçenek <strong>C</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="2">
-    <summary>
-      <span class="qno">Soru 2</span>
-      <span class="qtitle">Aşırı uç değerlerden (çok büyük veya çok küçük sayılardan) ETKİLENMEYEN merkezi eğilim ölçüsü hangisidir?</span>
-      <span class="qtag">Ünite 6 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Aritmetik Ortalama</li>
+</div>
+</details>
+<details class="sq" data-q="2">
+<summary>
+<span class="qno">Soru 2</span>
+<span class="qtitle">Aşırı uç değerlerden (çok büyük veya çok küçük sayılardan) ETKİLENMEYEN merkezi eğilim ölçüsü hangisidir?</span>
+<span class="qtag">Ünite 6 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Aritmetik Ortalama</li>
 <li class="ok"><strong>B)</strong> Medyan (Ortanca)</li>
 <li><strong>C)</strong> Standart Sapma</li>
 <li><strong>D)</strong> Varyans</li>
 <li><strong>E)</strong> Değişim Aralığı</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Medyan sıralamaya dayalı olduğu için uç değerlerin büyüklüğünden etkilenmez. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="3">
-    <summary>
-      <span class="qno">Soru 3</span>
-      <span class="qtitle">Sağa çarpık (pozitif eğimli) bir seride ortalamalar arasındaki doğru sıralama hangisidir?</span>
-      <span class="qtag">Ünite 6 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li class="ok"><strong>A)</strong> Mod < Medyan < Aritmetik Ortalama</li>
-<li><strong>B)</strong> Aritmetik Ortalama < Medyan < Mod</li>
+</div>
+</details>
+<details class="sq" data-q="3">
+<summary>
+<span class="qno">Soru 3</span>
+<span class="qtitle">Sağa çarpık (pozitif eğimli) bir seride ortalamalar arasındaki doğru sıralama hangisidir?</span>
+<span class="qtag">Ünite 6 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li class="ok"><strong>A)</strong> Mod &lt; Medyan &lt; Aritmetik Ortalama</li>
+<li><strong>B)</strong> Aritmetik Ortalama &lt; Medyan &lt; Mod</li>
 <li><strong>C)</strong> Mod = Medyan = Aritmetik Ortalama</li>
-<li><strong>D)</strong> Medyan < Mod < Aritmetik Ortalama</li>
-<li><strong>E)</strong> Aritmetik Ortalama < Mod < Medyan</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        Sağa çarpık dağılımda büyük değerler ortalamayı sağa çeker: Mod < Medyan < x̄. Doğru seçenek <strong>A</strong>'dir.
+<li><strong>D)</strong> Medyan &lt; Mod &lt; Aritmetik Ortalama</li>
+<li><strong>E)</strong> Aritmetik Ortalama &lt; Mod &lt; Medyan</li>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        Sağa çarpık dağılımda büyük değerler ortalamayı sağa çeker: Mod &lt; Medyan &lt; x̄. Doğru seçenek <strong>A</strong>'dir.
       </div>
-    </div>
-  </details>
-
-
-</section>
-
-<section class="unit" data-i="6" id="u6">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 07</span>
-    <h2>Merkezi Değişim (Dağılım) Ölçüleri: Varyans, Standart Sapma ve Değişim Katsayısı</h2>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u6">
+      
+<article class="unit-article">
+  <h2>7. Ünite: Merkezi Değişim (Dağılım) Ölçüleri</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Ortalamaların yetersiz kaldığı durumlarda verilerin ortalama etrafındaki yayılımını, homojenliğini ve risk düzeyini ölçen Değişim Aralığı, Ortalama Mutlak Sapma, Varyans, Standart Sapma, Değişim Katsayısı ve Chebyshev Teoremi'ni kapsamlı sayısal uygulamalarla öğrenmektir.
   </div>
 
-  <div class="lead-box">
-    <p>İki serinin aritmetik ortalaması eşit olsa bile, verilerin ortalama etrafındaki saçılımı (homojenliği veya heterojenliği) çok farklı olabilir. Bu saçılımı ölçen araçlara <strong>dağılım ölçüleri</strong> denir.</p>
-  </div>
-
-  <h3>7.1. Değişim Aralığı (Ranj)</h3>
-  <div class="box formul">
-    <p style="text-align:center;"><span class="f">Ranj (R) = En Büyük Değer (X<sub>max</sub>) &minus; En Küçük Değer (X<sub>min</sub>)</span></p>
-    <p>Hesaplanması en kolay fakat sadece iki uç değere bağlı olduğu için en kaba dağılım ölçüsüdür.</p>
-  </div>
-
-  <h3>7.2. Varyans ve Standart Sapma (Temel Dağılım Ölçüleri)</h3>
-  <p>Gözlem değerlerinin aritmetik ortalamadan sapmalarının karelerinin ortalamasıdır.</p>
-
-  <div class="box formul">
-    <h4>Örneklem Varyansı (s²):</h4>
-    <p style="text-align:center;"><span class="f">s² = &sum; (X<sub>i</sub> &minus; x̄)<sup>2</sup> / (n &minus; 1)</span></p>
-    <h4>Örneklem Standart Sapması (s):</h4>
-    <p style="text-align:center;"><span class="f">s = &radic;s² = &radic;[ &sum; (X<sub>i</sub> &minus; x̄)<sup>2</sup> / (n &minus; 1) ]</span></p>
-    <p style="font-size:13px; color:var(--ink-2); text-align:center;">*(Anakütle için formülde n&minus;1 yerine N kullanılır: &sigma;² ve &sigma;)*</p>
-  </div>
-
-  <h3>7.3. Değişim Katsayısı (Varyasyon Katsayısı - DK)</h3>
-  <p>Farklı birimlerle ölçülen (örn. boy ve kilo) veya ortalamaları birbirinden çok farklı olan serilerin <strong>değişkenliklerini (homojenliklerini) karşılaştırmak</strong> için kullanılan oransal (birimsiz) ölçüdür:</p>
-
-  <div class="box formul">
-    <p style="text-align:center; font-size:18px; font-weight:800;">
-      <span class="f">Değişim Katsayısı (DK) = (Standart Sapma / Aritmetik Ortalama) &times; 100 = (s / x̄) &times; 100</span>
-    </p>
+  <section>
+    <h3>7.1. Neden Değişim (Dağılım) Ölçülerine İhtiyaç Duyarız?</h3>
+    <p>Yalnızca merkezi eğilim ölçülerine (ortalamalara) bakarak iki veri kümesini karşılaştırmak ölümcül yanılgılara yol açabilir. Örneğin:</p>
     <ul>
-      <li>DK değeri <strong>küçük</strong> olan seri: Daha homojendir, daha kararlıdır, ortalama seriyi daha iyi temsil eder.</li>
-      <li>DK değeri <strong>büyük</strong> olan seri: Daha heterojendir, değişkenlik fazladır, risk yüksektir.</li>
+      <li>A Sınıfı Notları: $50, 50, 50, 50, 50 ightarrow ar{X} = 50$</li>
+      <li>B Sınıfı Notları: $0, 25, 50, 75, 100 ightarrow ar{X} = 50$</li>
     </ul>
-  </div>
+    <p>Her iki sınıfın aritmetik ortalaması 50'dir. Ancak A sınıfı tamamen homojen ve istikrarlıyken, B sınıfında aşırı bir farklılaşma ve dengesizlik vardır. Bu farkı ortaya koyan ölçülere <strong>Merkezi Değişim (Dağılım / Yayılım) Ölçüleri</strong> denir.</p>
+  </section>
 
-  <div class="box ornek">
-    <h4>Sayısal Örnek: İki Grubun Karşılaştırılması</h4>
-    <p>A sınıfının not ortalaması 60, standart sapması 6'dır. B sınıfının not ortalaması 80, standart sapması 10'dur. Hangi sınıf daha homojendir?</p>
-    <ol class="adim">
-      <li><strong>A Sınıfı:</strong> <span class="f">DK<sub>A</sub> = (6 / 60) &times; 100 = %10</span></li>
-      <li><strong>B Sınıfı:</strong> <span class="f">DK<sub>B</sub> = (10 / 80) &times; 100 = %12,5</span></li>
-      <li><strong>Karar:</strong> DK<sub>A</sub> (%10) < DK<sub>B</sub> (%12,5) olduğundan, <strong>A sınıfı daha homojendir</strong> (öğrencilerin başarı düzeyleri birbirine daha yakındır).</li>
-    </ol>
-  </div>
+  <section>
+    <h3>7.2. Temel Dağılım Ölçüleri</h3>
 
-  
-  <h3>7.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Farklı birimlerle ölçülen veya ortalamaları farklı olan iki serinin değişkenliğini (homojenliğini) karşılaştırmak için hangi ölçü kullanılır?</span>
-      <span class="qtag">Ünite 7 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Standart Sapma</li>
+    <h4>7.2.1. Değişim Aralığı (Ranj / Range - $R$)</h4>
+    <p>En büyük gözlem değeri ile en küçük gözlem değeri arasındaki farktır:</p>
+    $$R = X_{maks} - X_{min}$$
+    <p><em>Dezavantajı:</em> Sadece iki uç değere bağlıdır, aradaki değerlerin hiçbirini hesaba katmaz. Son derece kaba bir ölçüdür.</p>
+
+    <h4>7.2.2. Ortalama Mutlak Sapma ($MD$)</h4>
+    <p>Gözlem değerlerinin aritmetik ortalamadan olan mutlak farklarının ortalamasıdır:</p>
+    $$MD = rac{\sum_{i=1}^n |x_i - ar{X}|}{n}$$
+  </section>
+
+  <section>
+    <h3>7.3. Varyans ($\sigma^2$ ve $s^2$) ve Standart Sapma ($\sigma$ ve $s$)</h3>
+    <p>İstatistiğin en temel, en hassas ve çıkarımsal analizlerde en çok kullanılan dağılım ölçüleridir.</p>
+
+    <div class="formula-box">
+      <strong>Varyans Formülleri:</strong>
+      <ul>
+        <li><strong>Anakütle Varyansı ($\sigma^2$):</strong>
+          $$\sigma^2 = rac{\sum_{i=1}^N (x_i - \mu)^2}{N}$$
+        </li>
+        <li><strong>Örneklem Varyansı ($s^2$ - Bessel Düzeltmesi ile):</strong>
+          Örneklem varyansı hesaplanırken paydaya $n$ yerine $n - 1$ (serbestlik derecesi) yazılır. Bu düzeltme anakütle varyansının yansız (unbiased) tahminini verir:
+          $$s^2 = rac{\sum_{i=1}^n (x_i - ar{X})^2}{n - 1}$$
+        </li>
+        <li><strong>Hesaplama Kolaylığı Sağlayan Pratik Formül:</strong>
+          $$s^2 = rac{\sum x_i^2 - rac{(\sum x_i)^2}{n}}{n - 1}$$
+        </li>
+      </ul>
+    </div>
+
+    <h4>Standart Sapma ($s$ veya $\sigma$):</h4>
+    <p>Varyansın kareköküdür. Varyansın birimi verinin karesi olduğundan (örneğin $	ext{TL}^2$, $	ext{kg}^2$), veriyi orijinal ölçü birimine geri döndürmek için karekökü alınır:</p>
+    $$s = \sqrt{s^2}$$
+    <p>Standart sapma, verilerin ortalamadan ortalama olarak ne kadar uzaklaştığını <strong>orijinal ölçü birimiyle</strong> ifade eder.</p>
+  </section>
+
+  <section>
+    <h3>7.4. Değişim Katsayısı (Varyasyon Katsayısı - $DK$ / $CV$)</h3>
+    <p>Farklı ölçü birimlerine sahip (örneğin boy ile kilo) veya ortalamaları birbirinden çok farklı olan serilerin değişkenliklerini ve homojenliklerini karşılaştırmak için kullanılan <strong>BİRİMSİZ (YÜZDESEL)</strong> bağıl dağılım ölçüsüdür.</p>
+
+    <div class="formula-box">
+      $$DK = rac{s}{ar{X}} 	imes 100$$
+    </div>
+
+    <h4>Yorumlama Kuralı:</h4>
+    <ul>
+      <li>$DK$ değeri <strong>KÜÇÜK</strong> olan seri: Daha <strong>HOMOJEN</strong>, daha <strong>İSTİKRARLI</strong>, riski daha <strong>DÜŞÜK</strong> ve ortalamanın temsil yeteneği daha <strong>YÜKSEK</strong>tir.</li>
+      <li>$DK$ değeri <strong>BÜYÜK</strong> olan seri: Daha <strong>HETEROJEN</strong>, dalgalı ve risklidir.</li>
+    </ul>
+
+    <div class="note-box">
+      <strong>Sınav Örneği:</strong>
+      <p>A hisse senedinin ortalama getirisi 20 TL, standart sapması 4 TL'dir.<br>
+      B hisse senedinin ortalama getirisi 100 TL, standart sapması 15 TL'dir. Hangi hisse senedi daha risklidir?</p>
+      <p><em>Çözüm:</em><br>
+      $DK_A = rac{4}{20} 	imes 100 = \%20$<br>
+      $DK_B = rac{15}{100} 	imes 100 = \%15$<br>
+      A hissesinin değişim katsayısı (%20) B'den (%15) büyük olduğu için, <strong>A hissesi daha dalgalı ve daha risklidir</strong>.</p>
+    </div>
+  </section>
+
+  <section>
+    <h3>7.5. Chebyshev Teoremi ve Ampirik Kural</h3>
+    
+    <h4>7.5.1. Chebyshev Teoremi (Her Türlü Dağılım İçin)</h4>
+    <p>Dağılımın şekli ne olursa olsun (simetrik olmasa bile), ortalamanın $k$ standart sapma civarında yer alan gözlem oranı en az $1 - rac{1}{k^2}$'dir ($k > 1$):</p>
+    <ul>
+      <li>$k = 2$ için ($\mu \pm 2\sigma$ aralığı): En az $1 - rac{1}{4} = \mathbf{\%75}$</li>
+      <li>$k = 3$ için ($\mu \pm 3\sigma$ aralığı): En az $1 - rac{1}{9} = \mathbf{\%88.89}$</li>
+    </ul>
+
+    <h4>7.5.2. Ampirik (Görgül) Kural (Yalnızca Normal Çan Eğrisi Dağılımı İçin)</h4>
+    <ul>
+      <li>$\mu \pm 1\sigma$ aralığında gözlemlerin yaklaşık <strong>%68.26</strong>'sı,</li>
+      <li>$\mu \pm 2\sigma$ aralığında gözlemlerin yaklaşık <strong>%95.44</strong>'ü,</li>
+      <li>$\mu \pm 3\sigma$ aralığında gözlemlerin yaklaşık <strong>%99.74</strong>'ü yer alır.</li>
+    </ul>
+  </section>
+</article>
+
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 7 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Farklı birimlerle ölçülen veya ortalamaları farklı olan iki serinin değişkenliğini (homojenliğini) karşılaştırmak için hangi ölçü kullanılır?</span>
+<span class="qtag">Ünite 7 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Standart Sapma</li>
 <li><strong>B)</strong> Varyans</li>
 <li class="ok"><strong>C)</strong> Değişim Katsayısı (DK)</li>
 <li><strong>D)</strong> Ranj</li>
 <li><strong>E)</strong> Medyan</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        DK = (s / x̄) &times; 100 formülüyle hesaplanan birimsiz yüzde ölçüsüdür; homojenlik karşılaştırmasında kullanılır. Doğru seçenek <strong>C</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        DK = (s / x̄) × 100 formülüyle hesaplanan birimsiz yüzde ölçüsüdür; homojenlik karşılaştırmasında kullanılır. Doğru seçenek <strong>C</strong>'dir.
       </div>
-    </div>
-  </details>
-
-  <details class="sq" data-q="2">
-    <summary>
-      <span class="qno">Soru 2</span>
-      <span class="qtitle">A grubunun ortalaması 50, standart sapması 5; B grubunun ortalaması 100, standart sapması 8'dir. Hangisi doğrudur?</span>
-      <span class="qtag">Ünite 7 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> A grubu daha homojendir</li>
+</div>
+</details>
+<details class="sq" data-q="2">
+<summary>
+<span class="qno">Soru 2</span>
+<span class="qtitle">A grubunun ortalaması 50, standart sapması 5; B grubunun ortalaması 100, standart sapması 8'dir. Hangisi doğrudur?</span>
+<span class="qtag">Ünite 7 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> A grubu daha homojendir</li>
 <li class="ok"><strong>B)</strong> B grubu daha homojendir</li>
 <li><strong>C)</strong> Homojenlikleri eşittir</li>
 <li><strong>D)</strong> A grubunun varyansı daha büyüktür</li>
 <li><strong>E)</strong> B grubunun ortalaması daha güvensizdir</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        DK_A = (5/50)*100 = %10; DK_B = (8/100)*100 = %8. DK_B < DK_A olduğundan B grubu daha homojendir. Doğru seçenek <strong>B</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        DK_A = (5/50)*100 = %10; DK_B = (8/100)*100 = %8. DK_B &lt; DK_A olduğundan B grubu daha homojendir. Doğru seçenek <strong>B</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u7">
+      
+<article class="unit-article">
+  <h2>8. Ünite: Standart Değişken, Asimetri İncelemeleri, Toplanma Oranı</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Bir gözlemin göreli konumunu belirleyen Standart Değişken ($z$ skoru) dönüşümünü, Pearson ve Bowley asimetri katsayıları ile dağılımın çarpıklık derecesinin hesaplanmasını, gelir dağılımı eşitsizliğini ölçen Lorenz Eğrisi ve Gini Katsayısının mantığını kavramaktır.
+  </div>
+
+  <section>
+    <h3>8.1. Standart Değişken ($z$ Skoru / Standart Puan)</h3>
+    <p>Farklı ortalamalara ve farklı standart sapmalara sahip veri kümelerindeki gözlemleri karşılaştırılabilir hale getirmek için uygulanan standardizasyon işlemidir. Bir gözlem değerinin aritmetik ortalamadan kaç standart sapma uzakta olduğunu gösterir.</p>
+
+    <div class="formula-box">
+      <strong>Standartlaştırma Formülü:</strong>
+      $$z = rac{x_i - ar{X}}{s} \quad 	ext{(Örneklem için)} \qquad z = rac{x_i - \mu}{\sigma} \quad 	ext{(Anakütle için)}$$
     </div>
-  </details>
 
+    <h4>Standart Değişkenin Değişmez Matematiksel Özellikleri:</h4>
+    <ol>
+      <li><strong>Birimsizdir:</strong> $x$ değişkeninin birimi TL, kg veya cm olsa dahi, $z$ birimsiz saf bir sayıdır.</li>
+      <li><strong>Ortalaması DAİMA SIFIRDIR:</strong> $ar{Z} = 0$.</li>
+      <li><strong>Varyansı ve Standart Sapması DAİMA BİRDİR:</strong> $s_z^2 = 1$ ve $s_z = 1$.</li>
+      <li>$z > 0$ ise gözlem ortalamanın üzerinde; $z < 0$ ise gözlem ortalamanın altındadır.</li>
+    </ol>
 
-</section>
+    <div class="note-box">
+      <strong>Örnek Sınav Sorusu:</strong>
+      <p>Bir öğrenci ortalaması 60, standart sapması 10 olan İstatistik sınavından 75 almış; ortalaması 70, standart sapması 5 olan Muhasebe sınavından 80 almıştır. Öğrenci hangi derste daha başarılıdır?</p>
+      <p><em>Çözüm:</em><br>
+      $z_{İstatistik} = rac{75 - 60}{10} = rac{15}{10} = \mathbf{+1.5}$<br>
+      $z_{Muhasebe} = rac{80 - 70}{5} = rac{10}{5} = \mathbf{+2.0}$<br>
+      Öğrencinin Muhasebe $z$ skoru (+2.0), İstatistik $z$ skorundan (+1.5) daha yüksek olduğu için, <strong>öğrenci sınıfına göre Muhasebe dersinde daha başarılıdır</strong>.</p>
+    </div>
+  </section>
 
-<section class="unit" data-i="7" id="u7">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 08</span>
-    <h2>Standart Değişken (z Puanı), Asimetri ve Basıklık İncelemeleri</h2>
-  </div>
+  <section>
+    <h3>8.2. Asimetri (Çarpıklık) Ölçüleri</h3>
+    <p>Dağılımın simetri veya asimetri derecesini sayısal bir katsayıyla ifade etmek için geliştirilen ölçülerdir:</p>
 
-  <div class="lead-box">
-    <p>Farklı dağılımlardan gelen gözlem değerlerini ortak bir eksende karşılaştırabilmek için standartlaştırma işlemi yapılır. Ayrıca bir dağılımın simetriden ne kadar saptığı (asimetri) ve tepesinin ne kadar sivri olduğu (basıklık) incelenir.</p>
-  </div>
-
-  <h3>8.1. Standart Değişken (z Değeri)</h3>
-  <div class="box formul">
-    <p style="text-align:center; font-size:18px; font-weight:800;">
-      <span class="f">z = (X &minus; x̄) / s</span> &nbsp;veya&nbsp; <span class="f">z = (X &minus; &mu;) / &sigma;</span>
-    </p>
-    <p>Bir gözlem değerinin ortalamasından kaç standart sapma uzakta olduğunu gösterir. Standartlaştırılmış z dağılımının <strong>ortalaması daima 0</strong>, <strong>standart sapması daima 1</strong>'dir.</p>
-  </div>
-
-  <h3>8.2. Çarpıklık (Asimetri) Katsayıları</h3>
-  <h4>1. Pearson Çarpıklık Katsayısı:</h4>
-  <div class="box formul">
-    <p style="text-align:center;"><span class="f">Sk<sub>1</sub> = (x̄ &minus; Mod) / s</span> &nbsp;veya&nbsp; <span class="f">Sk<sub>2</sub> = 3(x̄ &minus; Medyan) / s</span></p>
+    <h4>8.2.1. Pearson Çarpıklık Katsayıları</h4>
     <ul>
-      <li>Sk = 0 &rarr; Seri <strong>Simetriktir</strong>.</li>
-      <li>Sk > 0 &rarr; Seri <strong>Sağa (Pozitif) Çarpıktır</strong>.</li>
-      <li>Sk < 0 &rarr; Seri <strong>Sola (Negatif) Çarpıktır</strong>.</li>
+      <li><strong>1. Pearson Katsayısı (Moda Dayalı):</strong>
+        $$Sk_1 = rac{ar{X} - Mo}{s}$$
+      </li>
+      <li><strong>2. Pearson Katsayısı (Medyana Dayalı):</strong>
+        Modun belirgin olmadığı serilerde kullanılır ($Mo pprox 3 Me - 2 ar{X}$ yaklaşık ilişkisinden türetilmiştir):
+        $$Sk_2 = rac{3(ar{X} - Me)}{s}$$
+      </li>
     </ul>
-  </div>
 
-  <h3>8.3. Basıklık (Kurtosis) Ölçüsü</h3>
-  <p>Dağılım eğrisinin Normal dağılıma göre ne kadar sivri veya basık olduğunu gösterir:</p>
-  <ul>
-    <li><strong>Mezokurtik:</strong> Normal sivrilikte (&alpha;<sub>4</sub> = 3).</li>
-    <li><strong>Leptokurtik (Sivri):</strong> Standart normalden daha dik, veriler merkezde toplanmış (&alpha;<sub>4</sub> > 3).</li>
-    <li><strong>Platikurtik (Basık):</strong> Yayvan, basık eğri (&alpha;<sub>4</sub> < 3).</li>
-  </ul>
+    <p><strong>Yorumlama Kuralları:</strong></p>
+    <ul>
+      <li>$Sk = 0 ightarrow$ <strong>Simetrik Dağılım</strong></li>
+      <li>$Sk > 0 ightarrow$ <strong>Sağa Çarpık (Pozitif Asimetrik) Dağılım</strong></li>
+      <li>$Sk < 0 ightarrow$ <strong>Sola Çarpık (Negatif Asimetrik) Dağılım</strong></li>
+    </ul>
 
-  
-  <h3>8.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Bir gözlem değerinin ortalamasından kaç standart sapma uzakta olduğunu gösteren standart değişken hangisidir?</span>
-      <span class="qtag">Ünite 8 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> t değeri</li>
+    <h4>8.2.2. Bowley Çarpıklık Katsayısı ($Sk_B$ - Kartillere Dayalı)</h4>
+    <p>Uç değerlerden etkilenmeyen kartillere ($Q_1, Q_2, Q_3$) dayalı asimetri ölçüsüdür:</p>
+    $$Sk_B = rac{(Q_3 - Q_2) - (Q_2 - Q_1)}{Q_3 - Q_1} = rac{Q_3 + Q_1 - 2 Me}{Q_3 - Q_1}$$
+    <p>Bowley katsayısı daima <strong>$-1$ ile $+1$ arasında</strong> değer alır.</p>
+  </section>
+
+  <section>
+    <h3>8.3. Toplanma Oranı (Lorenz Eğrisi ve Gini Katsayısı)</h3>
+    <p>İktisatta ve sosyal istatistikte gelir, servet veya üretimin toplumdaki nüfus dilimleri arasındaki dağılım adaletini ölçmek için kullanılır.</p>
+    <ul>
+      <li><strong>Mutlak Eşitlik Doğrusu:</strong> Nüfusun %x'inin toplam gelirin tam %x'ini aldığı (örneğin nüfusun %20'sinin gelirin %20'sini aldığı) $45^\circ$'lik köşegen doğrudur.</li>
+      <li><strong>Lorenz Eğrisi:</strong> Nüfusun kümülatif yüzdeleri yatay eksende, gelirin kümülatif yüzdeleri dikey eksende gösterildiğinde oluşan eğridir.</li>
+      <li><strong>Gini Katsayısı ($G$):</strong> Lorenz eğrisi ile mutlak eşitlik doğrusu arasındaki alanın ($A$), eşitlik doğrusunun altında kalan toplam üçgen alana ($A + B$) oranıdır:
+        $$G = rac{A}{A + B}$$
+        <ul>
+          <li>Gini katsayısı daima <strong>$0$ ile $1$ arasında</strong> ($0 \leq G \leq 1$) değer alır.</li>
+          <li>$G = 0$: Tam eşitlik (herkesin geliri tamamen eşittir).</li>
+          <li>$G = 1$: Tam eşitsizlik (tüm gelir tek bir kişinin elindedir).</li>
+          <li>Gini katsayısı 0'a yaklaştıkça gelir dağılımı adaleti ARTAR; 1'e yaklaştıkça gelir dağılımı adaletsizliği ARTAR.</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+</article>
+
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 8 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Bir gözlem değerinin ortalamasından kaç standart sapma uzakta olduğunu gösteren standart değişken hangisidir?</span>
+<span class="qtag">Ünite 8 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> t değeri</li>
 <li class="ok"><strong>B)</strong> z puanı</li>
 <li><strong>C)</strong> F değeri</li>
 <li><strong>D)</strong> Ki-kare</li>
 <li><strong>E)</strong> Ranj</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        z = (X &minus; x̄) / s formülü standart z puanını verir; ortalaması 0, standart sapması 1'dir. Doğru seçenek <strong>B</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        z = (X − x̄) / s formülü standart z puanını verir; ortalaması 0, standart sapması 1'dir. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-
-</section>
-
-<section class="unit" data-i="8" id="u8">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 09</span>
-    <h2>Momentler ve Dağılım Parametreleri</h2>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u8">
+      
+<article class="unit-article">
+  <h2>9. Ünite: Momentler ve Basıklık İncelemesi</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> İstatistikte dağılımların şeklini (merkezi eğilim, yayılım, çarpıklık ve basıklık) genel bir matematiksel çerçevede modelleyen Moment kavramını, sıfıra ve merkeze göre momentleri, König Teoremini ve Basıklık Katsayısını (&alpha;<sub>4</sub>) kavramaktır.
   </div>
 
-  <div class="lead-box">
-    <p>Momentler; fizik bilimindeki moment kavramının istatistiğe uyarlanmış halidir. Bir dağılımın merkezi eğilimini, değişkenliğini, çarpıklığını ve basıklığını tek bir matematiksel çatı altında ifade etmeyi sağlar.</p>
-  </div>
+  <section>
+    <h3>9.1. Moment Kavramı Nedir?</h3>
+    <p>Fizikteki moment (kuvvet x uzaklık) kavramının istatistiğe uyarlanmış halidir. Gözlem değerlerinin veya bu değerlerin ortalamadan farklarının belirli bir üssünün (kuvvetinin) ortalamasıdır.</p>
 
-  <h3>9.1. Sıfıra Göre Momentler (Başlangıç Noktasına Göre)</h3>
-  <div class="box formul">
-    <p style="text-align:center;"><span class="f">m'<sub>k</sub> = &sum; X<sub>i</sub><sup>k</sup> / n</span></p>
-    <p><strong>1. Sıfıra Göre Moment (k=1):</strong> <span class="f">m'<sub>1</sub> = &sum; X<sub>i</sub> / n = x̄</span> &rarr; <strong>ARİTMETİK ORTALAMAYA EŞİTTİR!</strong></p>
-  </div>
-
-  <h3>9.2. Ortalamaya Göre Merkezi Momentler</h3>
-  <div class="box formul">
-    <p style="text-align:center;"><span class="f">m<sub>k</sub> = &sum; (X<sub>i</sub> &minus; x̄)<sup>k</sup> / n</span></p>
+    <h4>9.1.1. Sıfıra Göre Momentler (Basit / Ham Momentler - $m_k'$)</h4>
+    <p>Gözlem değerlerinin orijine (sıfıra) göre $k$. dereceden momentidir:</p>
+    $$m_k' = rac{\sum_{i=1}^n x_i^k}{n}$$
     <ul>
-      <li><strong>1. Merkezi Moment (k=1):</strong> <span class="f">m<sub>1</sub> = &sum; (X<sub>i</sub> &minus; x̄) / n = 0</span> &rarr; DAİMA SIFIRDIR!</li>
-      <li><strong>2. Merkezi Moment (k=2):</strong> <span class="f">m<sub>2</sub> = &sum; (X<sub>i</sub> &minus; x̄)<sup>2</sup> / n = &sigma;²</span> &rarr; <strong>VARYANSA EŞİTTİR!</strong></li>
-      <li><strong>3. Merkezi Moment (k=3):</strong> Çarpıklığı (asimetriyi) ölçer. Simetrik seride 0'dır.</li>
-      <li><strong>4. Merkezi Moment (k=4):</strong> Basıklığı ölçer.</li>
+      <li><strong>1. Sıfıra Göre Moment ($k=1$):</strong>
+        $$m_1' = rac{\sum x_i}{n} = ar{X} \quad 	ext{(Aritmetik Ortalamanın ta kendisidir!)}$$
+      </li>
+      <li><strong>2. Sıfıra Göre Moment ($k=2$):</strong>
+        $$m_2' = rac{\sum x_i^2}{n} \quad 	ext{(Karelerin ortalamasıdır)}$$
+      </li>
     </ul>
-  </div>
 
-  
-  <h3>9.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Sıfıra göre birinci moment (m'1) aşağıdakilerden hangisine eşittir?</span>
-      <span class="qtag">Ünite 9 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Varyans</li>
+    <h4>9.1.2. Merkeze (Ortalamaya) Göre Momentler ($m_k$)</h4>
+    <p>Gözlem değerlerinin kendi aritmetik ortalamalarından olan farklarının $k$. dereceden ortalamasıdır:</p>
+    $$m_k = rac{\sum_{i=1}^n (x_i - ar{X})^k}{n}$$
+    <ul>
+      <li><strong>1. Merkeze Göre Moment ($k=1$):</strong>
+        $$m_1 = rac{\sum (x_i - ar{X})}{n} = \mathbf{0} \quad 	ext{(DAİMA SIFIRDIR!)}$$
+      </li>
+      <li><strong>2. Merkeze Göre Moment ($k=2$):</strong>
+        $$m_2 = rac{\sum (x_i - ar{X})^2}{n} = \mathbf{\sigma^2} \quad 	ext{(VARYANSTIR!)}$$
+      </li>
+      <li><strong>3. Merkeze Göre Moment ($k=3$):</strong> Dağılımın Çarpıklık yönünü ve büyüklüğünü belirler. Simetrik serilerde $m_3 = 0$'dır.</li>
+      <li><strong>4. Merkeze Göre Moment ($k=4$):</strong> Dağılımın Basıklık derecesini ölçer.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>9.2. König Teoremi</h3>
+    <p>Merkeze göre 2. moment (varyans) ile sıfıra göre momentler arasındaki temel cebirsel ilişkiyi kuran teoremdir:</p>
+    <div class="formula-box">
+      $$m_2 = m_2' - (m_1')^2 \implies \sigma^2 = rac{\sum x_i^2}{n} - ar{X}^2$$
+    </div>
+    <p><em>Anlamı:</em> "Varyans = Karelerin ortalaması eksi Ortalamanın karesi". Bu teorem varyans hesaplamalarında işlem süresini yarı yarıya kısaltır.</p>
+  </section>
+
+  <section>
+    <h3>9.3. Basıklık Katsayısı ($lpha_4$)</h3>
+    <p>Dağılımın eğrisinin tepe noktasının dikliğini veya yassılığını ölçen katsayıdır:</p>
+    $$lpha_4 = rac{m_4}{m_2^2} = rac{m_4}{\sigma^4}$$
+
+    <h4>Yorumlama Standartları (Normal Dağılıma Göre):</h4>
+    <ul>
+      <li><strong>$lpha_4 = 3$: Mezokurtik (Normal Basıklık)</strong> $ightarrow$ Dağılım standart normal çan eğrisi basıklığındadır.</li>
+      <li><strong>$lpha_4 > 3$: Leptokurtik (Sivri Dağılım)</strong> $ightarrow$ Tepe noktası normalden daha sivri, kuyrukları daha kalındır (Finansal piyasalarda aşırı getiri/risk riski).</li>
+      <li><strong>$lpha_4 < 3$: Platikurtik (Basık Dağılım)</strong> $ightarrow$ Tepe noktası yayvan, veriler merkeze daha az toplanmıştır.</li>
+    </ul>
+  </section>
+</article>
+
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 9 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Sıfıra göre birinci moment (m'1) aşağıdakilerden hangisine eşittir?</span>
+<span class="qtag">Ünite 9 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Varyans</li>
 <li class="ok"><strong>B)</strong> Aritmetik Ortalama</li>
 <li><strong>C)</strong> Standart Sapma</li>
 <li><strong>D)</strong> Sıfır</li>
 <li><strong>E)</strong> Medyan</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        m'1 = &sum; X / n = x̄ (Aritmetik ortalamaya eşittir). Ortalamaya göre 2. moment ise varyansa eşittir. Doğru seçenek <strong>B</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        m'1 = ∑ X / n = x̄ (Aritmetik ortalamaya eşittir). Ortalamaya göre 2. moment ise varyansa eşittir. Doğru seçenek <strong>B</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u9">
+      
+<article class="unit-article">
+  <h2>10. Ünite: Olasılığa Giriş ve Temel Kavramlar</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Belirsizlik içeren rassal olayların matematiksel modellemesini, örneklem uzayı ve olay kümelerini, Kolmogorov'un olasılık aksiyomlarını, sayma kurallarını (Çarpma, Permütasyon, Kombinasyon) ve büyük faktöriyellerin hesabında kullanılan Stirling Yaklaşımını öğrenmektir.
+  </div>
+
+  <section>
+    <h3>10.1. Olasılığın Temel Kavramları</h3>
+    <ul>
+      <li><strong>Rassal Deney:</strong> Sonucu önceden kesin olarak bilinemeyen, ancak olası tüm sonuçları önceden tanımlanabilen süreçtir (Örneğin: Madeni para atılması, zar atılması, yarınki hava durumu).</li>
+      <li><strong>Örneklem Uzayı ($S$):</strong> Bir rassal deneyin mümkün olan TÜM çıktılarının oluşturduğu kümedir.
+        <ul>
+          <li>Madeni para atılması: $S = \{	ext{Yazı}, 	ext{Tura}\}$ ($n(S) = 2$).</li>
+          <li>Bir zar atılması: $S = \{1, 2, 3, 4, 5, 6\}$ ($n(S) = 6$).</li>
+          <li>İki madeni para: $S = \{(Y,Y), (Y,T), (T,Y), (T,T)\}$ ($n(S) = 4$).</li>
+        </ul>
+      </li>
+      <li><strong>Olay ($A$):</strong> Örneklem uzayının herhangi bir alt kümesidir ($A \subseteq S$). Örneğin zar atıldığında çift sayı gelmesi olayı: $A = \{2, 4, 6\}$.</li>
+      <li><strong>İmkânsız Olay ($\emptyset$):</strong> Gerçekleşmesi mümkün olmayan olaydır: $P(\emptyset) = 0$ (Zar atıldığında 7 gelmesi).</li>
+      <li><strong>Kesin Olay ($S$):</strong> Mutlaka gerçekleşecek olaydır: $P(S) = 1$ (Zarın 7'den küçük gelmesi).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>10.2. Kolmogorov'un Üç Temel Olasılık Aksiyomu</h3>
+    <p>Andrey Kolmogorov (1933) tarafından modern olasılık teorisinin temeli olarak ortaya konan aksiyomlar:</p>
+    <div class="formula-box">
+      <ol>
+        <li><strong>Aksiyom 1 (Pozitiflik):</strong> Herhangi bir $A$ olayının olasılığı 0 ile 1 arasındadır:
+          $$0 \leq P(A) \leq 1$$
+        </li>
+        <li><strong>Aksiyom 2 (Kesinlik):</strong> Örneklem uzayının olasılığı 1'dir:
+          $$P(S) = 1$$
+        </li>
+        <li><strong>Aksiyom 3 (Ayrık Olayların Toplanabilirliği):</strong> Eğer $A$ ve $B$ birbirini dışlayan (ayrık, kesişimi boş küme: $A \cap B = \emptyset$) olaylar ise:
+          $$P(A \cup B) = P(A) + P(B)$$
+        </li>
+      </ol>
     </div>
-  </details>
 
+    <h4>Türetilen Temel Özellikler:</h4>
+    <ul>
+      <li><strong>Tümleyen Olay Kuralı:</strong> Bir olayın olmama olasılığı, 1'den olma olasılığının çıkarılmasına eşittir:
+        $$P(A') = 1 - P(A)$$
+      </li>
+      <li><strong>Genel Toplama Kuralı (Ayrık Olmayan Olaylar):</strong>
+        $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+      </li>
+    </ul>
+  </section>
 
-</section>
+  <section>
+    <h3>10.3. Temel Sayma Kuralları</h3>
 
-<section class="unit" data-i="9" id="u9">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 10</span>
-    <h2>Olasılık Teorisine Giriş: Örneklem Uzayı ve Olasılık Aksiyomları</h2>
-  </div>
+    <h4>10.3.1. Çarpma Kuralı</h4>
+    <p>Birinci işlem $n_1$ farklı yolla, ikinci işlem $n_2$ farklı yolla yapılabiliyorsa; iki işlem birlikte $n_1 	imes n_2$ farklı yolla yapılabilir.</p>
 
-  <div class="lead-box">
-    <p>Olasılık, rastgele bir deneyin olası sonuçları hakkında duyulan belirsizliğin 0 ile 1 arasındaki reel sayılarla matematiksel olarak ölçülmesidir.</p>
-  </div>
+    <h4>10.3.2. Permütasyon (Sıralama - Diziliş)</h4>
+    <p>$n$ elemanlı bir kümeden seçilen $r$ elemanın <strong>SIRALANIŞI (DİZİLİŞİ) ÖNEMLİ İSE</strong> permütasyon kullanılır:</p>
+    $$P(n, r) = rac{n!}{(n - r)!}$$
+    <p><em>Örnek:</em> 8 atletin yarıştığı koşuda ilk 3 derece (altın, gümüş, bronz) kaç farklı şekilde oluşabilir?<br>
+    $P(8, 3) = rac{8!}{(8-3)!} = rac{8 	imes 7 	imes 6 	imes 5!}{5!} = 8 	imes 7 	imes 6 = \mathbf{336}$ farklı sıralama.</p>
 
-  <h3>10.1. Temel Olasılık Kavramları</h3>
-  <div class="box formul">
-    <dl>
-      <dt>Rastgele Deney</dt>
-      <dd>Sonuçları önceden kesin olarak bilinemeyen, fakat olası tüm sonuçları tanımlanabilen süreçtir (örn. zar atılması, para atılması).</dd>
-      <dt>Örneklem Uzayı (S veya &Omega;)</dt>
-      <dd>Bir deneyin mümkün olan tüm sonuçlarının kümesidir (Hilesiz zar için: S = {1, 2, 3, 4, 5, 6}).</dd>
-      <dt>Olay (A)</dt>
-      <dd>Örneklem uzayının herhangi bir alt kümesidir (Zarın tek sayı gelmesi olayı: A = {1, 3, 5}).</dd>
-      <dt>İmkansız Olay ve Kesin Olay</dt>
-      <dd>Boş küme (&empty;) imkansız olaydır (P(&empty;) = 0); örneklem uzayının kendisi (S) kesin olaydır (P(S) = 1).</dd>
-    </dl>
-  </div>
+    <h4>10.3.3. Kombinasyon (Seçim - Gruplama)</h4>
+    <p>$n$ elemanlı bir kümeden $r$ elemanın <strong>SEÇİMİNDE SIRA ÖNEMSİZ İSE</strong> kombinasyon kullanılır:</p>
+    $$C(n, r) = inom{n}{r} = rac{n!}{r!(n - r)!}$$
+    <p><em>Örnek:</em> 10 kişilik bir gruptan 3 kişilik bir proje komitesi kaç farklı şekilde seçilebilir?<br>
+    $inom{10}{3} = rac{10 	imes 9 	imes 8}{3 	imes 2 	imes 1} = rac{720}{6} = \mathbf{120}$ farklı komite.</p>
 
-  <h3>10.2. Klasik Olasılık Tanımı ve 3 Temel Aksiyom (Kolmogorov)</h3>
-  <p>Eşit şanslı n adet temel sonuçtan m tanesi A olayını destekliyorsa: <span class="f">P(A) = m / n = İstenen Durum Sayısı / Tüm Olası Durum Sayısı</span></p>
+    <h4>10.3.4. Tekrarlı Permütasyon</h4>
+    <p>Bazı elemanları birbirinin aynı olan nesnelerin sıralanış sayısıdır:</p>
+    $$rac{n!}{n_1! \cdot n_2! \dots n_k!}$$
 
-  <div class="box formul">
-    <h4>Olasılığın 3 Aksiyomu:</h4>
-    <ol class="adim">
-      <li><strong>Pozitiflik Aksiyomu:</strong> Herhangi bir A olayı için olasılık daima 0 ile 1 arasındadır: <span class="f">0 &le; P(A) &le; 1</span></li>
-      <li><strong>Kesin Olay Aksiyomu:</strong> Örneklem uzayının olasılığı 1'dir: <span class="f">P(S) = 1</span></li>
-      <li><strong>Ayrık Olaylar Toplama Aksiyomu:</strong> A ve B ayrık (kesişimi boş, aynı anda gerçekleşemeyen) olaylar ise: <span class="f">P(A &cup; B) = P(A) + P(B)</span></li>
-    </ol>
-  </div>
+    <h4>10.3.5. Stirling Yaklaşımı</h4>
+    <p>Çok büyük $n$ değerleri için $n!$ hesaplamak bilgisayarlarda bile taşmaya yol açar. James Stirling'in geliştirdiği asimptotik formül:</p>
+    $$n! pprox \sqrt{2 \pi n} \left( rac{n}{e} ight)^n$$
+  </section>
+</article>
 
-  <h3>10.3. Tümleyen Olay Kuralı</h3>
-  <p>Bir A olayının gerçekleşmeme (tümleyen) olasılığı: <span class="f">P(A') = 1 &minus; P(A)</span></p>
-
-  
-  <h3>10.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Bir deneyde aynı anda gerçekleşmesi imkansız olan (kesişimi boş küme olan) olaylara ne ad verilir?</span>
-      <span class="qtag">Ünite 10 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Bağımsız Olaylar</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 10 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Bir deneyde aynı anda gerçekleşmesi imkansız olan (kesişimi boş küme olan) olaylara ne ad verilir?</span>
+<span class="qtag">Ünite 10 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Bağımsız Olaylar</li>
 <li class="ok"><strong>B)</strong> Ayrık Olaylar</li>
 <li><strong>C)</strong> Tümleyen Olaylar</li>
 <li><strong>D)</strong> Kesin Olaylar</li>
 <li><strong>E)</strong> Bağımlı Olaylar</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        A &cap; B = &empty; olan olaylara Ayrık (Karşılıklı Hariçleyen) olaylar denir. Doğru seçenek <strong>B</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        A ∩ B = ∅ olan olaylara Ayrık (Karşılıklı Hariçleyen) olaylar denir. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-
-</section>
-
-<section class="unit" data-i="10" id="u10">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 11</span>
-    <h2>Koşullu Olasılık, Bağımsızlık ve Kesikli Dağılımlar (Binom, Poisson)</h2>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u10">
+      
+<article class="unit-article">
+  <h2>11. Ünite: Çekilişler, Bağımlılık/Bağımsızlık, Koşullu Olasılık ve Bayes Teoremi</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> İadeli ve iadesiz çekilişlerin olasılık modellemesini, bağımsız ve bağımlı olayları, koşullu olasılık hesaplamalarını, Toplam Olasılık Yasasını ve ters olasılıkları güncelleyen Bayes Teoremini adım adım çözümlü problemlerle kavramaktır.
   </div>
 
-  <div class="lead-box">
-    <p>Bir olayın gerçekleştiği bilindiğinde diğer bir olayın gerçekleşme olasılığı koşullu olasılık kuralıyla hesaplanır. Ayrıca kesikli tesadüfi değişkenlerin olasılık kütle fonksiyonları incelenir.</p>
-  </div>
-
-  <h3>11.1. Koşullu Olasılık ve Bağımsızlık</h3>
-  <div class="box formul">
-    <h4>Koşullu Olasılık Formülü:</h4>
-    <p style="text-align:center;"><span class="f">P(A | B) = P(A &cap; B) / P(B)</span> &nbsp;(P(B) &gt; 0)</p>
-    <p>*(B olayının gerçekleştiği bilindiğinde A'nın gerçekleşme olasılığı)*</p>
-    <h4>Bağımsız Olaylar Şartı:</h4>
-    <p>İki olay birbirinin olasılığını etkilemiyorsa: <span class="f">P(A &cap; B) = P(A) &times; P(B)</span> ve <span class="f">P(A | B) = P(A)</span></p>
-  </div>
-
-  <h3>11.2. Binom Dağılımı (Bernoulli Denemeleri)</h3>
-  <p>Her denemede sadece iki olası sonuç (Başarı/Başarısızlık) olduğunda ve denemeler bağımsız olduğunda geçerlidir:</p>
-  <div class="box formul">
-    <p style="text-align:center;"><span class="f">P(X = k) = C(n, k) &times; p<sup>k</sup> &times; (1 &minus; p)<sup>n &minus; k</sup></span></p>
+  <section>
+    <h3>11.1. Çekiliş Türleri: İadeli vs. İadesiz Çekiliş</h3>
     <ul>
-      <li><strong>Beklenen Değer (Ortalama):</strong> <span class="f">&mu; = n &times; p</span></li>
-      <li><strong>Varyans:</strong> <span class="f">&sigma;² = n &times; p &times; (1 &minus; p)</span></li>
-      <li><strong>Standart Sapma:</strong> <span class="f">&sigma; = &radic;[n &times; p &times; (1 &minus; p)]</span></li>
+      <li><strong>İadeli (Yerine Koyarak) Çekiliş:</strong> Çekilen birim incelendikten sonra tekrar kütleye geri konur. Denemeler birbirinden <strong>BAĞIMSIZDIR</strong>. Örneklem uzayı ve olasılıklar her çekilişte sabit kalır.</li>
+      <li><strong>İadesiz (Yerine Koymadan) Çekiliş:</strong> Çekilen birim kütleye geri konmaz. Denemeler <strong>BAĞIMLIDIR</strong>. Örneklem uzayı her çekilişte 1 birim azalır ve olasılıklar sürekli değişir.</li>
     </ul>
-  </div>
+  </section>
 
-  <h3>11.3. Poisson Dağılımı</h3>
-  <p>Zaman, alan veya hacim gibi belirli bir sürekli aralıkta nadir görülen olayların sayısını modellemede kullanılır:</p>
-  <div class="box formul">
-    <p style="text-align:center;"><span class="f">P(X = x) = (e<sup>&minus;&lambda;</sup> &times; &lambda;<sup>x</sup>) / x!</span></p>
-    <p><strong>En Önemli Özelliği (Sınav Sorusu):</strong> Poisson dağılımında <strong>BEKLENEN DEĞER (ORTALAMA) İLE VARYANS BİRBİRİNE EŞİTTİR:</strong> <span class="f">E(X) = Var(X) = &lambda;</span></p>
-  </div>
+  <section>
+    <h3>11.2. Bağımsız Olaylar</h3>
+    <p>İki olaydan birinin gerçekleşmesi diğerinin gerçekleşme olasılığını hiçbir şekilde etkilemiyorsa bu iki olaya <strong>Bağımsız Olaylar</strong> denir. Bağımsız olayların kesişim (birlikte olma) olasılığı:</p>
+    $$P(A \cap B) = P(A) \cdot P(B)$$
+  </section>
 
-  
-  <h3>11.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Poisson olasılık dağılımının en ayırt edici özelliği aşağıdakilerden hangisidir?</span>
-      <span class="qtag">Ünite 11 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Ortalaması daima sıfırdır</li>
+  <section>
+    <h3>11.3. Koşullu Olasılık</h3>
+    <p>$B$ olayının gerçekleştiği bilindiğinde, $A$ olayının gerçekleşme olasılığına <strong>Koşullu Olasılık</strong> denir ve $P(A|B)$ şeklinde gösterilir:</p>
+    <div class="formula-box">
+      $$P(A|B) = rac{P(A \cap B)}{P(B)}, \quad P(B) > 0$$
+    </div>
+    <p>Buradan <em>Genel Çarpma Kuralı</em> elde edilir:</p>
+    $$P(A \cap B) = P(B) \cdot P(A|B) = P(A) \cdot P(B|A)$$
+  </section>
+
+  <section>
+    <h3>11.4. Bayes Teoremi ve Toplam Olasılık Yasası</h3>
+    <p>Thomas Bayes (1763) tarafından geliştirilen teorem, yeni bir bilgi veya kanıt ($B$) elde edildiğinde, başlangıçtaki olasılıkların (önsel olasılıklar) güncellenerek yeni olasılıklara (sonsal olasılıklar) dönüştürülmesini sağlar.</p>
+
+    <div class="formula-box">
+      <strong>Toplam Olasılık Kuralı:</strong>
+      $$P(B) = \sum_{i=1}^k P(A_i) \cdot P(B|A_i)$$
+      
+      <strong>Bayes Teoremi Formülü:</strong>
+      $$P(A_j|B) = rac{P(A_j) \cdot P(B|A_j)}{P(B)} = rac{P(A_j) \cdot P(B|A_j)}{\sum_{i=1}^k P(A_i) \cdot P(B|A_i)}$$
+    </div>
+
+    <div class="note-box">
+      <strong>Klasik Bayes Problemi:</strong>
+      <p>Bir fabrikada üretimin %60'ı A makinesinde, %40'ı B makinesinde yapılmaktadır. A makinesinin kusurlu ürün üretme oranı %2, B makinesinin kusurlu ürün üretme oranı %5'tir.<br>
+      Rastgele seçilen bir ürünün kusurlu ($K$) olduğu görülmüştür. Bu ürünün <strong>A makinesinde üretilmiş olma olasılığı $P(A|K)$ nedir?</strong></p>
+      
+      <p><em>Adım 1: Önsel Olasılıklar:</em><br>
+      $P(A) = 0.60$, $P(B) = 0.40$<br>
+      $P(K|A) = 0.02$, $P(K|B) = 0.05$</p>
+
+      <p><em>Adım 2: Toplam Kusurlu Ürün Olasılığı $P(K)$:</em><br>
+      $$P(K) = P(A) \cdot P(K|A) + P(B) \cdot P(K|B) = (0.60 	imes 0.02) + (0.40 	imes 0.05) = 0.012 + 0.020 = \mathbf{0.032}$$</p>
+
+      <p><em>Adım 3: Bayes Formülünün Uygulanması:</em><br>
+      $$P(A|K) = rac{P(A) \cdot P(K|A)}{P(K)} = rac{0.012}{0.032} = rac{12}{32} = \mathbf{0.375} \quad (\%37.5)$$</p>
+      Ürünün A makinesinde üretilmiş olma olasılığı <strong>%37.5</strong>'tir.
+    </div>
+  </section>
+</article>
+
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 11 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Poisson olasılık dağılımının en ayırt edici özelliği aşağıdakilerden hangisidir?</span>
+<span class="qtag">Ünite 11 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Ortalaması daima sıfırdır</li>
 <li class="ok"><strong>B)</strong> Beklenen değeri (ortalaması) varyansına eşittir</li>
 <li><strong>C)</strong> Sürekli bir dağılımdır</li>
 <li><strong>D)</strong> Varyansı standart sapmasına eşittir</li>
 <li><strong>E)</strong> Ortalaması modundan büyüktür</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        Poisson dağılımında E(X) = Var(X) = &lambda; kuralı geçerlidir. Doğru seçenek <strong>B</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        Poisson dağılımında E(X) = Var(X) = λ kuralı geçerlidir. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-
-</section>
-
-<section class="unit" data-i="11" id="u11">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 12</span>
-    <h2>Sürekli Olasılık Dağılımları: Normal Dağılım ve Standart Normal Dağılım (Z)</h2>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u11">
+      
+<article class="unit-article">
+  <h2>12. Ünite: Sürekli Dağılımlar - Normal Dağılım</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> İstatistiğin en temel dağılımı olan Normal Dağılımın (Gauss Dağılımı) matematiksel fonksiyonunu, çan eğrisi özelliklerini, Standart Normal Dağılımı ($Z$) ve $Z$ tablosunun okunma kurallarını sınav odaklı sayısal problemlerle öğrenmektir.
   </div>
 
-  <div class="lead-box">
-    <p>İstatistikte en yaygın kullanılan ve merkezi limit teoreminin temelini oluşturan Normal Dağılım (Gauss Dağılımı), simetrik çan eğrisi şekline sahiptir.</p>
-  </div>
+  <section>
+    <h3>12.1. Sürekli Rassal Değişkenler ve Olasılık Yoğunluk Fonksiyonu ($f(x)$)</h3>
+    <p>Sürekli değişkenlerde olasılık belirli bir nokta için değil, belirli bir <strong>aralık</strong> için hesaplanır.</p>
+    <ul>
+      <li><strong>Hayati İlke:</strong> Sürekli bir dağılımda tek bir noktanın olasılığı <strong>DAİMA SIFIRA EŞİTTİR:</strong>
+        $$P(X = a) = 0$$
+        Bu nedenle sürekli dağılımlarda eşitsizlik işaretlerinin katı veya geniş olması olasılığı DEĞİŞTİRMEZ:
+        $$P(a \leq X \leq b) = P(a < X < b)$$
+      </li>
+      <li>Yoğunluk fonksiyonunun eğrisi altında kalan toplam alan 1'e eşittir: $\int_{-\infty}^{\infty} f(x) dx = 1$.</li>
+    </ul>
+  </section>
 
-  <h3>12.1. Normal Dağılımın 5 Temel Özelliği</h3>
-  <ol class="adim">
-    <li>Eğri, ortalamaya (&mu;) göre kusursuz biçimde <strong>simetriktir</strong>.</li>
-    <li>Ortalama, medyan ve mod birbirine eşittir: <span class="f">&mu; = Medyan = Mod</span>.</li>
-    <li>Eğrinin altında kalan toplam alan (olasılık) <strong>1'e (%100)</strong> eşittir. Ortalamanın sağı %50 (0,5), solu %50 (0,5)'tir.</li>
-    <li>Eğri x eksenine yaklaşır fakat asla kesmez (asemptotiktir, &minus;&infin; ile +&infin; arasındadır).</li>
-    <li><strong>Ampirik Kural (68 - 95 - 99,7 Kuralı):</strong>
-      <ul>
-        <li>&mu; &plusmn; 1&sigma; aralığında verilerin yaklaşık <strong>%68,26</strong>'sı,</li>
-        <li>&mu; &plusmn; 2&sigma; aralığında verilerin yaklaşık <strong>%95,44</strong>'ü,</li>
-        <li>&mu; &plusmn; 3&sigma; aralığında verilerin yaklaşık <strong>%99,74</strong>'ü yer alır.</li>
-      </ul>
-    </li>
-  </ol>
+  <section>
+    <h3>12.2. Normal Dağılım (Gauss Dağılımı) ve Özellikleri</h3>
+    <p>Karl Friedrich Gauss tarafından geliştirilen ve doğada, sosyal bilimlerde en sık karşılaşılan simetrik çan eğrisi dağılımıdır. İki parametresi vardır: Ortalama ($\mu$) ve Varyans ($\sigma^2$). Gösterimi: $X \sim N(\mu, \sigma^2)$.</p>
 
-  <h3>12.2. Standart Normal Dağılım (Z Dağılımı)</h3>
-  <p>Herhangi bir X ~ N(&mu;, &sigma;²) değişkeni z dönüşümüyle standartlaştırılır: <strong>Z ~ N(0, 1)</strong></p>
-  <div class="box formul">
-    <p style="text-align:center; font-size:18px; font-weight:800;">
-      <span class="f">z = (X &minus; &mu;) / &sigma;</span>
-    </p>
-  </div>
-
-  <div class="box ornek">
-    <h4>Sayısal Örnek: Olasılık Hesabı</h4>
-    <p>Bir sınavda notlar &mu; = 70 ve &sigma; = 10 ile normal dağılmaktadır. Rastgele seçilen bir öğrencinin 80'den yüksek not alma olasılığı nedir?</p>
-    <ol class="adim">
-      <li><strong>Adım 1 (z Puanı Hesabı):</strong> <span class="f">z = (80 &minus; 70) / 10 = 10 / 10 = +1,00</span></li>
-      <li><strong>Adım 2 (Tablo Değeri):</strong> Z tablosuna göre ortalama ile z=1 arasındaki alan = 0,3413'tür.</li>
-      <li><strong>Adım 3 (Üst Kuyruk Olasılığı):</strong> z > 1 olasılığı = <span class="f">0,5000 &minus; 0,3413 = 0,1587 (%15,87)</span> olarak bulunur.</li>
+    <h4>Normal Eğrinin Temel Karakteristikleri:</h4>
+    <ol>
+      <li><strong>Simetriklik:</strong> Eğri ortalama $\mu$'ye göre tam simetriktir. Eğrinin altındaki alanın %50'si (0.5000) ortalamanın solunda, %50'si (0.5000) sağında yer alır.</li>
+      <li><strong>Eşitlik:</strong> Ortada tek bir tepe noktası vardır ve <strong>Aritmetik Ortalama = Medyan = Mod</strong>'dur ($\mu = Me = Mo$).</li>
+      <li><strong>Asimptotiklik:</strong> Eğrinin kolları her iki yönde sonsuza doğru uzanır, ancak yatay ekseni hiçbir zaman KESMEZ.</li>
     </ol>
-  </div>
+  </section>
 
-  
-  <h3>12.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Normal dağılım eğrisinde ortalama &plusmn; 1 standart sapma (&mu; &plusmn; 1&sigma;) aralığında gözlemlerin yaklaşık yüzde kaçı yer alır?</span>
-      <span class="qtag">Ünite 12 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> %50</li>
+  <section>
+    <h3>12.3. Standart Normal Dağılım ($Z$ Dağılımı)</h3>
+    <p>Ortalaması $\mu = 0$ ve standart sapması $\sigma = 1$ olan özel normal dağılıma <strong>Standart Normal Dağılım</strong> denir: $Z \sim N(0, 1)$.</p>
+
+    <div class="formula-box">
+      <strong>Standartlaştırma ($Z$) Formülü:</strong>
+      $$Z = rac{X - \mu}{\sigma}$$
+    </div>
+
+    <h4>$Z$ Tablosu Okuma ve Simetri Kuralları:</h4>
+    <table class="data-table">
+      <thead><tr><th>İstenen Durum</th><th>Uygulanacak Kural</th></tr></thead>
+      <tbody>
+        <tr><td>$P(Z < a)$ (Pozitif $a$)</td><td>Doğrudan tablodan okunur: $\Phi(a)$</td></tr>
+        <tr><td>$P(Z > a)$ (Pozitif $a$)</td><td>$1 - P(Z < a) = 1 - \Phi(a)$</td></tr>
+        <tr><td>$P(Z < -a)$ (Negatif $a$)</td><td>Simetri kuralı gereği: $P(Z > a) = 1 - \Phi(a)$</td></tr>
+        <tr><td>$P(a < Z < b)$</td><td>$\Phi(b) - \Phi(a)$</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note-box">
+      <strong>Sayısal Problem:</strong>
+      <p>Bir üniversitede İstatistik dersi vize notları $\mu = 65$ ve $\sigma = 10$ olan bir normal dağılım göstermektedir. Rastgele seçilen bir öğrencinin <strong>80'den yüksek not alma olasılığı $P(X > 80)$ nedir?</strong></p>
+      <p><em>Çözüm:</em><br>
+      $Z = rac{80 - 65}{10} = rac{15}{10} = \mathbf{1.50}$<br>
+      Tablodan $Z = 1.50$ için alan: $\Phi(1.50) = 0.9332$.<br>
+      $P(X > 80) = P(Z > 1.50) = 1 - 0.9332 = \mathbf{0.0668} \quad (\%6.68)$.</p>
+    </div>
+  </section>
+</article>
+
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 12 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Normal dağılım eğrisinde ortalama ± 1 standart sapma (μ ± 1σ) aralığında gözlemlerin yaklaşık yüzde kaçı yer alır?</span>
+<span class="qtag">Ünite 12 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> %50</li>
 <li class="ok"><strong>B)</strong> %68,26</li>
 <li><strong>C)</strong> %95,44</li>
 <li><strong>D)</strong> %99,74</li>
 <li><strong>E)</strong> %100</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Ampirik kurala göre 1 standart sapma aralığında verilerin %68,26'sı; 2 standart sapmada %95,44'ü yer alır. Doğru seçenek <strong>B</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u12">
+      
+<article class="unit-article">
+  <h2>13. Ünite: Hipotez Testleri (Tek Anakütle)</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> Bilimsel karar alma sürecinin omurgası olan Hipotez Testlerinin mantığını, Sıfır ($H_0$) ve Alternatif ($H_1$) hipotezlerin kuruluşunu, I. Tür ($lpha$) ve II. Tür ($eta$) hata kavramlarını, Z testi ve Student t testi seçim ölçütlerini ve tek anakütle ortalama ve oran testlerini öğrenmektir.
+  </div>
+
+  <section>
+    <h3>13.1. Hipotez Testinin Mantığı ve Aşamaları</h3>
+    <p>Hipotez, anakütle parametreleri hakkında ileri sürülen ve doğruluğu örneklem verileriyle sınanan bir iddiadır.</p>
+    <ul>
+      <li><strong>Sıfır Hipotezi ($H_0$):</strong> Değişiklik, fark veya etki olmadığını savunan başlangıç hipotezidir. <strong>DAİMA EŞİTLİK İÇERİR</strong> ($=, \leq, \geq$). Test edilen hipotez budur.</li>
+      <li><strong>Alternatif Hipotez ($H_1$):</strong> Araştırmacının kanıtlamaya çalıştığı, iddia edilen hipotezdir. Eşitlik İÇERMEZ ($
+eq, <, >$).</li>
+    </ul>
+
+    <h4>Testin Yönü:</h4>
+    <ul>
+      <li>$H_1: \mu 
+eq \mu_0 ightarrow$ <strong>İki Yönlü Test</strong> (Ret bölgesi her iki kuyrukta $lpha/2$ olarak paylaşılır).</li>
+      <li>$H_1: \mu < \mu_0 ightarrow$ <strong>Tek Yönlü Sol Kuyruk Testi</strong> (Tüm ret bölgesi $lpha$ soldadır).</li>
+      <li>$H_1: \mu > \mu_0 ightarrow$ <strong>Tek Yönlü Sağ Kuyruk Testi</strong> (Tüm ret bölgesi $lpha$ sağdadır).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>13.2. Karar Matrisi ve Hata Türleri</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Gerçek Durum</th>
+          <th>Karar: $H_0$ Kabul Edildi</th>
+          <th>Karar: $H_0$ Reddedildi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>$H_0$ Gerçekte Doğru</strong></td>
+          <td>Doğru Karar (Güven Düzeyi: $1 - lpha$)</td>
+          <td><strong style="color:var(--danger);">I. Tür Hata ($lpha$ - Anlamlılık Düzeyi)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>$H_0$ Gerçekte Yanlış</strong></td>
+          <td><strong style="color:var(--accent);">II. Tür Hata ($eta$)</strong></td>
+          <td>Doğru Karar (Testin Gücü: $1 - eta$)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card">
+      <h4>Hata Türlerinin Hukuk Benzetmesi:</h4>
+      <ul>
+        <li><strong>I. Tür Hata ($lpha$):</strong> Masum bir insanı suçlu bulup hapse atmak (Doğru olan $H_0$'ı reddetmek). En tehlikeli hatadır, araştırmacı tarafından önceden kontrol edilir (genellikle $lpha = 0.05$ veya $lpha = 0.01$).</li>
+        <li><strong>II. Tür Hata ($eta$):</strong> Suçlu bir insanı delil yetersizliğinden serbest bırakmak (Yanlış olan $H_0$'ı kabul etmek).</li>
+        <li><strong>Testin Gücü ($1 - eta$):</strong> Yanlış olan bir iddiayı doğru şekilde reddedebilme olasılığıdır.</li>
+      </ul>
     </div>
-  </details>
+  </section>
 
+  <section>
+    <h3>13.3. Test İstatistiğinin Seçimi ($Z$ vs. $t$)</h3>
+    <p>Anakütle ortalaması sınanırken iki temel test kullanılır:</p>
+    
+    <div class="formula-box">
+      <strong>Durum A: Anakütle Varyansı $\sigma$ Biliniyorsa VEYA Örneklem Büyükse ($n \geq 30$):</strong>
+      <p>Standart Normal Dağılım ($Z$) testi kullanılır:</p>
+      $$Z_{hesap} = rac{ar{X} - \mu_0}{rac{\sigma}{\sqrt{n}}} \quad 	ext{veya} \quad Z_{hesap} = rac{ar{X} - \mu_0}{rac{s}{\sqrt{n}}}$$
+    </div>
 
-</section>
+    <div class="formula-box">
+      <strong>Durum B: Anakütle Varyansı $\sigma$ Bilinmiyor VE Örneklem Küçükse ($n < 30$):</strong>
+      <p>Student $t$ testi kullanılır (Serbestlik Derecesi: $df = n - 1$):</p>
+      $$t_{hesap} = rac{ar{X} - \mu_0}{rac{s}{\sqrt{n}}}$$
+    </div>
 
-<section class="unit" data-i="12" id="u12">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 13</span>
-    <h2>Parametrik Hipotez Testleri: Temel Kavramlar ve Tek Anakütle Testleri</h2>
-  </div>
-
-  <div class="lead-box">
-    <p>Hipotez testi; anakütle parametresi hakkında öne sürülen bir iddianın, örneklemden elde edilen kanıtlar ışığında istatistiksel olarak geçerli olup olmadığını belirli bir hata payıyla (anlamlılık düzeyinde) karara bağlama sürecidir.</p>
-  </div>
-
-  <h3>13.1. Sıfır Hipotezi (H<sub>0</sub>) ve Alternatif Hipotez (H<sub>1</sub>)</h3>
-  <ul>
-    <li><strong>Sıfır Hipotezi (H<sub>0</sub>):</strong> Farkın veya etkinin olmadığını savunan statüko hipotezidir. Eşitlik daima H<sub>0</sub>'da yer alır (=, &le;, &ge;).</li>
-    <li><strong>Alternatif Hipotez (H<sub>1</sub> veya H<sub>a</sub>):</strong> Araştırmacının kanıtlamaya çalıştığı, fark veya etki olduğunu öne süren iddiadır (&ne;, &gt;, &lt;). Eşitlik içermez!</li>
-  </ul>
-
-  <h3>13.2. Hipotez Testlerinde Karar ve Hata Türleri</h3>
-  <table>
-    <thead>
-      <tr>
-        <th rowspan="2">Karar</th>
-        <th colspan="2">Gerçek Durum</th>
-      </tr>
-      <tr>
-        <th>H<sub>0</sub> Doğru İken</th>
-        <th>H<sub>0</sub> Yanlış İken</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>H<sub>0</sub> Kabul Edildi</strong></td>
-        <td>Doğru Karar (Güven Düzeyi: 1 &minus; &alpha;)</td>
-        <td><strong>2. Tip Hata (&beta;)</strong></td>
-      </tr>
-      <tr>
-        <td><strong>H<sub>0</sub> Reddedildi</strong></td>
-        <td><strong>1. Tip Hata (&alpha;)</strong><br>(Anlamlılık Düzeyi)</td>
-        <td>Doğru Karar (Testin Gücü: 1 &minus; &beta;)</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="box tuzak">
-    <h4>⚠️ Sınav Çeldiricisi: Hata Türleri Tanımı</h4>
+    <h4>Karar Kuralı:</h4>
     <ul>
-      <li><strong>1. Tip Hata (&alpha;):</strong> Gerçekte doğru olan bir sıfır hipotezinin (H<sub>0</sub>) reddedilmesidir (Masum birinin mahkum edilmesi gibi).</li>
-      <li><strong>2. Tip Hata (&beta;):</strong> Gerçekte yanlış olan bir sıfır hipotezinin (H<sub>0</sub>) reddedilememesidir (Suçlu birinin serbest kalması gibi).</li>
+      <li>Eğer $|Z_{hesap}| > Z_{tablo}$ ise $\mathbf{H_0 	ext{ REDDEDİLİR}}$.</li>
+      <li>Eğer $|Z_{hesap}| \leq Z_{tablo}$ ise $H_0$ kabul edilir (reddedilemez).</li>
     </ul>
-  </div>
+  </section>
+</article>
 
-  <h3>13.3. Tek Anakütle Ortalaması İçin Test İstatistiği</h3>
-  <div class="box formul">
-    <ul>
-      <li><strong>&sigma; Biliniyorsa veya n &ge; 30 ise (Z Testi):</strong> <span class="f">z<sub>hesap</sub> = (x̄ &minus; &mu;<sub>0</sub>) / (&sigma; / &radic;n)</span></li>
-      <li><strong>&sigma; Bilinmiyorsa ve n &lt; 30 ise (t Testi - Student t):</strong> <span class="f">t<sub>hesap</sub> = (x̄ &minus; &mu;<sub>0</sub>) / (s / &radic;n)</span> (Serbestlik derecesi: df = n &minus; 1).</li>
-    </ul>
-  </div>
-
-  
-  <h3>13.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Gerçekte DOĞRU olan bir sıfır hipotezinin (H0) test sonucunda yanlışlıkla REDDEDİLMESİ hangi hatadır?</span>
-      <span class="qtag">Ünite 13 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> 2. Tip Hata (&beta;)</li>
-<li class="ok"><strong>B)</strong> 1. Tip Hata (&alpha;)</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 13 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Gerçekte DOĞRU olan bir sıfır hipotezinin (H0) test sonucunda yanlışlıkla REDDEDİLMESİ hangi hatadır?</span>
+<span class="qtag">Ünite 13 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> 2. Tip Hata (β)</li>
+<li class="ok"><strong>B)</strong> 1. Tip Hata (α)</li>
 <li><strong>C)</strong> Standart Hata</li>
 <li><strong>D)</strong> Örnekleme Hatası</li>
 <li><strong>E)</strong> Sistematik Hata</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
-        Doğru H0'ın reddedilmesi 1. Tip Hatadır (&alpha; - anlamlılık düzeyi). Doğru seçenek <strong>B</strong>'dir.
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
+        Doğru H0'ın reddedilmesi 1. Tip Hatadır (α - anlamlılık düzeyi). Doğru seçenek <strong>B</strong>'dir.
       </div>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
+    <section class="unit " id="u13">
+      
+<article class="unit-article">
+  <h2>14. Ünite: Hipotez Testleri (İki Anakütle)</h2>
+  <div class="unit-lead">
+    <strong>Ünitenin Amacı:</strong> İki bağımsız anakütlenin ortalamaları veya oranları arasındaki farkların test edilmesini, bağımlı (eşleştirilmiş) örneklemler için t testini ve hipotez testlerinde doğru model seçim karar matrisini öğrenmektir.
+  </div>
+
+  <section>
+    <h3>14.1. İki Bağımsız Anakütle Ortalama Farkı Testi</h3>
+    <p>İki farklı grubun (örneğin kadınlar ile erkekler, A fabrikası ile B fabrikası) ortalamaları arasında anlamlı bir fark olup olmadığını sınar ($H_0: \mu_1 - \mu_2 = 0$).</p>
+
+    <div class="formula-box">
+      <strong>1. Büyük Örneklemlerde ($n_1, n_2 \geq 30$) veya $\sigma_1, \sigma_2$ Bilindiğinde ($Z$ Testi):</strong>
+      $$Z = rac{(ar{X}_1 - ar{X}_2) - 0}{\sqrt{rac{\sigma_1^2}{n_1} + rac{\sigma_2^2}{n_2}}}$$
     </div>
-  </details>
 
+    <div class="formula-box">
+      <strong>2. Küçük Örneklemlerde ($n < 30$) ve Varyanslar Eşit Varsayıldığında ($t$ Testi):</strong>
+      <p>Önce Ortak Varyans ($s_p^2$) hesaplanır:</p>
+      $$s_p^2 = rac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$$
+      $$t = rac{(ar{X}_1 - ar{X}_2) - 0}{s_p \sqrt{rac{1}{n_1} + rac{1}{n_2}}}, \quad df = n_1 + n_2 - 2$$
+    </div>
+  </section>
 
-</section>
+  <section>
+    <h3>14.2. Bağımlı (Eşleştirilmiş / Paired) Örneklemler İçin $t$ Testi</h3>
+    <p>Aynı birimler üzerinde iki farklı zamanda yapılan ölçümlerde (örneğin bir eğitim programı öncesi ve sonrası başarı puanları, diyet öncesi ve sonrası kilo) kullanılır.</p>
+    <ul>
+      <li>Her çift için fark hesaplanır: $d_i = X_{1i} - X_{2i}$</li>
+      <li>Farkların ortalaması $ar{d}$ ve standart sapması $s_d$ bulunur:
+        $$t = rac{ar{d} - 0}{rac{s_d}{\sqrt{n}}}, \quad df = n - 1$$
+      </li>
+    </ul>
+  </section>
 
-<section class="unit" data-i="13" id="u13">
-  
-  <div class="uhead">
-    <span class="num">ÜNİTE 14</span>
-    <h2>İki Anakütle Hipotez Testleri ve Bağımsız Örneklem Analizleri</h2>
-  </div>
+  <section>
+    <h3>14.3. İki Anakütle Oran Farkı Testi ($Z$ Testi)</h3>
+    <p>İki grubun belirli bir özelliğe sahip olma oranlarının ($p_1$ ve $p_2$) eşit olup olmadığını sınar ($H_0: P_1 = P_2$).</p>
+    <div class="formula-box">
+      <p>Ortak Oran: $ar{p} = rac{x_1 + x_2}{n_1 + n_2}$</p>
+      $$Z = rac{p_1 - p_2}{\sqrt{ar{p}(1 - ar{p}) \left( rac{1}{n_1} + rac{1}{n_2} ight)}}$$
+    </div>
+  </section>
+</article>
 
-  <div class="lead-box">
-    <p>İki farklı anakütlenin ortalamaları veya oranları arasında istatistiksel olarak anlamlı bir fark olup olmadığını sınamak için bağımsız iki örneklem veya bağımlı (eşleştirilmiş) örneklem testleri uygulanır.</p>
-  </div>
-
-  <h3>14.1. Bağımsız vs. Bağımlı (Eşleştirilmiş) Örneklemler</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Örneklem Yapısı</th>
-        <th>Tanımı</th>
-        <th>Tipik Örnek</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Bağımsız Örneklemler</strong></td>
-        <td>Bir gruptaki birimlerin seçimi diğer gruptan tamamen bağımsızdır (Farklı bireyler).</td>
-        <td>Kadın çalışanların maaş ortalaması ile erkek çalışanların maaş ortalamasının karşılaştırılması.</td>
-      </tr>
-      <tr>
-        <td><strong>Bağımlı (Eşleştirilmiş / Çift) Örneklemler</strong></td>
-        <td>Aynı birimler üzerinde iki farklı zamanda (önce-sonra) veya eşleştirilmiş çiftler üzerinde ölçüm yapılır.</td>
-        <td>Diyet programına katılan kişilerin diyet öncesi ve diyet sonrası kilolarının karşılaştırılması.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>14.2. İki Bağımsız Anakütle Ortalaması Farkı Testi</h3>
-  <div class="box formul">
-    <h4>Hipotezler:</h4>
-    <p>H<sub>0</sub>: &mu;<sub>1</sub> &minus; &mu;<sub>2</sub> = 0 (İki anakütle ortalaması arasında fark yoktur)<br>
-       H<sub>1</sub>: &mu;<sub>1</sub> &minus; &mu;<sub>2</sub> &ne; 0 (İki anakütle ortalaması arasında fark vardır)</p>
-    <h4>Test İstatistiği (Büyük Örneklemler için Z Testi):</h4>
-    <p style="text-align:center;"><span class="f">z<sub>hesap</sub> = [(x̄<sub>1</sub> &minus; x̄<sub>2</sub>) &minus; 0] / &radic;[ (&sigma;<sub>1</sub>² / n<sub>1</sub>) + (&sigma;<sub>2</sub>² / n<sub>2</sub>) ]</span></p>
-  </div>
-
-  <h3>14.3. Karar Kuralı (P Değeri ve Kritik Değer Yaklaşımı)</h3>
-  <ul>
-    <li>Hesaplanan test istatistiği ret bölgesine düşerse (|z<sub>hesap</sub>| &gt; z<sub>tablo</sub>) &rarr; <strong>H<sub>0</sub> REDDEDİLİR</strong>. İki grup arasındaki fark istatistiksel olarak anlamlıdır.</li>
-    <li><strong>p değeri &le; &alpha;</strong> ise &rarr; <strong>H<sub>0</sub> REDDEDİLİR</strong>.</li>
-  </ul>
-
-  
-  <h3>14.5. Ünite Değerlendirme ve Sınav Soruları</h3>
-  <p>Bu üniteden AUZEF sınavlarında çıkmış sorular ve detaylı çözümleri:</p>
-  
-  <details class="sq" data-q="1">
-    <summary>
-      <span class="qno">Soru 1</span>
-      <span class="qtitle">Aynı hastaların ilaç kullanımından önceki ve sonraki tansiyon değerlerinin karşılaştırılmasında hangi örneklem yapısı geçerlidir?</span>
-      <span class="qtag">Ünite 14 Çıkmış Soru</span>
-    </summary>
-    <div class="sqbody">
-      <ul class="o">
-        <li><strong>A)</strong> Bağımsız Örneklem</li>
+      
+    <section class="unit-questions" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 25px;">
+      <h3 style="color:var(--primary); margin-bottom: 16px;">📝 Ünite 14 Çıkmış Sınav Soruları ve Açıklamalı Çözümleri</h3>
+      <details class="sq" data-q="1">
+<summary>
+<span class="qno">Soru 1</span>
+<span class="qtitle">Aynı hastaların ilaç kullanımından önceki ve sonraki tansiyon değerlerinin karşılaştırılmasında hangi örneklem yapısı geçerlidir?</span>
+<span class="qtag">Ünite 14 Çıkmış Soru</span>
+</summary>
+<div class="sqbody">
+<ul class="o">
+<li><strong>A)</strong> Bağımsız Örneklem</li>
 <li class="ok"><strong>B)</strong> Bağımlı (Eşleştirilmiş) Örneklem</li>
 <li><strong>C)</strong> Tabakalı Örneklem</li>
 <li><strong>D)</strong> Küme Örneklemi</li>
 <li><strong>E)</strong> Sistematik Örneklem</li>
-
-      </ul>
-      <div class="exp">
-        <strong>Açıklamalı Çözüm:</strong><br>
+</ul>
+<div class="exp">
+<strong>Açıklamalı Çözüm:</strong><br/>
         Aynı denekler üzerinde önce-sonra ölçümü yapılıyorsa Bağımlı (Eşleştirilmiş) Örneklem kullanılır. Doğru seçenek <strong>B</strong>'dir.
       </div>
-    </div>
-  </details>
-
-
-</section>
-
-  </main>
+</div>
+</details>
+    </section>
+    
+    </section>
+    
 
   <div class="unit-pager">
     <button class="btn" id="prevBtn" onclick="prevUnit()">← Önceki Ünite</button>
     <span id="pageInfo" style="font-size:13px; font-weight:700; color:var(--text-muted);">Ünite 1 / 14</span>
     <button class="btn" id="nextBtn" onclick="nextUnit()">Sonraki Ünite →</button>
   </div>
-</div>
+</main>
 
 <script>
 let curUnit = 0;
@@ -1544,7 +2133,7 @@ function init() {
 
 function goUnit(idx, pushHash=true) {
   if(idx < 0 || idx >= totalUnits) return;
-  curUnit = idx;
+  curUnit = parseInt(idx);
   document.querySelectorAll('.unit').forEach((el, i) => {
     el.classList.toggle('on', i === curUnit);
   });
