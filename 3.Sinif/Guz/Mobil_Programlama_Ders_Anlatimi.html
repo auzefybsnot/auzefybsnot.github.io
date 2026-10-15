@@ -328,28 +328,250 @@ pre code {
   font-weight: 700;
 }
 
-/* QUESTION DETAILS (SQ) */
+
+/* ==========================================================================
+   GELİŞMİŞ VE ERGONOMİK TEST / SORU TASARIMI (DETAILS.SQ)
+   ========================================================================== */
+.unit-questions {
+  margin-top: 45px;
+  border-top: 2px dashed var(--border);
+  padding-top: 30px;
+}
+.unit-questions > h3 {
+  font-size: 19px;
+  color: var(--primary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 details.sq {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
   box-shadow: var(--shadow);
   overflow: hidden;
+  transition: all 0.2s ease;
 }
+details.sq:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Soru Başlığı (Summary) */
 details.sq summary {
-  padding: 12px 16px;
+  padding: 14px 18px;
   font-weight: 600;
   cursor: pointer;
   background: var(--surface);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   user-select: none;
+  list-style: none;
+  transition: background 0.15s ease;
 }
-details.sq summary:hover { background: var(--primary-light); }
-details.sq[open] summary { border-bottom: 1px solid var(--border); }
-.sq-content { padding: 16px; background: var(--bg); }
+details.sq summary::-webkit-details-marker { display: none; }
+details.sq summary::after {
+  content: "▾";
+  margin-left: auto;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: transform 0.25s ease;
+}
+details.sq[open] summary::after {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+details.sq[open] summary {
+  border-bottom: 1.5px solid var(--border);
+  background: var(--primary-light);
+}
+
+/* Soru Numarası Rozeti */
+.qno, .sqn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--primary);
+  color: #FFFFFF !important;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Soru Metni */
+.qtitle, details.sq summary > span:not(.qno):not(.sqn):not(.qtag):not(.sqtags):not(.sqtag) {
+  flex: 1 1 320px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* Soru Etiketleri */
+.qtag, .sqtag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: var(--bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.sqtag.rep {
+  background: var(--accent-light);
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 800;
+}
+.sqtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+/* Soru İçeriği (Body) */
+.sqbody, .sq-content {
+  padding: 18px 22px;
+  background: var(--surface);
+}
+
+/* Şıklar Listesi */
+ul.o {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 12px 0 16px 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+/* Tekil Şık Kartı */
+ul.o li {
+  position: relative;
+  padding: 11px 15px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.45;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+ul.o li:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+ul.o li strong, ul.o li b {
+  font-weight: 800;
+  color: var(--primary);
+  flex-shrink: 0;
+  min-width: 24px;
+}
+
+/* DOĞRU SEÇENEK (.ok) */
+ul.o li.ok {
+  border: 2px solid var(--success) !important;
+  background: var(--success-light) !important;
+  color: var(--text) !important;
+  font-weight: 700 !important;
+}
+ul.o li.ok strong, ul.o li.ok b {
+  color: var(--success) !important;
+}
+ul.o li.ok::after {
+  content: "✓ Doğru Seçenek";
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--success);
+  color: #FFFFFF !important;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+/* Açıklamalı Çözüm Kutusu (.exp, .coz) */
+.exp, .coz {
+  margin-top: 14px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--success);
+  color: var(--text);
+}
+.coz .cap, .exp strong:first-child {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--success);
+  margin-bottom: 6px;
+}
+
+/* DARK MODE UYARLAMALARI */
+[data-theme="dark"] details.sq {
+  background: var(--surface);
+  border-color: var(--border);
+}
+[data-theme="dark"] details.sq[open] summary {
+  background: rgba(96, 165, 250, 0.12);
+}
+[data-theme="dark"] ul.o li {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+[data-theme="dark"] ul.o li.ok {
+  background: rgba(74, 222, 128, 0.15) !important;
+  border-color: var(--success) !important;
+  color: #F8FAFC !important;
+}
+[data-theme="dark"] .exp, [data-theme="dark"] .coz {
+  background: var(--bg);
+  border-color: var(--border);
+}
+
+/* E-INK PROFILLERI UYARLAMALARI */
+[data-device="eink-6-bw"] details.sq,
+[data-device="eink-10-bw"] details.sq {
+  border: 2px solid #000000 !important;
+  box-shadow: none !important;
+}
+[data-device="eink-6-bw"] ul.o li.ok,
+[data-device="eink-10-bw"] ul.o li.ok {
+  border: 2px solid #000000 !important;
+  background: #EEEEEE !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+}
+[data-device="eink-6-bw"] ul.o li.ok::after,
+[data-device="eink-10-bw"] ul.o li.ok::after {
+  background: #000000 !important;
+  color: #FFFFFF !important;
+}
+
 
 /* PAGER */
 .unit-pager {
