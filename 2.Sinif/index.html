@@ -874,6 +874,32 @@ footer a:hover { color: var(--amber); }
   .mufredat-box { flex-direction: column; align-items: flex-start; }
 }
 
+
+/* Search Clear Button */
+.search-clear-btn {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--line-2);
+  color: var(--ink-2);
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+}
+.search-clear-btn:hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
 </style>
 </head>
 <body>
@@ -942,18 +968,27 @@ footer a:hover { color: var(--amber); }
     </div>
   </div>
 
-  <!-- Search in class -->
-  <div class="search-bar">
+    <!-- Search in class -->
+  <div class="search-bar" style="position:relative;">
     <span class="search-icon">🔍</span>
-    <input type="text" id="class-search" class="search-input" placeholder="2. sınıf derslerinde ara (örn. kod, ders adı)..." autocomplete="off">
+    <input type="text" id="class-search" class="search-input" placeholder="2. sınıf derslerinde ara (örn. kod, ders adı, konu)..." autocomplete="off">
+    <button id="search-clear-btn" class="search-clear-btn" onclick="clearSearch()" title="Aramayı Temizle" style="display:none;" type="button">✕</button>
   </div>
 
-  <!-- Tabs (Güz / Bahar) -->
+  <!-- Tabs (Güz / Bahar / Tüm Dönemler) -->
   <div class="tabs">
-    <button class="tab-btn active" id="tab-guz" onclick="switchTab(\'guz\')">🍂 Güz Dönemi (6/6 Tamamlandı)</button>
-    <button class="tab-btn" id="tab-bahar" onclick="switchTab(\'bahar\')">🌸 Bahar Dönemi (6/6 Tamamlandı)</button>
-    <button class="tab-btn" id="tab-all" onclick="switchTab('all')">📚 Tüm Dönemler</button>
-</div>
+    <button class="tab-btn active" id="tab-guz" onclick="switchTab('guz')" type="button">🍂 Güz Dönemi (6/6 Master Kitap)</button>
+    <button class="tab-btn" id="tab-bahar" onclick="switchTab('bahar')" type="button">🌸 Bahar Dönemi (6/6 Master Kitap)</button>
+    <button class="tab-btn" id="tab-all" onclick="switchTab('all')" type="button">📚 Tüm Dönemler</button>
+  </div>
+
+  <!-- Arama Sonuç Bulunamadı Kutusu -->
+  <div id="search-no-results" style="display:none;background:var(--card);border:1px dashed var(--line);border-radius:var(--radius-md);padding:30px 20px;text-align:center;margin:20px 0;">
+    <div style="font-size:28px;margin-bottom:8px;">🔍</div>
+    <div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:6px;">Eşleşen 2. Sınıf Dersi Bulunamadı</div>
+    <div style="font-size:14px;color:var(--ink-2);margin-bottom:14px;">"<span id="no-res-query" style="font-weight:700;"></span>" için sonuç bulunamadı. Lütfen ders adını veya kodunu kontrol ediniz.</div>
+    <button onclick="clearSearch()" style="background:var(--blue);color:#fff;border:none;padding:8px 18px;border-radius:var(--radius-sm);font-weight:700;cursor:pointer;font-family:inherit;">Aramayı Temizle</button>
+  </div>
 
   <!-- Güz Paneli -->
   <div id="panel-guz">
@@ -962,7 +997,7 @@ footer a:hover { color: var(--amber); }
       <span class="count">6 Ders (6/6 Ders Anlatımı Tamamlandı)</span>
     </div>
     <div class="grid-cards" id="guz-grid">
-                <div class="course-card" data-search="muhasebe aybs3003">
+                <div class="course-card" data-search="muhasebe aybs3003 gulden ulgen bilanco yevmiye hesap defter finansal donem varlik kaynak">
                   <div class="course-header">
                     <span class="course-code">AYBS3003</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -984,7 +1019,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="nesneye yöneli̇k programlama aybs3006">
+                <div class="course-card" data-search="nesneye yonelik programlama nyp aybs3006 zerrin ayvaz reis java cpp oop nesne sinif kalitim cok bicimlilik kapsulleme">
                   <div class="course-header">
                     <span class="course-code">AYBS3006</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1006,7 +1041,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="olasilik ve i̇stati̇sti̇k aybs3001">
+                <div class="course-card" data-search="olasilik ve istatistik aybs3001 haluk zulfikar varyans standart sapma hipotez olasilik dagilim korelasyon regresyon">
                   <div class="course-header">
                     <span class="course-code">AYBS3001</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1024,7 +1059,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="pazarlama i̇lkeleri̇ aybs3002">
+                <div class="course-card" data-search="pazarlama ilkeleri aybs3002 suphan nasir 4p segmentasyon tutundurma fiyat dagitim urun pazar strateji">
                   <div class="course-header">
                     <span class="course-code">AYBS3002</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1042,7 +1077,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="üreti̇m yöneti̇mi̇ aybs3004">
+                <div class="course-card" data-search="uretim yonetimi aybs3004 nur gokcen basabas pert cpm gantt kapasite verimlilik planlama kalite tesis">
                   <div class="course-header">
                     <span class="course-code">AYBS3004</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1064,7 +1099,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="veri̇ yapilari aybs3005">
+                <div class="course-card" data-search="veri yapilari aybs3005 zeki ozen yigin kuyruk stack queue agac bagli liste tree cpp algoritma grafik">
                   <div class="course-header">
                     <span class="course-code">AYBS3005</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1095,7 +1130,7 @@ footer a:hover { color: var(--amber); }
       <span class="count">6 Ders (6/6 Ders Anlatımı Tamamlandı)</span>
     </div>
     <div class="grid-cards" id="bahar-grid">
-                <div class="course-card" data-search="bi̇lgi̇sayar organi̇zasyonu aybs4004">
+                <div class="course-card" data-search="bilgisayar organizasyonu aybs4004 mehmet bilginer senyigit cpu ram rom von neumann mantik kapilari register bellek buyruk">
                   <div class="course-header">
                     <span class="course-code">AYBS4004</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1113,7 +1148,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="i̇leti̇şi̇m sosyoloji̇si̇ aybs4003">
+                <div class="course-card" data-search="iletisim sosyolojisi aybs4003 yusuf adiguzel medya kamuoyu frankfurt okulu kuram haber ajans etik kitle">
                   <div class="course-header">
                     <span class="course-code">AYBS4003</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1135,7 +1170,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="mali̇yet muhasebesi̇ aybs5001">
+                <div class="course-card" data-search="maliyet muhasebesi aybs5001 ahmet turel gider dagitim safha siparis standart maliyet fifo lifo uretim">
                   <div class="course-header">
                     <span class="course-code">AYBS5001</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1161,7 +1196,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="ofi̇s uygulamalari aybs8505">
+                <div class="course-card" data-search="ofis uygulamalari aybs8505 sezer kose biber word excel powerpoint smartart tablo formuller hucre slayt">
                   <div class="course-header">
                     <span class="course-code">AYBS8505</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1183,7 +1218,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="veri̇ tabani yöneti̇m si̇stemleri̇ aybs4005">
+                <div class="course-card" data-search="veri tabani yonetim sistemleri vtys aybs4005 ruya samli sql select create er iliskisel tablo dml view trigger">
                   <div class="course-header">
                     <span class="course-code">AYBS4005</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1201,7 +1236,7 @@ footer a:hover { color: var(--amber); }
                   </div>
                 </div>
                 
-                <div class="course-card" data-search="web programlama i aybs4006">
+                <div class="course-card" data-search="web programlama 1 i aybs4006 emel arslan html css javascript dom tarayici xml json internet web frontend">
                   <div class="course-header">
                     <span class="course-code">AYBS4006</span>
                     <span class="course-akts">5 AKTS • Zorunlu</span>
@@ -1383,70 +1418,193 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-</body>
-</html>
-
 
 <script>
+// --- Turkish-Aware Normalization ---
+function trNormalize(str) {
+  if (!str) return '';
+  return str
+    .replace(/\u0307/g, '') // strip combining dot
+    .replace(/İ/g, 'i')
+    .replace(/I/g, 'i')
+    .replace(/ı/g, 'i')
+    .replace(/Ş/g, 's')
+    .replace(/ş/g, 's')
+    .replace(/Ğ/g, 'g')
+    .replace(/ğ/g, 'g')
+    .replace(/Ü/g, 'u')
+    .replace(/ü/g, 'u')
+    .replace(/Ö/g, 'o')
+    .replace(/ö/g, 'o')
+    .replace(/Ç/g, 'c')
+    .replace(/ç/g, 'c')
+    .toLowerCase()
+    .trim();
+}
+
+let currentTab = 'guz';
+
 function switchTab(t) {
+  currentTab = t;
   const panelGuz = document.getElementById('panel-guz');
   const panelBahar = document.getElementById('panel-bahar');
   const tabGuz = document.getElementById('tab-guz');
   const tabBahar = document.getElementById('tab-bahar');
   const tabAll = document.getElementById('tab-all');
+  const classSearch = document.getElementById('class-search');
   
+  if (classSearch && classSearch.value.trim() !== '') {
+    classSearch.value = '';
+    const clrBtn = document.getElementById('search-clear-btn');
+    if (clrBtn) clrBtn.style.display = 'none';
+    const noRes = document.getElementById('search-no-results');
+    if (noRes) noRes.style.display = 'none';
+  }
+  
+  // Show all cards
+  document.querySelectorAll('.course-card').forEach(function(card) {
+    card.style.display = 'flex';
+  });
+  
+  // Reset section counts
+  const guzCount = document.querySelector('#panel-guz .count');
+  if (guzCount) guzCount.textContent = '6 Ders (6/6 Master Kitap Tamamlandı)';
+  const baharCount = document.querySelector('#panel-bahar .count');
+  if (baharCount) baharCount.textContent = '6 Ders (6/6 Master Kitap Tamamlandı)';
+
   if (t === 'bahar') {
     if (panelBahar) panelBahar.style.display = 'block';
     if (panelGuz) panelGuz.style.display = 'none';
     if (tabBahar) tabBahar.classList.add('active');
     if (tabGuz) tabGuz.classList.remove('active');
     if (tabAll) tabAll.classList.remove('active');
-  } else if (t === 'guz') {
-    if (panelBahar) panelBahar.style.display = 'none';
-    if (panelGuz) panelGuz.style.display = 'block';
-    if (tabGuz) tabGuz.classList.add('active');
-    if (tabBahar) tabBahar.classList.remove('active');
-    if (tabAll) tabAll.classList.remove('active');
-  } else {
-    // all
+  } else if (t === 'all') {
     if (panelBahar) panelBahar.style.display = 'block';
     if (panelGuz) panelGuz.style.display = 'block';
     if (tabAll) tabAll.classList.add('active');
     if (tabBahar) tabBahar.classList.remove('active');
     if (tabGuz) tabGuz.classList.remove('active');
+  } else {
+    // guz
+    if (panelBahar) panelBahar.style.display = 'none';
+    if (panelGuz) panelGuz.style.display = 'block';
+    if (tabGuz) tabGuz.classList.add('active');
+    if (tabBahar) tabBahar.classList.remove('active');
+    if (tabAll) tabAll.classList.remove('active');
   }
 }
 
-const classSearch = document.getElementById('class-search');
-if (classSearch) {
-  classSearch.addEventListener('input', function(e) {
-    const q = e.target.value.trim().toLowerCase();
-    const panelGuz = document.getElementById('panel-guz');
-    const panelBahar = document.getElementById('panel-bahar');
-    
-    if (q) {
-      if (panelGuz) panelGuz.style.display = 'block';
-      if (panelBahar) panelBahar.style.display = 'block';
-      document.querySelectorAll('.course-card').forEach(function(card) {
-        const s = (card.getAttribute('data-search') || '') + ' ' + card.innerText.toLowerCase();
-        if (s.includes(q)) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
+function clearSearch() {
+  const classSearch = document.getElementById('class-search');
+  if (classSearch) {
+    classSearch.value = '';
+    classSearch.focus();
+  }
+  const clrBtn = document.getElementById('search-clear-btn');
+  if (clrBtn) clrBtn.style.display = 'none';
+  const noRes = document.getElementById('search-no-results');
+  if (noRes) noRes.style.display = 'none';
+  
+  document.querySelectorAll('.course-card').forEach(function(card) {
+    card.style.display = 'flex';
+  });
+  
+  const guzCount = document.querySelector('#panel-guz .count');
+  if (guzCount) guzCount.textContent = '6 Ders (6/6 Master Kitap Tamamlandı)';
+  const baharCount = document.querySelector('#panel-bahar .count');
+  if (baharCount) baharCount.textContent = '6 Ders (6/6 Master Kitap Tamamlandı)';
+  
+  switchTab(currentTab);
+}
+
+function handleSearch(q) {
+  const qNorm = trNormalize(q);
+  const panelGuz = document.getElementById('panel-guz');
+  const panelBahar = document.getElementById('panel-bahar');
+  const clrBtn = document.getElementById('search-clear-btn');
+  const noRes = document.getElementById('search-no-results');
+  const noResQuery = document.getElementById('no-res-query');
+
+  if (clrBtn) clrBtn.style.display = qNorm ? 'flex' : 'none';
+
+  if (!qNorm) {
+    if (noRes) noRes.style.display = 'none';
+    document.querySelectorAll('.course-card').forEach(function(card) {
+      card.style.display = 'flex';
+    });
+    const guzCount = document.querySelector('#panel-guz .count');
+    if (guzCount) guzCount.textContent = '6 Ders (6/6 Master Kitap Tamamlandı)';
+    const baharCount = document.querySelector('#panel-bahar .count');
+    if (baharCount) baharCount.textContent = '6 Ders (6/6 Master Kitap Tamamlandı)';
+    switchTab(currentTab);
+    return;
+  }
+
+  // When searching, inspect both panels
+  if (panelGuz) panelGuz.style.display = 'block';
+  if (panelBahar) panelBahar.style.display = 'block';
+
+  let guzMatches = 0;
+  let baharMatches = 0;
+
+  const guzCards = document.querySelectorAll('#guz-grid .course-card');
+  guzCards.forEach(function(card) {
+    const rawData = card.getAttribute('data-search') || '';
+    const rawText = card.innerText || '';
+    const searchable = trNormalize(rawData + ' ' + rawText);
+    if (searchable.includes(qNorm)) {
+      card.style.display = 'flex';
+      guzMatches++;
     } else {
-      const activeTab = document.querySelector('.tab-btn.active');
-      if (activeTab && activeTab.id === 'tab-bahar') switchTab('bahar');
-      else if (activeTab && activeTab.id === 'tab-all') switchTab('all');
-      else switchTab('guz');
-      document.querySelectorAll('.course-card').forEach(function(card) {
-        card.style.display = 'flex';
-      });
+      card.style.display = 'none';
     }
+  });
+
+  const baharCards = document.querySelectorAll('#bahar-grid .course-card');
+  baharCards.forEach(function(card) {
+    const rawData = card.getAttribute('data-search') || '';
+    const rawText = card.innerText || '';
+    const searchable = trNormalize(rawData + ' ' + rawText);
+    if (searchable.includes(qNorm)) {
+      card.style.display = 'flex';
+      baharMatches++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // Dynamic panel visibility during search
+  if (panelGuz) {
+    panelGuz.style.display = guzMatches > 0 ? 'block' : 'none';
+    const cEl = panelGuz.querySelector('.count');
+    if (cEl) cEl.textContent = guzMatches + ' Ders Bulundu';
+  }
+  if (panelBahar) {
+    panelBahar.style.display = baharMatches > 0 ? 'block' : 'none';
+    const cEl = panelBahar.querySelector('.count');
+    if (cEl) cEl.textContent = baharMatches + ' Ders Bulundu';
+  }
+
+  const totalMatches = guzMatches + baharMatches;
+  if (totalMatches === 0) {
+    if (noRes) {
+      noRes.style.display = 'block';
+      if (noResQuery) noResQuery.textContent = q;
+    }
+  } else {
+    if (noRes) noRes.style.display = 'none';
+  }
+}
+
+// Attach Search Event Listener
+const searchInput = document.getElementById('class-search');
+if (searchInput) {
+  searchInput.addEventListener('input', function(e) {
+    handleSearch(e.target.value);
   });
 }
 
+// URL Hash / Query Parameter check on load
 window.addEventListener('DOMContentLoaded', function() {
   const hash = (window.location.hash || '').toLowerCase();
   const params = new URLSearchParams(window.location.search);
@@ -1455,6 +1613,11 @@ window.addEventListener('DOMContentLoaded', function() {
     switchTab('bahar');
   } else if (hash === '#all' || tab === 'all') {
     switchTab('all');
+  } else {
+    switchTab('guz');
   }
 });
 </script>
+
+</body>
+</html>
