@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofis Uygulamaları (AYBS8505) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Ofis Uygulamaları (AYBS8505) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Ofis Uygulamaları (AYBS8505) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Ofis Uygulamaları (AYBS8505) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Ofis Uygulamaları (AYBS8505) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>93 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">93</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Ofis_Uygulamalari_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (93)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">93</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Ofis_Uygulamalari_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, Final, Büt", "text": "Excel'de veri tablosu içerisinde vize notu 70'in üstünde olan öğrencileri yeşil renkte göstermek için kullanılan özellik aşağıdakilerden hangisidir", "options": [{"letter": "A", "text": "Gelişmiş filtre"}, {"letter": "B", "text": "Pivotchart ekleme"}, {"letter": "C", "text": "Koşullu biçimlendirme"}, {"letter": "D", "text": "Veri seçme"}, {"letter": "E", "text": "Durumu çözümleme"}], "correct": "C", "explanation": "Excel'de hücrelerdeki değerlere bağlı olarak hücrenin rengini otomatik olarak değiştiren özelliğe 'Koşullu Biçimlendirme' denir."}, {"num": 2, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final", "text": "Excel’de sayfa sayısı, veri içeren hücre sayısı gibi çalışma kitabı istatistiklerinin görüntülendiği alan aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Görüntüleme seçenekleri çubuğu"}, {"letter": "B", "text": "Menü şeridi"}, {"letter": "C", "text": "Kullanıcı bilgi ekranı"}, {"letter": "D", "text": "Durum çubuğu"}, {"letter": "E", "text": "Hızlı erişim çubuğu"}], "correct": "D", "explanation": "Excel'in en altındaki yatay şeride Durum Çubuğu denir. Burada seçili hücrelerin toplamı, ortalaması, sayısı gibi anlık veriler görüntülenir."}, {"num": 3, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Büt, 2025 Bahar Final, 3 Kez Çıktı!", "text": "Powerpoint’te slaytlara yer tutucuların eklenebildiği görünüm türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Slayt Sıralayıcısı"}, {"letter": "B", "text": "Asıl Slayt"}, {"letter": "C", "text": "Okuma Görünümü"}, {"letter": "D", "text": "Notlar sayfası"}, {"letter": "E", "text": "Ana Hat Görünümü"}], "correct": "B", "explanation": "PowerPoint'te tüm sunumun tema, arka plan ve 'yer tutucu' tasarımlarının standart kalıp olarak topluca yapıldığı arka plana 'Asıl Slayt' (Slide Master) denir."}, {"num": 4, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Final, 2024 Bahar Büt, 2026 Bahar Vize, 4 Kez Çıktı!", "text": "Powerpoint’te şekil galerisinin en altında yer alan özel şekillerin adı nedir?", "options": [{"letter": "A", "text": "Denklem şekilleri"}, {"letter": "B", "text": "Akış düğmeleri"}, {"letter": "C", "text": "Eylem düğmeleri"}, {"letter": "D", "text": "Tasarım düğmeleri"}, {"letter": "E", "text": "Temel Şekiller"}], "correct": "C", "explanation": "Ekle > Şekiller galerisinin en alt bölümünde, tıklandığında ileri gitme, ses çalma veya program açma gibi görevler atanabilen 'Eylem Düğmeleri' bulunur."}, {"num": 5, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Final, 2 Kez Çıktı!", "text": "Excel’de büyük veri kümelerinde belirli bir ölçüte göre verileri ayıklamak için kullanılan özellik aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sorgulama"}, {"letter": "B", "text": "Sıralama"}, {"letter": "C", "text": "Filtreleme"}, {"letter": "D", "text": "Çözümleme"}, {"letter": "E", "text": "Analiz"}], "correct": "C", "explanation": "Tablodaki verileri belirlenen koşullara göre (örneğin sadece 2022 verilerini) gösterip diğerlerini gizleme işlemine 'Filtreleme' denir."}, {"num": 6, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Büt, 2 Kez Çıktı!", "text": "=5+4^2*5 formülü Excel’de hangi sonucu döndürür?", "options": [{"letter": "A", "text": "405"}, {"letter": "B", "text": "85"}, {"letter": "C", "text": "1048581"}, {"letter": "D", "text": "15"}, {"letter": "E", "text": "105"}], "correct": "B", "explanation": "Matematiksel işlem önceliği geçerlidir. Önce üs alma işlemi yapılır (4^2 = 16). Ardından çarpma işlemi yapılır (16 * 5 = 80). Son olarak toplama işlemi yapılır (5 + 80 = 85)."}, {"num": 7, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Büt, 2 Kez Çıktı!", "text": "Excel’de formülün başvurduğu hücrelerin silinmesi veya üzerine başka bir şey yapıştırılması durumunda ortaya çıkan hata mesajı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "#YOK"}, {"letter": "B", "text": "#BOŞ!"}, {"letter": "C", "text": "#BAŞV!"}, {"letter": "D", "text": "#AD?"}, {"letter": "E", "text": "#DEĞER"}], "correct": "C", "explanation": "Bir formülde referans alınan hücre tamamen silinirse, formül nereye bakacağını bilemez ve Geçersiz Başvuru anlamına gelen #BAŞV! hatası verir."}, {"num": 8, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Büt, 2 Kez Çıktı!", "text": "Powerpoint’te slayt geçişleri ile ilgili aşağıda verilenlerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Kullanıcılar kendi tasarladıkları animasyonları slayt geçiş efekti olarak kullanabilmektedir."}, {"letter": "B", "text": "Seçilen efekt “Tümüne uygula” seçeneği ile tüm slaytlara uygulanabilmektedir."}, {"letter": "C", "text": "Slaytlara geçiş sırasında ses eklenebilmektedir."}, {"letter": "D", "text": "Efekt galerisinde ilgili efektin üstüne fare ile gelindiğinde animasyon ile ilgili kısa bilgiler görüntülenmektedir."}, {"letter": "E", "text": "Slayt geçişlerinin süresi “Süre” alanından saniye cinsinden ayarlanabilmektedir."}], "correct": "A", "explanation": "Slayt geçişleri (Transitions) Office içine gömülü yerleşik efektlerdir. Kullanıcıların sıfırdan kendi geçiş animasyonlarını tasarlayıp ekleme özelliği yoktur."}, {"num": 9, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final", "text": "B4, B5, B6, B7, B8 hücre aralığı nasıl yazılır?", "options": [{"letter": "A", "text": "B4,B8"}, {"letter": "B", "text": "B4:B8"}, {"letter": "C", "text": "B4;B8"}, {"letter": "D", "text": "B4_B8"}, {"letter": "E", "text": "B4-B8"}], "correct": "B", "explanation": "Excel'de birbiri ardına gelen bir blok aralığı belirtmek için iki nokta üst üste (:) işareti kullanılır."}, {"num": 10, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Final, 2025 Bahar Büt, 3 Kez Çıktı!", "text": "Excel’de belli bir koşula bağlı olarak işlem yapan fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "=Say()"}, {"letter": "B", "text": "=Bağıl()"}, {"letter": "C", "text": "=Koşul()"}, {"letter": "D", "text": "=Eğer()"}, {"letter": "E", "text": "=Şart()"}], "correct": "D", "explanation": "Excel'in en temel mantıksal fonksiyonu 'EĞER' (IF) fonksiyonudur. Belirlenen koşulun doğru mu yanlış mı olduğuna bakarak iki farklı senaryoda sonuçlar döndürür."}, {"num": 11, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2025 Bahar Final, 2 Kez Çıktı!", "text": "=EĞER(A1<50:”Başarısız”:EĞER(A1<75:”İyi”:”Pekiyi”)) formülü: A1 hücresinde 75 değeri varken hangi sonucu verir?", "options": [{"letter": "A", "text": "Pekiyi"}, {"letter": "B", "text": "#AD? hatası döndürür."}, {"letter": "C", "text": "#BOŞ! Hatası döndürür."}, {"letter": "D", "text": "Başarısız"}, {"letter": "E", "text": "İyi"}], "correct": "A", "explanation": "75, 50'den küçük değildir. İkinci EĞER'e geçer. 75, 75'ten küçük müdür? Hayır (eşittir). Bu yüzden 'İyi' yerine sondaki 'Yanlışsa Değer' olan 'Pekiyi' sonucunu verir."}, {"num": 12, "tag": "office uygulamaları final soru cevap, OFIS UYGULAMALARI, 2023 Bahar Final, 2024 Bahar Büt, 2 Kez Çıktı!", "text": "Word uygulamasında resimdeki gibi sayfanın arka planına eklenen soluk renkli metne veya grafiğe ne ad verilir?", "options": [{"letter": "A", "text": "Tema"}, {"letter": "B", "text": "Filigran"}, {"letter": "C", "text": "WordArt"}, {"letter": "D", "text": "Öncü"}, {"letter": "E", "text": "Stil"}], "correct": "B", "explanation": "Sayfa arka planına kopyalanmayı önlemek veya taslak belirtmek için eklenen soluk görsellere 'Filigran' (Watermark) denir."}, {"num": 13, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar", "text": "Microsoft PowerPoint'te şekil galerisinin en altında yer alan özel şekillerin adı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Akış düğmeleri"}, {"letter": "B", "text": "Tasarım düğmeleri"}, {"letter": "C", "text": "Temel şekiller"}, {"letter": "D", "text": "Denklem şekilleri"}, {"letter": "E", "text": "Eylem düğmeleri"}], "correct": "E", "explanation": "AUZEF Ofis Uygulamalari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 14, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2025 Bahar Vize, 2026 Bahar Vize, 2 Kez Çıktı!", "text": "MS Word uygulamasında yukarıdaki silgi aracının görevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tablonun arka plan resmini siler."}, {"letter": "B", "text": "Tablonun dolgu rengini siler."}, {"letter": "C", "text": "Tablodaki metinleri siler."}, {"letter": "D", "text": "Tablodaki kenar çizgilerini siler."}, {"letter": "E", "text": "Tablodaki sekmeleri siler."}], "correct": "D", "explanation": "Tablo Tasarımı sekmesindeki 'Silgi' aracı, tablodaki çizgilere tıklayarak o çizgiyi (kenarlığı) kaldırmak ve hücreleri birleştirmek için kullanılır."}, {"num": 15, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2025 Bahar Final, 2026 Bahar Vize, 2 Kez Çıktı!", "text": "Bir MS Word belgesinde tüm metinlerin aynı biçimde görünmesini sağlamak için aşağıdaki özelliklerden hangisi kullanılır?", "options": [{"letter": "A", "text": "Kenarlıklar"}, {"letter": "B", "text": "Stil Kümesi"}, {"letter": "C", "text": "Filigran"}, {"letter": "D", "text": "Sütunlar"}, {"letter": "E", "text": "Bölüm Sonu"}], "correct": "B", "explanation": "Tasarım sekmesindeki Stil Kümesi (Style Sets), belgedeki başlık ve gövde metinlerinin genel tasarımını tutarlı bir formata sokar."}, {"num": 16, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar", "text": "MS Word'de resmi kırpma menüsünde aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Kare"}, {"letter": "B", "text": "Şekle Göre Kırp"}, {"letter": "C", "text": "Doldur"}, {"letter": "D", "text": "Sığdır"}, {"letter": "E", "text": "En Boy Oranı"}], "correct": "A", "explanation": "AUZEF Ofis Uygulamalari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 17, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar", "text": "MS Word uygulamasında yukarıda yer alan \"Resmi Sıfırla\" butonunun işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Verilen değere uygun olarak resmi tüm kenarlarından kırpar."}, {"letter": "B", "text": "Resmi belgenin sağ kenarına yaslar."}, {"letter": "C", "text": "Resimde yapılan tüm değişiklikleri silerek resmi ilk haline döndürür."}, {"letter": "D", "text": "Resmi belgenin sol kenarına yaslar."}, {"letter": "E", "text": "Resmin kenarlarındaki boş pikselleri temizler."}], "correct": "C", "explanation": "AUZEF Ofis Uygulamalari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 18, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 2026 Bahar Vize, 4 Kez Çıktı!", "text": "Microsoft PowerPoint'te sunum tasarımının oluşturulduğu alanın adı nedir?", "options": [{"letter": "A", "text": "Notlar sayfası"}, {"letter": "B", "text": "Slayt"}, {"letter": "C", "text": "Sayfa"}, {"letter": "D", "text": "Çalışma kitabı"}, {"letter": "E", "text": "Tablo"}], "correct": "B", "explanation": "PowerPoint'te sunumu oluşturan temel yapı taşına 'Slayt' denir. Word'de bu 'Sayfa', Excel'de ise 'Çalışma Kitabı / Sayfası'dır."}, {"num": 19, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2026 Bahar Vize", "text": "Aşağıdakilerden hangisi açık kaynak kodlu ve ücretsiz bir kelime işlemci uygulamasıdır?", "options": [{"letter": "A", "text": "LibreOffice Writer"}, {"letter": "B", "text": "Microsoft Word"}, {"letter": "C", "text": "Google Docs"}, {"letter": "D", "text": "Dropbox Paper"}, {"letter": "E", "text": "Apple iWork-Pages"}], "correct": "A", "explanation": "LibreOffice Writer ve Abiword gibi programlar açık kaynak kodlu ve ücretsizdir. Microsoft Word ve Google Docs ise şirketlere ait kapalı kaynak (ticari) yazılımlardır."}, {"num": 20, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2026 Bahar Vize", "text": "Aşağıdakilerden hangisi MS PowerPoint'te yer tutucuları ile içerik zenginleştirmede kullanılabilecek görselleştirme araçlarından biri değildir?", "options": [{"letter": "A", "text": "SmartArt grafiği"}, {"letter": "B", "text": "İnfografik"}, {"letter": "C", "text": "Dosyadan film"}, {"letter": "D", "text": "Çevrimiçi resim"}, {"letter": "E", "text": "Tablo"}], "correct": "B", "explanation": "PowerPoint slaytlarındaki (başlık ve içerik düzenindeki) standart 6'lı yer tutucu ikonları şunlardır: Tablo, Grafik, SmartArt, Resim, Çevrimiçi Resim, Video. 'İnfografik' diye standart bir yer tutucu butonu yoktur."}, {"num": 21, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2026 Bahar Vize", "text": "Microsoft Word uygulamasında bir kavramın ya da sürecin zaman içerisindeki değişimini göstermek için kullanılabilecek diyagram türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Döngü"}, {"letter": "B", "text": "Hiyerarşi"}, {"letter": "C", "text": "Matris"}, {"letter": "D", "text": "İşlem"}, {"letter": "E", "text": "İlişki"}], "correct": "D", "explanation": "SmartArt grafiklerinde adım adım ilerleyen süreçleri veya zaman içindeki değişimi (bir sürecin aşamalarını) göstermek için 'İşlem' (Process) diyagramları kullanılır."}, {"num": 22, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 2026 Bahar Vize, 5 Kez Çıktı!", "text": "Belgede sürekli kullanılması düşünülen biçimsel özellikleri, istenilen metinlere kolaylıkla uygulayabilmek için aşağıdakilerden hangisinin yapılması uygundur?", "options": [{"letter": "A", "text": "Metni kopyalamak"}, {"letter": "B", "text": "Biçimsel özellikleri yeni bir stil olarak kaydetmek"}, {"letter": "C", "text": "Düzen menüsünden biçimlendirmeyi hafızaya almak"}, {"letter": "D", "text": "Font grubundaki araçları kullanmak"}, {"letter": "E", "text": "Biçimlendirmeyi temizle butonunu kullanmak"}], "correct": "B", "explanation": "Office programlarındaki 'Stiller' özelliği, yazı tipi, punto, renk, paragraf aralığı gibi birden fazla biçimlendirme ayarını tek bir paket halinde kaydedip, daha sonra istenilen metne tek tıklamayla uygulamak için kullanılır. Bu işlem uzun belgelerde tutarlılık sağlar."}, {"num": 23, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar", "text": "Microsoft PowerPoint uygulamasında \"Resim Efektleri\" menüsünde aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Yumuşak Geçişler"}, {"letter": "B", "text": "Eğim"}, {"letter": "C", "text": "Gölge"}, {"letter": "D", "text": "Parlama"}, {"letter": "E", "text": "Yansıma OFİS UYGULAMALARI B P787296.G19082 25-03-2026 08:52:14 CEVAPLI"}], "correct": "A", "explanation": "AUZEF Ofis Uygulamalari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 24, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2024 Bahar Final, 2024 Bahar Büt, 2026 Bahar Vize, 3 Kez Çıktı!", "text": "MS Word uygulamasında yazı tipi, renk gibi tüm özellikleri tek tıkla düzenleme imkânı sunan yapıya verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Filigran"}, {"letter": "B", "text": "Biçim"}, {"letter": "C", "text": "Tema"}, {"letter": "D", "text": "SmartArt"}, {"letter": "E", "text": "Desen"}], "correct": "C", "explanation": "Temalar, belgenin renk paleti, yazı tipi seti ve efekt düzenini tek seferde topluca değiştirir."}, {"num": 25, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2026 Bahar Vize", "text": "Bir Word belgesinde metni taşımak için aşağıdakilerden hangi kısayol tuşları kullanılır?", "options": [{"letter": "A", "text": "Ctrl+F ve Ctrl+P"}, {"letter": "B", "text": "Ctrl+X ve Ctrl+S"}, {"letter": "C", "text": "Ctrl+N ve Ctrl+S"}, {"letter": "D", "text": "Ctrl+X ve Ctrl+V"}, {"letter": "E", "text": "Ctrl+C ve Ctrl+V"}], "correct": "D", "explanation": "Metni 'taşımak', kopyalamaktan farklı olarak bulunduğu yerden silip başka yere koymak demektir. Bu yüzden önce KES (Ctrl+X) sonra YAPIŞTIR (Ctrl+V) işlemi sırasıyla yapılmalıdır."}, {"num": 26, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2026 Bahar Vize", "text": "Microsoft Word'de bir belgenin otomatik kaydedilmesi için aşağıdaki hangi bulut hizmeti kullanılır?", "options": [{"letter": "A", "text": "OneDrive"}, {"letter": "B", "text": "Google Drive"}, {"letter": "C", "text": "Yandex Drive"}, {"letter": "D", "text": "Adobe Cloud"}, {"letter": "E", "text": "Dropbox"}], "correct": "A", "explanation": "Microsoft Office programlarının (Word, Excel, PowerPoint) sol üst köşesindeki 'Otomatik Kaydet' özelliğinin çalışabilmesi için dosyanın Microsoft'un kendi bulut servisi olan 'OneDrive'a kaydedilmiş olması gerekir."}, {"num": 27, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2025 Bahar Vize, 2026 Bahar Vize, 2 Kez Çıktı!", "text": "MS Powerpoint'te sunum yaparken farklı ortamlara, uygulamalara erişmek için kullanılan araç aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "Slayt gösterisi sırasında başka bir dosyaya, programa veya web sitesine gitmek için 'Eylem' (Action) düğmeleri veya 'Köprü' (Hyperlink) kullanılır."}, {"num": 28, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 2026 Bahar Vize, 4 Kez Çıktı!", "text": "Aşağıdakilerden hangisi karakter biçimlendirme ayarlarından biri değildir?", "options": [{"letter": "A", "text": "Yazı tipi rengini değiştirme"}, {"letter": "B", "text": "Metni vurgulama"}, {"letter": "C", "text": "Paragrafı sola hizalama"}, {"letter": "D", "text": "Metni kalın yazma"}, {"letter": "E", "text": "Metni alt/üst simge şeklinde yazma"}], "correct": "C", "explanation": "Hizalama işlemleri (Sola, sağa, ortaya yaslama) karakteri (harfi) değil, metin bloğunu bütün olarak etkilediği için karakter değil, paragraf biçimlendirme grubunda yer alır."}, {"num": 29, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2026 Bahar Vize", "text": "Word’de paragraf aralığı ayarlarında kullanılan ölçü birimlerinden 1 cm kaç noktaya (nk) karşılık gelmektedir?", "options": [{"letter": "A", "text": "14,17"}, {"letter": "B", "text": "56,70"}, {"letter": "C", "text": "24"}, {"letter": "D", "text": "72"}, {"letter": "E", "text": "28,35"}], "correct": "E", "explanation": "Tipografide 1 inç = 72 nokta (nk) olarak kabul edilir. 1 inç aynı zamanda 2.54 cm'dir. Dolayısıyla 1 cm = 72 / 2.54 = 28,346... (yaklaşık 28,35 nk) değerine denk gelir."}, {"num": 30, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2026 Bahar Vize", "text": "Microsoft Word'de bir metni kalın yazmak için aşağıdakilerden hangi kısayol tuşu kullanılır?", "options": [{"letter": "A", "text": "Ctrl+U"}, {"letter": "B", "text": "Ctrl+X"}, {"letter": "C", "text": "Ctrl+I"}, {"letter": "D", "text": "Ctrl+K"}, {"letter": "E", "text": "Ctrl+C"}], "correct": "D", "explanation": "Türkçe Office sürümlerinde kalın (bold) yazma kısayolu Ctrl+K'dir. (İngilizce sürümlerde Ctrl+B'dir). Ctrl+I İtalik, Ctrl+U Altı Çizili, Ctrl+C Kopyala, Ctrl+X ise Kes kısayoludur."}, {"num": 31, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2025 Bahar Büt, 2026 Bahar Vize, 2 Kez Çıktı!", "text": "Microsoft Word uygulamasında tablo içerisindeki en geniş verinin sığacağı şekilde tablo sütunlarını genişletmek için aşağıdaki işlemlerden hangisi yapılmalıdır?", "options": [{"letter": "A", "text": "Hücreleri birleştir"}, {"letter": "B", "text": "Pencereye Otomatik Sığdır"}, {"letter": "C", "text": "Satırları Dağıt"}, {"letter": "D", "text": "Sabit Sütun Genişliği"}, {"letter": "E", "text": "İçindekileri Otomatik Sığdır"}], "correct": "E", "explanation": "Tablo içindeki metnin uzunluğuna göre sütunun otomatik olarak daralıp genişlemesini sağlayan özellik 'İçindekilere Otomatik Sığdır'dır."}, {"num": 32, "tag": "Ofis Uygulamaları - 2025-2026 - Vize B Kitapçığı - Bahar, 2024 Bahar Final, 2026 Bahar Vize, 2 Kez Çıktı!", "text": "MS Word uygulamasında aşağıdakilerden hangisi bir belgeyi kaydetme yöntemlerinden biri değildir?", "options": [{"letter": "A", "text": "Ctrl+S kısayol tuşunu kullanmak"}, {"letter": "B", "text": "Hızlı erişim çubuğundan \"Kaydet\"e tıklamak"}, {"letter": "C", "text": "Düzen menüsünden \"Kaydet\" seçeneğine tıklamak"}, {"letter": "D", "text": "Dosya menüsünden \"Farklı Kaydet\" seçeneğine tıklamak"}, {"letter": "E", "text": "Microsoft Word penceresinde \"Belge Başlığı\" bölümündeki \"Yer\" seçeneğine tıklamak"}], "correct": "C", "explanation": "Office arayüzünde (Ribbon) 'Düzen' adında bir sekme bulunmaz. Kaydet işlemleri her zaman 'Dosya' (File) sekmesi altındadır."}, {"num": 33, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 2023 Bahar Final, 4 Kez Çıktı!", "text": "Aşağıdakilerden hangisi açık kaynak kodlu bir kelime işlemci uygulamasıdır?", "options": [{"letter": "A", "text": "Apple iWork-Pages"}, {"letter": "B", "text": "Microsoft Word"}, {"letter": "C", "text": "Abiword"}, {"letter": "D", "text": "Google Docs"}, {"letter": "E", "text": "Dropbox Paper"}], "correct": "C", "explanation": "Açık kaynak kodlu yazılımlar, kaynak kodları herkesin erişimine açık olan yazılımlardır. AbiWord ücretsiz ve açık kaynak kodlu bir kelime işlemcidir. Diğerleri ticari şirketlerin mülkiyetindedir."}, {"num": 34, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 3 Kez Çıktı!", "text": "Word uygulamasında bir metni kesmek için kullanılan kısayol tuşu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ctrl+V"}, {"letter": "B", "text": "Ctrl+X"}, {"letter": "C", "text": "Ctrl+Y"}, {"letter": "D", "text": "Ctrl+K"}, {"letter": "E", "text": "Ctrl+U"}], "correct": "B", "explanation": "İşletim sistemlerinde ve Office programlarında evrensel kesme kısayolu Ctrl+X'tir. Kopyalama Ctrl+C, Yapıştırma ise Ctrl+V'dir."}, {"num": 35, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 3 Kez Çıktı!", "text": "Word uygulamasında eklenen bir resim ile ilgili 'Gelişmiş Düzen' penceresinden aşağıdaki ayarlardan hangisi yapılamaz?", "options": [{"letter": "A", "text": "Metnin kaydırma stilini belirleme"}, {"letter": "B", "text": "Resmi döndürme"}, {"letter": "C", "text": "Resmi kırpma"}, {"letter": "D", "text": "Resmin sayfadaki mutlak konumunu belirleme"}, {"letter": "E", "text": "Resmin metinden uzaklığının belirleme"}], "correct": "C", "explanation": "Gelişmiş Düzen iletişim kutusundan boyut, konum ve metin kaydırma ayarlanır. Kırpma (Crop) işlemi ise Şerit üzerindeki 'Resim Biçimi' sekmesinde yer alan 'Kırp' aracı ile doğrudan resim üzerinden yapılır."}, {"num": 36, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 3 Kez Çıktı!", "text": "Tabloda imleci bir sonraki sütuna taşımak için aşağıda verilen tuşlardan hangisi kullanılabilir?", "options": [{"letter": "A", "text": "Alt+End"}, {"letter": "B", "text": "Alt+Home"}, {"letter": "C", "text": "Ctrl+Tab"}, {"letter": "D", "text": "Shift+Tab"}, {"letter": "E", "text": "Tab"}], "correct": "E", "explanation": "Tablolarda hücreler arası gezinmenin en temel yolu 'Tab' tuşudur. Tab tuşuna basıldığında imleç sağdaki (bir sonraki) hücreye atlar. Shift+Tab ise imleci bir önceki (soldaki) hücreye geri götürür."}, {"num": 37, "tag": "2024 Bahar Vize, 2025 Bahar Vize, 2023 Bahar Final, 3 Kez Çıktı!", "text": "Microsoft Word uygulamasında orantılı ve hiyerarşik ilişkilerin sunulmasında kullanılabilecek diyagram türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İşlem"}, {"letter": "B", "text": "Hiyerarşi"}, {"letter": "C", "text": "Liste"}, {"letter": "D", "text": "Piramit"}, {"letter": "E", "text": "Matris"}], "correct": "D", "explanation": "SmartArt grafiklerinde 'Orantılı' kelimesi doğrudan piramit modellerini işaret etmektedir. Temel veya hiyerarşik ilişkileri tabandan tepeye daralan oranlarla göstermek için kullanılır."}, {"num": 38, "tag": "2024 Bahar Vize, 2025 Bahar Vize, 2 Kez Çıktı!", "text": "Kelime işlemci uygulamasında kelimelerin altının kırmızı dalga ile çizili olmasının nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Metnin birleşik kelime olması"}, {"letter": "B", "text": "Metnin sözlüğe yeni eklenmiş olması"}, {"letter": "C", "text": "Metnin yanlış yazılmış olması"}, {"letter": "D", "text": "Metnin seçilip Ctrl+K kısayol tuşuna basılmış olması"}, {"letter": "E", "text": "Metnin tamamının büyük harfle yazılmış olması"}], "correct": "C", "explanation": "Word'ün yazım denetimi seçili dilin sözlüğünde bulamadığı kelimelerin (hatalı yazımların) altını kırmızı dalgalı çizgiyle işaretler. Dilbilgisi/gramer hataları ise mavi/yeşil çizgiyle gösterilir."}, {"num": 39, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 3 Kez Çıktı!", "text": "PowerPoint'te 'Eylem Ayarları' penceresinde yer alan 'Köprü' özelliğini kullanarak aşağıdakilerden hangisi yapılamaz?", "options": [{"letter": "A", "text": "Görüntülenen ilk slayda yönlendirme"}, {"letter": "B", "text": "Sonraki slayda yönlendirme"}, {"letter": "C", "text": "Özel bir gösteri başlatma"}, {"letter": "D", "text": "Bir web sayfasına yönlendirme"}, {"letter": "E", "text": "Bir Word belgesi açma"}], "correct": "A", "explanation": "Eylem ayarlarında 'İlk Slayt', 'Son Slayt' ve 'Görüntülenen Son Slayt' vardır. Ancak 'Görüntülenen ilk slayt' şeklinde teknik bir yönlendirme mantıken mevcut değildir."}, {"num": 40, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 3 Kez Çıktı!", "text": "Microsoft PowerPoint uygulamasında 'Yapıştırma Seçenekleri' penceresinde aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Hedef temayı kullan"}, {"letter": "B", "text": "Özel yapıştır"}, {"letter": "C", "text": "Kaynak biçimlendirmesini koru"}, {"letter": "D", "text": "HTML resim yapıştır"}, {"letter": "E", "text": "Yalnızca metni koru"}], "correct": "D", "explanation": "Yapıştırma seçeneklerinde standart olarak hedef temayı kullanma, kaynak biçimlendirmesini koruma veya resmi yapıştırma vardır ama AUZEF'in klasik çeldiricisi olan 'HTML resim yapıştır' adında bir etiket menüde bulunmaz."}, {"num": 41, "tag": "2023 Bahar Vize", "text": "Aşağıdakilerden hangisi PowerPoint'e doğrudan eklenebilen zenginleştirme öğelerinden biri değildir?", "options": [{"letter": "A", "text": "Tarih ve Saat"}, {"letter": "B", "text": "Makro içeren Microsoft Word belgesi"}, {"letter": "C", "text": "Video"}, {"letter": "D", "text": "Denklem"}, {"letter": "E", "text": "Web 2.0 uygulaması"}], "correct": "E", "explanation": "PowerPoint Ekle menüsünde Video, Denklem, Tarih eklenir. Başka Office belgeleri 'Nesne' olarak eklenebilir. Ancak 'Web 2.0 uygulaması' doğrudan yerleşik bir ekleme öğesi değildir."}, {"num": 42, "tag": "2023 Bahar Vize, 2024 Bahar Final, 2024 Bahar Büt, 3 Kez Çıktı!", "text": "Word uygulamasında yer alan sol üstteki küçük araç çubuğunun adı nedir?", "options": [{"letter": "A", "text": "Hızlı erişim çubuğu"}, {"letter": "B", "text": "Yakınlaştırma çubuğu"}, {"letter": "C", "text": "Belge başlığı çubuğu"}, {"letter": "D", "text": "Durum çubuğu"}, {"letter": "E", "text": "Görünüm türleri çubuğu"}], "correct": "A", "explanation": "Office programlarının sol üst köşesinde yer alan, Kaydet, Geri Al gibi sık kullanılan işlemleri barındıran alana 'Hızlı Erişim Araç Çubuğu' denir."}, {"num": 43, "tag": "2023 Bahar Vize, 2024 Bahar Büt, 2026 Bahar Vize, 3 Kez Çıktı!", "text": "Resmi kırpma menüsünde aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Şekle Göre Kırp"}, {"letter": "B", "text": "Doldur"}, {"letter": "C", "text": "Sığdır"}, {"letter": "D", "text": "Kare"}, {"letter": "E", "text": "En Boy Oranı"}], "correct": "D", "explanation": "Resim Biçimi altındaki Kırp menüsünde Sığdır, Doldur, En Boy Oranı vardır. 'Kare' ise Metin Kaydırma menüsüne aittir."}, {"num": 44, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2024 Bahar Final, 3 Kez Çıktı!", "text": "Nesneleri Döndür menüsünde yer alan dairesel/dönen ok şeklindeki aracın işlevi nedir?", "options": [{"letter": "A", "text": "Resmi sola 90 derece döndürür"}, {"letter": "B", "text": "Resmi yatay ters çevirir"}, {"letter": "C", "text": "Resmi dikey ters çevirir"}, {"letter": "D", "text": "Resmi serbest şekilde döndürür"}, {"letter": "E", "text": "Resmi sağa 90 derece döndürür"}], "correct": "D", "explanation": "Resmin tepesinde yer alan yeşil veya beyaz tekli dairesel ok, fareyle basılı tutarak nesneyi 360 derece serbest şekilde döndürmeye yarar."}, {"num": 45, "tag": "2023 Bahar Vize, 2024 Bahar Büt, 2025 Bahar Final, 3 Kez Çıktı!", "text": "Bir metin üzerinde vurgulama dışındaki tüm stilleri ve biçimlendirmeyi kaldırmak için kullanılan araç aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Stilleri Temizle"}, {"letter": "B", "text": "Biçim Boyacısı"}, {"letter": "C", "text": "Biçimlendirmeyi Temizle"}, {"letter": "D", "text": "Geri Al"}], "correct": "C", "explanation": "Giriş sekmesindeki büyük 'A' ve silgi ikonu. Tüm kalınlık/renk ayarlarını sıfırlar fakat Metin Vurgu Rengi ile atılan fosforlu boyayı temizlemez."}, {"num": 46, "tag": "2023 Bahar Vize, 2024 Bahar Final, 2024 Bahar Büt, 3 Kez Çıktı!", "text": "Word uygulamasında bir metni 3 sütuna bölünmüş şekilde yazmak için kullanılan araç hangisidir?", "options": [{"letter": "A", "text": "Sütunlar aracı"}, {"letter": "B", "text": "Tablo aracı"}, {"letter": "C", "text": "Sayfa Düzeni aracı"}, {"letter": "D", "text": "Kenarlıklar"}], "correct": "A", "explanation": "Gazete ve dergilerdeki gibi metni sütunlar halinde bölmeye yarayan araç Sayfa Düzeni sekmesindeki 'Sütunlar'dır."}, {"num": 47, "tag": "2023 Bahar Vize, 2024 Bahar Vize, 2025 Bahar Vize, 2024 Bahar Final, 2026 Bahar Vize, 5 Kez Çıktı!", "text": "PowerPoint uygulamasında resim efektleri menüsünde aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Yansıma"}, {"letter": "B", "text": "Eğim"}, {"letter": "C", "text": "Parlama"}, {"letter": "D", "text": "Gölge"}, {"letter": "E", "text": "Yumuşak geçişler"}], "correct": "E", "explanation": "Resim efektleri menüsünde 'Yumuşak Kenarlar' vardır ancak 'Yumuşak Geçişler' yoktur. Geçişler slaytlar arasında kullanılan ayrı bir menüdür."}, {"num": 48, "tag": "2023 Bahar Vize, 2024 Bahar Büt, 2 Kez Çıktı!", "text": "PowerPoint'te bir şekle tıklayınca Microsoft Word programını çalıştırmak için aşağıdaki araçlardan hangisi kullanılması gerekmektedir?", "options": [{"letter": "A", "text": "Eylem butonu"}, {"letter": "B", "text": "Makro butonu"}, {"letter": "C", "text": "Bağlantı butonu"}, {"letter": "D", "text": "Nesne"}, {"letter": "E", "text": "Slayt Geçişi"}], "correct": "A", "explanation": "Şekillere 'Eylem' (Action) atanarak tıklandığında .exe programları (Word dahil) çalıştırılabilir."}, {"num": 49, "tag": "2024 Bahar Vize, 2025 Bahar Vize, 2 Kez Çıktı!", "text": "Microsoft Word uygulamasında 'Sayfa sonu' veya 'Sütun sonu' ekleyerek metni bir sonraki bölüme/sayfaya aktaran aracın adı nedir?", "options": [{"letter": "A", "text": "Sayfa Sonu / Kesmeler"}, {"letter": "B", "text": "Paragraf"}, {"letter": "C", "text": "Hizalama"}, {"letter": "D", "text": "Kenarlık"}, {"letter": "E", "text": "Satır Aralığı"}], "correct": "A", "explanation": "Sayfa Düzeni > Kesmeler menüsü ile sütun veya sayfa atlatmaları (break) yapılır."}, {"num": 50, "tag": "2025 Bahar Vize", "text": "Microsoft Word uygulamasında 'Öncü'ler ne işe yarar?", "options": [{"letter": "A", "text": "Tablo oluşturmaya yarar."}, {"letter": "B", "text": "Sekme tuşuna bastığınızda aradaki boşluğun nasıl doldurulacağını belirler."}, {"letter": "C", "text": "Belirlenen aralıkta sekme ekler."}, {"letter": "D", "text": "Metnin ilk satır girintisini belirler."}, {"letter": "E", "text": "Metinlerin başına madde imi ekler."}], "correct": "B", "explanation": "Sekmeler ayarındaki 'Öncü' (Leader) özelliği, Tab tuşuna bastığınızda boşluğun noktalar (...), tireler (---) ile doldurulmasını sağlar. İçindekiler tablosunda sık kullanılır."}, {"num": 51, "tag": "2024 Bahar Vize, 2025 Bahar Vize, 2 Kez Çıktı!", "text": "Aralık Önce: 0 nk Sonra: 0 nk ayarları görüntülenen bölümden hangi işlem gerçekleştirilir?", "options": [{"letter": "A", "text": "Satır aralarındaki boşluklar ayarlanır."}, {"letter": "B", "text": "Sekme durakları ayarlanır."}, {"letter": "C", "text": "Paragrafın soldan ve sağdan girintisi ayarlanır."}, {"letter": "D", "text": "Paragraflar arasındaki dikey boşluklar ayarlanır."}, {"letter": "E", "text": "Madde imlerinin soldan ve sağdan girintisi ayarlanır."}], "correct": "D", "explanation": "Sayfa Düzeni sekmesinde yer alan 'Aralık' ayarları, seçili paragrafın üstündeki ve altındaki dikey mesafeyi belirler."}, {"num": 52, "tag": "2025 Bahar Final, 2026 Bahar Vize, 2 Kez Çıktı!", "text": "MS Word uygulamasında 'Resmi Sıfırla' butonunun işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Resmi belgenin sol kenarına yaslar."}, {"letter": "B", "text": "Resmin piksellerini temizler."}, {"letter": "C", "text": "Resmi belgenin sağ kenarına yaslar."}, {"letter": "D", "text": "Resimde yapılan tüm değişiklikleri silerek resmi ilk haline döndürür."}, {"letter": "E", "text": "Resmi tüm kenarlarından kırpar."}], "correct": "D", "explanation": "Resmi Sıfırla (Reset Picture) aracı; kırpma, çerçeve, renk ve boyutlandırma gibi resme sonradan uygulanan tüm özellikleri temizleyip orijinal haline getirir."}, {"num": 53, "tag": "2025 Bahar Final", "text": "MS Word uygulamasında paragraf biçimlendirme işlemi aşağıdakilerden hangisini yapmanıza olanak sağlar?", "options": [{"letter": "A", "text": "Paragrafın metnini başka bir belgeye kopyalamak"}, {"letter": "B", "text": "Paragraflar arasında boşluk ayarlamak"}, {"letter": "C", "text": "Paragraf içindeki yazım hatalarını otomatik düzeltmek"}, {"letter": "D", "text": "Paragrafın yazı tipi boyutunu değiştirmek"}, {"letter": "E", "text": "Paragrafın üzerine resim eklemek"}], "correct": "B", "explanation": "Paragraf grubu; metin hizalama, satır aralığı, paragraf boşlukları ve girinti ayarlarını barındırır."}, {"num": 54, "tag": "2025 Bahar Final", "text": "Aşağıdakilerden hangisi MS Word uygulamasında oluşturulabilecek sekme türlerinden biri değildir?", "options": [{"letter": "A", "text": "İki yana yasla"}, {"letter": "B", "text": "Sağ sekme"}, {"letter": "C", "text": "Sol sekme"}, {"letter": "D", "text": "Ondalık"}, {"letter": "E", "text": "Çubuk"}], "correct": "A", "explanation": "Sekme durakları (Tab) Sol, Orta, Sağ, Ondalık ve Çubuk türlerindedir. 'İki yana yasla' bir sekme durağı değil, paragraf hizalama seçeneğidir."}, {"num": 55, "tag": "2024 Bahar Büt", "text": "MS Word'de cetvel üzerindeki alt dik üçgen aracının görevi nedir?", "options": [{"letter": "A", "text": "Paragrafın son satırının başlangıç konumunu belirler."}, {"letter": "B", "text": "Paragrafın tamamının başlangıç konumunu belirler. (Asılı Girinti)"}, {"letter": "C", "text": "İlk satır girintisini ayarlar."}, {"letter": "D", "text": "İmleci metnin sol kenarına hizalar."}, {"letter": "E", "text": "İmleci metnin sağ kenarına hizalar."}], "correct": "B", "explanation": "Cetveldeki üst üçgen 'İlk Satır' girintisini, alt üçgen ise ilk satır dışındaki diğer satırların (Asılı Girinti) içeriden başlamasını ayarlar."}, {"num": 56, "tag": "2025 Bahar Büt", "text": "Microsoft Word'de bir metni taşırken mevcut biçimlendirmeyi korumak için aşağıdaki yapıştırma seçeneklerinden hangisi tercih edilir?", "options": [{"letter": "A", "text": "Normal Yapıştır"}, {"letter": "B", "text": "Biçimlendirmeyi Eşleştir"}, {"letter": "C", "text": "Kaynak Biçimlendirmesini Koru"}, {"letter": "D", "text": "Gelişmiş Yapıştır"}, {"letter": "E", "text": "Yalnızca Metni Koru"}], "correct": "C", "explanation": "Kopyalanan verinin orijinal renk ve boyutunun yeni yerde bozulmaması için yapıştırma seçeneklerinden 'Kaynak Biçimlendirmesini Koru' seçilir."}, {"num": 57, "tag": "2025 Bahar Büt", "text": "Microsoft Word'de sekme durakları oluşturmak için hangi klavye tuşu kullanılır?", "options": [{"letter": "A", "text": "Tab"}, {"letter": "B", "text": "Enter"}, {"letter": "C", "text": "Ctrl"}, {"letter": "D", "text": "Shift"}, {"letter": "E", "text": "Alt"}], "correct": "A", "explanation": "Cetveldeki sekmelere hızlıca atlamak için klavyeden 'Tab' tuşu kullanılır."}, {"num": 58, "tag": "2025 Bahar Büt", "text": "Microsoft Word'de bir metin yazarken imlecin görevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sayfa numarası eklemek"}, {"letter": "B", "text": "Sayfayı bölmek"}, {"letter": "C", "text": "Yazıyı taşımak"}, {"letter": "D", "text": "Yazılacak konumu göstermek"}, {"letter": "E", "text": "Metni silmek"}], "correct": "D", "explanation": "İmleç (yanıp sönen dikey çizgi), eklenecek harfin veya nesnenin belge üzerinde nereye yerleştirileceğini gösteren kılavuzdur."}, {"num": 59, "tag": "2025 Bahar Büt", "text": "Microsoft Word uygulamasında tabloda imleci en üst satıra/sütuna göndermek için kullanılacak tuş kombinasyonu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Alt+Home"}, {"letter": "B", "text": "Alt+Page Down"}, {"letter": "C", "text": "Alt+Page Up"}, {"letter": "D", "text": "Shift+Tab"}, {"letter": "E", "text": "Alt+End"}], "correct": "C", "explanation": "Alt+Page Up bulunulan sütunun en üst hücresine gider. Alt+Home satırın en başına, Alt+End satırın en sonuna, Alt+Page Down sütunun en altına gider."}, {"num": 60, "tag": "2023 Bahar Final, 2024 Bahar Final, 2024 Bahar Büt, 2025 Bahar Büt, 4 Kez Çıktı!", "text": "Slayttaki bir görseli kıvrımlı/zigzag bir çizgi üzerinde hareket ettirmek için kullanılacak animasyon türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çıkış animasyonu"}, {"letter": "B", "text": "Vurgu animasyonu"}, {"letter": "C", "text": "Yol animasyonu"}, {"letter": "D", "text": "Karmaşık animasyon"}, {"letter": "E", "text": "Giriş animasyonu"}], "correct": "C", "explanation": "Bir nesnenin ekranda çizdiğiniz belirli bir güzergah (yol) üzerinde serbestçe hareket etmesini sağlayan tür 'Yol Animasyonu'dur."}, {"num": 61, "tag": "2024 Bahar Final, 2025 Bahar Büt, 2 Kez Çıktı!", "text": "MS Excel'de =MAKS(A2:A6) şeklinde bir hücreye yazılan formül aşağıdaki hangi hata mesajını döndürür?", "options": [{"letter": "A", "text": "#YOK"}, {"letter": "B", "text": "#BAŞV!"}, {"letter": "C", "text": "#HATA!"}, {"letter": "D", "text": "#BOŞ!"}, {"letter": "E", "text": "#AD?"}], "correct": "E", "explanation": "Türkçe Excel'de en büyük değeri bulma formülü =MAK() şeklindedir. Yanlış veya tanınmayan bir isim (=MAKS) yazıldığında Excel o formülü tanıyamadığı için #AD? (Name?) hatası döndürür."}, {"num": 62, "tag": "2024 Bahar Büt, 2025 Bahar Büt, 2 Kez Çıktı!", "text": "MS Excel'de ortalamanın altında yer alan değerleri kırmızı dolgu rengi ile göstermek için aşağıdaki hangi kategorideki koşullu biçimlendirme kuralını seçmek uygun olacaktır?", "options": [{"letter": "A", "text": "Veri çubukları"}, {"letter": "B", "text": "Simge kümeleri"}, {"letter": "C", "text": "Üst/Alt Kuralları"}, {"letter": "D", "text": "Hücre vurgulama kuralları"}, {"letter": "E", "text": "Renk ölçekleri"}], "correct": "C", "explanation": "Ortalama otomatik hesaplanan bütünsel bir değerdir. 'Ortalamanın Üstünde' veya 'Altında' kuralları, Koşullu Biçimlendirmede 'Üst/Alt Kuralları' kategorisi içinde bulunur."}, {"num": 63, "tag": "2024 Bahar Final, 2025 Bahar Büt, 2 Kez Çıktı!", "text": "Gelişmiş Filtre ekranında, Ölçüt tablosunda Sınıf='6-A' ve Türkçe Notu='>70' aynı satırda, Sınıf='6-C' ise alt satırda yazılmıştır. Hangi veriler filtrelenir?", "options": [{"letter": "A", "text": "6-C ve 6-A sınıfında Türkçe notu 70'in üstünde olan tüm öğrenciler"}, {"letter": "B", "text": "6-C sınıfındaki tüm öğrenciler veya 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler"}, {"letter": "C", "text": "6-C sınıfındaki tüm öğrenciler ve 6-A sınıfında ve Türkçe notu 70'in üstünde olan öğrenciler"}, {"letter": "D", "text": "6-C veya 6-A sınıfında Türkçe notu 70'in üstünde olan tüm öğrenciler"}], "correct": "B", "explanation": "Gelişmiş Filtre'de kural şudur: Yan yana (aynı satırda) yazılanlar 'VE' bağlacı ile, alt alta (farklı satırda) yazılanlar 'VEYA' bağlacı ile birbirine bağlanır."}, {"num": 64, "tag": "2023 Bahar Final, 2024 Bahar Büt, 2025 Bahar Büt, 3 Kez Çıktı!", "text": "PowerPoint'te 'Geçişler' sekmesinde yer alan 'Sonra: 00,00' butonunun görevi nedir?", "options": [{"letter": "A", "text": "Saniye cinsinden belirtilen süre sonunda animasyon başlar."}, {"letter": "B", "text": "Saniye cinsinden belirtilen süre sonunda sonraki slayta gider."}, {"letter": "C", "text": "Milisaniye cinsinden sonraki slayta gider."}, {"letter": "D", "text": "Milisaniye cinsinden animasyon başlar."}, {"letter": "E", "text": "Saniye cinsinden animasyonun görüntülenmesini sağlar."}], "correct": "B", "explanation": "Geçişler sekmesindeki 'Sonra' seçeneği, farenin tıklanmasını beklemeden slaytın saniye bazında bekleyip otomatik olarak bir sonraki slayta geçişini sağlar."}, {"num": 65, "tag": "2023 Bahar Final, 2024 Bahar Büt, 2 Kez Çıktı!", "text": "Excel'de C1'den E4'e kadar seçim işlemi gerçekleştiğinde 'Ad Kutusu'nda aşağıdakilerden hangisi görüntülenir?", "options": [{"letter": "A", "text": "C1"}, {"letter": "B", "text": "C1-E1"}, {"letter": "C", "text": "C1:E4"}, {"letter": "D", "text": "E4"}, {"letter": "E", "text": "C1-E4"}], "correct": "A", "explanation": "Ad Kutusu, çok büyük bir hücre aralığı seçilse bile her zaman fareyle seçimin yapıldığı ilk başladığınız hücreyi (Aktif Hücre) gösterir."}, {"num": 66, "tag": "2023 Bahar Final, 2024 Bahar Final, 2 Kez Çıktı!", "text": "'Büyüktür', 'Küçüktür', 'İlgili Tarih' gibi kurallar Koşullu Biçimlendirme'nin hangi kategorisinde yer almaktadır?", "options": [{"letter": "A", "text": "Üst/alt Kuralları"}, {"letter": "B", "text": "Veri çubukları"}, {"letter": "C", "text": "Simge kümeleri"}, {"letter": "D", "text": "Renk ölçekleri"}, {"letter": "E", "text": "Hücre vurgulama kuralları"}], "correct": "E", "explanation": "Bu kurallar Koşullu Biçimlendirme > 'Hücre Vurgulama Kuralları'nın alt menüleridir."}, {"num": 67, "tag": "2023 Bahar Final, 2024 Bahar Büt, 2 Kez Çıktı!", "text": "Excel'de C1 hücresindeki uzun metni hücre genişliğini bozmadan alt satıra atarak sığdırmak için aşağıdaki butonlardan hangisine tıklanmalıdır?", "options": [{"letter": "A", "text": "Metni Kaydır (Wrap Text)"}, {"letter": "B", "text": "Birleştir ve Ortala"}, {"letter": "C", "text": "Hizalama"}], "correct": "A", "explanation": "Uzun metinleri hücre sınırları içerisinde alt satıra atarak göstermeye yarayan özellik 'Metni Kaydır'dır."}, {"num": 68, "tag": "2024 Bahar Final", "text": "A1 hücresinde yer alan 'Ofis Uygulamaları' yazısından 'Uygulama' kelimesini alıp B1 hücresine yazdıran formül aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "PARÇAAL(B1;6;8)"}, {"letter": "B", "text": "PARÇAAL(B1;8;6)"}, {"letter": "C", "text": "PARÇAAL(A1;6;8)"}, {"letter": "D", "text": "PARÇAAL(A1;8;6)"}, {"letter": "E", "text": "PARÇAAL(A1;19;8)"}], "correct": "C", "explanation": "PARÇAAL(Metin; Başlangıç Sırası; Kaç Karakter). Metin A1'de. Uygulamanın 'U' harfi boşlukla beraber 6. sıradadır. Kelimenin uzunluğu 8 harftir."}, {"num": 69, "tag": "2024 Bahar Final", "text": "MS PowerPoint'te aşağıdakilerden hangisi 'Animasyonlar' sekmesinden yapılamaz?", "options": [{"letter": "A", "text": "Seçilen animasyonun farklı yönden gelmesini sağlamak"}, {"letter": "B", "text": "Madde imlerini ayrı ayrı getirmek"}, {"letter": "C", "text": "Slayt gösterisinin 'Esc' tuşuna basıncaya kadar sürekli dönmesini sağlamak"}, {"letter": "D", "text": "Animasyon hareketini kendinden öncekiyle başlatmak"}, {"letter": "E", "text": "Bir şekle giriş animasyonu eklemek"}], "correct": "C", "explanation": "Gösterinin sürekli kendi kendine dönmesi ayarı 'Slayt Gösterisi' sekmesindeki 'Slayt Gösterisi Ayarla' menüsünden yapılır, Animasyonlardan değil."}, {"num": 70, "tag": "2024 Bahar Final", "text": "MS PowerPoint'te animasyon galerisinde yer alan sarı renkli animasyon grubunun işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Vurgu animasyonlarıdır."}, {"letter": "B", "text": "Çıkış animasyonlarıdır."}, {"letter": "C", "text": "Giriş animasyonlarıdır."}, {"letter": "D", "text": "Ek animasyonlardır."}, {"letter": "E", "text": "Yol animasyonlarıdır."}], "correct": "A", "explanation": "PowerPoint'te: Yeşil Yıldız = Giriş, Sarı Yıldız = Vurgu, Kırmızı Yıldız = Çıkış animasyonudur."}, {"num": 71, "tag": "2024 Bahar Final, 2025 Bahar Final, 2 Kez Çıktı!", "text": "MS Excel'de kategorilerin yanında +/- butonları olan daraltılıp genişletilebilen özet tablo görünümü elde etmek için aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Mini Grafikler"}, {"letter": "B", "text": "PivotChart"}, {"letter": "C", "text": "Koşullu Biçimlendirme"}, {"letter": "D", "text": "Pivot Table"}, {"letter": "E", "text": "Hücre Stilleri"}], "correct": "D", "explanation": "Büyük veri yığınlarını gruplandırmak ve +/- düğmeleriyle dinamik analizler yapmak için 'Pivot Table' (Özet Tablo) kullanılır."}, {"num": 72, "tag": "2024 Bahar Final", "text": "Sayfa1'e sağ tıklandığında aşağıdaki işlemlerden hangisi gerçekleştirilemez?", "options": [{"letter": "A", "text": "Çalışma sayfasını taşıma"}, {"letter": "B", "text": "Sayfayı yazdırma"}, {"letter": "C", "text": "Sayfa ekleme"}, {"letter": "D", "text": "Sayfanın adını değiştirme"}, {"letter": "E", "text": "Çalışma sayfasına parola ekleme"}], "correct": "B", "explanation": "Sayfa (Sheet) sekmelerine sağ tıklandığında Ekle, Sil, İsim Değiştir, Taşı çıkar ancak yazdırma seçeneği çıkmaz."}, {"num": 73, "tag": "2024 Bahar Final, 2025 Bahar Final, 2 Kez Çıktı!", "text": "PowerPoint'te ortasında Kırmızı Kayıt Noktası İkonu olan butonun işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Animasyonu kaydeder."}, {"letter": "B", "text": "Geçerli slayttan başlayarak sunumu kaydetmek için kullanılır."}, {"letter": "C", "text": "Kırmızı daire ekler."}, {"letter": "D", "text": "Ekran resmi çeker."}, {"letter": "E", "text": "Çıkış animasyonu ekler."}], "correct": "B", "explanation": "Bu ikon, sesinizi, görüntü kameranızı ve zamanlamaları kaydetmeye yarayan 'Slayt Gösterisini Kaydet' özelliğidir."}, {"num": 74, "tag": "2024 Bahar Final", "text": "MS Excel çalışma sayfasında 'Süpürge' kelimesinin geçme sayısını veren formül aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "SAY(B2:B17;\\\"Süpürge\\\")"}, {"letter": "B", "text": "=ÇOKEĞER(B2:B17;\\\"Süpürge\\\")"}, {"letter": "C", "text": "=SAĞDAN(B2:B17;\\\"Süpürge\\\")"}, {"letter": "D", "text": "UZUNLUK(B2:B17;\\\"Süpürge\\\")"}, {"letter": "E", "text": "=EĞERSAY(B2:B17;\\\"Süpürge\\\")"}], "correct": "E", "explanation": "Bir hücre aralığında sadece belirli bir şarta (kelimeye) uyan hücrelerin adetini saymak için EĞERSAY (COUNTIF) kullanılır."}, {"num": 75, "tag": "2025 Bahar Final, 2025 Bahar Büt, 2 Kez Çıktı!", "text": "MS Excel'de bir hücre aralığını ifade eden A1:D5 yazımı ile aşağıdakilerden hangisi belirtilir?", "options": [{"letter": "A", "text": "A sütunundaki 1. hücreyi"}, {"letter": "B", "text": "A1 hücresi ile D5 hücresi arasındaki dikdörtgensel alanı"}, {"letter": "C", "text": "A sütunu ile D sütunu arasındaki tüm hücreleri"}, {"letter": "D", "text": "Tüm çalışma sayfasını"}, {"letter": "E", "text": "1. satırdan 5. satıra kadar tüm hücreleri"}], "correct": "B", "explanation": "İki nokta üst üste (:), iki hücre arasındaki kesişen tüm dikdörtgensel bloğu (matrisi) belirtmek için kullanılır."}, {"num": 76, "tag": "2025 Bahar Final", "text": "MS Excel'de bir formülde A1 hücresindeki değerin sabit kalmasını sağlamak için aşağıdaki referanslardan hangisi kullanılır?", "options": [{"letter": "A", "text": "A1$"}, {"letter": "B", "text": "A$1"}, {"letter": "C", "text": "A1"}, {"letter": "D", "text": "$A1"}, {"letter": "E", "text": "$A$1"}], "correct": "E", "explanation": "Bir hücre adresinin formül kopyalandığında sağa/sola/aşağı kaymasını engellemek (Mutlak Başvuru yapmak) için hem sütun hem satır ibaresinin başına dolar işareti ($) konur."}, {"num": 77, "tag": "2025 Bahar Final", "text": "MS Excel'de imleç iki sütun arasındayken çift tıklanıldığında aşağıdaki durumlardan hangisi gerçekleşir?", "options": [{"letter": "A", "text": "Hücreye sığmayan veriler bir alt satıra kaydırılır."}, {"letter": "B", "text": "İki sütun arasına yeni bir sütun eklenir."}, {"letter": "C", "text": "Sütun genişliği metne göre en uygun olacak şekilde ayarlanır."}, {"letter": "D", "text": "Hücreye sığmayan veriler silinir."}, {"letter": "E", "text": "Seçili hücrenin altına yeni satır eklenir."}], "correct": "C", "explanation": "Sütun başlıklarının arasındaki çizgiye çift tıklamak, o sütundaki en uzun metne göre genişliği tam ayarlayan 'Otomatik Sığdır' özelliğini devreye sokar."}, {"num": 78, "tag": "2025 Bahar Final", "text": "MS Excel'de filtre uygulamak istediniz verilere karmaşık ölçütler (VEYA mantığı vb.) uygulamanız gerektiğinde hangi butona tıklamanız gerekmektedir?", "options": [{"letter": "A", "text": "Sayfayı Hesapla"}, {"letter": "B", "text": "Durum Çözümlemesi"}, {"letter": "C", "text": "Gelişmiş"}, {"letter": "D", "text": "Grubu Çöz"}, {"letter": "E", "text": "Ad Tanımla"}], "correct": "C", "explanation": "Sütun başlıklarındaki standart filtrelerin yetersiz kaldığı durumlarda Veri sekmesindeki 'Gelişmiş Filtre' (Advanced Filter) aracı kullanılır."}, {"num": 79, "tag": "2025 Bahar Final", "text": "MS Excel'de bir formül yazarken doğrudan sayılar (10+5) yerine hücre adreslerini (A1+B1) kullanmanın avantajı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hata mesajlarını önler."}, {"letter": "B", "text": "Formülü sabit değerle değiştirir."}, {"letter": "C", "text": "Daha hızlı hesaplar."}, {"letter": "D", "text": "Formülün sabit kalmasını sağlar."}, {"letter": "E", "text": "Formülün dinamik olarak güncellenmesini sağlar."}], "correct": "E", "explanation": "Hücre adresi kullandığınızda, hücrenin içindeki veriyi değiştirdiğiniz an formül kendini yeni değere göre otomatik olarak günceller (dinamik hesaplama)."}, {"num": 80, "tag": "2025 Bahar Final", "text": "MS Excel'de hücreye veri girişi yapabilmek veya var olan veriyi düzenleyebilmek için aşağıdaki tuşlardan hangisi kullanılır?", "options": [{"letter": "A", "text": "F2"}, {"letter": "B", "text": "F1"}, {"letter": "C", "text": "Shift"}, {"letter": "D", "text": "Esc"}, {"letter": "E", "text": "F3"}], "correct": "A", "explanation": "Klavyeden F2 tuşuna basmak, imleci hücrenin içine sokar ve hücreyi düzenleme moduna alır."}, {"num": 81, "tag": "2025 Bahar Final", "text": "MS PowerPoint'teki 'Animasyon Boyacısı' aracının görevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Arka plan resmi eklemek"}, {"letter": "B", "text": "Hızını değiştirmek"}, {"letter": "C", "text": "Slayt geçiş efekti kopyalamak"}, {"letter": "D", "text": "Tüm slaytlara otomatik eklemek"}, {"letter": "E", "text": "Bir nesneye uygulanan animasyonu başka bir nesneye kopyalamak"}], "correct": "E", "explanation": "Word'deki 'Biçim Boyacısı'nın animasyon versiyonudur. Bir nesnedeki süre, tür ve gecikme gibi tüm animasyon ayarlarını kopyalayıp başka nesneye uygular."}, {"num": 82, "tag": "2025 Bahar Final", "text": "MS Excel'de birden fazla ölçüte göre (örn: Önce şehir, sonra departman) sıralama işlemi yapılırken aşağıdaki araçlardan hangisi kullanılır?", "options": [{"letter": "A", "text": "PivotTable"}, {"letter": "B", "text": "Sıralama ve Filtreleme"}, {"letter": "C", "text": "Koşullu Biçimlendirme"}, {"letter": "D", "text": "Özel Sıralama"}, {"letter": "E", "text": "Filtre Uygulama"}], "correct": "D", "explanation": "Kademeli sıralama yapmak için Özel Sıralama (Custom Sort) penceresi açılır ve 'Düzey Ekle' (Add Level) butonu kullanılır."}, {"num": 83, "tag": "2025 Bahar Final", "text": "MS PowerPoint'te slaytı 'Geniş Ekran' (16:9) olarak düzenlemek için aşağıdaki araçlardan hangisi kullanılmaktadır?", "options": [{"letter": "A", "text": "Slayt düzeni"}, {"letter": "B", "text": "Slayt boyutu"}, {"letter": "C", "text": "Slayt sıralayıcısı"}, {"letter": "D", "text": "Slayt tasarımı"}, {"letter": "E", "text": "Slayt yönlendirme"}], "correct": "B", "explanation": "Tasarım sekmesinde yer alan 'Slayt Boyutu' aracından standart 4:3 ve Geniş Ekran 16:9 oranları değiştirilir."}, {"num": 84, "tag": "2024 Bahar Büt", "text": "Aşağıdakilerden hangisi PivotTable alan listesi içerisinde yer almaz?", "options": [{"letter": "A", "text": "Filtreler"}, {"letter": "B", "text": "Kümeler"}, {"letter": "C", "text": "Satırlar"}, {"letter": "D", "text": "Sütunlar"}, {"letter": "E", "text": "Değerler"}], "correct": "B", "explanation": "Pivot Table (Özet Tablo) oluşturulduğunda açılan sağ panelde 4 alan bulunur: Filtreler, Sütunlar, Satırlar, Değerler. 'Kümeler' diye bir alan yoktur."}, {"num": 85, "tag": "2025 Bahar Büt", "text": "Microsoft Excel'de B1 hücresindeki =A1+$A$3 formülü aşağı doğru 4 satır sürüklenerek B5 hücresine kopyalandığında hangi sonuç formülüne ulaşılır?", "options": [{"letter": "A", "text": "=A4+$A$3"}, {"letter": "B", "text": "=A5+$A$3"}, {"letter": "C", "text": "=A1+$A$5"}, {"letter": "D", "text": "=A5+A3"}, {"letter": "E", "text": "=A5+$A$5"}], "correct": "B", "explanation": "A1 formülü görecelidir ve sürüklenince A5'e kayar. Fakat $A$3 mutlak (kilitli) bir başvuru olduğundan sürüklenmekle değişmez."}, {"num": 86, "tag": "2025 Bahar Büt", "text": "Microsoft Excel'de sütunların isimlendirilme biçimi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sembollerle"}, {"letter": "B", "text": "Harflerle"}, {"letter": "C", "text": "Özel karakterlerle"}, {"letter": "D", "text": "Rakamlar ve harflerle"}, {"letter": "E", "text": "Sayılarla"}], "correct": "B", "explanation": "Sütunlar (A, B, C...) harflerle; satırlar ise (1, 2, 3...) sayılarla isimlendirilir."}, {"num": 87, "tag": "2025 Bahar Büt", "text": "Microsoft PowerPoint'teki 'Slayt Düzeni' özelliği aşağıdaki işlevlerden hangisini sağlar?", "options": [{"letter": "A", "text": "Sunum temalarını değiştirmek"}, {"letter": "B", "text": "Slayt içeriklerini düzenlemek ve yapılandırmak için hazır şablonlar sunmak"}, {"letter": "C", "text": "Sunumun tamamını otomatik olarak oynatmak"}, {"letter": "D", "text": "Slaytlara ses ve video dosyaları eklemek"}, {"letter": "E", "text": "Slaytlara animasyon efektleri eklemek"}], "correct": "B", "explanation": "Slayt Düzeni (Layout), metin ve resim gibi 'yer tutucuların' slayt üzerinde hangi hizada duracağını ayarlayan kalıplardır."}, {"num": 88, "tag": "2025 Bahar Büt", "text": "Microsoft PowerPoint'te bir slaytın arka planını düzenlerken aşağıdakilerden hangisi dolgu seçenekleri içerisinde yer almaz?", "options": [{"letter": "A", "text": "Resim veya doku dolgusu"}, {"letter": "B", "text": "Düz dolgu"}, {"letter": "C", "text": "Gradyan dolgu"}, {"letter": "D", "text": "Desen dolgusu"}, {"letter": "E", "text": "Grafik dolgusu"}], "correct": "E", "explanation": "Arka Planı Biçimlendir panelinde Düz Dolgu, Gradyan Dolgu, Resim veya Doku Dolgusu ve Desen Dolgusu olmak üzere 4 temel dolgu vardır."}, {"num": 89, "tag": "2025-2026 Final", "text": "Microsoft Word'de paragraflar arası boşlukların ayarlanmasında hangi ölçü birimi kullanılmaktadır?", "options": [{"letter": "A", "text": "Piksel"}, {"letter": "B", "text": "Milimetre"}, {"letter": "C", "text": "Nokta"}, {"letter": "D", "text": "İnç"}, {"letter": "E", "text": "Santimetre"}], "correct": "C", "explanation": "Word'de paragraf öncesi ve sonrası boşluklar ile satır aralıkları standart olarak 'Nokta (nk / pt)' cinsinden ifade edilir."}, {"num": 90, "tag": "2025-2026 Final", "text": "MS PowerPoint'te kadeh/perde şeklinde gösterilen (Baştan/Slayt Gösterisi) butonun işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Slayt gösterisini kaydeder."}, {"letter": "B", "text": "Slayt gösterisini ilk slayttan başlayarak başlatır."}, {"letter": "C", "text": "Seçili görselin ekrana animasyonlu bir şekilde gelmesini sağlar."}, {"letter": "D", "text": "Seçili slaydı gizler."}, {"letter": "E", "text": "Slaytlara bölüm ekler."}], "correct": "B", "explanation": "Slayt Gösterisi sekmesindeki veya durum çubuğundaki bu buton (kısayolu F5), sunumu her zaman birinci slayttan itibaren tam ekran başlatır."}, {"num": 91, "tag": "2025-2026 Final", "text": "Açık kaynak kodlu bir kelime işlemci uygulaması hangi temel özelliğe sahiptir?", "options": [{"letter": "A", "text": "Yalnızca belirli bir işletim sisteminde çalışır ve kaynak kodu değiştirilemez."}, {"letter": "B", "text": "Sadece internet bağlantısı olan cihazlarda kullanılabilir."}, {"letter": "C", "text": "Belirli bir kullanıcı grubuna özel olarak geliştirilmiş olup, herkese açık değildir."}, {"letter": "D", "text": "Ticari bir şirket tarafından geliştirilir ve yalnızca ücretli sürümleri mevcuttur."}, {"letter": "E", "text": "Kullanıcıların kaynak koduna erişmesine ve değiştirmesine izin verir."}], "correct": "E", "explanation": "Açık kaynak (Open Source) yazılımların en temel özelliği, kaynak kodlarının herkesin erişimine ve geliştirilmesine açık olmasıdır."}, {"num": 92, "tag": "2025-2026 Final", "text": "MS PowerPoint uygulamasının 'Geçişler' sekmesinde yer alan 'Efekt Seçenekleri' butonunun işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Galeriden farklı animasyon efektleri seçilmesine izin verir."}, {"letter": "B", "text": "Seçilen slayt geçişleri ile ilgili ek animasyon ayarları yapılmasına izin verir."}, {"letter": "C", "text": "Seçilen slayt geçişine ses gibi ek özellikler ekler."}, {"letter": "D", "text": "Galeriden farklı slayt geçişleri seçilmesine izin verir."}, {"letter": "E", "text": "Seçilen efektin ekranda kalma süresini belirler."}], "correct": "B", "explanation": "Geçişler sekmesindeki 'Efekt Seçenekleri', seçtiğiniz geçişin yönünü (örn. sağdan, soldan, yukarıdan) değiştirmek gibi ek özelleştirmeler sunar."}, {"num": 93, "tag": "2025-2026 Final", "text": "Microsoft Excel'de bir hücre aralığını ifade ederken hangi sembol kullanılır?", "options": [{"letter": "A", "text": "Nokta (.)"}, {"letter": "B", "text": "Virgül (,)"}, {"letter": "C", "text": "Tire (-)"}, {"letter": "D", "text": "Noktalı virgül (;)"}, {"letter": "E", "text": "İki nokta üst üste (:)"}], "correct": "E", "explanation": "A1:D5 örneğinde olduğu gibi, Excel'de başlangıç ve bitiş hücreleri arasındaki tüm blok aralığını ifade etmek için iki nokta üst üste (:) işareti kullanılır."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

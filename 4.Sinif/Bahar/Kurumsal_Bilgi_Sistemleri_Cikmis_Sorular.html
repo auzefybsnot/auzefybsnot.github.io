@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kurumsal Bilgi Sistemleri (AYBS8004) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 4. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Kurumsal Bilgi Sistemleri (AYBS8004) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">4. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Kurumsal Bilgi Sistemleri (AYBS8004) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Kurumsal Bilgi Sistemleri (AYBS8004) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Kurumsal Bilgi Sistemleri (AYBS8004) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>150 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>4. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">150</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Kurumsal_Bilgi_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (150)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">150</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Kurumsal_Bilgi_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Kurumsal analiz ve stratejik analiz arasındaki temel fark aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Stratejik analiz sadece büyük işletmeler için uygunken kurumsal analiz tüm işletmeler için uygundur."}, {"letter": "B", "text": "Kurumsal analiz sadece iş süreçlerine odaklanırken stratejik analiz işletmenin amaçlarına odaklanır."}, {"letter": "C", "text": "Stratejik analiz sadece üst yönetim tarafından yapılırken kurumsal analiz tüm çalışanlar tarafından yapılabilir."}, {"letter": "D", "text": "Kurumsal analiz sadece teknolojiye odaklanırken stratejik analiz işletmenin tüm kaynaklarına odaklanır."}, {"letter": "E", "text": "Kurumsal analiz sadece veri toplamaya odaklanırken stratejik analiz veri analizine odaklanır."}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 2, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Bozulma kavramı tedarik zinciri yönetiminde ne anlama gelmektedir?", "options": [{"letter": "A", "text": "Daha fazla stok bulundurmak"}, {"letter": "B", "text": "Tedarik zincirini daha karmaşık hâle getirmek"}, {"letter": "C", "text": "Ürün çeşitliliğini azaltmak"}, {"letter": "D", "text": "Tedarik zincirindeki bir veya daha fazla basamağı azaltmak"}, {"letter": "E", "text": "Nakliye maliyetlerini artırmak"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 3, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Kurumsal bilgi sistemlerinin geleceğiyle ilişkili aşağıdakilerden hangisi söylenemez?", "options": [{"letter": "A", "text": "Ürün çeşitliliğinin artmasıyla daha da gelişecektir."}, {"letter": "B", "text": "İş süreçlerinin entegrasyonuyla daha da gelişecektir."}, {"letter": "C", "text": "Teknolojinin gelişmesiyle birlikte daha da gelişecektir."}, {"letter": "D", "text": "Kalite belgelerinin alınmasıyla daha da gelişecektir."}, {"letter": "E", "text": "Çalışanların memnuniyetinin artmasıyla daha da gelişecektir."}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 4, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi yeşil tedarik zincirleri için doğru bir ifadedir?", "options": [{"letter": "A", "text": "Tarım endüstrisindeki tedarik zincirleri 'yeşil' olarak tanımlanır."}, {"letter": "B", "text": "Tedarikçilerin içinde bulunmak isteyecekleri tedarik zincirleri 'yeşil' diğerleri 'kırmızı'dır."}, {"letter": "C", "text": "Sağlık tedarik zincirleri hijyen ürünlerin üretimini içerdiğinden 'yeşil' olarak adlandırılır."}, {"letter": "D", "text": "Gıda endüstrisindeki tedarik zincirleri 'yeşil' olarak tanımlanır."}, {"letter": "E", "text": "Zincir boyunca çevreye verilen zararın en aza indirilmesi tedarik zincirini 'yeşil' yapar."}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 5, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi bir işletmenin kurumsal bilgi sistemlerine sahip olmasına ilişkin yollardan biri değildir?", "options": [{"letter": "A", "text": "Çalışanların oluşturduğu bir sistemi kullanmak"}, {"letter": "B", "text": "Rakip işletmelerden birinin yazılımını kopyalamak"}, {"letter": "C", "text": "Pazardaki hazır ürünlerden birini satın almak"}, {"letter": "D", "text": "Bu konuda uzman bir işletmeye yaptırmak"}, {"letter": "E", "text": "Bu servisi veren bir sağlayıcıdan kiralamak"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 6, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Stratejik tedarik yönetimi ile geleneksel tedarik yönetimi arasındaki temel fark aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Geleneksel tedarik yönetimi daha fazla teknoloji kullanır."}, {"letter": "B", "text": "Stratejik tedarik yönetimi sadece imalat sektöründe kullanılır."}, {"letter": "C", "text": "Stratejik tedarik yönetimi daha fazla tedarikçi ile çalışmayı hedefler."}, {"letter": "D", "text": "Geleneksel tedarik yönetimi toplam maliyeti değil sadece satın alma fiyatını dikkate alır."}, {"letter": "E", "text": "Stratejik tedarik yönetimi daha kısa vadeli planlamalara odaklanır."}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 7, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Operasyonel MİY (Müşteri İlişkileri Yönetimi) uygulamalarının temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tedarikçi ilişkilerini yönetmek"}, {"letter": "B", "text": "Müşteri ile uzun vadeli stratejiler geliştirmek"}, {"letter": "C", "text": "Müşteri ile temas noktalarındaki süreçleri otomatikleştirmek"}, {"letter": "D", "text": "Müşteri verilerini toplamak ve analiz etmek"}, {"letter": "E", "text": "İşletme performansını ölçmek"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 8, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Aşağıdakilerden hangisi kurumsal analiz sırasındaki faaliyetlerden biri değildir?", "options": [{"letter": "A", "text": "Yöneticilerin becerilerinin belirlenerek sisteme aktarılması."}, {"letter": "B", "text": "Gerekli görülen bölümlere ve süreçlere öncelik verilmesi."}, {"letter": "C", "text": "İşletmenin bilgi açısından zayıf ve kuvvetli olduğu bölümlerin ortaya çıkarılması."}, {"letter": "D", "text": "Kurumsal bilgi sistemi altyapısının yeniden tasarlanması."}, {"letter": "E", "text": "Değişim mühendisliği bakış açısıyla bilgi akışı süreçlerinin gözden geçirilmesi."}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 9, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Aşağıdakilerden hangisi Müşteri İlişkileri Yönetimi'nin temel amacıdır?", "options": [{"letter": "A", "text": "Paydaşlarla ilişkilerin yönetimi"}, {"letter": "B", "text": "Müşterilerle ilişkilerin yönetimi"}, {"letter": "C", "text": "Toplam kalite yönetimi"}, {"letter": "D", "text": "Müşteri memnuniyetinin yönetimi"}, {"letter": "E", "text": "Gelir kanallarının yönetimi"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 10, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdaki işletme süreçlerinden hangisinin operasyonel düzeydeki bilişim sistemleri tarafından desteklenebilirliği daha yüksektir?", "options": [{"letter": "A", "text": "Günlük ticari faaliyetler"}, {"letter": "B", "text": "Uzun dönemli kapasite planlaması"}, {"letter": "C", "text": "Stratejik plan çalışmaları"}, {"letter": "D", "text": "İşletmenin kuruluş yeri seçimi ile ilgili çalışmalar"}, {"letter": "E", "text": "Yatırım planlamaları"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Pazarlama departmanı aşağıdakilerden hangisini etkin kullanır?", "options": [{"letter": "A", "text": "İmalat kaynakları planlaması sistemleri"}, {"letter": "B", "text": "Araştırma- geliştirme sistemleri"}, {"letter": "C", "text": "Yalın sistemler"}, {"letter": "D", "text": "Finansal sistemler"}, {"letter": "E", "text": "Müşteri ilişkileri yönetimi sistemleri KURUMSAL BİLGİ SİSTEMLERİ A P355543.G12132 19-06-2025 15:41:03 KURUMSAL BİLGİ SİSTEMLERİ A P355543.G12132 19-06-2025 15:41:03 CEVAPLI CEVAPLI"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 12, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Kurumsal bilgi sistemlerinin müşteri ilişkileri yönetimi ve tedarik zinciri yönetimi dışındaki üçüncü bileşeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yalın işlemler"}, {"letter": "B", "text": "Kalite sistemi"}, {"letter": "C", "text": "Kurumsal kaynak planlaması"}, {"letter": "D", "text": "Lojistik sistemi"}, {"letter": "E", "text": "Değişim mühendisliği"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 13, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Ödünleşme kavramının tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Dengede olanlar içinden en iyisini seçmek"}, {"letter": "B", "text": "Dengesizliği ortadan kaldırmak"}, {"letter": "C", "text": "Dengede tutulması gerekenleri gözetmek"}, {"letter": "D", "text": "Dengede olmayanları dengelemek"}, {"letter": "E", "text": "Dengesizlik oluşturmak"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 14, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Bilişim ile ilgili aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bilişim, bilgisayarların bilim için kullanılmasıdır."}, {"letter": "B", "text": "Bilişim, bilgi ile ilgili faaliyetler bütünüdür."}, {"letter": "C", "text": "Bilişim, bilgisayarlarla gerçekleştirilen haberleşme olarak tanımlanır."}, {"letter": "D", "text": "Bilişim, bilimsel işletmecilik faaliyetleridir."}, {"letter": "E", "text": "Bilişim, bilgi ve iletişim kelimelerinden türemiş bir kavramdır."}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 15, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi işletmenin stratejik düzeyindeki yöneticilere yardımcı olan bilişim sistemlerindendir?", "options": [{"letter": "A", "text": "Operasyonel bilgi sistemleri"}, {"letter": "B", "text": "Karar destek sistemleri"}, {"letter": "C", "text": "Stok kontrol sistemleri"}, {"letter": "D", "text": "Ofis otomasyon sistemleri"}, {"letter": "E", "text": "Yönetici destek sistemleri"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 16, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, 2026 Büt, 2025-26 Final, 2025 Büt, 2022-24 Final", "text": "Kurumsal bilgi sistemleri ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "İşletmelerin odaklanması gereken nispeten yeni bir konudur."}, {"letter": "B", "text": "Yalnızca stratejik düzeydeki yöneticilerin ele alacağı bir konudur."}, {"letter": "C", "text": "İşletmelere geçmişte başarı sağlamış olsa da değerini kaybetmiş bir konudur."}, {"letter": "D", "text": "Yalnızca operasyonel düzeydeki yöneticilerin ele alacağı bir konudur."}, {"letter": "E", "text": "İşletmelerin gelecekte odaklanacağı henüz fikir aşamasında olan bir konudur."}], "correct": "A", "explanation": "ACIKLAMA::Kurumsal bilgi sistemleri; her düzeydeki yöneticiyi ilgilendiren, işletmelerin üzerine odaklanması gereken görece yeni ve gelişen bir alandır."}, {"num": 17, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdakilerden hangisi müşteri ile tüketici arasındaki farkı doğru ifade eder?", "options": [{"letter": "A", "text": "Ürün ya da hizmeti satın alan müşteri ve onu kullanan tüketicidir."}, {"letter": "B", "text": "Müşteri birey olabilir, tüketici ise hem işletmeler ve bireylerdir."}, {"letter": "C", "text": "Müşteri bir işletme ya da birey olabilir, tüketici ise yalnızca bireylerdir."}, {"letter": "D", "text": "Müşteri ve tüketici arasında bir fark yoktur ve aynı anlamda kullanılır."}, {"letter": "E", "text": "Ürün ya da hizmeti satın alan tüketici ve onu kullanan müşteridir."}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 18, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Müşteri İlişkileri Yönetimi (MİY) en iyi şekilde aşağıdakilerden hangisiyle tanımlanabilir?", "options": [{"letter": "A", "text": "Sadece büyük işletmelerin kullanabildiği bir teknoloji"}, {"letter": "B", "text": "Müşteri şikâyetlerini yönetmek için kullanılan bir sistem"}, {"letter": "C", "text": "Ürün odaklı bir satış anlayışı"}, {"letter": "D", "text": "Sadece satış ve pazarlama faaliyetlerini kapsayan bir yaklaşım"}, {"letter": "E", "text": "Müşteriyle uzun vadeli, kârlı ilişki kurmayı hedefleyen bir strateji"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 19, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A", "text": "Aşağıdakilerdan hangisi kurumsal bilgi sistemlerinin entegrasyonunda kullanılabilecek stratejilerdendir?", "options": [{"letter": "A", "text": "Faz yaklaşımı."}, {"letter": "B", "text": "Üst yönetim yaklaşımı."}, {"letter": "C", "text": "Başlangıçta sonlandırma yaklaşımı."}, {"letter": "D", "text": "Sürdürülebilirlik yaklaşımı."}, {"letter": "E", "text": "Kalite artırımına dönük yaklaşım."}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 20, "tag": "BÜT-KURUMSAL BİLGİ SİSTEMLERİ A, Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi modern kurumsal bilgi sistemlerinin bir özelliği değildir?", "options": [{"letter": "A", "text": "Web tabanlı teknolojiler ile bütünleştirilebilir."}, {"letter": "B", "text": "Tedarikçi ilişkilerinin yönetilmesini sağlar."}, {"letter": "C", "text": "Bilgi kaynaklarının etkin ve verimli olarak kullanılmasını sağlar."}, {"letter": "D", "text": "İşletmenin yalnızca üretim işlemlerine destek sağlar."}, {"letter": "E", "text": "Çeşitli entegre yazılım paketlerinden oluşur."}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 21, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi müşteri ilişkileri yönetiminin amaçlarından biri değildir?", "options": [{"letter": "A", "text": "Müşteri geribildirimlerinin değerlendirilerek yanıtlanması"}, {"letter": "B", "text": "Müşteriye ilişkin analitik çalışmanın yapılması"}, {"letter": "C", "text": "Pazarın özelliklerinin tespit edilmesi"}, {"letter": "D", "text": "Müşteri memnuniyetinin yönetimi"}, {"letter": "E", "text": "Paydaşlarla ilişkilerin yönetimi"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 22, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdakilerden hangisi müşteri ilişkilerindeki iletişim hızının ürün ve hizmet tasarımına ilişkin gelişmesini sağlar?", "options": [{"letter": "A", "text": "Yönetsel verimlilik"}, {"letter": "B", "text": "Dış kaynak kullanımı"}, {"letter": "C", "text": "Ortaklaşa planlama"}, {"letter": "D", "text": "Tam zamanlı üretim uygulamaları"}, {"letter": "E", "text": "Tedarik zinciri yönetimi"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 23, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi gözlemler sonucunda elde edilebilir?", "options": [{"letter": "A", "text": "Bilişim"}, {"letter": "B", "text": "Analiz"}, {"letter": "C", "text": "Bilgi"}, {"letter": "D", "text": "Üst bilgi"}, {"letter": "E", "text": "Veri"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 24, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Tedarik zincirinin temel amacı aşağıdakilerden hangisiyle açıklanabilir?", "options": [{"letter": "A", "text": "Zaman kullanımını en aza indirmek"}, {"letter": "B", "text": "Ham madde kullanımını en yüksek düzeye ulaştırmak"}, {"letter": "C", "text": "Zincirin tümünde ortaya çıkan toplam değeri artırmak"}, {"letter": "D", "text": "Ana işletmenin kârlılığını artırmak"}, {"letter": "E", "text": "Müşterilerin pozitif geri bildirimlerinin sosyal medyada görünürlüğünü sağlamak"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 25, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdaki kamu kurumlarının kurumsal bilgi sistemlerinin hangi özelliğini, işletmelere kıyasla, daha kolay yönettiği görülmektedir?", "options": [{"letter": "A", "text": "Kurumsal bilgi sistemlerinin pozitif etkilerinin hemen görülmemesi"}, {"letter": "B", "text": "Yönetim becerisinin artmasına uyum göstermesi"}, {"letter": "C", "text": "Örgütsel değişimin gerçekleşmesinin sağlanması"}, {"letter": "D", "text": "Kurumsal bilgi sistemlerinin maliyetinin yüksek olması"}, {"letter": "E", "text": "Müşteri tatmininin sağlanması yönünde çalışmalar yapılması"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 26, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "İş birlikçi MİY (Müşteri İlişkileri Yönetimi) uygulamalarının temel faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Maliyetleri düşürmek"}, {"letter": "B", "text": "Ürün çeşitliliğini artırmak"}, {"letter": "C", "text": "Pazar payını artırmak"}, {"letter": "D", "text": "Müşteriye daha hızlı tepki vermek"}, {"letter": "E", "text": "İşletme kültürünü değiştirmek"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 27, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Kurumsal bilgi sistemlerinin müşteri ilişkileri yönetimine ilişkin çeşitli analizlerin yapılmasına imkân verdiği düşünüldüğünde, hedef pazar için detaylı bilgi aşağıdakilerden hangisi ile elde edilir?", "options": [{"letter": "A", "text": "Veri madenciliği"}, {"letter": "B", "text": "Süreç analizi"}, {"letter": "C", "text": "Tedarikçi yönetimi"}, {"letter": "D", "text": "Değişim mühendisliği"}, {"letter": "E", "text": "Finansal denetleme"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 28, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Kırbaç etkisi, tedarik zinciri yönetimindeki önemli konulardan biridir. Aşağıdakilerden hangisi bu etkinin oluşmasının nedenlerinden biridir?", "options": [{"letter": "A", "text": "Çalışanların kariyer hedeflerindeki değişiklikler"}, {"letter": "B", "text": "Ham maddenin gereğinden fazla satın alınmış olması"}, {"letter": "C", "text": "Kalitenin tedarik zincirindeki değişkenliği"}, {"letter": "D", "text": "Ürüne olan talepteki değişkenlik"}, {"letter": "E", "text": "Yöneticinin bilişim sistemleri konusundaki bilgi yetersizliği"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 29, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Yaş, cinsiyet, gelir gibi demografik özellikler I. Satın alma alışkanlıkları II. Yaşadıkları bölge III. Kullandıkları iletişim kanalları IV. Müşteriler MİY uygulamalarında yukarıdakilerden hangisi/hangilerine göre kategorize edilirler?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "Yalnız IV"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 30, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Bilgi sistemlerinin kullanımı küçük işletmelere aşağıdaki konulardan hangisinde yardımcı olabilir?", "options": [{"letter": "A", "text": "Ekip çalışmasının geliştirilmesi"}, {"letter": "B", "text": "Ürünler için küresel bir pazar geliştirilmesi"}, {"letter": "C", "text": "Çapraz eğitimli çalışanlar yetiştirilmesi"}, {"letter": "D", "text": "Karmaşık ve açıklayıcı kayıtların ve raporların oluşturulması"}, {"letter": "E", "text": "Potansiyel müşterilere ulaşılması KURUMSAL BİLGİ SİSTEMLERİ A P355875.G20360 04-06-2026 16:31:40 CEVAPLI"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 31, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Sistem entegrasyonunda paralel strateji ne anlama gelmektedir?", "options": [{"letter": "A", "text": "Eski ve yeni sistemin aynı anda kullanılması"}, {"letter": "B", "text": "Yeni sistemin aşama aşama uygulanması"}, {"letter": "C", "text": "Yeni sistemin dış kaynak kullanımı ile uygulanması"}, {"letter": "D", "text": "Yeni sistemin sadece bir departmanda uygulanması"}, {"letter": "E", "text": "Eski sistemin tamamen kapatılması ve yeni sisteme geçilmesi"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 32, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi bir tedarik zincirinde belirsizliğe neden olur?", "options": [{"letter": "A", "text": "Ürün çeşitliliğinin azalması"}, {"letter": "B", "text": "Müşteri taleplerindeki değişkenlik"}, {"letter": "C", "text": "Ham madde kalitesinin artması"}, {"letter": "D", "text": "Üretim hatlarındaki hız"}, {"letter": "E", "text": "Depolanan yarı mamul miktarının artması"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 33, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Kurumsal bilgi sistemleri, ..... organizasyon ve yönetim çözümleri olarak tanımlanabilir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "iş dünyasının küreselleşmesine yönelik"}, {"letter": "B", "text": "işletmelerin teknoloji gereksinimlerine yönelik"}, {"letter": "C", "text": "iş ve işletme çevresinin yarattığı zorluklara yönelik"}, {"letter": "D", "text": "işletmeler arasındaki fikir ayrılığına yönelik"}, {"letter": "E", "text": "işletmenin üzerindeki rekabetçi baskılara yönelik"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 34, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar, Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi kurumsal bilgi sistemleri ana başlığında değerlendirilebilecek bir konu değildir?", "options": [{"letter": "A", "text": "Tedarik zinciri"}, {"letter": "B", "text": "Arz-talep dengesi"}, {"letter": "C", "text": "Değer zinciri"}, {"letter": "D", "text": ""}, {"letter": "E", "text": "iş"}, {"letter": "E", "text": "Değişim mühendisliği"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 35, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Kapalı döngü tedarik zinciri, aşağıdakilerden hangisini ifade etmektedir?", "options": [{"letter": "A", "text": "Teknolojik olarak tamamen entegre bir sistem"}, {"letter": "B", "text": "Üreticinin hem ileri hem de geri lojistiği kontrol ettiği bir sistem"}, {"letter": "C", "text": "Sadece yerel tedarikçilerle çalışılan bir sistem"}, {"letter": "D", "text": "Tedarik zincirinde geri dönüşlerin olmadığı bir sistem"}, {"letter": "E", "text": "Sadece büyük işletmelerin kullanabildiği bir sistem"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 36, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Bilgi teknolojisinin maliyetinin hızla düşmesi ve gücünün artması ............... . Yukarıdaki cümledeki boşluğa aşağıdakilerden hangisi getirilebilir?", "options": [{"letter": "A", "text": "bilgisayar kapasitesindeki gelişimle eşleşmez"}, {"letter": "B", "text": "verimliliğe kolayca dönüşmez"}, {"letter": "C", "text": "sürdürülemez"}, {"letter": "D", "text": "az gelişmiş ülkeler için doğru değildir"}, {"letter": "E", "text": "kârı artırmanın kolay bir yoludur"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 37, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Doğru kullanıldığında, kurumsal bir bilgi sistemi .......... ortaya çıkarır. Yukarıdaki cümledeki boşluğa aşağıdakilerden hangisi getirilebilir?", "options": [{"letter": "A", "text": "daha çok müşteri talebi"}, {"letter": "B", "text": "daha fazla personel ihtiyacı"}, {"letter": "C", "text": "daha verimli bir organizasyon"}, {"letter": "D", "text": "daha yüksek kalite anlayışı"}, {"letter": "E", "text": "daha fazla rekabet bilgisi"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 38, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar", "text": "\"Bilgiye dayalı dinamiklerin toplumdaki iş yapma şekli, yaşam, kültürel özellikler, bireylerin becerileri gibi sosyal yapıları kökten değiştiren faktörlerin bir toplamı\" ifadesi aşağıdaki kavramlardan hangisini en doğru şekilde tanımlar?", "options": [{"letter": "A", "text": "İleri toplum"}, {"letter": "B", "text": "Veri toplumu"}, {"letter": "C", "text": "Bilgi toplumu"}, {"letter": "D", "text": "Bilişim toplumu"}, {"letter": "E", "text": "Sanal toplum"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 39, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi belirli bir sistemi tanımlayan bileşenlerden değildir?", "options": [{"letter": "A", "text": "Girdi"}, {"letter": "B", "text": "Geribildirim"}, {"letter": "C", "text": "Entropi"}, {"letter": "D", "text": "Süreç"}, {"letter": "E", "text": "Çıktı"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 40, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize, 2025-26 Vize, 2024-25 Vize, 2023-24 Vize, 2023-24 Büt", "text": "Bilişim toplumuyla ilgili aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bilişim toplumu iyi eğitimli bireylerden oluşur."}, {"letter": "B", "text": "Bilişim toplumu serbestçe haberleşen toplumdur."}, {"letter": "C", "text": "Bilişim toplumu bilime dayalı toplumdur."}, {"letter": "D", "text": "Bilişim toplumu bilim insanlarından oluşur."}, {"letter": "E", "text": "Bilişim toplumu bilgiye dayalı toplumdur."}], "correct": "E", "explanation": "ACIKLAMA::Bilişim toplumunun ayırt edici özelliği, üretim ve değerin bilgiye dayanmasıdır. Eğitim düzeyi ya da haberleşme sonuçtur; tanımlayıcı öz “bilgiye dayalı” olmasıdır."}, {"num": 41, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdaki endüstrilerden hangisinde soğuk tedarik zinciri yönetimi uygulamaları diğerlerinden daha yoğun olarak kullanılır?", "options": [{"letter": "A", "text": "Tarım"}, {"letter": "B", "text": "Eğlence"}, {"letter": "C", "text": "İnşaat"}, {"letter": "D", "text": "Sağlık"}, {"letter": "E", "text": "Enerji"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 42, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi e­iş kavramının tanımına uymaktadır?", "options": [{"letter": "A", "text": "İşletmedeki mühendislerin kullandığı sistemlerdir."}, {"letter": "B", "text": "İsrafın önlenmesini sağlayan 'Elenen İşler' yaklaşımıdır."}, {"letter": "C", "text": "Çalışanların uzaktan iş yapmasını sağlayan sistemdir."}, {"letter": "D", "text": "İşlerin bilgisayarlarla yapılıyor olmasıdır."}, {"letter": "E", "text": "İşletme süreçlerinin dijital hale gelmesidir."}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 43, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi küresel tedarik zincirlerinin yönetimindeki zorluklardan biri değildir?", "options": [{"letter": "A", "text": "Döviz kurlarındaki dalgalanmalar"}, {"letter": "B", "text": "Siyasi değişkenlikler"}, {"letter": "C", "text": "Çalışanların eğitim eksikliği"}, {"letter": "D", "text": "Dil ve kültür farklılıkları"}, {"letter": "E", "text": "Nakliye maliyetlerinin yüksek olması"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 44, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Bütünleşik yapılar işletmelerin çeşitli süreçlerinin birlikte çalışmasını sağlarken diğer yandan .......... da sağlar. Yukarıdaki cümledeki boşluğa aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "tanınırlığın artmasını"}, {"letter": "B", "text": "işgücünün artmasını"}, {"letter": "C", "text": "verimliliğin artmasını"}, {"letter": "D", "text": "motivasyonun artmasını"}, {"letter": "E", "text": "zaman kullanımının artmasını KURUMSAL BİLGİ SİSTEMLERİ A P787296.G18998 25-03-2026 05:57:20 CEVAPLI"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 45, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi bir kurum içindeki çeşitli bölümler tarafından ortak kullanılan bilgi teknolojisi kaynaklarını tanımlar?", "options": [{"letter": "A", "text": "Bilişim teknolojileri altyapısı"}, {"letter": "B", "text": "Operasyonel sistem"}, {"letter": "C", "text": "Yönetim bilişim sistemleri planı"}, {"letter": "D", "text": "İşletmedeki bilgi ağı"}, {"letter": "E", "text": "İş altyapısı"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi tümüyle entegre edilmiş bir KKP (Kurumsal Kaynak Planlaması) sistemindeki fonksiyonlardan biri değildir?", "options": [{"letter": "A", "text": "İnsan kaynakları"}, {"letter": "B", "text": "Üretim"}, {"letter": "C", "text": "Finans"}, {"letter": "D", "text": "Pazarlama"}, {"letter": "E", "text": "Araştırma ve geliştirme"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 47, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Ürün veya hizmet tasarlayan mühendisler aşağıdakilerden hangi grupta tanımlanabilir?", "options": [{"letter": "A", "text": "Veri üreticileri"}, {"letter": "B", "text": "Üretim danışmanları"}, {"letter": "C", "text": "Süreç uzmanları"}, {"letter": "D", "text": "Hizmet çalışanları"}, {"letter": "E", "text": "Bilgi çalışanları"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 48, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize, 2025-26 Vize, 2024-25 Vize", "text": "Aşağıdakilerden hangisi kurumsal bir bilişim sisteminin özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Müşteri ile tedarikçi arasındaki bağlantıyı sağlar."}, {"letter": "B", "text": "Stratejik düzeyden operasyonel düzeye kadar tüm süreçleri kapsar."}, {"letter": "C", "text": "Veri ve bilgi faktörlerini bir araya getirir."}, {"letter": "D", "text": "Farklı işletme fonksiyonlarını içerir."}, {"letter": "E", "text": "Bilgiye dayalı bir sistemler bütünüdür."}], "correct": "A", "explanation": "ACIKLAMA::“Müşteri–tedarikçi bağlantısı” daha çok tedarik zinciri/dış bütünleşme özelliğidir; klasik kurumsal bilişim sisteminin tanımlayıcı iç özelliği olarak verilmez ve bu soruda “değildir” yanıtıdır."}, {"num": 49, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Ürün yaşam süresi kavramı, belirli bir ürünün pazardaki talebi karşılayacak şekilde üretiminin artmasını, belirli bir süre sonra pazardaki doygunluktan dolayı üretimin sabit hâle gelmesini ve daha sonra yeni bir ürünün ikame olarak pazara girişiyle üretiminin azalarak ortadan kalkmasıyla yaşamını sonlandırmasını tanımlamak için kullanılır. Aşağıdaki ürünlerden hangisinin yaşam süresi diğerlerinden daha fazladır?", "options": [{"letter": "A", "text": "Oyun konsolu"}, {"letter": "B", "text": "Radyo"}, {"letter": "C", "text": "Televizyon"}, {"letter": "D", "text": "Cep telefonu"}, {"letter": "E", "text": "Bilgisayar"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 50, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Bilgi sistemleri ............... sistemlerdir. Yukarıdaki cümledeki boşluğa aşağıdakilerden hangisi getirilebilir?", "options": [{"letter": "A", "text": "yüksek entropiye sahip"}, {"letter": "B", "text": "sosyo-teknik"}, {"letter": "C", "text": "optimize edilmiş"}, {"letter": "D", "text": "teknik"}, {"letter": "E", "text": "davranışsal"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 51, "tag": "Kurumsal Bilgi Sistemleri - 2025-2026 - Vize - Bahar, Kurumsal Bilgi Sistemleri 2025 Vize, 2025-26 Vize, 2024-25 Vize, 2025-26 Final, 2023-24 Vize", "text": "Aşağıdakilerden hangisi kurumsal bilgi sistemlerinin temel özelliklerinin ilk ortaya çıktığı dönemi belirtir?", "options": [{"letter": "A", "text": "Ayda ilk insan - 1969"}, {"letter": "B", "text": "İkinci dünya savaşı sonrası - 1950"}, {"letter": "C", "text": "Endüstri devrimi - 1750"}, {"letter": "D", "text": "İşletmecilikte bilimsel yöntem - 1900"}, {"letter": "E", "text": "Endüstri 4.0 - 2016"}], "correct": "B", "explanation": "ACIKLAMA::İncelediğim üç cevaplı kitapçıkta da (2025-26 vize, 2024-25 vize, 2025-26 final) koyu işaretlenen şık “İkinci dünya savaşı sonrası - 1950”dir; kurumsal bilişim, savaş sonrası işletme bilgisayarlarıyla şekillenmiştir."}, {"num": 52, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi MİY uygulamalarında karşılaşılan zorluklardan biridir?", "options": [{"letter": "A", "text": "Pazarlama stratejilerinin belirlenmesi"}, {"letter": "B", "text": "Müşteri verilerinin toplanması"}, {"letter": "C", "text": "Teknolojik altyapının kurulması"}, {"letter": "D", "text": "Ürün ve hizmetlerin geliştirilmesi"}, {"letter": "E", "text": "Şirket kültürünün değişmesi"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 53, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdakilerden hangisi, bilgi ve sistem teorisi bağlamında \"bilgi\" olarak tanımlanabilir?", "options": [{"letter": "A", "text": "Verinin işlenerek anlamlı hâle getirilmiş hâli"}, {"letter": "B", "text": "İşlenmemiş ve ham veri"}, {"letter": "C", "text": "Bir sistemin tecrübeleri, tepkileri ve anlayışı"}, {"letter": "D", "text": "Bilginin paylaşımı ve kullanımı ile ilgili bilim dalı"}, {"letter": "E", "text": "Bilinenler bütünü ve bilgiler arasındaki ilişkiler"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 54, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisinde geleneksel sistem geliştirme döngüsünü oluşturan aşamalar doğru sırayla verilmiştir?", "options": [{"letter": "A", "text": "Analiz > Entegrasyon > Sürdürülebilirliğin sağlanması > Tasarım > Yazılım"}, {"letter": "B", "text": "Yazılım > Analiz > Tasarım > Sürdürülebilirliğin sağlanması > Entegrasyon"}, {"letter": "C", "text": "Sürdürülebilirliğin sağlanması > Entegrasyon > Yazılım > Analiz > Tasarım"}, {"letter": "D", "text": "Tasarım > Yazılım > Sürdürülebilirliğin sağlanması > Analiz > Entegrasyon"}, {"letter": "E", "text": "Analiz > Tasarım > Yazılım > Entegrasyon > Sürdürülebilirliğin sağlanması"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 55, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi bilişim sisteminin entegrasyonunu başarıya götürebilecek sosyal faktörlerden biri değildir?", "options": [{"letter": "A", "text": "Gruplar arası sosyal dinamikler"}, {"letter": "B", "text": "Müşteri ilişkileri yönetimi"}, {"letter": "C", "text": "Yöneticinin liderlik özellikleri"}, {"letter": "D", "text": "Değişimin yönetimi"}, {"letter": "E", "text": "Örgütsel yapı"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 56, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Aşağıdakilerden hangisi müşteri ilişkileri yönetiminin bir konusu değildir?", "options": [{"letter": "A", "text": "Müşteri memnuniyetinin sağlanması"}, {"letter": "B", "text": "Müşterinin satın alma davranışının anlaşılması"}, {"letter": "C", "text": "Müşteri taleplerinin üretim arzı ile sağlanması"}, {"letter": "D", "text": "Müşterinin kalite algısının ürün tasarımına yansıtılması"}, {"letter": "E", "text": "Müşterilerle ilişkilerde sürekliliğin sağlanması"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 57, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Kamu kurumlarının kurumsal bilgi sistemlerinin hangi özelliğini, işletmelere kıyasla, daha kolay yönettiği görülmektedir?", "options": [{"letter": "A", "text": "Yönetim becerisinin artmasına uyum göstermesi"}, {"letter": "B", "text": "Kurumsal bilgi sistemlerinin pozitif etkilerinin hemen görülmemesi"}, {"letter": "C", "text": "Kurumsal bilgi sistemlerinin maliyetinin yüksek olması"}, {"letter": "D", "text": "Örgütsel değişimin gerçekleşmesinin sağlanması"}, {"letter": "E", "text": "Müşteri tatmininin sağlanması yönünde çalışmalar yapılması"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 58, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "İşletmenin örgütsel düzeyleri için farklı bilişim sistemlerinin bilgi paylaşımı yapacak şekilde kullanılması ..... Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "dijital işletme olmak için bir gereksinim değildir."}, {"letter": "B", "text": "teknolojik olarak karmaşık ve yüksek maliyetlidir."}, {"letter": "C", "text": "yöneticilerin tekrar eğitilmelerini gerektirmez."}, {"letter": "D", "text": "örgütsel bürokrasinin bir parçasıdır."}, {"letter": "E", "text": "sunucu bilgisayarların kullanımını gerektirir."}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 59, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Bir işletmenin müşteri ilişkileri yönetimi stratejisi ..... Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "ürün merkezlidir."}, {"letter": "B", "text": "teknoloji merkezlidir."}, {"letter": "C", "text": "müşteri merkezlidir."}, {"letter": "D", "text": "pazarlama merkezlidir."}, {"letter": "E", "text": "kalite merkezlidir."}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 60, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "I. Yaş, cinsiyet, gelir gibi demografik özellikler II. Satın alma alışkanlıkları III. Yaşadıkları bölge IV. Kullandıkları iletişim kanalları Müşteriler MİY uygulamalarında yukarıdakilerden hangisi/hangilerine göre kategorize edilirler?", "options": [{"letter": "A", "text": "Yalnız I"}, {"letter": "B", "text": "Yalnız IV"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "II ve III"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 61, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme", "text": "Etkin bir tedarik zinciri oluşturmanın amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tüketiciden gelen ürün atıklarının yönetilmesini sağlamak"}, {"letter": "B", "text": "Müşterinin istemediği ya da yanlış teslim edilen ürünlerin işletmeye hızlı dönüşünü sağlamak"}, {"letter": "C", "text": "Tedarik zinciri ortakları arasında, faaliyetlerin planlanması ve koordinasyonunu kolaylaştıracak bir iş birliği ilişkisine sahip olmak"}, {"letter": "D", "text": "Zincir boyunca oluşan karbon emisyonunu azaltmak"}, {"letter": "E", "text": "Müşteriye teslim edilen ürün ya da hizmetlerin kalitesinin kontrol edilmesini sağlamak"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 62, "tag": "Kurumsal Bilgi Sistemleri 2024 Bütünleme, KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Bilginin üretilmesi, dönüştürülmesi, paylaşılması ve kullanımı ile ilgili belirli bir anlayışa sahip olmak ..... olarak tanımlanır. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "yönetim okuryazarlığı"}, {"letter": "B", "text": "sosyal okuryazarlık"}, {"letter": "C", "text": "bilgisayar okuryazarlığı"}, {"letter": "D", "text": "bilişim okuryazarlığı"}, {"letter": "E", "text": "teknoloji okuryazarlığı KURUMSAL BİLGİ SİSTEMLERİ B 2 P355543.G2749 27-05-2024 13:03:10 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 63, "tag": "Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıda belirtilen hangi işletme sürecinin operasyonel düzeyde bilişim sistemleri tarafından desteklenebilirliği daha yüksektir?", "options": [{"letter": "A", "text": "Uzun dönemli kapasite planlaması"}, {"letter": "B", "text": "Stratejik bakış açısı ve misyon çalışmaları"}, {"letter": "C", "text": "İşletmenin kuruluş yeri seçimi ile ilgili çalışmalar"}, {"letter": "D", "text": "Yatırım planlamaları"}, {"letter": "E", "text": "Günlük ticari faaliyetler"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 64, "tag": "Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Kurumsal bilgi sistemlerinin işletmeler için ortaya çıkardığı görünen (gelir vb) ve görünmeyen (memnuniyet vb) fayda için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Sistemin ortaya çıkardığı faydanın tümü görünmeyen faydadır."}, {"letter": "B", "text": "Sistemin ortaya çıkardığı faydanın tümü görünür faydadır."}, {"letter": "C", "text": "Sistemin görünen faydası görünmeyen faydasından fazladır."}, {"letter": "D", "text": "Sistem eşit düzeyde görünen ve görünmeyen fayda ortaya çıkarır."}, {"letter": "E", "text": "Sistemin görünen faydası görünmeyen faydasından düşüktür."}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 65, "tag": "Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Bilgi sistemleri ve işletmeler arasındaki ilişkide büyük bir değişiklik olarak.......... . Yukarıdaki cümledeki boşluğa aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "tüm çalışan gruplarında bilgi sistemlerine ilgi arttı"}, {"letter": "B", "text": "yeni organizasyonların eskilerine göre daha avantajlı olduğu gerçeği ortaya çıktı"}, {"letter": "C", "text": "yönetim bilgi sistemleri geçmişte olduğundan daha kapsamlı hale geldi"}, {"letter": "D", "text": "ana bilgisayar sistemlerine bağımlılık azaldı"}, {"letter": "E", "text": "iki işletme arasındaki rekabet arttı"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 66, "tag": "Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi lojistik ile tedarik zinciri yönetimi arasındaki ilişkiyi açıklar?", "options": [{"letter": "A", "text": "Lojistik ile tedarik zinciri yönetimi aynı anlamda kullanılır."}, {"letter": "B", "text": "Lojistik ile tedarik zinciri yönetiminin bir ilişkisi yoktur, farklı faaliyetleri kapsarlar."}, {"letter": "C", "text": "Tedarik zinciri yönetimi stoklarla ilgiliyken lojistik nakliye ile ilgilidir."}, {"letter": "D", "text": "Tedarik zinciri yönetimi, lojistiği kapsayan faaliyetler bütünüdür."}, {"letter": "E", "text": "Lojistik, tedarik zinciri yönetimini kapsayan faaliyetler bütünüdür."}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 67, "tag": "Kurumsal Bilgi Sistemleri 2025 Vize", "text": "Aşağıdakilerden hangisi bilgi hiyerarşisinin bir katmanı değildir?", "options": [{"letter": "A", "text": "Bilgi"}, {"letter": "B", "text": "Veri"}, {"letter": "C", "text": "Bilgelik"}, {"letter": "D", "text": "Eğitim"}, {"letter": "E", "text": "Üst-bilgi"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 68, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Kurumsal bilgi sistemine geçiş kararını etkileyen temel faktörler aşağıdakilerin hangisinde doğru olarak verilmiştir?", "options": [{"letter": "A", "text": "Verimlilik, etkinlik, kârlılık ve sürdürülebilirlik"}, {"letter": "B", "text": "İnsan, süreç, teknoloji ve bilgi"}, {"letter": "C", "text": "Ürün, fiyat, dağıtım ve tutundurma"}, {"letter": "D", "text": "Maliyet, zaman, kalite ve esneklik"}, {"letter": "E", "text": "Teknoloji, iş süreçleri, strateji ve rekabet"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 69, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdakilerden hangisi müşteri ilişkileri yönetimi mimarisinin bileşenlerini göstermektedir?", "options": [{"letter": "A", "text": "Operasyonel, Analitik, İş birlikçi"}, {"letter": "B", "text": "Kaliteli, Uyumlu, Özel"}, {"letter": "C", "text": "Fonksiyonel, Etik, Tedarikçi"}, {"letter": "D", "text": "Kurumsal, Stokastik, Profesyonel"}, {"letter": "E", "text": "Kavramsal, Deterministik, Paylaşımcı"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 70, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdakilerden hangisi üreticileri, maliyetlerini düşürmeye zorlayan etkenlerden biri değildir?", "options": [{"letter": "A", "text": "Yeni iş modellerinin ortaya çıkması"}, {"letter": "B", "text": "Paydaşların memnuniyetinin azalması"}, {"letter": "C", "text": "Rekabet baskılarının artması"}, {"letter": "D", "text": "Ürün yaşam süresinin kısalması"}, {"letter": "E", "text": "Müşterilerin artan memnuniyetsizliği"}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 71, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Tedarik zincirinin tümünde ortaya çıkan toplam değer ile ilgili aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Ana üreticinin sermayesindeki artıştır."}, {"letter": "B", "text": "Katma değer olarak adlandırılır."}, {"letter": "C", "text": "Müşteri memnuniyeti ile ölçülür."}, {"letter": "D", "text": "Ana üretici tarafından dönüştürülür."}, {"letter": "E", "text": "Toplam oluşan memnuniyet düzeyidir."}], "correct": "B", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 72, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdakilerden hangisi sistem entegrasyonu konusunda çalışan bir yöneticinin dikkate aldığı bir konu değildir?", "options": [{"letter": "A", "text": "Entegrasyonun riski"}, {"letter": "B", "text": "Entegrasyonun maliyeti"}, {"letter": "C", "text": "Entegrasyonun süresi"}, {"letter": "D", "text": "Entegrasyon stratejisinin işletmeye uygunluğu"}, {"letter": "E", "text": "Entegrasyon stratejisinin endüstriye uygunluğu"}], "correct": "E", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 73, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Türk işletmelerinin e­iş ve kurumsal bilgi sistemleri konusunda karşılaştığı temel zorluk aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Küresel rekabetin düşük olması"}, {"letter": "B", "text": "Bu konuda yeterli bilgiye sahip olunmaması"}, {"letter": "C", "text": "Başarılı uygulamaların yeterince paylaşılmaması"}, {"letter": "D", "text": "Teknolojik altyapının yetersiz olması"}, {"letter": "E", "text": "Kamu kuruluşlarının bu konuda destek vermemesi"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 74, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "\"Müşteri merkezli olmak\" ifadesinin anlamı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ürün ve hizmetleri müşteriye göre tasarlamak"}, {"letter": "B", "text": "Sadece müşteri isteklerini karşılamak"}, {"letter": "C", "text": "Müşteriye her zaman indirim yapmak"}, {"letter": "D", "text": "Müşteri odaklılıktan daha ileri bir aşamada olmak"}, {"letter": "E", "text": "Müşteri ile sürekli iletişim hâlinde olmak"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 75, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdakilerden hangisi işletmenin bilgiye ilişkin tüm gereksinimlerinin tanımlanmasını sağlar?", "options": [{"letter": "A", "text": "Veri planlama ve modelleme"}, {"letter": "B", "text": "Bilgi analizi"}, {"letter": "C", "text": "Bilişim politikası"}, {"letter": "D", "text": "Veritabanı teknolojisi"}, {"letter": "E", "text": "Veritabanı yönetimi"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 76, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Bir tedarik zincirinde aşağıdakilerden hangisi belirsizliğe neden olur?", "options": [{"letter": "A", "text": "Müşteri taleplerindeki değişkenlik"}, {"letter": "B", "text": "Üretim hatlarındaki hız"}, {"letter": "C", "text": "Hammadde kalitesinin artması"}, {"letter": "D", "text": "Depolanan yarı-mamül miktarının artması"}, {"letter": "E", "text": "Ürün çeşitliliğinin azalması"}], "correct": "A", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 77, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Analitik MİY (Müşteri İlişkileri Yönetimi ) uygulamalarında önemli rol oynayan teknoloji aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çağrı merkezi"}, {"letter": "B", "text": ""}, {"letter": "E", "text": "posta"}, {"letter": "C", "text": "Veri ambarı"}, {"letter": "D", "text": "Mobil cihazlar"}, {"letter": "E", "text": "Web sitesi"}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 78, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "Aşağıdakilerden hangisi kurumsal bilgi sistemlerinin e­iş ile bütünleştirilmesini tanımlar?", "options": [{"letter": "A", "text": "Kurumsal bilgi sistemleri e-işin gelişmiş hali olduğundan doğal olarak bütünleşiktir."}, {"letter": "B", "text": ""}, {"letter": "E", "text": "iş, kurumsal bilgi sistemlerine olan ihtiyacı ortadan kaldırdığı için bütünleşme söz konusu değildir."}, {"letter": "C", "text": "Kurumsal bilgi sistemleri işletme içine odaklanırken, e-iş işletme dışındaki dijital süreçlere odaklandığı bir bütünleşme söz konusudur."}, {"letter": "D", "text": "Kurumsal bilgi sistemleri dijital ise e-iş, geleneksel ise (dijital olmayan) g-iş adını alır, bütünleşik olamazlar."}, {"letter": "E", "text": "Kurumsal bilgi sistemlerinin ile e-iş aynı anlamda kullanılan kavramlar olduğundan bütünleşik olamazlar."}], "correct": "C", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 79, "tag": "KURUMSAL BİLGİ SİSTEMLERİ - A-2024-2025 Final", "text": "İnternet teknolojilerinin ve e­ticaretin kullanımı aşağıdakilerden hangisinin gelişmesini sağlar?", "options": [{"letter": "A", "text": "Optik kablolu ağlar"}, {"letter": "B", "text": "Veri depolama teknolojileri"}, {"letter": "C", "text": "Çok uluslu işletmeler"}, {"letter": "D", "text": "Dijital işletmeler"}, {"letter": "E", "text": "Uydu iletişim teknolojileri"}], "correct": "D", "explanation": "AUZEF Kurumsal Bilgi Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 80, "tag": "2025-26 Vize, 2024-25 Vize, 2026 Büt, 2023-24 Vize", "text": "${t_hiyerarsi}Aşağıdakilerden hangisi gözlemler sonucunda elde edilebilir?", "options": [{"letter": "A", "text": "Veri"}, {"letter": "B", "text": "Bilgi"}, {"letter": "C", "text": "Üst-bilgi"}, {"letter": "D", "text": "Bilgelik"}, {"letter": "E", "text": "Bilişim"}], "correct": "A", "explanation": "ACIKLAMA::Gözlem ve ölçümün doğrudan çıktısı ham, işlenmemiş gerçeklerdir; yani veridir. Veri işlenip bağlam kazandığında bilgiye, bilginin bilgisi üst-bilgiye, deneyimle birleşince bilgeliğe dönüşür."}, {"num": 81, "tag": "2025-26 Vize, 2023-24 Vize", "text": "“Bilgiye dayalı dinamiklerin, toplumdaki iş yapma ve yaşama biçimlerini kökten değiştiren faktörlerin bütünü” aşağıdakilerden hangisini tanımlar?", "options": [{"letter": "A", "text": "İleri toplum"}, {"letter": "B", "text": "Veri toplumu"}, {"letter": "C", "text": "Bilgi toplumu"}, {"letter": "D", "text": "Bilişim toplumu"}, {"letter": "E", "text": "Sanal toplum"}], "correct": "D", "explanation": "ACIKLAMA::Bilgiye dayalı dinamiklerin iş ve yaşam biçimini dönüştürdüğü toplum, AUZEF anahtarında “bilişim toplumu” olarak verilir."}, {"num": 82, "tag": "2024 Final, 2022-24 Final", "text": "${t_hiyerarsi}Bilgi ve sistem teorisi bağlamında “bilgi” aşağıdakilerden hangisiyle tanımlanabilir?", "options": [{"letter": "A", "text": "Verinin işlenerek anlamlı hâle getirilmiş hâli"}, {"letter": "B", "text": "İşlenmemiş ve ham gözlem sonuçları"}, {"letter": "C", "text": "Bir sistemin tecrübeleri ve anlayışı"}, {"letter": "D", "text": "Bilginin paylaşımıyla ilgili bilim dalı"}, {"letter": "E", "text": "Bilinenler arasındaki tüm ilişkiler"}], "correct": "A", "explanation": "ACIKLAMA::Bilgi (information), verinin işlenip anlam kazanmış hâlidir. “Ham gözlem” veriyi; “tecrübe/anlayış” bilgeliğe yakın kavramı tanımlar."}, {"num": 83, "tag": "2025 Büt, 2022-24 Final", "text": "Bilişim ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bilgisayarların yalnızca bilim için kullanılmasıdır."}, {"letter": "B", "text": "Bilişim, bilgi ile ilgili faaliyetlerin bütünüdür."}, {"letter": "C", "text": "Yalnızca haberleşme teknolojilerini kapsar."}, {"letter": "D", "text": "Bilimsel işletmecilik yöntemidir."}, {"letter": "E", "text": "Bilişim, “bilgi” ve “iletişim” kelimelerinden türemiş bir kavramdır."}], "correct": "B", "explanation": "ACIKLAMA::Bilişim; bilginin üretilmesi, işlenmesi, saklanması ve iletilmesiyle ilgili faaliyetlerin tümünü kapsar."}, {"num": 84, "tag": "2024-25 Vize, 2023-24 Vize, 2023-24 Büt", "text": "${t_hiyerarsi}Aşağıdakilerden hangisi bilgi hiyerarşisinin bir katmanı DEĞİLDİR?", "options": [{"letter": "A", "text": "Veri"}, {"letter": "B", "text": "Bilgi"}, {"letter": "C", "text": "Üst-bilgi"}, {"letter": "D", "text": "Eğitim"}, {"letter": "E", "text": "Bilgelik"}], "correct": "D", "explanation": "ACIKLAMA::Bilgi hiyerarşisi Veri → Bilgi → Üst-bilgi → Bilgelik katmanlarından oluşur. Eğitim bu piramidin bir katmanı değildir."}, {"num": 85, "tag": "2024 Büt, 2024 Final, 2022-24 Final", "text": "Bilginin üretilmesi, dönüştürülmesi, paylaşılması ve kullanımı konusunda belirli bir anlayışa sahip olmak ................ olarak tanımlanır.", "options": [{"letter": "A", "text": "yönetim okuryazarlığı"}, {"letter": "B", "text": "sosyal okuryazarlık"}, {"letter": "C", "text": "bilgisayar okuryazarlığı"}, {"letter": "D", "text": "bilişim okuryazarlığı"}, {"letter": "E", "text": "teknoloji okuryazarlığı"}], "correct": "D", "explanation": "ACIKLAMA::Bilginin yaşam döngüsüne (üretim, dönüştürme, paylaşım, kullanım) dair anlayış “bilişim okuryazarlığı”dır. Bilgisayar okuryazarlığı yalnızca cihaz kullanımıyla sınırlıdır; bilişim okuryazarlığı daha kapsamlıdır."}, {"num": 86, "tag": "2025-26 Vize", "text": "Bilgi sistemleri ................ sistemlerdir.", "options": [{"letter": "A", "text": "yüksek entropiye sahip"}, {"letter": "B", "text": "sosyo-teknik"}, {"letter": "C", "text": "tümüyle otomatik"}, {"letter": "D", "text": "yalnızca teknik"}, {"letter": "E", "text": "yalnızca davranışsal"}], "correct": "B", "explanation": "ACIKLAMA::Bilgi sistemleri insan (sosyal) ve teknoloji (teknik) bileşenlerini birlikte içerdiği için sosyo-teknik sistemlerdir; sadece yazılım/donanımdan ibaret değildir."}, {"num": 87, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize", "text": "Bilgi teknolojisinin maliyetinin hızla düşmesi ve gücünün artması ................ .", "options": [{"letter": "A", "text": "kârı artırmanın kolay bir yoludur"}, {"letter": "B", "text": "sürdürülebilir değildir"}, {"letter": "C", "text": "bilgisayar kapasitesindeki gelişimle eşleşmez"}, {"letter": "D", "text": "verimliliğe kolayca dönüşmez"}, {"letter": "E", "text": "az gelişmiş ülkeler için geçerli değildir"}], "correct": "D", "explanation": "ACIKLAMA::Bu, klasik “verimlilik paradoksu”dur: ucuzlayan ve güçlenen BT, tek başına otomatik olarak verimliliğe/kâra dönüşmez; süreç, insan ve yönetim uyumu gerekir."}, {"num": 88, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize", "text": "Doğru kullanıldığında, kurumsal bir bilgi sistemi ................ ortaya çıkarır.", "options": [{"letter": "A", "text": "daha yüksek maliyetli bir yapı"}, {"letter": "B", "text": "daha karmaşık bir bürokrasi"}, {"letter": "C", "text": "daha verimli bir organizasyon"}, {"letter": "D", "text": "yalnızca teknik bir altyapı"}, {"letter": "E", "text": "bağımsız çalışan birimler"}], "correct": "C", "explanation": "ACIKLAMA::Kurumsal bilgi sistemlerinin temel vaadi; süreçleri bütünleştirerek daha verimli, koordineli bir organizasyon üretmektir."}, {"num": 89, "tag": "2025-26 Vize, 2024-25 Vize, 2025-26 Final, 2023-24 Vize", "text": "Aşağıdakilerden hangisi belirli bir sistemi tanımlayan bileşenlerden biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Girdi"}, {"letter": "B", "text": "Süreç"}, {"letter": "C", "text": "Çıktı"}, {"letter": "D", "text": "Geri bildirim"}, {"letter": "E", "text": "Entropi"}], "correct": "E", "explanation": "ACIKLAMA::Bir sistem girdi → süreç → çıktı ve geri bildirim bileşenleriyle tanımlanır. Entropi bir düzensizlik ölçüsüdür; sistemin yapısal bileşeni değildir."}, {"num": 90, "tag": "2025-26 Vize, 2025-26 Final, 2025 Büt, 2024 Final, 2026 Büt, 2022-24 Final", "text": "Aşağıdakilerden hangisi modern kurumsal bilgi sistemlerinin bir özelliği DEĞİLDİR?", "options": [{"letter": "A", "text": "İşletmenin yalnızca üretim işlemlerine destek sağlar."}, {"letter": "B", "text": "Farklı fonksiyonları bütünleştirir."}, {"letter": "C", "text": "Stratejik ve operasyonel kararları destekler."}, {"letter": "D", "text": "Bilgiyi paydaşlar arasında paylaştırır."}, {"letter": "E", "text": "Süreçleri uçtan uca entegre eder."}], "correct": "A", "explanation": "ACIKLAMA::Modern KBS tüm işletme fonksiyonlarını (finans, satış, İK, üretim...) bütünleştirir. “Yalnızca üretime destek sağlar” ifadesi bu bütünleşik doğaya aykırıdır, dolayısıyla özelliği değildir."}, {"num": 91, "tag": "2025-26 Vize, 2024-25 Vize", "text": "Aşağıdakilerden hangisi bir kurum içindeki çeşitli bölümlerce ortak kullanılan bilgi teknolojisi kaynaklarını ifade eder?", "options": [{"letter": "A", "text": "Bilişim teknolojileri altyapısı"}, {"letter": "B", "text": "Uygulama yazılımı"}, {"letter": "C", "text": "Karar destek sistemi"}, {"letter": "D", "text": "Veri ambarı"}, {"letter": "E", "text": "Kurumsal portal"}], "correct": "A", "explanation": "ACIKLAMA::Ortak kullanılan donanım, ağ, veri ve temel hizmetlerin bütünü “bilişim teknolojileri (BT) altyapısı”dır; üzerine kurulan uygulamalardan farklıdır."}, {"num": 92, "tag": "2025-26 Vize, 2025 Büt", "text": "${t_duzey}İşletmenin stratejik düzeydeki yöneticilerine yardımcı olan bilişim sistemleri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yönetici destek sistemleri"}, {"letter": "B", "text": "İşlem süreç sistemleri"}, {"letter": "C", "text": "Ofis otomasyon sistemleri"}, {"letter": "D", "text": "Bilgi çalışması sistemleri"}, {"letter": "E", "text": "Kayıt tutma sistemleri"}], "correct": "A", "explanation": "ACIKLAMA::Üst/stratejik düzey, yapılandırılmamış kararlar için Yönetici Destek Sistemleri (YDS/ESS) kullanır. İşlem süreç sistemleri (TPS) ise operasyonel düzeye hizmet eder."}, {"num": 93, "tag": "2024 Final, 2025 Büt, 2024 Büt, 2022-24 Final", "text": "${t_duzey}Aşağıdaki işletme süreçlerinden hangisinin operasyonel düzeyde bilişim sistemleriyle desteklenebilirliği daha yüksektir?", "options": [{"letter": "A", "text": "Günlük ticari faaliyetler"}, {"letter": "B", "text": "Uzun vadeli strateji belirleme"}, {"letter": "C", "text": "Yeni pazar keşfi"}, {"letter": "D", "text": "Kurumsal vizyon oluşturma"}, {"letter": "E", "text": "Üst yönetim politikaları"}], "correct": "A", "explanation": "ACIKLAMA::Operasyonel düzey; tekrarlı, yapılandırılmış günlük işlemleri (satış kaydı, sipariş, stok) kapsar ve bilişim sistemleriyle en kolay otomatikleşen alandır."}, {"num": 94, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize", "text": "${t_kkp}Aşağıdakilerden hangisi tümüyle entegre bir Kurumsal Kaynak Planlaması (KKP) fonksiyonlarından biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Finans ve muhasebe"}, {"letter": "B", "text": "Üretim planlama"}, {"letter": "C", "text": "İnsan kaynakları"}, {"letter": "D", "text": "Satış ve dağıtım"}, {"letter": "E", "text": "Araştırma ve geliştirme"}], "correct": "E", "explanation": "ACIKLAMA::KKP çekirdeği finans, üretim, tedarik, satış-dağıtım ve İK modüllerini bütünleştirir. Ar-Ge klasik çekirdek KKP fonksiyonu olarak sayılmaz."}, {"num": 95, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize", "text": "İşletmedeki mühendisler, mimarlar ve tasarımcılar gibi çalışanlar aşağıdaki hangi grupta yer alır?", "options": [{"letter": "A", "text": "Veri çalışanları"}, {"letter": "B", "text": "Üretim çalışanları"}, {"letter": "C", "text": "Bilgi çalışanları"}, {"letter": "D", "text": "Hizmet çalışanları"}, {"letter": "E", "text": "Yönetim çalışanları"}], "correct": "C", "explanation": "ACIKLAMA::Yeni bilgi/ürün üreten uzmanlar (mühendis, mimar, tasarımcı) “bilgi çalışanları”dır. Veri çalışanları ise mevcut bilgiyi işleyip kaydeden personeldir."}, {"num": 96, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize", "text": "${t_yasam}Aşağıdaki ürünlerden hangisinin yaşam süresi (piyasadaki toplam ömrü) en fazladır?", "options": [{"letter": "A", "text": "Akıllı telefon"}, {"letter": "B", "text": "Radyo"}, {"letter": "C", "text": "Tablet"}, {"letter": "D", "text": "Dizüstü bilgisayar"}, {"letter": "E", "text": "Akıllı saat"}], "correct": "B", "explanation": "ACIKLAMA::Radyo, onlarca yıldır varlığını sürdüren köklü bir teknolojidir; hızlı yenilenen dijital cihazlara göre ürün yaşam süresi çok daha uzundur."}, {"num": 97, "tag": "2025-26 Vize, 2024-25 Vize, 2025-26 Final, 2023-24 Vize", "text": "İşletmelerde bütünleşik (entegre) yapılar kurulması öncelikle neyi sağlar?", "options": [{"letter": "A", "text": "Maliyetlerin artmasını"}, {"letter": "B", "text": "Verimliliğin artmasını"}, {"letter": "C", "text": "Bağımsız birimlerin çoğalmasını"}, {"letter": "D", "text": "Bürokrasinin genişlemesini"}, {"letter": "E", "text": "Veri tekrarının artmasını"}], "correct": "B", "explanation": "ACIKLAMA::Bütünleşik yapılar; veri tekrarını ve kopukluğu azaltıp süreçleri koordine ederek verimliliği artırır."}, {"num": 98, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize", "text": "e-İş (e-business) kavramı aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Yalnızca internetten satış yapmayı"}, {"letter": "B", "text": "İşletme süreçlerinin dijital hâle gelmesini"}, {"letter": "C", "text": "Yalnızca sosyal medya kullanımını"}, {"letter": "D", "text": "Sadece elektronik ödemeyi"}, {"letter": "E", "text": "Yalnızca web sitesi sahibi olmayı"}], "correct": "B", "explanation": "ACIKLAMA::e-İş; işletmenin tüm iç ve dış süreçlerinin (üretim, tedarik, İK, müşteri) dijitalleşmesidir. e-Ticaret (sadece alım-satım) bunun bir alt kümesidir."}, {"num": 99, "tag": "2024-25 Vize, 2023-24 Vize", "text": "Bilgi sistemlerinin işletmelerde yol açtığı en büyük değişiklik aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tüm çalışan gruplarında teknolojiye ilgi azalması"}, {"letter": "B", "text": "Rekabetin tümüyle ortadan kalkması"}, {"letter": "C", "text": "Ana bilgisayar (mainframe) bağımlılığının artması"}, {"letter": "D", "text": "Yönetim bilgi sistemlerinin geçmişe göre çok daha kapsamlı hâle gelmesi"}, {"letter": "E", "text": "Organizasyonların küçülmek zorunda kalması"}], "correct": "D", "explanation": "ACIKLAMA::Zamanla yönetim bilgi sistemleri stratejik, operasyonel ve paydaş süreçlerini kapsayacak biçimde genişlemiş; işletmenin her katmanına yayılmıştır."}, {"num": 100, "tag": "2025-26 Final", "text": "Bir bilişim sisteminin görünen ve görünmeyen faydaları için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Sistemin görünen faydası görünmeyen faydasından düşüktür."}, {"letter": "B", "text": "Tüm faydalar görünürdür."}, {"letter": "C", "text": "Tüm faydalar görünmezdir."}, {"letter": "D", "text": "Görünen ve görünmeyen fayda daima eşittir."}, {"letter": "E", "text": "Görünen faydası görünmeyen faydasından fazladır."}], "correct": "A", "explanation": "ACIKLAMA::Bilişim yatırımlarında somut/görünen faydaların (maliyet düşüşü vb.) yanında; müşteri memnuniyeti, hız, itibar gibi görünmeyen faydalar çoğu zaman daha büyüktür."}, {"num": 101, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize", "text": "Aşağıdakilerden hangisi küresel tedarik zincirlerinin karşılaştığı zorluklardan biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Döviz kuru dalgalanmaları"}, {"letter": "B", "text": "Kültürel ve dil farklılıkları"}, {"letter": "C", "text": "Çalışanların eğitim eksikliği"}, {"letter": "D", "text": "Uzun mesafeler ve lojistik"}, {"letter": "E", "text": "Farklı yasal düzenlemeler"}], "correct": "C", "explanation": "ACIKLAMA::Küresel tedarik zincirinin tipik zorlukları mesafe, kur, mevzuat ve kültür farklarıdır. “Çalışanların eğitim eksikliği” küresellikten kaynaklanan bir zorluk olarak verilmez."}, {"num": 102, "tag": "2025-26 Vize, 2024-25 Vize, 2023-24 Vize, 2022-24 Final", "text": "${t_tzy}Soğuk tedarik zincirinin en yoğun kullanıldığı sektör aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İnşaat"}, {"letter": "B", "text": "Sağlık"}, {"letter": "C", "text": "Otomotiv"}, {"letter": "D", "text": "Tekstil"}, {"letter": "E", "text": "Madencilik"}], "correct": "B", "explanation": "ACIKLAMA::Aşı, ilaç ve kan gibi ürünlerin belirli sıcaklıkta taşınıp saklanması gerektiğinden, soğuk zincir en kritik olarak sağlık sektöründe kullanılır (gıda da yoğun bir alandır)."}, {"num": 103, "tag": "2025-26 Vize, 2025 Büt, 2023-24 Vize", "text": "Yeşil tedarik zinciri kavramı aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Yalnızca maliyeti düşürmeyi"}, {"letter": "B", "text": "Zincir boyunca çevreye verilen zararın en aza indirilmesini"}, {"letter": "C", "text": "Yalnızca hızlı teslimatı"}, {"letter": "D", "text": "Tedarikçi sayısını azaltmayı"}, {"letter": "E", "text": "Yalnızca yerli üretimi"}], "correct": "B", "explanation": "ACIKLAMA::Yeşil tedarik zinciri; tedarik, üretim, dağıtım ve geri dönüşüm dahil tüm halkalarda çevresel etkiyi (karbon, atık, enerji) en aza indirmeyi amaçlar."}, {"num": 104, "tag": "2024-25 Vize, 2023-24 Vize, 2023-24 Büt", "text": "${t_tzy}Lojistik ile Tedarik Zinciri Yönetimi (TZY) arasındaki ilişki için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Lojistik, TZY’yi kapsayan üst kavramdır."}, {"letter": "B", "text": "İkisi tamamen aynı şeydir."}, {"letter": "C", "text": "TZY, lojistiği de kapsayan daha geniş bir faaliyetler bütünüdür."}, {"letter": "D", "text": "Aralarında bir ilişki yoktur."}, {"letter": "E", "text": "Lojistik yalnızca üretimle ilgilidir."}], "correct": "C", "explanation": "ACIKLAMA::TZY; tedarikçiden son müşteriye kadar tüm ağı yönetir. Lojistik (taşıma, depolama, stok akışı) bu bütünün bir alt kümesidir."}, {"num": 105, "tag": "2025-26 Final, 2026 Büt, 2024 Final, 2024 Büt", "text": "Tedarik zincirinde belirsizliğin temel kaynağı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tedarikçi sayısının azlığı"}, {"letter": "B", "text": "Müşteri taleplerindeki değişkenlik"}, {"letter": "C", "text": "Depo sayısının fazlalığı"}, {"letter": "D", "text": "Sabit fiyat politikası"}, {"letter": "E", "text": "Kısa teslim süreleri"}], "correct": "B", "explanation": "ACIKLAMA::Belirsizliğin asıl kaynağı, tahmin edilmesi güç olan müşteri talebindeki dalgalanmadır; bu da zincir boyunca stok ve planlama sorunları doğurur."}, {"num": 106, "tag": "2026 Büt, 2024 Final, 2022-24 Final", "text": "Tedarik zincirinde “kırbaç (bullwhip) etkisi”nin oluşmasının temel nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ürüne olan talepteki değişkenlik"}, {"letter": "B", "text": "Tedarikçilerin azlığı"}, {"letter": "C", "text": "Depo otomasyonu"}, {"letter": "D", "text": "Sabit üretim planı"}, {"letter": "E", "text": "Kısa mesafeli taşıma"}], "correct": "A", "explanation": "ACIKLAMA::Son müşterideki küçük talep dalgalanmaları, zincirde yukarı çıkıldıkça (perakende → toptancı → üretici) abartılı stok/sipariş salınımlarına dönüşür; buna kırbaç etkisi denir."}, {"num": 107, "tag": "2026 Büt, 2025-26 Final, 2024 Final, 2024 Büt, 2022-24 Final", "text": "Tedarik zinciri yönetiminin temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yalnızca tedarikçi maliyetini düşürmek"}, {"letter": "B", "text": "Yalnızca stok tutmak"}, {"letter": "C", "text": "Zincirin tümünde ortaya çıkan toplam değeri artırmak"}, {"letter": "D", "text": "Yalnızca en yakın tedarikçiyi seçmek"}, {"letter": "E", "text": "Yalnızca taşıma süresini uzatmak"}], "correct": "C", "explanation": "ACIKLAMA::TZY tek bir halkayı değil, tedarikçiden son müşteriye kadar zincirin tümünde yaratılan toplam değeri (kâr + müşteri değeri) artırmayı hedefler."}, {"num": 108, "tag": "2025-26 Final, 2024 Final, 2024 Büt, 2022-24 Final", "text": "Etkin bir tedarik zincirinin temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tedarikçileri birbiriyle rekabet ettirmek"}, {"letter": "B", "text": "Yalnızca fiyatı düşürmek"}, {"letter": "C", "text": "Zincir ortakları arasında iş birliği ve koordinasyon ilişkisi kurmak"}, {"letter": "D", "text": "Stokları sürekli artırmak"}, {"letter": "E", "text": "Aracıları çoğaltmak"}], "correct": "C", "explanation": "ACIKLAMA::Etkin TZY, ortaklar arası güvene dayalı iş birliği ve bilgi paylaşımıyla sağlanır; kısa vadeli fiyat pazarlığı yerine uzun vadeli koordinasyon esastır."}, {"num": 109, "tag": "2025 Büt, 2022-24 Final", "text": "Tedarik zincirinde “bozulma” kavramı aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Ürün kalitesinin düşmesini"}, {"letter": "B", "text": "Zincirdeki bir veya daha fazla basamağın azaltılmasını (aradan çıkarılmasını)"}, {"letter": "C", "text": "Fiyatların artmasını"}, {"letter": "D", "text": "Stokların bozulmasını"}, {"letter": "E", "text": "Tedarikçi sayısının artmasını"}], "correct": "B", "explanation": "ACIKLAMA::Buradaki “bozulma” (disintermediation); aracı bir veya birkaç halkanın zincirden çıkarılarak doğrudan bağlantı kurulmasıdır (ör. üreticiden tüketiciye satış)."}, {"num": 110, "tag": "2025 Büt, 2022-24 Final", "text": "Stratejik tedarik ile geleneksel tedarik anlayışı arasındaki fark için hangisi doğrudur?", "options": [{"letter": "A", "text": "Stratejik tedarik yalnızca fiyata bakar."}, {"letter": "B", "text": "İkisi arasında fark yoktur."}, {"letter": "C", "text": "Geleneksel tedarik yalnızca üretimle ilgilenir."}, {"letter": "D", "text": "Geleneksel tedarik toplam maliyeti değil yalnızca satın alma fiyatını dikkate alır."}, {"letter": "E", "text": "Stratejik tedarik tedarikçiyle ilişkiyi önemsemez."}], "correct": "D", "explanation": "ACIKLAMA::Geleneksel yaklaşım en ucuz satın alma fiyatına odaklanır; stratejik tedarik ise toplam sahip olma maliyetini, kaliteyi ve tedarikçiyle uzun vadeli ilişkiyi gözetir."}, {"num": 111, "tag": "2026 Büt, 2022-24 Final", "text": "Kapalı döngü (closed-loop) tedarik zinciri aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Yalnızca ileri lojistiği olan sistem"}, {"letter": "B", "text": "Üreticinin hem ileri hem geri (tersine) lojistiği kontrol ettiği sistem"}, {"letter": "C", "text": "Yalnızca tek tedarikçili sistem"}, {"letter": "D", "text": "Stok tutulmayan sistem"}, {"letter": "E", "text": "Yalnızca ihracata dayalı sistem"}], "correct": "B", "explanation": "ACIKLAMA::Kapalı döngüde ürün müşteriye ulaştıktan sonra iade/geri dönüşüm/yeniden üretim yoluyla zincire geri döner; üretici hem ileri hem tersine lojistiği yönetir."}, {"num": 112, "tag": "2025-26 Final, 2024 Final, 2022-24 Final", "text": "“Değer ağları” kavramı aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Tek bir işletmenin iç süreçlerini"}, {"letter": "B", "text": "Birden fazla değer zincirinin bir araya gelmesiyle oluşan yapıyı"}, {"letter": "C", "text": "Yalnızca lojistik faaliyetlerini"}, {"letter": "D", "text": "Yalnızca finansal işlemleri"}, {"letter": "E", "text": "Rakip işletmelerin birleşmesini"}], "correct": "B", "explanation": "ACIKLAMA::Değer ağı; birbirine bağlı birden çok işletmenin değer zincirlerinin (tedarikçi, üretici, dağıtıcı) esnek biçimde bütünleşmesiyle oluşan yapıdır."}, {"num": 113, "tag": "2026 Büt, 2025-26 Final, 2024 Final", "text": "${t_miy}Aşağıdakilerden hangisi Müşteri İlişkileri Yönetimi (MİY) amaçlarından biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Müşteri memnuniyetini yönetmek"}, {"letter": "B", "text": "Müşteri geri bildirimini toplamak"}, {"letter": "C", "text": "Pazarın özelliklerini analiz etmek"}, {"letter": "D", "text": "Müşteri sadakatini artırmak"}, {"letter": "E", "text": "Tüm paydaşlarla ilişkilerin yönetimi"}], "correct": "E", "explanation": "ACIKLAMA::MİY özellikle müşteriye odaklanır. “Tüm paydaşlarla ilişki yönetimi” daha geniş bir kurumsal kavramdır ve MİY’in doğrudan amacı olarak verilmez."}, {"num": 114, "tag": "2024 Final, 2025-26 Final", "text": "${t_miy}Aşağıdakilerden hangisi Müşteri İlişkileri Yönetimi'nin (MİY) konusu DEĞİLDİR?", "options": [{"letter": "A", "text": "Müşteri sadakatinin artırılması"}, {"letter": "B", "text": "Müşteri memnuniyeti"}, {"letter": "C", "text": "Müşteri taleplerinin üretim arzı ile karşılanması"}, {"letter": "D", "text": "Müşteriyle iletişim"}, {"letter": "E", "text": "Müşteri verisinin analizi"}], "correct": "C", "explanation": "ACIKLAMA::Talebin üretim/arz ile karşılanması tedarik zinciri ve üretim planlamanın konusudur; MİY ilişkinin kurulması ve sürdürülmesine odaklanır."}, {"num": 115, "tag": "2024 Final, 2025-26 Final", "text": "Bir işletmenin MİY stratejisi temelde ................ .", "options": [{"letter": "A", "text": "ürün merkezlidir"}, {"letter": "B", "text": "maliyet merkezlidir"}, {"letter": "C", "text": "teknoloji merkezlidir"}, {"letter": "D", "text": "müşteri merkezlidir"}, {"letter": "E", "text": "rakip merkezlidir"}], "correct": "D", "explanation": "ACIKLAMA::MİY’in özü, işletmeyi ürün odaklılıktan çıkarıp müşteri odaklı bir yapıya taşımaktır; strateji müşteri merkezlidir."}, {"num": 116, "tag": "2026 Büt, 2024 Final", "text": "Müşteriler kârlılık ve ilişki değerine göre I–IV kategorilerine ayrıldığında, işletmenin en çok yatırım yapması gereken müşteriler hangileridir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "III ve IV"}], "correct": "A", "explanation": "ACIKLAMA::En yüksek değeri taşıyan üst kategoriler (I ve II) elde tutma ve ilişki geliştirme açısından önceliklidir; düşük değerli gruplara aynı yoğunlukta kaynak ayrılmaz."}, {"num": 117, "tag": "2026 Büt, 2025-26 Final, 2024 Final, 2022-24 Final", "text": "${t_miy}Hedef pazarla ilgili detaylı bilgi elde etmek için aşağıdaki hangi yöntem kullanılır?", "options": [{"letter": "A", "text": "Veri madenciliği"}, {"letter": "B", "text": "Yedekleme"}, {"letter": "C", "text": "Şifreleme"}, {"letter": "D", "text": "Kablolama"}, {"letter": "E", "text": "Biçimlendirme"}], "correct": "A", "explanation": "ACIKLAMA::Büyük müşteri verisinden gizli örüntü, eğilim ve segmentleri çıkarmak için veri madenciliği (data mining) kullanılır; bu analitik MİY’in kalbidir."}, {"num": 118, "tag": "2026 Büt, 2025 Büt", "text": "Müşteri ile tüketici arasındaki fark için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Satın alan müşteri, kullanan tüketicidir."}, {"letter": "B", "text": "Satın alan tüketici, kullanan müşteridir."}, {"letter": "C", "text": "Müşteri bir işletme ya da birey olabilir; tüketici ise yalnızca bireylerdir."}, {"letter": "D", "text": "İkisi arasında fark yoktur."}, {"letter": "E", "text": "Müşteri yalnızca birey, tüketici yalnızca işletmedir."}], "correct": "C", "explanation": "ACIKLAMA::Müşteri satın alma kararını veren taraftır ve birey veya işletme (kurumsal müşteri) olabilir. Tüketici ise ürünü nihai olarak kullanan bireydir."}, {"num": 119, "tag": "2025 Büt, 2022-24 Final", "text": "Müşteri İlişkileri Yönetimi'ni en iyi tanımlayan ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yalnızca reklam yapma faaliyeti"}, {"letter": "B", "text": "Müşteriyle uzun vadeli ve kârlı ilişki kurmayı hedefleyen bir strateji"}, {"letter": "C", "text": "Yalnızca şikâyet toplama sistemi"}, {"letter": "D", "text": "Sadece bir yazılım paketi"}, {"letter": "E", "text": "Yalnızca satış sonrası servis"}], "correct": "B", "explanation": "ACIKLAMA::MİY bir yazılımdan ibaret değildir; müşteriyi tanıyıp uzun vadeli, karşılıklı kârlı ilişki kurmayı amaçlayan bütünsel bir iş stratejisidir."}, {"num": 120, "tag": "2025 Büt, 2022-24 Final", "text": "${t_miy}Operasyonel MİY uygulamalarının temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Stratejik plan yapmak"}, {"letter": "B", "text": "Müşteri verisini derinlemesine analiz etmek"}, {"letter": "C", "text": "Müşteri temas noktalarındaki süreçleri otomatikleştirmek"}, {"letter": "D", "text": "Rakipleri izlemek"}, {"letter": "E", "text": "Yalnızca rapor üretmek"}], "correct": "C", "explanation": "ACIKLAMA::Operasyonel MİY; satış, pazarlama ve servis gibi temas noktalarındaki günlük süreçleri otomatikleştirir. Derin analiz ise analitik MİY’in işidir."}, {"num": 121, "tag": "2025 Büt", "text": "Müşteri İlişkileri Yönetimi'nin temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Paydaşlarla ilişkilerin yönetimi"}, {"letter": "B", "text": "Müşterilerle ilişkilerin yönetimi"}, {"letter": "C", "text": "Toplam kalite yönetimi"}, {"letter": "D", "text": "Tedarikçilerle ilişki yönetimi"}, {"letter": "E", "text": "Gelir kanallarının yönetimi"}], "correct": "B", "explanation": "ACIKLAMA::Adından da anlaşılacağı gibi MİY’in temel amacı müşterilerle ilişkilerin yönetimidir; “paydaşlar” çeldiricisine dikkat."}, {"num": 122, "tag": "2026 Büt", "text": "${t_miy}İş birlikçi (collaborative) MİY’in işletmeye sağladığı temel fayda aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Maliyetleri sabitlemek"}, {"letter": "B", "text": "Ürün çeşidini azaltmak"}, {"letter": "C", "text": "Pazar payını düşürmek"}, {"letter": "D", "text": "Müşteriye daha hızlı tepki vermek"}, {"letter": "E", "text": "Kurum kültürünü değiştirmek"}], "correct": "D", "explanation": "ACIKLAMA::İş birlikçi MİY; kanallar ve birimler arası koordinasyonla müşteriye tutarlı ve hızlı yanıt verilmesini sağlar."}, {"num": 123, "tag": "2025-26 Final", "text": "${t_miy}MİY mimarisinin üç temel bileşeni aşağıdakilerden hangisinde birlikte verilmiştir?", "options": [{"letter": "A", "text": "Kaliteli, Uyumlu, Özel"}, {"letter": "B", "text": "Kavramsal, Deterministik, Paylaşımcı"}, {"letter": "C", "text": "Operasyonel, Analitik, İş birlikçi"}, {"letter": "D", "text": "Kurumsal, Stokastik, Profesyonel"}, {"letter": "E", "text": "Fonksiyonel, Etik, Tedarikçi"}], "correct": "C", "explanation": "ACIKLAMA::MİY üç katmanda ele alınır: Operasyonel (süreç otomasyonu), Analitik (veri analizi) ve İş birlikçi (kanal/paydaş koordinasyonu)."}, {"num": 124, "tag": "2022-24 Final, 2024 Final", "text": "${t_miy}Analitik MİY uygulamalarında müşteri verisinin toplanıp saklandığı temel teknoloji aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Güvenlik duvarı"}, {"letter": "B", "text": "Veri ambarı"}, {"letter": "C", "text": "Yönlendirici"}, {"letter": "D", "text": "Sanal makine"}, {"letter": "E", "text": "Yük dengeleyici"}], "correct": "B", "explanation": "ACIKLAMA::Analitik MİY; farklı kaynaklardan gelen müşteri verisini bütünleştirip saklayan veri ambarı (data warehouse) üzerine kuruludur; madencilik bunun üstünde çalışır."}, {"num": 125, "tag": "2022-24 Final, 2024 Final", "text": "MİY projelerinde teknolojinin temel rolü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çalışan sayısını azaltmak"}, {"letter": "B", "text": "Müşteri verilerini toplamak ve analiz etmek"}, {"letter": "C", "text": "Ürün fiyatını belirlemek"}, {"letter": "D", "text": "Reklam metni yazmak"}, {"letter": "E", "text": "Tedarikçi seçmek"}], "correct": "B", "explanation": "ACIKLAMA::MİY’de teknoloji; müşteriye dair veriyi toplar, bütünleştirir ve analiz ederek ilişki kararlarını besler. Strateji ve kültür ise insanın işidir."}, {"num": 126, "tag": "2022-24 Final, 2024 Final", "text": "MİY’de “etkileşim” kavramı öncelikle aşağıdakilerden hangisiyle ilgilidir?", "options": [{"letter": "A", "text": "Depo sayısı"}, {"letter": "B", "text": "Müşteri temas noktalarının sayısı ve çeşitliliği"}, {"letter": "C", "text": "Üretim hattı hızı"}, {"letter": "D", "text": "Tedarikçi mesafesi"}, {"letter": "E", "text": "Sunucu kapasitesi"}], "correct": "B", "explanation": "ACIKLAMA::Etkileşim; müşteriyle kurulan temas noktalarının (mağaza, çağrı merkezi, web, sosyal medya) sayısı ve çeşitliliğiyle ölçülür. Ne kadar çok kanal, o kadar zengin ilişki."}, {"num": 127, "tag": "2022-24 Final, 2024 Final", "text": "Bir MİY projesinin başarısında en belirleyici faktör aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "En pahalı yazılımı seçmek"}, {"letter": "B", "text": "Projenin şirket yapısına ve kültürüne uygun olması"}, {"letter": "C", "text": "Yalnızca donanım gücü"}, {"letter": "D", "text": "Tedarikçi sayısı"}, {"letter": "E", "text": "Reklam bütçesi"}], "correct": "B", "explanation": "ACIKLAMA::MİY başarısı teknolojiden çok uyuma bağlıdır: seçilen çözüm işletmenin süreçlerine, yapısına ve kültürüne oturmalıdır."}, {"num": 128, "tag": "2024 Final, 2022-24 Final", "text": "MİY uygulamasında karşılaşılan en temel zorluk aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Pazarlama stratejisi seçimi"}, {"letter": "B", "text": "Müşteri verisi toplama"}, {"letter": "C", "text": "Teknolojik altyapı kurulumu"}, {"letter": "D", "text": "Ürün geliştirme"}, {"letter": "E", "text": "Şirket kültürünün değişmesi (dönüşüm direnci)"}], "correct": "E", "explanation": "ACIKLAMA::MİY, işletmeyi müşteri odaklı hâle getirdiği için köklü bir kültür değişimi gerektirir; asıl zorluk teknolojide değil, bu dönüşüme direnci aşmaktadır."}, {"num": 129, "tag": "2026 Büt, 2025 Büt, 2024 Final, 2022-24 Final", "text": "Aşağıdakilerden hangisi bir işletmenin kurumsal bilgi sistemine sahip olma yollarından biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Hazır paket yazılım satın almak"}, {"letter": "B", "text": "Kendi bünyesinde geliştirmek"}, {"letter": "C", "text": "Dış kaynak (outsourcing) kullanmak"}, {"letter": "D", "text": "Kiralama / bulut hizmeti almak"}, {"letter": "E", "text": "Rakip işletmelerden birinin yazılımını kopyalamak"}], "correct": "E", "explanation": "ACIKLAMA::KBS’ye sahip olmanın meşru yolları satın alma, kendi geliştirme, dış kaynak ve kiralamadır. Rakibin yazılımını kopyalamak ne yasal ne de mümkün bir yoldur."}, {"num": 130, "tag": "2026 Büt, 2025-26 Final, 2024 Final, 2022-24 Final", "text": "Aşağıdakilerden hangisi kurumsal bilgi sistemlerinin ana başlıkları/konuları arasında yer ALMAZ?", "options": [{"letter": "A", "text": "Kurumsal Kaynak Planlaması (KKP)"}, {"letter": "B", "text": "Müşteri İlişkileri Yönetimi (MİY)"}, {"letter": "C", "text": "Tedarik Zinciri Yönetimi (TZY)"}, {"letter": "D", "text": "Arz-talep dengesi"}, {"letter": "E", "text": "Sistem entegrasyonu"}], "correct": "D", "explanation": "ACIKLAMA::KBS’nin ana başlıkları KKP, MİY, TZY ve entegrasyondur. “Arz-talep dengesi” bir ekonomi kavramıdır; KBS ana konu başlığı olarak sayılmaz."}, {"num": 131, "tag": "2025-26 Final, 2025 Büt", "text": "KKP ve MİY’in yanında kurumsal bilgi sistemlerinin üçüncü temel bileşeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tedarik Zinciri Yönetimi"}, {"letter": "B", "text": "Ofis otomasyonu"}, {"letter": "C", "text": "Veri madenciliği"}, {"letter": "D", "text": "Bordro sistemi"}, {"letter": "E", "text": "Web tasarımı"}], "correct": "A", "explanation": "ACIKLAMA::Kurumsal bilgi sistemleri klasik olarak üç ayak üzerinde durur: KKP (iç kaynaklar), MİY (müşteri) ve TZY (tedarik zinciri)."}, {"num": 132, "tag": "2025-26 Final, 2025 Büt", "text": "Sistem entegrasyonunda kullanılan “faz (aşamalı) yaklaşımı” aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Sistemi tek seferde devreye almayı"}, {"letter": "B", "text": "Sistemi adım adım, parça parça devreye almayı"}, {"letter": "C", "text": "Eski sistemi hiç kullanmamayı"}, {"letter": "D", "text": "Yalnızca pilot bölgede kullanmayı"}, {"letter": "E", "text": "Sistemi hiç test etmemeyi"}], "correct": "B", "explanation": "ACIKLAMA::Faz yaklaşımı; yeni sistemi modül modül veya birim birim, aşamalı olarak devreye alarak riski dağıtır. Bir anda geçişe göre daha kontrollüdür."}, {"num": 133, "tag": "2025-26 Final, 2022-24 Final", "text": "Kurumsal bilgi sistemleri bağlamında “kurum” kavramı aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Tek bir departmanı"}, {"letter": "B", "text": "Birlikte iş yapan işletmeler bütününü"}, {"letter": "C", "text": "Yalnızca kamu kuruluşlarını"}, {"letter": "D", "text": "Sadece üretim tesisini"}, {"letter": "E", "text": "Bağımsız bireyleri"}], "correct": "B", "explanation": "ACIKLAMA::Burada “kurum”; tek bir şirketle sınırlı kalmayıp tedarikçi, iş ortağı ve müşteriyi de kapsayan, birlikte iş yapan işletmeler bütününü anlatır."}, {"num": 134, "tag": "2026 Büt, 2022-24 Final", "text": "Sistem geçişinde “paralel strateji” aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Yalnızca yeni sistemi kullanmayı"}, {"letter": "B", "text": "Eski ve yeni sistemin bir süre aynı anda çalıştırılmasını"}, {"letter": "C", "text": "Hiç test yapmamayı"}, {"letter": "D", "text": "Sistemi hiç değiştirmemeyi"}, {"letter": "E", "text": "Yalnızca eski sistemi kullanmayı"}], "correct": "B", "explanation": "ACIKLAMA::Paralel geçişte eski ve yeni sistem bir süre birlikte çalışır; sonuçlar karşılaştırılıp yeni sistemin güvenilirliği doğrulanınca eski sistem kapatılır. Güvenli ama maliyetlidir."}, {"num": 135, "tag": "2024 Final, 2022-24 Final", "text": "${t_sgdc}Sistem geliştirme yaşam döngüsündeki aşamaların doğru sıralaması aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tasarım → Analiz → Yazılım → Entegrasyon → Sürdürülebilirlik"}, {"letter": "B", "text": "Yazılım → Analiz → Tasarım → Entegrasyon → Sürdürülebilirlik"}, {"letter": "C", "text": "Analiz → Tasarım → Entegrasyon → Yazılım → Sürdürülebilirlik"}, {"letter": "D", "text": "Analiz → Yazılım → Tasarım → Sürdürülebilirlik → Entegrasyon"}, {"letter": "E", "text": "Analiz → Tasarım → Yazılım → Entegrasyon → Sürdürülebilirliğin sağlanması"}], "correct": "E", "explanation": "ACIKLAMA::Doğru akış: önce ihtiyaç Analizi, sonra Tasarım, ardından Yazılımın geliştirilmesi, Entegrasyon ve son olarak sistemin Sürdürülebilirliğinin sağlanması."}, {"num": 136, "tag": "2024 Final, 2024 Büt, 2022-24 Final", "text": "Sistem entegrasyonunda aşağıdakilerden hangisi bir “sosyal faktör” DEĞİLDİR?", "options": [{"letter": "A", "text": "Çalışanların direnci"}, {"letter": "B", "text": "Kurum kültürü"}, {"letter": "C", "text": "Yönetim desteği"}, {"letter": "D", "text": "Müşteri İlişkileri Yönetimi"}, {"letter": "E", "text": "İletişim ve eğitim"}], "correct": "D", "explanation": "ACIKLAMA::Entegrasyonun sosyal (insana dair) faktörleri; direnç, kültür, yönetim desteği, iletişim/eğitimdir. “MİY” bir sistem/uygulamadır, sosyal faktör değildir."}, {"num": 137, "tag": "2024 Final, 2024 Büt, 2022-24 Final", "text": "Örgütsel düzeylerin farklı bilişim sistemleri kullanması aşağıdakilerden hangisine yol açar?", "options": [{"letter": "A", "text": "Sistemin daha ucuz olmasına"}, {"letter": "B", "text": "Sistemin teknolojik olarak karmaşık ve yüksek maliyetli olmasına"}, {"letter": "C", "text": "Veri tekrarının azalmasına"}, {"letter": "D", "text": "Entegrasyonun kolaylaşmasına"}, {"letter": "E", "text": "Personel ihtiyacının bitmesine"}], "correct": "B", "explanation": "ACIKLAMA::Her düzeyin ayrı sistem kullanması; bu sistemlerin birbirine bağlanmasını gerektirir, bu da teknolojik karmaşıklığı ve maliyeti artırır. Entegrasyon ihtiyacının temel gerekçesidir."}, {"num": 138, "tag": "2025-26 Final", "text": "Bir işletmenin kurumsal bilgi sistemlerine geçiş kararında dikkate alması gereken temel faktörler aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ürün, fiyat, dağıtım, tutundurma"}, {"letter": "B", "text": "İnsan, süreç, teknoloji ve bilgi"}, {"letter": "C", "text": "Verimlilik, etkinlik, kârlılık, sürdürülebilirlik"}, {"letter": "D", "text": "Maliyet, zaman, kalite, esneklik"}, {"letter": "E", "text": "Teknoloji, iş süreçleri, strateji ve rekabet"}], "correct": "E", "explanation": "ACIKLAMA::İncelediğim final kitapçığında koyu işaretlenen şık “Teknoloji, iş süreçleri, strateji ve rekabet”tir; geçiş kararı hem iç yetkinlik hem rekabet ortamıyla birlikte değerlendirilir."}, {"num": 139, "tag": "2025-26 Final", "text": "Aşağıdakilerden hangisi işletmeleri maliyet düşürmeye zorlayan faktörlerden biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Müşteri memnuniyetsizliği"}, {"letter": "B", "text": "Rekabet baskısı"}, {"letter": "C", "text": "Paydaşların memnuniyetinin azalması"}, {"letter": "D", "text": "Yeni iş modelleri"}, {"letter": "E", "text": "Ürün yaşam süresinin kısalması"}], "correct": "C", "explanation": "ACIKLAMA::Rekabet, kısalan ürün ömrü ve yeni iş modelleri işletmeyi maliyet düşürmeye iter. “Paydaş memnuniyetinin azalması” bir maliyet düşürme baskısı olarak verilmez."}, {"num": 140, "tag": "2026 Büt, 2024 Final, 2024 Büt, 2022-24 Final", "text": "Kamu kurumlarının kurumsal bilgi sistemlerini yönetmesini zorlaştıran temel özellik aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kâr amacı gütmemesi"}, {"letter": "B", "text": "Kurumsal bilgi sistemlerinin maliyetinin yüksek olması"}, {"letter": "C", "text": "Çalışan sayısının az olması"}, {"letter": "D", "text": "Rekabetin olmaması"}, {"letter": "E", "text": "Müşteri sayısının azlığı"}], "correct": "B", "explanation": "ACIKLAMA::KBS kurulum ve bakım maliyetleri yüksektir; bütçe kısıtları ve kamu satın alma süreçleriyle birleşince kamuda yönetimi güçleşir."}, {"num": 141, "tag": "2026 Büt", "text": "Kurumsal bilgi sistemleri küçük işletmelere aşağıdakilerden hangisi konusunda yardımcı olur?", "options": [{"letter": "A", "text": "Çalışanları eğitmek"}, {"letter": "B", "text": "Ürünler için küresel bir pazar geliştirilmesi"}, {"letter": "C", "text": "Vergi ödememek"}, {"letter": "D", "text": "Rakipleri engellemek"}, {"letter": "E", "text": "Personel azaltmak"}], "correct": "B", "explanation": "ACIKLAMA::İnternet tabanlı KBS/e-iş araçları, küçük işletmelerin bile ürünlerini küresel pazara ulaştırmasını sağlar; ölçek dezavantajını azaltır."}, {"num": 142, "tag": "2025 Büt", "text": "Kurumsal bilgi sistemlerinin geleceği için aşağıdakilerden hangisi söylenemez?", "options": [{"letter": "A", "text": "İş süreçleriyle daha çok bütünleşecektir."}, {"letter": "B", "text": "Teknolojiyle birlikte evrilecektir."}, {"letter": "C", "text": "Veri analitiği daha önemli hâle gelecektir."}, {"letter": "D", "text": "Yalnızca kalite belgelerinin alınmasıyla gelişecektir."}, {"letter": "E", "text": "Karar desteğinde rolü artacaktır."}], "correct": "D", "explanation": "ACIKLAMA::KBS’nin gelişimi süreç bütünleşmesi, analitik ve teknolojiyle ilerler. Gelişimi “yalnızca kalite belgesi almaya” bağlamak yanlıştır."}, {"num": 143, "tag": "2026 Büt, 2025 Büt", "text": "Kurumsal analiz ile stratejik analiz arasındaki fark için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "İkisi aynıdır."}, {"letter": "B", "text": "Kurumsal analiz iş süreçlerine, stratejik analiz işletmenin amaçlarına odaklanır."}, {"letter": "C", "text": "Stratejik analiz yalnızca büyük işletmelerde yapılır."}, {"letter": "D", "text": "Kurumsal analiz yalnızca teknolojiyle ilgilenir."}, {"letter": "E", "text": "Stratejik analiz yalnızca veri toplar."}], "correct": "B", "explanation": "ACIKLAMA::Kurumsal analiz “işleri nasıl yapıyoruz?” (süreçler) sorusuna; stratejik analiz “nereye gitmek istiyoruz?” (amaç/hedef) sorusuna odaklanır."}, {"num": 144, "tag": "2025 Büt", "text": "Aşağıdakilerden hangisi kurumsal analiz kapsamındaki faaliyetlerden biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Yöneticilerin bireysel becerilerinin belirlenip sisteme aktarılması"}, {"letter": "B", "text": "Süreçlere öncelik verilmesi"}, {"letter": "C", "text": "Zayıf ve kuvvetli bölümlerin belirlenmesi"}, {"letter": "D", "text": "İş süreçlerinin incelenmesi"}, {"letter": "E", "text": "Değişim ihtiyacının saptanması"}], "correct": "A", "explanation": "ACIKLAMA::Kurumsal analiz süreç ve yapı odaklıdır. “Yöneticilerin kişisel becerilerini belirleyip sisteme aktarmak” bu analizin bir faaliyeti olarak verilmez."}, {"num": 145, "tag": "2025 Büt", "text": "Bir sistemde “ödünleşme (trade-off)” kavramı aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Dengede olanlar içinden en iyisini seçmek"}, {"letter": "B", "text": "Dengesizliği tamamen ortadan kaldırmak"}, {"letter": "C", "text": "Dengede tutulması gereken unsurları gözeterek karşılıklı fedakârlık yapmak"}, {"letter": "D", "text": "Dengede olmayanları dengelemek"}, {"letter": "E", "text": "Bilinçli dengesizlik oluşturmak"}], "correct": "C", "explanation": "ACIKLAMA::Ödünleşmede bir şeyi kazanmak için başka bir şeyden ölçülü ödün verilir (ör. hız ↔ maliyet). Amaç, gözetilmesi gereken unsurlar arasında dengeyi korumaktır."}, {"num": 146, "tag": "2025 Büt", "text": "Pazarlama departmanının en etkin biçimde kullandığı kurumsal bilgi sistemi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "KKP sistemleri"}, {"letter": "B", "text": "Bordro sistemleri"}, {"letter": "C", "text": "Üretim planlama sistemleri"}, {"letter": "D", "text": "Stok sistemleri"}, {"letter": "E", "text": "MİY sistemleri"}], "correct": "E", "explanation": "ACIKLAMA::Pazarlama; müşteri segmentasyonu, kampanya ve sadakat için doğrudan MİY (CRM) sistemlerini kullanır."}, {"num": 147, "tag": "2022-24 Final", "text": "Bilgi işlem gücündeki artış ve internetin yaygınlaşması sonucunda ortaya çıkan yapı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Birbirinden bağımsız çalışan işletmeler"}, {"letter": "B", "text": "Bilişim ağlarıyla birbirine bağlı işletmeler"}, {"letter": "C", "text": "Yalnızca yerel pazarda çalışan işletmeler"}, {"letter": "D", "text": "Tek merkezli işletmeler"}, {"letter": "E", "text": "Teknoloji kullanmayan işletmeler"}], "correct": "B", "explanation": "ACIKLAMA::Ucuzlayan işlem gücü ve internet; işletmeleri tedarikçi, ortak ve müşteriyle ağ üzerinden bağlı, birbirine entegre yapılar hâline getirmiştir."}, {"num": 148, "tag": "2022-24 Final", "text": "${t_kkp}Kurumsal Kaynak Planlaması (KKP) ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "İşletmenin kaynaklarının daha verimli kullanımını sağlar"}, {"letter": "B", "text": "Yalnızca muhasebe için kullanılır"}, {"letter": "C", "text": "Departmanları birbirinden ayırır"}, {"letter": "D", "text": "Yalnızca büyük fabrikalarda çalışır"}, {"letter": "E", "text": "Veri paylaşımını engeller"}], "correct": "A", "explanation": "ACIKLAMA::KKP; finans, üretim, İK, satış gibi süreçleri tek veri tabanında bütünleştirerek kaynakların (para, insan, malzeme, zaman) verimli kullanımını sağlar."}, {"num": 149, "tag": "2022-24 Final", "text": "Sistem geliştirmede “test” aşamasının temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sistemin ihtiyaçları karşılayıp karşılamadığını kontrol etmek"}, {"letter": "B", "text": "Yeni personel almak"}, {"letter": "C", "text": "Reklam yapmak"}, {"letter": "D", "text": "Fiyat belirlemek"}, {"letter": "E", "text": "Tedarikçi seçmek"}], "correct": "A", "explanation": "ACIKLAMA::Test aşaması; geliştirilen sistemin belirlenen gereksinimleri doğru ve hatasız karşıladığını, devreye almadan önce doğrulamayı amaçlar."}, {"num": 150, "tag": "2024 Final, 2022-24 Final", "text": "Kurumsal bilgi sistemleri, ................ yönelik organizasyon ve yönetim çözümleri olarak tanımlanabilir.", "options": [{"letter": "A", "text": "yalnızca teknik altyapıya"}, {"letter": "B", "text": "yalnızca maliyet düşürmeye"}, {"letter": "C", "text": "iş ve işletme çevresinin yarattığı zorluklara"}, {"letter": "D", "text": "yalnızca müşteri şikâyetlerine"}, {"letter": "E", "text": "yalnızca üretim hatalarına"}], "correct": "C", "explanation": "ACIKLAMA::KBS yalnızca teknoloji değildir; iş ve işletme çevresinin (rekabet, mevzuat, müşteri, tedarik) yarattığı zorluklara karşı geliştirilen organizasyon + yönetim + teknoloji çözümleridir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

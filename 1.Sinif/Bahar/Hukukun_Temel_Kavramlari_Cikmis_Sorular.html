@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hukukun Temel Kavramları - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 1. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Hukukun Temel Kavramları - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">1. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Hukukun Temel Kavramları Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Hukukun Temel Kavramları - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Hukukun Temel Kavramları dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>34 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>1. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">34</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Hukukun_Temel_Kavramlari_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (34)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">34</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Hukukun_Temel_Kavramlari_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Hâkimin kendiliğinden dikkate aldığı yaptırım aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Nispi butlan"}, {"letter": "B", "text": "İptal"}, {"letter": "C", "text": "Tazminat"}, {"letter": "D", "text": "Mutlak butlan"}, {"letter": "E", "text": "Defi"}], "correct": "D", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek D'dir."}, {"num": 2, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "\"Pozitif hukuk\" ile \"doğal hukuk\" arasındaki fark aşağıdakilerden hangisinde doğru olarak ifade edilmiştir?", "options": [{"letter": "A", "text": "Pozitif hukuk yazılı değildir, doğal hukuk yazılıdır."}, {"letter": "B", "text": "Pozitif hukuk yalnız kanun biçiminde çıkarılır, doğal hukuk tüzük, yönetmelik, yönerge biçiminde de çıkarılabilir."}, {"letter": "C", "text": "Pozitif hukukun somut yaptırımları yoktur, doğal hukukun somut yaptırımları vardır."}, {"letter": "D", "text": "Pozitif hukuk ceza davalarında uygulanır, doğal hukuk, hukuk davalarında uygulanır."}, {"letter": "E", "text": "Pozitif hukuk olanı, doğal hukuk olması gerekeni ifade eder."}], "correct": "E", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 3, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi hukuk kurallarının türleri arasında yer almaz?", "options": [{"letter": "A", "text": "Yorumlayıcı hukuk kuralları"}, {"letter": "B", "text": "Tamamlayıcı hukuk kuralları"}, {"letter": "C", "text": "Ödetici hukuk kuralları"}, {"letter": "D", "text": "Emredici hukuk kuralları"}, {"letter": "E", "text": "İlga edici hukuk kuralları"}], "correct": "C", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 4, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi işlenen fiili hukuka aykırı olmaktan çıkaran durumlardan biri değildir?", "options": [{"letter": "A", "text": "Rıza"}, {"letter": "B", "text": "Haksız tahrik"}, {"letter": "C", "text": "Meşru müdafaa"}, {"letter": "D", "text": "Zorunluluk"}, {"letter": "E", "text": "Üstün hukuksal yarar"}], "correct": "B", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek B'dir."}, {"num": 5, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Anayasa Mahkemesi, iptal ettiği yasanın yürürlükten kalkmasının doğuracağı sakıncaları önlemek amacıyla, iptal edilen kanunun en fazla ..... süreyle yürürlükte kalmasına karar verebilir. Yukarıda boş bırakılan yere aşağıdaki ifadelerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "bir ay"}, {"letter": "B", "text": "iki yıl"}, {"letter": "C", "text": "iki ay"}, {"letter": "D", "text": "altı ay"}, {"letter": "E", "text": "bir yıl"}], "correct": "E", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 6, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar, Hukukun Temel Kavramları 2025 Vize", "text": "Cumhurbaşkanlığı kararnamesi ile ilgili aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Cumhurbaşkanlığı kararnamesi ile yeni bir vergi konulabilir."}, {"letter": "B", "text": "Suçlar ve cezalar cumhurbaşkanlığı kararnamesi ile düzenlenebilir."}, {"letter": "C", "text": "Cumhurbaşkanlığı kararnamesi normlar hiyerarşisinde yasadan üstündür."}, {"letter": "D", "text": "Ayrıca bir yürürlük tarihi belirtilmemişse cumhurbaşkanlığı kararnamesi Resmî Gazete’de yayımlandığı gün yürürlüğe girer."}, {"letter": "E", "text": "Cumhurbaşkanlığı kararnamesi ile yasalarda değişiklik yapılabilir."}], "correct": "D", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek D'dir."}, {"num": 7, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "13 yaşındaki ayırt etme gücüne (temyiz kudretine) sahip küçüğün ana ve babasının iznini almadan yapmış olduğu iki tarafa borç yükleyen bir sözleşmenin yaptırımı nedir?", "options": [{"letter": "A", "text": "İdari para cezası"}, {"letter": "B", "text": "Yokluk"}, {"letter": "C", "text": "Yok hükmünde sayma"}, {"letter": "D", "text": "İptal"}, {"letter": "E", "text": "Tek taraflı bağlamazlık"}], "correct": "E", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 8, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi hukuk kurallarının yaptırımlarından biri değildir?", "options": [{"letter": "A", "text": "Eski hâle getirme"}, {"letter": "B", "text": "Toplumdan dışlama"}, {"letter": "C", "text": "Hapis cezası"}, {"letter": "D", "text": "İdari para cezası"}, {"letter": "E", "text": "Tazminat"}], "correct": "B", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek B'dir."}, {"num": 9, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Kişinin hak ve borçlara sahip olabilme ehliyeti Türk hukuk sisteminde hangi kavramla tanımlanmaktadır?", "options": [{"letter": "A", "text": "Fiil ehliyeti"}, {"letter": "B", "text": "Sınırlı ehliyetlilik"}, {"letter": "C", "text": "Sınırlı ehliyetsizlik"}, {"letter": "D", "text": "Tam ehliyetlilik"}, {"letter": "E", "text": "Hak ehliyeti"}], "correct": "E", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 10, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar, Hukukun Temel Kavramları 2025 Vize", "text": "Hâkimin hukuku uygulaması ile ilgili aşağıdaki bilgilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Hâkim, örf ve âdet hukukunda hüküm bulamadığı takdirde kanunlara bakar."}, {"letter": "B", "text": "Hâkim, yazılı bir hukuk kuralı bulamazsa kendisi hukuk yaratır."}, {"letter": "C", "text": "Hâkim, önce kanunlara sonra örf ve âdet hukukuna bakar orada da hüküm bulamazsa kendisi hukuk yaratır."}, {"letter": "D", "text": "Hâkim somut olaya uygulanacak hukuk kuralı bulamadığı takdirde davayı çözümsüz bırakır."}, {"letter": "E", "text": "Hâkim, kanunu vicdanına aykırı bulursa kendisi hukuk yaratabilir."}], "correct": "C", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 11, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar, Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi iki taraflı hukuksal işlemlerdendir?", "options": [{"letter": "A", "text": "Kira sözleşmesi"}, {"letter": "B", "text": "İptal"}, {"letter": "C", "text": "Fesih"}, {"letter": "D", "text": "Ön alım"}, {"letter": "E", "text": "Sözleşmeden dönme HUKUKUN TEMEL KAVRAMLARI A P355875.G18745 07-04-2026 11:27:33 CEVAPLI"}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 12, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Tek taraflı irade açıklamasıyla yeni bir hukuksal durum yaratan, mevcut bir hukuksal durumu değiştiren veya ortadan kaldıran haklara ne denir?", "options": [{"letter": "A", "text": "İrtifak hakkı"}, {"letter": "B", "text": "İnşai hak"}, {"letter": "C", "text": "Nispi hak"}, {"letter": "D", "text": "Mutlak hak"}, {"letter": "E", "text": "İntifa hakkı"}], "correct": "B", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek B'dir."}, {"num": 13, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Kanun önerme yetkisi kime / kimlere ait bir yetkidir?", "options": [{"letter": "A", "text": "Vatandaşlara"}, {"letter": "B", "text": "Bakanlara"}, {"letter": "C", "text": "Milletvekillerine"}, {"letter": "D", "text": "Cumhurbaşkanına"}, {"letter": "E", "text": "Kamu Denetçiliği Kurumuna"}], "correct": "C", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 14, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi özel hukuk haklarından biri değildir?", "options": [{"letter": "A", "text": "Mülkiyet hakkı"}, {"letter": "B", "text": "İntifa hakkı"}, {"letter": "C", "text": "Seçme hakkı"}, {"letter": "D", "text": "Rehin hakkı"}, {"letter": "E", "text": "Taşınmaz yükü (gayrimenkul mükellefiyeti)"}], "correct": "C", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 15, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Türk Medeni Kanunu'nda yer alan dürüstlük ve hakkın kötüye kullanılması yasağının dayanağı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Örf ve âdet kuralları"}, {"letter": "B", "text": "Din kuralları"}, {"letter": "C", "text": "Metafizik kuralları"}, {"letter": "D", "text": "Ahlak kuralları"}, {"letter": "E", "text": "Görgü kuralları"}], "correct": "D", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek D'dir."}, {"num": 16, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar, Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi toplumsal düzen kurallarından biri değildir?", "options": [{"letter": "A", "text": "İktisadi kurallar"}, {"letter": "B", "text": "Görgü kuralları"}, {"letter": "C", "text": "Din kuralları"}, {"letter": "D", "text": "Ahlak kuralları"}, {"letter": "E", "text": "Hukuk kuralları"}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 17, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Derneklerde denetim kurulu asıl üyeleri en az kaç kişiden oluşur?", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "9"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "7"}], "correct": "D", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek D'dir."}, {"num": 18, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi sınırlı ayni haklardan biridir?", "options": [{"letter": "A", "text": "Kişilik hakkı"}, {"letter": "B", "text": "İntifa (yararlanma) hakkı"}, {"letter": "C", "text": "Fikrî hak"}, {"letter": "D", "text": "Mülkiyet hakkı"}, {"letter": "E", "text": "Özel yaşamın gizliliği hakkı"}], "correct": "B", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek B'dir."}, {"num": 19, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar, Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi bir ceza hukuku yaptırımıdır?", "options": [{"letter": "A", "text": "Hapis cezası"}, {"letter": "B", "text": "Cebrî icra"}, {"letter": "C", "text": "Manevi tazminat"}, {"letter": "D", "text": "Maddi tazminat"}, {"letter": "E", "text": "İdari para cezası"}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 20, "tag": "Hukukun Temel Kavramları - 2025-2026 - Vize - Bahar, Hukukun Temel Kavramları 2025 Vize", "text": "Milletvekilliğinin düşmesi aşağıdaki hukuk dallarından hangisine ilişkin bir yaptırımdır?", "options": [{"letter": "A", "text": "Anayasa Hukuku"}, {"letter": "B", "text": "İcra Hukuku"}, {"letter": "C", "text": "Ceza Hukuku"}, {"letter": "D", "text": "İdare Hukuku"}, {"letter": "E", "text": "Medeni Hukuk"}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 21, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "“Kadın ve erkek 17 yaşını doldurmadan evlenemez.” Yukarıdaki kural niteliği açısından nasıl bir hukuk kuralıdır?", "options": [{"letter": "A", "text": "Yetki verici"}, {"letter": "B", "text": "Tanımlayıcı"}, {"letter": "C", "text": "Yorumlayıcı"}, {"letter": "D", "text": "İlga edici"}, {"letter": "E", "text": "Emredici"}], "correct": "E", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 22, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Haksız fiille zarar arasındaki nedensellik bağının eş anlamlısı olan ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kusur"}, {"letter": "B", "text": "Kast"}, {"letter": "C", "text": "İlliyet Bağı"}, {"letter": "D", "text": "İhmal"}, {"letter": "E", "text": "Taksir"}], "correct": "C", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 23, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Bir ülkede devletin yetkili organlarınca konulmuş (vaz edilmiş) ve uygulanması zorunlu olan yazılı hukuk kurallarına ne ad verilir?", "options": [{"letter": "A", "text": "Öğreti"}, {"letter": "B", "text": "Doğal hukuk"}, {"letter": "C", "text": "Mevzu hukuk"}, {"letter": "D", "text": "Pozitif hukuk"}, {"letter": "E", "text": "Dogmatik hukuk"}], "correct": "C", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 24, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi maddi olmayan mallar üzerindeki mutlak haklardan biridir?", "options": [{"letter": "A", "text": "Mülkiyet hakkı"}, {"letter": "B", "text": "Velayet hakkı"}, {"letter": "C", "text": "Nispi haklar"}, {"letter": "D", "text": "Sosyal ekonomik haklar"}, {"letter": "E", "text": "Telif hakkı"}], "correct": "E", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 25, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Olağanüstü cumhurbaşkanlığı kararnameleri Türkiye Büyük Millet Meclisinde kaç ay içerisinde görüşülmezse kendiliğinden yürürlükten kalkar?", "options": [{"letter": "A", "text": "2 ay"}, {"letter": "B", "text": "6 ay"}, {"letter": "C", "text": "3 ay"}, {"letter": "D", "text": "1 ay"}, {"letter": "E", "text": "4 ay"}], "correct": "C", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek C'dir."}, {"num": 26, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Tüzel kişilerin fiil ehliyeti ne zaman kazanılır?", "options": [{"letter": "A", "text": "Fesih bildirimi ile birlikte"}, {"letter": "B", "text": "Hiçbir zaman"}, {"letter": "C", "text": "Tüzel kişiliğin tescil ettirildiği an"}, {"letter": "D", "text": "Harç yatırıldığı an"}, {"letter": "E", "text": "Gerekli organlara sahip olunduğu an"}], "correct": "E", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek E'dir."}, {"num": 27, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi hukuki yorum yöntemleri arasında yer almaz?", "options": [{"letter": "A", "text": "Tarihî yorum"}, {"letter": "B", "text": "Amaçsal yorum"}, {"letter": "C", "text": "Sistematik yorum"}, {"letter": "D", "text": "Kıyas"}, {"letter": "E", "text": "Lafzi yorum"}], "correct": "D", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek D'dir."}, {"num": 28, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Ev başkanlığı ile ilgili aşağıdaki bilgilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Mutlak aile haklarındandır."}, {"letter": "B", "text": "Mülkiyet hakları içinde yer alır."}, {"letter": "C", "text": "Kamu hakkıdır."}, {"letter": "D", "text": "Nispi haklar arasında yer alır."}, {"letter": "E", "text": "İrtifak hakları arasında yer alır."}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 29, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi bir hukuki yaptırımdır?", "options": [{"letter": "A", "text": "Ayıplama"}, {"letter": "B", "text": "Cebri icra"}, {"letter": "C", "text": "Toplumdan dışlama"}, {"letter": "D", "text": "Kınama"}, {"letter": "E", "text": "Hor görme HUKUKUN TEMEL KAVRAMLARI A P355543.G9121 17-03-2025 08:50:40 HUKUKUN TEMEL KAVRAMLARI A P355543.G9121 17-03-2025 08:50:40 CEVAPLI CEVAPLI"}], "correct": "B", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek B'dir."}, {"num": 30, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Türk Medeni Kanununa göre kişinin hakları ne zaman başlar?", "options": [{"letter": "A", "text": "Tam ve sağ doğumla"}, {"letter": "B", "text": "Evlenmekle"}, {"letter": "C", "text": "Ana rahmine düştüğü anda"}, {"letter": "D", "text": "Ayırt etme (temyiz) gücüne sahip olduğunda"}, {"letter": "E", "text": "Reşit (ergin) olmakla"}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 31, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi hukuk kurallarının amaçları arasında yer almaz?", "options": [{"letter": "A", "text": "İnsanın manevi dünyasını geliştirmek ve Tanrı ile ilişkilerini düzenlemek"}, {"letter": "B", "text": "Toplumsal barışı sağlamak"}, {"letter": "C", "text": "Eşitliğin sağlamak"}, {"letter": "D", "text": "Toplumun güvenliğini sağlamak"}, {"letter": "E", "text": "Adaleti gerçekleştirmek"}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 32, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi kişinin özel hakları arasında yer almaz?", "options": [{"letter": "A", "text": "Alacak hakları"}, {"letter": "B", "text": "Seçme ve seçilme hakkı"}, {"letter": "C", "text": "Mülkiyet hakkı"}, {"letter": "D", "text": "İntifa hakkı"}, {"letter": "E", "text": "Telif hakkı"}], "correct": "B", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek B'dir."}, {"num": 33, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Türk Medeni Kanunu’na göre aşağıdakilerden hangisi kısıtlanma nedenleri arasında yer almaz?", "options": [{"letter": "A", "text": "65 yaşın üzerinde olma"}, {"letter": "B", "text": "Savurganlık"}, {"letter": "C", "text": "Akıl zayıflığı"}, {"letter": "D", "text": "Bir yıl ve daha fazla özgürlüğü bağlayıcı cezaya çarptırılmış olma"}, {"letter": "E", "text": "Alkol bağımlılığı"}], "correct": "A", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek A'dir."}, {"num": 34, "tag": "Hukukun Temel Kavramları 2025 Vize", "text": "Aşağıdakilerden hangisi hukuk sistemleri içinde yer almaz?", "options": [{"letter": "A", "text": "Sosyalist hukuk sistemi"}, {"letter": "B", "text": "Batı hukuk sistemi"}, {"letter": "C", "text": "Anglo-Sakson/Anglo-Amerikan hukuk sistemi"}, {"letter": "D", "text": "Roma hukuku sistemi"}, {"letter": "E", "text": "Kıta/Kara Avrupası hukuk sistemi"}], "correct": "B", "explanation": "AUZEF Hukukun Temel Kavramlari müfredatı uyarınca doğru seçenek B'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

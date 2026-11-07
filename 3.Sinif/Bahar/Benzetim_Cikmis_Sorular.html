@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benzetim (Simülasyon) (AYBS6002) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 3. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Benzetim (Simülasyon) (AYBS6002) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">3. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Benzetim (Simülasyon) (AYBS6002) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Benzetim (Simülasyon) (AYBS6002) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Benzetim (Simülasyon) (AYBS6002) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>67 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>3. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">67</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Benzetim_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (67)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">67</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Benzetim_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Bir diş kliniğinde hastaların tedavi görme süreçlerinin benzetim çalışması yapılmıştır. Gözlemler sonucu hastaların ortalama 18 dk bekledikleri gözlemlenmiştir. Sistemin modeli 8 saatlik 10 bağımsız koşumda çalıştırılmıştır. Bu koşumlarda elde edilen sonuçların yardımıyla modelin geçerliliğini test etmek için kurulacak sıfır hipotezi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "𝐻0 :𝐸𝑌 ( ) ≤18𝑑𝑘"}, {"letter": "B", "text": "𝐻0 :𝐸(𝑌) = 18𝑑𝑘"}, {"letter": "C", "text": "𝐻0 :𝐸(𝑌) < 18𝑑𝑘"}, {"letter": "D", "text": "𝐻0 :𝐸(𝑌) > 18𝑑𝑘"}, {"letter": "E", "text": "𝐻0 :𝐸𝑌 ( ) ≠18𝑑𝑘"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 2, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Yukarıdaki şekilde verilen Fit All Summary raporuna göre verilere en uygun dağılım aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Gamma"}, {"letter": "B", "text": "Normal"}, {"letter": "C", "text": "Erlang"}, {"letter": "D", "text": "Beta"}, {"letter": "E", "text": "Exponential"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 3, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi bir benzetim yazılımı seçilirken dikkat edilecek model oluşturma özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Hareket kalitesi"}, {"letter": "B", "text": "Modelin tutarlılığı"}, {"letter": "C", "text": "Söz dizimi (syntax)"}, {"letter": "D", "text": "Dünya görüşü"}, {"letter": "E", "text": "Girdi esnekliği"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 4, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Vize", "text": "Yukarıda verilen görseller hangi iki dağılım ailesine aittir?", "options": [{"letter": "A", "text": "Üstel-Düzgün"}, {"letter": "B", "text": "Geometrik-Kesikli Düzgün"}, {"letter": "C", "text": "Geometrik-Düzgün"}, {"letter": "D", "text": "Üstel-Kesikli Düzgün"}, {"letter": "E", "text": "Binom-Üstel"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 5, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Vize", "text": "Servis sürelerinin minimum 8 dakika (dk) maksimum 15 dk arasında düzgün dağılıma uyduğu belirlenmiştir. Rassal sayı tablosundan RS= 0,72 seçildiğinde servis süresi kaç dakika olacaktır?", "options": [{"letter": "A", "text": "13,04"}, {"letter": "B", "text": "12,04"}, {"letter": "C", "text": "14,04"}, {"letter": "D", "text": "15,04"}, {"letter": "E", "text": "11,04"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 6, "tag": "Benzetim - 2025-2026 - Final - Bahar", "text": "Kolmogorov Smirnov testi ile verilerin normal dağılıma uyup uymadığı test edilmiş ve sonucu elde edilmiştir. Buna göre aşağıdakilerden hangisine karar verilir?", "options": [{"letter": "A", "text": "Verilerin normal dağılıma uymakta olduğu kabul edilir."}, {"letter": "B", "text": "Verilerin düzgün dağılıma uymakta olduğu reddedilir."}, {"letter": "C", "text": "Verilerin düzgün dağılıma uymakta olduğu kabul edilir."}, {"letter": "D", "text": "Verilerin normal dağılıma uymakta olduğu reddedilir."}, {"letter": "E", "text": "Karar vermeden önce yeni testler yapılır. BENZETİM A P355875.G19674 21-05-2026 16:30:38 CEVAPLI"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 7, "tag": "Benzetim - 2025-2026 - Final - Bahar, Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Final A Kitapçığı", "text": "Aşağıdakilerden hangisi doğrusal eşlik yönteminde tam periyot elde etmek için kullanılan Hull­Dobell teoremi şartlarındandır?", "options": [{"letter": "A", "text": "b değeri asal sayı olmalıdır."}, {"letter": "B", "text": "Eğer m 4'e bölünüyorsa c-1 de 4’e bölünebilmelidir."}, {"letter": "C", "text": "m değeri asal sayı olmalıdır."}, {"letter": "D", "text": "m değerinin tüm bölenlerine b-1 de bölünebilmelidir."}, {"letter": "E", "text": "c değeri tek sayı olmalıdır."}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 8, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "ARENA programında RUN açılır menüsünden seçilen SETUP penceresindeki REPLICATION PARAMETERS sekmesi ile aşağıdakilerden hangisi belirlenemez?", "options": [{"letter": "A", "text": "Isınma periyodu süresi"}, {"letter": "B", "text": "Koşum sayısı"}, {"letter": "C", "text": "Koşum uzunluğu"}, {"letter": "D", "text": "Sonlandırma şartları"}, {"letter": "E", "text": "Yürütme hızı"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 9, "tag": "Benzetim - 2025-2026 - Final - Bahar", "text": "En iyi senaryoyu belirlemek için istatistiksel bir prosedür sağlayan ARENA programı aracı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "INPUT ANALYZER"}, {"letter": "B", "text": "OUTPUT ANALYZER"}, {"letter": "C", "text": "PROCESS ANALYZER"}, {"letter": "D", "text": "OPTQUEST"}, {"letter": "E", "text": "FACTORY ANALYZER"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 10, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Final A Kitapçığı", "text": "Aşağıdakilerden hangisi Statik­Dinamik sistem ikilisine örnektir?", "options": [{"letter": "A", "text": "Üretim - İletişim"}, {"letter": "B", "text": "Güneş Sistemi - Sindirim Sistemi"}, {"letter": "C", "text": "Kalite Kontrol - Stok Kontrol"}, {"letter": "D", "text": "Banka - Baraj"}, {"letter": "E", "text": "Havayolları - Karayolları"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 11, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Final A Kitapçığı", "text": "Aşağıdakilerden hangisi PROCESS modülündeki Action penceresindeki seçeneklerden değildir?", "options": [{"letter": "A", "text": "Delay"}, {"letter": "B", "text": "Delay Release"}, {"letter": "C", "text": "Random"}, {"letter": "D", "text": "Seize Delay Release"}, {"letter": "E", "text": "Seize Delay"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 12, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Aşağıdaki ikililerden hangisi her ARENA modülünde bulunmalıdır?", "options": [{"letter": "A", "text": "Create-Process"}, {"letter": "B", "text": "Create-Record"}, {"letter": "C", "text": "Process-Record"}, {"letter": "D", "text": "Create-Dispose"}, {"letter": "E", "text": "Process-Dispose"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 13, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdakilerden hangisi bir iletişim sistemi kuyruk modelinde müşteri olamaz?", "options": [{"letter": "A", "text": "Arama"}, {"letter": "B", "text": "Baz istasyonu"}, {"letter": "C", "text": "Sesli mesaj"}, {"letter": "D", "text": "Video görüşme"}, {"letter": "E", "text": ""}, {"letter": "E", "text": "posta"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 14, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Bütünleme, BENZETİM 2024-2025 Final A Kitapçığı", "text": "Bir berbere gelen müşterilerin %20’si saç tıraşı ve %80’i sakal tıraşı olmaktadır. Bu müşteri tipleri ARENA programı ile modellenen bir modelde ASSIGN modülü ile tanımlanmıştır. Bu işlemler farklı personeller tarafından gerçekleştirildiğinden DECIDE modülü ile bu müşteriler farklı PROCESS modüllerine yönlendirilecektir. DECIDE modüle yazılacak koşul/condition aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "DISC(1,2)"}, {"letter": "B", "text": "TIP==%20"}, {"letter": "C", "text": "%80"}, {"letter": "D", "text": "%20"}, {"letter": "E", "text": "TIP==1"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 15, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Final A Kitapçığı", "text": "AutoMod ürün ailesindeki çalıştırma yöneticisi ve istatistiksel analiz ürünü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "OptQuest"}, {"letter": "B", "text": "SimRunner"}, {"letter": "C", "text": "PROCESS ANALYZER"}, {"letter": "D", "text": "AutoStat"}, {"letter": "E", "text": "OUTPUT ANALYZER BENZETİM A P355875.G19674 21-05-2026 16:30:38 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 16, "tag": "Benzetim - 2025-2026 - Final - Bahar", "text": "Bir havalimanında check-in yaptıran yolculara dair bir benzetim çalışması yapılmıştır. Sistem ARENA yardımıyla modellenirken CREATE modülünde “yolcu” bilgisi hangi pencereye yazılmalıdır?", "options": [{"letter": "A", "text": "Value"}, {"letter": "B", "text": "Max Arrivals"}, {"letter": "C", "text": "Entities per Arrival"}, {"letter": "D", "text": "Entity Type"}, {"letter": "E", "text": "Name"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 17, "tag": "Benzetim - 2025-2026 - Final - Bahar", "text": "Aşağıdaki yöntemlerden hangisi sınırları uygun nokta tahminleri kullanılarak hesaplanan bir aralık içinde bulunduğu doğru istatistiksel parametrenin güvenini sayısallaştırmaktadır?", "options": [{"letter": "A", "text": "Parti ortalamaları"}, {"letter": "B", "text": "Rejeneratif yöntem"}, {"letter": "C", "text": "Bonferri yöntemi"}, {"letter": "D", "text": "Nokta tahmini"}, {"letter": "E", "text": "Güven aralığı"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 18, "tag": "Benzetim - 2025-2026 - Final - Bahar, BENZETİM 2024-2025 Final A Kitapçığı", "text": "Bir fabrika sisteminin benzetim modeli aşağıdaki tanımlardan hangisi ile ifade edilmektedir?", "options": [{"letter": "A", "text": "Kararlı simülasyon"}, {"letter": "B", "text": "Sonsuz ufuklu simülasyon"}, {"letter": "C", "text": "Geçici durum simülasyonu"}, {"letter": "D", "text": "Kararsız durum simülasyonu"}, {"letter": "E", "text": "Sonlu ufuklu simülasyon Queue Average Half Width Minimum Average Maximum Average Doktorla ikinci gorusme.Queue 117.08 48.68"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 19, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi ters dönüşüm yöntemini kullanarak elde edilen rassal değişken aralıklarından değildir?", "options": [{"letter": "A", "text": "0,25<R<0,54 ise X=2"}, {"letter": "B", "text": "0,55<R<0,69 ise X=3"}, {"letter": "C", "text": "0<R<0,24 ise X=1"}, {"letter": "D", "text": "0,7<R<1 ise X=4"}, {"letter": "E", "text": "0,25<R<0,55 ise X=2"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 20, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdakilerden hangisi \"son giren ilk çıkar\" prensibine göre servis veren kuyruk disiplini kısaltmasıdır?", "options": [{"letter": "A", "text": "PR"}, {"letter": "B", "text": "SPT"}, {"letter": "C", "text": "LIFO"}, {"letter": "D", "text": "FIFO"}, {"letter": "E", "text": "SIRO"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 21, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdakilerden hangisi bir banka kuyruk modelinin servisi olamaz?", "options": [{"letter": "A", "text": "ATM"}, {"letter": "B", "text": "Vezne"}, {"letter": "C", "text": "Mobil bankacılık bilgisayarı"}, {"letter": "D", "text": "Güvenlik görevlisi"}, {"letter": "E", "text": "Telefon bankacılığı kabini"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 22, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Final A Kitapçığı", "text": "Bilgisayar üreten bir firma ürünlerinin dayanıklılık süresini değerlendirmek istemektedir. 100 tane rassal olarak seçilen bilgisayarın standart sapması 120 gün, ortalama dayanıklılık süreleri de 1440 gündür. %90 güvenle anakütle ortalama dayanıklılık süresi aşağıdaki aralıklardan hangisidir? (Zα/2=1,65)", "options": [{"letter": "A", "text": "[1400 - 1471]"}, {"letter": "B", "text": "[1420,2 - 1459,8]"}, {"letter": "C", "text": "[1320 - 1560]"}, {"letter": "D", "text": "[1398,5 - 1481,5]"}, {"letter": "E", "text": "[1202,4 - 1667,6]"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 23, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Faaliyetlerin meydana gelmesinde görev alan personel, alet, alan, enerji, zaman, para gibi birimler aşağıdakilerden hangisini ifade etmektedir?", "options": [{"letter": "A", "text": "Faaliyet"}, {"letter": "B", "text": "Varlık"}, {"letter": "C", "text": "Kaynak"}, {"letter": "D", "text": "Kontrol"}, {"letter": "E", "text": "Özellik"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 24, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdaki ikililerden hangisi sürekli­kesikli dağılım ikilisidir?", "options": [{"letter": "A", "text": "Normal-Poisson"}, {"letter": "B", "text": "Binom-Geometrik"}, {"letter": "C", "text": "Bernoulli-Poisson"}, {"letter": "D", "text": "Üstel-Normal"}, {"letter": "E", "text": "Üçgen-Normal"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 25, "tag": "Benzetim - 2025-2026 - Vize - Bahar", "text": "Aşağıdaki sistem – varlık eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Karayolları-Araç"}, {"letter": "B", "text": "Acil servis-Hasta"}, {"letter": "C", "text": "Banka-Müşteri"}, {"letter": "D", "text": "Fabrika-Talep"}, {"letter": "E", "text": "Hava yolları-Yolcu"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 26, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdakilerden hangisi benzetim tekniğinin avantajlarından biridir?", "options": [{"letter": "A", "text": "Bireysel gözleme dayalı değil, gerçekte sistemin işleyişine dair bilgi kazandırması"}, {"letter": "B", "text": "Rassallıktan kaynaklanan bir sonuç olup olmadığını gözlemlemenin güçlüğü"}, {"letter": "C", "text": "Bilgisayarlarda benzetim modellerinin koşum maliyetinin yüksek olması"}, {"letter": "D", "text": "En iyi çözüme ulaşamaması"}, {"letter": "E", "text": "Maliyetli ve zaman alıcı bir teknik olması"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 27, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdakilerden hangisi rassal sayı üreteçlerinden istenilen özelliklerdendir?", "options": [{"letter": "A", "text": "Küçük periyot"}, {"letter": "B", "text": "Tek seferlik üretim"}, {"letter": "C", "text": "Rassallık"}, {"letter": "D", "text": "Hesaplanabilir olmaması"}, {"letter": "E", "text": "Belli bir yazılım diline bağlılık"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 28, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıda benzetim hakkında verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Benzetim birçok bilim dallarında uygulama alanı geniş bir tekniktir."}, {"letter": "B", "text": "Benzetim, sistemlerin zamana bağlı işleyişlerinin taklit edilmesidir."}, {"letter": "C", "text": "Benzetim uygulamalarına akademik araştırmalarda ve iş dünyasında sıkça rastlanmaktadır."}, {"letter": "D", "text": "Benzetim sadece bilgisayar tabanlı bir yöntemdir."}, {"letter": "E", "text": "Bir benzetim modeli, sistemin işleyişi ile ilgili bazı kabullerden oluşur."}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 29, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Kendall (1953)’de kuyruk sistemi modellerini sınıflandırmak için kullandığı A/B/c/N/K notasyonundaki c aşağıdakilerden hangisini temsil etmektedir?", "options": [{"letter": "A", "text": "Servis sayısı"}, {"letter": "B", "text": "Servis prosesi"}, {"letter": "C", "text": "Müşterinin geldiği yığının genişliği"}, {"letter": "D", "text": "Varış prosesi"}, {"letter": "E", "text": "Sistemde izin verilen müşteri sayısı Kesikli X rassal değişkeninin dağılım fonksiyonu aşağıdaki gibidir. 𝐹(𝑥) = 0 𝑥< 1 0, 25 1 ≤𝑥< 2 0, 55 2 ≤𝑥< 3 0, 7 3 ≤𝑥< 4 1 𝑥≥4 ⎧ ⎨ ⎩ ⎪ ⎪ BENZETİM A P355875.G18994 07-04-2026 11:43:50 CEVAPLI"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 30, "tag": "Benzetim - 2025-2026 - Vize - Bahar", "text": "n denemedeki başarı sayısını modelleyen dağılım aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Normal"}, {"letter": "B", "text": "Gama"}, {"letter": "C", "text": "Negatif Binom"}, {"letter": "D", "text": "Binom"}, {"letter": "E", "text": "Beta"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 31, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Gözlemlerin düz bir doğru etrafında yayılım gösterip göstermediğine bakılarak verinin belirlenen dağılımdan gelip gelmediği hakkında sonuca varılan girdi analizi yöntemi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kolmogorov-Smirnov Testi"}, {"letter": "B", "text": "Ki-kare Testi"}, {"letter": "C", "text": "Q-Q grafikleri"}, {"letter": "D", "text": "P-P Grafikleri"}, {"letter": "E", "text": "Histogram"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 32, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdaki ikililerden hangisi Deterministik­Stokastik sistem ikilisine örnektir?", "options": [{"letter": "A", "text": "Fabrika-Borsa"}, {"letter": "B", "text": "Differansiyel denklem-Meteoroloji"}, {"letter": "C", "text": "Kalite kontrol-Stok kontrol"}, {"letter": "D", "text": "Üretim-İletişim"}, {"letter": "E", "text": "Hava yolları-Karayolları"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 33, "tag": "Benzetim - 2025-2026 - Vize - Bahar", "text": "{9, 2, 16, 7, 5, 18, 13, 9, 14, 8 , 9} Yukarıda verilen serinin medyanı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "9"}, {"letter": "B", "text": "10"}, {"letter": "C", "text": "7"}, {"letter": "D", "text": "11"}, {"letter": "E", "text": "8"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 34, "tag": "Benzetim - 2025-2026 - Vize - Bahar", "text": "Yukarıda verilen tabloya göre 4. müşteri sisteme kaçıncı dakikada gelmiştir?", "options": [{"letter": "A", "text": "9"}, {"letter": "B", "text": "18"}, {"letter": "C", "text": "15"}, {"letter": "D", "text": "7"}, {"letter": "E", "text": "11"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 35, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi simülasyon saatinin ilerletilmesinde kullanılan yaklaşımlardan biridir?", "options": [{"letter": "A", "text": "En geç olay zamanı"}, {"letter": "B", "text": "Sabit artışlarla zaman ilerletme"}, {"letter": "C", "text": "En yakın servis zamanı"}, {"letter": "D", "text": "Değişken artışlarla zaman ilerletme"}, {"letter": "E", "text": "En uzak olay zamanı"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 36, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Aşağıdakilerden hangisi darboğaz tanımına uygun bir örnektir?", "options": [{"letter": "A", "text": "Bir teknoloji ürününe çok fazla talep gelmesi"}, {"letter": "B", "text": "Bilgisayar donanımında ekran kartının görüntü kalitesini artması"}, {"letter": "C", "text": "Fabrikada depoda fazla hammadde bulunması"}, {"letter": "D", "text": "Bir konser alanının çok kalabalık olması"}, {"letter": "E", "text": "Üretim atölyelerinde ara stokların artması"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 37, "tag": "Benzetim - 2025-2026 - Vize - Bahar, BENZETİM 2024-2025 Vize", "text": "Müşterilerin toplam bekleme süresi 142 dakikadır ve sistemde 6 müşteri bulunmaktadır. Bu varsayıma göre müşterilerin sistemde ortalama bekleme süresi kaç dakikadır?", "options": [{"letter": "A", "text": "16,33"}, {"letter": "B", "text": "13,66"}, {"letter": "C", "text": "26,33"}, {"letter": "D", "text": "14,2"}, {"letter": "E", "text": "23,66"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 38, "tag": "BENZETİM 2023 FİNAL AUZEF 26 soru", "text": "Aşağıdaki şekilde gösterilen simülasyonun ısınma periyodu ne zaman(kaçıncı saat ) Sona ererek kararlı duruma ulaşmıştır.", "options": [{"letter": "A", "text": "20"}, {"letter": "B", "text": "50 (Doğru Cevap )"}, {"letter": "C", "text": "30"}, {"letter": "D", "text": "40"}, {"letter": "E", "text": "10"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 39, "tag": "BENZETİM 2023 FİNAL AUZEF 26 soru", "text": "Bir gazete bayiine gelen müşterilerin %20 si A, %25 i B, %15 i C ve %40 i D gazetesini almaktadır. Benzetim Modelinde CREATE Modeli ile üretilen Müşterilere gazete tersihlerini ASSIGN modülü İle DISC Fonksiyonu kullanılarak atanacaktır. Yukarıdaki Görseldeki “New Value” alanına aşağıdakilerden hangisi yazılmalıdır.", "options": [{"letter": "A", "text": "DISC(0.2,1,0.45,2,0.6,3,1,4="}, {"letter": "B", "text": "DISC(0.2,1,0.4,2,0.7,3,1,4)"}, {"letter": "C", "text": "DISC(0.2,1,0.2,20.15,3,0.4,4)"}, {"letter": "D", "text": "DISC(0.4,1,0.25,2,0.2,3,0.15,4)"}, {"letter": "E", "text": "DISC(0.15,1,0.20,2,0.25,3,0.4,4)"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 40, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Bir havaalanı sisteminin benzetim modeli aşağıdaki tanımlardan hangisi ile ifade edilmektedir?", "options": [{"letter": "A", "text": "Geçici durum simülasyonu"}, {"letter": "B", "text": "Kalıcı durum simülasyonu"}, {"letter": "C", "text": "Kararsız durum simülasyonu"}, {"letter": "D", "text": "Sonlu ufuklu simülasyon"}, {"letter": "E", "text": "Sonsuz ufuklu simülasyon"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 41, "tag": "BENZETİM 2024-2025 Bütünleme, BENZETİM 2024-2025 Final A Kitapçığı", "text": "Modelin geçerli olarak kabul edilip edilmeyeceğinin veya modelin iyileştirilip iyileştirilmeyeceğinin belirlenmesi, güven aralığının ima ettiği en iyi durum ve en kötü durum hatasına bağlıdır. Bir süpermarket benzetim çalışmasında kasa kuyruğunda bekleyen ortalama müşteri sayısı güven aralığı [9.1-10.5] olarak belirlenmiştir. Gözlemlenen sistemde kuyrukta bekleyen müşteri sayısı ortalama 11 müşteri olarak belirlenmiştir. Bu durum ε=1 için en iyi durum ve en kötü durum hatasına göre incelendiğinde aşağıdaki sonuçlardan hangisine ulaşılır?", "options": [{"letter": "A", "text": "En kötü durum hatası ≤ε ‘dur. Simülasyon modelini yeterince yakın ve geçerli kabul edilir."}, {"letter": "B", "text": "En kötü durum hatası ≤ε ‘dur, simülasyon modelini yeterince yakın ve geçerli kabul edilir."}, {"letter": "C", "text": "En iyi durum veya en kötü durum hatası >ε ‘dur. Bir sonuca varılıncaya kadar ek simülasyon çalıştırmalarına ihtiyaç vardır."}, {"letter": "D", "text": "En iyi durum hatası >ε ‘dur. Sistem ve model performansları arasındaki fark, en iyi durumda bile yeterince büyük olduğundan model iyileştirilmelidir."}, {"letter": "E", "text": "En iyi durum hatası ≤ε’dur ancak en kötü durum hatası >ε’dur. Bir sonuca varılıncaya kadar ek simülasyon çalıştırmalarına ihtiyaç vardır."}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 42, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi Arena şablon paneli değildir?", "options": [{"letter": "A", "text": "ADVANCED PROCESS"}, {"letter": "B", "text": "ADVANCED TRANSPORT"}, {"letter": "C", "text": "BASIC TRANSPORT"}, {"letter": "D", "text": "BASIC PROCESS"}, {"letter": "E", "text": "REPORTS"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 43, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Yukarıda gösterilen simülasyonun ısınma periyodu sona ererek kararlı duruma ulaşma zamanı (kaçıncı saatte) aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "10"}, {"letter": "B", "text": "50"}, {"letter": "C", "text": "40"}, {"letter": "D", "text": "30"}, {"letter": "E", "text": "20"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 44, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "RECORD modülündeki TYPE alanında, üretilecek olan istatistiklerin tipi belirlenir. Aşağıdakilerden hangisi modüle gelen varlıklar arasındaki zamanı kayıt altına alır?", "options": [{"letter": "A", "text": "Count"}, {"letter": "B", "text": "Time Between"}, {"letter": "C", "text": "Expression"}, {"letter": "D", "text": "Entity Statistics"}, {"letter": "E", "text": "Time Interval Kesikli X rassal değişkeninin dağılım fonksiyonu aşağıdaki gibidir. 𝐹(𝑥) = 0 𝑥< 1 0, 25 1 ≤𝑥< 2 0, 55 2 ≤𝑥< 3 0, 7 3 ≤𝑥< 4 1 𝑥≥4 ⎧ ⎨ ⎩ ⎪ ⎪ BENZETİM B P355543.G12128 23-06-2025 10:30:05 BENZETİM B P355543.G12128 23-06-2025 10:30:05 CEVAPLI CEVAPLI"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 45, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi PROCESS ANALYZER için tanımlanabilecek bir CONTROL değişkeni olamaz?", "options": [{"letter": "A", "text": "Müşterilerin bekleme süresi"}, {"letter": "B", "text": "Personel sayısı"}, {"letter": "C", "text": "Kaynak kapasiteleri"}, {"letter": "D", "text": "Replikasyon uzunluğu"}, {"letter": "E", "text": "Replikasyon sayısı"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Bir gazete bayiine gelen müşterilerin %20’si A, %25’i B, %15’i C ve %40’ı D gazetesini almaktadır. ARENA programı ile modellenen Benzetim modelinde CREATE modülü ile üretilen müşterilere gazete tercihleri ASSIGN modülü ile DISC fonksiyonu kullanarak atanacaktır. Doğru fonksiyon gösterimi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "DISC(0.2,1,0.4,2,0.7,3,1,4)"}, {"letter": "B", "text": "DISC(0.2,1,0.45,2,0.6,3,1,4)"}, {"letter": "C", "text": "DISC(0.2,1,0.2,2,0.15,3,0.4,4)"}, {"letter": "D", "text": "DISC(0.4,1,0.25,2,0.2,3,0.15,4)"}, {"letter": "E", "text": "DISC(0.15,1,0.20,2,0.25,3,0.4,4)"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 47, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Simülasyon yazılımını değerlendirirken ve seçerken aşağıdaki tavsiyelerden hangisi dikkate alınmamalıdır?", "options": [{"letter": "A", "text": "Tek bir konuya odaklanılmalıdır."}, {"letter": "B", "text": "Uygulama ve yetenek bütünlüğü önemlidir."}, {"letter": "C", "text": "Kullanıcılar, modeli haricî dillerde yazılmış kod veya rutinlere bağlayabilmelidir."}, {"letter": "D", "text": "Yürütme hızı önemlidir."}, {"letter": "E", "text": "Satıcıdan problemin basitleştirilmiş küçük bir versiyonunu çözmesi beklenebilir."}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 48, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Histogram ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Sınıf aralıklarının sayısı, gözlemlerin sayısına ve dağılım miktarına veya verilerdeki dağılıma bağlıdır."}, {"letter": "B", "text": "Örneklem büyüklüğünün kareköküne yaklaşık olarak eşit sınıf aralıkları belirlemek genellikle faydalı kabul edilir."}, {"letter": "C", "text": "Aralıklar çok genişse, histogram kaba veya bloklu olacaktır."}, {"letter": "D", "text": "Aralıklar çok darsa, histogram düzensiz olur ve verileri yumuşatmaz."}, {"letter": "E", "text": "Sürekli verilerin histogramı, dağılımın olasılık kütle fonksiyonuna karşılık gelir."}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 49, "tag": "BENZETİM 2024-2025 Bütünleme", "text": "Verilen görseller aşağıdaki hangi iki dağılım ailesine aittir?", "options": [{"letter": "A", "text": "Geometrik-Kesikli Düzgün"}, {"letter": "B", "text": "Üstel-Düzgün"}, {"letter": "C", "text": "Üstel-Kesikli Düzgün"}, {"letter": "D", "text": "Geometrik-Düzgün"}, {"letter": "E", "text": "Binom-Üstel"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 50, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "Bir üretim tesisinin benzetim modelinde makine kullanımları için arızalara kadar geçen süreyi modelleyen dağılım aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Normal"}, {"letter": "B", "text": "Weibull"}, {"letter": "C", "text": "Üçgen"}, {"letter": "D", "text": "Negatif Binom"}, {"letter": "E", "text": "Ampirik"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 51, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "Aşağıdaki modüllerden hangisi bir taşıyıcı birimin durumunu devre dışı olarak değiştirmek için kullanılır?", "options": [{"letter": "A", "text": "STORE"}, {"letter": "B", "text": "HALT"}, {"letter": "C", "text": "ACCESS"}, {"letter": "D", "text": "UNSTORE"}, {"letter": "E", "text": "HOLD"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 52, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "Kararlı durum modellerinin doğal sonlandırma süreleri olmadığına göre replikasyon uzunluğu belirlenme zamanı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İstenen sonuçlar alındığında"}, {"letter": "B", "text": "Sistemde belli bir miktarda varlık olduğunda"}, {"letter": "C", "text": "İstenmeyen sonuçlar alınmaya başlandığında"}, {"letter": "D", "text": "Önceden belirlenmiş birkaç ardışık zaman artımından sonra"}, {"letter": "E", "text": "İlgilenilen istatistikler sabitlendiğinde"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 53, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "müşteri sistemden ayrılma zamanı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "20 dk"}, {"letter": "B", "text": "16 dk"}, {"letter": "C", "text": "6 dk"}, {"letter": "D", "text": "12 dk"}, {"letter": "E", "text": "9 dk"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 54, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "Tek bir uzun çalışmanın birden çok çoğaltma çalıştırmaya tercih edilebilme sebebi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sonuçlarda bağımsızlık sağlar."}, {"letter": "B", "text": "Tahmini ortalama değer daha doğrudur."}, {"letter": "C", "text": "Güven aralıkları daha kolay hesaplanabilir."}, {"letter": "D", "text": "Isınma süresinin yalnızca bir kez çalıştırılması gerekir, bu da deneyleri çalıştırmak için gereken süreyi azaltır."}, {"letter": "E", "text": "Standart sapma değeri daha yaklaşık sonuçlar verir."}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 55, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "OUTPUT ANALYZER aracı ile farklı senaryolarda çalıştırılan modellerin ortalamalarının karşılaştırılması için aşağıdakilerden hangisi kullanılır?", "options": [{"letter": "A", "text": "Correlogram"}, {"letter": "B", "text": "Compare Variances"}, {"letter": "C", "text": "Conf.Interval on Mean"}, {"letter": "D", "text": "Compare Means"}, {"letter": "E", "text": "One-Way ANOVA"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 56, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "ARENA çalışma sonuçları raporlarından Resources (Kaynaklar) raporunda aşağıdakilerden hangisi bir kaynağın meşgul birimlerinin sayısını ifade eder?", "options": [{"letter": "A", "text": "TOTAL NUMBER SEIZED"}, {"letter": "B", "text": "INSTANTANEOUS UTILIZATION"}, {"letter": "C", "text": "NUMBER SCHEDULED"}, {"letter": "D", "text": "SCHEDULED UTILIZATION"}, {"letter": "E", "text": "NUMBER BUSY"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 57, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "Bir süpermarket sisteminde kasada işlem yapan müşteriler için benzetim çalışması yapılmıştır. Müşterilerin gelişleri arası süre sabit 10 dk olarak belirlenmiştir. Yukarıdaki görselde sarı renkli işaretlenmiş kutucuklar aşağıdaki seçeneklerin hangisinde doğru verilmiştir?", "options": [{"letter": "A", "text": "Constant -10 – Minutes"}, {"letter": "B", "text": "Constant -10 – Hours"}, {"letter": "C", "text": "Random -10 - Hours"}, {"letter": "D", "text": "Random -10 - Minutes"}, {"letter": "E", "text": "Expression-10 – Minutes"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 58, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "Bir acil servise saatte ortalama 4 hasta gelmektedir. Her bir hastaya ortalama müdahale süresi 12 dakikadır. Gelişler arası süre ve servis süresi üstel dağılıma uymaktadır. Bu durumda hastaların sistemde geçirdiği ortalama süre aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "80 dk"}, {"letter": "B", "text": "30 dk"}, {"letter": "C", "text": "40 dk"}, {"letter": "D", "text": "20 dk"}, {"letter": "E", "text": "60 dk"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 59, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "Aşağıdaki simülasyon yazılımlarından hangisi 1993 yılında ilk defa piyasaya sürülmüştür?", "options": [{"letter": "A", "text": "EXTEND"}, {"letter": "B", "text": "AUTOMOD"}, {"letter": "C", "text": "ARENA"}, {"letter": "D", "text": "SIMUL8"}, {"letter": "E", "text": "PROMODEL"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 60, "tag": "BENZETİM 2024-2025 Final A Kitapçığı", "text": "En düşük işlem süresine sahip varlığın ilk işlem görmesini sağlayacak kuyruk disiplini aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "FIFO"}, {"letter": "B", "text": "LIFO"}, {"letter": "C", "text": "PR"}, {"letter": "D", "text": "Highest Attribute Value (first)"}, {"letter": "E", "text": "Lowest Attribute Value (first)"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 61, "tag": "BENZETİM 2024-2025 Vize", "text": "𝑥0= 4283 başlangıç sayısı olsun. Orta kare yöntemi ile𝑥1 değeri aşağıdaki hangi seçenekte doğru verilmiştir?", "options": [{"letter": "A", "text": "8344"}, {"letter": "B", "text": "1834"}, {"letter": "C", "text": "4089"}, {"letter": "D", "text": "4408"}, {"letter": "E", "text": "3440"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 62, "tag": "BENZETİM 2024-2025 Vize", "text": "Aşağıdaki sistem – durum değişkenleri eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Banka - Müşteri hesap meblağları"}, {"letter": "B", "text": "Hızlı tren - Bekleyen yolcu sayısı"}, {"letter": "C", "text": "Okul - Mezun olan öğrenci sayısı"}, {"letter": "D", "text": "Fabrika - Arızalı makine oranı"}, {"letter": "E", "text": "Stok - Gecikmiş talep miktarı"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 63, "tag": "BENZETİM 2024-2025 Vize", "text": "Aşağıdakilerden hangisi örnek benzetim yazılımlarından değildir?", "options": [{"letter": "A", "text": "Flexsim"}, {"letter": "B", "text": "AutoCAD"}, {"letter": "C", "text": "Arena"}, {"letter": "D", "text": "ProModel"}, {"letter": "E", "text": "WITNESS"}], "correct": "B", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 64, "tag": "BENZETİM 2024-2025 Vize", "text": "Tek taraflı hipotez testi için sıfır hipotezi işareti aşağıdakilerden hangisi olabilir?", "options": [{"letter": "A", "text": "= veya <"}, {"letter": "B", "text": ">"}, {"letter": "C", "text": "= veya >"}, {"letter": "D", "text": "= veya ≥"}, {"letter": "E", "text": "≠"}], "correct": "D", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 65, "tag": "BENZETİM 2024-2025 Vize", "text": "Parametreleri maksimum 8, en olası 5 ve minimum 2 olan üçgensel dağılım için uygulanan ters dönüşüm formülüne göre R1=0,6 için Xi değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "5,29"}, {"letter": "B", "text": "4,68"}, {"letter": "C", "text": "4,71"}, {"letter": "D", "text": "5,60"}, {"letter": "E", "text": "5,32"}], "correct": "E", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 66, "tag": "BENZETİM 2024-2025 Vize", "text": "Müşteri gelişlerinin ortalaması 9 dk, standart sapması 3 dk olan normal dağılıma uyduğu belirlenmiştir. Rassal sayı tablosundan RS= 0,5 seçildiğinde müşteri geliş süresi kaç dakikadır?", "options": [{"letter": "A", "text": "10,5"}, {"letter": "B", "text": "9,5"}, {"letter": "C", "text": "10"}, {"letter": "D", "text": "9"}, {"letter": "E", "text": "11 BENZETİM A P355543.G9374 17-03-2025 08:58:20 BENZETİM A P355543.G9374 17-03-2025 08:58:20 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 67, "tag": "BENZETİM 2024-2025 Vize", "text": "Bağımsız olaylar arasındaki zamanı veya hafızasız bir işlem süresini modelleyen dağılım aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Normal"}, {"letter": "B", "text": "Poisson"}, {"letter": "C", "text": "Üstel"}, {"letter": "D", "text": "Düzgün"}, {"letter": "E", "text": "Weibull"}], "correct": "C", "explanation": "AUZEF Benzetim müfredatı uyarınca doğru seçenek C'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Yönetimi ve Bulut Bilişim (AYBS8008) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 4. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Sistem Yönetimi ve Bulut Bilişim (AYBS8008) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">4. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Sistem Yönetimi ve Bulut Bilişim (AYBS8008) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Sistem Yönetimi ve Bulut Bilişim (AYBS8008) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Sistem Yönetimi ve Bulut Bilişim (AYBS8008) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>248 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>4. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">248</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Sistem_Yonetimi_ve_Bulut_Bilisim_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (248)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">248</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Sistem_Yonetimi_ve_Bulut_Bilisim_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2022-2023 Final, 2023-2024 Bütünleme", "text": "İşletim sistemi güvenliğiyle ilgili işlevleri gerçekleştiren özel ayrıcalıklara sahip uygulamalara verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Güvenlikli"}, {"letter": "B", "text": "Garantili"}, {"letter": "C", "text": "Karmaşık"}, {"letter": "D", "text": "Güvenilir"}, {"letter": "E", "text": "Kalifiye"}], "correct": "D", "explanation": "ACIKLAMA::Güvenilir (trusted) uygulamalar, sistemin güvenlik işlevlerini yerine getirmek için özel ayrıcalıklara sahiptir."}, {"num": 2, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "I. Bir imajdan bir eşgörünümü önyükleme II. Ekran konsolu çıktısı III.Bir imajın kopyalanması Bir kullanıcı yukarıda belirtilen durumların hangisi veya hangilerinde bir dizi SOAP mesajı kullanarak EC2 eşgörünümlerini işleyebilir?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "II ve III"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 3, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2023-2024 Bütünleme", "text": "UBUNTU aşağıdaki LINUX dağıtımlarından hangisine dayalı bir işletim sistemidir?", "options": [{"letter": "A", "text": "Arch"}, {"letter": "B", "text": "Manjaro"}, {"letter": "C", "text": "Debian"}, {"letter": "D", "text": "Fedora"}, {"letter": "E", "text": "Solus"}], "correct": "C", "explanation": "ACIKLAMA::Ubuntu, Debian tabanlı bir Linux dağıtımıdır (apt/dpkg paket sistemini kullanır)."}, {"num": 4, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2022-2023 Final", "text": "Bir ulus devletin zarar verme veya kesintiye uğratma amacıyla başka bir ulusun bilgisayarlarına veya ağlarına sızmasına yönelik eylemlerine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Siber Sınıflama"}, {"letter": "B", "text": "Siber Dalaşma"}, {"letter": "C", "text": "Siber Donanma"}, {"letter": "D", "text": "Siber Karşılaşma"}, {"letter": "E", "text": "Siber Savaş"}], "correct": "E", "explanation": "ACIKLAMA::Devlet destekli, başka bir ulusa zarar/kesinti amaçlı bilgisayar saldırıları siber savaş (cyber warfare) olarak adlandırılır."}, {"num": 5, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "Xen güvenlik açıklarının analizi yapıldığında saldırıların büyük çoğunluğu aşağıdakilerden hangi bileşene yapılmaktadır?", "options": [{"letter": "A", "text": "Yardımcı sanal makinenin hizmet bileşeni"}, {"letter": "B", "text": "Yardımcı sanal makinenin güvenlik bileşeni"}, {"letter": "C", "text": "Kontrol sanal makinesinin hizmet bileşeni"}, {"letter": "D", "text": "Kontrol işletim sisteminin hizmet bileşeni"}, {"letter": "E", "text": "Kontrol sanal makinesinin güvenlik bileşeni"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 6, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2022-2023 Final, 2023-2024 Bütünleme", "text": "“Toplum giderek bilgi altyapısına ........... hale geldikçe, bilgi işlem ve iletişim sistemlerinin güvenliği yeni bir aciliyet kazanıyor.” Yukarıdaki cümlede verilen boşluğa gelebilecek kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sorumlu"}, {"letter": "B", "text": "Öngörülü"}, {"letter": "C", "text": "Bağımlı"}, {"letter": "D", "text": "Saygılı"}, {"letter": "E", "text": "Karmaşık"}], "correct": "C", "explanation": "ACIKLAMA::Toplumun bilgi altyapısına bağımlılığı arttıkça güvenlik daha kritik hale gelir."}, {"num": 7, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "I. Hizmet reddi (DoS) saldırıları olasılığını ortaya çıkarmıştır. II. Uygulama katmanı protokollerini anlar. III. İzinsiz giriş tespit sistemlerini destekler. Üçüncü nesil güvenlik duvarları için yukarıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "I ve II"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 8, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2023-2024 Bütünleme", "text": "Aşağıdakilerden hangisi bir transistörü açıp kapatmak için gereken voltajdır?", "options": [{"letter": "A", "text": "Zener Voltajı"}, {"letter": "B", "text": "Göreceli Voltaj"}, {"letter": "C", "text": "Paralel Voltaj"}, {"letter": "D", "text": "Eşik Voltaj"}, {"letter": "E", "text": "Kademeli Voltaj"}], "correct": "D", "explanation": "ACIKLAMA::Transistörün iletime geçmesi için gereken minimum kapı gerilimi eşik voltajıdır (threshold voltage)."}, {"num": 9, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2023-2024 Bütünleme", "text": "I. Xen tarafından sağlanan işlevselliği sürdürmek. II. Ayrıcalıkların sıkı kontrolünü sürdürmek. III. Kalıcı bileşenler oluşturmak. Yukarıdakilerden hangisi XOAR'ın tasarım hedeflerindendir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "Yalnız III"}], "correct": "A", "explanation": "ACIKLAMA::XOAR, Xen işlevselliğini korurken ayrıcalıkları sıkı denetler; amacı kalıcı bileşenleri artırmak değil, tam tersine bileşenleri geçici (ephemeral) yaparak saldırı yüzeyini azaltmaktır."}, {"num": 10, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "Bir MPEG dosyasının şarkıcı adı, albüm adı gibi bilgilere verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "meta veri"}, {"letter": "B", "text": "hepta veri"}, {"letter": "C", "text": "hexa veri"}, {"letter": "D", "text": "kota veri"}, {"letter": "E", "text": "ata veri"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2022-2023 Final, 2023-2024 Bütünleme", "text": "Belirli bir s3 kovasındaki tüm nesnelerin anahtarlarını görüntülemek için aşağıdakilerden hangisi kullanılır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "Objectpanel listing = s3.panelObjects(\"bucket_name\"); ObjectSummary show = s3.sumObjects(\"bucket_name\"); Objectshowing show = s3.showObjects(\"bucket_name\"); ObjectListing listing = s3.listObjects(\"bucket_name\"); ObjectSummary sum = s3.summaryObjects(\"bucket_name\"); SİSTEM YÖNETİMİ VE BULUT BİLİŞİM B 1 P355543.G2746 26-06-2024 10:39:34 CEVAPLI"}], "correct": "D", "explanation": "ACIKLAMA::AWS SDK'da s3.listObjects(\\\"bucket_name\\\") çağrısı, kovadaki nesne anahtarlarını içeren bir ObjectListing döndürür."}, {"num": 12, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "I. Stenografik Kullanım İlkeleri II. Kimlik Doğrulama III. Erişim Denetimi Yukarıdakilerden hangisi ya da hangileri zorunlu işletim sistemi güvenliğinin unsurlarındandır?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "II ve III"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 13, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2023 Vize, 2022-2023 Vize, 2023-2024 Bütünleme", "text": "Adil Kuyruklama algoritmasının kısaltması aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "HTB"}, {"letter": "B", "text": "SFQ"}, {"letter": "C", "text": "CBQ"}, {"letter": "D", "text": "WSC"}, {"letter": "E", "text": "FQ"}], "correct": "E", "explanation": "ACIKLAMA::Adil Kuyruklama = Fair Queuing = FQ."}, {"num": 14, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "Mikroskobik bir sistemin termodinamik entropisi S=kB ln Ω dir. Buradaki Ω aşağıdakilerden hangisi olarak bilinmektedir?", "options": [{"letter": "A", "text": "Mikrofaj ortalama"}, {"letter": "B", "text": "Makro durum sayısı"}, {"letter": "C", "text": "Median durum sayısı"}, {"letter": "D", "text": "Median ortalama"}, {"letter": "E", "text": "Mikro durum sayısı"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 15, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2023-2024 Bütünleme", "text": "Güvenlik duvarlarında hedef/kaynak port numarasına dayalı filtreleme yapılırken aşağıdaki hangi katmanda işlem yapılmaktadır?", "options": [{"letter": "A", "text": "Fiziksel"}, {"letter": "B", "text": "MAC"}, {"letter": "C", "text": "Ağ"}, {"letter": "D", "text": "Taşıma"}, {"letter": "E", "text": "Uygulama"}], "correct": "D", "explanation": "ACIKLAMA::Port numaraları taşıma (transport) katmanına (TCP/UDP) aittir; port bazlı filtreleme bu katmanda yapılır."}, {"num": 16, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "2012 yılına kadar BT kurumsal altyapısı için harcanan bütçenin aşağıdaki yüzde değerlerinden hangisine kadar enerjiye ayrılacağı planlanıyordu?", "options": [{"letter": "A", "text": "%40"}, {"letter": "B", "text": "%50"}, {"letter": "C", "text": "%70"}, {"letter": "D", "text": "%60"}, {"letter": "E", "text": "%65"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 17, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme, 2022-2023 Final, 2023-2024 Bütünleme", "text": "Bağımsız olarak oluşturulmuş ve test edilmiş bir dizi bileşenden karmaşık bir sistem oluşturma tekniğine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hiyerarşi"}, {"letter": "B", "text": "Modülerlik"}, {"letter": "C", "text": "Erişimsellik"}, {"letter": "D", "text": "Görecelik"}, {"letter": "E", "text": "Katmanlama"}], "correct": "B", "explanation": "ACIKLAMA::Modülerlik; bağımsız geliştirilip test edilen modüllerin birleştirilmesiyle karmaşık sistem kurma yaklaşımıdır."}, {"num": 18, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "Aşağıdakilerden hangisi bir sanal makine değildir?", "options": [{"letter": "A", "text": "Klein"}, {"letter": "B", "text": "Xen"}, {"letter": "C", "text": "Parallels"}, {"letter": "D", "text": "Virtual Box"}, {"letter": "E", "text": "Hyper-V"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 19, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "Kaynaklar için birbirleriyle rekabet eden süreçler veya iş parçacıkları diğer işlemler veya iş parçacıkları tarafından tutulur veya ek kaynaklar için beklemeye zorlanır ise aşağıdakilerden hangisi gerçekleşir?", "options": [{"letter": "A", "text": "Paralel döngü"}, {"letter": "B", "text": "Ölümcül kilitlenme"}, {"letter": "C", "text": "Yarış koşulu"}, {"letter": "D", "text": "Önbırakma"}, {"letter": "E", "text": "Dairesel bekleme"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 20, "tag": "Sistem Yönetimi Bulut Bilişim 2024 Bütünleme", "text": "I. Bileşenlerin yapısı II. Bileşenlerin sayısı III. Bileşenlerin arasındaki etkileşim yollarının sayısı Yukarıdakilerden hangisi ya da hangileri ile bir sistem simüle edildiğinde simülasyonun karmaşıklığı artar?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "I ve II SİSTEM YÖNETİMİ VE BULUT BİLİŞİM B 2 P355543.G2746 26-06-2024 10:39:34 CEVAPLI"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 21, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme, 2024-2025 Bütünleme", "text": "Bulut bilişimde karşılaşılan zorluklardan biri olan \"uyumluluk\" kavramı ile aşağıdakilerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "Yasal ve düzenleyici gereksinimlere uyum sağlama ihtiyacı"}, {"letter": "B", "text": "Verilerin yalnızca merkezi sunucularda işlenmesi"}, {"letter": "C", "text": "Verilerin manuel olarak işlenmesi"}, {"letter": "D", "text": "Bulut hizmetlerinin performansını düşürmesi"}, {"letter": "E", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılması"}], "correct": "A", "explanation": "ACIKLAMA::Bulutta uyumluluk (compliance), verilerin ve hizmetlerin yasal/düzenleyici gerekliliklere (KVKK, GDPR, HIPAA vb.) uygun tutulması ihtiyacını ifade eder."}, {"num": 22, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdakilerden hangisi bilgi işlem kaynaklarından biri değildir?", "options": [{"letter": "A", "text": "Yazıcı"}, {"letter": "B", "text": "Depolama"}, {"letter": "C", "text": "CPU"}, {"letter": "D", "text": "Bellek"}, {"letter": "E", "text": "Ağ"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 23, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, SisYonBulutBilisim Final 31052025, 2025-2026 Bütünleme", "text": "Yazılım test türlerinden biri olan \"yük testi\" ile aşağıdaki ifadelerden hangisi belirtilir?", "options": [{"letter": "A", "text": "Yazılımın işlevselliğini doğrulamayı"}, {"letter": "B", "text": "Yazılımın farklı bileşenlerinin birlikte çalışmasını test etmeyi"}, {"letter": "C", "text": "Yazılımın güvenlik açıklarını test etmeyi"}, {"letter": "D", "text": "Yazılımın en küçük birimlerini test etmeyi"}, {"letter": "E", "text": "Yazılımın yüksek kullanıcı trafiği veya veri yükü altında performansını test etmeyi"}], "correct": "E", "explanation": "ACIKLAMA::Yük testi (load testing), sistemin yüksek kullanıcı/veri yükü altındaki performans ve kararlılığını ölçer."}, {"num": 24, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme, 2024-2025 Bütünleme", "text": "IoT (Nesnelerin İnterneti) cihazlarının bulut bilişimle entegrasyonunun amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "IoT cihazlarının yalnızca yerel cihazlarda çalışmasını sağlamak."}, {"letter": "B", "text": "IoT cihazlarının fiziksel sunuculara bağlanmasını sağlamak."}, {"letter": "C", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlamak."}, {"letter": "D", "text": "Gerçek zamanlı veri işleme ve analiz imkanı sunmak."}, {"letter": "E", "text": "IoT cihazlarının performansını düşünmek."}], "correct": "D", "explanation": "ACIKLAMA::IoT-bulut entegrasyonu, cihaz verilerinin merkezî bulutta gerçek zamanlı işlenip analiz edilmesini sağlar."}, {"num": 25, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme, 2024-2025 Bütünleme", "text": "Dinamik ölçeklendirme yöntemlerinden biri olan \"otomatik ölçeklendirme\" kavramı ile aşağıdakilerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "Uygulamanın kaynaklarının talebe göre otomatik olarak artırılıp azaltılması"}, {"letter": "B", "text": "Uygulamanın performansının düşürülmesi"}, {"letter": "C", "text": "Uygulamanın yalnızca manuel olarak güncellenmesi"}, {"letter": "D", "text": "Uygulamanın yalnızca sabit kaynaklarla çalıştırılması"}, {"letter": "E", "text": "Verilerin manuel olarak işlenmesi"}], "correct": "A", "explanation": "ACIKLAMA::Otomatik ölçeklendirme (auto-scaling), iş yüküne göre kaynakları otomatik büyütüp küçültür."}, {"num": 26, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, SisYonBulutBilisim Final 31052025", "text": "Çoklu bulut stratejileri ile aşağıdaki ifadelerden hangisi belirtilir?", "options": [{"letter": "A", "text": "Farklı bulut sağlayıcıları arasında iş yüklerinin dağıtılması"}, {"letter": "B", "text": "Bulut hizmetlerinin manuel olarak güncellenmesi"}, {"letter": "C", "text": "Bulut hizmetlerinin yalnızca özel bulutlarda çalıştırılması"}, {"letter": "D", "text": "Tüm iş yüklerinin tek bir bulut sağlayıcısında çalıştırılması"}, {"letter": "E", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılması"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 27, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar", "text": "Yönlendiricilerin (routers) temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kullanıcıların ağ erişimini engellemek"}, {"letter": "B", "text": "Yalnızca ağ kesintilerini önlemek"}, {"letter": "C", "text": "Veri trafiğini doğru hedeflere yönlendirmek"}, {"letter": "D", "text": "Depolama alanlarını artırmak"}, {"letter": "E", "text": "Veri paketlerini şifrelemek"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 28, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme", "text": "Güvenlik politikalarından biri olan \"erişim kontrolü\" ifadesinin faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kullanıcıların kimliklerini doğrulamasını sağlar."}, {"letter": "B", "text": "Verilerin test ortamında kullanılmasını sağlar."}, {"letter": "C", "text": "Verilerin düzenli olarak yedeklenmesini"}, {"letter": "D", "text": "Yetkisiz erişimi önlemek için kaynaklara erişim politikalarını düzenler."}, {"letter": "E", "text": "Verilerin şifrelenmesini"}], "correct": "D", "explanation": "ACIKLAMA::Erişim kontrolü, hangi kullanıcının hangi kaynağa erişebileceğini politikalarla düzenleyerek yetkisiz erişimi engeller. (Kimlik doğrulama ayrı bir adımdır.)"}, {"num": 29, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme, 2024-2025 Bütünleme", "text": "Karmaşık sistemlerde kullanılan \"yük dengeleme\" stratejisinin amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İş yükünün manuel olarak işlenmesi"}, {"letter": "B", "text": "İş yükünün yalnızca öncelik sırasına göre işlenmesini"}, {"letter": "C", "text": "İş yükünün yalnızca bir kaynağa yönlendirilmesi"}, {"letter": "D", "text": "İş yükünün sırayla işlenmesi"}, {"letter": "E", "text": "İş yükünün sistem kaynakları arasında dengeli bir şekilde dağıtılması"}], "correct": "E", "explanation": "ACIKLAMA::Yük dengeleme, gelen istekleri birden çok kaynağa dengeli dağıtarak performansı ve erişilebilirliği artırır."}, {"num": 30, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025 Vize, 2025-2026 Bütünleme", "text": "Bulut altyapısında sunucuların temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yalnızca veri depolamak"}, {"letter": "B", "text": "İnternet bağlantısını yönetmek"}, {"letter": "C", "text": "Uygulamaların çalıştırılmasını sağlamak"}, {"letter": "D", "text": "Yedekleme işlemlerini gerçekleştirmek"}, {"letter": "E", "text": "Güvenlik duvarı işlevi görmek"}], "correct": "C", "explanation": "ACIKLAMA::Sunucular, uygulama ve hizmetleri barındırıp çalıştıran temel bilgi işlem birimleridir."}, {"num": 31, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, SisYonBulutBilisim Final 31052025", "text": "Güvenlik Otomasyonu ve Orkestrasyonu (SOAR) sistemlerinin temel özelliklerinden biri olan \"tehdit istihbaratı entegrasyonu\" faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Güvenlik olaylarının manuel olarak yönetilmesi"}, {"letter": "B", "text": "Fiziksel sunucuların performansını artırması"}, {"letter": "C", "text": "Verilerin düzenli olarak yedeklenmesi"}, {"letter": "D", "text": "Kullanıcıların erişim yetkilerinin kaldırılması"}, {"letter": "E", "text": "Dış kaynaklardan elde edilen tehdit istihbaratının güvenlik süreçlerine entegre edilmesi"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 32, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, SisYonBulutBilisim Final 31052025, 2025-2026 Bütünleme", "text": "Microsoft Office 365'in video konferans ve işbirliği aracı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "OneDrive"}, {"letter": "B", "text": "Outlook"}, {"letter": "C", "text": "Excel"}, {"letter": "D", "text": "Word"}, {"letter": "E", "text": "Teams SİSTEM YÖNETİMİ VE BULUT BİLİŞİM B P787296.G20471 17-06-2026 20:03:29 CEVAPLI"}], "correct": "E", "explanation": "ACIKLAMA::Microsoft Teams, Office 365'in video konferans, sohbet ve işbirliği aracıdır."}, {"num": 33, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme, 2024-2025 Bütünleme", "text": "Sürekli entegrasyon (CI) kavramı ile aşağıdakilerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "Verilerin yalnızca manuel olarak işlenmesi"}, {"letter": "B", "text": "Verilerin yalnızca fiziksel sunucularda saklanması"}, {"letter": "C", "text": "Kod değişikliklerinin sürekli olarak entegre edilmesi"}, {"letter": "D", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışması"}, {"letter": "E", "text": "Bulut hizmetlerinin performansını düşürmesi"}], "correct": "C", "explanation": "ACIKLAMA::CI (Continuous Integration), geliştiricilerin kod değişikliklerini sık sık ortak dala birleştirip otomatik test etmesidir."}, {"num": 34, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar", "text": "Sanallaştırmanın aşağıdaki avantajlardan hangisi, her sanal makinenin bağımsız çalışmasını ifade eder?", "options": [{"letter": "A", "text": "Maliyet tasarrufu"}, {"letter": "B", "text": "İzolasyon"}, {"letter": "C", "text": "Esneklik"}, {"letter": "D", "text": "Yedekleme"}, {"letter": "E", "text": "Kaynak verimliliği"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 35, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, SisYonBulutBilisim Final 31052025", "text": "Büyük veri analitiğinde kullanılan \"veri gölü\" ile aşağıdaki ifadelerden hangisi belirtilir?", "options": [{"letter": "A", "text": "Verilerin manuel olarak işlenmesini sağlayan bir sistem"}, {"letter": "B", "text": "Verilerin şifrelenmeden paylaşılması"}, {"letter": "C", "text": "Verilerin yalnızca yerel cihazlarda saklanması"}, {"letter": "D", "text": "Yapılandırılmış, yarı yapılandırılmış ve yapılandırılmamış verilerin ham halde saklandığı merkezi bir depo"}, {"letter": "E", "text": "Yalnızca yapılandırılmış verilerin saklandığı bir veritabanı"}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 36, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar", "text": "Test otomasyonu araçlarından biri olan \"Selenium\" aşağıdaki amaçlarıdan hangisi için kullanılır?", "options": [{"letter": "A", "text": "Yazılımın manuel olarak test edilmesi"}, {"letter": "B", "text": "Web uygulamalarının test edilmesi"}, {"letter": "C", "text": "Mobil uygulamaların test edilmesi"}, {"letter": "D", "text": "Java tabanlı birim testlerinin yapılması"}, {"letter": "E", "text": "Yük testlerinin gerçekleştirilmesi"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 37, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, SisYonBulutBilisim Final 31052025", "text": "Google Cloud Console'un (GCP) \"güvenlik\" özelliği faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "GCP hizmetlerinin performansını artırır"}, {"letter": "B", "text": "GCP ortamında güvenlik politikalarının uygulanmasını ve izlenmesini sağlar"}, {"letter": "C", "text": "GCP hizmetlerini manuel olarak devre dışı bırakır"}, {"letter": "D", "text": "GCP hizmetlerinin yalnızca yedeklenmesini sağlar"}, {"letter": "E", "text": "GCP hizmetlerinin maliyetlerini artırır"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 38, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2024-2025 Bütünleme", "text": "Bulut yönetim sistemlerinin sağladığı faydalardan biri olan \"maliyet tasarrufu\" elde edilme biçimi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yedekleme süreçlerinin durdurulması"}, {"letter": "B", "text": "Kaynakların verimli kullanımı ve maliyetlerin düşürülmesi"}, {"letter": "C", "text": "Performans izleme araçlarının devre dışı bırakılması"}, {"letter": "D", "text": "Bulut hizmetlerinin manuel olarak yönetilmesi"}, {"letter": "E", "text": "Güvenlik politikalarının uygulanmaması"}], "correct": "B", "explanation": "ACIKLAMA::Bulut yönetimi, kaynakları talebe göre verimli kullandırıp atıl kaynağı kapatarak (kullandıkça öde) maliyeti düşürür. Diğer şıklar güvenlik/sürekliliği bozan yanlış yollardır."}, {"num": 39, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme, 2024-2025 Bütünleme", "text": "Bulut ortamında karmaşık sistemlerin yönetiminde kullanılan \"dinamik ölçeklendirme\" stratejisinin amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sistemlerin yalnızca güvenlik politikalarını uygulaması"}, {"letter": "B", "text": "Sistem bileşenlerinin manuel olarak yapılandırılması"}, {"letter": "C", "text": "Sistem performansının izlenmesini ve raporlanması"}, {"letter": "D", "text": "Sistem kaynaklarının talebe göre otomatik olarak ayarlanması"}, {"letter": "E", "text": "Sistem kaynaklarının sabit bir şekilde tahsis edilmesi"}], "correct": "D", "explanation": "ACIKLAMA::Dinamik ölçeklendirme, kaynakları anlık talebe göre otomatik artırıp azaltarak hem performans hem maliyet dengesini kurar."}, {"num": 40, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme", "text": "Tehdit istihbaratı kaynaklarından biri olan \"ticari istihbarat hizmetleri\" ne sağlar?", "options": [{"letter": "A", "text": "Kullanıcıların kimlik bilgilerini doğrular."}, {"letter": "B", "text": "Verilerin düzenli olarak yedeklenmesini sağlar."}, {"letter": "C", "text": "Güvenlik firmaları tarafından sağlanan profesyonel tehdit istihbaratı hizmetlerini kapsar."}, {"letter": "D", "text": "İnternetten ücretsiz olarak tehdit bilgisi sağlar."}, {"letter": "E", "text": "Organizasyon içindeki tehditlerden bilgi toplar."}], "correct": "C", "explanation": "ACIKLAMA::Ticari tehdit istihbaratı, güvenlik firmalarının ücretli/profesyonel olarak sunduğu istihbarat beslemelerini ifade eder."}, {"num": 41, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Aşağıdaki araçlardan hangisi açık kaynaklı bir yük dengeleme ve ters proxy sunucusudur?", "options": [{"letter": "A", "text": "HAProxy"}, {"letter": "B", "text": "Google Cloud Load Balancing"}, {"letter": "C", "text": "NGINX"}, {"letter": "D", "text": "Azure Load Balancer"}, {"letter": "E", "text": "AWS Elastic Load Balancing"}], "correct": "C", "explanation": "ACIKLAMA::Cevap anahtarı NGINX'i işaretlemiştir; NGINX açık kaynaklı bir ters proxy ve yük dengeleyicidir."}, {"num": 42, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Alt ağlar (subnets) ne işe yarar?", "options": [{"letter": "A", "text": "Fiziksel sunucuları birleştirir."}, {"letter": "B", "text": "Sanal ağları daha küçük bölümlere ayırır."}, {"letter": "C", "text": "Ağ trafiğini şifreler."}, {"letter": "D", "text": "Kullanıcıların ağ erişimini sınırlar."}, {"letter": "E", "text": "Yalnızca veri depolama işlemlerini optimize eder."}], "correct": "B", "explanation": "ACIKLAMA::Subnet, bir ağı daha küçük mantıksal bölümlere ayırarak yönetim, güvenlik ve trafik izolasyonu sağlar."}, {"num": 43, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Bulut bilişimin temel özelliklerinden biri olan \"isteğe bağlı self­servis\" neyi ifade eder?", "options": [{"letter": "A", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını"}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını"}, {"letter": "C", "text": "Bulut hizmetlerinin performansını düşürmesini"}, {"letter": "D", "text": "Kullanıcıların ihtiyaç duydukları kaynakları manuel olarak talep etmesini"}, {"letter": "E", "text": "Kullanıcıların ihtiyaç duydukları kaynakları otomatik olarak talep edebilmesini"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 44, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Performans izleme ve yönetim araçlarından biri olan Dynatrace'in temel işlevi nedir?", "options": [{"letter": "A", "text": "Konteynerlerin dağıtımını yönetmek"}, {"letter": "B", "text": "Veri tabanı sorgularını optimize etmek"}, {"letter": "C", "text": "Uygulama performansını izlemek ve yönetmek"}, {"letter": "D", "text": "Sunucusuz bilgi işlem sağlamak"}, {"letter": "E", "text": "Elektronik tablo oluşturmak"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 45, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Bulut bilişimde \"kullandıkça öde\" modeli neyi ifade eder?", "options": [{"letter": "A", "text": "Bulut hizmetlerinin performansını düşürmesini"}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını"}, {"letter": "C", "text": "Kullanıcıların sabit bir ücret ödemesini"}, {"letter": "D", "text": "Kullanıcıların yalnızca kullandıkları kaynaklar için ödeme yapmasını"}, {"letter": "E", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını"}], "correct": "D", "explanation": "ACIKLAMA::Pay-as-you-go; sabit maliyet yerine yalnızca tüketilen kaynak kadar ödeme yapılmasıdır."}, {"num": 46, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Aşağıdakilerden hangisi bulut ortamında karşılaşılan güvenlik risklerinden biridir?", "options": [{"letter": "A", "text": "Çok faktörlü kimlik doğrulama"}, {"letter": "B", "text": "Veri şifreleme"}, {"letter": "C", "text": "Güvenlik duvarları"}, {"letter": "D", "text": "Veri ihlalleri"}, {"letter": "E", "text": "Veri maskeleme"}], "correct": "D", "explanation": "ACIKLAMA::Veri ihlali (data breach) bir güvenlik riskidir. Diğer şıklar (MFA, şifreleme, güvenlik duvarı, maskeleme) risk değil, koruma yöntemleridir."}, {"num": 47, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2025 Vize, 2026 Vize", "text": "Blok depolamanın temel avantajı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yüksek performans ve düşük gecikme"}, {"letter": "B", "text": "Kolay yönetim ve genişletilebilirlik"}, {"letter": "C", "text": "Daha az esneklik"}, {"letter": "D", "text": "Yalnızca dosya paylaşımı imkânı"}, {"letter": "E", "text": "Yüksek gecikme ve düşük maliyet"}], "correct": "A", "explanation": "ACIKLAMA::Blok depolama, veritabanı gibi yoğun G/Ç isteyen yükler için yüksek performans ve düşük gecikme sunar."}, {"num": 48, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Yük dengeleme (load balancing) neyi ifade eder?", "options": [{"letter": "A", "text": "Bulut hizmetlerinin performansını düşürmesi"}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlaması"}, {"letter": "C", "text": "İş yükünün birden fazla sunucuya dengeli bir şekilde dağıtılması"}, {"letter": "D", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlaması"}, {"letter": "E", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını sağlaması"}], "correct": "C", "explanation": "ACIKLAMA::Yük dengeleme, gelen isteği birden çok sunucuya dağıtarak sistemin dengeli ve kesintisiz çalışmasını sağlar."}, {"num": 49, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Yönlendiricinin (router) temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Veri paketlerini ağlar arasında yönlendirmek"}, {"letter": "B", "text": "Dosya paylaşımını sağlamak"}, {"letter": "C", "text": "Sanal makineleri çalıştırmak"}, {"letter": "D", "text": "Güvenlik duvarı işlevi görmek"}, {"letter": "E", "text": "Verileri depolamak"}], "correct": "A", "explanation": "ACIKLAMA::Yönlendirici, paketleri farklı ağlar arasında hedefe göre iletir."}, {"num": 50, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "IaaS (Infrastructure as a Service) modelinde kullanıcılar aşağıdaki bileşenlerden hangisi ile yönetilir?", "options": [{"letter": "A", "text": "Sunucular"}, {"letter": "B", "text": "Sanallaştırma"}, {"letter": "C", "text": "Uygulamalar"}, {"letter": "D", "text": "Ağ"}, {"letter": "E", "text": "Depolama"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 51, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Bulut mimarisi katmanlarından biri olan \"Platform as a Service (PaaS)\" ne sağlar?", "options": [{"letter": "A", "text": "Verilerin manuel olarak işlenmesini sağlar."}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlar."}, {"letter": "C", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını sağlar."}, {"letter": "D", "text": "Geliştiricilere uygulama geliştirme ve dağıtım platformu sunar."}, {"letter": "E", "text": "Yalnızca fiziksel sunucuların yönetimini sağlar."}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 52, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Aşağıdakilerden hangisi veri şifreleme yönteminin temel amacıdır?", "options": [{"letter": "A", "text": "Verilerin okunamaz hale getirilerek yetkisiz erişimlere karşı korunmasını sağlamak"}, {"letter": "B", "text": "Verilerin test ortamında kullanılmasını sağlamak"}, {"letter": "C", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını sağlamak"}, {"letter": "D", "text": "Verilerin düzenli olarak yedeklenmesini sağlamak"}, {"letter": "E", "text": "Kullanıcıların kimliklerini doğrulamak"}], "correct": "A", "explanation": "ACIKLAMA::Şifreleme, veriyi anahtarsız okunamaz hale getirerek gizliliğini korur."}, {"num": 53, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Ağ performansını değerlendirmek için kullanılan araçlardan biri olan Wireshark'ın temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Veri paketlerinin rotasını izlemek"}, {"letter": "B", "text": "Gecikme süresini ölçmek"}, {"letter": "C", "text": "Yedekleme çözümleri oluşturmak"}, {"letter": "D", "text": "Bant genişliğini artırmak"}, {"letter": "E", "text": "Ağ trafiğini analiz etmek SİSTEM YÖNETİMİ VE BULUT BİLİŞİM A P355875.G19109 07-04-2026 11:51:33 CEVAPLI"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 54, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Bağlantı sorunlarının çözümünde kullanılan QoS (Quality of Service)'nin kullanım amacı aşağıdakilerden hagisidir?", "options": [{"letter": "A", "text": "Fiziksel sunucuları birleştirir."}, {"letter": "B", "text": "Ağ trafiğini önceliklendirir."}, {"letter": "C", "text": "Depolama alanlarını artırır."}, {"letter": "D", "text": "Yalnızca ağ kesintilerini önler."}, {"letter": "E", "text": "Veri paketlerini şifreler."}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 55, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Sanallaştırma teknolojisinde kullanılan \"hipervizör\" neyi ifade eder?", "options": [{"letter": "A", "text": "Verilerin yalnızca yerel cihazlarda saklanmasını sağlayan bir sistem"}, {"letter": "B", "text": "Sanal makineleri yöneten yazılım katmanı"}, {"letter": "C", "text": "Fiziksel sunucuların performansını düşüren bir yazılım"}, {"letter": "D", "text": "Verilerin manuel olarak işlenmesini sağlayan bir araç"}, {"letter": "E", "text": "Bulut hizmetlerinin yalnızca manuel olarak güncellenmesini sağlayan bir araç"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 56, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Kaynak yönetimi ifadesinin tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bilgi işlem kaynaklarının etkin ve verimli bir şekilde kullanılması sürecidir."}, {"letter": "B", "text": "Kullanıcıların bulut hizmetlerine erişimini engelleyen bir süreçtir."}, {"letter": "C", "text": "Yalnızca depolama alanlarının artırılmasıdır."}, {"letter": "D", "text": "Yalnızca ağ trafiğinin izlenmesidir."}, {"letter": "E", "text": "Fiziksel sunucuların manuel olarak yönetilmesidir."}], "correct": "A", "explanation": "ACIKLAMA::Kaynak yönetimi; CPU, bellek, depolama ve ağın ihtiyaca göre etkin ve verimli tahsis edilmesidir."}, {"num": 57, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar, 2026 Vize", "text": "Konteynerlerin sanal makinelere göre avantajı nedir?", "options": [{"letter": "A", "text": "Yalnızca fiziksel sunucularda çalışır"}, {"letter": "B", "text": "Daha az güvenlidir"}, {"letter": "C", "text": "Daha fazla donanım gerektirir"}, {"letter": "D", "text": "Daha hafif ve hızlıdır"}, {"letter": "E", "text": "Daha yavaş çalışır"}], "correct": "D", "explanation": "ACIKLAMA::Konteynerler İS çekirdeğini paylaşır, kendi İS'lerini taşımaz; bu yüzden VM'lerden daha hafif ve hızlı başlar."}, {"num": 58, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi bulut bilişimin avantajlarından biri değildir?", "options": [{"letter": "A", "text": "Maliyet tasarrufu"}, {"letter": "B", "text": "İnternet bağımlılığı"}, {"letter": "C", "text": "Esneklik"}, {"letter": "D", "text": "Yedekleme ve felaket kurtarma"}, {"letter": "E", "text": "Ölçeklenebilirlik"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 59, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Sanallaştırma teknolojisinde kullanılan \"sanal makine\" neyi ifade eder?", "options": [{"letter": "A", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını sağlayan bir yazılım"}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlayan bir sistem"}, {"letter": "C", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlayan bir araç"}, {"letter": "D", "text": "Bulut hizmetlerinin performansını düşüren bir yazılım"}, {"letter": "E", "text": "Fiziksel bir sunucunun yazılım tabanlı bir kopyası"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 60, "tag": "Sistem Yönetimi ve Bulut Bilişim - 2025-2026 - Vize - Bahar", "text": "Bulut bilişimde hangi özellik, değişen iş yüklerine hızlı uyum sağlamayı ifade eder?", "options": [{"letter": "A", "text": "Yedekleme"}, {"letter": "B", "text": "Fiziksel donanım yönetimi"}, {"letter": "C", "text": "Veri kaybı"}, {"letter": "D", "text": "Güvenlik"}, {"letter": "E", "text": "Otomatik ölçeklendirme"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 61, "tag": "SisYonBulutBilisim Final 31052025", "text": "Sistem entegrasyonu sürecinin ilk adımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Veri Şifreleme"}, {"letter": "B", "text": "Uygulama"}, {"letter": "C", "text": "Test ve Doğrulama"}, {"letter": "D", "text": "Gereksinim Analizi"}, {"letter": "E", "text": "Tasarım"}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 62, "tag": "SisYonBulutBilisim Final 31052025", "text": "Karmaşık sistemlerin otomasyonunda kullanılan \"Ansible\" aracı faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İş yüklerini manuel olarak kaynaklara dağıtır"}, {"letter": "B", "text": "Sunucuların ve altyapı bileşenlerinin yapılandırılmasını ve yönetilmesini otomatikleştirir"}, {"letter": "C", "text": "Yalnızca iş yüklerini sırayla işler"}, {"letter": "D", "text": "Sistem performansını manuel olarak izler"}, {"letter": "E", "text": "Sistemlerin yalnızca güvenlik politikalarını uygular"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 63, "tag": "SisYonBulutBilisim Final 31052025", "text": "Güvenlik politikalarından biri olan \"erişim yönetimi\" kavramının ifadesi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yazılım uygulamalarının tek bir sistemde çalıştırılması"}, {"letter": "B", "text": "Kullanıcı ve sistem erişimlerinin yönetilmesi"}, {"letter": "C", "text": "Verilerin manuel olarak işlenmesi"}, {"letter": "D", "text": "İş süreçlerinin tamamen kaldırılması"}, {"letter": "E", "text": "Sistemlerin bağımsız çalışması"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 64, "tag": "SisYonBulutBilisim Final 31052025", "text": "Sorun giderme tekniklerinden biri olan \"kök neden analizi\" ifadesinin anlamı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sorunların geçici çözümlerle giderilmesi"}, {"letter": "B", "text": "Sorunların manuel olarak göz ardı edilmesi"}, {"letter": "C", "text": "Sorunların yalnızca raporlanması"}, {"letter": "D", "text": "Sorunların temel nedenlerinin tespit edilmesi"}, {"letter": "E", "text": "Sorunların performans izleme araçlarıyla çözülmesi"}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 65, "tag": "SisYonBulutBilisim Final 31052025", "text": "Kuantum bilişim platformlarından biri olan \"Amazon Braket\" faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kuantum bilgisayarların performansını düşürür"}, {"letter": "B", "text": "Kuantum bilgisayarların yalnızca manuel olarak güncellenmesini sağlar"}, {"letter": "C", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlar"}, {"letter": "D", "text": "Kullanıcılara bulut tabanlı kuantum bilgisayarlara erişim sağlar"}, {"letter": "E", "text": "Kuantum bilgisayarların yalnızca yerel cihazlarda çalıştırılmasını sağlar"}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 66, "tag": "SisYonBulutBilisim Final 31052025", "text": "Performans göstergelerinden biri olan \"CPU kullanımı\" neyi ifade eder?", "options": [{"letter": "A", "text": "Sistemin disk giriş/çıkış işlemlerinin performansını"}, {"letter": "B", "text": "Sistemin ağ trafiği miktarını"}, {"letter": "C", "text": "Sistemin işlemci kaynaklarının ne kadarının kullanıldığını"}, {"letter": "D", "text": "Sistemin iş yükünü paralel olarak işlemesini"}, {"letter": "E", "text": "Sistemin bellek kaynaklarının kullanım oranını"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 67, "tag": "SisYonBulutBilisim Final 31052025", "text": "Bulut altyapısının temel bileşenlerinden biri olan \"depolama\" ifadesi ile aşağıdakilerden hangisi tanımlanmaktadır?", "options": [{"letter": "A", "text": "Fiziksel sunucuların performansını düşüren bir yazılım"}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca manuel olarak güncellenmesini sağlayan bir araç"}, {"letter": "C", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlayan bir araç"}, {"letter": "D", "text": "Verilerin saklanması ve erişilmesi için kullanılan sistemler"}, {"letter": "E", "text": "Verilerin yalnızca yerel cihazlarda saklanmasını sağlayan bir sistem"}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 68, "tag": "SisYonBulutBilisim Final 31052025", "text": "Bulut ağ mimarisinin temel bileşenlerinden biri olan sanal ağlar (VPC) kavramının tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ağ trafiğini izleyen bir yazılımdır."}, {"letter": "B", "text": "Fiziksel ağların manuel olarak yönetilmesidir."}, {"letter": "C", "text": "Bulut ortamında izole edilmiş bir ağ segmentidir."}, {"letter": "D", "text": "Yalnızca güvenlik duvarlarının yapılandırılmasıdır."}, {"letter": "E", "text": "Veri paketlerinin kaybolmasını önleyen bir sistemdir. SİSTEM YÖNETİMİ VE BULUT BİLİŞİM A P355875.G12291 07-05-2025 16:46:03 SİSTEM YÖNETİMİ VE BULUT BİLİŞİM A P355875.G12291 07-05-2025 16:46:03 CEVAPLI CEVAPLI"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 69, "tag": "SisYonBulutBilisim Final 31052025", "text": "Yapay zekâ ve makine öğreniminin bulut güvenliğinde kullanım amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Verilerin düzenli olarak yedeklenmesi"}, {"letter": "B", "text": "Şifreleme anahtarlarını manuel olarak yönetmek"}, {"letter": "C", "text": "Kullanıcıların erişim yetkilerini sınırlandırmak"}, {"letter": "D", "text": "Fiziksel sunucuların performansını artırmak"}, {"letter": "E", "text": "Anormal davranışları tespit etmek ve tehditleri otomatik olarak algılamak"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 70, "tag": "SisYonBulutBilisim Final 31052025", "text": "Yazılım tabanlı sanallaştırma genellikle aşağıdaki kullanım alanlarından hangisi için uygundur?", "options": [{"letter": "A", "text": "Büyük veri merkezleri"}, {"letter": "B", "text": "Yüksek performanslı uygulamalar"}, {"letter": "C", "text": "Küçük ve orta ölçekli işletmeler"}, {"letter": "D", "text": "Yoğun işlem gücü gerektiren uygulamalar"}, {"letter": "E", "text": "Kritik güvenlik gereksinimleri"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 71, "tag": "SisYonBulutBilisim Final 31052025", "text": "Aşağıdakilerden hangisi kaynak optimizasyonu türlerinden biridir?", "options": [{"letter": "A", "text": "CPU optimizasyonu"}, {"letter": "B", "text": "Yedekleme işlemleri"}, {"letter": "C", "text": "Yazılım güncellemeleri"}, {"letter": "D", "text": "Kullanıcı erişim kısıtlamaları"}, {"letter": "E", "text": "Fiziksel sunucu kapatma"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 72, "tag": "SisYonBulutBilisim Final 31052025", "text": "Veri gizliliği ilkelerinden biri olan \"veri minimizasyonu\" kavramının tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sadece gerekli olan verilerin toplanması ve işlenmesini"}, {"letter": "B", "text": "Kullanıcıların kimlik bilgilerinin saklanmasını"}, {"letter": "C", "text": "Verilerin test ortamında kullanılmasını"}, {"letter": "D", "text": "Verilerin düzenli olarak yedeklenmesini"}, {"letter": "E", "text": "Verilerin şifrelenmesini"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 73, "tag": "SisYonBulutBilisim Final 31052025", "text": "Kuantum bilişimde \"süperpozisyon\" ile aşağıdaki ifadelerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "Kuantum bilgisayarların performansını düşürmesi"}, {"letter": "B", "text": "Qubit'lerin yalnızca bir durumda bulunabilmesi"}, {"letter": "C", "text": "Verilerin manuel olarak işlenmesi"}, {"letter": "D", "text": "Kuantum bilgisayarların yalnızca yerel cihazlarda çalıştırılması"}, {"letter": "E", "text": "Qubit'lerin aynı anda birden fazla durumda bulunabilmesi"}], "correct": "E", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek E'dir."}, {"num": 74, "tag": "SisYonBulutBilisim Final 31052025", "text": "Çevik proje yönetimi yaklaşımında \"sprint\" ifadesi ile aşağıdakilerden hangisi belirtilir?", "options": [{"letter": "A", "text": "Belirli bir süre zarfında tamamlanması gereken iş birimini"}, {"letter": "B", "text": "Yazılımın test edilmesi sürecini"}, {"letter": "C", "text": "Projenin tamamlanması için gereken toplam süreyi"}, {"letter": "D", "text": "Uygulamanın dağıtım aşamasını"}, {"letter": "E", "text": "İş akışını görselleştiren bir yöntem"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 75, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize, 2023-2024 Vize", "text": "Her servisin farklı bilgisayarda yürütülmesi işlemine ne ad verilir?", "options": [{"letter": "A", "text": "Kum paketleme"}, {"letter": "B", "text": "Kaynak paylaşımı"}, {"letter": "C", "text": "Döngü sistemi"}, {"letter": "D", "text": "Zaman dağıtma"}, {"letter": "E", "text": "Dağıtık sistem"}], "correct": "A", "explanation": "ACIKLAMA::Cevap anahtarı bu soruda A şıkkını işaretlemiştir."}, {"num": 76, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "I. Gelen paketleri sınıflara eşlemek için paket başlığındaki bilgileri kullanan bir sınıflandırıcı II. Bağlantı atamasını aşan bir sınıfın göndermesine izin verildiğinde hesaplamak için bir geciktirici III. Sınıf dışı öncül tahmincisi Yukarıdakilerden hangisi ya da hangileri CBQ algoritmasının işlevsel birimidir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "I ve III"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 77, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize, 2023-2024 Vize", "text": "Microsoft firmasının bulut platformunun ismi nedir?", "options": [{"letter": "A", "text": "Azure"}, {"letter": "B", "text": "Ubuntu"}, {"letter": "C", "text": "AWS"}, {"letter": "D", "text": "Office 365"}, {"letter": "E", "text": "Red Hat"}], "correct": "A", "explanation": "ACIKLAMA::Microsoft'un bulut platformu Azure'dur. AWS Amazon'a, Office 365 ise bir SaaS ürünüdür."}, {"num": 78, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "İletişim kanalları, eşzamanlı etkinliklerin uyum içinde çalışmasına ve koordine olmasına izin verir. İletişim ...................., gürültülü ve güvenilmez kanalları, mesajları sırayla ileten güvenilir kanallara dönüştürmemizi sağlar. Yukarıda verilen boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "protokolleri"}, {"letter": "B", "text": "frekansları"}, {"letter": "C", "text": "paradigmaları"}, {"letter": "D", "text": "cihazları"}, {"letter": "E", "text": "ücretleri"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 79, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "VoIP, video akışı ve ses akışı gibi bant genişliği garantileri gerektiren uygulamalar için esnek bağlantı paylaşımını destekleyen ağ kaynak yönetimi algoritması hangisidir?", "options": [{"letter": "A", "text": "FQ"}, {"letter": "B", "text": "CBQ"}, {"letter": "C", "text": "SFQ"}, {"letter": "D", "text": "SCQ"}, {"letter": "E", "text": "Basic Queue"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 80, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize, 2023-2024 Vize", "text": "I.Servis olarak yazılım II.Servis olarak platform III.Servis olarak altyapı IV. Servis olarak özelleştirme Yukarıdakilerden hangileri bulut iletim yollarındandır?", "options": [{"letter": "A", "text": "I, III"}, {"letter": "B", "text": "I, IV"}, {"letter": "C", "text": "II, III, IV"}, {"letter": "D", "text": "I, II, III"}, {"letter": "E", "text": "II, IV"}], "correct": "D", "explanation": "ACIKLAMA::Bulut iletim yolları SaaS (yazılım), PaaS (platform) ve IaaS (altyapı)'dır. 'Servis olarak özelleştirme' diye bir model yoktur."}, {"num": 81, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "Aşağıdakilerden hangisi açık kaynaklı bulut platformu değildir?", "options": [{"letter": "A", "text": "OpenStack"}, {"letter": "B", "text": "Nimbus"}, {"letter": "C", "text": "Microsoft"}, {"letter": "D", "text": "Open Nebula"}, {"letter": "E", "text": "Eucalyptus"}], "correct": "C", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek C'dir."}, {"num": 82, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize, 2023-2024 Vize", "text": "Bir sunucu işletim sistemi ne kadar süreyle çalışmalıdır?", "options": [{"letter": "A", "text": "Günde 5 saat"}, {"letter": "B", "text": "Haftada 3 gün"}, {"letter": "C", "text": "Günde 2 saat"}, {"letter": "D", "text": "Yılda 365 gün 24 saat"}, {"letter": "E", "text": "Ayda 3 hafta"}], "correct": "D", "explanation": "ACIKLAMA::Sunucu İS'leri kesintisiz hizmet için 7/24 (365 gün, günde 24 saat) çalışacak şekilde tasarlanır."}, {"num": 83, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2023 Vize, 2024 Vize", "text": "I. Eşgörünümü formatlar ortaya çıkarır. II. Yeni bir imaj yaratır. III. Mevcut bir AMI'den bir eşgörünüm başlatabilir. Amazon Bulut Bilişim'de yukarıdakilerden hangisi veya hangilerini bir kullanıcı gerçekleştirebilir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız I"}], "correct": "B", "explanation": "ACIKLAMA::Kullanıcı yeni AMI oluşturabilir ve mevcut AMI'den eşgörünüm başlatabilir. 'Formatlar ortaya çıkarma' anlamlı bir işlem değildir."}, {"num": 84, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "Aşağıdakilerin hangisi Bulut İletim Yollarının kazandırdığı yeni felsefeyi tanımlayan özelliklerinden değildir?", "options": [{"letter": "A", "text": "İnternet altyapısı tarafından bakım ve güvenlik sağlanmaktadır."}, {"letter": "B", "text": "Özelleştirme sayesinde servis sağlayıcılar çok daha etkin çalışabilmektedir."}, {"letter": "C", "text": "Elastik sistemlerde kaynaklar ölçülebilirdir ve kullanıcılar sadece kullandıkları kaynaklar için ücretlendirilir."}, {"letter": "D", "text": "Merkezileştirme sayesinde servis sağlayıcılar çok daha etkin çalışabilmektedir."}, {"letter": "E", "text": "Elastik servisler sunmak için Bulut Bilişim İnternet teknolojilerini kullanır."}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 85, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "Birçok bulut uygulamasında veri yoğundur ve aynı anda çalışan birkaç .................... kullanılır. Yukarıda verilen boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "bilgisayar"}, {"letter": "B", "text": "eşgörünüm"}, {"letter": "C", "text": "veri"}, {"letter": "D", "text": "ağ"}, {"letter": "E", "text": "damga SİSTEM YÖNETİMİ VE BULUT BİLİŞİM A 1 P355875.G494 04-04-2024 13:24:51"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 86, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize, 2023-2024 Vize", "text": "Ağ merkezli işlem dendiğinde aşağıdakilerden hangisi anlaşılmaktadır?", "options": [{"letter": "A", "text": "Ağın ortasında bir aktarım noktası olması"}, {"letter": "B", "text": "İşlem gücünün uzaktaki veri merkezinde olması"}, {"letter": "C", "text": "Uygulama arayüzünün istemci bilgisayarında çalışması"}, {"letter": "D", "text": "Servis olarak platform iletim yolunun seçilmesi"}, {"letter": "E", "text": "Servis olarak yazılım iletim yolunun seçilmesi"}], "correct": "B", "explanation": "ACIKLAMA::Ağ merkezli (network-centric) işlem, hesaplamanın uzaktaki veri merkezinde yapılıp sonucun ağ üzerinden istemciye sunulmasıdır."}, {"num": 87, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize, 2023-2024 Vize", "text": "Yerel ve uzak bilgi nesnelerine aynı işlemler kullanılarak erişilir. Bu özellik aşağıdakilerden hangisini ifade eder?", "options": [{"letter": "A", "text": "Eşzamanlılık"}, {"letter": "B", "text": "Erişim Şeffaflığı"}, {"letter": "C", "text": "RAID"}, {"letter": "D", "text": "Eşzaman Şeffaflığı"}, {"letter": "E", "text": "Sanal Bellek Yöneticisi"}], "correct": "B", "explanation": "ACIKLAMA::Erişim şeffaflığı; yerel ve uzak nesnelere aynı işlemlerle, konum farkını gizleyerek erişebilmektir."}, {"num": 88, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "Aşağıdakilerden hangisi Fayda Bilişim (utility computing) sağlayıcısı değildir?", "options": [{"letter": "A", "text": "Google"}, {"letter": "B", "text": "HP"}, {"letter": "C", "text": "Amazon"}, {"letter": "D", "text": "Lenovo"}, {"letter": "E", "text": "Apple"}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 89, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2023-2024 Vize", "text": "Önceden tanımlanmış bir Amazon Machine Image'(AMI)den oluşturularak S3'te saklanan kavram hangisidir?", "options": [{"letter": "A", "text": "SOAP"}, {"letter": "B", "text": "Eşgörünüm"}, {"letter": "C", "text": "İmaj"}, {"letter": "D", "text": "Ara bağlantı"}, {"letter": "E", "text": "MAC Adresi"}], "correct": "B", "explanation": "ACIKLAMA::Çıkmış sınav cevap anahtarında bu sorunun yanıtı 'Eşgörünüm' olarak işaretlenmiştir."}, {"num": 90, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize, 2023-2024 Vize", "text": "Aşağıdakilerden hangisi hipervizör tiplerindendir?", "options": [{"letter": "A", "text": "Tip1"}, {"letter": "B", "text": "Tip4"}, {"letter": "C", "text": "Tip5"}, {"letter": "D", "text": "Tip3"}, {"letter": "E", "text": "Tip6"}], "correct": "A", "explanation": "ACIKLAMA::Hipervizörler Tip 1 (bare-metal, doğrudan donanım üstünde) ve Tip 2 (host İS üstünde) olmak üzere ikiye ayrılır. Şıklarda geçerli olan Tip1'dir."}, {"num": 91, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim, 2024 Vize", "text": "Verimsiz bir kaynak yönetimi, performans ve maliyet üzerinde doğrudan .................... bir etkiye ve bir sistemin işlevselliği üzerinde dolaylı bir etkiye sahiptir. Yukarıda verilen boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "gayri ihtiyari"}, {"letter": "B", "text": "düzensiz"}, {"letter": "C", "text": "olumlu"}, {"letter": "D", "text": "olumsuz"}, {"letter": "E", "text": "işlevsel"}], "correct": "D", "explanation": "ACIKLAMA::Verimsiz kaynak yönetimi performans ve maliyeti doğrudan olumsuz etkiler."}, {"num": 92, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "I. Performans II. Maliyet III. Görecelik Bir sistemin başarılı olarak değerlendirilmesi için yukarıdaki hangi kriter veya kriterler değerlidir?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız II"}], "correct": "D", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek D'dir."}, {"num": 93, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "I. Performans garantileri sağlama olasılığının düşük olması II. Talep üzerine serbest bırakılabilen veya tahsis edilebilen bir kaynak havuzu olması III. Bir kontrol döngüsünün gerçek zamanlı tahsis etmeye izin veren izleme sistemi olması Kaynaklar için otomatik ölçeklendirme yukarıdaki hangi durum ya da durumlar olduğunda planlanmamış ani yüklerle karşılaşıldığında kullanılabilir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız III"}], "correct": "B", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek B'dir."}, {"num": 94, "tag": "Vize-Sistem Yönetimi ve Bulut Bilişim", "text": "SLA'lar tarafından zorunlu kılınan gereksinimlerden hangisi aşağıda yanlış verilmiştir?", "options": [{"letter": "A", "text": "gözlemlenebilirlik"}, {"letter": "B", "text": "ölçeklenebilirlik"}, {"letter": "C", "text": "güvenlik"}, {"letter": "D", "text": "güvenilirlik"}, {"letter": "E", "text": "servis kalitesi SİSTEM YÖNETİMİ VE BULUT BİLİŞİM A 2 P355875.G494 04-04-2024 13:24:51"}], "correct": "A", "explanation": "AUZEF Sistem Yonetimi ve Bulut Bilisim müfredatı uyarınca doğru seçenek A'dir."}, {"num": 95, "tag": "2023 Vize, 2022-2023 Vize", "text": "AMD firmasının kullandığı işlemci güç yönetim teknolojisinin ismi nedir?", "options": [{"letter": "A", "text": "Poweneise"}, {"letter": "B", "text": "PowerStep"}, {"letter": "C", "text": "Speedstep"}, {"letter": "D", "text": "PowerNow"}, {"letter": "E", "text": "AgnoPower"}], "correct": "D", "explanation": "ACIKLAMA::AMD işlemcilerde saat hızını/voltajı iş yüküne göre dinamik ayarlayan teknoloji PowerNow!'dır. Intel muadili SpeedStep'tir."}, {"num": 96, "tag": "2023 Vize, 2022-2023 Vize", "text": "Amazon AWS'de basit depolama sistemi adlandırması aşağıdakilerden hangisi için kullanılır?", "options": [{"letter": "A", "text": "SOAP"}, {"letter": "B", "text": "S3"}, {"letter": "C", "text": "EC2"}, {"letter": "D", "text": "İmaj"}, {"letter": "E", "text": "AMI"}], "correct": "B", "explanation": "ACIKLAMA::S3 = Simple Storage Service. EC2 hesaplama, AMI makine imajı, SOAP bir mesajlaşma protokolüdür."}, {"num": 97, "tag": "2023 Vize", "text": "S3'e yazılan her nesnenin MD5'ini hesapladıktan sonra hangi alana döndürür?", "options": [{"letter": "A", "text": "BeTag"}, {"letter": "B", "text": "CeTag"}, {"letter": "C", "text": "ATag"}, {"letter": "D", "text": "CTag"}, {"letter": "E", "text": "ETag"}], "correct": "E", "explanation": "ACIKLAMA::S3 yüklenen her nesnenin bütünlük özeti (MD5) olarak ETag döndürür; istemci bununla yüklemenin bozulmadığını doğrular."}, {"num": 98, "tag": "2023 Vize, 2022-2023 Vize", "text": "Fiber Kanal çerçevesinde aşağıdakilerden hangisi iletilmemektedir?", "options": [{"letter": "A", "text": "Hedef Port Adresi"}, {"letter": "B", "text": "DNF"}, {"letter": "C", "text": "EOF"}, {"letter": "D", "text": "Çerçeve Başlangıcı"}, {"letter": "E", "text": "CRC"}], "correct": "B", "explanation": "ACIKLAMA::FC çerçevesinde SOF (başlangıç), EOF (bitiş), adres alanları ve CRC bulunur. 'DNF' diye bir alan yoktur."}, {"num": 99, "tag": "2023 Vize, 2022-2023 Vize", "text": "Intel firmasının kullandığı işlemci güç yönetim teknolojisinin ismi nedir?", "options": [{"letter": "A", "text": "AgnoPower"}, {"letter": "B", "text": "Speedstep"}, {"letter": "C", "text": "Powerwise"}, {"letter": "D", "text": "PowerNow"}, {"letter": "E", "text": "PowerStep"}], "correct": "B", "explanation": "ACIKLAMA::Intel'in dinamik frekans/voltaj ölçekleme teknolojisi SpeedStep'tir; AMD karşılığı PowerNow!'dır."}, {"num": 100, "tag": "2023 Vize", "text": "I. Bileşik koşul II. İsim III. Açıklama — Görev, iş akışı modellemede hangileri ile karakterize edilir?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız III"}], "correct": "C", "explanation": "ACIKLAMA::Bir 'görev' isim (ne olduğu) ve açıklama (ne yaptığı) ile tanımlanır. Bileşik koşul kontrol akışına aittir, görevin özelliği değildir."}, {"num": 101, "tag": "2023 Vize, 2022-2023 Vize", "text": "I. Otonom II. Dağıtık III. Tümleşik — Hangileri Bulut Bilişim Altyapısı tiplerindendir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "II ve III"}], "correct": "A", "explanation": "ACIKLAMA::Bulut altyapıları otonom (kendini yöneten) ve dağıtık yapıdadır. 'Tümleşik' bir altyapı tipi değildir."}, {"num": 102, "tag": "2023 Vize, 2022-2023 Vize", "text": "Sanal makine üzerinde koşan işletim sistemine ne denir?", "options": [{"letter": "A", "text": "Ana makine İS"}, {"letter": "B", "text": "Genel Makine İS"}, {"letter": "C", "text": "Yedek makine İS"}, {"letter": "D", "text": "Konuk İS"}, {"letter": "E", "text": "Yardımcı makine İS"}], "correct": "D", "explanation": "ACIKLAMA::VM içinde çalışan İS konuk (guest) İS'dir; fiziksel donanımdaki İS ana (host) İS'dir."}, {"num": 103, "tag": "2023 Vize, 2022-2023 Vize", "text": "Fiber Kanal Çerçevesinde kaç adet kelimelik bilgi saklanmaktadır?", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "3"}, {"letter": "C", "text": "6"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "4"}], "correct": "C", "explanation": "ACIKLAMA::Fiber Channel çerçeve başlığı 6 kelimelik (word) bilgi taşır."}, {"num": 104, "tag": "2023 Vize", "text": "I. VmWare II. Bochs III. Parallels — Hangileri bir yorumlayıcıdır?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "Yalnız III"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "Yalnız I"}], "correct": "D", "explanation": "ACIKLAMA::Bochs x86'yı komut komut öykünen (yorumlayıcı) yazılımdır. VMware ve Parallels donanım destekli sanallaştırma kullanır."}, {"num": 105, "tag": "2023 Vize", "text": "I. Kaynaklar ölçülebilir, kullanıcılar yalnızca kullandıkları için ücretlendirilir. II. Özelleştirme+merkezileştirme ile sağlayıcılar daha etkin çalışır. III. Uygulama verisi sağlayıcı ile uyumsuz geliştirilmiştir. — Hangileri bulut felsefesini tanımlar?", "options": [{"letter": "A", "text": "II ve III"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve III"}, {"letter": "E", "text": "Yalnız II"}], "correct": "B", "explanation": "ACIKLAMA::Kullandıkça öde (I) ve merkezileştirmeyle verimlilik (II) bulut felsefesidir. III bir kusuru anlatır."}, {"num": 106, "tag": "2023 Vize, 2022-2023 Vize", "text": "I. İşlem boru hatları II. Masaüstü uygulamaları III. Toplu işleme sistemleri — Hangileri mevcut bulut uygulaması kategorisidir?", "options": [{"letter": "A", "text": "Yalnız I"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve II"}], "correct": "C", "explanation": "ACIKLAMA::Bulut kategorileri arasında işlem boru hatları ve toplu (batch) işleme sayılır; masaüstü uygulamaları değildir."}, {"num": 107, "tag": "2023 Vize", "text": "I. Hard disk imajı II. Ethernet imajı III. Ana hafıza imajı — İS göçünde hangileri taşınırsa İS tamamen taşınmış olur?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve III"}], "correct": "E", "explanation": "ACIKLAMA::Eksiksiz göç için disk durumu (hard disk imajı) ve çalışan durum (RAM/ana hafıza imajı) birlikte taşınmalıdır. 'Ethernet imajı' yoktur."}, {"num": 108, "tag": "2023 Vize", "text": "${t_enerji}Yukarıdaki tabloya göre bir işlemci saat hızını 0.8 GHz'e düşürürse elde edeceği enerji kazancı yüzde kaç olacaktır?", "options": [{"letter": "A", "text": "56"}, {"letter": "B", "text": "52"}, {"letter": "C", "text": "40"}, {"letter": "D", "text": "38"}, {"letter": "E", "text": "48"}], "correct": "B", "explanation": "ACIKLAMA::0.8 GHz'de normalize enerji %48'dir. Enerji kazancı = 1 − 0,48 = 0,52 → %52."}, {"num": 109, "tag": "2023 Vize", "text": "I. Veritabanı yüklü II. Web yüklü III. Bölünemez iş yüklü IV. İşlem tabanlı — Bazı uygulamalar bulutta gerçeklemeye uygun değildir; bu duruma hangisi uyar?", "options": [{"letter": "A", "text": "III ve IV"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "Yalnız I"}], "correct": "B", "explanation": "ACIKLAMA::Bölünemez (paralelleştirilemeyen) iş yükü bulutun ölçeklenme avantajından yararlanamaz; buluta uygun değildir."}, {"num": 110, "tag": "2023 Vize, 2022-2023 Vize", "text": "I. Bit düzeyinde serilik II. Yönerge düzeyinde paralellik III. Döngü paralelliği — Paralel bilgisayar mimarisi açısından hangileri doğrudur?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "I ve III"}, {"letter": "E", "text": "II ve III"}], "correct": "E", "explanation": "ACIKLAMA::Mimari açıdan yönerge (instruction) ve döngü (loop) düzeyi paralellik ele alınır. Bit düzeyi paralellik daha alt/donanımsal bir kavramdır."}, {"num": 111, "tag": "2023 Vize, 2022-2023 Vize", "text": "Paralel programlamanın \\\"kutsal kâse\\\" seçilmesinin nedeni aşağıdakilerden hangisi DEĞİLDİR?", "options": [{"letter": "A", "text": "Güvenlik duvarı"}, {"letter": "B", "text": "Kayan nokta teknolojileri"}, {"letter": "C", "text": "Ara bağlantı ağları"}, {"letter": "D", "text": "Bilgisayar mimarisi"}, {"letter": "E", "text": "Performans izleme"}], "correct": "A", "explanation": "ACIKLAMA::Performans hedefini belirleyen etkenler mimari, ara bağlantı ağları ve performans izlemedir. Güvenlik duvarı bu bağlamla ilgisizdir."}, {"num": 112, "tag": "2023 Vize, 2022-2023 Vize, 2023-2024 Bütünleme", "text": "I. Bir imajdan eşgörünüm önyükleme II. Ekran konsolu çıktısı III. Bir imajın kopyalanması — Bir kullanıcı hangi durumlarda SOAP mesajları ile EC2 eşgörünümlerini işleyebilir?", "options": [{"letter": "A", "text": "Yalnız I"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız II"}], "correct": "D", "explanation": "ACIKLAMA::EC2 SOAP API'si ile imajdan eşgörünüm başlatma (I) ve konsol çıktısı alma (II) yapılır. İmaj kopyalama bu çağrı ile yönetilmez."}, {"num": 113, "tag": "2023 Vize, 2022-2023 Vize", "text": "I. Devasa Altyapı II. İntranetten erişilebilme III. Fayda Bilişim (kullanım başına ödeme) — Hangileri Bulut Bilişimi tanımlar?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "Yalnız II"}], "correct": "C", "explanation": "ACIKLAMA::Bulut; devasa ölçeklenebilir altyapı ve kullandıkça öde modeliyle tanımlanır. Bulut internetten erişilir, yalnızca intranetten değil."}, {"num": 114, "tag": "2023 Vize", "text": "Kaynak için rekabet eden süreçler diğerleri tarafından tutulur veya ek kaynak için beklemeye zorlanırsa aşağıdakilerden hangisi gerçekleşir?", "options": [{"letter": "A", "text": "Dairesel bekleme"}, {"letter": "B", "text": "Paralel döngü"}, {"letter": "C", "text": "Yarış koşulu"}, {"letter": "D", "text": "Ölümcül kilitlenme"}, {"letter": "E", "text": "Önbırakma"}], "correct": "D", "explanation": "ACIKLAMA::Karşılıklı kaynak bekleme deadlock (ölümcül kilitlenme) yaratır. Dairesel bekleme yalnızca deadlock'un koşullarından biridir."}, {"num": 115, "tag": "2023 Vize, 2022-2023 Vize", "text": "I. Kabul Kontrolü II. Yük Dengeleme III. Kapasite Aşımı — Hangileri Bulut Kaynak Yönetimi ilkesidir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız II"}], "correct": "D", "explanation": "ACIKLAMA::Kaynak yönetimi ilkeleri kabul kontrolü ve yük dengelemedir. 'Kapasite aşımı' kaçınılması gereken bir durumdur, ilke değildir."}, {"num": 116, "tag": "2023 Vize", "text": "I. Aylık/yıllık faaliyet raporları II. Finans/sigorta/sağlık kuruluşları için günlük işlemlerin toplu işlenmesi/özeti III. Veri Madenciliği — Toplu (batch) işleme örneği hangileridir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız III"}], "correct": "D", "explanation": "ACIKLAMA::Periyodik raporlama (I) ve kurumların günlük işlem yığınlarının toplu işlenmesi (II) klasik batch örnekleridir."}, {"num": 117, "tag": "2024 Vize", "text": "I. Gelen paketleri sınıflara eşlemek için başlık bilgisini kullanan sınıflandırıcı II. Bağlantı atamasını aşan sınıfın göndermesine izin verildiğinde hesaplayan geciktirici III. Sınıf dışı öncül tahmincisi — Hangileri CBQ algoritmasının işlevsel birimidir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "I ve III"}], "correct": "A", "explanation": "ACIKLAMA::CBQ'nun işlevsel birimleri sınıflandırıcı (I) ve geciktirici/scheduler (II)'dir. 'Sınıf dışı öncül tahmincisi' böyle bir birim değildir."}, {"num": 118, "tag": "2024 Vize", "text": "İletişim kanalları eşzamanlı etkinliklerin koordinasyonunu sağlar. İletişim ........, gürültülü ve güvenilmez kanalları mesajları sırayla ileten güvenilir kanallara dönüştürür. Boşluğa ne gelmelidir?", "options": [{"letter": "A", "text": "protokolleri"}, {"letter": "B", "text": "frekansları"}, {"letter": "C", "text": "paradigmaları"}, {"letter": "D", "text": "cihazları"}, {"letter": "E", "text": "ücretleri"}], "correct": "A", "explanation": "ACIKLAMA::İletişim protokolleri, güvenilmez kanalları sıralı ve güvenilir iletişime dönüştürür (ör. TCP)."}, {"num": 119, "tag": "2024 Vize", "text": "VoIP, video/ses akışı gibi bant genişliği garantisi gerektiren uygulamalar için esnek bağlantı paylaşımını destekleyen ağ kaynak yönetimi algoritması hangisidir?", "options": [{"letter": "A", "text": "FQ"}, {"letter": "B", "text": "CBQ"}, {"letter": "C", "text": "SFQ"}, {"letter": "D", "text": "SCQ"}, {"letter": "E", "text": "Basic Queue"}], "correct": "B", "explanation": "ACIKLAMA::CBQ (Class-Based Queuing) trafiği sınıflara ayırıp her sınıfa bant genişliği garantisi verir; gerçek zamanlı akışlar için uygundur."}, {"num": 120, "tag": "2024 Vize, 2023-2024 Vize", "text": "Aşağıdakilerden hangisi açık kaynaklı bulut platformu DEĞİLDİR?", "options": [{"letter": "A", "text": "OpenStack"}, {"letter": "B", "text": "Nimbus"}, {"letter": "C", "text": "Microsoft"}, {"letter": "D", "text": "Open Nebula"}, {"letter": "E", "text": "Eucalyptus"}], "correct": "C", "explanation": "ACIKLAMA::OpenStack, Nimbus, OpenNebula ve Eucalyptus açık kaynaklı bulut platformlarıdır. Microsoft (Azure) tescilli/ticaridir."}, {"num": 121, "tag": "2024 Vize, 2023-2024 Vize", "text": "Aşağıdakilerden hangisi Bulut İletim Yollarının kazandırdığı yeni felsefeyi tanımlayan özelliklerinden DEĞİLDİR?", "options": [{"letter": "A", "text": "İnternet altyapısı tarafından bakım ve güvenlik sağlanmaktadır."}, {"letter": "B", "text": "Özelleştirme ile sağlayıcılar daha etkin çalışır."}, {"letter": "C", "text": "Elastik sistemlerde kaynaklar ölçülebilir, kullanıcı yalnızca kullandığı için ödenir."}, {"letter": "D", "text": "Merkezileştirme ile sağlayıcılar daha etkin çalışır."}, {"letter": "E", "text": "Elastik servisler için Bulut Bilişim İnternet teknolojilerini kullanır."}], "correct": "A", "explanation": "ACIKLAMA::Bulut felsefesini tanımlayan özellikler elastiklik, kullandıkça öde, merkezileştirme ve internet teknolojileridir. Bakım/güvenliğin 'internet altyapısınca sağlandığı' ifadesi doğru bir tanım değildir."}, {"num": 122, "tag": "2024 Vize, 2023-2024 Vize", "text": "Birçok bulut uygulamasında veri yoğundur ve aynı anda çalışan birkaç .......... kullanılır. Boşluğa ne gelmelidir?", "options": [{"letter": "A", "text": "bilgisayar"}, {"letter": "B", "text": "eşgörünüm"}, {"letter": "C", "text": "veri"}, {"letter": "D", "text": "ağ"}, {"letter": "E", "text": "damga"}], "correct": "B", "explanation": "ACIKLAMA::Veri yoğun uygulamalar aynı anda birden çok eşgörünüm (instance) ile paralel çalıştırılır."}, {"num": 123, "tag": "2024 Vize, 2023-2024 Vize", "text": "Aşağıdakilerden hangisi Fayda Bilişim (utility computing) sağlayıcısı DEĞİLDİR?", "options": [{"letter": "A", "text": "Google"}, {"letter": "B", "text": "HP"}, {"letter": "C", "text": "Amazon"}, {"letter": "D", "text": "Lenovo"}, {"letter": "E", "text": "Apple"}], "correct": "D", "explanation": "ACIKLAMA::Google, HP, Amazon ve Apple bulut/fayda bilişim hizmeti sunar. Lenovo temelde bir donanım üreticisidir."}, {"num": 124, "tag": "2024 Vize", "text": "Önceden tanımlanmış bir AMI'den oluşturularak S3'te saklanan kavram hangisidir?", "options": [{"letter": "A", "text": "SOAP"}, {"letter": "B", "text": "Eşgörünüm"}, {"letter": "C", "text": "İmaj"}, {"letter": "D", "text": "Ara bağlantı"}, {"letter": "E", "text": "MAC Adresi"}], "correct": "B", "explanation": "ACIKLAMA::AMI'den oluşturulup çalıştırılan somut örnek eşgörünümdür (instance)."}, {"num": 125, "tag": "2024 Vize", "text": "I. Performans II. Maliyet III. Görecelik — Bir sistemin başarılı değerlendirilmesi için hangi kriterler değerlidir?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız II"}], "correct": "D", "explanation": "ACIKLAMA::Başarı değerlendirmesinde temel kriterler performans ve maliyettir. 'Görecelik' bir başarı kriteri değildir."}, {"num": 126, "tag": "2024 Vize", "text": "I. Performans garantisi olasılığının düşük olması II. Talep üzerine tahsis edilebilen bir kaynak havuzu III. Gerçek zamanlı tahsise izin veren izleme sistemi — Otomatik ölçeklendirme, planlanmamış ani yüklerde hangi durumlarda kullanılabilir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız III"}], "correct": "B", "explanation": "ACIKLAMA::Otomatik ölçeklendirme için serbest bırakılabilen kaynak havuzu (II) ve gerçek zamanlı izleyen kontrol döngüsü (III) gerekir."}, {"num": 127, "tag": "2024 Vize, 2023-2024 Vize", "text": "SLA'lar tarafından zorunlu kılınan gereksinimlerden hangisi aşağıda YANLIŞ verilmiştir?", "options": [{"letter": "A", "text": "gözlemlenebilirlik"}, {"letter": "B", "text": "ölçeklenebilirlik"}, {"letter": "C", "text": "güvenlik"}, {"letter": "D", "text": "güvenilirlik"}, {"letter": "E", "text": "servis kalitesi"}], "correct": "A", "explanation": "ACIKLAMA::SLA gereksinimleri ölçeklenebilirlik, güvenlik, güvenilirlik ve servis kalitesidir. 'Gözlemlenebilirlik' bu zorunlu listede yanlış verilmiştir."}, {"num": 128, "tag": "2025 Vize", "text": "Sanallaştırmanın bulut bilişimdeki temel rolü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İnternet bağlantısı olmadan çalışmak"}, {"letter": "B", "text": "Fiziksel donanımın tamamen ortadan kaldırılması"}, {"letter": "C", "text": "Yalnızca yazılım geliştirme süreçlerini desteklemek"}, {"letter": "D", "text": "Fiziksel kaynakların daha verimli kullanılmasını sağlamak"}, {"letter": "E", "text": "Kullanıcıların donanım yönetimini üstlenmesi"}], "correct": "D", "explanation": "ACIKLAMA::Sanallaştırma tek fiziksel sunucuyu birçok VM'e bölerek kaynakların (CPU, RAM, disk) verimli paylaşımını sağlar; bu bulutun temelidir."}, {"num": 129, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi ağ performansını iyileştirme yöntemlerinden biridir?", "options": [{"letter": "A", "text": "Yalnızca fiziksel sunuculara yatırım yapmak"}, {"letter": "B", "text": "Güvenlik gruplarını devre dışı bırakmak"}, {"letter": "C", "text": "Önbellekleme kullanmak"}, {"letter": "D", "text": "QoS'yi devre dışı bırakmak"}, {"letter": "E", "text": "Sanal makineleri kapatmak"}], "correct": "C", "explanation": "ACIKLAMA::Önbellekleme (caching), sık erişilen veriyi yakında tutarak gecikmeyi azaltır ve performansı artırır."}, {"num": 130, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi bulutta uygulama dağıtım yöntemlerinden biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Sunucusuz bilişim"}, {"letter": "B", "text": "Hibrit bulut"}, {"letter": "C", "text": "Fiziksel sunucular"}, {"letter": "D", "text": "Sanal makineler"}, {"letter": "E", "text": "Konteynerler"}], "correct": "C", "explanation": "ACIKLAMA::Bulut dağıtımı sunucusuz, sanal makine ve konteyner ile yapılır. Fiziksel sunucu bulut dağıtım yöntemi değildir."}, {"num": 131, "tag": "2025 Vize, 2025-2026 Bütünleme", "text": "Yönlendiricilerin (router) temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Depolama alanlarını artırmak"}, {"letter": "B", "text": "Veri paketlerini şifrelemek"}, {"letter": "C", "text": "Veri trafiğini doğru hedeflere yönlendirmek"}, {"letter": "D", "text": "Yalnızca ağ kesintilerini önlemek"}, {"letter": "E", "text": "Kullanıcıların ağ erişimini engellemek"}], "correct": "C", "explanation": "ACIKLAMA::Yönlendirici, paketleri IP adresine göre ağlar arasında doğru hedefe iletir."}, {"num": 132, "tag": "2025 Vize, 2025-2026 Bütünleme", "text": "Aşağıdakilerden hangisi bilgi işlem kaynaklarından biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Ağ"}, {"letter": "B", "text": "CPU"}, {"letter": "C", "text": "Depolama"}, {"letter": "D", "text": "Bellek"}, {"letter": "E", "text": "Yazıcı"}], "correct": "E", "explanation": "ACIKLAMA::Bilgi işlem kaynakları CPU, bellek, depolama ve ağdır. Yazıcı bir çevre birimidir, temel bilgi işlem kaynağı değildir."}, {"num": 133, "tag": "2025 Vize", "text": "Bulut bilişimde \\\"erişilebilirlik\\\" kavramının tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fiziksel donanımın sürekli güncellenmesi"}, {"letter": "B", "text": "Yalnızca yerel cihazlardan erişim"}, {"letter": "C", "text": "İnternet bağlantısı olan her yerden verilere erişim"}, {"letter": "D", "text": "Verilerin yalnızca bir cihazda saklanması"}, {"letter": "E", "text": "İnternet bağlantısının gereksiz olması"}], "correct": "C", "explanation": "ACIKLAMA::Erişilebilirlik, internet olan her yerden ve her cihazdan hizmete/veriye ulaşabilmektir."}, {"num": 134, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi sanallaştırmanın avantajlarından biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Maliyet tasarrufu"}, {"letter": "B", "text": "Esneklik ve ölçeklenebilirlik"}, {"letter": "C", "text": "Kaynak verimliliği"}, {"letter": "D", "text": "Performans kaybı"}, {"letter": "E", "text": "Yedekleme ve felaket kurtarma"}], "correct": "D", "explanation": "ACIKLAMA::Sanallaştırma maliyet, esneklik, kaynak verimliliği ve kurtarma avantajı sağlar. Performans kaybı bir dezavantajdır, avantaj değildir."}, {"num": 135, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi sanallaştırma türlerinden biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Ağ sanallaştırma"}, {"letter": "B", "text": "Depolama sanallaştırma"}, {"letter": "C", "text": "Sunucu sanallaştırma"}, {"letter": "D", "text": "İşletim sistemi sanallaştırma"}, {"letter": "E", "text": "Masaüstü sanallaştırma"}], "correct": "D", "explanation": "ACIKLAMA::Ağ, depolama, sunucu ve masaüstü sanallaştırma temel türlerdir."}, {"num": 136, "tag": "2025 Vize", "text": "Google Workspace'in temel araçlarından Google Drive'ın işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "E-posta gönderip almak"}, {"letter": "B", "text": "Doküman düzenlemek"}, {"letter": "C", "text": "Elektronik tablo oluşturmak"}, {"letter": "D", "text": "Video konferans yapmak"}, {"letter": "E", "text": "Bulut depolama sağlamak"}], "correct": "E", "explanation": "ACIKLAMA::Google Drive bir bulut depolama hizmetidir. E-posta Gmail, doküman Docs, tablo Sheets, konferans Meet ile yapılır."}, {"num": 137, "tag": "2025 Vize", "text": "Bulut bilişim kavramının tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yerel veri merkezlerinin yönetilmesi"}, {"letter": "B", "text": "İnternet üzerinden bilgi işlem hizmetlerinin sağlanması"}, {"letter": "C", "text": "Yalnızca yazılım geliştirme süreçlerini kapsar"}, {"letter": "D", "text": "Fiziksel donanım satın alma süreci"}, {"letter": "E", "text": "Bilgisayarların fiziksel olarak birleştirilmesi"}], "correct": "B", "explanation": "ACIKLAMA::Bulut bilişim; hesaplama, depolama ve yazılımın internet üzerinden hizmet olarak sunulmasıdır."}, {"num": 138, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi yük dengeleme işleminin faydalarından biridir?", "options": [{"letter": "A", "text": "Fiziksel sunucuların manuel yönetimini zorunlu kılar."}, {"letter": "B", "text": "Yalnızca web trafiğini izler."}, {"letter": "C", "text": "Kullanıcıların bulut erişimini sınırlar."}, {"letter": "D", "text": "Yalnızca depolama alanı artırır."}, {"letter": "E", "text": "Ağ trafiğini/işlem yükünü birden fazla kaynağa dağıtarak dengeli çalışmayı sağlar."}], "correct": "E", "explanation": "ACIKLAMA::Yük dengeleme, gelen isteği birden çok sunucuya dağıtarak tek noktanın aşırı yüklenmesini önler."}, {"num": 139, "tag": "2025 Vize", "text": "Güvenlik politikalarından \\\"erişim kontrolü\\\" ifadesinin faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Verilerin test ortamında kullanılmasını sağlar."}, {"letter": "B", "text": "Yetkisiz erişimi önlemek için kaynaklara erişim politikalarını düzenler."}, {"letter": "C", "text": "Verilerin düzenli yedeklenmesini"}, {"letter": "D", "text": "Verilerin şifrelenmesini"}, {"letter": "E", "text": "Kullanıcıların kimliklerini doğrulamasını"}], "correct": "B", "explanation": "ACIKLAMA::Erişim kontrolü, kimin hangi kaynağa erişebileceğini belirleyerek yetkisiz erişimi engeller."}, {"num": 140, "tag": "2025 Vize, 2025-2026 Final", "text": "Aşağıdakilerden hangisi ağ güvenliği yöntemlerinden biri DEĞİLDİR?", "options": [{"letter": "A", "text": "VPN"}, {"letter": "B", "text": "IDS/IPS"}, {"letter": "C", "text": "Güvenlik duvarları"}, {"letter": "D", "text": "Ağ segmentasyonu"}, {"letter": "E", "text": "CDN"}], "correct": "E", "explanation": "ACIKLAMA::VPN, IDS/IPS, güvenlik duvarı ve ağ segmentasyonu güvenlik yöntemidir. CDN içerik dağıtımı/performans içindir, bir güvenlik yöntemi değildir."}, {"num": 141, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi ağ yapılarından biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Fiziksel Depolama Ağı"}, {"letter": "B", "text": "İnternet"}, {"letter": "C", "text": "Bulut Ağı"}, {"letter": "D", "text": "Yerel Ağ (LAN)"}, {"letter": "E", "text": "Geniş Alan Ağı (WAN)"}], "correct": "A", "explanation": "ACIKLAMA::İnternet, bulut ağı, LAN ve WAN ağ yapılarıdır. 'Fiziksel Depolama Ağı' bir ağ yapısı olarak sayılmaz."}, {"num": 142, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi CPU'nun tanımıdır?", "options": [{"letter": "A", "text": "Veri iletişimini sağlayan altyapıdır."}, {"letter": "B", "text": "Merkezi işlem birimi, bilgi işlem gücünü sağlar."}, {"letter": "C", "text": "Yazılım yönetimini sağlayan birimdir."}, {"letter": "D", "text": "Verilerin kalıcı saklandığı yerdir."}, {"letter": "E", "text": "Verilerin geçici saklandığı yerdir."}], "correct": "B", "explanation": "ACIKLAMA::CPU (Central Processing Unit) hesaplama gücünü sağlayan merkezi işlem birimidir."}, {"num": 143, "tag": "2025 Vize", "text": "Aşağıdakilerden hangisi bulut bilişimin avantajlarından biridir?", "options": [{"letter": "A", "text": "Kullanıcı yalnızca kullandığı kaynaklar için ödeme yapar."}, {"letter": "B", "text": "Esneklik ve ölçeklenebilirlik sağlamaz."}, {"letter": "C", "text": "Tüm verilerin yerel cihazda saklanmasını zorunlu kılar."}, {"letter": "D", "text": "Yalnızca fiziksel donanım maliyetini artırır."}, {"letter": "E", "text": "İnternet bağlantısı olmadan çalışabilir."}], "correct": "A", "explanation": "ACIKLAMA::Kullandıkça öde modeli bulutun temel avantajıdır; sabit yatırım yerine tüketim bazlı ödeme yapılır."}, {"num": 144, "tag": "2025 Vize", "text": "Bulut güvenliğinin temel prensiplerinden \\\"gizlilik\\\" ile aşağıdakilerden hangisi kastedilir?", "options": [{"letter": "A", "text": "Verilerin yalnızca test ortamında kullanılması"}, {"letter": "B", "text": "Verilerin yetkisiz erişime karşı korunması"}, {"letter": "C", "text": "Verilerin sürekli erişilebilir olması"}, {"letter": "D", "text": "Verilerin düzenli yedeklenmesi"}, {"letter": "E", "text": "Verilerin şifrelenmesi"}], "correct": "B", "explanation": "ACIKLAMA::Gizlilik (confidentiality), verinin yalnızca yetkili kişilerce görülmesini, yetkisiz erişime karşı korunmasını ifade eder."}, {"num": 145, "tag": "2025 Vize", "text": "Bulut performans ölçütlerinden \\\"gecikme süresi\\\" ifadesi ile aşağıdakilerden hangisi temsil edilir?", "options": [{"letter": "A", "text": "İsteklerin yanıtlanma süresini"}, {"letter": "B", "text": "Uygulamaların kolay kullanılabilirliğini"}, {"letter": "C", "text": "Kaynakların artırılabilirliğini"}, {"letter": "D", "text": "Veri aktarım kapasitesini"}, {"letter": "E", "text": "Uygulamaların sürekli erişilebilirliğini"}], "correct": "A", "explanation": "ACIKLAMA::Gecikme (latency), bir isteğin gönderilip yanıtın alınması arasındaki süredir."}, {"num": 146, "tag": "2026 Vize", "text": "Bulut bilişimin temel özelliği \\\"isteğe bağlı self-servis\\\" neyi ifade eder?", "options": [{"letter": "A", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını"}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını"}, {"letter": "C", "text": "Bulut hizmetlerinin performansını düşürmesini"}, {"letter": "D", "text": "Kullanıcıların kaynakları manuel olarak talep etmesini"}, {"letter": "E", "text": "Kullanıcıların ihtiyaç duydukları kaynakları otomatik olarak talep edebilmesini"}], "correct": "E", "explanation": "ACIKLAMA::On-demand self-service; kullanıcının insan müdahalesi olmadan, otomatik olarak kaynak talep edip alabilmesidir."}, {"num": 147, "tag": "2026 Vize", "text": "Performans izleme aracı Dynatrace'in temel işlevi nedir?", "options": [{"letter": "A", "text": "Konteynerlerin dağıtımını yönetmek"}, {"letter": "B", "text": "Veri tabanı sorgularını optimize etmek"}, {"letter": "C", "text": "Uygulama performansını izlemek ve yönetmek"}, {"letter": "D", "text": "Sunucusuz bilgi işlem sağlamak"}, {"letter": "E", "text": "Elektronik tablo oluşturmak"}], "correct": "C", "explanation": "ACIKLAMA::Dynatrace bir APM (Application Performance Monitoring) aracıdır; uygulama performansını izler ve yönetir."}, {"num": 148, "tag": "2026 Vize", "text": "IaaS modelinde kullanıcılar aşağıdaki bileşenlerden hangisi ile yönetilir?", "options": [{"letter": "A", "text": "Sunucular"}, {"letter": "B", "text": "Sanallaştırma"}, {"letter": "C", "text": "Uygulamalar"}, {"letter": "D", "text": "Ağ"}, {"letter": "E", "text": "Depolama"}], "correct": "C", "explanation": "ACIKLAMA::IaaS'te sağlayıcı donanım/sanallaştırma/ağ/depolamayı yönetir; kullanıcı ise İS ve uygulamalarını kendisi yönetir."}, {"num": 149, "tag": "2026 Vize", "text": "Bulut mimarisi katmanı PaaS ne sağlar?", "options": [{"letter": "A", "text": "Verilerin manuel işlenmesini"}, {"letter": "B", "text": "Yalnızca yerel cihazlarda çalışmayı"}, {"letter": "C", "text": "Yalnızca fiziksel sunucularda saklamayı"}, {"letter": "D", "text": "Geliştiricilere uygulama geliştirme ve dağıtım platformu sunar."}, {"letter": "E", "text": "Yalnızca fiziksel sunucuların yönetimini"}], "correct": "D", "explanation": "ACIKLAMA::PaaS, altyapı ayrıntılarıyla uğraşmadan uygulama geliştirip dağıtmak için hazır bir platform (çalışma zamanı, veri tabanı, araçlar) sağlar."}, {"num": 150, "tag": "2026 Vize", "text": "Ağ analiz aracı Wireshark'ın temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Veri paketlerinin rotasını izlemek"}, {"letter": "B", "text": "Gecikme süresini ölçmek"}, {"letter": "C", "text": "Yedekleme çözümleri oluşturmak"}, {"letter": "D", "text": "Bant genişliğini artırmak"}, {"letter": "E", "text": "Ağ trafiğini analiz etmek"}], "correct": "E", "explanation": "ACIKLAMA::Wireshark bir paket yakalama/analiz aracıdır; ağdaki trafiği paket düzeyinde inceler."}, {"num": 151, "tag": "2026 Vize", "text": "QoS (Quality of Service)'nin kullanım amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fiziksel sunucuları birleştirir."}, {"letter": "B", "text": "Ağ trafiğini önceliklendirir."}, {"letter": "C", "text": "Depolama alanlarını artırır."}, {"letter": "D", "text": "Yalnızca ağ kesintilerini önler."}, {"letter": "E", "text": "Veri paketlerini şifreler."}], "correct": "B", "explanation": "ACIKLAMA::QoS, kritik trafiğe (ör. VoIP, video) öncelik vererek bant genişliği ve gecikme garantisi sağlar."}, {"num": 152, "tag": "2026 Vize", "text": "Sanallaştırmada \\\"hipervizör\\\" neyi ifade eder?", "options": [{"letter": "A", "text": "Verilerin yalnızca yerel cihazlarda saklanmasını sağlayan sistem"}, {"letter": "B", "text": "Sanal makineleri yöneten yazılım katmanı"}, {"letter": "C", "text": "Fiziksel sunucuların performansını düşüren yazılım"}, {"letter": "D", "text": "Verilerin manuel işlenmesini sağlayan araç"}, {"letter": "E", "text": "Bulut hizmetlerinin manuel güncellenmesini sağlayan araç"}], "correct": "B", "explanation": "ACIKLAMA::Hipervizör (VMM), fiziksel donanımı soyutlayarak birden çok sanal makineyi oluşturup yöneten yazılım katmanıdır."}, {"num": 153, "tag": "2026 Vize", "text": "Aşağıdakilerden hangisi bulut bilişimin avantajlarından biri DEĞİLDİR?", "options": [{"letter": "A", "text": "Maliyet tasarrufu"}, {"letter": "B", "text": "İnternet bağımlılığı"}, {"letter": "C", "text": "Esneklik"}, {"letter": "D", "text": "Yedekleme ve felaket kurtarma"}, {"letter": "E", "text": "Ölçeklenebilirlik"}], "correct": "B", "explanation": "ACIKLAMA::Maliyet tasarrufu, esneklik, kurtarma ve ölçeklenebilirlik avantajdır. İnternete bağımlılık bir dezavantajdır."}, {"num": 154, "tag": "2026 Vize", "text": "Sanallaştırmada \\\"sanal makine\\\" neyi ifade eder?", "options": [{"letter": "A", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını sağlayan yazılım"}, {"letter": "B", "text": "Yalnızca yerel cihazlarda çalışmayı sağlayan sistem"}, {"letter": "C", "text": "Verilerin manuel işlenmesini sağlayan araç"}, {"letter": "D", "text": "Bulut hizmetlerinin performansını düşüren yazılım"}, {"letter": "E", "text": "Fiziksel bir sunucunun yazılım tabanlı bir kopyası"}], "correct": "E", "explanation": "ACIKLAMA::Sanal makine, gerçek bir bilgisayarın (CPU, bellek, disk, ağ) yazılımla taklit edilen kopyasıdır."}, {"num": 155, "tag": "2026 Vize", "text": "Bulut bilişimde değişen iş yüklerine hızlı uyum sağlamayı ifade eden özellik hangisidir?", "options": [{"letter": "A", "text": "Yedekleme"}, {"letter": "B", "text": "Fiziksel donanım yönetimi"}, {"letter": "C", "text": "Veri kaybı"}, {"letter": "D", "text": "Güvenlik"}, {"letter": "E", "text": "Otomatik ölçeklendirme"}], "correct": "E", "explanation": "ACIKLAMA::Otomatik ölçeklendirme (auto-scaling), talebe göre kaynakları otomatik artırıp azaltarak değişen yüke uyum sağlar."}, {"num": 156, "tag": "2022-2023 Final", "text": "I. SISD II. MIMD III. KIMD — 1966'da Michael Flynn'in eşzamanlı kontrol/talimat ve veri akışları sayısına dayalı sınıflandırması hangilerini içerir?", "options": [{"letter": "A", "text": "II ve III"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "Yalnız III"}], "correct": "B", "explanation": "ACIKLAMA::Flynn taksonomisi SISD, SIMD, MISD ve MIMD'dir. 'KIMD' diye bir sınıf yoktur; verilenlerden yalnızca SISD (I) ve MIMD (II) geçerlidir."}, {"num": 157, "tag": "2022-2023 Final", "text": "Güvenilir bir uygulamayı en düşük ayrıcalık düzeyiyle kısıtlamak için kullanılabilen zorunlu güvenlik mekanizmalarından biri hangisidir?", "options": [{"letter": "A", "text": "Tür değişimi"}, {"letter": "B", "text": "Tür zorlaması"}, {"letter": "C", "text": "Tür geliştirmesi"}, {"letter": "D", "text": "Tür salınımı"}, {"letter": "E", "text": "Tür atlaması"}], "correct": "B", "explanation": "ACIKLAMA::Tür zorlaması (Type Enforcement), zorunlu erişim kontrolünde özne ve nesneleri tiplere ayırarak en az ayrıcalık ilkesini uygular."}, {"num": 158, "tag": "2022-2023 Final", "text": "I. Geçici depolama II. Örnek dışı bulut depolama III. Monte edilebilir örnek dışı blok depolama — AWS'de Hadoop dosya sistemine benzer bir dosya sistemi kurmak için hangileri kullanılmalıdır?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "Yalnız II"}], "correct": "B", "explanation": "ACIKLAMA::Kalıcı ve monte edilebilen depolama (örnek dışı S3/EBS türü) HDFS benzeri sistem için gerekir. Geçici (ephemeral) depolama eşgörünüm kapanınca silineceğinden uygun değildir."}, {"num": 159, "tag": "2022-2023 Final, 2023-2024 Bütünleme", "text": "Xen güvenlik açıklarının analizi yapıldığında saldırıların büyük çoğunluğu hangi bileşene yapılmaktadır?", "options": [{"letter": "A", "text": "Yardımcı sanal makinenin güvenlik bileşeni"}, {"letter": "B", "text": "Kontrol sanal makinesinin güvenlik bileşeni"}, {"letter": "C", "text": "Kontrol işletim sisteminin hizmet bileşeni"}, {"letter": "D", "text": "Kontrol sanal makinesinin hizmet bileşeni"}, {"letter": "E", "text": "Yardımcı sanal makinenin hizmet bileşeni"}], "correct": "D", "explanation": "ACIKLAMA::Xen'de saldırıların çoğu, ayrıcalıklı kontrol VM'inin (Dom0) hizmet bileşenlerini hedef alır; saldırı yüzeyinin en geniş olduğu yer burasıdır."}, {"num": 160, "tag": "2022-2023 Final", "text": "${t_s3kod}Yukarıdaki kod aşağıdakilerden hangisini gerçekleştirmektedir?", "options": [{"letter": "A", "text": "Belirli bir klasördeki tüm erişim anahtarlarının listesini oluşturur."}, {"letter": "B", "text": "Belirli bir klasördeki tüm gizli anahtarların listesini oluşturur."}, {"letter": "C", "text": "Belirli bir klasördeki tüm liste sonu anahtarlarının listesini oluşturur."}, {"letter": "D", "text": "Belirli bir klasördeki tüm anahtarların bir listesini oluşturur."}, {"letter": "E", "text": "Belirli bir klasördeki tüm öncü anahtarların listesini oluşturur."}], "correct": "D", "explanation": "ACIKLAMA::listObjects + getObjectSummaries döngüsü, kovadaki (bucket) tüm nesne anahtarlarını (key) allKeys listesine toplar."}, {"num": 161, "tag": "2022-2023 Final, 2024 Final", "text": "Bulut bilişim paradigmalarının piramit modeline göre yazılım hangi görevi görür?", "options": [{"letter": "A", "text": "Temel kaynakların kullanımını kolaylaştıracak bir ortam ekler."}, {"letter": "B", "text": "Kaynakları kontrol eder."}, {"letter": "C", "text": "Temel kaynaklar sağlar."}, {"letter": "D", "text": "Hizmetlerin tasarımını yapar."}, {"letter": "E", "text": "Hizmetlere doğrudan erişime izin verir."}], "correct": "E", "explanation": "ACIKLAMA::Piramidin en üstündeki yazılım (SaaS) katmanı kullanıcıya hizmetlere doğrudan erişim sağlar."}, {"num": 162, "tag": "2022-2023 Final", "text": "I. Etkinlik II. Görecelik III. Sadakat — Hangi madde veya maddelerde hipervizörler iyi performans göstermelidir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız I"}], "correct": "A", "explanation": "ACIKLAMA::Hipervizör etkinlik (verimlilik) ve sadakat (donanımı doğru öykünme) açısından ideali temsil etmelidir. Görecelik bir performans ölçütü değildir."}, {"num": 163, "tag": "2022-2023 Final", "text": "Her FC aygıtının sahip olduğu WorldWideName benzersiz kimliğinin adres uzunluğu kaç bittir?", "options": [{"letter": "A", "text": "128"}, {"letter": "B", "text": "48"}, {"letter": "C", "text": "32"}, {"letter": "D", "text": "16"}, {"letter": "E", "text": "64"}], "correct": "E", "explanation": "ACIKLAMA::WWN (World Wide Name), Fiber Channel aygıtlarını benzersiz tanımlayan 64 bitlik bir adrestir."}, {"num": 164, "tag": "2022-2023 Final", "text": "Akıllı telefonlardaki \\\"ölüm tutuşu\\\" tabiri ne anlama gelmektedir?", "options": [{"letter": "A", "text": "Telefonu belli açıda tutunca internet performansının düşmesi"}, {"letter": "B", "text": "Telefonu belli açıda tutunca kamera görüntüsünde bozulmalar olması"}, {"letter": "C", "text": "Telefonu belli açıda tutunca çok yüksek elektromanyetik alana maruz kalma"}, {"letter": "D", "text": "Telefonu belli açıda tutunca ekran ömrünün azalması"}, {"letter": "E", "text": "Telefonu belli açıda tutunca anten kazancının çok düşmesi ve çekme problemleri yaşaması"}], "correct": "E", "explanation": "ACIKLAMA::Elin anteni kapatacak şekilde kavraması anten kazancını düşürüp sinyal/çekim kaybına yol açar (death grip)."}, {"num": 165, "tag": "2022-2023 Final", "text": "I. Simetri II. Tamamlayıcılık III. Düzenlilik — Hangileri sistem simülasyonunun karmaşıklığını azaltır?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "II ve III"}], "correct": "A", "explanation": "ACIKLAMA::Simetri ve düzenlilik, tekrar eden yapıların bir kez modellenip yeniden kullanılmasını sağlayarak simülasyon karmaşıklığını azaltır."}, {"num": 166, "tag": "2022-2023 Final", "text": "Uygulama kodlamasını ve dağıtımını kolaylaştırmak için bir dizi araç ve hizmet sağlayan bulut iletim yolu hangisidir?", "options": [{"letter": "A", "text": "KaaS"}, {"letter": "B", "text": "SaaS"}, {"letter": "C", "text": "IaaS"}, {"letter": "D", "text": "PaaS"}, {"letter": "E", "text": "BaaS"}], "correct": "D", "explanation": "ACIKLAMA::PaaS (Platform as a Service) geliştiriciye hazır çalışma zamanı, araç ve hizmetler sunarak kodlama ve dağıtımı kolaylaştırır."}, {"num": 167, "tag": "2022-2023 Final", "text": "S3'ün varsayılan protokolü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "RTSP"}, {"letter": "B", "text": "HTTP"}, {"letter": "C", "text": "BitTorrent"}, {"letter": "D", "text": "RTP"}, {"letter": "E", "text": "UDP"}], "correct": "B", "explanation": "ACIKLAMA::S3 nesnelerine varsayılan olarak HTTP (REST) üzerinden erişilir; güvenli erişim HTTPS ile yapılır."}, {"num": 168, "tag": "2022-2023 Final", "text": "I. Sonraki eylemi nerede bulacağını söyleyen eylem referansı II. Yorumlayıcının görselinde görülebilen referans III. Gerçekleştirebileceği eylemler dizisini tanımlayan repertuar — Hangileri yorumlayıcı soyutlamasında tanınabilen ögelerdendir?", "options": [{"letter": "A", "text": "Yalnız I"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve II"}], "correct": "B", "explanation": "ACIKLAMA::Yorumlayıcı soyutlamasında eylem referansı (I) ve eylem repertuarı (III) tanımlıdır; görselde görülen referans bu soyutlamanın ögesi değildir."}, {"num": 169, "tag": "2022-2023 Final", "text": "Xen tabanlı bir ortamın yönetim işletim sistemi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Dom0"}, {"letter": "B", "text": "DomZ"}, {"letter": "C", "text": "DomK"}, {"letter": "D", "text": "DomU"}, {"letter": "E", "text": "DomV"}], "correct": "A", "explanation": "ACIKLAMA::Dom0 (Domain 0), Xen açıldığında ilk başlatılan, donanım sürücülerini ve diğer VM'leri (DomU) yöneten ayrıcalıklı yönetim İS'idir."}, {"num": 170, "tag": "2024 Final", "text": "Bir bulut sağlayıcı, güveni şüpheli bir sağlayıcıdan bazı kaynakları taşerona verebilir ve bu taşeronlar müşteri verisini doğru koruyamayabilir. Bu durumu engelleyecek yöntem hangisidir?", "options": [{"letter": "A", "text": "Üçüncü taraf ardışıllaması"}, {"letter": "B", "text": "Üçüncü taraf denetimi"}, {"letter": "C", "text": "Üçüncü taraf katışımı"}, {"letter": "D", "text": "Üçüncü taraf anlaşması"}, {"letter": "E", "text": "Üçüncü taraf globalleşmesi"}], "correct": "B", "explanation": "ACIKLAMA::Bağımsız üçüncü taraf denetimi (third-party audit), taşeron sağlayıcıların veri koruma yükümlülüklerine uyduğunu doğrular."}, {"num": 171, "tag": "2024 Final", "text": "I. Aradan çıkartma II. İnceleme III. İzolasyon — Hangileri VM tabanlı izinsiz giriş tespit sistemlerinin özelliğidir?", "options": [{"letter": "A", "text": "Yalnız I"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve III"}], "correct": "D", "explanation": "ACIKLAMA::VM tabanlı IDS'ler introspeksiyonla inceleme (II) yapar ve izleyiciyi konuktan izolasyon (III) ile korur."}, {"num": 172, "tag": "2024 Final", "text": "Infiniband üzerinde FDR için bağlantı başına her yönde bant genişliği aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "10 Gbps"}, {"letter": "B", "text": "2.5 Gbps"}, {"letter": "C", "text": "14 Gbps"}, {"letter": "D", "text": "5 Gbps"}, {"letter": "E", "text": "25 Gbps"}], "correct": "C", "explanation": "ACIKLAMA::InfiniBand FDR (Fourteen Data Rate) hat başına yönde yaklaşık 14 Gbps sağlar."}, {"num": 173, "tag": "2024 Final", "text": "Tüm sistemin ortalama arıza süresi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "MTAF"}, {"letter": "B", "text": "MTTF"}, {"letter": "C", "text": "MDAF"}, {"letter": "D", "text": "MDTF"}, {"letter": "E", "text": "MTAD"}], "correct": "B", "explanation": "ACIKLAMA::MTTF (Mean Time To Failure), onarılamayan bir sistemin ortalama arızaya kadar geçen süresidir."}, {"num": 174, "tag": "2024 Final, 2022-2023 Vize", "text": "I. Bileşik koşul II. İsim III. Açıklama — İş akışı modellemede \\\"görev\\\" hangileri ile karakterize edilir?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve II"}], "correct": "D", "explanation": "ACIKLAMA::Bir görev isim (II) ve açıklama (III) ile tanımlanır; bileşik koşul kontrol akışına aittir."}, {"num": 175, "tag": "2024 Final", "text": "I. Otomatik Boyutlandırma II. EC2 III. Cloudwatch — Hangileri Yönetim Konsolu tarafından erişilebilen servislerdir?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız III"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I, II ve III"}], "correct": "E", "explanation": "ACIKLAMA::AWS Management Console'dan Auto Scaling, EC2 ve CloudWatch servislerinin hepsine erişilebilir."}, {"num": 176, "tag": "2024 Final", "text": "Ubuntu üzerindeki Basit Bildirim Hizmeti ne olarak da bilinir?", "options": [{"letter": "A", "text": "WNS"}, {"letter": "B", "text": "CNS"}, {"letter": "C", "text": "SNS"}, {"letter": "D", "text": "ZNS"}, {"letter": "E", "text": "KNS"}], "correct": "C", "explanation": "ACIKLAMA::SNS (Simple Notification Service), yayınla-abone ol (pub/sub) mantığıyla çalışan basit bildirim hizmetidir."}, {"num": 177, "tag": "2024 Final", "text": "Güvenilir Bilgi İşlem Tabanı aşağıdakilerden hangisi olarak bilinir?", "options": [{"letter": "A", "text": "TCB"}, {"letter": "B", "text": "GBIT"}, {"letter": "C", "text": "TKB"}, {"letter": "D", "text": "GBT"}, {"letter": "E", "text": "TKK"}], "correct": "A", "explanation": "ACIKLAMA::TCB (Trusted Computing Base), bir sistemin güvenliğini sağlayan tüm donanım/yazılım/bileşenlerin bütünüdür."}, {"num": 178, "tag": "2024 Final", "text": "Proses bazlı sanallaştırma metodunu kullanan Tip 2 sanal makine aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Xen"}, {"letter": "B", "text": "Wine"}, {"letter": "C", "text": "Parallels"}, {"letter": "D", "text": "VmWare Workstation 1"}, {"letter": "E", "text": "KVM"}], "correct": "B", "explanation": "ACIKLAMA::Wine, uygulama (proses) düzeyinde çalışan, Windows API çağrılarını çeviren bir Tip-2 (proses bazlı) çözümdür."}, {"num": 179, "tag": "2024 Final", "text": "I. Fayda Tabanlı II. Makine Öğrenme III. Sanal Odaklanma — Hangileri Kaynak Yönetimi politikalarının uygulanması için temel mekanizmalardır?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I ve II"}], "correct": "E", "explanation": "ACIKLAMA::Kaynak yönetiminde fayda tabanlı (utility-based) ve makine öğrenmesi temel mekanizmalardır. 'Sanal odaklanma' böyle bir mekanizma değildir."}, {"num": 180, "tag": "2024 Final", "text": "Ara katman yazılımının desteklemesi gereken \\\"sistemdeki bilgi nesneleri sistemi etkilemeden taşınır\\\" özelliği hangisidir?", "options": [{"letter": "A", "text": "Göç Şeffaflığı"}, {"letter": "B", "text": "Ölçeklendirme Şeffaflığı"}, {"letter": "C", "text": "Konum Şeffaflığı"}, {"letter": "D", "text": "Çoğaltma Şeffaflığı"}, {"letter": "E", "text": "Erişim Şeffaflığı"}], "correct": "A", "explanation": "ACIKLAMA::Göç (migration) şeffaflığı, nesnelerin sistemi etkilemeden bir yerden başka yere taşınabilmesini gizler."}, {"num": 181, "tag": "2024 Final", "text": "Bir Web formuna girilen SQL komutunun veri tabanı içeriğini saldırgana açması/değiştirmesi durumuna ne ad verilir?", "options": [{"letter": "A", "text": "SQL normalizasyonu"}, {"letter": "B", "text": "SQL enjeksiyonu"}, {"letter": "C", "text": "SQL dezentegrasyonu"}, {"letter": "D", "text": "SQL sorgulaması"}, {"letter": "E", "text": "SQL ayrıştırılması"}], "correct": "B", "explanation": "ACIKLAMA::SQL enjeksiyonu; kullanıcı girdisinin sorguya kod olarak enjekte edilerek veri tabanının ele geçirilmesidir."}, {"num": 182, "tag": "2024 Final", "text": "<pre>ReceiveMessageRequest r = new ReceiveMessageRequest();\\nr.QueueUrl = myQueueUrl;\\nReceiveMessageResponse resp = sqs.ReceiveMessage(r);</pre>Yukarıdaki kod SQS yoluyla hangi işlemi yerine getirir?", "options": [{"letter": "A", "text": "Bağlantı kimliğini doğrular."}, {"letter": "B", "text": "Mesaj gönderir."}, {"letter": "C", "text": "Mesaj alır."}, {"letter": "D", "text": "Mesaj siler."}, {"letter": "E", "text": "Kuyruk oluşturur."}], "correct": "C", "explanation": "ACIKLAMA::Kod, SQS kuyruğundan ReceiveMessage çağrısıyla mesaj okur/alır."}, {"num": 183, "tag": "2024 Final", "text": "I. Performans II. Açılım III. Maliyet — Hangileri insan yapımı sistemlerin karmaşıklığını pratikte sınırlayan faktörlerdir?", "options": [{"letter": "A", "text": "II ve III"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız II"}], "correct": "C", "explanation": "ACIKLAMA::Karmaşıklığı pratikte sınırlayan faktörler performans ve maliyettir."}, {"num": 184, "tag": "2024 Final", "text": "Kendi kendine benzerliğin karmaşıklığını ölçmek için kullanılabilecek kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kritik yavaşlama"}, {"letter": "B", "text": "Kritik yaşlanma"}, {"letter": "C", "text": "Kritik durağanlık"}, {"letter": "D", "text": "Kritik hızlanma"}, {"letter": "E", "text": "Kritik gövde"}], "correct": "A", "explanation": "ACIKLAMA::Kritik yavaşlama (critical slowing down), sistemin kritik noktaya yaklaşırken kendine benzer davranış ve artan tepki süresiyle karmaşıklığını gösterir."}, {"num": 185, "tag": "2024 Final", "text": "I. Yönetim Araçları II. Cihaz Öykünücüleri III. Sanal Hafıza — Hangileri Yönetim İşletim Sistemi'nin (Dom0) elemanlarındandır?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız I"}], "correct": "D", "explanation": "ACIKLAMA::Yönetim İS'i (Dom0) yönetim araçlarını ve cihaz öykünücülerini (device emulators) içerir. Sanal hafıza konuk VM'e ait bir kaynaktır."}, {"num": 186, "tag": "2024 Final", "text": "Dom0'da taşıma katmanı güvenliği nasıl gösterilir?", "options": [{"letter": "A", "text": "TSL"}, {"letter": "B", "text": "TGK"}, {"letter": "C", "text": "TCM"}, {"letter": "D", "text": "TLS"}, {"letter": "E", "text": "TKG"}], "correct": "D", "explanation": "ACIKLAMA::Taşıma katmanı güvenliği TLS (Transport Layer Security) ile sağlanır."}, {"num": 187, "tag": "2024 Final", "text": "I. Hizmet reddi olasılığı fazladır. II. Paket filtreleme yapar. III. Kabul kuralına uymayan bireysel paketleri atar. — Birinci nesil güvenlik duvarları için hangileri doğrudur?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "II ve III"}], "correct": "E", "explanation": "ACIKLAMA::Birinci nesil güvenlik duvarları paket filtreleme (II) yapar ve kurala uymayan paketleri atar (III). Yüksek DoS olasılığı bunların bir özelliği olarak sayılmaz."}, {"num": 188, "tag": "2024 Final", "text": "Mikroskobik bir sistemin termodinamik entropisi S = kB ln Ω'dır. Buradaki kB ne olarak bilinir?", "options": [{"letter": "A", "text": "Boltzmann sabiti"}, {"letter": "B", "text": "Bormann sabiti"}, {"letter": "C", "text": "Birkin sabiti"}, {"letter": "D", "text": "Blatzmann sabiti"}, {"letter": "E", "text": "Blazkiewicz sabiti"}], "correct": "A", "explanation": "ACIKLAMA::kB, istatistiksel mekaniğin temel sabiti olan Boltzmann sabitidir."}, {"num": 189, "tag": "2022-2023 Vize, 2023-2024 Vize", "text": "I. Eşgörünüm formatlar ortaya çıkarır. II. Yeni bir imaj yaratır. III. Mevcut bir AMI'den bir eşgörünüm başlatabilir. — Amazon Bulut Bilişim'de kullanıcı hangilerini gerçekleştirebilir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve III"}], "correct": "D", "explanation": "ACIKLAMA::Kullanıcı yeni imaj (AMI) oluşturabilir ve mevcut bir AMI'den eşgörünüm başlatabilir."}, {"num": 190, "tag": "2022-2023 Vize", "text": "I. Veritabanı yüklü servisler II. Web yüklü servisler III. Bölünemez iş yüklü servisler IV. İşlem tabanlı servisler — Bazı uygulamalar bulut için uygun değildir; hangileri bu duruma uyar?", "options": [{"letter": "A", "text": "III ve IV"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "Yalnız I"}], "correct": "B", "explanation": "ACIKLAMA::Çıkmış sınav cevap anahtarında bu sorunun yanıtı 'Yalnız III' (bölünemez / paralelleştirilemeyen iş yüklü servisler) olarak işaretlenmiştir; bu tür yükler bulutun paralel ölçeklenme avantajından yararlanamaz."}, {"num": 191, "tag": "2022-2023 Vize", "text": "I. Hard disk imajı II. Ethernet imajı III. Ana hafıza imajı — İşletim sistemi göçünde hangileri taşınırsa İS tamamen taşınmış olur?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve III"}], "correct": "E", "explanation": "ACIKLAMA::Diskin (kalıcı durum) ve ana hafızanın (çalışan durum) imajı taşınırsa İS eksiksiz göç eder."}, {"num": 192, "tag": "2022-2023 Vize", "text": "S3 yazılan her nesnenin MD5'ini hesapladıktan sonra hangi alana döndürür?", "options": [{"letter": "A", "text": "BeTag"}, {"letter": "B", "text": "CeTag"}, {"letter": "C", "text": "ATag"}, {"letter": "D", "text": "CTag"}, {"letter": "E", "text": "ETag"}], "correct": "E", "explanation": "ACIKLAMA::S3, nesnenin MD5 özetini ETag alanında döndürür; bütünlük doğrulaması için kullanılır."}, {"num": 193, "tag": "2022-2023 Vize", "text": "I. VmWare II. Bochs III. Parallels — Yukarıdaki sanal makinelerden hangileri bir yorumlayıcıdır (interpreter)?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "Yalnız III"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "Yalnız I"}], "correct": "D", "explanation": "ACIKLAMA::Bochs, komutları yazılımsal olarak yorumlayan bir öykünücü/yorumlayıcıdır. VMware ve Parallels donanım destekli sanallaştırma kullanır."}, {"num": 194, "tag": "2022-2023 Vize, 2023-2024 Bütünleme", "text": "Kaynaklar için rekabet eden süreçler/iş parçacıkları başkalarınca tutulur veya ek kaynak için beklemeye zorlanırsa ne gerçekleşir?", "options": [{"letter": "A", "text": "Dairesel bekleme"}, {"letter": "B", "text": "Paralel döngü"}, {"letter": "C", "text": "Yarış koşulu"}, {"letter": "D", "text": "Ölümcül kilitlenme"}, {"letter": "E", "text": "Önbırakma"}], "correct": "D", "explanation": "ACIKLAMA::Süreçlerin birbirinin tuttuğu kaynakları karşılıklı beklemesi ölümcül kilitlenmedir (deadlock). Dairesel bekleme bunun dört koşulundan yalnızca biridir."}, {"num": 195, "tag": "2022-2023 Vize", "text": "I. Kaynaklar ölçülebilir, kullanıcı yalnızca kullandığı kadar öder. II. Özelleştirme/merkezileştirme sayesinde sağlayıcılar daha etkin çalışır. III. Uygulama verisi servis sağlayıcı ile uyumsuz geliştirilmiştir. — Hangileri bulut iletim yollarının felsefesini tanımlar?", "options": [{"letter": "A", "text": "II ve III"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I ve III"}, {"letter": "E", "text": "Yalnız II"}], "correct": "B", "explanation": "ACIKLAMA::Bulut felsefesi kullandıkça öde ölçülebilirliği ve merkezileştirme/özelleştirme verimliliğine dayanır. III olumsuz/yanlış bir ifadedir."}, {"num": 196, "tag": "2022-2023 Vize", "text": "İşlem Süreç Sistemleri'nin (TPS) raporlama faaliyeti kapsamına aşağıdakilerden hangisi girer? I. Aylık/yıllık faaliyet raporları II. Günlük işlemlerin işlenmesi/toplanması III. Veri Madenciliği", "options": [{"letter": "A", "text": "Yalnız I"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "Yalnız III"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "Yalnız II"}], "correct": "A", "explanation": "ACIKLAMA::TPS'in raporlama çıktısı aylık/yıllık özet raporlardır. Günlük işlem toplama bir işlem faaliyetidir; veri madenciliği TPS kapsamı dışındadır."}, {"num": 197, "tag": "2023-2024 Vize", "text": "İletişim …………., gürültülü ve güvenilmez kanalları, mesajları sırayla ileten güvenilir kanallara dönüştürmemizi sağlar. Boşluğa ne gelmelidir?", "options": [{"letter": "A", "text": "protokolleri"}, {"letter": "B", "text": "ücretleri"}, {"letter": "C", "text": "cihazları"}, {"letter": "D", "text": "paradigmaları"}, {"letter": "E", "text": "frekansları"}], "correct": "A", "explanation": "ACIKLAMA::İletişim protokolleri, güvenilmez kanalları sıralı ve güvenilir iletim sağlayan yapılar hâline getirir."}, {"num": 198, "tag": "2023-2024 Vize", "text": "I. Performans garantisi olasılığının düşük olması II. Talep üzerine bırakılıp tahsis edilebilen kaynak havuzu III. Gerçek zamanlı tahsise izin veren kontrol döngüsü izleme sistemi — Otomatik ölçeklendirme hangi durum(lar)da kullanılabilir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "Yalnız III"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "II ve III"}], "correct": "E", "explanation": "ACIKLAMA::Otomatik ölçeklendirme için esnek bir kaynak havuzu (II) ve gerçek zamanlı tahsis yapan izleme/kontrol döngüsü (III) gerekir."}, {"num": 199, "tag": "2023-2024 Vize", "text": "VoIP, video ve ses akışı gibi bant genişliği garantisi gerektiren uygulamalar için esnek bağlantı paylaşımını destekleyen ağ kaynak yönetimi algoritması hangisidir?", "options": [{"letter": "A", "text": "CBQ"}, {"letter": "B", "text": "SCQ"}, {"letter": "C", "text": "FQ"}, {"letter": "D", "text": "SFQ"}, {"letter": "E", "text": "Basic Queue"}], "correct": "A", "explanation": "ACIKLAMA::CBQ (Class-Based Queuing), sınıflara bant genişliği garantisi verip esnek bağlantı paylaşımı sağlar."}, {"num": 200, "tag": "2023-2024 Vize", "text": "Verimsiz bir kaynak yönetimi, performans ve maliyet üzerinde doğrudan ………. bir etkiye sahiptir. Boşluğa ne gelmelidir?", "options": [{"letter": "A", "text": "işlevsel"}, {"letter": "B", "text": "gayri ihtiyari"}, {"letter": "C", "text": "olumlu"}, {"letter": "D", "text": "düzensiz"}, {"letter": "E", "text": "olumsuz"}], "correct": "E", "explanation": "ACIKLAMA::Verimsiz kaynak yönetimi performansı düşürüp maliyeti artırdığından doğrudan olumsuz etki yapar."}, {"num": 201, "tag": "2023-2024 Vize", "text": "I. Performans II. Maliyet III. Görecelik — Bir sistemin başarılı sayılması için hangi kriter(ler) değerlidir?", "options": [{"letter": "A", "text": "Yalnız I"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "I ve II"}], "correct": "E", "explanation": "ACIKLAMA::Sistem başarısı performans ve maliyet ile değerlendirilir; görecelik bir başarı ölçütü değildir."}, {"num": 202, "tag": "2023-2024 Vize", "text": "I. Paket başlığındaki bilgiyi sınıflara eşleyen bir sınıflandırıcı II. Bağlantı atamasını aşan sınıfın gönderimini hesaplayan bir geciktirici (estimator) III. Sınıf dışı öncül tahmincisi — Hangileri CBQ algoritmasının işlevsel birimidir?", "options": [{"letter": "A", "text": "II ve III"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "I ve III"}, {"letter": "E", "text": "I ve II"}], "correct": "E", "explanation": "ACIKLAMA::CBQ'nun temel işlevsel birimleri sınıflandırıcı (classifier) ve tahmin edici/geciktirici (estimator) ile zamanlayıcıdır."}, {"num": 203, "tag": "2023-2024 Bütünleme", "text": "Bir ulus devletin başka bir ulusun bilgisayarlarına/ağlarına zarar/kesinti amacıyla sızmasına yönelik eylemlerine verilen ad hangisidir?", "options": [{"letter": "A", "text": "Siber Sınıflama"}, {"letter": "B", "text": "Siber Dalaşma"}, {"letter": "C", "text": "Siber Donanma"}, {"letter": "D", "text": "Siber Karşılaşma"}, {"letter": "E", "text": "Siber Savaş"}], "correct": "E", "explanation": "ACIKLAMA::Devlet destekli, başka bir ulusa zarar/kesinti amaçlı saldırılar siber savaş olarak adlandırılır."}, {"num": 204, "tag": "2023-2024 Bütünleme", "text": "I. DoS saldırıları olasılığını ortaya çıkarmıştır. II. Uygulama katmanı protokollerini anlar. III. İzinsiz giriş tespit sistemlerini destekler. — Üçüncü nesil güvenlik duvarları için hangisi doğrudur?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "I ve II"}], "correct": "C", "explanation": "ACIKLAMA::Üçüncü nesil (uygulama katmanı) güvenlik duvarları uygulama protokollerini anlar ve IDS ile bütünleşik çalışır."}, {"num": 205, "tag": "2023-2024 Bütünleme", "text": "Bir MPEG dosyasının şarkıcı adı, albüm adı gibi bilgilerine verilen ad hangisidir?", "options": [{"letter": "A", "text": "meta veri"}, {"letter": "B", "text": "hepta veri"}, {"letter": "C", "text": "hexa veri"}, {"letter": "D", "text": "kota veri"}, {"letter": "E", "text": "ata veri"}], "correct": "A", "explanation": "ACIKLAMA::İçeriği tanımlayan (şarkıcı, albüm vb.) bu bilgiler meta veridir (metadata)."}, {"num": 206, "tag": "2023-2024 Bütünleme", "text": "I. Stenografik Kullanım İlkeleri II. Kimlik Doğrulama III. Erişim Denetimi — Hangileri zorunlu işletim sistemi güvenliğinin unsurlarındandır?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "II ve III"}], "correct": "E", "explanation": "ACIKLAMA::Zorunlu İS güvenliği kimlik doğrulama ve erişim denetimini kapsar. 'Stenografik kullanım ilkeleri' bir güvenlik unsuru değildir."}, {"num": 207, "tag": "2023-2024 Bütünleme", "text": "${t_entropi}Mikroskobik bir sistemin termodinamik entropisi S = kB ln Ω'dır. Buradaki Ω aşağıdakilerden hangisi olarak bilinir?", "options": [{"letter": "A", "text": "Mikrofaj ortalama"}, {"letter": "B", "text": "Makro durum sayısı"}, {"letter": "C", "text": "Median durum sayısı"}, {"letter": "D", "text": "Median ortalama"}, {"letter": "E", "text": "Mikro durum sayısı"}], "correct": "E", "explanation": "ACIKLAMA::Boltzmann entropisinde Ω, belirli bir makro duruma karşılık gelen mikro durumların sayısıdır."}, {"num": 208, "tag": "2023-2024 Bütünleme", "text": "2012 yılına kadar BT kurumsal altyapısı için harcanan bütçenin hangi yüzdesine kadarının enerjiye ayrılacağı planlanıyordu?", "options": [{"letter": "A", "text": "%40"}, {"letter": "B", "text": "%50"}, {"letter": "C", "text": "%70"}, {"letter": "D", "text": "%60"}, {"letter": "E", "text": "%65"}], "correct": "A", "explanation": "ACIKLAMA::Çıkmış sınav cevap anahtarında bu sorunun doğru yanıtı %40 olarak işaretlenmiştir (BT altyapı bütçesinin enerjiye ayrılması planlanan payı)."}, {"num": 209, "tag": "2023-2024 Bütünleme", "text": "Aşağıdakilerden hangisi bir sanal makine DEĞİLDİR?", "options": [{"letter": "A", "text": "Klein"}, {"letter": "B", "text": "Xen"}, {"letter": "C", "text": "Parallels"}, {"letter": "D", "text": "Virtual Box"}, {"letter": "E", "text": "Hyper-V"}], "correct": "A", "explanation": "ACIKLAMA::Xen, Parallels, VirtualBox ve Hyper-V sanallaştırma çözümleridir. 'Klein' bir sanal makine değildir."}, {"num": 210, "tag": "2023-2024 Bütünleme", "text": "I. Bileşenlerin yapısı II. Bileşenlerin sayısı III. Bileşenler arasındaki etkileşim yollarının sayısı — Bir sistem simüle edildiğinde hangileri simülasyonun karmaşıklığını artırır?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "I ve II"}], "correct": "B", "explanation": "ACIKLAMA::Bileşen sayısı ve aralarındaki etkileşim yollarının sayısı arttıkça simülasyon karmaşıklığı artar."}, {"num": 211, "tag": "2025-2026 Bütünleme", "text": "Çoklu bulut (multi-cloud) stratejileri ile aşağıdaki ifadelerden hangisi belirtilir?", "options": [{"letter": "A", "text": "Farklı bulut sağlayıcıları arasında iş yüklerinin dağıtılması"}, {"letter": "B", "text": "Bulut hizmetlerinin manuel olarak güncellenmesi"}, {"letter": "C", "text": "Bulut hizmetlerinin yalnızca özel bulutlarda çalıştırılması"}, {"letter": "D", "text": "Tüm iş yüklerinin tek bir bulut sağlayıcısında çalıştırılması"}, {"letter": "E", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılması"}], "correct": "A", "explanation": "ACIKLAMA::Çoklu bulut stratejisi, iş yüklerini birden çok sağlayıcıya dağıtarak bağımlılığı azaltıp esneklik sağlar."}, {"num": 212, "tag": "2025-2026 Bütünleme", "text": "Güvenlik Otomasyonu ve Orkestrasyonu (SOAR) sistemlerinin özelliklerinden biri olan \\\"tehdit istihbaratı entegrasyonu\\\" faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Güvenlik olaylarının manuel olarak yönetilmesi"}, {"letter": "B", "text": "Fiziksel sunucuların performansını artırması"}, {"letter": "C", "text": "Verilerin düzenli olarak yedeklenmesi"}, {"letter": "D", "text": "Kullanıcıların erişim yetkilerinin kaldırılması"}, {"letter": "E", "text": "Dış kaynaklardan elde edilen tehdit istihbaratının güvenlik süreçlerine entegre edilmesi"}], "correct": "E", "explanation": "ACIKLAMA::SOAR, dış tehdit istihbaratı beslemelerini otomatik olarak güvenlik süreçlerine dahil ederek daha hızlı ve tutarlı yanıt sağlar."}, {"num": 213, "tag": "2025-2026 Bütünleme", "text": "Sanallaştırmanın avantajlarından hangisi, her sanal makinenin bağımsız çalışmasını ifade eder?", "options": [{"letter": "A", "text": "Maliyet tasarrufu"}, {"letter": "B", "text": "İzolasyon"}, {"letter": "C", "text": "Esneklik"}, {"letter": "D", "text": "Yedekleme"}, {"letter": "E", "text": "Kaynak verimliliği"}], "correct": "B", "explanation": "ACIKLAMA::İzolasyon, her sanal makinenin diğerlerinden yalıtılmış, bağımsız çalışmasını (birinin çökmesi diğerini etkilememesini) sağlar."}, {"num": 214, "tag": "2025-2026 Bütünleme", "text": "Büyük veri analitiğinde kullanılan \\\"veri gölü\\\" (data lake) ile aşağıdakilerden hangisi belirtilir?", "options": [{"letter": "A", "text": "Verilerin manuel olarak işlenmesini sağlayan bir sistem"}, {"letter": "B", "text": "Verilerin şifrelenmeden paylaşılması"}, {"letter": "C", "text": "Verilerin yalnızca yerel cihazlarda saklanması"}, {"letter": "D", "text": "Yapılandırılmış, yarı yapılandırılmış ve yapılandırılmamış verilerin ham hâlde saklandığı merkezi bir depo"}, {"letter": "E", "text": "Yalnızca yapılandırılmış verilerin saklandığı bir veritabanı"}], "correct": "D", "explanation": "ACIKLAMA::Veri gölü, her türden veriyi dönüştürmeden ham hâlde tutan büyük ölçekli merkezi depodur."}, {"num": 215, "tag": "2025-2026 Bütünleme", "text": "Test otomasyonu araçlarından biri olan \\\"Selenium\\\" aşağıdaki amaçlardan hangisi için kullanılır?", "options": [{"letter": "A", "text": "Yazılımın manuel olarak test edilmesi"}, {"letter": "B", "text": "Web uygulamalarının test edilmesi"}, {"letter": "C", "text": "Mobil uygulamaların test edilmesi"}, {"letter": "D", "text": "Java tabanlı birim testlerinin yapılması"}, {"letter": "E", "text": "Yük testlerinin gerçekleştirilmesi"}], "correct": "B", "explanation": "ACIKLAMA::Selenium, web tarayıcılarını otomatikleştirerek web uygulamalarının fonksiyonel testini yapan bir araçtır."}, {"num": 216, "tag": "2025-2026 Bütünleme", "text": "Google Cloud Console'un (GCP) \\\"güvenlik\\\" özelliğinin faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "GCP hizmetlerinin performansını artırır"}, {"letter": "B", "text": "GCP ortamında güvenlik politikalarının uygulanmasını ve izlenmesini sağlar"}, {"letter": "C", "text": "GCP hizmetlerini manuel olarak devre dışı bırakır"}, {"letter": "D", "text": "GCP hizmetlerinin yalnızca yedeklenmesini sağlar"}, {"letter": "E", "text": "GCP hizmetlerinin maliyetlerini artırır"}], "correct": "B", "explanation": "ACIKLAMA::GCP güvenlik özellikleri (IAM, güvenlik komuta merkezi vb.) politikaların uygulanmasını ve izlenmesini sağlar."}, {"num": 217, "tag": "2025-2026 Bütünleme", "text": "Bulut yönetim sistemlerinin sağladığı faydalardan biri olan \\\"maliyet tasarrufu\\\" nasıl elde edilir?", "options": [{"letter": "A", "text": "Yedekleme süreçlerinin durdurulması"}, {"letter": "B", "text": "Kaynakların verimli kullanımı ve maliyetlerin düşürülmesi"}, {"letter": "C", "text": "Performans izleme araçlarının devre dışı bırakılması"}, {"letter": "D", "text": "Bulut hizmetlerinin manuel olarak yönetilmesi"}, {"letter": "E", "text": "Güvenlik politikalarının uygulanmaması"}], "correct": "B", "explanation": "ACIKLAMA::Bulut yönetimi, kaynakları ihtiyaca göre verimli kullandırarak (ve atıl kaynakları kapatarak) maliyeti düşürür."}, {"num": 218, "tag": "2025-2026 Final, 2024-2025 Bütünleme", "text": "Otomasyon ve orkestrasyon süreçlerinden biri olan \\\"otomasyon\\\" ifadesinin faydası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bulut hizmetlerinin performansının düşürülmesi"}, {"letter": "B", "text": "Bulut hizmetlerinin yalnızca yedeklenmesi"}, {"letter": "C", "text": "Bulut hizmetlerinin maliyetlerinin artırılması"}, {"letter": "D", "text": "İş akışlarının manuel olarak yönetilmesi"}, {"letter": "E", "text": "Tekrarlayan görevlerin otomatikleştirilmesi"}], "correct": "E", "explanation": "ACIKLAMA::Otomasyon, tekrar eden manuel görevleri otomatik hâle getirerek hız, tutarlılık ve verimlilik sağlar."}, {"num": 219, "tag": "2025-2026 Final", "text": "Veri entegrasyonu için kullanılan araçlardan biri olan AWS Glue'nin temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Konteyner yönetimi"}, {"letter": "B", "text": "Bulut tabanlı ETL hizmeti sağlamak"}, {"letter": "C", "text": "Video konferans yapmak"}, {"letter": "D", "text": "Sunucusuz bilgi işlem"}, {"letter": "E", "text": "Elektronik tablo oluşturmak"}], "correct": "B", "explanation": "ACIKLAMA::AWS Glue, verileri çıkar-dönüştür-yükle (ETL) süreçleriyle hazırlayan yönetilen, sunucusuz bir bulut ETL hizmetidir."}, {"num": 220, "tag": "2025-2026 Final", "text": "Bulut bilişimde \\\"karbon ayak izi azaltma\\\" neyi ifade eder?", "options": [{"letter": "A", "text": "Bulut hizmetlerinin performansını düşürme çalışmaları"}, {"letter": "B", "text": "Verilerin yalnızca fiziksel sunucularda saklanması çalışmaları"}, {"letter": "C", "text": "Bulut hizmetlerinin karbon emisyonlarını ölçme ve azaltma çalışmaları"}, {"letter": "D", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlama çalışmaları"}, {"letter": "E", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlama çalışmaları"}], "correct": "C", "explanation": "ACIKLAMA::Karbon ayak izini azaltma; bulut hizmetlerinin enerji kaynaklı emisyonlarını ölçüp yenilenebilir enerji ve verimlilikle düşürmeyi hedefler."}, {"num": 221, "tag": "2025-2026 Final", "text": "Gereksinim analizi sürecinde \\\"ihtiyaç toplama\\\" aşaması ile aşağıdakilerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "Yazılımın test edilmesi"}, {"letter": "B", "text": "Uygulamanın bulut ortamında dağıtılması"}, {"letter": "C", "text": "Yazılımın bakımının yapılması"}, {"letter": "D", "text": "Kullanıcı ve paydaş gereksinimlerinin toplanması"}, {"letter": "E", "text": "Yazılımın kodlanması"}], "correct": "D", "explanation": "ACIKLAMA::İhtiyaç/gereksinim toplama, kullanıcı ve paydaşlardan sistemin ne yapması gerektiğine dair gereksinimlerin derlendiği aşamadır."}, {"num": 222, "tag": "2025-2026 Final", "text": "Aşağıdakilerden hangisi veri şifreleme tekniklerinden biridir?", "options": [{"letter": "A", "text": "Veri maskeleme"}, {"letter": "B", "text": "Güvenlik duvarı"}, {"letter": "C", "text": "Simetrik şifreleme"}, {"letter": "D", "text": "Veri anonimleştirme"}, {"letter": "E", "text": "Çok faktörlü kimlik doğrulama"}], "correct": "C", "explanation": "ACIKLAMA::Simetrik şifreleme, aynı anahtarla şifreleyip çözen bir şifreleme tekniğidir. Diğer seçenekler şifreleme dışı güvenlik/gizlilik yöntemleridir."}, {"num": 223, "tag": "2025-2026 Final", "text": "Sistem entegrasyonunun sağladığı faydalardan biri olan \\\"verimlilik artışı\\\" nasıl elde edilir?", "options": [{"letter": "A", "text": "İş süreçlerinin tamamen kaldırılmasıyla"}, {"letter": "B", "text": "Veri kaynaklarının manuel olarak birleştirilmesiyle"}, {"letter": "C", "text": "Yazılım güncellemelerinin durdurulmasıyla"}, {"letter": "D", "text": "Sistemlerin bağımsız çalıştırılmasıyla"}, {"letter": "E", "text": "İş süreçlerinin otomatikleştirilmesi ve manuel işlemlerin azaltılmasıyla"}], "correct": "E", "explanation": "ACIKLAMA::Sistem entegrasyonu, süreçleri otomatikleştirip manuel/yinelenen işleri azaltarak verimliliği artırır."}, {"num": 224, "tag": "2025-2026 Final", "text": "Karmaşık sistemlerin \\\"öngörülemezlik\\\" özelliği neyi ifade eder?", "options": [{"letter": "A", "text": "Sistemin sürekli erişilebilir olmasını"}, {"letter": "B", "text": "Sistemin gelecekteki davranışlarının kesin olarak tahmin edilememesini"}, {"letter": "C", "text": "Sistemin iş yükünü dengeli dağıtmasını"}, {"letter": "D", "text": "Sistemin farklı koşullara uyum sağlayabilme kapasitesini"}, {"letter": "E", "text": "Sistemin çevresel değişikliklere uyum sağlama yeteneğini"}], "correct": "B", "explanation": "ACIKLAMA::Öngörülemezlik, karmaşık sistemlerin çok sayıda etkileşimden dolayı gelecekteki davranışının kesin tahmin edilememesidir."}, {"num": 225, "tag": "2025-2026 Final", "text": "Büyük veri işleme araçlarından biri olan \\\"Apache Spark\\\"ın kullanım amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Verilerin şifrelenmeden paylaşılması"}, {"letter": "B", "text": "Hızlı veri işleme motoru olması"}, {"letter": "C", "text": "Yalnızca mobil uygulamaların test edilmesi"}, {"letter": "D", "text": "Uygulamanın yalnızca manuel olarak güncellenmesi"}, {"letter": "E", "text": "Verilerin manuel olarak işlenmesi"}], "correct": "B", "explanation": "ACIKLAMA::Apache Spark, bellek içi işleme sayesinde büyük veriyi hızlı işleyen dağıtık bir analitik motorudur."}, {"num": 226, "tag": "2025-2026 Final", "text": "Bulut uygulama geliştirme sürecinin ilk adımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Gereksinim Analizi"}, {"letter": "B", "text": "Tasarım"}, {"letter": "C", "text": "Dağıtım"}, {"letter": "D", "text": "Bakım"}, {"letter": "E", "text": "Test"}], "correct": "A", "explanation": "ACIKLAMA::Yazılım geliştirme yaşam döngüsünün ilk adımı gereksinim analizidir; ne yapılacağı burada belirlenir."}, {"num": 227, "tag": "2025-2026 Final", "text": "Sanallaştırma kavramının tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fiziksel donanımın yazılım güncellemeleriyle değiştirilmesidir"}, {"letter": "B", "text": "Fiziksel bilgi işlem kaynaklarının sanal sürümlere dönüştürülmesidir"}, {"letter": "C", "text": "Yalnızca depolama cihazlarının yedeklenmesidir"}, {"letter": "D", "text": "İnternet bağlantısı olmadan çalışan bir sistemdir"}, {"letter": "E", "text": "Fiziksel makinelerin birleştirilmesidir"}], "correct": "B", "explanation": "ACIKLAMA::Sanallaştırma; işlemci, bellek, depolama gibi fiziksel kaynakların yazılımla soyutlanıp sanal sürümlere dönüştürülmesidir."}, {"num": 228, "tag": "2025-2026 Final", "text": "Kaynak yönetiminin sağladığı temel faydalardan biri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kullanıcı deneyimini olumsuz etkiler"}, {"letter": "B", "text": "Performansı düşürür"}, {"letter": "C", "text": "Gereksiz harcamaları önler ve maliyet tasarrufu sağlar"}, {"letter": "D", "text": "Yüksek maliyetler oluşturur"}, {"letter": "E", "text": "Kaynakların manuel olarak yönetilmesini zorunlu kılar"}], "correct": "C", "explanation": "ACIKLAMA::İyi kaynak yönetimi, atıl/gereksiz kaynak kullanımını önleyerek maliyet tasarrufu ve verimlilik sağlar."}, {"num": 229, "tag": "2025-2026 Final", "text": "Karmaşık sistemlerin adaptif özelliklerinden biri olan \\\"esneklik\\\" neyi ifade eder?", "options": [{"letter": "A", "text": "Sistemin farklı ve beklenmedik koşullara uyum sağlayabilme kapasitesini"}, {"letter": "B", "text": "Sistemin çevresel değişikliklere uyum sağlama yeteneğini"}, {"letter": "C", "text": "Sistemin iş yükünü dengeli dağıtmasını"}, {"letter": "D", "text": "Sistemin başlangıç koşullarına olan hassasiyetini"}, {"letter": "E", "text": "Sistemin sürekli erişilebilir olmasını"}], "correct": "A", "explanation": "ACIKLAMA::Esneklik (adaptif anlamda), sistemin farklı ve beklenmedik koşullara uyum sağlayabilme kapasitesidir."}, {"num": 230, "tag": "2025-2026 Final", "text": "Mikro hizmetlerin konteynerlerle kullanımının avantajlarından biri olan \\\"taşınabilirlik\\\" neyi ifade eder?", "options": [{"letter": "A", "text": "Konteynerlerin her ortamda aynı şekilde çalışabilmesini"}, {"letter": "B", "text": "Konteynerlerin iş süreçlerini kaldırmasını"}, {"letter": "C", "text": "Konteynerlerin manuel olarak güncellenmesini"}, {"letter": "D", "text": "Konteynerlerin veri tabanlarını birleştirmesini"}, {"letter": "E", "text": "Konteynerlerin yalnızca bir sistemde çalıştırılmasını"}], "correct": "A", "explanation": "ACIKLAMA::Taşınabilirlik, konteynerlerin bağımlılıklarıyla paketlendiği için her ortamda (geliştirme, test, üretim) aynı şekilde çalışabilmesidir."}, {"num": 231, "tag": "2025-2026 Final", "text": "Kimlik yönetimi kavramı ile ilişkili durum aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kullanıcı kimliklerinin yönetimi"}, {"letter": "B", "text": "İnternet bağlantısının yönetimi"}, {"letter": "C", "text": "Fiziksel sunucuların yönetimi"}, {"letter": "D", "text": "Yazılım geliştirme araçları sağlama"}, {"letter": "E", "text": "Donanım satın alma ve yönetme"}], "correct": "A", "explanation": "ACIKLAMA::Kimlik yönetimi (Identity Management), kullanıcı kimliklerinin, rollerinin ve erişim haklarının yönetilmesidir."}, {"num": 232, "tag": "2025-2026 Final", "text": "Microsoft Azure Portal'ın \\\"kaynak yönetimi\\\" özelliği neyi ifade eder?", "options": [{"letter": "A", "text": "Azure hizmetlerinin manuel olarak devre dışı bırakılmasını sağlar"}, {"letter": "B", "text": "Azure hizmetlerinin yalnızca yedeklenmesini sağlar"}, {"letter": "C", "text": "Azure hizmetlerinin performansını optimize etmez"}, {"letter": "D", "text": "Azure kaynaklarının etkin bir şekilde yönetilmesi ve yapılandırılmasını ifade eder"}, {"letter": "E", "text": "Azure hizmetlerinin yalnızca güvenlik politikalarını izler"}], "correct": "D", "explanation": "ACIKLAMA::Azure kaynak yönetimi (ARM), kaynakların oluşturulması, gruplanması, yapılandırılması ve etkin yönetimini sağlar."}, {"num": 233, "tag": "2025-2026 Final", "text": "Aşağıdaki depolama türlerinden hangisi büyük ölçekli veri depolama ve arşivleme için idealdir?", "options": [{"letter": "A", "text": "Dosya depolama"}, {"letter": "B", "text": "Blok depolama"}, {"letter": "C", "text": "RAM depolama"}, {"letter": "D", "text": "SSD depolama"}, {"letter": "E", "text": "Nesne depolama"}], "correct": "E", "explanation": "ACIKLAMA::Nesne depolama (ör. S3), yüksek ölçeklenebilirliği ve düşük maliyetiyle büyük veri arşivleme için idealdir."}, {"num": 234, "tag": "2025-2026 Final", "text": "Performans optimizasyonu tekniklerinden biri olan \\\"önbellekleme\\\" ile aşağıdaki ifadelerden hangisi belirtilir?", "options": [{"letter": "A", "text": "Uygulamanın performansının düşürülmesi"}, {"letter": "B", "text": "Verilerin şifrelenmesi"}, {"letter": "C", "text": "Uygulamanın yalnızca manuel olarak ölçeklendirilmesi"}, {"letter": "D", "text": "Sık kullanılan verilerin hızlı erişim için saklanması"}, {"letter": "E", "text": "Verilerin manuel olarak işlenmesi"}], "correct": "D", "explanation": "ACIKLAMA::Önbellekleme (caching), sık erişilen veriyi hızlı erişilen bir katmanda tutarak gecikmeyi ve yükü azaltır."}, {"num": 235, "tag": "2025-2026 Final", "text": "Çok faktörlü kimlik doğrulama (MFA) yöntemlerinden biri olan \\\"biyometrik doğrulama\\\" neyi ifade eder?", "options": [{"letter": "A", "text": "Kullanıcının şifreyi tekrar girmesiyle doğrulama"}, {"letter": "B", "text": "Kullanıcının IP adresine göre doğrulama"}, {"letter": "C", "text": "Kullanıcının e-posta adresine gönderilen bir bağlantı ile doğrulama"}, {"letter": "D", "text": "Parmak izi veya yüz tanıma gibi fiziksel özelliklerle doğrulama"}, {"letter": "E", "text": "Kullanıcının telefonuna gönderilen bir kod ile doğrulama"}], "correct": "D", "explanation": "ACIKLAMA::Biyometrik doğrulama, parmak izi/yüz/iris gibi kişiye özgü fiziksel özelliklerle kimlik doğrular."}, {"num": 236, "tag": "2025-2026 Final", "text": "Edge Computing'in (uç bilişim) temel avantajı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını sağlaması"}, {"letter": "B", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlaması"}, {"letter": "C", "text": "Verilerin üretildiği noktaya yakın işlenmesiyle gecikme süresini azaltması"}, {"letter": "D", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlaması"}, {"letter": "E", "text": "Bulut hizmetlerinin performansını düşürmesi"}], "correct": "C", "explanation": "ACIKLAMA::Uç bilişim, işlemeyi verinin üretildiği noktaya (uca) yaklaştırarak gecikmeyi ve merkezî ağ yükünü azaltır."}, {"num": 237, "tag": "2024-2025 Bütünleme", "text": "Test otomasyonu araçlarından biri olan \\\"Selenium\\\" aşağıdaki amaçlarından hangisi için kullanılır?", "options": [{"letter": "A", "text": "Java tabanlı birim testlerinin yapılması"}, {"letter": "B", "text": "Mobil uygulamaların test edilmesi"}, {"letter": "C", "text": "Yük testlerinin gerçekleştirilmesi"}, {"letter": "D", "text": "Web uygulamalarının test edilmesi"}, {"letter": "E", "text": "Yazılımın manuel olarak test edilmesi"}], "correct": "D", "explanation": "ACIKLAMA::Selenium, web tarayıcılarını otomatikleştirerek web uygulamalarının fonksiyonel/otomasyon testini yapar. (JUnit → birim testi, Appium → mobil, LoadRunner → yük testi, manuel test ise araç değil yöntemdir.)"}, {"num": 238, "tag": "2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi sanal makinelerin bir avantajıdır?", "options": [{"letter": "A", "text": "Fiziksel donanım gereksinimini artırır"}, {"letter": "B", "text": "Daha yüksek maliyetlidir"}, {"letter": "C", "text": "Bağımsız bir ortam sağlar"}, {"letter": "D", "text": "Yalnızca fiziksel sunucularla çalışır"}, {"letter": "E", "text": "Daha az esneklik sunar"}], "correct": "C", "explanation": "ACIKLAMA::Sanal makineler birbirinden yalıtılmış (izole), bağımsız ortamlar sunar; diğer şıklar VM'in sağladığı faydanın tam tersini söyler."}, {"num": 239, "tag": "2024-2025 Bütünleme", "text": "Edge computing'in temel avantajlarından biri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Verilerin yalnızca merkezi sunucularda işlenmesini sağlaması"}, {"letter": "B", "text": "Verilerin üretildiği noktaya yakın işlenmesiyle gecikme süresini azaltması"}, {"letter": "C", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalıştırılmasını sağlaması"}, {"letter": "D", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlaması"}, {"letter": "E", "text": "Bulut hizmetlerinin performansını düşürmesi"}], "correct": "B", "explanation": "ACIKLAMA::Uç bilişim, işlemeyi verinin üretildiği kaynağa yaklaştırarak gecikmeyi ve merkezî ağ trafiğini azaltır; IoT ve gerçek zamanlı senaryolar için idealdir."}, {"num": 240, "tag": "2024-2025 Bütünleme", "text": "Erişim kontrolü yöntemlerinden biri olan \\\"denetim izleri\\\" ile aşağıdakilerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "Kullanıcıların kimlik bilgilerinin doğrulanması"}, {"letter": "B", "text": "Kullanıcıların erişim yetkilerinin kaldırılması"}, {"letter": "C", "text": "Tüm erişim ve etkinliklerin kaydedilmesi ve izlenmesi"}, {"letter": "D", "text": "Verilerin düzenli olarak yedeklenmesi"}, {"letter": "E", "text": "Verilerin şifrelenmesi"}], "correct": "C", "explanation": "ACIKLAMA::Denetim izleri (audit trail/log), sistemdeki tüm erişim ve etkinlikleri kim-ne-zaman biçiminde kayıt altına alıp izlenebilir kılar; olay incelemesi ve hesap verebilirliğin temelidir."}, {"num": 241, "tag": "2024-2025 Bütünleme", "text": "Kaynak izleme ve analiz sürecinin ilk adımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Analiz"}, {"letter": "B", "text": "Optimizasyon"}, {"letter": "C", "text": "Kaynak tahsisi"}, {"letter": "D", "text": "İzleme"}, {"letter": "E", "text": "Yedekleme"}], "correct": "D", "explanation": "ACIKLAMA::Süreç önce veri toplamayla, yani izleme (monitoring) ile başlar; ölçüm olmadan analiz ve optimizasyon yapılamaz. Sıra genelde İzleme → Analiz → Optimizasyon şeklindedir."}, {"num": 242, "tag": "2024-2025 Bütünleme", "text": "Konteyner yönetiminde yaygın olarak kullanılan araçlardan biri olan Kubernetes'in temel işlevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Konteynerlerin dağıtımını ve yönetimini otomatikleştirmek"}, {"letter": "B", "text": "Veri tabanı sorgularını optimize etmek"}, {"letter": "C", "text": "Sanal makineler oluşturmak"}, {"letter": "D", "text": "E-posta gönderip almak"}, {"letter": "E", "text": "Sunucusuz bilgi işlem sağlamak"}], "correct": "A", "explanation": "ACIKLAMA::Kubernetes; konteynerlerin dağıtım, ölçeklendirme, yük dengeleme ve kendini onarma (self-healing) işlemlerini otomatikleştiren bir orkestrasyon platformudur."}, {"num": 243, "tag": "2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi bulut tabanlı geliştirme platformlarından biridir?", "options": [{"letter": "A", "text": "Appium"}, {"letter": "B", "text": "Selenium"}, {"letter": "C", "text": "LoadRunner"}, {"letter": "D", "text": "JUnit"}, {"letter": "E", "text": "GitHub"}], "correct": "E", "explanation": "ACIKLAMA::Appium, Selenium, LoadRunner ve JUnit test araçlarıdır; GitHub ise kod barındırma, sürüm kontrolü ve CI/CD sunan bulut tabanlı geliştirme/işbirliği platformudur."}, {"num": 244, "tag": "2024-2025 Bütünleme", "text": "Sıfır Güven Mimarisi'nin (Zero Trust Architecture) temel ilkelerinden biri olan \\\"mikrosegmentasyon\\\" ile aşağıdakilerden hangisi sağlanır?", "options": [{"letter": "A", "text": "Kullanıcıların kimlik bilgilerinin şifrelenmesi"}, {"letter": "B", "text": "Verilerin düzenli olarak yedeklenmesi"}, {"letter": "C", "text": "Kullanıcıların erişim yetkilerinin kaldırılması"}, {"letter": "D", "text": "Ağ trafiğinin tamamen durdurulması"}, {"letter": "E", "text": "Ağın daha küçük ve izole segmentlere ayrılması"}], "correct": "E", "explanation": "ACIKLAMA::Mikrosegmentasyon, ağı küçük ve yalıtılmış bölgelere ayırarak yanal (lateral) hareketi kısıtlar; bir bölge ele geçse bile saldırının yayılması zorlaşır."}, {"num": 245, "tag": "2024-2025 Bütünleme", "text": "Sistem entegrasyonunun temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bulut hizmetlerinin performansını düşürme"}, {"letter": "B", "text": "Verilerin yalnızca fiziksel sunucularda saklanmasını sağlamak"}, {"letter": "C", "text": "Verilerin yalnızca manuel olarak işlenmesini sağlamak"}, {"letter": "D", "text": "Bulut hizmetlerinin yalnızca yerel cihazlarda çalışmasını sağlamak"}, {"letter": "E", "text": "Farklı sistemlerin bir arada çalışmasını sağlamak"}], "correct": "E", "explanation": "ACIKLAMA::Sistem entegrasyonu; farklı uygulama ve sistemlerin veri/işlev paylaşarak birlikte (birlikte çalışabilir) çalışmasını sağlamayı amaçlar."}, {"num": 246, "tag": "2024-2025 Bütünleme", "text": "Yapay zekâ (AI) etiği ilkelerinden biri olan \\\"şeffaflık\\\" ile aşağıdakilerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "AI sistemlerinin yalnızca manuel olarak çalıştırılması"}, {"letter": "B", "text": "AI sistemlerinin taraflı kararlar alması"}, {"letter": "C", "text": "AI sistemlerinin nasıl çalıştığının anlaşılabilir olması"}, {"letter": "D", "text": "AI sistemlerinin güvenlik açıklarının göz ardı edilmesi"}, {"letter": "E", "text": "AI sistemlerinin sonuçlarından sorumlu tutulmaması"}], "correct": "C", "explanation": "ACIKLAMA::Şeffaflık (transparency), bir AI sisteminin karar mekanizmasının açıklanabilir ve anlaşılabilir olmasıdır; hesap verebilirlik ve güvenin temelidir."}, {"num": 247, "tag": "2024-2025 Bütünleme", "text": "Sanallaştırmanın aşağıdaki avantajlarından hangisi, her sanal makinenin bağımsız çalışmasını ifade eder?", "options": [{"letter": "A", "text": "İzolasyon"}, {"letter": "B", "text": "Esneklik"}, {"letter": "C", "text": "Kaynak verimliliği"}, {"letter": "D", "text": "Maliyet tasarrufu"}, {"letter": "E", "text": "Yedekleme"}], "correct": "A", "explanation": "ACIKLAMA::İzolasyon, her sanal makinenin diğerlerinden yalıtılmış çalışmasıdır; birinin çökmesi ya da ele geçirilmesi diğerlerini doğrudan etkilemez."}, {"num": 248, "tag": "2024-2025 Bütünleme", "text": "Veri güvenliği yöntemlerinden biri olan \\\"veri maskeleme\\\"nin amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kullanıcıların kimliklerinin doğrulanması"}, {"letter": "B", "text": "Hassas verilerin gizlenmesi veya değiştirilmesi"}, {"letter": "C", "text": "Verilerin düzenli olarak yedeklenmesi"}, {"letter": "D", "text": "Verilerin şifrelenmesi"}, {"letter": "E", "text": "Verilerin test ortamında kullanılması"}], "correct": "B", "explanation": "ACIKLAMA::Veri maskeleme; hassas veriyi (ör. TC/kart no) gerçek değerinin yerine sahte ama gerçekçi değerlerle değiştirerek gizler, çoğunlukla test/geliştirme ortamlarında kullanılır."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veri Tabanı Yönetim Sistemleri (AYBS4005) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Veri Tabanı Yönetim Sistemleri (AYBS4005) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Veri Tabanı Yönetim Sistemleri (AYBS4005) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Veri Tabanı Yönetim Sistemleri (AYBS4005) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Veri Tabanı Yönetim Sistemleri (AYBS4005) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>49 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">49</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Veri_Tabani_Yonetim_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (49)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">49</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Veri_Tabani_Yonetim_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Birden daha fazla SQL sorgusunun arka arkaya tek bir sorgu gibi çalıştırılmasını sağlayan kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "TRANSACTION"}, {"letter": "B", "text": "COMMIT"}, {"letter": "C", "text": "ROLLBACK"}, {"letter": "D", "text": "DML"}, {"letter": "E", "text": "CREATE"}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 2, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Bir veri kümesinde bir özniteliğin alabileceği değerlerin tümünün oluşturduğu kümeye ne ad verilir?", "options": [{"letter": "A", "text": "Varlık"}, {"letter": "B", "text": "İlişki"}, {"letter": "C", "text": "Etki alanı"}, {"letter": "D", "text": "Anahtar"}, {"letter": "E", "text": "Satır"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 3, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Aşağıdakilerden hangisi bir alt sorgu çeşidi değildir?", "options": [{"letter": "A", "text": "Çok sütunlu alt sorgu"}, {"letter": "B", "text": "Belirsiz alt sorgu"}, {"letter": "C", "text": "Tek satırlı alt sorgu"}, {"letter": "D", "text": "Tek sütunlu alt sorgu"}, {"letter": "E", "text": "Çok satırlı alt sorgu"}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 4, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Aşağıdakilerden hangisi SQL’de bir matematiksel fonksiyondur?", "options": [{"letter": "A", "text": "NEXT_DAY()"}, {"letter": "B", "text": "INITCAP()"}, {"letter": "C", "text": "NVL()"}, {"letter": "D", "text": "DECODE()"}, {"letter": "E", "text": "MOD()"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 5, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme, Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar, Veri Tabanı Yönetim Sistemleri - 2025-2026 - Final - Bahar, VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Herhangi bir programlama dilindeki IF…THEN...ELSE deyimine SQL’de karşılık gelen deyim aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "INITCAP()"}, {"letter": "B", "text": "NEXT_DAY()"}, {"letter": "C", "text": "DECODE()"}, {"letter": "D", "text": "MOD()"}, {"letter": "E", "text": "NVL()"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 6, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Aşağıdakilerden hangisi INDEKS oluşturmayı engelleyen bir durum değildir?", "options": [{"letter": "A", "text": "Sorgudan elde edilen sonuç satırlarının tüm tablonun %2-4’ünden daha fazla olması"}, {"letter": "B", "text": "Alanın çok sayıda NULL değer içermesi"}, {"letter": "C", "text": "Tablonun sık sık güncelleştirilmesi"}, {"letter": "D", "text": "İlgili alanların sorgularda sık sık kullanılmaması"}, {"letter": "E", "text": "Tablonun çok küçük olması"}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 7, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "SELECT SUM(Ücret) FROM PERSONEL WHERE Görevi =’Şef’; şeklindeki bir sorgu, aşağıdaki değerlerin hangisini elde etmek için kullanılır?", "options": [{"letter": "A", "text": "Görevi Şef olan kişilerin Ücret alanlarının ortalaması"}, {"letter": "B", "text": "Görevi Şef olmayan kişilerin Ücret alanlarının ortalaması"}, {"letter": "C", "text": "Görevi Şef olmayan kişilerin Ücret alanlarının toplamı"}, {"letter": "D", "text": "Tüm tabloda yer alan kişilerin Ücret alanlarının toplamı"}, {"letter": "E", "text": "Görevi Şef olan kişilerin Ücret alanlarının toplamı"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 8, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Bir veri tabanı tablosunda bir özniteliğin bağlı olduğu anahtar ile benzersiz olarak belirlenmesi durumuna ne ad verilir?", "options": [{"letter": "A", "text": "Döngüsel bağımlılık"}, {"letter": "B", "text": "Kısmi bağımlılık"}, {"letter": "C", "text": "Tam fonksiyonel bağımlılık"}, {"letter": "D", "text": "Değerli bağımlılık"}, {"letter": "E", "text": "Geçişli bağımlılık"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 9, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Yukarıdaki şekilde \"?\" yerine hangi ilişkisel cebir işlemi gelmelidir?", "options": [{"letter": "A", "text": "Seçim"}, {"letter": "B", "text": "Atma"}, {"letter": "C", "text": "Fark"}, {"letter": "D", "text": "Kesişim"}, {"letter": "E", "text": "Birleşim"}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 10, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "SELECT Adı, Görevi, Ücret FROM PERSONELWHERE Görevi = (SELECT GöreviFROM PERSONEL WHERE PersonelNo=155) AND Ücret> (SELECT Ücret FROM PERSONEL WHERE PersonelNo=300);sorgusu ne iş yapar?", "options": [{"letter": "A", "text": "PersonelNo 155 veya 300 olan personelin ücretinden daha fazla ücret alan personeli listeler."}, {"letter": "B", "text": "PersonelNo 155 olan personelle aynı göreve sahip olan ve “300” numaralı personelin ücretinden daha fazla ücret alan personeli listeler."}, {"letter": "C", "text": "PersonelNo 300 olan personelle aynı göreve sahip olan ve “155” numaralı personelin ücretinden daha fazla ücret alan personeli listeler."}, {"letter": "D", "text": "PersonelNo 155 veya 300 olan personelin ücretinden daha az ücret alan personeli listeler."}, {"letter": "E", "text": "PersonelNo 155 ve 300 olan personelin ücretinden daha fazla ücret alan personeli listeler."}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 11, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "GRANT CREATE TABLE TO Ruya; sorgusu ne anlama gelmektedir?", "options": [{"letter": "A", "text": "Ruya kullanıcısına tablo oluşturma yetkisi verir."}, {"letter": "B", "text": "Ruya kullanıcısına tablo güncelleme yetkisi verir."}, {"letter": "C", "text": "Ruya dışındaki bütün kullanıcılara tablo oluşturma yetkisi verir."}, {"letter": "D", "text": "Ruya kullanıcısına tablo silme yetkisi verir."}, {"letter": "E", "text": "Ruya dışındaki bütün kullanıcılara tablo silme yetkisi verir."}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 12, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Transaction işlemindeki SQL komutu tarafından yapılmış olan tüm değişiklikleri geri almak için kullanılan komut aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Rollback"}, {"letter": "B", "text": "Commit"}, {"letter": "C", "text": "Where"}, {"letter": "D", "text": "Alter"}, {"letter": "E", "text": "Select VERİ TABANI YÖNETİM SİSTEMLERİ A 1 P355543.G2808 03-06-2024 13:22:02 CEVAPLI"}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 13, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "İki veya daha çok veri tabanı tablosundaki ortak satırların bulunması için kullanılan komut aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "MINUS"}, {"letter": "B", "text": "INTO"}, {"letter": "C", "text": "UNION"}, {"letter": "D", "text": "LIKE"}, {"letter": "E", "text": "INTERSECT"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 14, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Aşağıdakilerden hangisi ilişkisel veri tabanları ile ilişkisel olmayan veri tabanları arasındaki kesin farklardan biri değildir?", "options": [{"letter": "A", "text": "Kullanıldıkları işler"}, {"letter": "B", "text": "Verilerin ifade ediliş biçimleri"}, {"letter": "C", "text": "Kullandıkları ölçekler"}, {"letter": "D", "text": "En uygun iş yükleri"}, {"letter": "E", "text": "Performansları"}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 15, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Aşağıdakilerden hangisi bir veri tabanındaki bir tablonun ismi olabilir?", "options": [{"letter": "A", "text": "HAVING"}, {"letter": "B", "text": "SYSDATE"}, {"letter": "C", "text": "INTO"}, {"letter": "D", "text": "UPDATE"}, {"letter": "E", "text": "OGRENCILER"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 16, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "SELECT Adı, Ücret, NVL(Komisyon, 0) FROM PERSONEL;SQL sorgusu aşağıdakilerden hangisini gerçekleştirmek için kullanılır?", "options": [{"letter": "A", "text": "Personel tablosundaki değeri NULL olmayan Komisyon verilerini bulmak"}, {"letter": "B", "text": "Personel tablosundaki değeri NULL olan tüm verileri bulmak"}, {"letter": "C", "text": "Personel tablosundaki Komisyon verilerini NULL olan kayıtlarda 0 yazarak Adı, Ücret ve Komisyon değerlerini elde etmek"}, {"letter": "D", "text": "Personel tablosundaki Komisyon verilerini bulmak"}, {"letter": "E", "text": "Personel tablosundaki değeri NULL olan Komisyon verilerini bulmak"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 17, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "İlişkisel veri tabanlarında yapılan aşağıdaki işlemlerden hangisinin sonucu doğru verilmiştir?", "options": [{"letter": "A", "text": "100+NULL = 130"}, {"letter": "B", "text": "(10xNULL)+100+NULL = 100"}, {"letter": "C", "text": "(10x3)+100 = NULL"}, {"letter": "D", "text": "(10x3)+100+NULL = NULL"}, {"letter": "E", "text": "(10x3)+100+NULL = 130"}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 18, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme, Veri Tabanı Yönetim Sistemleri - 2025-2026 - Final - Bahar", "text": "SELECT BölümNo, AVG(Ücret) FROM PERSONEL;WHERE AVG(Ücret) >2000GROUP BY BölümNo; Yukarıda verilen SQL sorgusu içerisinde yer alan hata aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "BölümNo alanı hem Select hem Group By deyiminde kullanılamaz."}, {"letter": "B", "text": "Ücret alanı hem Select hem Where deyiminde kullanılamaz."}, {"letter": "C", "text": "AVG() fonksiyonu ile karşılaştırılma ifadesi kullanılamaz."}, {"letter": "D", "text": "Group By ile Where deyimi beraber kullanılamaz."}, {"letter": "E", "text": "Hem From hem Where aynı sorguda kullanılamaz."}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 19, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme", "text": "Aşağıdaki karşılaştırma deyimlerinden hangileri bir değerin tabloda var olup olmadığını tespit etmek için kullanılır?", "options": [{"letter": "A", "text": "LIKE / IN"}, {"letter": "B", "text": "GROUP BY / HAVING"}, {"letter": "C", "text": "BETWEEN / AND"}, {"letter": "D", "text": "IS NULL / IS NOT NULL"}, {"letter": "E", "text": "WHERE / ORDER BY"}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 20, "tag": "2023-2024-veri-tabani-yonetim-sistemleri-butunleme, Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar, Veri Tabanı Yönetim Sistemleri - 2025-2026 - Final - Bahar", "text": "Veri tabanlarındaki view yapısı ile ilgili aşağıdakilerden hangisi söylenemez?", "options": [{"letter": "A", "text": "Farklı tablolardan verileri birleştirebilir."}, {"letter": "B", "text": "Tablolara benzer şekilde oluşturulur ve kaldırılır."}, {"letter": "C", "text": "İndekslenebilir yapılardır."}, {"letter": "D", "text": "Tablolardan daha çok bellek alanı kaplar."}, {"letter": "E", "text": "Tablolarda belirli kolonların gizlenmesini sağlamak için kullanılabilir. VERİ TABANI YÖNETİM SİSTEMLERİ A 2 P355543.G2808 03-06-2024 13:22:02 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 21, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Yukarıdaki SQL sorgusunda hangi kısım alt sorgudur?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 22, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Yukarıdaki sorgu ile aşağıdaki işlemlerden hangisi gerçekleştirilir?", "options": [{"letter": "A", "text": "PersonelNo 155 ve 300 olan personelin ücretinden daha fazla ücret alan personeli listeler."}, {"letter": "B", "text": "PersonelNo 155 olan personelle aynı göreve sahip olan ve “300” numaralı personelin ücretinden daha fazla ücret alan personeli listeler."}, {"letter": "C", "text": "PersonelNo 155 veya 300 olan personelin ücretinden daha az ücret alan personeli listeler."}, {"letter": "D", "text": "PersonelNo 300 olan personelle aynı göreve sahip olan ve “155” numaralı personelin ücretinden daha fazla ücret alan personeli listeler."}, {"letter": "E", "text": "PersonelNo 155 veya 300 olan personelin ücretinden daha fazla ücret alan personeli listeler. SELECT Adı, ÜcretFROM PERSONELWHERE Ücret = (SELECT MIN (Ücret) FROM PERSONEL) ; MIN (Ücret) FROM PERSONEL CEVAPLI Bir veri tabanı tablosunda bir alana girilen verinin tekrarsız olmasını sağlamak için kullanılan veri kısıtlama türündeki ifade aşağıdakilerden hangisidir? Aşağıdaki veri tabanı yönetim sistemlerinin hangisinde COMMIT ve ROLLBACK işlemlerine ihtiyaç duyulmaz? Masaüstü veri tabanı yönetim sistemleri Web veri tabanı yönetim sistemleri İlişkisel veri tabanı yönetim sistemleri Çok kullanıcılı veri tabanı yönetim sistemleri Tek kullanıcılı veri tabanı yönetim sistemleri FROM PERSONEL WHERE Ücret SELECT MIN (Ücret) FROM PERSONEL SELECT Adı, Ücret FROM PERSONEL SELECT Adı, Ücret FROM PERSONEL WHERE Ücret SELECT Adı, Görevi, Ücret FROM PERSONELWHERE Görevi = (SELECT GöreviFROM PERSONEL WHERE Persone lNo=155) AND Ücret> (SELECT Ücret FROM PERSONEL WHERE PersonelNo=300); VERİ TABANI YÖNETİM SİSTEMLERİ A P355875.G20352 04-06-2026 16:29:33"}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 23, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Personel arasında görevi \"Memur\" olanlara %10, \"Şef\" olanlara %15, \"Müdür\" olanlara ise %20 zam yapılması için gerçekleştirilecek olan SQL sorgusu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 24, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Yukarıdaki sorgu aşağıdaki işlemlerden hangisini yapar?", "options": [{"letter": "A", "text": "300 numaralı personelin BölümNo’sunu 10 olarak değiştirir."}, {"letter": "B", "text": "10 ve 300 numaralı personelleri birbiriyle değiştirir."}, {"letter": "C", "text": "300 numaralı bölümün BölümNo’sunu 10 olarak değiştirir."}, {"letter": "D", "text": "300 numaralı personelin PersonelNo’sunu 10 olarak değiştirir."}, {"letter": "E", "text": "300 numaralı tüm personelin PersonelNo’sunu 10 olarak değiştirir. SELECT Adı, Görevi, Ücret DECODE(Memur, Ücret*1,10, Şef, Ücret*1,15, Müdür, Ücret*1,20, Ücre t) FROM PERSONEL; SELECT Adı, Görevi, Ücret DECODE(Görevi, ‘Memur’, Ücret*1,10, ‘Şef’, Ücret*1,15, ‘Müdür’, Üc ret*1,20, Ücret) FROM PERSONEL; SELECT Adı, Görevi, Ücret DECODE(‘Memur’, ‘Şef’, ‘Müdür’, Ücret*1,10, Ücret*1,15, Ücret*1,20 , Ücret) FROM PERSONEL; CEVAPLI Normal formlar ile ilgili aşağıdakilerden hangisi yanlıştır? Birinci normal formda hazırlanmış bir tabloda ekleme, silme ve güncelleme sırasında sorunlar olabilir. Boyce-Codd Normal Formu Üçüncü ve Dördüncü Normal Formlar arasında yer alır. Normalleştirme işlemi temelde veri tekrarını engellemek için yapılır. Normal formun derecesi arttıkça bozulma oranı da artmaktadır. Birinci normal formdan ikinci normal forma geçişte kısmi bağımlılıkların ortadan kaldırılması gerekmektedir. İki veya daha çok veri tabanı tablosundaki ortak satırların bulunması için kullanılan komut aşağıdakilerden hangisidir? Aşağıdakilerden hangisi bir veri tabanı tablosunda yapılan seçim işleminde kullanılabilecek olan bir karşılaştırma işlemi değildir? SELECT Adı, Görevi, Ücret DECODE(Görevi, ‘Memur’, ‘Şef’, ‘Müdür’, Ücret*1,10, Ücret*1,15, Üc ret*1,20, Ücret) FROM PERSONEL; SELECT Adı, Görevi, Ücret DECODE(Görevi, Ücret*1,10, Ücret*1,15, Ücret*1,20) FROM PERSONEL; UPDATE PERSONEL SET BölümNo=10 WHERE PersonelNo=300; VERİ TABANI YÖNETİM SİSTEMLERİ A P355875.G20352 04-06-2026 16:29:33"}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 25, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Alanları Adı, Soyadı ve İşeGirişTarihi şeklinde olan bir Personel tablosundaki personeller arasında o iş yerinde en az sürede çalışandan en çok sürede çalışana doğru bir sıralama işlemi gerçekleştiren SQL sorgusu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "SELECT * FROM Personel GROUP BY İşeGirişTarihi DESC;"}, {"letter": "B", "text": "SELECT * FROM Personel WHERE İşeGirişTarihi;"}, {"letter": "C", "text": "SELECT * FROM Personel GROUP BY İşeGirişTarihi;"}, {"letter": "D", "text": "SELECT * FROM Personel ORDER BY İşeGirişTarihi;"}, {"letter": "E", "text": "SELECT * FROM Personel ORDER BY İşeGirişTarihi DESC;"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 26, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar, VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "SQL’deki bazı grup fonksiyonları, uygulandığı alandaki tüm verileri kullanıp bir sonuç oluştururken bazı fonksiyonlar uygulandığı alanlar arasından bir değer seçmektedir. Aşağıdakilerden hangisi alanlardaki veriler arasında bir değer seçen grup fonksiyonudur?", "options": [{"letter": "A", "text": "STDDEV() Fonksiyonu"}, {"letter": "B", "text": "SUM() Fonksiyonu"}, {"letter": "C", "text": "VARIANCE() Fonksiyonu"}, {"letter": "D", "text": "AVG() Fonksiyonu"}, {"letter": "E", "text": "COUNT() Fonksiyonu"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 27, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Bütünleme - Bahar", "text": "Varlık – ilişki modelinde nesne, yer, kişi gibi kavramlar hangi öğe ile temsil edilir?", "options": [{"letter": "A", "text": "İlişki"}, {"letter": "B", "text": "Sütun"}, {"letter": "C", "text": "Varlık"}, {"letter": "D", "text": "Satır"}, {"letter": "E", "text": "Nitelik"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 28, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Final - Bahar", "text": "Aşağıdaki veri türlerinden hangisi üzerinde TO_DATE() fonksiyonu kullanılarak tarih verisine dönüştürme gerçekleştirmek mümkündür?", "options": [{"letter": "A", "text": "Sayısal"}, {"letter": "B", "text": "Resim"}, {"letter": "C", "text": "Köprü"}, {"letter": "D", "text": "Metinsel"}, {"letter": "E", "text": "Ses"}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 29, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Final - Bahar", "text": "En fazla ücret alan personelinin ücreti “30” numaralı bölümün ortalama ücretinden daha fazla olan bölümleri öğrenmek için gerçekleştirilen bir sorguda (tablo ve alan adlarının önemsenmediği durumda) aşağıdaki sorgu parçalarının hangisi bulunmaz?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 30, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Final - Bahar", "text": "Bir veri tabanı tablosunda yer alan bazı özniteliklerin başka bir öznitelik aracılığıyla üçüncü bir özniteliğe bağlı olması durumuna verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Döngüsel bağımlılık"}, {"letter": "B", "text": "Dış bağımlılık"}, {"letter": "C", "text": "Geçişli bağımlılık"}, {"letter": "D", "text": "Değerli bağımlılık"}, {"letter": "E", "text": "Kısmî bağımlılık"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 31, "tag": "Veri Tabanı Yönetim Sistemleri - 2025-2026 - Final - Bahar", "text": "Tablo ve görünüm oluşturma yetkilerine sahip olan bir YÖNETİCİ rolü oluşturmak ve veri tabanı yönetim sistemindeki Ali ve Ayşe kullanıcılarına bu rol yetkisini vermek için aşağıdaki işlemlerden hangisi gerçekleştirilmez?", "options": [{"letter": "A", "text": "YÖNETİCİ rolüne verilen yetkiler Ali ve Ayşe kullanıcılara verilir."}, {"letter": "B", "text": "YÖNETİCİ ismiyle oluşturulan role, tablo oluşturma yetkisi verilir."}, {"letter": "C", "text": "YÖNETİCİ ismiyle oluşturulan rolün işlemleri başarıyla gerçekleştirip gerçekleştirilemediğine bakılır."}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 32, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdaki komutlardan hangisi Tablo1 tablosunda Ad alanı Rüya olan kayıtların hepsinin PersonelNo alanını 50 olarak değiştirir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 33, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Yukarıdaki SQL sorgusu aşağıdaki işlemlerden hangisini gerçekleştirir?", "options": [{"letter": "A", "text": "Herkesin ücretinin ortalamasını bulur."}, {"letter": "B", "text": "Belli personellerin ücretinin ortalamasını bulur."}, {"letter": "C", "text": "Belli personellerin ücretinin toplamını bulur."}, {"letter": "D", "text": "Herkesin ücretinin ortalamasından daha fazla ücret alan personelleri bulur, adlarını ve ücretlerini döndürür."}, {"letter": "E", "text": "Herkesin ücretinin ortalamasından daha az ücret alan personelleri bulur."}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 34, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Bir ilişkisel olmayan veri tabanı yapısı olan Arama Veri Tabanı Yönetim Sistemleri ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Sosyal ağlarda en sıklıkla kullanılan ilişkisel olmayan veri tabanı yapısıdır."}, {"letter": "B", "text": "Oyun teknolojisi uygulamalarının puan tabloları bu yapı ile oluşturulur."}, {"letter": "C", "text": "Yüksek oranda yatay ölçeklendirmeye imkan tanır."}, {"letter": "D", "text": "Uygulama kodunda veriler genellikle bir nesne ile ifade edilir."}, {"letter": "E", "text": "Sistemlerin içerisinde günlük adı verilen yapılar bulunur."}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 35, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdakilerden hangisi temel veri tabanı nesnelerinden biri değildir?", "options": [{"letter": "A", "text": "Görünümler"}, {"letter": "B", "text": "Varlıklar"}, {"letter": "C", "text": "Tablolar"}, {"letter": "D", "text": "Sorgular"}, {"letter": "E", "text": "İndeksler"}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 36, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdakilerden hangisi Ali isimli bir kullanıcının şifresini 1a2b3c4d5e6f olarak değiştirmek için kullanılan bir sorgudur?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 37, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "İlişkisel cebir içerisinde yer alan aşağıdaki işlemlerden hangisi klasik cebir içerisinde mevcut değildir?", "options": [{"letter": "A", "text": "Karteyzen Çarpım"}, {"letter": "B", "text": "Birleşme"}, {"letter": "C", "text": "Fark"}, {"letter": "D", "text": "Doğal Birleştirme"}, {"letter": "E", "text": "Kesişme"}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 38, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Alt sorgu kullanımları ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Alt sorgu parantez işaretleri arasında yer alır."}, {"letter": "B", "text": "Alt sorgu, ana sorgu içindeki karşılaştırma operatörünün sağında yer alır."}, {"letter": "C", "text": "Alt sorgular içerisinde ORDER BY deyimi yerine farklı ifadeler kullanılmaktadır."}, {"letter": "D", "text": "Alt sorgular içerisinde WHERE deyimi yerine farklı ifadeler kullanılmaktadır."}, {"letter": "E", "text": "FROM sözcüğü içinde tanımlanan alt sorgular karşılaştırma operatörünün sağında ve solunda yer alabilir."}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 39, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdakilerden hangisi bir veri tabanındaki bir tablonun ismi olamaz?", "options": [{"letter": "A", "text": "LOKASYONLAR"}, {"letter": "B", "text": "DERSLER"}, {"letter": "C", "text": "PERSONELLER"}, {"letter": "D", "text": "İSTANBUL’UN GÜZELLİKLERİ"}, {"letter": "E", "text": "SIPARISLER Drop Tablo1 Set [PersonelNo]=50 Where Ad=Rüya Delete Tablo1 Set [PersonelNo]=50 Wher e Ad=Rüya Update Tablo1 Set [PersonelNo]=50 Wher e Ad=Rüya Insert Into Tablo1 Set [PersonelNo]=50 Where Ad=Rüya Select Tablo1 Set [PersonelNo]=50 Wher e Ad=Rüya SELECT Adı, Ücret FROM PERSONEL WHERE Ücr et > (SELECT AVG(Ücret) FROM PERSONEL); ALTER USER Ali IDENTIFIED BY 1a2b3c4d5 e6f; CREATE USER Ali IDENTIFIED BY 1a2b3c4d 5e6f; GRANT CREATE USER Ali IDENTIFIED BY 1a 2b3c4d5e6f; REVOKE USER Ali IDENTIFIED BY 1a2b3c4d 5e6f; GRANT USER Ali IDENTIFIED BY 1a2b3c4d5 e6f; VERİ TABANI YÖNETİM SİSTEMLERİ A P355543.G12122 19-06-2025 15:39:27 VERİ TABANI YÖNETİM SİSTEMLERİ A P355543.G12122 19-06-2025 15:39:27 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 40, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Yukarıdaki SQL sorgusu aşağıdakilerden hangisi gerçekleştirilir?", "options": [{"letter": "A", "text": "Pazarlamacı dışında görevi olan personeli görevlerine göre gruplandırır, bölümünün toplam ücreti 5000’den fazla olanlar seçilir."}, {"letter": "B", "text": "Pazarlamacı dışında görevi olan personeli görevlerine göre gruplandırır, ücretleri toplanır, bölümünün toplam ücreti 5000’den fazla olanlar seçilir, sonuçlar en düşük ücret toplamından büyüğe doğru sıralanır."}, {"letter": "C", "text": "Pazarlamacı dışında görevi olan personeli görevlerine göre gruplandırır, sonuçlar en düşük ücret toplamından büyüğe doğru sıralanır."}, {"letter": "D", "text": "Pazarlamacı dışında görevi olan personeli görevlerine göre gruplandırır, bölümünün toplam ücreti 5000’den fazla olanlar seçilir, sonuçlar en düşük ücret toplamından büyüğe doğru sıralanır."}, {"letter": "E", "text": "Pazarlamacı olan personelin ücretleri toplanır, bölümünün toplam ücreti 5000’den fazla olanlar seçilir, sonuçlar en düşük ücret toplamından büyüğe doğru sıralanır."}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 41, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Karakter türü bilgi içinde arama yapmak için yazılmış olan LIKE ‘RU%’ sorgusunun amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "RU ile başlayan tüm verileri bulur."}, {"letter": "B", "text": "RU değerinin yüzde kaç olduğunu hesaplar."}, {"letter": "C", "text": "İçinde RU bulunan tüm verileri bulur."}, {"letter": "D", "text": "RU ile biten tüm verileri bulur."}, {"letter": "E", "text": "İçinde RU bulunmayan tüm verileri bulur."}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 42, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "SQL kavramının İngilizce ve Türkçe açılımı aşağıdaki seçeneklerin hangisinde doğru bir şekilde verilmiştir?", "options": [{"letter": "A", "text": "Source Query Language – Kaynak Sorgulama Dili"}, {"letter": "B", "text": "Structured Question Language – Yapısal Sorgulama Dili"}, {"letter": "C", "text": "Stong Query Language – Güçlü Sorgulama Dili"}, {"letter": "D", "text": "Stong Question Language – Güçlü Sorgulama Dili"}, {"letter": "E", "text": "Structured Query Language – Yapısal Sorgulama Dili"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 43, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Yukarıdaki SQL sorgusu aşağıdakilerden hangisini gerçekleştirmek için kullanılır?", "options": [{"letter": "A", "text": "Personel tablosundaki kayıtların tüm bilgilerini bulmak"}, {"letter": "B", "text": "Personel tablosunda gerçekleştirilen işlemlerin tarihini bulmak"}, {"letter": "C", "text": "Personel tablosundaki kayıtların çalıştıkları süreyi ay cinsinden bulmak"}, {"letter": "D", "text": "Personel tablosundaki kayıtların işten çıktıkları tarihi bulmak"}, {"letter": "E", "text": "Personel tablosundaki kayıtların İşeGirişTarihi bilgisini bulmak"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 44, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdakilerden hangisi veri tabanı tablolarını birleştirmek için kullanılan bir birleştirme türü değildir?", "options": [{"letter": "A", "text": "Dış birleştirme"}, {"letter": "B", "text": "Eşiti olmayan birleştirme"}, {"letter": "C", "text": "Belirsiz birleştirme"}, {"letter": "D", "text": "Eşiti olan birleştirme"}, {"letter": "E", "text": "Küme operatörünü kullanarak birleştirme"}], "correct": "C", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 45, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdakilerden hangisi bir ilişkisel olmayan veri tabanı yapısıdır?", "options": [{"letter": "A", "text": "MongoDB"}, {"letter": "B", "text": "PostgreSQL"}, {"letter": "C", "text": "SQL Server"}, {"letter": "D", "text": "MySQL"}, {"letter": "E", "text": "Oracle"}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdaki veri tabanı yönetim sistemlerinin hangisinde COMMIT ve ROLLBACK işlemlerine ihtiyaç duyulmaz?", "options": [{"letter": "A", "text": "Çok kullanıcılı veri tabanı yönetim sistemleri"}, {"letter": "B", "text": "Masaüstü veri tabanı yönetim sistemleri"}, {"letter": "C", "text": "Web veri tabanı yönetim sistemleri"}, {"letter": "D", "text": "İlişkisel veri tabanı yönetim sistemleri"}, {"letter": "E", "text": "Tek kullanıcılı veri tabanı yönetim sistemleri"}], "correct": "E", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 47, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Veri tabanı tablolarında geçişli bağımlılıkların kaldırıldığı normalleşme formu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "BCNF"}, {"letter": "B", "text": "3NF"}, {"letter": "C", "text": "4NF"}, {"letter": "D", "text": "2NF"}, {"letter": "E", "text": "1NF"}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 48, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Yukarıdaki SQL sorgusunun anlamı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ruya kullanıcısına tablo oluşturma yetkisi verir."}, {"letter": "B", "text": "Ruya kullanıcısına tablo silme yetkisi verir."}, {"letter": "C", "text": "Ruya kullanıcısına tablo güncelleme yetkisi verir."}, {"letter": "D", "text": "Ruya dışındaki bütün kullanıcılara tablo silme yetkisi verir."}, {"letter": "E", "text": "Ruya dışındaki bütün kullanıcılara tablo oluşturma yetkisi verir. SELECT Görevi, SUM(Ücret) FROM PERSONEL W HERE Görevi <> ‘PAZARLAMACI’ GROUP BY Gör evi HAVING SUM(Ücret)> 5000 ORDER BY SUM( Ücret); SELECT MONTHS_BETWEEN (SYSDATE, İşeGirişT arihi) AS AY FROM PERSONEL; GRANT CREATE TABLE TO Ruya; VERİ TABANI YÖNETİM SİSTEMLERİ A P355543.G12122 19-06-2025 15:39:27 VERİ TABANI YÖNETİM SİSTEMLERİ A P355543.G12122 19-06-2025 15:39:27 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 49, "tag": "VERİ TABANI YÖNETİM SİSTEMLERİ BÜTÜNLEME SINAVI 2024-2025", "text": "Alanları PersonelNo, Adı, Görevi, Ücret, BölümNo olan bir PERSONEL tablosu ve alanları BölümNo, Bölüm Adı, Konum olan bir BÖLÜM tablosu arasındaki ilişki aşağıdakilerden hangisi ile kurulur?", "options": [{"letter": "A", "text": "İki tablodaki en çok veriye sahip olan alan üzerinde işlem yapılarak"}, {"letter": "B", "text": "İki tabloda ortak olan BölümNo alanından faydalanılarak"}, {"letter": "C", "text": "İki tablodaki bütün alanlar birleştirilerek"}, {"letter": "D", "text": "İki tablodaki herhangi bir alan üzerinde işlem yapılarak"}, {"letter": "E", "text": "İki tablodaki en az veriye sahip olan alan üzerinde işlem yapılarak"}], "correct": "B", "explanation": "AUZEF Veri Tabani Yonetim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

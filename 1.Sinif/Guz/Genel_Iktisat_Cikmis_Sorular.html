@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genel İktisat — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 1. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Genel İktisat — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">1. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Genel İktisat — Ders Anlatımı Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Genel İktisat — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Genel İktisat — Ders Anlatımı dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>250 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>1. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">250</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Genel_Iktisat_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (250)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">250</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Genel_Iktisat_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Kaydi para yaratılmasında para fonksiyonunu gören unsur aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kâğıt para"}, {"letter": "B", "text": "Çek"}, {"letter": "C", "text": "Vadesiz mevduat"}, {"letter": "D", "text": "Senet"}, {"letter": "E", "text": "Mal para"}], "correct": "C", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek C'dir."}, {"num": 2, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Aşağıdakilerden hangisi firmanın satışında bir birimlik değişmenin toplam gelirde meydana getirdiği değişme oranıdır?", "options": [{"letter": "A", "text": "MG = TG / Q"}, {"letter": "B", "text": "MG= ΔTG / ΔQ"}, {"letter": "C", "text": "MG = TG > Q"}, {"letter": "D", "text": "MG= ΔTG > ΔQ"}, {"letter": "E", "text": "MG= ΔTG < ΔQ"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 3, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Kişilerin serbestçe kullanabileceği gelir aşağıdakilerden hangisi ile tanımlanmaktadır?", "options": [{"letter": "A", "text": "GSYİH"}, {"letter": "B", "text": "Kişisel gelir"}, {"letter": "C", "text": "Harcanabilir gelir"}, {"letter": "D", "text": "Safi millî gelir"}, {"letter": "E", "text": "Millî gelir"}], "correct": "C", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek C'dir."}, {"num": 4, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Aşağıdakilerden hangisi bir malın denge fiyatını vermektedir?", "options": [{"letter": "A", "text": "Piyasa talebinin piyasa arzını aştığı herhangi bir düzey"}, {"letter": "B", "text": "Malın maliyeti ile piyasa fiyatı arasındaki fark"}, {"letter": "C", "text": "Piyasa arz ve talebinin kesiştiği nokta"}, {"letter": "D", "text": "Piyasa arzının piyasa talebini aştığı herhangi bir düzey"}, {"letter": "E", "text": "Malın karaborsa fiyatı"}], "correct": "C", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek C'dir."}, {"num": 5, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Üretim fonksiyonu aşağıdakilerden hangisini ifade etmektedir?", "options": [{"letter": "A", "text": "Faktör miktarı"}, {"letter": "B", "text": "Faktör fiyatı"}, {"letter": "C", "text": "Girdi maliyeti"}, {"letter": "D", "text": "Çıktı maliyeti"}, {"letter": "E", "text": "Faktörlerin teknik zorunluluğunu"}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 6, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Paranın değer ölçüsü olma özelliğini kaybettiği enflasyon türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hiperenflasyon"}, {"letter": "B", "text": "Sinsi enflasyon"}, {"letter": "C", "text": "Stagflasyon"}, {"letter": "D", "text": "Kronik enflasyon"}, {"letter": "E", "text": "Yapısal enflasyon"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 7, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME, Genel İktisat Bütünleme 2023-2024", "text": "Reel GSYİH’nın potansiyel GSYİH’nın gerisinde kalması sonucu oluşan işsizliğe ne ad verilmektedir?", "options": [{"letter": "A", "text": "Konjonktürel"}, {"letter": "B", "text": "Friksiyonel"}, {"letter": "C", "text": "Mevsimsel"}, {"letter": "D", "text": "Yapısal"}, {"letter": "E", "text": "Gizli"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 8, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Aşağıdakilerden hangisi fayda ile ilgili bir kavramdır?", "options": [{"letter": "A", "text": "Tüketicilerin sayısı"}, {"letter": "B", "text": "Tüketicilerin ihtiyaçları"}, {"letter": "C", "text": "Tüketicilerin geliri"}, {"letter": "D", "text": "Tüketicilerin tercihi"}, {"letter": "E", "text": "Tüketicilerin tatmini"}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 9, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Firmanın birim üretim başına düşen maliyetine ne ad verilir?", "options": [{"letter": "A", "text": "Ortalama toplam maliyet"}, {"letter": "B", "text": "Ortalama sabit maliyet"}, {"letter": "C", "text": "Ortalama değişken maliyet"}, {"letter": "D", "text": "Marjinal maliyet"}, {"letter": "E", "text": "Toplam maliyet"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 10, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Belli bir dönemde bir ülke vatandaşlarının sahip oldukları üretim faktörleri kullanılarak üretilmiş bütün nihai mal ve hizmetlerin piyasa fiyatlarıyla hesaplanmış değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "GSYİH"}, {"letter": "B", "text": "MG"}, {"letter": "C", "text": "GSMH"}, {"letter": "D", "text": "SMH"}, {"letter": "E", "text": "KG"}], "correct": "C", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek C'dir."}, {"num": 11, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME, Genel İktisat Bütünleme 2023-2024", "text": "Aşağıdakilerden hangisi para politikası araçlarından biri değildir?", "options": [{"letter": "A", "text": "Açık piyasa işlemleri"}, {"letter": "B", "text": "Parasal taban"}, {"letter": "C", "text": "Reeskont oranı"}, {"letter": "D", "text": "Kanuni karşılık"}, {"letter": "E", "text": "Kredi tavanı"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 12, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME, Genel İktisat Bütünleme 2023-2024", "text": "Aşağıdakilerden hangisi paranın özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Bölünebilir olması"}, {"letter": "B", "text": "Heterojen olması"}, {"letter": "C", "text": "Dayanıklı olması"}, {"letter": "D", "text": "Taşınmaya elverişli olması"}, {"letter": "E", "text": "Değişim aracı olması"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 13, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME, genel iktisat 2025 final", "text": "Tam rekabet piyasasındaki bir firmanın ortalama geliri (OG) ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Ortalama maliyete bağlı olarak artar."}, {"letter": "B", "text": "Üretimle birlikte azalır."}, {"letter": "C", "text": "Üretimle birlikte artar."}, {"letter": "D", "text": "Sabittir ve fiyata eşittir."}, {"letter": "E", "text": "Önce artar, sonra azalır."}], "correct": "D", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek D'dir."}, {"num": 14, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?", "options": [{"letter": "A", "text": "ed : 0"}, {"letter": "B", "text": "ed : <1"}, {"letter": "C", "text": "ed : 1"}, {"letter": "D", "text": "ed : ∞"}, {"letter": "E", "text": "ed : >1 GENEL İKTİSAT A P355875.G13883 05-01-2026 10:57:56 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek D'dir."}, {"num": 15, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Piyasa arz eğrisi"}, {"letter": "B", "text": "Firma arz eğrisi"}, {"letter": "C", "text": "Arz eğrisi"}, {"letter": "D", "text": "Talep eğrisi"}, {"letter": "E", "text": "Sanayi talep eğrisi"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 16, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME, genel iktisat 2025 final", "text": "Aşağıdakilerden hangisi para politikası uygulamalarından biri değildir?", "options": [{"letter": "A", "text": "Reeskont oranlarının düşürülmesi"}, {"letter": "B", "text": "Tedavüldeki banknot miktarının arttırılması"}, {"letter": "C", "text": "Kredi faizlerinin arttırılması"}, {"letter": "D", "text": "Vergi oranlarında indirim yapılması"}, {"letter": "E", "text": "Merkez Bankasının tahvil satması"}], "correct": "D", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek D'dir."}, {"num": 17, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME, Genel İktisat Bütünleme 2023-2024", "text": "Mal ihracatında artışın sağlanması hangi koşula bağlı olmaktadır?", "options": [{"letter": "A", "text": "Millî paranın dış değerinin yüksek olması"}, {"letter": "B", "text": "İhraç mallarının dış talep esnekliğinin düşük olması"}, {"letter": "C", "text": "Rekabet gücünün olmaması"}, {"letter": "D", "text": "İhracata hazır mal stokunun varlığı"}, {"letter": "E", "text": "İthal mallarının iç talep esnekliği"}], "correct": "D", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek D'dir."}, {"num": 18, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Hangi işsizlik türü ekonominin en elverişli dönemlerinde bile görülebilmektedir?", "options": [{"letter": "A", "text": "Konjoktürel işsizlik"}, {"letter": "B", "text": "Gizli işsizlik"}, {"letter": "C", "text": "İradi işsizlik"}, {"letter": "D", "text": "Yapısal işsizlik"}, {"letter": "E", "text": "Friksiyonel işsizlik"}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 19, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Monopolcünün belli koşullar altında malının farklı birimlerini farklı fiyattan satmasına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Fiyat arttırılması"}, {"letter": "B", "text": "Fiyat farklılaştırılması"}, {"letter": "C", "text": "Üretici rantı"}, {"letter": "D", "text": "Maliyet arttırılması"}, {"letter": "E", "text": "Tüketici rantı"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 20, "tag": "2025- 2026 GENEL İKTİSAT BÜTÜNLEME", "text": "Aşağıdakilerden hangisi monopol piyasalarında karşılaşılan iktisadi olgulardan birisi değildir?", "options": [{"letter": "A", "text": "Monopolcu firma denge durumunun maliyetlere göre açıklanması"}, {"letter": "B", "text": "Monopolcü firmanın piyasada azalan eğimli bir talep eğrisine sahip olması"}, {"letter": "C", "text": "Monopolcü firma ile endüstrinin aynı olması"}, {"letter": "D", "text": "Monopolcü firmanın bir mal ve hizmetin tek arz edicisi olması"}, {"letter": "E", "text": "Monopolün kısa ve uzun dönem koşullarının farklılık göstermesi"}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 21, "tag": "genel iktisat 2025 final", "text": "İktisadi faaliyetlerde insan ihtiyaçlarını giderme amacına yönelik olarak mal ve hizmet üretilmesine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Esneklik"}, {"letter": "B", "text": "Tüketim"}, {"letter": "C", "text": "Fayda"}, {"letter": "D", "text": "Talep"}, {"letter": "E", "text": "Arz"}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 22, "tag": "genel iktisat 2025 final", "text": "Aşağıdakilerden hangisi altın ve gümüşe çevrilebilen paraları tanımlamaktadır?", "options": [{"letter": "A", "text": "Mal para"}, {"letter": "B", "text": "Temsilî para"}, {"letter": "C", "text": "Kâğıt para"}, {"letter": "D", "text": "Sikke"}, {"letter": "E", "text": "Banknot"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 23, "tag": "genel iktisat 2025 final", "text": "Talep çapraz esnekliğinin sıfıra yaklaşması aşağıdaki hangi durumu ifade etmektedir?", "options": [{"letter": "A", "text": "İkâmenin güç olduğu"}, {"letter": "B", "text": "İkâmenin kolay olduğu"}, {"letter": "C", "text": "İkâmenin çok olduğu"}, {"letter": "D", "text": "İkâmenin az olduğu"}, {"letter": "E", "text": "İkâmenin tam olduğu"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 24, "tag": "genel iktisat 2025 final", "text": "Aşağıdakilerden hangisi döviz kurunun değerini düşürme işlemini ifade etmektedir?", "options": [{"letter": "A", "text": "Revalüasyon"}, {"letter": "B", "text": "Deflasyon"}, {"letter": "C", "text": "Stagflasyon"}, {"letter": "D", "text": "Resesyon"}, {"letter": "E", "text": "Devalüasyon"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 25, "tag": "genel iktisat 2025 final", "text": "Arz edenlere yeni tesis kurarak arz düzeylerini arttırma imkanı veren dönem aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Piyasa dönemi"}, {"letter": "B", "text": "Resesyon dönemi"}, {"letter": "C", "text": "Stagflasyon dönemi"}, {"letter": "D", "text": "Uzun dönem"}, {"letter": "E", "text": "Kısa dönem"}], "correct": "D", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek D'dir."}, {"num": 26, "tag": "genel iktisat 2025 final", "text": "Aşağıdakilerden hangisi paranın ticarete konu olan her türlü işlemi yürüten özelliğini ifade etmektedir?", "options": [{"letter": "A", "text": "Bölünebilir olması"}, {"letter": "B", "text": "Homojen olması"}, {"letter": "C", "text": "Taşınabilir olması"}, {"letter": "D", "text": "Dayanıklı olması"}, {"letter": "E", "text": "Taklit edilememesi"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 27, "tag": "genel iktisat 2025 final", "text": "Aşağıdakilerden hangisi uzun dönemde firma içi maliyetlerin yükselmesine neden olmaktadır?", "options": [{"letter": "A", "text": "İçsel ekonomiler"}, {"letter": "B", "text": "Alan ekonomileri"}, {"letter": "C", "text": "Dışsal eksi ekonomiler"}, {"letter": "D", "text": "İçsel eksi ekonomiler"}, {"letter": "E", "text": "Dışsal ekonomiler"}], "correct": "D", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek D'dir."}, {"num": 28, "tag": "genel iktisat 2025 final", "text": "Tam rekabet piyasasına ait bir firmada uzun dönemde kâr için aşağıdakilerden hangisi söylenebilir?", "options": [{"letter": "A", "text": "Üretim miktarı arttıkça artar."}, {"letter": "B", "text": "Çok düşüktür."}, {"letter": "C", "text": "Pozitiftir."}, {"letter": "D", "text": "Azalarak artar."}, {"letter": "E", "text": "Normaldir."}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 29, "tag": "genel iktisat 2025 final", "text": "Aşağıdakilerden hangisi yıllık üretimin baz alınan yılın fiyatları ile hesaplanması sonucu bulunan geliri ifade etmektedir?", "options": [{"letter": "A", "text": "Reel milli gelir"}, {"letter": "B", "text": "Potansiyel GSMH"}, {"letter": "C", "text": "Harcanabilir gelir"}, {"letter": "D", "text": "Nominal milli gelir"}, {"letter": "E", "text": "Reel GSYİH"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 30, "tag": "genel iktisat 2025 final", "text": "Teorik olarak faydanın ölçülebileceğini varsayan fayda görüşü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Toplam fayda"}, {"letter": "B", "text": "Marjinal fayda"}, {"letter": "C", "text": "Ordinal fayda"}, {"letter": "D", "text": "Kardinal fayda"}, {"letter": "E", "text": "Azalan fayda"}], "correct": "D", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek D'dir."}, {"num": 31, "tag": "genel iktisat 2025 final, Genel İktisat Bütünleme 2023-2024", "text": "Ekonomide emek­yoğun teknolojilerde görülen işsizlik türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Friksiyonel işsizlik"}, {"letter": "B", "text": "Yapısal işsizlik"}, {"letter": "C", "text": "İradi işsizlik"}, {"letter": "D", "text": "Gayriiradi işsizlik"}, {"letter": "E", "text": "Gizli işsizlik"}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 32, "tag": "genel iktisat 2025 final", "text": "Çok sayıda alıcı ve satıcı bulunurken farklılaştırılmış mal ve hizmetlerin satıldığı piyasa aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Monopson piyasası"}, {"letter": "B", "text": "Tam rekabet piyasası"}, {"letter": "C", "text": "Oligopol piyasası"}, {"letter": "D", "text": "Monopol piyasası"}, {"letter": "E", "text": "Monopollü rekabet piyasası"}], "correct": "E", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek E'dir."}, {"num": 33, "tag": "genel iktisat 2025 final", "text": "Ekonomide talep ve üretim yapısında meydana gelen değişiklik sonucu ortaya çıkan işsizlik türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Friksiyonel işsizlik"}, {"letter": "B", "text": "Yapısal işsizlik"}, {"letter": "C", "text": "Gizli işsizlik"}, {"letter": "D", "text": "Konjonktürel işsizlik"}, {"letter": "E", "text": "İradi işsizlik GENEL İKTİSAT A P355875.G13271 28-11-2025 13:18:03 CEVAPLI"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 34, "tag": "genel iktisat 2025 final", "text": "Monopolcü bir firmanın marjinal gelir eğrisinin talep eğrisinin altında yer almasının nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Marjinal gelirin belirli bir satış düzeyinden sonra artması"}, {"letter": "B", "text": "Marjinal maliyetin sürekli azalması"}, {"letter": "C", "text": "Firmanın daha fazla mal satabilmek için fiyatlarını düşürmesi"}, {"letter": "D", "text": "Diğer firmaların yüksek maliyette çalışmaları"}, {"letter": "E", "text": "Firmanın piyasadaki diğer firmaların satışını engellemek için fiyatları yüksek tutması"}], "correct": "C", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek C'dir."}, {"num": 35, "tag": "genel iktisat 2025 final", "text": "Harcanabilir gelirden bağımsız tüketim harcamalarına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Ortalama tüketim"}, {"letter": "B", "text": "Toplam tüketim"}, {"letter": "C", "text": "Otonom tüketim"}, {"letter": "D", "text": "Lüks tüketim"}, {"letter": "E", "text": "Uyarılmış tüketim"}], "correct": "C", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek C'dir."}, {"num": 36, "tag": "genel iktisat 2025 final", "text": "Deflasyon sürecinde uygulanmayacak tedbir aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Gelir ve kurumlar vergisindeki düzenlemeler"}, {"letter": "B", "text": "Otonom yatırımları azaltma"}, {"letter": "C", "text": "Tüketici kredilerini arttırma"}, {"letter": "D", "text": "Ucuz faizli kredi"}, {"letter": "E", "text": "Ücretleri arttırma"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 37, "tag": "genel iktisat 2025 final", "text": "Aşağıdakilerden hangisi para politikası araçları arasında yer almamaktadır?", "options": [{"letter": "A", "text": "Reeskont oranı"}, {"letter": "B", "text": "Zorunlu karşılıklar"}, {"letter": "C", "text": "İthalat teminatları"}, {"letter": "D", "text": "Kredi tavanı"}, {"letter": "E", "text": "Açık piyasa işlemleri"}], "correct": "C", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek C'dir."}, {"num": 38, "tag": "genel iktisat 2025 final", "text": "Aynı eş­ürün eğrisi üzerinde kalmak koşulu ile herhangi bir üretim faktöründen bir birim vazgeçilmesi karşısında arttırılan üretim faktörü miktarı oranı aşağıdakilerden hangisini ifade etmektedir?", "options": [{"letter": "A", "text": "Faktörlerin ikame oranı"}, {"letter": "B", "text": "Marjinal teknik ikame oranı"}, {"letter": "C", "text": "Faktörlerin fiyat oranı"}, {"letter": "D", "text": "Üretimde kullanılan girdi miktarlarını oranı"}, {"letter": "E", "text": "Faktörlerin esneklik oranı"}], "correct": "B", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek B'dir."}, {"num": 39, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Monopolcünün belli koşullar altında malının farklı birimlerini farklı ﬁyattan satmasına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Maliyet arttırılması"}, {"letter": "B", "text": "Fiyat arttırılması"}, {"letter": "C", "text": "Tüketici rantı"}, {"letter": "D", "text": "Üretici rantı"}, {"letter": "E", "text": "Fiyat farklılaştırılması"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 40, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Vergilerdeki bir değişimin arz eğrisi üzerindeki etkisi ne ile ifade edilir?", "options": [{"letter": "A", "text": "Arz kayması"}, {"letter": "B", "text": "Arz esnekliği"}, {"letter": "C", "text": "Arz kanunu"}, {"letter": "D", "text": "Arz ﬁyatı"}, {"letter": "E", "text": "Arz miktarı"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 41, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Tüketicinin geliri ile çeşitli mallardan satın alabileceği mal miktarlarının geometrik yerini tanımlayan ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Eş maliyet doğrusu"}, {"letter": "B", "text": "Bütçe doğrusu"}, {"letter": "C", "text": "Gelir tüketim eğrisi"}, {"letter": "D", "text": "Eş ürün eğrisi"}, {"letter": "E", "text": "Kayıtsızlık eğrisi"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 42, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Aşağıdakilerden hangisi tam rekabet piyasasından söz etmek için zorunlu bir koşul değildir?", "options": [{"letter": "A", "text": "Alıcı satıcı sayısının çok olması"}, {"letter": "B", "text": "Kâr maksimizasyonu"}, {"letter": "C", "text": "Homojenlik"}, {"letter": "D", "text": "Şeﬀaﬂık"}, {"letter": "E", "text": "Mobilite"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 43, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Aşağıdakilerden hangisi üretim miktarında meydana gelen bir değişimin toplam maliyette meydana getirdiği değişimi ifade etmektedir?", "options": [{"letter": "A", "text": "Marjinal maliyet"}, {"letter": "B", "text": "Değişir maliyet"}, {"letter": "C", "text": "Toplam maliyet"}, {"letter": "D", "text": "Sabit maliyet"}, {"letter": "E", "text": "Ortalama maliyet"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 44, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Reeskont oranlarındaki düşmenin ekonomiye etkisi ne şekilde olur?", "options": [{"letter": "A", "text": "Ticari bankaların kredi maliyetlerini düşürür."}, {"letter": "B", "text": "Enﬂasyonu düşürür."}, {"letter": "C", "text": "Para arzı daralır."}, {"letter": "D", "text": "Ticari bankaların kredi maliyetlerini arttırır."}, {"letter": "E", "text": "Merkez bankasının lehine olur."}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 45, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Millî gelir kaç şekilde hesaplanmaktadır?", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "2"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "5"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Diğer girdiler sabitken, bir üretim faktöründen üretime katılan birimler arttırıldıkça elde edilen ek üretim miktarının azalması durumuna ne ad verilmektedir?", "options": [{"letter": "A", "text": "Sabit verimler kanunu"}, {"letter": "B", "text": "Azalan verimler kanunu"}, {"letter": "C", "text": "Toplam verimler kanunu"}, {"letter": "D", "text": "Sabit marjinal verimler kanunu"}, {"letter": "E", "text": "Artan toplam verimler kanunu"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 47, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Arz (maliyet) enﬂasyonunun en önemli nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Enerji kıtlığı"}, {"letter": "B", "text": "İş gücü yetersizliği"}, {"letter": "C", "text": "Döviz darboğazı"}, {"letter": "D", "text": "Üretim maliyetlerindeki artış"}, {"letter": "E", "text": "Sermaye yetersizliği"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 48, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Tam rekabet piyasasında ﬁrmanın kaç tür geliri vardır?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "5"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 49, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Bir malın talebi sabitken arzı azalırsa aşağıdakilerden hangisi meydana gelir?", "options": [{"letter": "A", "text": "Denge miktarı artar, denge ﬁyatı sabit kalır."}, {"letter": "B", "text": "Denge ﬁyatı artar, denge miktarı azalır."}, {"letter": "C", "text": "Hem denge ﬁyatı hem de denge miktarı azalır."}, {"letter": "D", "text": "Denge ﬁyatı azalır, denge miktarı sabit kalır."}, {"letter": "E", "text": "Hem denge ﬁyatı hem de denge miktarı artar."}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 50, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Ülke sınırları içinde üretilen mal ve hizmetlerin parasal değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "KBMG"}, {"letter": "B", "text": "Millî gelir"}, {"letter": "C", "text": "GSYİH"}, {"letter": "D", "text": "GSMH"}, {"letter": "E", "text": "Harcanabilir gelir"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 51, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Talep esnekliğinde miktar ve ﬁyatları dikkate alan esneklik kavramı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yay esnekliği"}, {"letter": "B", "text": "Gelir esnekliği"}, {"letter": "C", "text": "Çapraz esneklik"}, {"letter": "D", "text": "İlk gelir düzeyi"}, {"letter": "E", "text": "Nokta esnekliği"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 52, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Ekonomide para miktarının ihtiyacın üzerine çıkması durumuna ne ad verilmektedir?", "options": [{"letter": "A", "text": "Deﬂasyon"}, {"letter": "B", "text": "Mal ve hizmet ﬁyatlarının düşmesi"}, {"letter": "C", "text": "Enﬂasyon"}, {"letter": "D", "text": "Paranın satın alma gücünün artması"}, {"letter": "E", "text": "Stagﬂasyon"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 53, "tag": "Genel İktisat Bütünleme 2023-2024", "text": "Monopolcü bir ﬁrmanın marjinal gelir eğrisinin talep eğrisinin altında yer almasının nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Firmanın piyasadaki diğer ﬁrmaların satışını engellemek için ﬁyatları yüksek tutması"}, {"letter": "B", "text": "Marjinal maliyetin sürekli azalması"}, {"letter": "C", "text": "Marjinal gelirin belirli bir satış düzeyinden sonra artması"}, {"letter": "D", "text": "Firmanın daha fazla mal satabilmek için ﬁyatlarını düşürmesi"}, {"letter": "E", "text": "Diğer ﬁrmaların yüksek maliyette çalışmaları 1 E 2 E 3 A 4 E 5 B 6 A 7 A 8 D 9 B 10 D 11 C 12 E 13 B 14 B 15 C 16 A 17 D 18 C 19 C 20 D YAYINLANMIŞ DOKÜMAN 2 Test Bitti"}], "correct": "A", "explanation": "AUZEF Genel Iktisat müfredatı uyarınca doğru seçenek A'dir."}, {"num": 54, "tag": "2022 Vize", "text": "1. Eş maliyet doğrusu hangi durumu belirtmektedir?", "options": [{"letter": "A", "text": "Üretim maliyetini"}, {"letter": "B", "text": "Sermaye maliyetini"}, {"letter": "C", "text": "İşçi maliyetini"}, {"letter": "D", "text": "Faktör bileşiminin maliyetini"}, {"letter": "E", "text": "Faktör tercihini"}], "correct": "D", "explanation": "💡 Açıklama: Eş maliyet doğrusu, üreticinin belirli bir bütçe ile satın alabileceği ve aynı toplam maliyeti veren çeşitli faktör (girdi) bileşimlerini gösterir."}, {"num": 55, "tag": "2022 Vize", "text": "2. Arz-talep eğrileri analizinde talep eğrisi altında ve denge fiyatı üzerinde kalan alan aşağıdakilerden hangisini gösterir?", "options": [{"letter": "A", "text": "Fayda maksimizasyonu"}, {"letter": "B", "text": "Toplam rant"}, {"letter": "C", "text": "Tüketici rantı"}, {"letter": "D", "text": "Üretici rantı"}, {"letter": "E", "text": "Kâr maksimizasyonu"}], "correct": "C", "explanation": "💡 Açıklama: Tüketicinin bir mal için ödemeye razı olduğu en yüksek fiyat ile fiilen ödediği piyasa fiyatı (denge fiyatı) arasındaki fark tüketici rantıdır."}, {"num": 56, "tag": "2022 Vize", "text": "3. Malların fiyatının düşmesi bütçe doğrusunu nasıl etkiler?", "options": [{"letter": "A", "text": "Etkilemez"}, {"letter": "B", "text": "Eğimini değiştirmez"}, {"letter": "C", "text": "Eğimini değiştirir"}, {"letter": "D", "text": "Paralel sağa kaydırır"}, {"letter": "E", "text": "Paralel sola kaydırır"}], "correct": "D", "explanation": "💡 Açıklama: Tüketicinin geliri sabitken tüm malların fiyatları aynı oranda düşerse, satın alma gücü artar ve bütçe doğrusu eğimi değişmeden paralel olarak sağa kayar."}, {"num": 57, "tag": "2022 Vize", "text": "4. Aşağıdakilerden hangisi uzun dönemde firma içi maliyetlerin yükselmesine neden olmaktadır?", "options": [{"letter": "A", "text": "İçsel ekonomiler"}, {"letter": "B", "text": "Alan ekonomileri"}, {"letter": "C", "text": "İçsel eksi ekonomiler"}, {"letter": "D", "text": "Dışsal ekonomiler"}, {"letter": "E", "text": "Dışsal eksi ekonomiler"}], "correct": "C", "explanation": "💡 Açıklama: Bir firmanın üretim ölçeğini büyütmesi sonucunda, yönetim ve organizasyon zorlukları gibi nedenlerle maliyetlerin artmasına içsel eksi (negatif) ekonomiler denir."}, {"num": 58, "tag": "2022 Vize", "text": "5. Aşağıdakilerden hangisi eş ürün eğrisinin özelliklerinden değildir?", "options": [{"letter": "A", "text": "Eğri üzerindeki her nokta farklı üretim düzeyini gösterir"}, {"letter": "B", "text": "Paralel eğrilerdir"}, {"letter": "C", "text": "Marjinal teknik ikame özelliğini taşır"}, {"letter": "D", "text": "Birbirlerini kesmezler"}, {"letter": "E", "text": "Dışbükeydir"}], "correct": "A", "explanation": "💡 Açıklama: Eş ürün eğrisi üzerindeki her nokta FARKLI değil, AYNI üretim düzeyini temsil eder."}, {"num": 59, "tag": "2022 Vize", "text": "6. Aşağıdakilerden hangisi arz eğrisinin yer değiştirmesine etki eden faktörlerden biri değildir?", "options": [{"letter": "A", "text": "Geleceğe yönelik beklentiler"}, {"letter": "B", "text": "Mal fiyatı"}, {"letter": "C", "text": "Teknoloji"}, {"letter": "D", "text": "Maliyetler"}, {"letter": "E", "text": "Diğer mal fiyatı"}], "correct": "B", "explanation": "💡 Açıklama: Malın kendi fiyatındaki değişimler eğriyi sağa veya sola kaydırmaz; eğri üzerinde bir noktadan diğerine harekete neden olur."}, {"num": 60, "tag": "2022 Vize", "text": "7. Her toplumun belirli bir düzeyde karşı karşıya olduğu ve iktisadın temel uğraş alanı olan sorun aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fayda"}, {"letter": "B", "text": "Enflasyon"}, {"letter": "C", "text": "Kıtlık"}, {"letter": "D", "text": "Para"}, {"letter": "E", "text": "Fiyat"}], "correct": "C", "explanation": "💡 Açıklama: İhtiyaçların sonsuz, kaynakların ise sınırlı olması durumuna kıtlık denir ve iktisadın temel çıkış noktasıdır."}, {"num": 61, "tag": "2022 Vize", "text": "8. İhtiyaçları tatmine yarayan unsurlara verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Emek"}, {"letter": "B", "text": "Mal"}, {"letter": "C", "text": "Faktör"}, {"letter": "D", "text": "Doğal kaynak"}, {"letter": "E", "text": "Sermaye"}], "correct": "B", "explanation": "💡 Açıklama: İnsan ihtiyaçlarını doğrudan veya dolaylı olarak karşılama özelliğine sahip olan fiziksel varlıklara mal denir."}, {"num": 62, "tag": "2022 Vize", "text": "9. Arz ve talep aynı oranda artarsa aşağıdaki durumlardan hangisi ortaya çıkar?", "options": [{"letter": "A", "text": "Denge fiyatı değişmez"}, {"letter": "B", "text": "Denge fiyatı düşer"}, {"letter": "C", "text": "Denge fiyatı yükselir"}, {"letter": "D", "text": "Denge fiyatı sabit kalır"}, {"letter": "E", "text": "Denge miktarı azalır"}], "correct": "A", "explanation": "💡 Açıklama: Hem arz hem de talep tam olarak aynı oranda sağa kayarsa, denge miktarı artarken denge fiyatı başlangıç seviyesinde sabit kalır (değişmez)."}, {"num": 63, "tag": "2022 Vize", "text": "10. Bir malın fiyatı arttıkça arz edilen miktarın artmasına, fiyat azalınca arz edilen miktarın azalmasına verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Üretim esnekliği"}, {"letter": "B", "text": "Arz kanunu"}, {"letter": "C", "text": "Marjinal üretim"}, {"letter": "D", "text": "Fiyat kanunu"}, {"letter": "E", "text": "Arz esnekliği"}], "correct": "B", "explanation": "💡 Açıklama: Fiyat ile arz edilen miktar arasındaki bu doğru orantılı ilişki \"Arz Kanunu\" olarak adlandırılır."}, {"num": 64, "tag": "2022 Vize", "text": "11. İktisadi faaliyetlerde insan ihtiyaçlarını giderme amacına yönelik olarak mal ve hizmet üretilmesine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Esneklik"}, {"letter": "B", "text": "Arz"}, {"letter": "C", "text": "Fayda"}, {"letter": "D", "text": "Talep"}, {"letter": "E", "text": "Tüketim"}], "correct": "B", "explanation": "💡 Açıklama: Üretilen mal ve hizmetlerin tüketici ihtiyaçlarını gidermek üzere piyasaya sunulmasına genel bağlamda arz denmektedir."}, {"num": 65, "tag": "2022 Vize", "text": "12. Teorik olarak faydanın ölçülebileceğini varsayan fayda görüşü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Toplam fayda"}, {"letter": "B", "text": "Azalan fayda"}, {"letter": "C", "text": "Marjinal fayda"}, {"letter": "D", "text": "Kardinal fayda"}, {"letter": "E", "text": "Ordinal fayda"}], "correct": "D", "explanation": "💡 Açıklama: Faydanın \"util\" adı verilen birimlerle sayısal olarak ölçülebileceğini savunan yaklaşıma Kardinal (sayısal) fayda teorisi denir."}, {"num": 66, "tag": "2022 Vize", "text": "13. Bir malın talep edilen miktarının, bu malın fiyatı karşısındaki duyarlılığının ölçüsüne verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çapraz talep esnekliği"}, {"letter": "B", "text": "Talebin tercih esnekliği"}, {"letter": "C", "text": "Talebin ikame esnekliği"}, {"letter": "D", "text": "Talebin fiyat esnekliği"}, {"letter": "E", "text": "Talebin gelir esnekliği"}], "correct": "D", "explanation": "💡 Açıklama: Fiyattaki %1'lik bir değişimin, talep edilen miktarda yarattığı yüzdesel değişime talebin fiyat esnekliği denir."}, {"num": 67, "tag": "2022 Vize", "text": "14. Üretim miktarına bağlı olmayan maliyetler aşağıdakilerden hangisi ile adlandırılır?", "options": [{"letter": "A", "text": "Toplam maliyet"}, {"letter": "B", "text": "Marjinal maliyet"}, {"letter": "C", "text": "Değişir maliyet"}, {"letter": "D", "text": "Ortalama değişir maliyet"}, {"letter": "E", "text": "Sabit maliyet"}], "correct": "E", "explanation": "💡 Açıklama: Üretim sıfır olsa bile katlanılması gereken ve üretim hacmine göre değişmeyen maliyetlere sabit maliyetler (kira vb.) denir."}, {"num": 68, "tag": "2022 Vize", "text": "15. Aşağıdakilerden hangisi, bir birim daha mal tüketimi sonucu, toplam faydada yaratılan değişikliğe verilen isimdir?", "options": [{"letter": "A", "text": "Kardinal fayda"}, {"letter": "B", "text": "Toplam fayda"}, {"letter": "C", "text": "Ordinal fayda"}, {"letter": "D", "text": "Azalan fayda"}, {"letter": "E", "text": "Marjinal fayda"}], "correct": "E", "explanation": "💡 Açıklama: Tüketilen son birimin toplam faydaya yaptığı ilave katkıya marjinal (ek) fayda adı verilir."}, {"num": 69, "tag": "2022 Vize", "text": "16. Tatmin edildiğinde haz ve doyum, tatmin edilmediğinde ise acı ve üzüntü veren duyguya verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İhtiyaç"}, {"letter": "B", "text": "Yarar"}, {"letter": "C", "text": "Hizmet"}, {"letter": "D", "text": "Fayda"}, {"letter": "E", "text": "Talep"}], "correct": "A", "explanation": "💡 Açıklama: İktisatta karşılandığında haz, karşılanmadığında elem ve üzüntü veren duygulara ihtiyaç denir."}, {"num": 70, "tag": "2022 Vize", "text": "17. Aşağıdakilerden hangisi bir fayda yaratmak veya mevcut faydalara ilavelerde bulunmak amacıyla yapılan bütün faaliyetleri kapsayan kavramdır?", "options": [{"letter": "A", "text": "İhtiyaç"}, {"letter": "B", "text": "Tüketim"}, {"letter": "C", "text": "Üretim"}, {"letter": "D", "text": "İktisadi davranış"}, {"letter": "E", "text": "Rasyonel davranış"}], "correct": "C", "explanation": "💡 Açıklama: İnsan ihtiyaçlarını karşılamak üzere mal ve hizmetlerin miktarını ve faydasını artırmaya yönelik faaliyetlerin tümüne üretim denir."}, {"num": 71, "tag": "2022 Vize", "text": "18. Bir malın fiyatındaki bir değişmenin diğer malın arz miktarında meydana getirdiği değişime verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çapraz esneklik"}, {"letter": "B", "text": "Fiyat esnekliği"}, {"letter": "C", "text": "Gelir esnekliği"}, {"letter": "D", "text": "Nokta esnekliği"}, {"letter": "E", "text": "Yay esnekliği"}], "correct": "A", "explanation": "💡 Açıklama: Bir malın miktarının, başka (ilişkili) bir malın fiyatındaki değişime karşı gösterdiği duyarlılık \"çapraz esneklik\" olarak adlandırılır."}, {"num": 72, "tag": "2022 Vize", "text": "19. Çapraz talep esnekliği pozitif olan mallara verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Giffen Malı"}, {"letter": "B", "text": "Veblen Malı"}, {"letter": "C", "text": "Tamamlayıcı Mal"}, {"letter": "D", "text": "Snop Mal"}, {"letter": "E", "text": "İkame Mal"}], "correct": "E", "explanation": "💡 Açıklama: Çapraz esneklik pozitifse, mallar birbiri yerine kullanılabilen (ikame) mallardır (Örn: Çay fiyatı artarsa kahve talebi artar)."}, {"num": 73, "tag": "2022 Vize", "text": "20. Aşağıdakilerden hangisi iki noktadan geçen doğrunun orta noktasının esnekliğini belirtmektedir?", "options": [{"letter": "A", "text": "Gelir esnekliği"}, {"letter": "B", "text": "Nokta esnekliği"}, {"letter": "C", "text": "Çapraz esneklik"}, {"letter": "D", "text": "Fiyat esnekliği"}, {"letter": "E", "text": "Yay esnekliği"}], "correct": "E", "explanation": "💡 Açıklama: Talep eğrisi üzerindeki iki nokta arasındaki kısmın (yayın) ortalama esnekliğinin hesaplanmasına yay (ark) esnekliği denir."}, {"num": 74, "tag": "2023-2024 Vize", "text": "1. Reel GSYİH'nın potansiyel GSYİH'nın gerisinde kalması sonucu oluşan işsizliğe ne ad verilmektedir?", "options": [{"letter": "A", "text": "Mevsimsel"}, {"letter": "B", "text": "Yapısal"}, {"letter": "C", "text": "Friksiyonel"}, {"letter": "D", "text": "Gizli"}, {"letter": "E", "text": "Konjonktürel"}], "correct": "E", "explanation": "💡 Açıklama: Ekonomik daralma dönemlerinde üretimin düşmesiyle ortaya çıkan işsizlik türüne konjonktürel işsizlik denir."}, {"num": 75, "tag": "2023-2024 Vize", "text": "2. Monopolcünün belli koşullar altında malının farklı birimlerini farklı fiyattan satmasına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Maliyet arttırılması"}, {"letter": "B", "text": "Fiyat arttırılması"}, {"letter": "C", "text": "Tüketici rantı"}, {"letter": "D", "text": "Üretici rantı"}, {"letter": "E", "text": "Fiyat farklılaştırılması"}], "correct": "E", "explanation": "💡 Açıklama: Bir malın farklı alıcılara farklı fiyatlardan satılması işlemine fiyat farklılaştırması (ayrımcılığı) denir."}, {"num": 76, "tag": "2023-2024 Vize", "text": "3. Vergilerdeki bir değişimin arz eğrisi üzerindeki etkisi ne ile ifade edilir?", "options": [{"letter": "A", "text": "Arz kayması"}, {"letter": "B", "text": "Arz esnekliği"}, {"letter": "C", "text": "Arz kanunu"}, {"letter": "D", "text": "Arz fiyatı"}, {"letter": "E", "text": "Arz miktarı"}], "correct": "A", "explanation": "💡 Açıklama: Vergiler maliyetleri doğrudan etkiler. Vergilerin artması veya azalması arz eğrisinin bütünüyle yer değiştirmesine (arz kayması) neden olur."}, {"num": 77, "tag": "2023-2024 Vize, 2023-2024 Vize, 2024-2025 Final", "text": "4. Tüketicinin geliri ile çeşitli mallardan satın alabileceği mal miktarlarının geometrik yerini tanımlayan ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Eş maliyet doğrusu"}, {"letter": "B", "text": "Bütçe doğrusu"}, {"letter": "C", "text": "Gelir tüketim eğrisi"}, {"letter": "D", "text": "Eş ürün eğrisi"}, {"letter": "E", "text": "Kayıtsızlık eğrisi"}], "correct": "E", "explanation": "💡 Açıklama: Not: Orijinal cevap anahtarında E şıkkı verilmiştir ancak sorudaki tanım iktisadi olarak 'Bütçe doğrusu'na aittir."}, {"num": 78, "tag": "2023-2024 Vize", "text": "5. Aşağıdakilerden hangisi tam rekabet piyasasından söz etmek için zorunlu bir koşul değildir?", "options": [{"letter": "A", "text": "Alıcı satıcı sayısının çok olması"}, {"letter": "B", "text": "Kâr maksimizasyonu"}, {"letter": "C", "text": "Homojenlik"}, {"letter": "D", "text": "Şeffaflık"}, {"letter": "E", "text": "Mobilite"}], "correct": "B", "explanation": "💡 Açıklama: Tam rekabet piyasasının zorunlu varsayımları atomisite, homojenlik, mobilite ve şeffaflıktır. Kâr maksimizasyonu piyasanın yapısal bir koşulu değil, firmanın amacıdır."}, {"num": 79, "tag": "2023-2024 Vize", "text": "6. Aşağıdakilerden hangisi üretim miktarında meydana gelen bir değişimin toplam maliyette meydana getirdiği değişimi ifade etmektedir?", "options": [{"letter": "A", "text": "Marjinal maliyet"}, {"letter": "B", "text": "Değişir maliyet"}, {"letter": "C", "text": "Toplam maliyet"}, {"letter": "D", "text": "Sabit maliyet"}, {"letter": "E", "text": "Ortalama maliyet"}], "correct": "A", "explanation": "💡 Açıklama: Üretilen son birimin (veya üretimdeki bir birimlik artışın) toplam maliyete yaptığı ek katkıya marjinal maliyet denir."}, {"num": 80, "tag": "2023-2024 Vize", "text": "7. Reeskont oranlarındaki düşmenin ekonomiye etkisi ne şekilde olur?", "options": [{"letter": "A", "text": "Ticari bankaların kredi maliyetlerini düşürür."}, {"letter": "B", "text": "Enflasyonu düşürür."}, {"letter": "C", "text": "Para arzı daralır."}, {"letter": "D", "text": "Ticari bankaların kredi maliyetlerini arttır."}, {"letter": "E", "text": "Merkez bankasının lehine olur."}], "correct": "A", "explanation": "💡 Açıklama: Merkez Bankası reeskont oranını düşürdüğünde bankaların fon bulma maliyeti azalır ve piyasaya daha ucuza kredi sunabilirler."}, {"num": 81, "tag": "2023-2024 Vize", "text": "8. Millî gelir kaç şekilde hesaplanmaktadır?", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "2"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "5"}], "correct": "D", "explanation": "💡 Açıklama: Milli gelir temel olarak 3 farklı yöntemle hesaplanır: Üretim yöntemi, Gelir yöntemi ve Harcama yöntemi."}, {"num": 82, "tag": "2023-2024 Vize", "text": "9. Diğer girdiler sabitken, bir üretim faktöründen üretime katılan birimler arttırıldıkça elde edilen ek üretim miktarının azalması durumuna ne ad verilmektedir?", "options": [{"letter": "A", "text": "Sabit verimler kanunu"}, {"letter": "B", "text": "Azalan verimler kanunu"}, {"letter": "C", "text": "Toplam verimler kanunu"}, {"letter": "D", "text": "Sabit marjinal verimler kanunu"}, {"letter": "E", "text": "Artan toplam verimler kanunu"}], "correct": "B", "explanation": "💡 Açıklama: Kısa dönemde sabit girdiler varken değişken girdinin miktarı artırıldıkça, bir noktadan sonra marjinal fiziki ürünün azalmasına azalan verimler kanunu denir."}, {"num": 83, "tag": "2023-2024 Vize", "text": "10. Arz (maliyet) enflasyonunun en önemli nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Enerji kıtlığı"}, {"letter": "B", "text": "İş gücü yetersizliği"}, {"letter": "C", "text": "Döviz darboğazı"}, {"letter": "D", "text": "Üretim maliyetlerindeki artış"}, {"letter": "E", "text": "Sermaye yetersizliği"}], "correct": "D", "explanation": "💡 Açıklama: Arz enflasyonu (maliyet enflasyonu), firmaların kullandığı üretim faktörlerinin maliyetlerindeki artışların fiyatlar genel düzeyini yukarı çekmesiyle oluşur."}, {"num": 84, "tag": "2023-2024 Vize", "text": "11. Tam rekabet piyasasında firmanın kaç tür geliri vardır?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "5"}], "correct": "C", "explanation": "💡 Açıklama: Firmanın analiz edilen üç temel gelir türü vardır: Toplam Gelir (TR), Ortalama Gelir (AR) ve Marjinal Gelir (MR)."}, {"num": 85, "tag": "2023-2024 Vize", "text": "12. Ekonomide emek-yoğun teknolojilerde görülen işsizlik türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Friksiyonel işsizlik"}, {"letter": "B", "text": "Yapısal işsizlik"}, {"letter": "C", "text": "İradi işsizlik"}, {"letter": "D", "text": "Gayriiradi işsizlik"}, {"letter": "E", "text": "Gizli işsizlik"}], "correct": "E", "explanation": "💡 Açıklama: Tarım gibi emek-yoğun sektörlerde sıkça görülen, bazı çalışanlar üretimden çekilse dahi toplam üretimde bir azalmanın yaşanmadığı duruma gizli işsizlik denir."}, {"num": 86, "tag": "2023-2024 Vize", "text": "13. Mal ihracatında artışın sağlanması hangi koşula bağlı olmaktadır?", "options": [{"letter": "A", "text": "İthal mallarının iç talep esnekliği"}, {"letter": "B", "text": "İhracata hazır mal stokunun varlığı"}, {"letter": "C", "text": "Millî paranın dış değerinin yüksek olması"}, {"letter": "D", "text": "İhraç mallarının dış talep esnekliğinin düşük olması"}, {"letter": "E", "text": "Rekabet gücünün olmaması"}], "correct": "B", "explanation": "💡 Açıklama: Bir ülkenin ihracatını artırabilmesi için öncelikle dışarıya satabileceği, üretime ve ihracata hazır yeterli mal stokuna sahip olması gerekir."}, {"num": 87, "tag": "2023-2024 Vize", "text": "14. Bir malın talebi sabitken arzı azalırsa aşağıdakilerden hangisi meydana gelir?", "options": [{"letter": "A", "text": "Denge miktarı artar, denge fiyatı sabit kalır."}, {"letter": "B", "text": "Denge fiyatı artar, denge miktarı azalır."}, {"letter": "C", "text": "Hem denge fiyatı hem de denge miktarı azalır."}, {"letter": "D", "text": "Denge fiyatı azalır, denge miktarı sabit kalır."}, {"letter": "E", "text": "Hem denge fiyatı hem de denge miktarı artar."}], "correct": "B", "explanation": "💡 Açıklama: Talep eğrisi sabitken arz eğrisi sola kayarsa piyasada mal kıtlaşacağı için denge fiyatı yükselir, alınıp satılan miktar ise azalır."}, {"num": 88, "tag": "2023-2024 Vize", "text": "15. Ülke sınırları içinde üretilen mal ve hizmetlerin parasal değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "KBMG"}, {"letter": "B", "text": "Millî gelir"}, {"letter": "C", "text": "GSYİH"}, {"letter": "D", "text": "GSMH"}, {"letter": "E", "text": "Harcanabilir gelir"}], "correct": "C", "explanation": "💡 Açıklama: Gayrisafi Yurt İçi Hasıla (GSYİH), bir ülkenin coğrafi sınırları içinde belirli bir dönemde üretilen tüm nihai mal ve hizmetlerin parasal (piyasa) değeridir."}, {"num": 89, "tag": "2023-2024 Vize", "text": "16. Talep esnekliğinde miktar ve fiyatları dikkate alan esneklik kavramı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yay esnekliği"}, {"letter": "B", "text": "Gelir esnekliği"}, {"letter": "C", "text": "Çapraz esneklik"}, {"letter": "D", "text": "İlk gelir düzeyi"}, {"letter": "E", "text": "Nokta esnekliği"}], "correct": "A", "explanation": "💡 Açıklama: Eğri üzerindeki iki nokta arasındaki ortalama esnekliği, ilk ve son fiyat ile miktar seviyelerinin ortalamalarını dikkate alarak hesaplayan yönteme yay esnekliği denir."}, {"num": 90, "tag": "2023-2024 Vize", "text": "17. Aşağıdakilerden hangisi para politikası araçlarından biri değildir?", "options": [{"letter": "A", "text": "Kredi tavanı"}, {"letter": "B", "text": "Açık piyasa işlemleri"}, {"letter": "C", "text": "Kanuni karşılık"}, {"letter": "D", "text": "Parasal taban"}, {"letter": "E", "text": "Reeskont oranı"}], "correct": "D", "explanation": "💡 Açıklama: Açık piyasa işlemleri, kanuni karşılıklar ve reeskont oranı Merkez Bankası'nın araçlarıdır. Parasal taban ise piyasaya sürülen para büyüklüğüdür, bir araç değildir."}, {"num": 91, "tag": "2023-2024 Vize", "text": "18. Aşağıdakilerden hangisi paranın özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Bölünebilir olması"}, {"letter": "B", "text": "Değişim aracı olması"}, {"letter": "C", "text": "Heterojen olması"}, {"letter": "D", "text": "Taşınmaya elverişli olması"}, {"letter": "E", "text": "Dayanıklı olması"}], "correct": "C", "explanation": "💡 Açıklama: Paranın bir değişim aracı olarak işlev görebilmesi için birimlerinin birbiriyle tamamen aynı özelliklerde (homojen) olması gerekir; heterojen olmamalıdır."}, {"num": 92, "tag": "2023-2024 Vize", "text": "19. Ekonomide para miktarının ihtiyacın üzerine çıkması durumuna ne ad verilmektedir?", "options": [{"letter": "A", "text": "Deflasyon"}, {"letter": "B", "text": "Mal ve hizmet fiyatlarının düşmesi"}, {"letter": "C", "text": "Enflasyon"}, {"letter": "D", "text": "Paranın satın alma gücünün artması"}, {"letter": "E", "text": "Stagflasyon"}], "correct": "C", "explanation": "💡 Açıklama: Piyasada dolaşan para miktarının üretilen mal ve hizmetlerden daha hızlı artması, paranın değer kaybetmesine ve fiyatlar genel düzeyinin sürekli artmasına (enflasyona) yol açar."}, {"num": 93, "tag": "2023-2024 Vize", "text": "20. Monopolcü bir firmanın marjinal gelir eğrisinin talep eğrisinin altında yer almasının nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Firmanın piyasadaki diğer firmaların satışını engellemek için fiyatları yüksek tutması"}, {"letter": "B", "text": "Marjinal maliyetin sürekli azalması"}, {"letter": "C", "text": "Marjinal gelirin belirli bir satış düzeyinden sonra artması"}, {"letter": "D", "text": "Firmanın daha fazla mal satabilmek için fiyatlarını düşürmesi"}, {"letter": "E", "text": "Diğer firmaların yüksek maliyette çalışmaları"}], "correct": "D", "explanation": "💡 Açıklama: Monopolcü firma daha fazla ürün satmak istediğinde fiyatı indirmek zorundadır. Fiyat düşüşü tüm birimlere yansıyacağı için elde edilen ek (marjinal) gelir fiyattan (talepten) her zaman düşük olur."}, {"num": 94, "tag": "2024 Vize", "text": "1. Üretim fonksiyonu aşağıdakilerden hangisini ifade etmektedir?[cite: 4]", "options": [{"letter": "A", "text": "Girdi maliyeti"}, {"letter": "B", "text": "Faktörlerin teknik zorunluluğunu"}, {"letter": "C", "text": "Faktör miktarı"}, {"letter": "D", "text": "Faktör fiyatı"}, {"letter": "E", "text": "Çıktı maliyeti"}], "correct": "B", "explanation": "💡 Açıklama: Üretim fonksiyonu, teknoloji veri iken kullanılan girdiler (faktörler) ile elde edilebilecek maksimum çıktı arasındaki teknik ilişkiyi belirtir."}, {"num": 95, "tag": "2024 Vize", "text": "2. Özel mülkiyetin yanında kamu mülkiyetini, piyasa mekanizması yanında müdahaleyi, fiyat mekanizması yanında merkezî planlamayı kabul eden iktisadi yapılanma aşağıdakilerden hangisidir?[cite: 4]", "options": [{"letter": "A", "text": "Fizyokratik sistem"}, {"letter": "B", "text": "Karma ekonomik sistem"}, {"letter": "C", "text": "Sosyalist sistem"}, {"letter": "D", "text": "Merkantilist sistem"}, {"letter": "E", "text": "Kapitalist sistem"}], "correct": "B", "explanation": "💡 Açıklama: Hem özel sektörün hem de devletin (kamu) ekonomide aktif rol aldığı, piyasa ve planlamanın bir arada uygulandığı sistem karma ekonomik sistemdir."}, {"num": 96, "tag": "2024 Vize", "text": "3. Aşağıdakilerden hangisi ikame mala örnektir?[cite: 4]", "options": [{"letter": "A", "text": "Bilgisayar - masa"}, {"letter": "B", "text": "Tavuk - koyun"}, {"letter": "C", "text": "Reçel - peynir"}, {"letter": "D", "text": "Çay - şeker"}, {"letter": "E", "text": "Araba - benzin"}], "correct": "B", "explanation": "💡 Açıklama: İkame (rakip) mallar birbiri yerine kullanılabilen mallardır. Tavuk ve koyun eti birbirinin yerine tüketilebilen ikame mallardır."}, {"num": 97, "tag": "2024 Vize", "text": "4. Vergilerdeki bir değişimin arz eğrisi üzerindeki etkisi aşağıdakilerden hangisi ile ifade edilir?[cite: 4]", "options": [{"letter": "A", "text": "Arz kayması"}, {"letter": "B", "text": "Arz fiyatı"}, {"letter": "C", "text": "Arz kanunu"}, {"letter": "D", "text": "Arz miktarı"}, {"letter": "E", "text": "Arz esnekliği"}], "correct": "A", "explanation": "💡 Açıklama: Vergilerin artması veya azalması maliyetleri doğrudan etkiler, bu da arz eğrisinin bütünüyle sağa veya sola kaymasına (arz kayması) neden olur."}, {"num": 98, "tag": "2024 Vize", "text": "5. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?[cite: 4]", "options": [{"letter": "A", "text": "ed: 0"}, {"letter": "B", "text": "ed: ∞"}, {"letter": "C", "text": "ed: 1"}, {"letter": "D", "text": "ed: -1"}, {"letter": "E", "text": "ed: <1"}], "correct": "B", "explanation": "💡 Açıklama: Yatay eksene (miktar eksenine) paralel olan talep eğrilerinde fiyat değişmezken miktar sonsuz değişebilir, bu nedenle esneklik sonsuzdur (ed: ∞)."}, {"num": 99, "tag": "2024 Vize", "text": "6. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?[cite: 4]", "options": [{"letter": "A", "text": "Sanayi talep eğrisi"}, {"letter": "B", "text": "Talep eğrisi"}, {"letter": "C", "text": "Firma arz eğrisi"}, {"letter": "D", "text": "Piyasa arz eğrisi"}, {"letter": "E", "text": "Arz eğrisi"}], "correct": "D", "explanation": "💡 Açıklama: Belirli bir malı üreten tüm firmaların bireysel arz eğrilerinin her bir fiyat seviyesindeki miktarlarının (yatay) toplanmasıyla piyasa arz eğrisi elde edilir."}, {"num": 100, "tag": "2024 Vize", "text": "7. Diğer faktörlerin değişmeyip sabit olduğu bir ortamda bir malın fiyatının yükselmesi hâlinde aşağıdakilerden hangisi gerçekleşir?[cite: 4]", "options": [{"letter": "A", "text": "Talep edilen mal miktarında düşüş olur."}, {"letter": "B", "text": "Malın talebinde artış olur."}, {"letter": "C", "text": "Malın talebinde düşüş olur."}, {"letter": "D", "text": "Malın arz edilen miktarı azalır."}, {"letter": "E", "text": "Talep edilen mal miktarında artış olur."}], "correct": "A", "explanation": "💡 Açıklama: Talep kanununa göre, diğer şartlar sabitken (ceteris paribus) bir malın fiyatı artarsa, o maldan talep edilen miktar azalır."}, {"num": 101, "tag": "2024 Vize", "text": "8. İkame mallar ile ilgili aşağıdakilerden hangisi doğrudur?[cite: 4]", "options": [{"letter": "A", "text": "Esneklik katsayısı sıfırdır."}, {"letter": "B", "text": "Esneklik katsayısı birden büyüktür."}, {"letter": "C", "text": "Esneklik katsayısı daima pozitiftir."}, {"letter": "D", "text": "Esneklik katsayısı daima negatiftir."}, {"letter": "E", "text": "Esneklik katsayısı birden küçüktür."}], "correct": "C", "explanation": "💡 Açıklama: İkame mallarda birinin fiyatı artarsa diğerinin talebi artar. Çapraz talep esnekliği aynı yönlü hareketten dolayı daima pozitiftir."}, {"num": 102, "tag": "2024 Vize", "text": "9. Marjinal ürünün sıfır olduğu noktada toplam ürün nasıldır?[cite: 4]", "options": [{"letter": "A", "text": "Sıfırdır."}, {"letter": "B", "text": "Azalmaktadır."}, {"letter": "C", "text": "Negatiftir."}, {"letter": "D", "text": "Minimumdur."}, {"letter": "E", "text": "Maksimumdur."}], "correct": "E", "explanation": "💡 Açıklama: Marjinal ürün (eklenen son birimin katkısı) pozitifken toplam ürün artar. Marjinal ürün sıfır olduğunda toplam ürün artık artmaz, yani ulaştığı en yüksek (maksimum) seviyededir."}, {"num": 103, "tag": "2024 Vize", "text": "10. Toplam fayda ilk etapta azalarak artar ve toplam fayda maksimuma ulaştıktan sonra azalmaya başlar. Bunun nedeni aşağıdakilerden hangisidir?[cite: 4]", "options": [{"letter": "A", "text": "Artan toplam fayda kanunu"}, {"letter": "B", "text": "Artan marjinal fayda kanunu"}, {"letter": "C", "text": "Değişen marjinal fayda kanunu"}, {"letter": "D", "text": "Azalan marjinal fayda kanunu"}, {"letter": "E", "text": "Azalan toplam fayda kanunu"}], "correct": "D", "explanation": "💡 Açıklama: Bir malın tüketimi arttıkça elde edilen ek (marjinal) faydanın sürekli düşmesini ifade eden azalan marjinal fayda kanunu nedeniyle toplam fayda önce azalarak artar, sonra düşer."}, {"num": 104, "tag": "2024 Vize", "text": "11. Aşağıdakilerden hangisi mal darlığından yararlanarak kanun otoritesinin koyduğu ya da kontrol ettiği fiyatlardan daha yüksek fiyata satış yapılan durumu ifade etmektedir?[cite: 4]", "options": [{"letter": "A", "text": "King kanunu"}, {"letter": "B", "text": "Tüketici rantı"}, {"letter": "C", "text": "Örümcek ağı"}, {"letter": "D", "text": "Üretici rantı"}, {"letter": "E", "text": "Karaborsa"}], "correct": "E", "explanation": "💡 Açıklama: Devletin belirlediği tavan fiyat uygulamalarında mal yetersizliği (kıtlık) oluşursa, malların yasa dışı olarak denge fiyatından daha yüksek fiyata satıldığı karaborsa piyasası ortaya çıkar."}, {"num": 105, "tag": "2024 Vize", "text": "12. Geniş bir üretim aralığında ölçeğe göre artan getiriye sahip bir firmanın uzun dönem ortalama maliyetleri bu aralıkta nasıl değişir?[cite: 4]", "options": [{"letter": "A", "text": "Önce minimum bir değere kadar azalır sonra artar."}, {"letter": "B", "text": "Artar."}, {"letter": "C", "text": "Önce maksimum bir değere kadar artar sonra azalır."}, {"letter": "D", "text": "Azalır."}, {"letter": "E", "text": "Sabit kalır."}], "correct": "D", "explanation": "💡 Açıklama: Ölçeğe göre artan getiri durumunda (içsel ekonomiler), üretim ölçeği büyüdükçe firmanın uzun dönem ortalama maliyetleri düşüş gösterir."}, {"num": 106, "tag": "2024 Vize", "text": "13. Aşağıdakilerden hangisinde marjinal fayda yaklaşımına göre toplam fayda (TU) ve marjinal fayda (MU) ilişkisi tam ve doğru olarak verilmiştir?[cite: 4]", "options": [{"letter": "A", "text": "TU'nun maksimum olduğu noktada MU sıfıra eşittir."}, {"letter": "B", "text": "MU ve TU eğrileri birlikte artış gösterirler."}, {"letter": "C", "text": "MU'nun maksimum olduğu noktada TU sıfıra eşittir."}, {"letter": "D", "text": "MU artarken TU önce azalan sonra artan bir eğridir."}, {"letter": "E", "text": "MU ve TU eğrilerinin ikisinde de her noktada eğimi negatiftir."}], "correct": "A", "explanation": "💡 Açıklama: Tüketicinin doyum noktasına ulaştığı (TU'nun maksimum olduğu) anda tüketilen son birimden alınan ek fayda (MU) artık sıfırdır."}, {"num": 107, "tag": "2024 Vize", "text": "14. Aşağıdakilerden hangisi örümcek ağı teoreminin uygulandığı ürünlere en iyi örnektir?[cite: 4]", "options": [{"letter": "A", "text": "Tarım"}, {"letter": "B", "text": "Bilişim"}, {"letter": "C", "text": "Teknoloji"}, {"letter": "D", "text": "İmalat üretimi"}, {"letter": "E", "text": "Hizmet"}], "correct": "A", "explanation": "💡 Açıklama: Örümcek ağı (Cobweb) teoremi, üretim süreci uzun olan ve fiyat değişimlerine arzın gecikmeli (genellikle bir sonraki dönem) tepki verdiği tarım ürünleri için geçerlidir."}, {"num": 108, "tag": "2024 Vize", "text": "15. Arz eğrisi üzerindeki iki nokta arasında kalan kısmının esnekliğine ne ad verilmektedir?[cite: 4]", "options": [{"letter": "A", "text": "Nokta esnekliği"}, {"letter": "B", "text": "Gelir esnekliği"}, {"letter": "C", "text": "Çapraz esneklik"}, {"letter": "D", "text": "Fiyat esnekliği"}, {"letter": "E", "text": "Yay esnekliği"}], "correct": "E", "explanation": "💡 Açıklama: Bir eğri üzerindeki belirli iki nokta arasındaki kısmın (yayın) ortalama esnekliğinin hesaplanmasına yay (ark) esnekliği denir."}, {"num": 109, "tag": "2024 Vize", "text": "16. Arz eğrisindeki sola kaymanın talep eğrisindeki kayma ile eşit ancak ters yönlü olduğu durumda aşağıdakilerden hangisi olur?[cite: 4]", "options": [{"letter": "A", "text": "Piyasa dengededir."}, {"letter": "B", "text": "Piyasa denge miktarı azalır."}, {"letter": "C", "text": "Piyasa fiyatı değişmez."}, {"letter": "D", "text": "Piyasa denge miktarı azalırken piyasa fiyatı değişmez."}, {"letter": "E", "text": "Piyasa denge miktarı değişmezken piyasa fiyatı yükselir."}], "correct": "E", "explanation": "💡 Açıklama: Arz sola kaydığında (azaldığında) miktar düşer fiyat artar. Talep eşit oranda ters yöne (sağa) kaydığında (arttığında) miktar artar fiyat artar. Miktardaki zıt etkiler birbirini götürür (miktar değişmez), fiyat ise iki yönlü baskıyla kesin olarak yükselir."}, {"num": 110, "tag": "2024 Vize", "text": "17. Kayıtsızlık eğrilerinin orijine dış bükey olmalarının nedeni aşağıdakilerden hangisidir?[cite: 4]", "options": [{"letter": "A", "text": "Tercihlerin tamamlanmışlığı varsayımı"}, {"letter": "B", "text": "Tüketici tercihlerinin değişmesi"}, {"letter": "C", "text": "Azalan marjinal ikame oranı varsayımı"}, {"letter": "D", "text": "Daha az malın daha çok mala tercih edileceği varsayımı"}, {"letter": "E", "text": "Daha çok malın daha az mala tercih edileceği varsayımı"}], "correct": "C", "explanation": "💡 Açıklama: Bir maldan daha fazla tüketildikçe o maldan elde edilen marjinal fayda düşeceği için, diğer maldan vazgeçilmek istenen miktar da gittikçe azalır. Bu duruma azalan marjinal ikame oranı denir ve eğrinin dış bükey (konveks) olmasını sağlar."}, {"num": 111, "tag": "2024 Vize", "text": "18. Firmanın birim üretim başına düşen maliyetine ne ad verilir?[cite: 4]", "options": [{"letter": "A", "text": "Ortalama sabit maliyet"}, {"letter": "B", "text": "Marjinal maliyet"}, {"letter": "C", "text": "Ortalama toplam maliyet"}, {"letter": "D", "text": "Ortalama değişken maliyet"}, {"letter": "E", "text": "Toplam maliyet"}], "correct": "C", "explanation": "💡 Açıklama: Toplam maliyetin üretilen birim miktarına bölünmesiyle elde edilen, birim başına maliyete Ortalama (Toplam) Maliyet denir."}, {"num": 112, "tag": "2024 Vize, 2024 Vize, 2025-2026 Vize", "text": "19. Et fiyatı % 20 artınca et talep miktarı değişmiyor ise et talep esnekliği ile ilgili aşağıdakilerden hangisi söylenebilir?[cite: 4]", "options": [{"letter": "A", "text": "Esneklik birden küçüktür."}, {"letter": "B", "text": "Esneklik birden büyüktür."}, {"letter": "C", "text": "Esneklik sıfırdır."}, {"letter": "D", "text": "Esneklik bire eşittir."}, {"letter": "E", "text": "Esneklik sonsuzdur."}], "correct": "C", "explanation": "💡 Açıklama: Fiyat ne kadar değişirse değişsin talep edilen miktar hiç değişmiyorsa (tepkisiz ise), esneklik sıfırdır (tam inelastik talep)."}, {"num": 113, "tag": "2024 Vize", "text": "20. Aynı eş-ürün eğrisi üzerinde kalmak koşulu ile herhangi bir üretim faktöründen bir birim vazgeçilmesi karşısında arttırılan üretim faktörü miktarı oranı aşağıdakilerden hangisini ifade etmektedir?[cite: 4]", "options": [{"letter": "A", "text": "Üretimde kullanılan girdi miktarlarını oranı"}, {"letter": "B", "text": "Faktörlerin ikame oranı"}, {"letter": "C", "text": "Marjinal teknik ikame oranı"}, {"letter": "D", "text": "Faktörlerin fiyat oranı"}, {"letter": "E", "text": "Faktörlerin esneklik oranı"}], "correct": "C", "explanation": "💡 Açıklama: Üretici aynı üretim düzeyini korurken, bir girdiyi azalttığında diğer girdiyi ne kadar artırması gerektiğini gösteren orana marjinal teknik ikame oranı denir."}, {"num": 114, "tag": "2024 Vize, 2025-2026 Vize", "text": "1. Marjinal ürünün sıfır olduğu noktada toplam ürün nasıldır?[cite: 5]", "options": [{"letter": "A", "text": "Negatiftir."}, {"letter": "B", "text": "Sıfırdır."}, {"letter": "C", "text": "Minimumdur."}, {"letter": "D", "text": "Azalmaktadır."}, {"letter": "E", "text": "Maksimumdur."}], "correct": "E", "explanation": "💡 Açıklama: Marjinal ürün (eklenen son birimin katkısı) pozitifken toplam ürün artar. Marjinal ürün sıfır olduğunda toplam ürün ulaştığı en yüksek (maksimum) seviyededir."}, {"num": 115, "tag": "2024 Vize, 2025-2026 Vize", "text": "2. Arz eğrisindeki sola kaymanın talep eğrisindeki kayma ile eşit ancak ters yönlü olduğu durumda aşağıdakilerden hangisi olur?[cite: 5]", "options": [{"letter": "A", "text": "Piyasa fiyatı değişmez."}, {"letter": "B", "text": "Piyasa denge miktarı azalırken piyasa fiyatı değişmez."}, {"letter": "C", "text": "Piyasa denge miktarı değişmezken piyasa fiyatı yükselir."}, {"letter": "D", "text": "Piyasa dengededir."}, {"letter": "E", "text": "Piyasa denge miktarı azalır."}], "correct": "C", "explanation": "💡 Açıklama: Arz azalıp talep aynı oranda arttığında zıt miktar etkileri birbirini sıfırlar (miktar değişmez), ancak iki durum da fiyatı yukarı ittiği için piyasa fiyatı kesin olarak yükselir."}, {"num": 116, "tag": "2024 Vize, 2025-2026 Vize", "text": "3. Toplam fayda ilk etapta azalarak artar ve toplam fayda maksimuma ulaştıktan sonra azalmaya başlar. Bunun nedeni aşağıdakilerden hangisidir?[cite: 5]", "options": [{"letter": "A", "text": "Değişen marjinal fayda kanunu"}, {"letter": "B", "text": "Azalan marjinal fayda kanunu"}, {"letter": "C", "text": "Artan toplam fayda kanunu"}, {"letter": "D", "text": "Artan marjinal fayda kanunu"}, {"letter": "E", "text": "Azalan toplam fayda kanunu"}], "correct": "B", "explanation": "💡 Açıklama: Tüketim arttıkça ek (marjinal) faydanın sürekli düşmesini ifade eden azalan marjinal fayda kanunu, toplam faydanın azalarak artmasına ve sonra düşmesine neden olur."}, {"num": 117, "tag": "2024 Vize, 2025-2026 Vize", "text": "4. Aşağıdakilerden hangisi ikame mala örnektir?[cite: 5]", "options": [{"letter": "A", "text": "Bilgisayar - masa"}, {"letter": "B", "text": "Araba - benzin"}, {"letter": "C", "text": "Çay - şeker"}, {"letter": "D", "text": "Reçel - peynir"}, {"letter": "E", "text": "Tavuk - koyun"}], "correct": "E", "explanation": "💡 Açıklama: Birbirinin yerine kullanılabilen ve rakip olan mallara ikame mal denir. Tavuk ve koyun eti ikame mallardır."}, {"num": 118, "tag": "2024 Vize, 2025-2026 Vize", "text": "5. Aşağıdakilerden hangisi örümcek ağı teoreminin uygulandığı ürünlere en iyi örnektir?[cite: 5]", "options": [{"letter": "A", "text": "Tarım"}, {"letter": "B", "text": "İmalat üretimi"}, {"letter": "C", "text": "Bilişim"}, {"letter": "D", "text": "Hizmet"}, {"letter": "E", "text": "Teknoloji"}], "correct": "A", "explanation": "💡 Açıklama: Üretim süreci uzun olan ve fiyat değişimlerine arzın gecikmeli tepki verdiği tarım ürünleri örümcek ağı teoreminin en tipik örneğidir."}, {"num": 119, "tag": "2024 Vize, 2025-2026 Vize", "text": "6. Özel mülkiyetin yanında kamu mülkiyetini, piyasa mekanizması yanında müdahaleyi, fiyat mekanizması yanında merkezî planlamayı kabul eden iktisadi yapılanma aşağıdakilerden hangisidir?[cite: 5]", "options": [{"letter": "A", "text": "Kapitalist sistem"}, {"letter": "B", "text": "Karma ekonomik sistem"}, {"letter": "C", "text": "Sosyalist sistem"}, {"letter": "D", "text": "Merkantilist sistem"}, {"letter": "E", "text": "Fizyokratik sistem"}], "correct": "B", "explanation": "💡 Açıklama: Özel sektör ile devletin ekonomide birlikte yer aldığı sisteme karma ekonomik sistem denir."}, {"num": 120, "tag": "2024 Vize, 2025-2026 Vize", "text": "7. Kayıtsızlık eğrilerinin orijine dış bükey olmalarının nedeni aşağıdakilerden hangisidir?[cite: 5]", "options": [{"letter": "A", "text": "Daha az malın daha çok mala tercih edileceği varsayımı"}, {"letter": "B", "text": "Daha çok malın daha az mala tercih edileceği varsayımı"}, {"letter": "C", "text": "Tüketici tercihlerinin değişmesi"}, {"letter": "D", "text": "Azalan marjinal ikame oranı varsayımı"}, {"letter": "E", "text": "Tercihlerin tamamlanmışlığı varsayımı"}], "correct": "D", "explanation": "💡 Açıklama: Bir maldan çok tüketildikçe o maldan elde edilen marjinal faydanın düşmesi, diğer maldan vazgeçilmek istenen miktarı azaltır. Bu durum (azalan marjinal ikame oranı) eğrinin orijine dış bükey olmasını sağlar."}, {"num": 121, "tag": "2024 Vize, 2025-2026 Vize", "text": "8. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?[cite: 5]", "options": [{"letter": "A", "text": "Arz eğrisi"}, {"letter": "B", "text": "Sanayi talep eğrisi"}, {"letter": "C", "text": "Firma arz eğrisi"}, {"letter": "D", "text": "Piyasa arz eğrisi"}, {"letter": "E", "text": "Talep eğrisi"}], "correct": "D", "explanation": "💡 Açıklama: Tüm firmaların bireysel arz miktarlarının her fiyat seviyesinde toplanmasıyla elde edilen eğri piyasa arz eğrisidir."}, {"num": 122, "tag": "2024 Vize, 2025-2026 Vize", "text": "9. Aşağıdakilerden hangisinde marjinal fayda yaklaşımına göre toplam fayda (TU) ve marjinal fayda (MU) ilişkisi tam ve doğru olarak verilmiştir?[cite: 5]", "options": [{"letter": "A", "text": "MU ve TU eğrilerinin ikisinde de her noktada eğimi negatiftir."}, {"letter": "B", "text": "TU'nun maksimum olduğu noktada MU sıfıra eşittir."}, {"letter": "C", "text": "MU artarken TU önce azalan sonra artan bir eğridir."}, {"letter": "D", "text": "MU'nun maksimum olduğu noktada TU sıfıra eşittir."}, {"letter": "E", "text": "MU ve TU eğrileri birlikte artış gösterirler."}], "correct": "B", "explanation": "💡 Açıklama: Toplam doyumun en yüksek noktaya ulaştığı (TU maksimum) anda, ilave birimden sağlanan ek fayda (MU) artık sıfır olur."}, {"num": 123, "tag": "2024 Vize, 2025-2026 Vize", "text": "10. Vergilerdeki bir değişimin arz eğrisi üzerindeki etkisi aşağıdakilerden hangisi ile ifade edilir?[cite: 5]", "options": [{"letter": "A", "text": "Arz kanunu"}, {"letter": "B", "text": "Arz kayması"}, {"letter": "C", "text": "Arz fiyatı"}, {"letter": "D", "text": "Arz miktarı"}, {"letter": "E", "text": "Arz esnekliği"}], "correct": "B", "explanation": "💡 Açıklama: Vergiler maliyet unsurudur. Vergilerin değişmesi arz eğrisinin komple sağa veya sola yer değiştirmesine (arz kayması) yol açar."}, {"num": 124, "tag": "2024 Vize, 2025-2026 Vize", "text": "11. Firmanın birim üretim başına düşen maliyetine ne ad verilir?[cite: 5]", "options": [{"letter": "A", "text": "Ortalama toplam maliyet"}, {"letter": "B", "text": "Toplam maliyet"}, {"letter": "C", "text": "Ortalama sabit maliyet"}, {"letter": "D", "text": "Marjinal maliyet"}, {"letter": "E", "text": "Ortalama değişken maliyet"}], "correct": "A", "explanation": "💡 Açıklama: Toplam maliyetin üretilen birim adedine bölünmesi birim maliyeti, yani ortalama (toplam) maliyeti verir."}, {"num": 125, "tag": "2024 Vize, 2025-2026 Vize", "text": "12. İkame mallar ile ilgili aşağıdakilerden hangisi doğrudur?[cite: 5]", "options": [{"letter": "A", "text": "Esneklik katsayısı sıfırdır."}, {"letter": "B", "text": "Esneklik katsayısı birden küçüktür."}, {"letter": "C", "text": "Esneklik katsayısı daima negatiftir."}, {"letter": "D", "text": "Esneklik katsayısı birden büyüktür."}, {"letter": "E", "text": "Esneklik katsayısı daima pozitiftir."}], "correct": "E", "explanation": "💡 Açıklama: İkame mallarda birinin fiyatındaki artış, diğerinin talebini de artırdığı için aralarındaki çapraz talep esnekliği katsayısı her zaman pozitiftir."}, {"num": 126, "tag": "2024 Vize, 2025-2026 Vize", "text": "13. Üretim fonksiyonu aşağıdakilerden hangisini ifade etmektedir?[cite: 5]", "options": [{"letter": "A", "text": "Faktör miktarı"}, {"letter": "B", "text": "Girdi maliyeti"}, {"letter": "C", "text": "Çıktı maliyeti"}, {"letter": "D", "text": "Faktör fiyatı"}, {"letter": "E", "text": "Faktörlerin teknik zorunluluğunu"}], "correct": "E", "explanation": "💡 Açıklama: Üretim fonksiyonu, belirli bir teknoloji düzeyinde girdiler (faktörler) ile elde edilebilen maksimum çıktı arasındaki teknik zorunlu ilişkiyi belirtir."}, {"num": 127, "tag": "2024 Vize, 2025-2026 Vize", "text": "14. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?[cite: 5]", "options": [{"letter": "A", "text": "ed: 1"}, {"letter": "B", "text": "ed: >1"}, {"letter": "C", "text": "ed: ∞"}, {"letter": "D", "text": "ed: <1"}, {"letter": "E", "text": "ed: 0"}], "correct": "C", "explanation": "💡 Açıklama: Fiyat değişmezken miktarın sonsuz oranda değişebildiği durumlarda (yatay talep eğrisi) esneklik sonsuzdur (tam esnek)."}, {"num": 128, "tag": "2024 Vize, 2025-2026 Vize", "text": "15. Aşağıdakilerden hangisi mal darlığından yararlanarak kanun otoritesinin koyduğu ya da kontrol ettiği fiyatlardan daha yüksek fiyata satış yapılan durumu ifade etmektedir?[cite: 5]", "options": [{"letter": "A", "text": "King kanunu"}, {"letter": "B", "text": "Tüketici rantı"}, {"letter": "C", "text": "Üretici rantı"}, {"letter": "D", "text": "Karaborsa"}, {"letter": "E", "text": "Örümcek ağı"}], "correct": "D", "explanation": "💡 Açıklama: Piyasada oluşan kıtlık neticesinde, malların devletin belirlediği tavan fiyatın üzerinde yasa dışı satılması karaborsa olarak adlandırılır."}, {"num": 129, "tag": "2024 Vize, 2025-2026 Vize", "text": "16. Aynı eş-ürün eğrisi üzerinde kalmak koşulu ile herhangi bir üretim faktöründen bir birim vazgeçilmesi karşısında arttırılan üretim faktörü miktarı oranı aşağıdakilerden hangisini ifade etmektedir?[cite: 5]", "options": [{"letter": "A", "text": "Üretimde kullanılan girdi miktarlarını oranı"}, {"letter": "B", "text": "Faktörlerin esneklik oranı"}, {"letter": "C", "text": "Faktörlerin fiyat oranı"}, {"letter": "D", "text": "Marjinal teknik ikame oranı"}, {"letter": "E", "text": "Faktörlerin ikame oranı"}], "correct": "D", "explanation": "💡 Açıklama: Aynı üretim seviyesini korurken, bir girdiden ne kadar azaltıldığında diğerinin ne kadar artırılması gerektiğini gösteren teknik oran budur."}, {"num": 130, "tag": "2024 Vize, 2025-2026 Vize", "text": "17. Diğer faktörlerin değişmeyip sabit olduğu bir ortamda bir malın fiyatının yükselmesi hâlinde aşağıdakilerden hangisi gerçekleşir?[cite: 5]", "options": [{"letter": "A", "text": "Malın talebinde artış olur."}, {"letter": "B", "text": "Malın arz edilen miktarı azalır."}, {"letter": "C", "text": "Talep edilen mal miktarında düşüş olur."}, {"letter": "D", "text": "Malın talebinde düşüş olur."}, {"letter": "E", "text": "Talep edilen mal miktarında artış olur."}], "correct": "C", "explanation": "💡 Açıklama: Talep kanunu gereği; diğer şartlar sabitken bir malın fiyatı arttığında o maldan talep edilen miktar azalır."}, {"num": 131, "tag": "2024 Vize, 2025-2026 Vize", "text": "18. Geniş bir üretim aralığında ölçeğe göre artan getiriye sahip bir firmanın uzun dönem ortalama maliyetleri bu aralıkta nasıl değişir?[cite: 5]", "options": [{"letter": "A", "text": "Azalır."}, {"letter": "B", "text": "Önce minimum bir değere kadar azalır sonra artar."}, {"letter": "C", "text": "Sabit kalır."}, {"letter": "D", "text": "Artar."}, {"letter": "E", "text": "Önce maksimum bir değere kadar artar sonra azalır."}], "correct": "A", "explanation": "💡 Açıklama: Ölçeğe göre artan getiri varlığında (ölçek ekonomileri), firma üretimini artırdıkça birim (ortalama) maliyetleri giderek düşer."}, {"num": 132, "tag": "2024 Vize, 2025-2026 Vize", "text": "20. Arz eğrisi üzerindeki iki nokta arasında kalan kısmının esnekliğine ne ad verilmektedir?[cite: 5]", "options": [{"letter": "A", "text": "Nokta esnekliği"}, {"letter": "B", "text": "Gelir esnekliği"}, {"letter": "C", "text": "Fiyat esnekliği"}, {"letter": "D", "text": "Çapraz esneklik"}, {"letter": "E", "text": "Yay esnekliği"}], "correct": "E", "explanation": "💡 Açıklama: Bir eğrinin iki farklı noktası arasında kalan belirli bir bölümün (yayın) esnekliğinin hesaplanmasına yay esnekliği denir."}, {"num": 133, "tag": "2022 Final", "text": "1. Diğer malları üretmek amacıyla kullanılan makineler, araçlar ve fabrikalar bir üretim faktörü olarak aşağıdakilerden hangisi ile adlandırılır?[cite: 6]", "options": [{"letter": "A", "text": "Toprak"}, {"letter": "B", "text": "Sermaye"}, {"letter": "C", "text": "Emek"}, {"letter": "D", "text": "Girişim"}, {"letter": "E", "text": "Doğal kaynak"}], "correct": "B", "explanation": "💡 Açıklama: Sermaye, iktisadi anlamda üretilmiş üretim araçlarını, yani üretim sürecinde kullanılan makine, teçhizat, bina ve araçları ifade eder."}, {"num": 134, "tag": "2022 Final", "text": "2. Talep enflasyonuna sebep olmayan unsur aşağıdakilerden hangisidir?[cite: 6]", "options": [{"letter": "A", "text": "Yatırım yetersizliği"}, {"letter": "B", "text": "Döviz yetersizliği"}, {"letter": "C", "text": "Sermaye yetersizliği"}, {"letter": "D", "text": "Enerji yetersizliği"}, {"letter": "E", "text": "İşgücü yetersizliği"}], "correct": "C", "explanation": "💡 Açıklama: Talep enflasyonu, talebin aşırı artmasıyla oluşur. Sermaye, enerji veya işgücü yetersizliği gibi unsurlar ise üretimi (arzı) kısıtlayarak arz (maliyet) yönlü enflasyona yol açar."}, {"num": 135, "tag": "2022 Final", "text": "3. Bir ekonomide iş bölümü ve uzmanlaşmayı hızlandıran para fonksiyonu aşağıdakilerden hangisidir?[cite: 6]", "options": [{"letter": "A", "text": "Değer olarak saklanması fonksiyonu"}, {"letter": "B", "text": "Finansal yeniliklere olanak tanıma fonksiyonu"}, {"letter": "C", "text": "Tasarruf aracı olma fonksiyonu"}, {"letter": "D", "text": "Mübadele aracı olma fonksiyonu"}, {"letter": "E", "text": "Değer ölçüsü ve hesap birimi olma fonksiyonu"}], "correct": "D", "explanation": "💡 Açıklama: Paranın mübadele (değişim) aracı olması, trampa (takas) sisteminin zorluklarını ortadan kaldırarak ticareti kolaylaştırır ve kişilerin belirli alanlarda uzmanlaşmasına olanak tanır."}, {"num": 136, "tag": "2022 Final", "text": "4. Orijinden çıkan arz doğrusu dikey eksene yaklaşıyorsa aşağıdakilerden hangisi söylenebilir?[cite: 6]", "options": [{"letter": "A", "text": "Piyasa ekonomisi"}, {"letter": "B", "text": "Tam rekabet"}, {"letter": "C", "text": "Serbest piyasa"}, {"letter": "D", "text": "Liberalleşme"}, {"letter": "E", "text": "Tekelleşme"}], "correct": "E", "explanation": "💡 Açıklama: Arz doğrusunun dikey eksene (fiyat eksenine) yaklaşması ve dikleşmesi esnekliğinin düştüğünü gösterir. Piyasaya yeni firma girişinin zorlaşması, tekelleşme eğilimine işaret eder."}, {"num": 137, "tag": "2022 Final", "text": "5. Tam rekabetçi bir firmanın talep eğrisi hakkında aşağıdakilerden hangisi söylenebilir?[cite: 6]", "options": [{"letter": "A", "text": "Yatay eksene paraleldir"}, {"letter": "B", "text": "Toplam maliyete (TM) eşittir."}, {"letter": "C", "text": "Toplam gelire (TG) eşittir."}, {"letter": "D", "text": "Toplam kâra eşittir."}, {"letter": "E", "text": "Marjinal gelirin üstündedir."}], "correct": "A", "explanation": "💡 Açıklama: Tam rekabet piyasasında firma fiyat alıcıdır. Fiyatı değiştiremediği için firmanın karşılaştığı talep eğrisi piyasa fiyatında yatay eksene paraleldir (sonsuz esnektir)."}, {"num": 138, "tag": "2022 Final", "text": "6. Reeskont oranının artmasının ekonomiye etkisi hakkında aşağıdakilerden hangisi söylenebilir?[cite: 6]", "options": [{"letter": "A", "text": "Para arzı azalır."}, {"letter": "B", "text": "Para arzı etkilenmez."}, {"letter": "C", "text": "Yabancı sermaye girişi artar."}, {"letter": "D", "text": "Para arzı artar."}, {"letter": "E", "text": "Ülkeye döviz girişi artar."}], "correct": "A", "explanation": "💡 Açıklama: Merkez Bankası reeskont oranını artırdığında, bankaların Merkez'den borçlanma maliyeti yükselir. Bu da bankaların açacağı kredileri sınırlar ve piyasadaki para arzı daralır."}, {"num": 139, "tag": "2022 Final", "text": "7. Aşağıdakilerden hangisi cari ücrete razı kişilerin iş bulamama durumundaki işsizlik türüdür?[cite: 6]", "options": [{"letter": "A", "text": "Konjoktürel işsizlik"}, {"letter": "B", "text": "Friksiyonel işsizlik"}, {"letter": "C", "text": "İradi işsizlik"}, {"letter": "D", "text": "Gayrı-iradi işsizlik"}, {"letter": "E", "text": "Yapısal işsizlik"}], "correct": "D", "explanation": "💡 Açıklama: Geçerli (cari) piyasa ücretinden çalışmaya hazır ve istekli olup iş aradığı halde iş bulamayanların durumuna gayri iradi (istek dışı) işsizlik denir."}, {"num": 140, "tag": "2022 Final", "text": "8. Zarf eğrisi aşağıdaki maliyetlerden hangisini tanımlamaktadır?[cite: 6]", "options": [{"letter": "A", "text": "Ortalama değişir maliyet"}, {"letter": "B", "text": "Kısa dönem ortalama maliyet"}, {"letter": "C", "text": "Ortalama toplam maliyet"}, {"letter": "D", "text": "Uzun dönem ortalama maliyet"}, {"letter": "E", "text": "Ortalama sabit maliyet"}], "correct": "D", "explanation": "💡 Açıklama: Firma tüm faktörleri değiştirebildiğinde oluşan ve olası tüm kısa dönem ortalama maliyet eğrilerini alttan teğet olarak saran eğriye uzun dönem ortalama maliyet (zarf eğrisi) denir."}, {"num": 141, "tag": "2022 Final", "text": "9. Paranın bir biriminin bağlı olduğu unsuru belirten düzenlemeye ne ad verilir?[cite: 6]", "options": [{"letter": "A", "text": "Para arzı"}, {"letter": "B", "text": "Para talebi"}, {"letter": "C", "text": "Para miktarı"}, {"letter": "D", "text": "Para politikası"}, {"letter": "E", "text": "Para sistemi"}], "correct": "E", "explanation": "💡 Açıklama: Ülke parasının hangi maden veya kritere (altın, gümüş, kâğıt para vb.) dayanarak basıldığını ve değerinin nasıl korunduğunu belirleyen yasal kurallar bütününe para sistemi denir."}, {"num": 142, "tag": "2022 Final", "text": "10. Tam rekabet piyasasındaki bir firmanın toplam gelir doğrusunun eğimi aşağıdakilerden hangisine bağlı olarak değişmektedir?[cite: 6]", "options": [{"letter": "A", "text": "Ortalama gelir"}, {"letter": "B", "text": "Fiyat"}, {"letter": "C", "text": "Üretim miktarı"}, {"letter": "D", "text": "Toplam kâr miktarı"}, {"letter": "E", "text": "Marjinal maliyet"}], "correct": "C", "explanation": "💡 Açıklama: Orijinal cevap anahtarına göre C şıkkı verilmiştir. (Not: Tam rekabet piyasasında fiyat sabitken toplam gelir doğrusunun fonksiyonel büyüklüğü üretim miktarı (Q) ile orantılı olarak gelişir.)"}, {"num": 143, "tag": "2022 Final", "text": "11. Aşağıdakilerden hangisi dört temel faktör geliri ile hesaplanan milli gelir değerini vermektedir?[cite: 6]", "options": [{"letter": "A", "text": "Kişi başına milli gelir"}, {"letter": "B", "text": "Gelir yöntemi ile milli gelir"}, {"letter": "C", "text": "Vergiler yönünden milli gelir"}, {"letter": "D", "text": "Üretim yöntemi ile milli gelir"}, {"letter": "E", "text": "Harcama yöntemi ile milli gelir"}], "correct": "B", "explanation": "💡 Açıklama: Üretim faktörlerinin elde ettiği getirilerin (ücret, faiz, rant ve kâr) toplanması suretiyle milli gelirin hesaplanmasına \"Gelir Yöntemi\" adı verilir."}, {"num": 144, "tag": "2022 Final", "text": "12. Aşağıdakilerden hangisi fayda ile ilgili bir kavramdır?[cite: 6]", "options": [{"letter": "A", "text": "Tüketicilerin geliri"}, {"letter": "B", "text": "Tüketicilerin ihtiyaçları"}, {"letter": "C", "text": "Tüketicilerin tatmini"}, {"letter": "D", "text": "Tüketicilerin tercihi"}, {"letter": "E", "text": "Tüketicilerin sayısı"}], "correct": "C", "explanation": "💡 Açıklama: İktisatta mal ve hizmetlerin tüketilmesi sonucu bireylerin sağladığı psikolojik haz veya tatmin duygusuna fayda denir."}, {"num": 145, "tag": "2022 Final", "text": "13. \"Belirli bir ücret karşılığında bireylerin hizmetlerinden yararlanılması\" olarak tanımlanan kavram aşağıdakilerden hangisidir?[cite: 6]", "options": [{"letter": "A", "text": "Emek"}, {"letter": "B", "text": "İstihdam"}, {"letter": "C", "text": "İşsizlik oranı"}, {"letter": "D", "text": "İşsizlik"}, {"letter": "E", "text": "İşgücü"}], "correct": "B", "explanation": "💡 Açıklama: Üretim faktörlerinin (özellikle emeğin) belirli bir bedel karşılığında fiilen üretim sürecine dâhil edilmesi ve kullanılmasına istihdam denir."}, {"num": 146, "tag": "2022 Final", "text": "14. Aşağıdakilerden hangisi gelir sıfır iken yapılan tüketimi ifade etmektedir?[cite: 6]", "options": [{"letter": "A", "text": "Lüks Tüketim"}, {"letter": "B", "text": "Ortalama Tüketim Eğilimi"}, {"letter": "C", "text": "Tüketim"}, {"letter": "D", "text": "Marjinal Tüketim Eğilimi"}, {"letter": "E", "text": "Otonom Tüketim"}], "correct": "E", "explanation": "💡 Açıklama: Bireyin geliri hiç olmasa bile (sıfır gelirde) hayatta kalabilmek için zorunlu olarak yaptığı harcamalara otonom (gelirden bağımsız) tüketim denir."}, {"num": 147, "tag": "2022 Final", "text": "15. Aşağıdakilerden hangisi çeşitli kullanma imkânlarından en yüksek tatmini veya en büyük getiri imkânının seçilmesini ifade etmektedir?[cite: 6]", "options": [{"letter": "A", "text": "Bedensel davranış"}, {"letter": "B", "text": "Seçici davranış"}, {"letter": "C", "text": "Zihinsel davranış"}, {"letter": "D", "text": "Finansal davranış"}, {"letter": "E", "text": "Rasyonel davranış"}], "correct": "E", "explanation": "💡 Açıklama: İktisadi birimlerin her zaman faydalarını veya kârlarını en üst seviyeye çıkaracak (maksimize edecek) şekilde hareket etmesine rasyonel (akılcı) davranış denir."}, {"num": 148, "tag": "2022 Final", "text": "16. Aşağıdakilerden hangisi eksik rekabet piyasasının özelliklerinden değildir?[cite: 6]", "options": [{"letter": "A", "text": "Firma sayısının az olması"}, {"letter": "B", "text": "Üretimin az olması"}, {"letter": "C", "text": "Malların homojen olması"}, {"letter": "D", "text": "Malların heterojen olması"}, {"letter": "E", "text": "Kar düzeyinin yüksek olması"}], "correct": "C", "explanation": "💡 Açıklama: Malların birbiriyle tıpatıp aynı (homojen) olması sadece tam rekabet piyasasının bir özelliğidir. Eksik rekabette mallar genellikle heterojendir (farklılaştırılmıştır)."}, {"num": 149, "tag": "2024 Vize, 2025-2026 Vize, 2022 Final", "text": "17. Aşağıdakilerden hangisi örümcek ağı teoreminin uygulandığı ürünlere en iyi örnektir?[cite: 6]", "options": [{"letter": "A", "text": "Tarım"}, {"letter": "B", "text": "Hizmet"}, {"letter": "C", "text": "İmalat üretimi"}, {"letter": "D", "text": "Teknoloji"}, {"letter": "E", "text": "Bilişim"}], "correct": "A", "explanation": "💡 Açıklama: Tarım ürünleri üretim süreçlerinin uzun olması sebebiyle, çiftçilerin cari dönemin fiyatlarına bakıp arz kararını bir sonraki dönem için almasına yol açar (Örümcek Ağı teoremi)."}, {"num": 150, "tag": "2022 Final", "text": "18. Aşağıdakilerden hangisi aynı malı üreten firmaların rekabeti ortadan kaldırmak amacıyla birleşerek oluşturdukları kollektif monopollerdir?[cite: 6]", "options": [{"letter": "A", "text": "Psikolojik monopoller"}, {"letter": "B", "text": "Anlaşmalı monopoller"}, {"letter": "C", "text": "Yasal monopoller"}, {"letter": "D", "text": "Fiili monopoller"}, {"letter": "E", "text": "Doğal monopoller"}], "correct": "B", "explanation": "💡 Açıklama: Firmaların bir araya gelerek kartel veya tröst kurmak suretiyle fiyatları kontrol etme ve piyasayı tekel gibi yönetme amaçlı oluşturdukları yapılara anlaşmalı monopoller denir."}, {"num": 151, "tag": "2022 Final", "text": "19. Aşağıdakilerden hangisi yapısal enflasyonun özellikleri arasında yer almamaktadır?[cite: 6]", "options": [{"letter": "A", "text": "Kişi başına gelir düzeyinin yüksek olması"}, {"letter": "B", "text": "Eksik rekabet piyasalarının varlığı"}, {"letter": "C", "text": "Maliyetlerin yüksek olması"}, {"letter": "D", "text": "Altyapı yatırımlarının geniş yer tutması"}, {"letter": "E", "text": "İşgücü verimliliğinin düşük olması"}], "correct": "A", "explanation": "💡 Açıklama: Yapısal enflasyon kronik sorunlara sahip gelişmekte olan ülkelerde görülür. Bu nedenle \"kişi başına gelir düzeyinin yüksek olması\" yapısal enflasyonu olan bir ekonominin özelliği değildir."}, {"num": 152, "tag": "2024 Vize, 2025-2026 Vize, 2022 Final", "text": "20. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?[cite: 6]", "options": [{"letter": "A", "text": "ed: 1"}, {"letter": "B", "text": "ed: >1"}, {"letter": "C", "text": "ed: 0"}, {"letter": "D", "text": "ed: 00"}, {"letter": "E", "text": "ed: <1"}], "correct": "D", "explanation": "💡 Açıklama: Fiyatın sabit olduğu, miktarın ise sonsuz olarak değişebildiği yatay eksene paralel bir talep eğrisinde esneklik sonsuzdur (ed: ∞ veya 00)."}, {"num": 153, "tag": "2022 Büt", "text": "1. Aşağıdakilerden hangisi bir ekonomide üretilmiş bütün nihai mal ve hizmetlerin piyasa fiyatları ile hesaplanmış değerini vermektedir?", "options": [{"letter": "A", "text": "Harcanabilir Gelir"}, {"letter": "B", "text": "GSMH"}, {"letter": "C", "text": "Kişisel Gelir"}, {"letter": "D", "text": "SMH"}, {"letter": "E", "text": "GSYH"}], "correct": "B", "explanation": "💡 Açıklama: Bir ülkenin vatandaşları tarafından belirli bir dönemde (genellikle 1 yıl) üretilen tüm nihai mal ve hizmetlerin piyasa fiyatları cinsinden değerine Gayrisafi Millî Hasıla (GSMH) denir."}, {"num": 154, "tag": "2022 Büt", "text": "2. Aşağıdakilerden hangisi altın ve gümüşe çevrilebilen paraları tanımlamaktadır?", "options": [{"letter": "A", "text": "Kağıt para"}, {"letter": "B", "text": "Temsili para"}, {"letter": "C", "text": "Banknot"}, {"letter": "D", "text": "Sikke"}, {"letter": "E", "text": "Mal para"}], "correct": "B", "explanation": "💡 Açıklama: Karşılığı %100 oranında kıymetli maden (altın, gümüş) olarak saklanan ve istendiğinde bu madenlere dönüştürülebilen paralara temsili para denir."}, {"num": 155, "tag": "2022 Vize, 2024 Vize, 2025-2026 Vize, 2022 Büt", "text": "3. Arz eğrisi üzerindeki iki nokta arasında kalan kısmının esnekliğine ne ad verilmektedir?", "options": [{"letter": "A", "text": "Yay esnekliği"}, {"letter": "B", "text": "Nokta esnekliği"}, {"letter": "C", "text": "Fiyat esnekliği"}, {"letter": "D", "text": "Çapraz esneklik"}, {"letter": "E", "text": "Gelir esnekliği"}], "correct": "A", "explanation": "💡 Açıklama: Bir eğrinin iki farklı noktası arasında kalan belirli bir bölümün (yayın) esnekliğinin hesaplanmasına yay esnekliği denir."}, {"num": 156, "tag": "2022 Büt", "text": "4. Enflasyonun yükselme ihtimalini arttıran unsur aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Faiz oranlarındaki artış"}, {"letter": "B", "text": "Para miktarındaki artış"}, {"letter": "C", "text": "Para miktarındaki azalış"}, {"letter": "D", "text": "Talep artışı"}, {"letter": "E", "text": "Döviz kurunda yükseliş"}], "correct": "B", "explanation": "💡 Açıklama: Piyasada dolaşan para miktarının artması, harcamaları tetikleyerek fiyatlar genel düzeyinin (enflasyonun) yükselmesine neden olur."}, {"num": 157, "tag": "2022 Büt", "text": "5. Aşağıdakilerden hangisi çok sayıda satıcı firmaya karşılık, alıcı sayısının tek olduğu piyasa türüdür?", "options": [{"letter": "A", "text": "Monopol Piyasası"}, {"letter": "B", "text": "İkili Monopol Piyasası"}, {"letter": "C", "text": "Monopollü Rekabet Piyasası"}, {"letter": "D", "text": "Monopson Piyasası"}, {"letter": "E", "text": "Oligopol Piyasası"}], "correct": "D", "explanation": "💡 Açıklama: Piyasada çok sayıda satıcının bulunduğu ancak sadece tek bir alıcının olduğu (alıcı tekeli) piyasa türüne monopson piyasası denir."}, {"num": 158, "tag": "2022 Büt", "text": "6. Tam rekabet piyasasında faaliyet gösteren bir firmanın normal kar elde etmesinin koşulu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Marjinal maliyet = Marjinal gelir"}, {"letter": "B", "text": "Ortalama maliyet = Ortalama gelir"}, {"letter": "C", "text": "Fiyat Ortalama gelir"}, {"letter": "D", "text": "Ortalama değişir maliyet = Marjinal gelir"}, {"letter": "E", "text": "Marjinal gelir Ortalama gelir"}], "correct": "A", "explanation": "💡 Açıklama: (Not: Cevap anahtarında A şıkkı verilmiştir.) Firmanın kârını maksimize ettiği (veya zararını minimize ettiği) denge koşulu Marjinal Maliyetin (MC), Marjinal Gelire (MR) eşit olmasıdır."}, {"num": 159, "tag": "2022 Büt", "text": "7. Arz edenlere yeni tesis kurarak arz düzeylerini arttırma imkanı veren dönem aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Piyasa dönemi"}, {"letter": "B", "text": "Resesyon dönemi"}, {"letter": "C", "text": "Stagflasyon dönemi"}, {"letter": "D", "text": "Uzun dönem"}, {"letter": "E", "text": "Kısa dönem"}], "correct": "D", "explanation": "💡 Açıklama: Tüm üretim faktörlerinin değiştirilebildiği, firmaların yeni tesisler kurup üretim kapasitelerini artırabildikleri döneme uzun dönem denir."}, {"num": 160, "tag": "2022 Büt", "text": "8. Talep çapraz esnekliğinin sıfıra yaklaşması aşağıdaki hangi durumu ifade etmektedir?", "options": [{"letter": "A", "text": "İkamenin az"}, {"letter": "B", "text": "İkâmenin güç"}, {"letter": "C", "text": "İkâmenin kolay"}, {"letter": "D", "text": "İkâmenin çok"}, {"letter": "E", "text": "İkâmenin tam"}], "correct": "B", "explanation": "💡 Açıklama: Çapraz esnekliğin sıfıra yaklaşması, bir malın fiyatındaki değişimin diğer malın talebini pek etkilemediğini, yani bu iki malın birbirinin yerine kullanılmasının (ikamesinin) güç olduğunu gösterir."}, {"num": 161, "tag": "2022 Büt", "text": "9. Hangi kuruma bozuk paraları basma yetkisi verilmiştir?", "options": [{"letter": "A", "text": "Merkez Bankası"}, {"letter": "B", "text": "Hazine Müsteşarlığı"}, {"letter": "C", "text": "Maliye Bakanlığı"}, {"letter": "D", "text": "Katılım Bankaları"}, {"letter": "E", "text": "Ticari Bankalar"}], "correct": "C", "explanation": "💡 Açıklama: Türkiye'de kâğıt paraları (banknotları) Merkez Bankası, madeni ufaklık (bozuk) paraları ise Maliye Bakanlığı'na bağlı Darphane basar."}, {"num": 162, "tag": "2022 Büt", "text": "10. Belli bir üretim sektöründe gerekli olandan daha fazla emeğin istihdam edilmesi halinde fazla emeğe ne ad verilir?", "options": [{"letter": "A", "text": "Mevsimlik işsizlik"}, {"letter": "B", "text": "Friksiyonel işsizlik"}, {"letter": "C", "text": "Tam istihdam"}, {"letter": "D", "text": "Gizli işsizlik"}, {"letter": "E", "text": "Yapısal işsizlik"}], "correct": "D", "explanation": "💡 Açıklama: Üretim sürecinden çekildiklerinde toplam üretim miktarında herhangi bir azalmaya neden olmayan atıl durumdaki fazla emeğe gizli işsizlik denir."}, {"num": 163, "tag": "2022 Büt", "text": "11. Para politikası araçlarından en esnek olanı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Faiz oranları"}, {"letter": "B", "text": "Zorunlu karşılık oranları"}, {"letter": "C", "text": "Açık piyasa işlemleri"}, {"letter": "D", "text": "Transfer harcamaları"}, {"letter": "E", "text": "Reeskont oranları"}], "correct": "C", "explanation": "💡 Açıklama: Merkez Bankası'nın piyasadaki para miktarını ayarlamak için hazine kâğıtlarını alıp satması olan Açık Piyasa İşlemleri (APİ), en hızlı ve esnek şekilde uygulanan para politikası aracıdır."}, {"num": 164, "tag": "2022 Büt", "text": "12. İktisadın tanımı ile ilgili olarak aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "İktisat, ulusal ve uluslararası bazda ticareti inceler."}, {"letter": "B", "text": "İktisat, tercih bilimidir."}, {"letter": "C", "text": "İktisat, kıtlık bilimidir."}, {"letter": "D", "text": "İktisat, para ve para benzerlerini incelemez."}, {"letter": "E", "text": "İktisat, malların üretim ve değişimini içeren faaliyetleri inceler."}], "correct": "D", "explanation": "💡 Açıklama: İktisat, para, bankacılık, finans ve para benzeri değerleri inceleyen temel bir bilim dalıdır. Bu yüzden D şıkkı yanlıştır."}, {"num": 165, "tag": "2022 Büt", "text": "13. Aşağıdakilerden hangisi yıllık üretimin baz alınan yılın fiyatları ile hesaplanması sonucu bulunan geliri ifade etmektedir?", "options": [{"letter": "A", "text": "Reel milli gelir"}, {"letter": "B", "text": "Potansiyel GSMH"}, {"letter": "C", "text": "Harcanabilir gelir"}, {"letter": "D", "text": "Nominal milli gelir"}, {"letter": "E", "text": "Reel GSYİH"}], "correct": "A", "explanation": "💡 Açıklama: Enflasyonun etkisinden arındırmak amacıyla, üretilen mal ve hizmetlerin cari yıl fiyatlarıyla değil, belirli bir temel (baz) yılın sabit fiyatlarıyla hesaplanan değerine reel milli gelir denir."}, {"num": 166, "tag": "2022 Büt", "text": "14. Monopolcü firmanın daha fazla kar elde etmek için aynı ürünü farklı alt piyasalarda farklı fiyatlardan satmasına ne denir?", "options": [{"letter": "A", "text": "Pazar bölmesi"}, {"letter": "B", "text": "Piyasa farklılaştırması"}, {"letter": "C", "text": "Fiyat farklılaştırması"}, {"letter": "D", "text": "Ürün farklılaştırması"}, {"letter": "E", "text": "Bölge farklılaştırması"}], "correct": "C", "explanation": "💡 Açıklama: Monopol gücüne sahip bir firmanın, kârını artırmak amacıyla aynı maliyete sahip bir malı farklı alıcılara veya piyasalara farklı fiyatlardan satmasına fiyat farklılaştırması (ayrımcılığı) denir."}, {"num": 167, "tag": "2022 Büt", "text": "15. Aşağıdakilerden hangisi tam rekabet piyasasının özelliklerinden birisi değildir?", "options": [{"letter": "A", "text": "Satıcı sayısı çoktur"}, {"letter": "B", "text": "Fiyat veridir"}, {"letter": "C", "text": "Mallar homojendir"}, {"letter": "D", "text": "Alıcı sayısı çoktur"}, {"letter": "E", "text": "Piyasaya giriş çıkış yoktur"}], "correct": "E", "explanation": "💡 Açıklama: Tam rekabet piyasasında piyasaya giriş ve çıkışların tamamen serbest olması (mobilite) temel özelliklerden biridir."}, {"num": 168, "tag": "2022 Büt", "text": "16. Hangi işsizlik türü ekonominin en elverişli dönemlerinde bile görülebilmektedir?", "options": [{"letter": "A", "text": "Gizli işsizlik"}, {"letter": "B", "text": "Yapısal işsizlik"}, {"letter": "C", "text": "Friksiyonel işsizlik"}, {"letter": "D", "text": "Konjoktürel işsizlik"}, {"letter": "E", "text": "İradi işsizlik"}], "correct": "C", "explanation": "💡 Açıklama: Kişilerin iş değiştirme süreçlerinde veya mezuniyet sonrası ilk işlerini ararken geçirdikleri geçici sürede oluşan friksiyonel (geçici/arizi) işsizlik, ekonomi tam istihdamda olsa bile her zaman vardır."}, {"num": 169, "tag": "2022 Büt", "text": "17. Üretici üretim miktarını arttırdıkça sermaye faktörünü daha fazla kullanılıyorsa genişleme yolu eğrisi nasıl bir durum göstermektedir?", "options": [{"letter": "A", "text": "Sermaye eksenine doğru kıvrılmaktadır"}, {"letter": "B", "text": "Düz bir doğru şeklindedir"}, {"letter": "C", "text": "Emek eksenine doğru kıvrılmaktadır"}, {"letter": "D", "text": "Sağa doğru artandır"}, {"letter": "E", "text": "Sola doğru artandır"}], "correct": "A", "explanation": "💡 Açıklama: Üretim ölçeği büyüdükçe firmanın teknoloji tercihi sermaye-yoğun bir yapıya kayıyorsa, faktör bileşimlerini gösteren genişleme yolu eğrisi sermaye eksenine doğru yaklaşarak bükülür."}, {"num": 170, "tag": "2022 Büt", "text": "18. Aşağıdakilerden hangisi firma dışı fakat endüstri içi kazanç durumunu ifade etmektedir?", "options": [{"letter": "A", "text": "Dışsal eksi ekonomiler"}, {"letter": "B", "text": "Ölçek ekonomileri"}, {"letter": "C", "text": "İçsel eksi ekonomiler"}, {"letter": "D", "text": "İçsel ekonomiler"}, {"letter": "E", "text": "Dışsal ekonomiler"}], "correct": "E", "explanation": "💡 Açıklama: Firmanın kendi ölçeğinden bağımsız olarak, içinde bulunduğu endüstrinin (sektörün) gelişmesi ve büyümesi sayesinde elde ettiği maliyet avantajlarına ve kazançlara dışsal ekonomiler denir."}, {"num": 171, "tag": "2022 Büt", "text": "19. Paranın değer ölçüsü olma özelliğini kaybettiği enflasyon türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kronik enflasyon"}, {"letter": "B", "text": "Sinsi enflasyon"}, {"letter": "C", "text": "Stagflasyon"}, {"letter": "D", "text": "Yapısal enflasyon"}, {"letter": "E", "text": "Hiperenflasyon"}], "correct": "E", "explanation": "💡 Açıklama: Fiyatların kontrol edilemez bir hızda arttığı ve paranın satın alma gücünün tamamen çöktüğü hiperenflasyon dönemlerinde, ulusal para değer ölçüsü ve değişim aracı olma vasfını yitirir."}, {"num": 172, "tag": "2022 Büt", "text": "20. Bir malın tüketim miktarları arttıkça marjinal faydanın seyri ile ilgili aşağıdakilerden hangisi söylenebilir?", "options": [{"letter": "A", "text": "Değişmez."}, {"letter": "B", "text": "Önce azalır minumumdan sonra artar."}, {"letter": "C", "text": "Önce artar maksimumdan sonra azalır."}, {"letter": "D", "text": "Artar."}, {"letter": "E", "text": "Azalır."}], "correct": "E", "explanation": "💡 Açıklama: İktisatta azalan marjinal fayda kanunu gereği, bir malın tüketilen miktarı arttıkça tüketilen son birimden elde edilen ek tatmin (marjinal fayda) sürekli azalır."}, {"num": 173, "tag": "2023-2024 Final, 2023-2024 Final, 2025-2026 Büt", "text": "1. Kaydi para yaratılmasında para fonksiyonunu gören unsur aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çek"}, {"letter": "B", "text": "Vadesiz mevduat"}, {"letter": "C", "text": "Senet"}, {"letter": "D", "text": "Mal para"}, {"letter": "E", "text": "Kâğıt para"}], "correct": "B", "explanation": "💡 Açıklama: Bankacılık sisteminde bankaların verdikleri kredilerle yarattıkları ve fiziki olmayan paraya kaydi para denir; bu süreç vadesiz mevduatlar üzerinden işler."}, {"num": 174, "tag": "2023-2024 Final", "text": "2. Dönem üretiminin baz alınan bir yılın fiyatları ile hesaplanmasıyla bulunan gelir ölçüsüne ne ad verilmektedir?", "options": [{"letter": "A", "text": "Reel gelir"}, {"letter": "B", "text": "Kişisel gelir"}, {"letter": "C", "text": "Milli gelir"}, {"letter": "D", "text": "Harcanabilir gelir"}, {"letter": "E", "text": "Nominal gelir"}], "correct": "A", "explanation": "💡 Açıklama: Enflasyonun şişirici etkisinden arındırmak amacıyla üretimin cari yıl değil, temel (baz) alınan bir yılın sabit fiyatlarıyla hesaplanması reel geliri verir."}, {"num": 175, "tag": "2023-2024 Final", "text": "3. Çok sayıda alıcı ve satıcı bulunurken farklılaştırılmış mal ve hizmetlerin satıldığı piyasa aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Monopson piyasası"}, {"letter": "B", "text": "Tam rekabet piyasası"}, {"letter": "C", "text": "Oligopol piyasası"}, {"letter": "D", "text": "Monopol piyasası"}, {"letter": "E", "text": "Monopollü rekabet piyasası"}], "correct": "E", "explanation": "💡 Açıklama: Çok sayıda firmanın bulunduğu ancak malların homojen olmadığı (farklılaştırıldığı, marka vb. unsurlarla ayrıştığı) piyasalara monopollü rekabet piyasası denir."}, {"num": 176, "tag": "2023-2024 Final", "text": "4. Aşağıdakilerden hangisi bir ekonomideki işsizlik oranının hesaplanmasında kullanılır?", "options": [{"letter": "A", "text": "[(Çalışanlar - İş gücü) / Çalışanlar) x 100"}, {"letter": "B", "text": "(Çalışanlar / Toplam Nüfus) x 100"}, {"letter": "C", "text": "(İşsiz sayısı / İş gücü) x 100"}, {"letter": "D", "text": "[(İşsiz sayısı / Toplam nüfus)] x 100"}, {"letter": "E", "text": "[(Çalışanlar - İşsizler) / İş gücü) x 100"}], "correct": "C", "explanation": "💡 Açıklama: İşsizlik oranı, işsiz sayısının toplam iş gücüne (çalışanlar + iş arayanlar) bölünüp 100 ile çarpılmasıyla hesaplanır."}, {"num": 177, "tag": "2023-2024 Final", "text": "5. Aşağıdakilerden hangisi para politikası uygulamalarından biri değildir?", "options": [{"letter": "A", "text": "Tedavüldeki banknot miktarının arttırılması"}, {"letter": "B", "text": "Merkez Bankasının tahvil satması"}, {"letter": "C", "text": "Kredi faizlerinin arttırılması"}, {"letter": "D", "text": "Vergi oranlarında indirim yapılması"}, {"letter": "E", "text": "Reeskont oranlarının düşürülmesi"}], "correct": "D", "explanation": "💡 Açıklama: Vergilerle ilgili düzenlemeler (indirimler veya artışlar) Maliye Bakanlığı'nın yürüttüğü \"Maliye Politikası\"nın bir aracıdır, Merkez Bankası'nın yürüttüğü para politikasının aracı değildir."}, {"num": 178, "tag": "2023-2024 Final", "text": "6. Toplam faydanın maksimum olduğu durumda marjinal fayda nasıldır?", "options": [{"letter": "A", "text": "Bir"}, {"letter": "B", "text": "Sıfır"}, {"letter": "C", "text": "Minimum"}, {"letter": "D", "text": "İki"}, {"letter": "E", "text": "Maksimum"}], "correct": "B", "explanation": "💡 Açıklama: Tüketicinin belirli bir maldan elde ettiği toplam doyum en yüksek seviyeye (maksimuma) ulaştığında, ilave tüketilen birimden sağlanan ek (marjinal) fayda sıfır olur."}, {"num": 179, "tag": "2023-2024 Final", "text": "7. Merkez Bankası enflasyonla mücadele politikasında aşağıdakilerden hangisini uygulamamaktadır?", "options": [{"letter": "A", "text": "Reeskont oranlarının düşürülmesi"}, {"letter": "B", "text": "Zorunlu karşılık oranının yükseltilmesi"}, {"letter": "C", "text": "Reeskont oranlarının yükseltilmesi"}, {"letter": "D", "text": "Piyasaya devlet tahvili satılması"}, {"letter": "E", "text": "Kanuni rezerv oranının yükseltilmesi"}], "correct": "A", "explanation": "💡 Açıklama: Enflasyonla mücadelede piyasadaki para miktarını kısmak hedeflenir. Reeskont oranlarının \"düşürülmesi\" kredileri ucuzlatıp para miktarını artıracağı için enflasyona karşı uygulanamaz."}, {"num": 180, "tag": "2023-2024 Final", "text": "8. Aşağıdakilerden hangisi talebin fiyat esnekliğini etkileyen faktörlerden biri değildir?", "options": [{"letter": "A", "text": "İkame mal varlığı"}, {"letter": "B", "text": "Mala harcanan miktarın gelire oranı"}, {"letter": "C", "text": "Harcama alışkanlıklarının değişim hızı"}, {"letter": "D", "text": "Piyasanın yapısı"}, {"letter": "E", "text": "Yeni alıcıların piyasaya girmesi"}], "correct": "E", "explanation": "💡 Açıklama: Yeni alıcıların piyasaya girmesi talep eğrisini bütünüyle sağa kaydıran (talebi artıran) bir etkendir; esnekliği (fiyat değişimine olan duyarlılığı) belirleyen temel yapısal faktörlerden biri değildir."}, {"num": 181, "tag": "2024 Vize, 2025-2026 Vize, 2023-2024 Final", "text": "9. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Arz eğrisi"}, {"letter": "B", "text": "Sanayi talep eğrisi"}, {"letter": "C", "text": "Talep eğrisi"}, {"letter": "D", "text": "Firma arz eğrisi"}, {"letter": "E", "text": "Piyasa arz eğrisi"}], "correct": "E", "explanation": "💡 Açıklama: Bir malı üreten tüm firmaların bireysel arz miktarlarının her fiyat seviyesinde yatay olarak toplanmasıyla elde edilen toplam eğri piyasa arz eğrisidir."}, {"num": 182, "tag": "2023-2024 Final", "text": "10. Tam rekabet piyasasındaki bir firmanın ortalama geliri (OG) ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Ortalama maliyete bağlı olarak artar."}, {"letter": "B", "text": "Üretimle birlikte azalır."}, {"letter": "C", "text": "Üretimle birlikte artar."}, {"letter": "D", "text": "Önce artar, sonra azalır."}, {"letter": "E", "text": "Sabittir ve fiyata eşittir."}], "correct": "E", "explanation": "💡 Açıklama: Tam rekabet piyasasında fiyat sabit olduğu için (firma fiyat alıcıdır), firmanın elde ettiği ortalama gelir (OG) ve marjinal gelir (MG) her zaman bu sabit piyasa fiyatına (P) eşittir."}, {"num": 183, "tag": "2023-2024 Final", "text": "11. Deflasyon sürecinde uygulanmayacak tedbir aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ücretleri arttırma"}, {"letter": "B", "text": "Ucuz faizli kredi"}, {"letter": "C", "text": "Otonom yatırımları azaltma"}, {"letter": "D", "text": "Tüketici kredilerini arttırma"}, {"letter": "E", "text": "Gelir ve kurumlar vergisindeki düzenlemeler"}], "correct": "C", "explanation": "💡 Açıklama: Deflasyon ekonomide durgunluk ve fiyatların sürekli düşmesi durumudur. Bu süreçte harcamaları teşvik etmek gerekirken, otonom yatırımları \"azaltmak\" ekonomiyi daha da daraltır."}, {"num": 184, "tag": "2023-2024 Final", "text": "12. Kişilerin serbestçe kullanabileceği gelir aşağıdakilerden hangisi ile tanımlanmaktadır?", "options": [{"letter": "A", "text": "Millî gelir"}, {"letter": "B", "text": "GSYİH"}, {"letter": "C", "text": "Kişisel gelir"}, {"letter": "D", "text": "Harcanabilir gelir"}, {"letter": "E", "text": "Safi milli gelir"}], "correct": "D", "explanation": "💡 Açıklama: Kişilerin eline geçen kişisel gelirden dolaysız vergiler (gelir vergisi vb.) düşüldükten sonra geriye kalan, tüketim veya tasarruf için serbestçe harcanabilen gelire harcanabilir gelir denir."}, {"num": 185, "tag": "2023-2024 Final", "text": "13. Revalüasyon aşağıdakilerden hangisi nedeniyle uygulanmaktadır?", "options": [{"letter": "A", "text": "İthalat azlığı"}, {"letter": "B", "text": "Ödemeler dengesi fazlalığı"}, {"letter": "C", "text": "İhracat azlığı"}, {"letter": "D", "text": "İthalat fazlası"}, {"letter": "E", "text": "Ödemeler dengesi azlığı"}], "correct": "B", "explanation": "💡 Açıklama: Revalüasyon, ödemeler dengesinin sürekli fazla vermesi (ülkeye giren dövizin çok yüksek olması) durumunda devletin resmî müdahalesiyle yerli paranın değerinin artırılması işlemidir."}, {"num": 186, "tag": "2023-2024 Final", "text": "14. Monopolcünün karşılaştığı talep eğrisi nasıldır?", "options": [{"letter": "A", "text": "Tam rekabettekinden daha yatıktır."}, {"letter": "B", "text": "Marjinal gelirin altındadır."}, {"letter": "C", "text": "Piyasa talep eğrisi ile aynıdır."}, {"letter": "D", "text": "Sonsuz esnektir."}, {"letter": "E", "text": "Monopollü rekabettekinden daha esnektir."}], "correct": "C", "explanation": "💡 Açıklama: Monopol piyasasında malı üreten tek bir firma olduğu için, o endüstrinin tamamı o firmadan oluşur. Bu sebeple monopolcünün talep eğrisi, doğrudan piyasa talep eğrisinin kendisidir."}, {"num": 187, "tag": "2023-2024 Final", "text": "15. Aşağıdakilerden hangisi paranın ticarete konu olan her türlü işlemi yürüten özelliğini ifade etmektedir?", "options": [{"letter": "A", "text": "Homojen olması"}, {"letter": "B", "text": "Bölünebilir olması"}, {"letter": "C", "text": "Taklit edilememesi"}, {"letter": "D", "text": "Taşınabilir olması"}, {"letter": "E", "text": "Dayanıklı olması"}], "correct": "B", "explanation": "💡 Açıklama: Paranın alt birimlere (ufaklıklara) bölünebilir olması, hem çok küçük hem de çok büyük değerlerdeki her türlü ticari işlemin sorunsuzca yürütülmesini sağlar."}, {"num": 188, "tag": "2023-2024 Final", "text": "16. Aşağıdakilerden hangisi bir malın denge fiyatını vermektedir?", "options": [{"letter": "A", "text": "Piyasa talebinin piyasa arzını aştığı herhangi bir düzey"}, {"letter": "B", "text": "Piyasa arzının piyasa talebini aştığı herhangi bir düzey"}, {"letter": "C", "text": "Malın karaborsa fiyatı"}, {"letter": "D", "text": "Piyasa arz ve talebinin kesiştiği nokta"}, {"letter": "E", "text": "Malın maliyeti ile piyasa fiyatı arasındaki fark"}], "correct": "D", "explanation": "💡 Açıklama: Serbest piyasada arz eğrisi ile talep eğrisinin kesiştiği noktada piyasa dengesi oluşur ve bu noktadaki fiyat seviyesi denge fiyatıdır."}, {"num": 189, "tag": "2023-2024 Final", "text": "17. Aşağıdakilerden hangisi sabit maliyetler arasında yer almamaktadır?", "options": [{"letter": "A", "text": "Kira"}, {"letter": "B", "text": "Sigorta masrafları"}, {"letter": "C", "text": "Faiz"}, {"letter": "D", "text": "Enerji"}, {"letter": "E", "text": "Ücretler"}], "correct": "D", "explanation": "💡 Açıklama: (Not: Orijinal cevap anahtarına göre enerji doğru cevap olarak verilmiştir.) Sabit maliyetler üretim miktarından bağımsız olan giderlerdir (kira, sigorta gibi). Enerji (elektrik, yakıt) üretime bağlı olarak değişen bir maliyettir."}, {"num": 190, "tag": "2023-2024 Final", "text": "18. Ekonomide talep ve üretim yapısında meydana gelen değişiklik sonucu ortaya çıkan işsizlik türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Konjonktürel işsizlik"}, {"letter": "B", "text": "Friksiyonel işsizlik"}, {"letter": "C", "text": "Yapısal işsizlik"}, {"letter": "D", "text": "İradi işsizlik"}, {"letter": "E", "text": "Gizli İşsizlik"}], "correct": "C", "explanation": "💡 Açıklama: Teknolojik gelişmeler veya tüketici alışkanlıklarındaki değişimler nedeniyle ekonominin temel üretim ve talep yapısının (sektörlerin) değişmesine uyum sağlayamayanların oluşturduğu işsizliğe yapısal işsizlik denir."}, {"num": 191, "tag": "2023-2024 Final", "text": "19. Tam rekabet piyasasına ait bir firmada uzun dönemde kâr için aşağıdakilerden hangisi söylenebilir?", "options": [{"letter": "A", "text": "Normaldir."}, {"letter": "B", "text": "Çok düşüktür."}, {"letter": "C", "text": "Üretim miktarı arttıkça artar."}, {"letter": "D", "text": "Pozitiftir."}, {"letter": "E", "text": "Azalarak artar."}], "correct": "A", "explanation": "💡 Açıklama: Tam rekabet piyasasında uzun dönemde piyasaya yeni firmaların girişi serbest olduğu için aşırı kâr ortadan kalkar ve firmalar sadece \"normal kâr\" (iktisadi kârın sıfır olduğu durum) elde ederler."}, {"num": 192, "tag": "2023-2024 Final", "text": "20. Üretici bütçesindeki değişim sonucu daha fazla faktör alımı ile üretim artışı söz konusu ise bu durum aşağıdakilerden hangisi ile ifade edilmektedir?", "options": [{"letter": "A", "text": "Genişleme yolu"}, {"letter": "B", "text": "Marjinal ikame oranı"}, {"letter": "C", "text": "Eş ürün eğrisi"}, {"letter": "D", "text": "Eş maliyet doğrusu"}, {"letter": "E", "text": "Marjinal teknik ikame oranı"}], "correct": "A", "explanation": "💡 Açıklama: Üreticinin mali imkânları (bütçesi) arttığında ve faktör fiyatları sabitken üretim düzeyini artırarak ulaşacağı en uygun (optimum) faktör bileşimlerinin noktalarını birleştiren eğriye genişleme yolu eğrisi denir."}, {"num": 193, "tag": "2024 Büt", "text": "1. Aşağıdakilerden hangisi firmanın satışında bir birimlik değişmenin toplam gelirde meydana getirdiği değişme oranıdır?", "options": [{"letter": "A", "text": "MG = ΔTG > ΔQ"}, {"letter": "B", "text": "MG = TG / Q"}, {"letter": "C", "text": "MG = TG > Q"}, {"letter": "D", "text": "MG = ΔTG / ΔQ"}, {"letter": "E", "text": "MG = ΔTG < ΔQ"}], "correct": "D", "explanation": "💡 Açıklama: Marjinal gelir (MG), satış miktarındaki bir birimlik değişimin ($\\Delta Q$) toplam gelirde ($\\Delta TG$) yarattığı değişmedir. Formülü $MG = \\Delta TG / \\Delta Q$ şeklindedir."}, {"num": 194, "tag": "2022 Büt, 2024 Büt", "text": "2. Paranın değer ölçüsü olma özelliğini kaybettiği enflasyon türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sinsi enflasyon"}, {"letter": "B", "text": "Yapısal enflasyon"}, {"letter": "C", "text": "Kronik enflasyon"}, {"letter": "D", "text": "Stagflasyon"}, {"letter": "E", "text": "Hiperenflasyon"}], "correct": "E", "explanation": "💡 Açıklama: Fiyatların kontrol edilemez bir hızda arttığı ve paranın satın alma gücünün tamamen çöktüğü hiperenflasyon dönemlerinde, ulusal para değer ölçüsü ve değişim aracı olma vasfını yitirir."}, {"num": 195, "tag": "2024 Büt", "text": "3. Aşağıdakilerden hangisi monopol piyasalarında karşılaşılan iktisadi olgulardan birisi değildir?", "options": [{"letter": "A", "text": "Monopolün kısa ve uzun dönem koşullarının farklılık göstermesi"}, {"letter": "B", "text": "Monopolcü firmanın bir mal ve hizmetin tek arz edicisi olması"}, {"letter": "C", "text": "Monopolcu firma denge durumunun maliyetlere göre açıklanması"}, {"letter": "D", "text": "Monopolcü firmanın piyasada azalan eğimli bir talep eğrisine sahip olması"}, {"letter": "E", "text": "Monopolcü firma ile endüstrinin aynı olması"}], "correct": "A", "explanation": "💡 Açıklama: Monopol piyasasına yeni firmaların girişi engelli olduğu için, monopolcü firmanın kısa dönem ve uzun dönem denge koşulları (aşırı kâr elde etme durumu) genellikle birbirinin aynıdır, farklılık göstermez."}, {"num": 196, "tag": "2024 Büt", "text": "4. Aşağıdakilerden hangisi tüketicinin sabit geliri ile iki malı hangi miktarlarda tüketme olanaklarına sahip olduğunu gösteren seçim noktalarını birleştirir?", "options": [{"letter": "A", "text": "Gelir tüketim eğrisi"}, {"letter": "B", "text": "Fiyat-tüketim eğrisi"}, {"letter": "C", "text": "Genişleme yolu"}, {"letter": "D", "text": "Bütçe doğrusu"}, {"letter": "E", "text": "Maliyet kısıtı"}], "correct": "D", "explanation": "💡 Açıklama: Tüketicinin veri (sabit) geliri ve piyasa fiyatları ile bütçesini tam olarak harcayarak satın alabileceği mal bileşimlerinin geometrik yerine bütçe doğrusu denir."}, {"num": 197, "tag": "2024 Büt", "text": "5. Zorunlu karşılık oranları değiştiğinde bankaların karşılaştığı risk aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Likidite sıkışıklığı"}, {"letter": "B", "text": "Kredileri arttırma zorunluluğu"}, {"letter": "C", "text": "Likidite bolluğu"}, {"letter": "D", "text": "Faiz oranında istikrarsızlık"}, {"letter": "E", "text": "Merkez Bankasından borçlanma güçlüğü"}], "correct": "A", "explanation": "💡 Açıklama: Merkez Bankası zorunlu karşılık oranlarını artırdığında, ticari bankalar topladıkları mevduatların daha büyük bir kısmını Merkez Bankası'nda tutmak zorunda kalır. Bu durum bankalarda nakit (likidite) sıkışıklığı yaratır."}, {"num": 198, "tag": "2024 Büt", "text": "6. Birbirinin tamamlayıcısı iki malın esneklik katsayısı ile ilgili ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Daima negatiftir."}, {"letter": "B", "text": "Birden küçüktür."}, {"letter": "C", "text": "Birden büyüktür."}, {"letter": "D", "text": "Sıfırdır."}, {"letter": "E", "text": "Daima pozitiftir."}], "correct": "A", "explanation": "💡 Açıklama: Tamamlayıcı mallarda (örn: otomobil ve benzin) birinin fiyatı artarken diğerinin talebi azalır. Ters yönlü bu ilişki nedeniyle çapraz talep esnekliği daima negatiftir."}, {"num": 199, "tag": "2024 Büt", "text": "7. Harcanabilir gelirden bağımsız tüketim harcamalarına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Ortalama tüketim"}, {"letter": "B", "text": "Lüks tüketim"}, {"letter": "C", "text": "Uyarılmış tüketim"}, {"letter": "D", "text": "Toplam tüketim"}, {"letter": "E", "text": "Otonom tüketim"}], "correct": "E", "explanation": "💡 Açıklama: Bireylerin geliri sıfır dahi olsa hayatta kalabilmek için yapmak zorunda oldukları, gelirden tamamen bağımsız zorunlu harcamalara otonom tüketim denir."}, {"num": 200, "tag": "2022 Büt, 2024 Büt", "text": "8. Hangi kuruma bozuk paraları basma yetkisi verilmektedir?", "options": [{"letter": "A", "text": "Merkez Bankası"}, {"letter": "B", "text": "Hazine ve Maliye Bakanlığı"}, {"letter": "C", "text": "Devlet Planlama Teşkilatı"}, {"letter": "D", "text": "Katılım Bankaları"}, {"letter": "E", "text": "Ticari Bankalar"}], "correct": "B", "explanation": "💡 Açıklama: Türkiye'de madeni (bozuk) paraları basma yetkisi Hazine ve Maliye Bakanlığı'na bağlı Darphane ve Damga Matbaası Genel Müdürlüğü'ne aittir."}, {"num": 201, "tag": "2024 Büt", "text": "9. Aşağıdakilerden hangisi monopollü rekabet piyasası özelliklerinden birisidir?", "options": [{"letter": "A", "text": "Çok sayıda firmanın farklılaştırılmış ürün satması"}, {"letter": "B", "text": "Az sayıda firmanın homojen ürün satması"}, {"letter": "C", "text": "Aşırı kârlılık elde edilmesi"}, {"letter": "D", "text": "Çok sayıda firmanın homojen ürün satması"}, {"letter": "E", "text": "Az sayıda firmanın farklılaştırılmış ürün satması"}], "correct": "A", "explanation": "💡 Açıklama: Monopollü rekabet piyasasının en belirgin özelliği, piyasada birbirini ikame edebilen ancak marka, ambalaj, kalite gibi unsurlarla farklılaştırılmış (heterojen) ürünler satan çok sayıda firmanın bulunmasıdır."}, {"num": 202, "tag": "2024 Büt", "text": "10. Tarımsal ürünlerde arzın talep değişikliğine uyabilmesi için en az bir üretim döneminin geçmesi gerektiği ifadesi aşağıdakilerden hangisi ile açıklanmaktadır?", "options": [{"letter": "A", "text": "Azalan verimler kanunu"}, {"letter": "B", "text": "Cobwed (örümcek ağı) teoremi"}, {"letter": "C", "text": "Crowding out"}, {"letter": "D", "text": "King kanunu"}, {"letter": "E", "text": "Engel kanunu"}], "correct": "B", "explanation": "💡 Açıklama: Üretim süreci uzun olan tarım ürünlerinde, üreticilerin cari dönemdeki fiyatlara bakarak verdikleri üretim (arz) kararlarının piyasaya ancak bir sonraki dönemde yansımasını açıklayan teori Örümcek Ağı (Cobweb) teoremidir."}, {"num": 203, "tag": "2024 Büt", "text": "11. Aşağıdakilerden hangi enflasyon çeşidinde dış ödemelerde, bir başka ülke parası standart ölçü olarak kullanılmaktadır?", "options": [{"letter": "A", "text": "Yapısal enflasyon"}, {"letter": "B", "text": "Sinsi enflasyon"}, {"letter": "C", "text": "Hiperenflasyon"}, {"letter": "D", "text": "Kronik enflasyon"}, {"letter": "E", "text": "Sürünen enflasyon"}], "correct": "C", "explanation": "💡 Açıklama: Hiperenflasyon durumunda ulusal para tüm değerini ve işlevini yitirir. Güveni sağlamak için tasarruflar, fiyatlamalar ve dış ödemeler gibi işlemlerde yabancı güçlü paralar (dolarizasyon) standart ölçü olarak kullanılır."}, {"num": 204, "tag": "2024 Büt", "text": "12. Sabit maliyet eğrisinin şekli aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Pozitif eğimli"}, {"letter": "B", "text": "Yatay bir çizgi"}, {"letter": "C", "text": "Negatif eğimli"}, {"letter": "D", "text": "Hiperbol"}, {"letter": "E", "text": "Düşey bir çizgi"}], "correct": "B", "explanation": "💡 Açıklama: Sabit maliyetler (kira, amortisman vb.) üretim miktarından bağımsız olarak değişmeyen maliyetlerdir. Bu nedenle miktar (yatay) eksenine paralel düz ve yatay bir çizgi şeklindedir."}, {"num": 205, "tag": "2024 Büt", "text": "13. Belli bir dönemde bir ülke vatandaşlarının sahip oldukları üretim faktörleri kullanılarak üretilmiş bütün nihai mal ve hizmetlerin piyasa fiyatlarıyla hesaplanmış değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "MG"}, {"letter": "B", "text": "GSYİH"}, {"letter": "C", "text": "GSMH"}, {"letter": "D", "text": "SMH"}, {"letter": "E", "text": "KG"}], "correct": "C", "explanation": "💡 Açıklama: Üretimin ülke sınırları içinde yapılmasına değil de, nerede olursa olsun \"ülke vatandaşları (millî üretim faktörleri)\" tarafından yapılmış olmasına vurgu yapıldığı için bu Gayrisafi Millî Hasıla (GSMH) tanımıdır."}, {"num": 206, "tag": "2024 Büt", "text": "14. Üretim teknolojisinin değişmesi ile iş gücü talep yapısının değişmesi sonucu görülen işsizlik türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Friksiyonel işsizlik"}, {"letter": "B", "text": "Yapısal işsizlik"}, {"letter": "C", "text": "Gayrı-iradi işsizlik"}, {"letter": "D", "text": "İradi işsizlik"}, {"letter": "E", "text": "Konjoktürel işsizlik"}], "correct": "B", "explanation": "💡 Açıklama: Teknolojik ilerlemeler veya temel ekonomik sektörlerin değişmesi sonucu iş gücünün mevcut niteliklerinin yeni taleplere uyum sağlayamaması nedeniyle ortaya çıkan işsizliğe yapısal işsizlik denir."}, {"num": 207, "tag": "2022 Büt, 2024 Büt", "text": "15. Aşağıdakilerden hangisi altın ve gümüşe çevrilebilen paraları tanımlamaktadır?", "options": [{"letter": "A", "text": "Mal para"}, {"letter": "B", "text": "Banknot"}, {"letter": "C", "text": "Sikke"}, {"letter": "D", "text": "Temsili para"}, {"letter": "E", "text": "Kâğıt para"}], "correct": "D", "explanation": "💡 Açıklama: Karşılığı \\%100 oranında kıymetli maden (altın, gümüş vb.) olarak saklanan ve istendiğinde anında bu madenlere dönüştürülebilen sertifika niteliğindeki paralara temsili para denir."}, {"num": 208, "tag": "2024 Büt", "text": "16. Toplam gelir ile toplam maliyetin birbirine eşit olduğu üretim düzeyi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Aşırı kâr noktası"}, {"letter": "B", "text": "Denge noktası"}, {"letter": "C", "text": "Maksimum kâr noktası"}, {"letter": "D", "text": "Kapanma noktası"}, {"letter": "E", "text": "Başa baş noktası"}], "correct": "E", "explanation": "💡 Açıklama: Bir firmanın toplam gelirinin tam olarak toplam maliyetini karşıladığı, yani ekonomik kârın ve zararın tam sıfır olduğu geçiş noktasına başa baş (kâra geçiş) noktası denir."}, {"num": 209, "tag": "2024 Büt", "text": "17. Ekonomi üzerinde en az olumsuz etkiye sahip olan işsizlik türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Konjoktürel işsizlik"}, {"letter": "B", "text": "Teknolojik işsizlik"}, {"letter": "C", "text": "Friksiyonel işsizlik"}, {"letter": "D", "text": "Yapısal işsizlik"}, {"letter": "E", "text": "Mevsimlik işsizlik"}], "correct": "C", "explanation": "💡 Açıklama: Kişilerin daha iyi bir iş bulmak amacıyla kendi istekleriyle iş değiştirdikleri kısa süreli geçiş dönemlerini kapsadığı için friksiyonel (arizi) işsizlik, ekonomideki en doğal ve olumsuz etkisi en az olan işsizlik türüdür."}, {"num": 210, "tag": "2022 Vize, 2024 Büt", "text": "18. İktisadi faaliyetlerde insan ihtiyaçlarını giderme amacına yönelik olarak mal ve hizmet üretilmesine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Talep"}, {"letter": "B", "text": "Fayda"}, {"letter": "C", "text": "Tüketim"}, {"letter": "D", "text": "Esneklik"}, {"letter": "E", "text": "Arz"}], "correct": "E", "explanation": "💡 Açıklama: Üretilen mal ve hizmetlerin tüketici ihtiyaçlarını gidermek üzere piyasaya sunulmasına genel bağlamda arz denmektedir."}, {"num": 211, "tag": "2024 Büt", "text": "19. Eş ürün eğrileri ile ilgili olarak aşağıdakilerden hangisi söylenemez?", "options": [{"letter": "A", "text": "Faktörler birbirlerini ikame edebilirler."}, {"letter": "B", "text": "Üretim sırasında faktörlerin birbirini ikame etmesi durumunda çıktı miktarında artış veya azalış meydana gelir."}, {"letter": "C", "text": "Kayıtsızlık eğrileri ile aynı anlamı ifade etmektedir."}, {"letter": "D", "text": "Aynı üretim seviyesini sağlayan farklı faktör bileşimlerinin geometrik yeridir."}, {"letter": "E", "text": "Eş ürün eğrileri uzun dönem firma analizinde kullanılmaktadır."}], "correct": "C", "explanation": "💡 Açıklama: Eş ürün eğrileri üreticinin aynı çıktıyı veren üretim bileşimlerini (arz yönünü) gösterirken, kayıtsızlık eğrileri tüketicinin aynı tatmini sağlayan tüketim bileşimlerini (talep yönünü) gösterir. Aynı anlamı taşımazlar."}, {"num": 212, "tag": "2024 Büt", "text": "20. Aşağıdakilerden hangisi para politikası araçları arasında yer almamaktadır?", "options": [{"letter": "A", "text": "Kredi tavanı"}, {"letter": "B", "text": "Reeskont oranı"}, {"letter": "C", "text": "İthalat teminatları"}, {"letter": "D", "text": "Zorunlu karşılıklar"}, {"letter": "E", "text": "Açık piyasa işlemleri"}], "correct": "C", "explanation": "💡 Açıklama: İthalat teminatları, devletin dış ticaret rejiminin (dış ticaret politikası) bir aracıdır. Açık piyasa işlemleri, zorunlu karşılıklar ve reeskont oranları ise Merkez Bankası'nın temel para politikası araçlarıdır."}, {"num": 213, "tag": "2022 Büt, 2023-2024 Vize, 2024-2025 Final", "text": "1. Monopolcü firmanın daha fazla kâr elde etmek için aynı ürünü farkı alt piyasalarda farklı fiyatlardan satmasına ne ad verilir?", "options": [{"letter": "A", "text": "Pazar bölmesi"}, {"letter": "B", "text": "Piyasa farklılaştırması"}, {"letter": "C", "text": "Ürün farklılaştırması"}, {"letter": "D", "text": "Fiyat farklılaştırması"}, {"letter": "E", "text": "Bölge farklılaştırması"}], "correct": "D", "explanation": "💡 Açıklama: Monopol gücüne sahip bir firmanın, kârını artırmak amacıyla aynı maliyete sahip bir malı farklı alıcılara veya piyasalara farklı fiyatlardan satmasına fiyat farklılaştırması (ayrımcılığı) denir."}, {"num": 214, "tag": "2023-2024 Vize, 2024-2025 Final", "text": "2. Aşağıdakilerden hangisi üretim miktarında meydana gelen bir değişimin toplam maliyette meydana getirdiği değişimi ifade etmektedir?", "options": [{"letter": "A", "text": "Ortalama maliyet"}, {"letter": "B", "text": "Sabit maliyet"}, {"letter": "C", "text": "Değişir maliyet"}, {"letter": "D", "text": "Toplam maliyet"}, {"letter": "E", "text": "Marjinal maliyet"}], "correct": "E", "explanation": "💡 Açıklama: Üretilen son birimin (veya üretimdeki bir birimlik artışın) toplam maliyete yaptığı ek katkıya marjinal maliyet denir."}, {"num": 215, "tag": "2022 Büt, 2024-2025 Final", "text": "3. Hangi işsizlik türü ekonominin en elverişli dönemlerinde bile görülebilmektedir?", "options": [{"letter": "A", "text": "Gizli işsizlik"}, {"letter": "B", "text": "İradi işsizlik"}, {"letter": "C", "text": "Yapısal işsizlik"}, {"letter": "D", "text": "Friksiyonel işsizlik"}, {"letter": "E", "text": "Konjoktürel işsizlik"}], "correct": "D", "explanation": "💡 Açıklama: Kişilerin iş değiştirme süreçlerinde veya ilk işlerini ararken geçirdikleri geçici sürede oluşan friksiyonel (geçici) işsizlik, ekonomi tam istihdamda olsa bile her zaman vardır."}, {"num": 216, "tag": "2024-2025 Final", "text": "5. Monopolcü firmanın denge koşulu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "MM=MG"}, {"letter": "B", "text": "OM=OG"}, {"letter": "C", "text": "MM=OM"}, {"letter": "D", "text": "MM>MG"}, {"letter": "E", "text": "MM<MG"}], "correct": "A", "explanation": "💡 Açıklama: Tüm piyasalarda olduğu gibi monopolcü firmanın da kârını maksimize ettiği (dengeye ulaştığı) koşul, Marjinal Maliyetin (MM) Marjinal Gelire (MG) eşit olmasıdır."}, {"num": 217, "tag": "2024-2025 Final", "text": "6. Antidepresyonist politikalar ile önlenmeye çalışılan işsizlik türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Gayri iradi işsizlik"}, {"letter": "B", "text": "Konjonktürel işsizlik"}, {"letter": "C", "text": "Yapısal işsizlik"}, {"letter": "D", "text": "İradi işsizlik"}, {"letter": "E", "text": "Friksiyonel işsizlik"}], "correct": "B", "explanation": "💡 Açıklama: Ekonomik dalgalanmalar (kriz ve depresyon dönemleri) sonucu ortaya çıkan konjonktürel işsizlik, devleti genişletici (antidepresyonist) politikalar uygulamaya iter."}, {"num": 218, "tag": "2024-2025 Final", "text": "7. Aşağıdakilerden hangisi paranın temel özelliklerinden değildir?", "options": [{"letter": "A", "text": "Taşınabilir olması"}, {"letter": "B", "text": "Değişim aracı olması"}, {"letter": "C", "text": "Homojenlik"}, {"letter": "D", "text": "Dayanıklılık"}, {"letter": "E", "text": "Bölünebilirlik"}], "correct": "B", "explanation": "💡 Açıklama: Taşınabilirlik, homojenlik, dayanıklılık ve bölünebilirlik paranın fiziksel 'özellikleri'dir. Değişim aracı olması ise paranın bir 'işlevi' (fonksiyonu) dir."}, {"num": 219, "tag": "2022 Büt, 2024-2025 Final", "text": "8. Aşağıdakilerden hangisi yıllık üretimin baz alınan yılın fiyatları ile hesaplanması sonucu bulunan geliri ifade etmektedir?", "options": [{"letter": "A", "text": "Reel milli gelir"}, {"letter": "B", "text": "Nominal milli gelir"}, {"letter": "C", "text": "Reel GSYİH"}, {"letter": "D", "text": "Potansiyel GSMH"}, {"letter": "E", "text": "Harcanabilir gelir"}], "correct": "A", "explanation": "💡 Açıklama: Enflasyonun etkisinden arındırmak amacıyla, üretilen mal ve hizmetlerin belirli bir temel (baz) yılın sabit fiyatlarıyla hesaplanan değerine reel milli gelir denir."}, {"num": 220, "tag": "2022 Büt, 2024-2025 Final", "text": "9. Üretici üretim miktarını arttırdıkça sermaye faktörünü daha fazla kullandıyorsa genişleme yolu eğrisi nasıl bir durum göstermektedir?", "options": [{"letter": "A", "text": "Düz bir doğru şeklindedir."}, {"letter": "B", "text": "Sermaye eksenine doğru kıvrılmaktadır."}, {"letter": "C", "text": "Emek eksenine doğru kıvrılmaktadır."}, {"letter": "D", "text": "Sağa doğru artandır."}, {"letter": "E", "text": "Sola doğru artandır."}], "correct": "B", "explanation": "💡 Açıklama: Üretim ölçeği büyüdükçe firmanın teknoloji tercihi sermaye-yoğun bir yapıya kayıyorsa, genişleme yolu eğrisi sermaye eksenine doğru yaklaşarak bükülür."}, {"num": 221, "tag": "2023-2024 Vize, 2024-2025 Final", "text": "10. Aşağıdakilerden hangisi tam rekabet piyasasından söz etmek için zorunlu bir koşul değildir?", "options": [{"letter": "A", "text": "Homojenlik"}, {"letter": "B", "text": "Kâr maksimizasyonu"}, {"letter": "C", "text": "Mobilite"}, {"letter": "D", "text": "Alıcı satıcı sayısının çok olması"}, {"letter": "E", "text": "Şeffaflık"}], "correct": "B", "explanation": "💡 Açıklama: Tam rekabet piyasasının zorunlu varsayımları atomisite (çok sayıda alıcı-satıcı), homojenlik, mobilite ve şeffaflıktır. Kâr maksimizasyonu ise firmanın amacıdır, piyasanın yapısal koşulu değildir."}, {"num": 222, "tag": "2022 Vize, 2024-2025 Final", "text": "11. Aşağıdakilerden hangisi arz eğrisinin yer değiştirmesine etki eden faktörlerden biri değildir?", "options": [{"letter": "A", "text": "Mal fiyatı"}, {"letter": "B", "text": "Teknoloji"}, {"letter": "C", "text": "Diğer mal fiyatı"}, {"letter": "D", "text": "Maliyetler"}, {"letter": "E", "text": "Geleceğe yönelik beklentiler"}], "correct": "A", "explanation": "💡 Açıklama: Malın kendi fiyatındaki değişimler eğriyi sağa veya sola kaydırmaz; eğri üzerinde bir noktadan diğerine (miktarda) harekete neden olur."}, {"num": 223, "tag": "2024-2025 Final", "text": "12. Ekonomide istikrarı sağlamak için para arzı düşük bir hızla artarken hangi para politikası kuralı uygulanmaktadır?", "options": [{"letter": "A", "text": "Para arzı hedeflemesi"}, {"letter": "B", "text": "Para talebi hedeflemesi"}, {"letter": "C", "text": "Enflasyon hedeflemesi"}, {"letter": "D", "text": "GSYH hedeflemesi"}, {"letter": "E", "text": "Döviz hedeflemesi"}], "correct": "A", "explanation": "💡 Açıklama: Merkez Bankası'nın ekonomideki büyümeye paralel olarak para arzını belirli ve sabit bir oranda artırmayı taahhüt etmesine para arzı hedeflemesi (monetarist kural) denir."}, {"num": 224, "tag": "2024-2025 Final", "text": "13. Kısa dönem dengesinde zarar eden tam rekabetçi firma nasıl davranır?", "options": [{"letter": "A", "text": "Toplam zararı toplam sabit maliyetten büyükse üretimini sürdürür."}, {"letter": "B", "text": "Fiyat ortalama değişir maliyetten küçük ise üretimini sürdürür."}, {"letter": "C", "text": "Başa baş noktasına kadar üretimini sürdürür."}, {"letter": "D", "text": "Optimumdan küçük ölçekte bir tesisle çalışıyorsa üretimini sürdürür."}, {"letter": "E", "text": "Fiyat ortalama değişir maliyete eşit veya ondan büyükse üretimini sürdürür."}], "correct": "E", "explanation": "💡 Açıklama: Firma zarar etse bile fiyat (P), Ortalama Değişken Maliyeti (AVC) karşılıyorsa veya ondan büyükse sabit maliyetlerinin en azından bir kısmını kurtarmak için kısa dönemde üretime devam eder."}, {"num": 225, "tag": "2023-2024 Vize, 2024-2025 Final", "text": "14. Arz (maliyet) enflasyonunun en önemli nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sermaye yetersizliği"}, {"letter": "B", "text": "İş gücü yetersizliği"}, {"letter": "C", "text": "Üretim maliyetlerindeki artış"}, {"letter": "D", "text": "Enerji kıtlığı"}, {"letter": "E", "text": "Döviz darboğazı"}], "correct": "C", "explanation": "💡 Açıklama: Firmaların kullandığı üretim faktörlerinin (hammadde, ücret vb.) maliyetlerindeki artışların fiyatlar genel düzeyini yukarı çekmesiyle arz (maliyet) enflasyonu oluşur."}, {"num": 226, "tag": "2023-2024 Vize, 2024-2025 Final", "text": "15. Talep esnekliğinde miktar ve fiyatları dikkate alan esneklik kavramı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çapraz esneklik"}, {"letter": "B", "text": "Nokta esnekliği"}, {"letter": "C", "text": "İlk gelir düzeyi"}, {"letter": "D", "text": "Gelir esnekliği"}, {"letter": "E", "text": "Yay esnekliği"}], "correct": "E", "explanation": "💡 Açıklama: Eğri üzerindeki iki nokta arasındaki ortalama esnekliği, ilk ve son fiyat ile miktar seviyelerinin ortalamalarını dikkate alarak hesaplayan yönteme yay esnekliği denir."}, {"num": 227, "tag": "2022 Vize, 2024-2025 Final", "text": "16. Arz-talep eğrileri analizinde talep eğrisi altında ve denge fiyatı üzerinde kalan alan aşağıdakilerden hangisini gösterir?", "options": [{"letter": "A", "text": "Toplam rant"}, {"letter": "B", "text": "Fayda maksimizasyonu"}, {"letter": "C", "text": "Kâr maksimizasyonu"}, {"letter": "D", "text": "Tüketici rantı"}, {"letter": "E", "text": "Üretici rantı"}], "correct": "D", "explanation": "💡 Açıklama: Tüketicinin bir mal için ödemeye razı olduğu en yüksek fiyat (talep eğrisi) ile fiilen ödediği piyasa fiyatı (denge fiyatı) arasındaki fark tüketici rantıdır."}, {"num": 228, "tag": "2024-2025 Final", "text": "17. Hangi para çeşidi malın malla değişimini yansıtmaktadır?", "options": [{"letter": "A", "text": "Bozuk para"}, {"letter": "B", "text": "Temsili para"}, {"letter": "C", "text": "Kağıt para"}, {"letter": "D", "text": "Mal para"}, {"letter": "E", "text": "Kaydi para"}], "correct": "D", "explanation": "💡 Açıklama: İnsanlık tarihinde paranın icadından önce (trampa ekonomisinde) veya ilk para formlarında doğrudan başka bir malla değiştirilebilen ve kendi başına bir değeri olan mallara mal para denir."}, {"num": 229, "tag": "2023-2024 Vize, 2024-2025 Final", "text": "18. Milli gelir kaç şekilde hesaplanmaktadır?", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "1"}], "correct": "C", "explanation": "💡 Açıklama: Milli gelir temel olarak 3 farklı yöntemle hesaplanır: Üretim yöntemi, Gelir yöntemi ve Harcama yöntemi."}, {"num": 230, "tag": "2024-2025 Final", "text": "19. Aşağıdakilerden hangisi döviz kurunun değerini düşürme işlemini ifade etmektedir?", "options": [{"letter": "A", "text": "Stagflasyon"}, {"letter": "B", "text": "Devalüasyon"}, {"letter": "C", "text": "Revalüasyon"}, {"letter": "D", "text": "Resesyon"}, {"letter": "E", "text": "Deflasyon"}], "correct": "B", "explanation": "💡 Açıklama: Sabit kur sistemlerinde, ödemeler dengesi açığını kapatmak amacıyla devletin resmî müdahalesiyle ulusal paranın yabancı paralar karşısındaki değerinin düşürülmesine devalüasyon denir."}, {"num": 231, "tag": "2022 Büt, 2024-2025 Final", "text": "20. Para politikası araçlarından en esnek olanı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Reeskont oranları"}, {"letter": "B", "text": "Transfer harcamaları"}, {"letter": "C", "text": "Açık piyasa işlemleri"}, {"letter": "D", "text": "Zorunlu karşılık oranları"}, {"letter": "E", "text": "Faiz oranları"}], "correct": "C", "explanation": "💡 Açıklama: Merkez Bankası'nın piyasadaki para miktarını ayarlamak için hazine kâğıtlarını alıp satması olan Açık Piyasa İşlemleri (APİ), istenildiği an uygulanabildiği için en esnek araçtır."}, {"num": 232, "tag": "2024 Büt, 2025-2026 Büt", "text": "2. Aşağıdakilerden hangisi firmanın satışında bir birimlik değişmenin toplam gelirde meydana getirdiği değişme oranıdır?", "options": [{"letter": "A", "text": "MG=TG/Q"}, {"letter": "B", "text": "MG=ΔTG/ΔQ"}, {"letter": "C", "text": "MG=TG>Q"}, {"letter": "D", "text": "MG=ΔTG>ΔQ"}, {"letter": "E", "text": "MG=ΔTG<ΔQ"}], "correct": "B", "explanation": "💡 Açıklama: Marjinal gelir (MG), satış miktarındaki bir birimlik değişim ($\\Delta Q$) sonucunda toplam gelirde ($\\Delta TG$) oluşan değişim oranıdır."}, {"num": 233, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "3. Kişilerin serbestçe kullanabileceği gelir aşağıdakilerden hangisi ile tanımlanmaktadır?", "options": [{"letter": "A", "text": "GSYİH"}, {"letter": "B", "text": "Kişisel gelir"}, {"letter": "C", "text": "Harcanabilir gelir"}, {"letter": "D", "text": "Safi milli gelir"}, {"letter": "E", "text": "Milli gelir"}], "correct": "C", "explanation": "💡 Açıklama: Kişisel gelirden dolaysız vergiler çıkarıldıktan sonra kalan, bireylerin tüketim veya tasarruf için serbestçe harcayabildiği tutardır."}, {"num": 234, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "4. Aşağıdakilerden hangisi bir malın denge fiyatını vermektedir?", "options": [{"letter": "A", "text": "Piyasa talebinin piyasa arzını aştığı herhangi bir düzey"}, {"letter": "B", "text": "Malın maliyeti ile piyasa fiyatı arasındaki fark"}, {"letter": "C", "text": "Piyasa arz ve talebinin kesiştiği nokta"}, {"letter": "D", "text": "Piyasa arzının piyasa talebini aştığı herhangi bir düzey"}, {"letter": "E", "text": "Malın karaborsa fiyatı"}], "correct": "C", "explanation": "💡 Açıklama: Serbest piyasada arz ve talep eğrilerinin kesiştiği noktada piyasa dengesi oluşur ve bu fiyat denge fiyatıdır."}, {"num": 235, "tag": "2024 Vize, 2025-2026 Büt", "text": "5. Üretim fonksiyonu aşağıdakilerden hangisini ifade etmektedir?", "options": [{"letter": "A", "text": "Faktör miktarı"}, {"letter": "B", "text": "Faktör fiyatı"}, {"letter": "C", "text": "Girdi maliyeti"}, {"letter": "D", "text": "Çıktı maliyeti"}, {"letter": "E", "text": "Faktörlerin teknik zorunluluğunu"}], "correct": "E", "explanation": "💡 Açıklama: Üretim fonksiyonu, belirli bir teknoloji düzeyinde girdiler (faktörler) ile elde edilebilecek maksimum çıktı arasındaki teknik ilişkiyi ifade eder."}, {"num": 236, "tag": "2024 Büt, 2025-2026 Büt", "text": "6. Paranın değer ölçüsü olma özelliğini kaybettiği enflasyon türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hiperenflasyon"}, {"letter": "B", "text": "Sinsi enflasyon"}, {"letter": "C", "text": "Stagflasyon"}, {"letter": "D", "text": "Kronik enflasyon"}, {"letter": "E", "text": "Yapısal enflasyon"}], "correct": "A", "explanation": "💡 Açıklama: Fiyatların aşırı hızlı arttığı hiperenflasyon ortamlarında, paranın satın alma gücü çöker ve değer ölçüsü olma fonksiyonunu kaybeder."}, {"num": 237, "tag": "2023-2024 Vize, 2025-2026 Büt", "text": "7. Reel GSYİH'nın potansiyel GSYİH'nın gerisinde kalması sonucu oluşan işsizliğe ne ad verilmektedir?", "options": [{"letter": "A", "text": "Konjonktürel"}, {"letter": "B", "text": "Friksiyonel"}, {"letter": "C", "text": "Mevsimsel"}, {"letter": "D", "text": "Yapısal"}, {"letter": "E", "text": "Gizli"}], "correct": "A", "explanation": "💡 Açıklama: Ekonomik durgunluk dönemlerinde, toplam talebin yetersizliği nedeniyle oluşan işsizliğe konjonktürel işsizlik denir."}, {"num": 238, "tag": "2022 Final, 2025-2026 Büt", "text": "8. Aşağıdakilerden hangisi fayda ile ilgili bir kavramdır?", "options": [{"letter": "A", "text": "Tüketicilerin sayısı"}, {"letter": "B", "text": "Tüketicilerin ihtiyaçları"}, {"letter": "C", "text": "Tüketicilerin geliri"}, {"letter": "D", "text": "Tüketicilerin tercihi"}, {"letter": "E", "text": "Tüketicilerin tatmini"}], "correct": "E", "explanation": "💡 Açıklama: İktisadi anlamda fayda, bir malın tüketilmesi sonucu bireyin elde ettiği psikolojik tatmin duygusudur."}, {"num": 239, "tag": "2024-2025 Final, 2025-2026 Büt", "text": "9. Firmanın birim üretim başına düşen maliyetine ne ad verilir?", "options": [{"letter": "A", "text": "Ortalama toplam maliyet"}, {"letter": "B", "text": "Ortalama sabit maliyet"}, {"letter": "C", "text": "Ortalama değişken maliyet"}, {"letter": "D", "text": "Marjinal maliyet"}, {"letter": "E", "text": "Toplam maliyet"}], "correct": "A", "explanation": "💡 Açıklama: Toplam maliyetin üretilen birim miktarına bölünmesiyle elde edilen değer, birim başına maliyeti yani ortalama toplam maliyeti verir."}, {"num": 240, "tag": "2024 Büt, 2025-2026 Büt", "text": "10. Belli bir dönemde bir ülke vatandaşlarının sahip oldukları üretim faktörleri kullanılarak üretilmiş bütün nihai mal ve hizmetlerin piyasa fiyatlarıyla hesaplanmış değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "GSYİH"}, {"letter": "B", "text": "MG"}, {"letter": "C", "text": "GSMH"}, {"letter": "D", "text": "SMH"}, {"letter": "E", "text": "KG"}], "correct": "C", "explanation": "💡 Açıklama: Üretimin nerede yapıldığına değil, kimin faktörleri tarafından yapıldığına odaklanan bu tanım Gayrisafi Millî Hasıla'dır."}, {"num": 241, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "11. Aşağıdakilerden hangisi para politikası araçlarından biri değildir?", "options": [{"letter": "A", "text": "Açık piyasa işlemleri"}, {"letter": "B", "text": "Parasal taban"}, {"letter": "C", "text": "Reeskont oranı"}, {"letter": "D", "text": "Kanuni karşılık"}, {"letter": "E", "text": "Kredi tavanı"}], "correct": "B", "explanation": "💡 Açıklama: Açık piyasa işlemleri, reeskont oranı, kanuni karşılık ve kredi tavanı birer araçtır; parasal taban ise piyasadaki para büyüklüğünü ifade eder."}, {"num": 242, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "12. Aşağıdakilerden hangisi paranın özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Bölünebilir olması"}, {"letter": "B", "text": "Heterojen olması"}, {"letter": "C", "text": "Dayanıklı olması"}, {"letter": "D", "text": "Taşınmaya elverişli olması"}, {"letter": "E", "text": "Değişim aracı olması"}], "correct": "B", "explanation": "💡 Açıklama: Paranın değişim aracı olarak işlev görebilmesi için homojen (aynı nitelikte) olması gerekir; heterojen olması istenmez."}, {"num": 243, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "13. Tam rekabet piyasasındaki bir firmanın ortalama geliri (OG) ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Ortalama maliyete bağlı olarak artar."}, {"letter": "B", "text": "Üretimle birlikte azalır."}, {"letter": "C", "text": "Üretimle birlikte artar."}, {"letter": "D", "text": "Sabittir ve fiyata eşittir."}, {"letter": "E", "text": "Önce artar, sonra azalır."}], "correct": "D", "explanation": "💡 Açıklama: Tam rekabet piyasasında firma fiyat alıcı olduğu için fiyat sabittir; dolayısıyla ortalama gelir de bu fiyata eşittir."}, {"num": 244, "tag": "2024-2025 Final, 2025-2026 Büt", "text": "14. Yatay eksene paralel bir talep eğrisinin esneklik derecesi kaçtır?", "options": [{"letter": "A", "text": "ed: 0"}, {"letter": "B", "text": "ed: <1"}, {"letter": "C", "text": "ed: 1"}, {"letter": "D", "text": "ed: 00"}, {"letter": "E", "text": "ed: ∞"}], "correct": "D", "explanation": "💡 Açıklama: Fiyatın sabit olduğu durumlarda esneklik sonsuzdur (tam esnek), bu durum 00 veya ∞ ile ifade edilir."}, {"num": 245, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "15. Bir endüstrideki bütün firmaların arz eğrilerinin yatay toplamına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Piyasa arz eğrisi"}, {"letter": "B", "text": "Firma arz eğrisi"}, {"letter": "C", "text": "Arz eğrisi"}, {"letter": "D", "text": "Talep eğrisi"}, {"letter": "E", "text": "Sanayi talep eğrisi"}], "correct": "A", "explanation": "💡 Açıklama: Tüm firmaların bireysel arzlarının her fiyat seviyesinde toplanmasıyla oluşan eğri piyasa arz eğrisidir."}, {"num": 246, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "16. Aşağıdakilerden hangisi para politikası uygulamalarından biri değildir?", "options": [{"letter": "A", "text": "Reeskont oranlarının düşürülmesi"}, {"letter": "B", "text": "Tedavüldeki banknot miktarının arttırılması"}, {"letter": "C", "text": "Kredi faizlerinin arttırılması"}, {"letter": "D", "text": "Vergi oranlarında indirim yapılması"}, {"letter": "E", "text": "Merkez Bankasının tahvil satması"}], "correct": "D", "explanation": "💡 Açıklama: Vergiler, Maliye Politikası'nın bir aracıdır ve Maliye Bakanlığı tarafından yönetilir."}, {"num": 247, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "17. Mal ihracatında artışın sağlanması hangi koşula bağlı olmaktadır?", "options": [{"letter": "A", "text": "Milli paranın dış değerinin yüksek olması"}, {"letter": "B", "text": "İhraç mallarının dış talep esnekliğinin düşük olması"}, {"letter": "C", "text": "Rekabet gücünün olmaması"}, {"letter": "D", "text": "İhracata hazır mal stokunun varlığı"}, {"letter": "E", "text": "İthal mallarının iç talep esnekliği"}], "correct": "D", "explanation": "💡 Açıklama: Bir ülkenin ihracatını artırabilmesi için öncelikle dışarıya satabileceği, ihracata hazır yeterli mal stokuna sahip olması gerekir."}, {"num": 248, "tag": "2024-2025 Final, 2025-2026 Büt", "text": "18. Hangi işsizlik türü ekonominin en elverişli dönemlerinde bile görülebilmektedir?", "options": [{"letter": "A", "text": "Konjonktürel işsizlik"}, {"letter": "B", "text": "Gizli işsizlik"}, {"letter": "C", "text": "İradi işsizlik"}, {"letter": "D", "text": "Yapısal işsizlik"}, {"letter": "E", "text": "Friksiyonel işsizlik"}], "correct": "E", "explanation": "💡 Açıklama: İş değiştirme süreçlerinde veya ilk iş arayışında yaşanan geçici süreli (friksiyonel) işsizlik, ekonomi tam istihdamda olsa bile mevcuttur."}, {"num": 249, "tag": "2023-2024 Vize, 2025-2026 Büt", "text": "19. Monopolcünün belli koşullar altında malının farklı birimlerini farklı fiyattan satmasına ne ad verilmektedir?", "options": [{"letter": "A", "text": "Fiyat arttırılması"}, {"letter": "B", "text": "Fiyat farklılaştırılması"}, {"letter": "C", "text": "Üretici rantı"}, {"letter": "D", "text": "Maliyet arttırılması"}, {"letter": "E", "text": "Tüketici rantı"}], "correct": "B", "explanation": "💡 Açıklama: Aynı malın farklı alıcılara veya piyasalara farklı fiyatlardan satılması işlemine fiyat farklılaştırması denir."}, {"num": 250, "tag": "2024 Büt, 2025-2026 Büt", "text": "20. Aşağıdakilerden hangisi monopol piyasalarında karşılaşılan iktisadi olgulardan birisi değildir?", "options": [{"letter": "A", "text": "Monopolcu firma denge durumunun maliyetlere göre açıklanması"}, {"letter": "B", "text": "Monopolcü firmanın piyasada azalan eğimli bir talep eğrisine sahip olması"}, {"letter": "C", "text": "Monopolcü firma ile endüstrinin aynı olması"}, {"letter": "D", "text": "Monopolcü firmanın bir mal ve hizmetin tek arz edicisi olması"}, {"letter": "E", "text": "Monopolün kısa ve uzun dönem koşullarının farklılık göstermesi"}], "correct": "E", "explanation": "💡 Açıklama: Giriş engelleri nedeniyle monopolün kısa ve uzun dönem dengeleri (aşırı kâr durumu) genellikle birbirinin aynısıdır."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

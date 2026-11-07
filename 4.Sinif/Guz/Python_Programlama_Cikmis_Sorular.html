@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYTHON PROGRAMLAMA — AUZEF Master Web - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 4. Sınıf Dersleri</a>
+    <span class="agy-doc-title">PYTHON PROGRAMLAMA — AUZEF Master Web - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">4. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>PYTHON PROGRAMLAMA — AUZEF Master Web Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>PYTHON PROGRAMLAMA — AUZEF Master Web - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">PYTHON PROGRAMLAMA — AUZEF Master Web dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>198 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>4. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">198</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Python_Programlama_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (198)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">198</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Python_Programlama_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2025-2026 Python Bütünleme, Python Programlama 2025-2026 Vize, Python Programlama-2024-2025-VİZE, 2025-2026 vize, 2024-2025 vize, 2025-2026 vize, 2025-2026 bütünleme", "text": "Yukarıdaki Python kod bloğu çalıştırıldığında aşağıdaki seçeneklerden hangisi döner?", "options": [{"letter": "A", "text": "FF"}, {"letter": "B", "text": "45"}, {"letter": "C", "text": "85"}, {"letter": "D", "text": "20"}, {"letter": "E", "text": "Geçer! CEVAPLI Yukarıdaki Python kodları çalıştırıldığında ekrana kaç adet + yazdırılır? Yukarıda tanımlanan indirim() fonksiyonunun çağrılması ve döndürdüğü değerin karşılanması hangi seçenekte doğru bir şekilde verilmiştir? a + b = indirim(1000, 20) a, b = indirim(1000, 20) sayilar = [145, 728, 8, 40, 27, 60, 110, 59] esik = 60 for say in sayilar: if say >= esik: print(\"+\") else: print(\"-\") def indirim(harcama, yuzde): x=(harcama*yuzde)/100 return (x, harcama-x) ogrNotu = 20 notDegeri = 85 print(\"FF\") if notDegeri < 45 else print(\"Geçer!\") PYTHON PROGRAMLAMA B P355875.G14310 13-01-2026 16:34:47"}], "correct": "E", "explanation": "Koşullu ifade (ternary) önce <code>sayi % 3 != 0</code> kısmını denetler: 50 % 3 = 2, sıfırdan farklı olduğu için <code>print(sayi % 3)</code> çalışır ve ekrana <b>2</b> yazılır."}, {"num": 2, "tag": "2025-2026 Python Bütünleme, 2024-2025 bütünleme, 2025-2026 bütünleme", "text": "Bir listenin uzunluğu aşağıdaki Python fonksiyonlarından hangisi ile döndürülür?", "options": [{"letter": "A", "text": "vol()"}, {"letter": "B", "text": "size()"}, {"letter": "C", "text": "len()"}, {"letter": "D", "text": "length()"}, {"letter": "E", "text": "width()"}], "correct": "C", "explanation": "<code>len(liste)</code> eleman sayısını verir. <code>size</code> NumPy dizilerinin bir <i>özelliğidir</i> (fonksiyon değil), diğerleri Python'da tanımlı değildir."}, {"num": 3, "tag": "2025-2026 Python Bütünleme, 2025-2026 final, 2025-2026 bütünleme", "text": "Yukarıdaki Python kodlarına göre “sayilar” float64 veri tipinde bir NumPy dizisi olarak saklanmaktadır. “sayilar”ın int32 veri tipinde saklanabilmesi için aşağıdaki seçeneklerden hangisi tercih edilebilir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "NumPy'da veri tipi <b>dtype</b> parametresiyle belirtilir (tekil, sonunda \"s\" yok). Diğer isimler geçersiz anahtar kelime argümanı olduğu için TypeError verir."}, {"num": 4, "tag": "2025-2026 Python Bütünleme, Python Programlama-2024-2025-VİZE", "text": "Yukarıda verilen Python kodları ile ilgili aşağıdaki seçeneklerden hangisi doğrudur?", "options": [{"letter": "A", "text": "fonksiyonum adlı fonksiyon çağrılmıştır."}, {"letter": "B", "text": "Parametre alan ve değer döndürmeyen bir fonksiyon tanımlanmıştır."}, {"letter": "C", "text": "Parametre almayan ve değer döndüren bir fonksiyon tanımlanmıştır."}, {"letter": "D", "text": "Parametre almayan ve değer döndürmeyen bir fonksiyon tanımlanmıştır."}, {"letter": "E", "text": "Parametre alan ve değer döndüren bir fonksiyon tanımlanmıştır. import numpy as np sayilar = np.array([5.0, 10, 15.2, 20]) CEVAPLI Yukarıda verilen Python kodlarına göre kapsülleme (encapsulation) kullanılarak gizlenen değişken aşağıdakilerden hangisidir? sayilar = np.array([5.0, 10, 15.2, 20], type=\"int32\") sayilar = np.array([5.0, 10, 15.2, 20], datatype=\"int32\") sayilar = np.array([5.0, 10, 15.2, 20], types=\"int32\") sayilar = np.array([5.0, 10, 15.2, 20], dtypes=\"int32\") sayilar = np.array([5.0, 10, 15.2, 20], dtype=\"int32\") class BankaHesap: def __init__(self, bakiye): self.__bakiye = bakiye def bakiye_goster(self): return self.__bakiye def paraEkle(self, mktr): if mktr > 0: self.__bakiye += mktr hesabim = BankaHesap(2000) def fonksiyonum(a): return (a**2) PYTHON PROGRAMLAMA B P355875.G14310 13-01-2026 16:34:47"}], "correct": "E", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 5, "tag": "2025-2026 Python Bütünleme, 2025-2026 final, 2025-2026 bütünleme, 2024-2025 final", "text": "Aşağıdaki seçeneklerin hangisinde yukarıda verilen “Futbolcu” sınıfının bir örneği doğru biçimde oluşturulmuştur?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "<code>__init__</code> self dışında <b>beş parametre</b> ister ve sıra önemlidir: <code>no, ad, soyad, yas, pozisyon</code>. Yalnızca A hem sayıyı hem sırayı doğru verir; diğerlerinde ya argüman eksiktir ya da sıra bozuktur."}, {"num": 6, "tag": "2025-2026 Python Bütünleme, Python Programlama 2025-2026 Vize, Python Programlama-2024-2025-VİZE, 2024-2025 vize, 2025-2026 vize, 2025-2026 bütünleme", "text": "Yukarıda verilen Python kod bloğu çalıştırıldığında z değişkeninin aldığı değer, aşağıdaki seçeneklerden hangisinde a değişkeninin son değerine eşittir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "Önce üs alma yapılır: <code>z = 10 * 4**2 = 10 * 16 = <b>160</b></code>. Şıkların sonuçları sırasıyla 200, 1600, 145, <b>160</b> ve 0'dır; eşleşen tek işlem <code>a += b</code> (100 + 60)."}, {"num": 7, "tag": "2025-2026 Python Bütünleme", "text": "Yukarıda verilen Python kodu çalıştırıldığında aşağıdaki gibi bir hata mesajı döndürülmektedir. Bu hatanın nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 8, "tag": "2025-2026 Python Bütünleme", "text": "şeklinde tanımlanıyor.", "options": [{"letter": "A", "text": "a = 8, b = 8"}, {"letter": "B", "text": "a = 8, b = 4"}, {"letter": "C", "text": "a = 0, b = 0"}, {"letter": "D", "text": "a = 2, b = 8"}, {"letter": "E", "text": "a = 2, b = 4"}], "correct": "D", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 9, "tag": "2025-2026 Python Bütünleme, 2025-2026 bütünleme", "text": "Spyder’da aşağıdaki fonksiyonlardan hangisi bir Python fonksiyonuyla ilgili yardım kaynaklarına ulaşmak için kullanılabilir?", "options": [{"letter": "A", "text": "help()"}, {"letter": "B", "text": "get_help()"}, {"letter": "C", "text": "disc_help()"}, {"letter": "D", "text": "find_help()"}, {"letter": "E", "text": "set_help()"}], "correct": "A", "explanation": "<code>help(print)</code> gibi kullanımlarla nesnenin belgelendirmesi (docstring) konsola yazdırılır. Diğer isimler Python'da tanımlı değildir."}, {"num": 10, "tag": "2025-2026 Python Bütünleme", "text": "Tuple I. List II. Series III. DataFrame IV. Dictionary V. Yukarıda verilenlerden hangileri pandas kütüphanesine özgü veri yapılarındandır?", "options": [{"letter": "A", "text": "III ve IV"}, {"letter": "B", "text": "III, IV ve V"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "II, III, IV ve V"}], "correct": "A", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "Python Programlama 2025-2026 Vize, PYTHON PROGRAMLAMA 25-26 vize", "text": "Aşağıdakilerden hangisi Python’da koşul ifadeleri ile ilgili bir terim değildir?", "options": [{"letter": "A", "text": "if"}, {"letter": "B", "text": "elif"}, {"letter": "C", "text": "match-case"}, {"letter": "D", "text": "else"}, {"letter": "E", "text": "for"}], "correct": "E", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 12, "tag": "Python Programlama 2025-2026 Vize, PYTHON PROGRAMLAMA 25-26 vize, 2025-2026 vize", "text": "Bir yazılım şirketindeki programcı aynı anda iki farklı Python projesinde görev almaktadır; ancak görev aldığı projelerin biri NumPy’ın 1.10 diğeri ise 1.14 versiyonu ile sorunsuz çalışmaktadır. Bu durumda aşağıdakilerden hangisi programcıya en uygun tavsiye olacaktır?", "options": [{"letter": "A", "text": "NumPy’ın eski versiyonunu gerektiren projenin iptal edilmesi."}, {"letter": "B", "text": "NumPy’ın yeniden yüklenmesi."}, {"letter": "C", "text": "NumPy’ın yeni versiyonunu gerektiren projenin iptal edilmesi."}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "<b>Sanal ortam</b>, her projeye kendi paket klasörünü verir; böylece aynı paketin farklı sürümleri çakışmadan yan yana durabilir. IDE değiştirmek paket sürümünü değiştirmez, projeyi iptal etmek ise çözüm değildir."}, {"num": 13, "tag": "Python Programlama 2025-2026 Vize, PYTHON PROGRAMLAMA 25-26 vize", "text": "Yukarıda verilen kod bloğu çalıştırıldığında aşağıda verilen seçeneklerden hangisi döndürülür?", "options": [{"letter": "A", "text": "16"}, {"letter": "B", "text": "50"}, {"letter": "C", "text": "0"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "3 CEVAPLI Projeler için farklı bütünleşik geliştirme ortamları kullanılması. Projeler için farklı sanal ortamların (Virtual Environment) kullanılması. Aşağıdakilerden hangisi Python kodlarının üzerine yazıldığı bir dosya (betik/script dosyası) olabilir? veriliyor. Listenin ilk elemanı olarak 1’in eklenebilmesi için aşağıdaki seçeneklerden hangisi çalıştırılmalıdır? A = [3, 5, 7, 9, 11]"}, {"letter": "A", "text": "insert(0, 1)"}, {"letter": "A", "text": "insert(1)"}, {"letter": "A", "text": "append(1)"}, {"letter": "A", "text": "insert(1, 0)"}, {"letter": "A", "text": "append(1,0) sayi = 50 print(sayi % 3) if sayi % 3 != 0 else print(\"0\") PYTHON PROGRAMLAMA A P787296.G13086 21-10-2025 16:11:20"}], "correct": "D", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 14, "tag": "Python Programlama 2025-2026 Vize, PYTHON PROGRAMLAMA 25-26 vize", "text": "PyCharm I. Spyder II. IDLE III. Jupyter Notebook IV. Saturn V.", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "3"}, {"letter": "C", "text": "4"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "2"}], "correct": "C", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 15, "tag": "Python Programlama 2025-2026 Vize, Python Programlama-2024-2025-VİZE", "text": "Python'da yukarıdaki gibi bir x listesi veriliyor. Aşağıdaki seçeneklerin hangisi bu liste elemanlarının tersten yazdırılmasını sağlar?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 16, "tag": "Python Programlama 2025-2026 Vize, 2024-2025 vize, 2025-2026 vize, 2025-2026 bütünleme", "text": "Yukarıdaki ekran görüntüsünde yer alan metnin \"çoklu yorum satırı\"na dönüştürülebilmesi için aşağıdaki seçeneklerden hangisi kullanılabilir?", "options": [{"letter": "A", "text": "Yalnızca 7. satıra \"\"\" (üç adet tırnak işareti) eklenmelidir."}, {"letter": "B", "text": ""}], "correct": "E", "explanation": "Çoklu yorum, metnin <b>başına ve sonuna</b> üçlü tırnak (<code>\"\"\"</code>) konarak yapılır. Metin 8-10. satırlarda olduğuna göre tırnaklar bir üstteki 7. ve bir alttaki 11. satıra yazılır. <code>#</code> yalnızca tek satırı yorumlar; her satıra ayrı ayrı konması gerekirdi."}, {"num": 17, "tag": "Python Programlama 2025-2026 Vize, PYTHON PROGRAMLAMA 25-26 vize", "text": "Yukarıda verilenlere göre aşağıdakilerden hangisinde s bir tam sayıdır (int)?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 18, "tag": "PYTHON PROGRAMLAMA 25-26 vize, Python Programlama-2024-2025-VİZE, 2024-2025 vize, 2025-2026 vize", "text": "Yukarıda verilen Python nesnelerinden hangisi ya da hangilerinde 2 elemanı yerine 5 atanabilir?", "options": [{"letter": "A", "text": "a1 ve a2"}, {"letter": "B", "text": "Yalnızca a1"}, {"letter": "C", "text": "a2 ve a3"}, {"letter": "D", "text": "Yalnızca a3"}, {"letter": "E", "text": "a1, a2 ve a3"}], "correct": "B", "explanation": "Yalnızca <b>liste</b> indeksle değiştirilebilir: <code>a1[1] = 5</code> çalışır. <code>a2</code> bir demettir (değişmez), <code>a3</code> ise kümedir; kümede sıra ve indeks kavramı olmadığı için <code>a3[1]</code> zaten hata verir."}, {"num": 19, "tag": "PYTHON PROGRAMLAMA 25-26 vize", "text": "olarak veriliyor. Buna göre aşağıdaki kod satırı çalıştırıldığında x’in değeri kaç olur?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "11"}, {"letter": "D", "text": "14"}, {"letter": "E", "text": "10"}], "correct": "C", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 20, "tag": "PYTHON PROGRAMLAMA 25-26 vize", "text": "Windows’ta CMD ekranı üzerinden Python kodlama gerçekleştirebilmek için programcı aşağıdaki komutlardan hangisini yazmalıdır?", "options": [{"letter": "A", "text": "cd python"}, {"letter": "B", "text": "py – enter"}, {"letter": "C", "text": ".. python"}, {"letter": "D", "text": "python"}, {"letter": "E", "text": "get python"}], "correct": "D", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 21, "tag": "PYTHON PROGRAMLAMA 25-26 vize", "text": "Yukarıda verilen kod satırlarına göre aşağıdaki seçeneklerden hangisi gerçekleşir?", "options": [{"letter": "A", "text": "x'e \"Lütfen bir sayı giriniz:\" değeri atanır. Bu nedenle de x + 5 kod satırı çalışmaz, hata mesajı döndürür."}, {"letter": "B", "text": "Ekrana 5 yazdırılır."}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "Ekrana 0 yazdırılır."}], "correct": "D", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 22, "tag": "Python Programlama-2024-2025-VİZE, 2024-2025 vize", "text": "Yukarıda verilen kodlar çalıştırıldığında b'nin değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "5"}, {"letter": "C", "text": "6"}, {"letter": "D", "text": "15"}, {"letter": "E", "text": "1"}], "correct": "C", "explanation": "<code>a.find(\" \")</code> ilk boşluğun indeksini verir: \"Bilg Prog \" metninde bu <b>4</b>'tür. <code>len(a.upper())</code> yine <b>10</b>'dur, 10/5 = <b>2.0</b>. Toplam 4 + 2.0 = <b>6.0</b>, yani 6."}, {"num": 23, "tag": "Python Programlama-2024-2025-VİZE", "text": "Windows'ta yukarıda verilen konsol ekranından Python'a erişim sağlamak için komut satırına aşağıdakilerden hangisi yazılmalıdır?", "options": [{"letter": "A", "text": "python()"}, {"letter": "B", "text": "python"}, {"letter": "C", "text": "enter(python)"}, {"letter": "D", "text": "get python"}, {"letter": "E", "text": "enter"}], "correct": "B", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek B'dir."}, {"num": 24, "tag": "Python Programlama-2024-2025-VİZE, 2025-2026 final, 2024-2025 vize", "text": "Aşağıdaki kod satırlarından hangisi çalıştırıldığında hata dönmez ve bir elemanlı bir demet tanımlanmış olur?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "Tek elemanlı demette <b>sondaki virgül zorunludur</b>: <code>(1)</code> yalnızca parantez içine alınmış bir sayıdır (int), <code>(1,)</code> ise demettir. <code>{1,}</code> küme, <code>[1,]</code> listedir; <code>(, 1)</code> söz dizimi hatasıdır."}, {"num": 25, "tag": "Python Programlama-2024-2025-VİZE, 2024-2025 vize", "text": "Yukarıda verilen Python kod bloğu aşağıdaki seçeneklerden hangisi ile tamamlanırsa, futbol, tenis, basketbol ve yüzme seçenekleri dışında bir seçenek girildiğinde \"Lütfen geçerli bir spor dalı giriniz.\" uyarısı ekrana yazdırılır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "if-elif zincirinde <b>hiçbir koşul tutmadığında</b> çalışacak blok <code>else:</code>'dir. <code>elif</code> ve <code>if</code> yanına koşul ister; <code>match/case</code> ise ayrı bir yapıdır, if zincirinin devamı olamaz."}, {"num": 26, "tag": "Python Programlama-2024-2025-VİZE, 2024-2025 vize, 2025-2026 vize", "text": "Yukarıdaki şekilde çerçeve içine alınmış Spyder bölmesinin adı aşağıdaki seçeneklerden hangisinde verilmiştir?", "options": [{"letter": "A", "text": "Grafikler alanı"}, {"letter": "B", "text": "IPython konsolu"}, {"letter": "C", "text": "Python betik dosyası"}, {"letter": "D", "text": "Yardım penceresi"}, {"letter": "E", "text": "Değişken gezgini"}], "correct": "B", "explanation": "Ekran görüntüsünde çerçeveli bölmede Python sürüm bilgisi ve <code>In [1]:</code> istemi görünür; bu, kodun satır satır çalıştırıldığı <b>IPython konsolu</b>dur. Değişken gezgini tanımlı nesneleri tablo hâlinde listeler."}, {"num": 27, "tag": "Python Programlama-2024-2025-VİZE, 2024-2025 vize", "text": "Yukarıdaki Python kod bloğunun ilk satırı çalıştırıldığında kullanıcı “sarı” girişi yaparsa, match­case ifadesi çalıştırıldığında aşağıdaki seçeneklerden hangisi elde edilir?", "options": [{"letter": "A", "text": "Sıcak Renk"}, {"letter": "B", "text": "Lütfen geçerli bir renk giriniz."}, {"letter": "C", "text": "Doğal Renk"}, {"letter": "D", "text": "Soğuk Renk"}, {"letter": "E", "text": "Kod bloğu çalışmaz, hata döndürür."}], "correct": "B", "explanation": "\"sarı\" hiçbir case ile eşleşmediği için <b>joker (wildcard) durum</b> olan <code>case _:</code> çalışır. Alt çizgi \"yukarıdakilerin hiçbiri\" anlamına gelir ve if-else yapısındaki else'in karşılığıdır."}, {"num": 28, "tag": "Python Programlama-2024-2025-VİZE, 2024-2025 vize", "text": "Aşağıdakilerden hangisi Python dilinin nesneye yönelimli programlama yapısına özgü kavramlardan biri değildir?", "options": [{"letter": "A", "text": "Sınıf"}, {"letter": "B", "text": "Çok biçimlilik"}, {"letter": "C", "text": "Nesne"}, {"letter": "D", "text": "Değişken"}, {"letter": "E", "text": "Kapsülleme renk = input(\"Lütfen bir renk giriniz= \") match renk: case \"kırmızı\": print(\"Sıcak Renk\") case \"mavi\": print(\"Soğuk Renk\") case \"yeşil\": print(\"Doğal Renk\") case _: print(\"Lütfen geçerli bir renk gi riniz.\") x = [1, 3, 5, 7, 9] x[-1:] x[: 1] x[: : 1] x[: : -1] x[:1:] ogrNotu = 20 notDegeri = 85 print(\"FF\") if notDegeri < 45 else print( \"Geçer!\") PYTHON PROGRAMLAMA A P3.G5667 03-11-2024 19:14:22 PYTHON PROGRAMLAMA A P3.G5667 03-11-2024 19:14:22 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "Sınıf, nesne, kapsülleme, kalıtım ve çok biçimlilik NYP'ye özgü kavramlardır. <b>Değişken</b> ise her paradigmada bulunan temel bir programlama öğesidir, NYP'ye özgü değildir."}, {"num": 29, "tag": "Python Programlama-2024-2025-VİZE", "text": "Spyder'da yeni bir Python betik dosyası üzerindaki kodların satır satır çalıştırılmasını sağlayan varsayılan klavye kısayolu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "F12"}, {"letter": "B", "text": "Ctrl+Shift+Enter"}, {"letter": "C", "text": "F5"}, {"letter": "D", "text": "Cltrl+Enter"}, {"letter": "E", "text": "F9"}], "correct": "E", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 30, "tag": "Python Programlama-2024-2025-VİZE, 2024-2025 vize, 2025-2026 vize", "text": "Yukarıda verilenlere göre odeme değişkeninin son değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "50"}, {"letter": "B", "text": "90"}, {"letter": "C", "text": "100"}, {"letter": "D", "text": "110"}, {"letter": "E", "text": "0"}], "correct": "A", "explanation": "<code>harcama = 100</code> olduğu için <code>harcama &gt;= 50</code> koşulu doğrudur ve if bloğu çalışır: <code>100 - 100*0.50 = <b>50.0</b></code>. else bloğundaki %10'luk indirim hiç uygulanmaz."}, {"num": 31, "tag": "Python Programlama-2024-2025-VİZE", "text": "Aşağıdakilerden hangisi Python programlama dili hakkında yanlış bir ifadedir?", "options": [{"letter": "A", "text": "Python yorumlayıcı (interpreter) kullanır."}, {"letter": "B", "text": "Python'da kodların satır satır çalıştırılması mümkündür."}, {"letter": "C", "text": "Python dilinde yazılan kodlar, modül ya da paket halinde gruplandırılabilir."}, {"letter": "D", "text": "Python kodlarındaki istisna durumların (exceptions) yakalanması mümkün değildir."}, {"letter": "E", "text": "Python dili otomatik bellek yönetimi prensibini kullanır."}], "correct": "D", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 32, "tag": "Python Programlama-2024-2025-VİZE", "text": "Aşağıdakilerden hangisi Python'da hatalı bir değişken tanımlamasıdır?", "options": [{"letter": "A", "text": "elif = \"elif\""}, {"letter": "B", "text": "ECEM = \"ecem\""}, {"letter": "C", "text": "zekI = \"zeki\""}, {"letter": "D", "text": "tur_han = 50"}, {"letter": "E", "text": "iLkim = \"1\""}], "correct": "A", "explanation": "AUZEF Python Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 33, "tag": "Python Programlama-2024-2025-VİZE, 2024-2025 vize", "text": "Aşağıdaki Python kodlarından hangisi çalıştırıldığında hata vermez ve x değişkenin veri tipi boolean (bool) olur?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "x = 10 y = 4 z = x * y**2 a = 20 b = 10 a *= b a = 40 b = 2 a **= b a = 150 b = 5 a -= b a = 100 b = 60 a += b a = 1200 b = 30 a %= b a = {\"1\": \"2\", \"3\": \"4\", \"5\": \"6\", \"7\": \" 8\"} list(a.values()) odeme = 0 harcama = 100 if harcama >= 50: odeme = harcama - harcama * 0.50 else: odeme = harcama - harcama * 0.10 tatil = {\"deniz\", \"gunes\", \"kum\"} tatil.pop() x, y, z = \"True\", \"50\", 850 x = 1, -10, 0, 1 x, y = True, \"False\" x, y = \"1\", \"2\", \"3\" z, x = True, True, False"}], "correct": "C", "explanation": "C'de sol ve sağ taraftaki eleman sayıları eşittir; x'e tırnaksız <b>True</b> atandığı için tipi bool olur. A'da x'e metin (\"True\") atanır; B'de x bir demet olur; D ve E'de değişken sayısı ile değer sayısı eşleşmediğinden ValueError alınır."}, {"num": 34, "tag": "2023-2024 vize", "text": "Python programlama dilinin ilk sürümü hangi tarihte piyasaya sürülmüştür?", "options": [{"letter": "A", "text": "1980"}, {"letter": "B", "text": "1991"}, {"letter": "C", "text": "1995"}, {"letter": "D", "text": "1990"}, {"letter": "E", "text": "1985"}], "correct": "B", "explanation": "Guido van Rossum, dili 1989'un sonunda yazmaya başladı ve <b>ilk sürüm (0.9.0) Şubat 1991'de</b> yayımlandı. 1994'te 1.0, 2000'de 2.0, 2008'de 3.0 çıktı. 1990 ve 1995 çeldiricidir."}, {"num": 35, "tag": "2022 vize", "text": "Python, popüler bir programlama dilidir. 1991 yılında ….. tarafından tasarlanmıştır. Yukarıdaki cümlede boş bırakılan yere aşağıdaki seçeneklerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Dennis Ritchie"}, {"letter": "B", "text": "Linus Torvalds"}, {"letter": "C", "text": "Charles Babbage"}, {"letter": "D", "text": "Bill Gates"}, {"letter": "E", "text": "Guido van Rossum"}], "correct": "E", "explanation": "Python'un tasarımcısı Hollandalı <b>Guido van Rossum</b>'dur. Dennis Ritchie C dilini, Linus Torvalds Linux çekirdeğini geliştirmiş, Charles Babbage ise Analitik Motor'u tasarlamıştır."}, {"num": 36, "tag": "2023-2024 vize", "text": "Python programlama dilinin adı aşağıdakilerden hangisinden gelmektedir?", "options": [{"letter": "A", "text": "Bir matematiksel formülden"}, {"letter": "B", "text": "Bir müzik parçasından"}, {"letter": "C", "text": "Bir bilgisayar bilimcisinin adından"}, {"letter": "D", "text": "Bir ingiliz komedi grubu olan Monty Python'dan"}, {"letter": "E", "text": "Bir yılan türünden"}], "correct": "D", "explanation": "Van Rossum, dile adını sevdiği İngiliz komedi grubu <b>Monty Python</b>'dan vermiştir; yılanla ilgisi yoktur (logodaki yılanlar sonradan eklenmiştir)."}, {"num": 37, "tag": "2023-2024 vize", "text": "Bilgisayar programlarının kodlanması için kullanılan ilk ilkel programlama dili, aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Python"}, {"letter": "B", "text": "C++"}, {"letter": "C", "text": "C#"}, {"letter": "D", "text": "Analitik Motor"}, {"letter": "E", "text": "C"}], "correct": "D", "explanation": "Ders notlarına göre ilk ilkel programlama <b>Charles Babbage'ın Analitik Motoru</b> için Ada Lovelace tarafından yazılan komut dizileriyle başlar. C (1972), C++ ve C# çok daha sonradır."}, {"num": 38, "tag": "2023-2024 vize", "text": "Python programlama dili hangi tür bir dildir?", "options": [{"letter": "A", "text": "Obje yönelimli"}, {"letter": "B", "text": "Yüksek seviyeli"}, {"letter": "C", "text": "Düşük seviyeli"}, {"letter": "D", "text": "Yapısal"}, {"letter": "E", "text": "Fonksiyonel"}], "correct": "B", "explanation": "Python insan diline yakın söz dizimi kullandığı, bellek yönetimini kendisi yaptığı ve donanımdan soyutlandığı için <b>yüksek seviyeli</b> bir dildir. Nesne yönelimli, yapısal ve fonksiyonel programlamayı da desteklese de sorunun aradığı sınıflandırma seviye ile ilgilidir."}, {"num": 39, "tag": "2022 vize", "text": "Yorumlanarak çalıştırılan diller, derlenmiş dillere nazaran daha ….. çalışır. Yukarıdaki cümlede boş bırakılan yere aşağıdaki seçeneklerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "optimize"}, {"letter": "B", "text": "güvenilir"}, {"letter": "C", "text": "yavaş"}, {"letter": "D", "text": "hızlı"}, {"letter": "E", "text": "etkin"}], "correct": "C", "explanation": "Yorumlayıcı (interpreter) kodu çalışma anında satır satır makine diline çevirdiği için ek bir maliyet doğar; derlenmiş dillerde bu çeviri bir kez, çalıştırmadan önce yapılır. Bu yüzden yorumlanan diller genelde daha <b>yavaş</b> ama daha taşınabilirdir."}, {"num": 40, "tag": "2022 vize", "text": "Python Programlama dili aşağıdaki hangi programlama paradigmasını <u>desteklemez</u>?", "options": [{"letter": "A", "text": "Yapısal Programlama (Structured Programming)"}, {"letter": "B", "text": "Fonksiyonel Programlama (Functional Programming)"}, {"letter": "C", "text": "Mantıksal Programlama (Logic Programming)"}, {"letter": "D", "text": "Emirli Programlama (Imperative Programming)"}, {"letter": "E", "text": "Nesneye Dayalı Programlama (Object-oriented Programming)"}], "correct": "C", "explanation": "Python; yapısal, emirli, fonksiyonel ve nesne yönelimli paradigmaları destekler. <b>Mantıksal programlama</b> (Prolog'daki gibi kural/olgu tabanlı çıkarım) Python'un doğrudan desteklediği bir paradigma değildir."}, {"num": 41, "tag": "2023-2024 vize", "text": "Ders notlarına göre bilgisayar programlarının işlevsel olabilmesi için bilgisayarlarda gerekli olan iki unsur nedir?", "options": [{"letter": "A", "text": "Donanım ve yazılım"}, {"letter": "B", "text": "İşletim sistemi ve programlama dili"}, {"letter": "C", "text": "Yazılım ve programlama dili"}, {"letter": "D", "text": "Donanım, yazılım ve işletim sistemi"}, {"letter": "E", "text": "Yazılım ve işletim sistemi"}], "correct": "A", "explanation": "Bir bilgisayar sistemi en temelde <b>donanım</b> (fiziksel parçalar) ve <b>yazılım</b> (bu parçalara ne yapacağını söyleyen komutlar) ikilisinden oluşur. İşletim sistemi ve programlama dili zaten yazılımın alt başlıklarıdır."}, {"num": 42, "tag": "2023-2024 final", "text": "Python programlama dilinin popülerliğini artıran faktörlerden biri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çok amaçlı bir programlama dili olması"}, {"letter": "B", "text": "Değişik programlama paradigmalarını desteklemesi"}, {"letter": "C", "text": "Basit ve okunabilir olması"}, {"letter": "D", "text": "Python Yazılım Vakfı tarafından desteklenmesi"}, {"letter": "E", "text": "Veri bilimi ve makine öğrenimi gibi alanlarda yaygın olarak kullanılması"}], "correct": "E", "explanation": "Ders notunda Python'un son yıllardaki yükselişi öncelikle <b>veri bilimi ve makine öğrenmesi</b> ekosistemine (NumPy, pandas, scikit-learn, TensorFlow) bağlanır; kitapçık anahtarı da E'yi işaretlemiştir."}, {"num": 43, "tag": "2023-2024 bütünleme", "text": "Aşağıdakilerden hangisi Python Programlama Dilinin özelliklerinden biri <u>değildir</u>?", "options": [{"letter": "A", "text": "Okunması ve yazılması kolaydır."}, {"letter": "B", "text": "İnsan diline yakın bir dildir."}, {"letter": "C", "text": "Düşük düzey bir dildir."}, {"letter": "D", "text": "Açık kaynak yazılımdır."}, {"letter": "E", "text": "Nesne tabanlı bir dildir."}], "correct": "C", "explanation": "Python <b>yüksek düzeyli</b> bir dildir: bellek adresleri, kayıtçılar (register) gibi donanım ayrıntılarıyla uğraşmazsınız. Düşük düzeyli diller Assembly ve (görece) C'dir."}, {"num": 44, "tag": "2022 final", "text": "….., python'ın fikirsel haklarını korumaktadır. Yukarıdaki boşluğa aşağıdaki seçeneklerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Charles Babbage"}, {"letter": "B", "text": "Guido van Rossum"}, {"letter": "C", "text": "Microsoft"}, {"letter": "D", "text": "Python Yazılım Vakfı"}, {"letter": "E", "text": "Bill Gates"}], "correct": "D", "explanation": "Dilin telif ve marka haklarını kâr amacı gütmeyen <b>Python Software Foundation (Python Yazılım Vakfı)</b> yönetir. Guido van Rossum dili tasarlayan kişidir, hak sahibi kurum değildir."}, {"num": 45, "tag": "2023-2024 final", "text": "Modern anlamda kayıt ve dizi özelliğine sahip ilk programlama dilini geliştiren kişi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Alan Turing"}, {"letter": "B", "text": "Ada Lovelace"}, {"letter": "C", "text": "K. Zuse"}, {"letter": "D", "text": "John von Neumann"}, {"letter": "E", "text": "Charles Babbage"}], "correct": "C", "explanation": "Alman mühendis <b>Konrad Zuse</b>'nin 1940'larda tasarladığı <i>Plankalkül</i>, kayıt (record) ve dizi (array) gibi veri yapılarını içeren ilk yüksek seviyeli dil kabul edilir."}, {"num": 46, "tag": "2022 vize", "text": "Python kaynak kodlarının dosya uzantısı aşağıdakilerden hangisdir?", "options": [{"letter": "A", "text": ".exe"}, {"letter": "B", "text": ".pyc"}, {"letter": "C", "text": ".py"}, {"letter": "D", "text": ".ipynp"}, {"letter": "E", "text": ".c"}], "correct": "C", "explanation": "Python kaynak (betik) dosyaları <b>.py</b> uzantılıdır. <code>.pyc</code> derlenmiş bytecode, <code>.ipynb</code> Jupyter defteri, <code>.exe</code> Windows çalıştırılabilir dosyasıdır."}, {"num": 47, "tag": "2025-2026 vize", "text": "Aşağıdakilerden hangisi Python kodlarının üzerine yazıldığı bir dosya (betik/script dosyası) olabilir?", "options": [{"letter": "A", "text": "vize.exe"}, {"letter": "B", "text": "vize.r"}, {"letter": "C", "text": "vize.py"}, {"letter": "D", "text": "vize.ipython"}, {"letter": "E", "text": "vize.python"}], "correct": "C", "explanation": "Betik dosyasının uzantısı <b>.py</b> olmalıdır. <code>.r</code> R diline, <code>.exe</code> derlenmiş programa aittir; <code>.ipython</code> ve <code>.python</code> diye bir uzantı yoktur."}, {"num": 48, "tag": "2022 final", "text": "Python Bytecode program dosya uzantısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ".c"}, {"letter": "B", "text": ".py"}, {"letter": "C", "text": ".java"}, {"letter": "D", "text": ".byte"}, {"letter": "E", "text": ".pyc"}], "correct": "E", "explanation": "Python kaynak kodu çalıştırılmadan önce <b>bytecode</b>'a çevrilir ve <code>__pycache__</code> klasöründe <b>.pyc</b> uzantısıyla saklanır. Böylece dosya değişmediği sürece yeniden derleme yapılmaz."}, {"num": 49, "tag": "2024-2025 vize, 2025-2026 vize, 2025-2026 final", "text": "Windows'ta CMD/konsol ekranından Python'a erişim sağlamak için komut satırına aşağıdakilerden hangisi yazılmalıdır?", "options": [{"letter": "A", "text": "py – enter"}, {"letter": "B", "text": "python"}, {"letter": "C", "text": "enter(python)"}, {"letter": "D", "text": "get python"}, {"letter": "E", "text": ".. python"}], "correct": "B", "explanation": "Yorumlayıcı, komut isteminde sadece <code>python</code> (bazı sistemlerde <code>py</code> veya <code>python3</code>) yazılıp Enter'a basılarak açılır ve <code>&gt;&gt;&gt;</code> istemi görünür. Diğer şıklar geçerli komut değildir."}, {"num": 50, "tag": "2025-2026 final, 2025-2026 bütünleme", "text": "Aşağıda verilen kod satırı \"Spyder Terminal\" ekranında çalıştırılıyor. Buna göre, aşağıdakilerden hangisi gerçekleştirilmek istenmektedir?", "options": [{"letter": "A", "text": "Python sanal ortamı (virtual environment) oluşturmak."}, {"letter": "B", "text": "Python'da venv adlı bir değişken tanımlamak."}, {"letter": "C", "text": "Python betik (script) dosyası oluşturmak."}, {"letter": "D", "text": "Python'da sOrtam adlı bir değişken tanımlamak."}, {"letter": "E", "text": "Bilgisayardaki Python kurulumunu kaldırmak."}], "correct": "A", "explanation": "<code>python -m venv sOrtam</code> komutu, <code>venv</code> modülünü çalıştırarak <b>sOrtam</b> adında bir sanal ortam klasörü oluşturur. Bu bir terminal komutudur, Python kodu değildir; dolayısıyla değişken tanımlamaz."}, {"num": 51, "tag": "2025-2026 vize", "text": "I. PyCharm II. Spyder III. IDLE IV. Jupyter Notebook V. Saturn — Yukarıdakilerden kaç tanesi Python geliştirme ortamlarındandır?", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "3"}, {"letter": "C", "text": "4"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "2"}], "correct": "C", "explanation": "PyCharm, Spyder, IDLE ve Jupyter Notebook gerçek Python geliştirme ortamlarıdır; <b>Saturn</b> diye bir Python IDE'si yoktur (çeldirici). Bu yüzden 4 tanesi doğrudur."}, {"num": 52, "tag": "2024-2025 bütünleme", "text": "Spyder'da Python ile çalışırken tanımlanan değişken, dizi, liste gibi Python nesnelerinin görüntülendiği ve şekilde ok işareti ile gösterilen bölmenin adı nedir?", "options": [{"letter": "A", "text": "IPython konsolu"}, {"letter": "B", "text": "Grafikler alanı"}, {"letter": "C", "text": "Değişken gezgini"}, {"letter": "D", "text": "Yardım penceresi"}, {"letter": "E", "text": "Python betik dosyası"}], "correct": "C", "explanation": "<b>Değişken gezgini (Variable Explorer)</b>, o an bellekte tanımlı nesneleri adı, tipi, boyutu ve değeriyle tablo hâlinde gösterir. Sorudaki şekilde \"No variables to show\" yazan bölme budur."}, {"num": 53, "tag": "2024-2025 vize", "text": "Spyder'da yeni bir Python betik dosyası üzerindeki kodların satır satır çalıştırılmasını sağlayan varsayılan klavye kısayolu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "F12"}, {"letter": "B", "text": "Ctrl+Shift+Enter"}, {"letter": "C", "text": "F5"}, {"letter": "D", "text": "Cltrl+Enter"}, {"letter": "E", "text": "F9"}], "correct": "E", "explanation": "Spyder'da <b>F9</b> imlecin bulunduğu satırı (ya da seçili bloğu) konsolda çalıştırır. <b>F5</b> ise dosyanın tamamını çalıştırır. Bu ayrım sık sorulur."}, {"num": 54, "tag": "2024-2025 bütünleme", "text": "Spyder'da varsayılan Python versiyonu yerine bilgisayarda kurulu olan farklı bir Python versiyonu ile çalışabilmek için aşağıdakilerden hangisinin yapılması daha uygundur?", "options": [{"letter": "A", "text": "\"Tools - Preferences - Python Interpreter - Internal\" seçimi yapılır."}, {"letter": "B", "text": "Spyder'da \"Tools - Preferences - Python Interpreter - Use the following Python interpreter\" alanından yapılacak yeni Python .exe dosyası seçimi ile Spyder'daki varsayılan Python yorumlayıcısı değiştirilir."}, {"letter": "C", "text": "Spyder yeniden başlatılır."}, {"letter": "D", "text": "Spyder kaldırılır ve yeniden yüklenir."}, {"letter": "E", "text": "https://www.python.org/ adresinden bilgisayara kurulan Python kaldırılır ve yeniden yüklenir."}], "correct": "B", "explanation": "Yorumlayıcı değişimi ayarlardan yapılır: <b>Tools → Preferences → Python Interpreter</b> altında \"Use the following Python interpreter\" seçilip ilgili <code>python.exe</code> gösterilir. \"Internal\" zaten Spyder'ın kendi varsayılanıdır; program silip yeniden kurmak gereksizdir."}, {"num": 55, "tag": "2024-2025 final", "text": "Python'da tek satırlık bir yorum eklemek için aşağıdaki karakterlerden hangisi kullanılır?", "options": [{"letter": "A", "text": "#"}, {"letter": "B", "text": "*"}, {"letter": "C", "text": "$"}, {"letter": "D", "text": "!"}, {"letter": "E", "text": "%"}], "correct": "A", "explanation": "<code>#</code> işaretinden satır sonuna kadar olan her şey yorumdur, yorumlayıcı tarafından yok sayılır. Çok satırlı yorum için üçlü tırnak kullanılır."}, {"num": 56, "tag": "2022 vize", "text": "Aşağıdakilerden hangisi Python'da <u>geçersiz</u> tanımlayıcıdır?", "options": [{"letter": "A", "text": "Öğrenci1"}, {"letter": "B", "text": "ogrenciAdi"}, {"letter": "C", "text": "Ogrenci1"}, {"letter": "D", "text": "1.Ogrenci"}, {"letter": "E", "text": "Ogrenci_Adi"}], "correct": "D", "explanation": "Değişken adı <b>rakamla başlayamaz</b> ve içinde <b>nokta</b> gibi özel karakter bulunamaz; <code>1.Ogrenci</code> her iki kuralı da çiğner. Diğerleri harfle veya alt çizgiyle başlayıp harf/rakam/alt çizgi içerdiği için geçerlidir."}, {"num": 57, "tag": "2023-2024 vize", "text": "Python'da aşağıdakilerden hangisi bir değişken adlandırma kuralı ihlalidir <u>değildir</u>?", "options": [{"letter": "A", "text": "%ogrenci"}, {"letter": "B", "text": "@ogrenci"}, {"letter": "C", "text": "!ogrenci"}, {"letter": "D", "text": "#ogrenci"}, {"letter": "E", "text": "_ogrenci"}], "correct": "E", "explanation": "Değişken adında yalnızca harf, rakam ve <b>alt çizgi</b> bulunabilir; ad alt çizgiyle başlayabilir. <code>%, @, !, #</code> gibi karakterler geçersizdir (üstelik <code>#</code> yorum başlatır)."}, {"num": 58, "tag": "2023-2024 vize", "text": "Hangisi Python'da hatalı ayrılmış bir anahtar sözcüktür?", "options": [{"letter": "A", "text": "elif"}, {"letter": "B", "text": "false"}, {"letter": "C", "text": "if"}, {"letter": "D", "text": "else"}, {"letter": "E", "text": "true"}], "correct": "E", "explanation": "Python'da mantıksal değerler <b>True</b> ve <b>False</b> şeklinde büyük harfle başlar; <code>true</code> anahtar sözcük değildir, tanımsız isim hatası verir."}, {"num": 59, "tag": "2023-2024 vize", "text": "Aşağıdaki değişken isimlerinden hangisi Deve (Camel) notasyonunda yazılmıştır?", "options": [{"letter": "A", "text": "ogrenci_no"}, {"letter": "B", "text": "_OgrenciAdi"}, {"letter": "C", "text": "ogrenciAdi"}, {"letter": "D", "text": "Ogrenci_adi"}, {"letter": "E", "text": "OgrenciNumarasi"}], "correct": "C", "explanation": "<b>camelCase</b>'de ilk kelime küçük harfle başlar, sonraki kelimelerin baş harfleri büyüktür: <code>ogrenciAdi</code>. Hepsi büyükle başlarsa PascalCase, alt çizgi kullanılırsa snake_case olur."}, {"num": 60, "tag": "2023-2024 vize", "text": "Aşağıdaki şıklardan hangisinde değişken adlandırma için kural doğru <u>değildir</u>?", "options": [{"letter": "A", "text": "Değişken adları 10 karakterden fazla olabilir."}, {"letter": "B", "text": "Değişken adları anahtar kelimeler olarak kullanılamaz."}, {"letter": "C", "text": "Değişken adları harf, rakam veya alt çizgi içerebilir."}, {"letter": "D", "text": "Değişken adları sayılarla başlayabilir."}, {"letter": "E", "text": "Değişken adları büyük/küçük harfe duyarlıdır."}], "correct": "D", "explanation": "Değişken adı <b>rakamla başlayamaz</b>; harf ya da alt çizgiyle başlamalıdır. Uzunluk sınırı yoktur, büyük/küçük harf duyarlıdır ve anahtar sözcükler ad olarak kullanılamaz."}, {"num": 61, "tag": "2024-2025 vize, 2025-2026 vize", "text": "Aşağıdakilerden hangisi Python'da <u>hatalı</u> bir değişken tanımlamasıdır?", "options": [{"letter": "A", "text": "zekI = \"zeki\""}, {"letter": "B", "text": "tur_han = 50"}, {"letter": "C", "text": "elif = \"elif\""}, {"letter": "D", "text": "iLkim = \"1\""}, {"letter": "E", "text": "ECEM = \"ecem\""}], "correct": "C", "explanation": "<code>elif</code> Python'un <b>ayrılmış anahtar sözcüğü</b>dür, değişken adı olarak kullanılamaz (SyntaxError). Diğerlerinde büyük/küçük harf karışımı ve alt çizgi kullanımı serbesttir."}, {"num": 62, "tag": "2025-2026 final", "text": "Aşağıdaki seçeneklerden hangisinde Python değişken tanımlama kurallarına uygun bir tanımlama işlemi <u>gerçekleştirilmemiştir</u>?", "options": [{"letter": "A", "text": "siraliD = True"}, {"letter": "B", "text": "Sepetirenk = [\"R\", \"G\", \"B\"]"}, {"letter": "C", "text": "kedituru = \"tekir\""}, {"letter": "D", "text": "eleman_1 = 1"}, {"letter": "E", "text": "break = 3200"}], "correct": "E", "explanation": "<code>break</code> ayrılmış anahtar sözcüktür, değişken adı olamaz. Diğerlerinde ad kuralları çiğnenmemiştir (C şıkkındaki tırnaklar sınavda tipografik yazılmış olsa da amaçlanan geçerli bir atamadır)."}, {"num": 63, "tag": "2024-2025 bütünleme", "text": "metin = \"Otuz\" — Yukarıda örneklendiği gibi bir değişkenin aldığı değere ne ad verilir?", "options": [{"letter": "A", "text": "Yorum"}, {"letter": "B", "text": "Betik"}, {"letter": "C", "text": "Literal"}, {"letter": "D", "text": "Sabit"}, {"letter": "E", "text": "İşaretçi"}], "correct": "C", "explanation": "Kodun içine doğrudan yazılan sabit değerlere (<code>\"Otuz\"</code>, <code>42</code>, <code>3.14</code>, <code>True</code>) <b>literal</b> denir. \"Sabit\" (constant) ise değeri değişmeyecek şekilde tanımlanmış değişkendir, aynı şey değildir."}, {"num": 64, "tag": "2024-2025 bütünleme", "text": "Python'da değişkenler ile ilgili aşağıda verilen ifadelerden hangisi <u>yanlıştır</u>?", "options": [{"letter": "A", "text": "Bir değişken tanımlanırken mutlaka başında veri tipi de belirtilmelidir."}, {"letter": "B", "text": "Değişkenler programlamada veri saklamak amacıyla kullanılırlar."}, {"letter": "C", "text": "Bir değişkenin değeri program içinde değişebilir."}, {"letter": "D", "text": "Bir değişken int, float, bool, str gibi farklı veri tipinde olabilir."}, {"letter": "E", "text": "Bir değişken tanımlarken değişkene değer atamak için = sembolü kullanılır."}], "correct": "A", "explanation": "Python <b>dinamik tiplidir</b>: tip, atanan değere bakılarak çalışma anında belirlenir. C/Java'daki gibi <code>int x = 5;</code> şeklinde tip yazmak zorunlu değildir."}, {"num": 65, "tag": "2022 vize", "text": "Tanımlandıktan sonra ömrü program çalıştığı sürece geçerli olan değişkenler, ….. olarak adlandırılmaktadır.", "options": [{"letter": "A", "text": "kapalı değişken"}, {"letter": "B", "text": "yerleşik değişken"}, {"letter": "C", "text": "yerel değişken"}, {"letter": "D", "text": "genel değişken"}, {"letter": "E", "text": "özel değişken"}], "correct": "D", "explanation": "Modül düzeyinde tanımlanan <b>genel (global)</b> değişkenler program bitene kadar yaşar ve her yerden okunabilir. Yerel değişken ise tanımlandığı fonksiyon bitince bellekten silinir."}, {"num": 66, "tag": "2023-2024 vize", "text": "Python'da, bir fonksiyon içinde tanımlanan ve yalnızca o fonksiyon içinde erişilebilir ve kullanılabilen değişkenler ……… olarak adlandırılır.", "options": [{"letter": "A", "text": "Açık alan değişkenleri"}, {"letter": "B", "text": "Kapalı alan değişkenleri"}, {"letter": "C", "text": "Genel alan değişkenleri"}, {"letter": "D", "text": "Yerleşik alan değişkenleri"}, {"letter": "E", "text": "Yerel alan değişkenleri"}], "correct": "E", "explanation": "Fonksiyonun içinde tanımlanan değişkenler <b>yerel (local)</b> kapsamdadır; fonksiyon dışından erişilmeye çalışılırsa NameError alınır."}, {"num": 67, "tag": "2022 vize", "text": "Ondalık sayıyı tam sayıya çeviren fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "float()"}, {"letter": "B", "text": "str()"}, {"letter": "C", "text": "ord()"}, {"letter": "D", "text": "complex()"}, {"letter": "E", "text": "int()"}], "correct": "E", "explanation": "<code>int()</code> ondalık kısmı <b>atarak</b> (yuvarlamadan) tam sayıya çevirir: <code>int(3.9)</code> → 3. <code>float()</code> tersini, <code>str()</code> metne, <code>ord()</code> karakterin Unicode kodunu döndürür."}, {"num": 68, "tag": "2022 vize", "text": "Aşağıdaki kodlardan hangisinde örtülü tür dönüştürme yapılmıştır?", "options": [{"letter": "A", "text": "a = 7 / b = 8.8 / toplam = a + b"}, {"letter": "B", "text": "a = 7 / b = 8.8 / toplam = float(a) + b"}, {"letter": "C", "text": "a = 7 / b = 8 / toplam = a + b"}, {"letter": "D", "text": "a = 7 / b = 8 / toplam = int(a + b)"}, {"letter": "E", "text": "a = 7.7 / b = 8.8 / toplam = int(a + b)"}], "correct": "A", "explanation": "<b>Örtülü (implicit)</b> dönüşümde çeviriyi programcı değil Python yapar: <code>int + float</code> işleminde int otomatik float'a yükseltilir, sonuç 15.8 olur. B, D ve E'de <code>int()/float()</code> ile <b>açık (explicit)</b> dönüşüm vardır; C'de iki değer de int olduğu için dönüşüm yoktur."}, {"num": 69, "tag": "2022 vize", "text": "Aşağıdakilerden hangisi <u>hatalı</u> karmaşık sayı tanımlamasıdır?", "options": [{"letter": "A", "text": "complex(12,7)"}, {"letter": "B", "text": "12+7j"}, {"letter": "C", "text": "12+j"}, {"letter": "D", "text": "1j"}, {"letter": "E", "text": "12+1j"}], "correct": "C", "explanation": "Sanal birim tek başına <code>j</code> olarak yazılamaz, önünde katsayı bulunmalıdır: <code>1j</code>. Aksi hâlde Python <code>j</code>'yi tanımsız bir değişken sanar ve NameError verir."}, {"num": 70, "tag": "2022 vize", "text": "Aşağıdakilerden hangisi satırın devamını sağlayan kaçış karakteridir?", "options": [{"letter": "A", "text": "#"}, {"letter": "B", "text": ","}, {"letter": "C", "text": "-"}, {"letter": "D", "text": "?"}, {"letter": "E", "text": "\\"}], "correct": "E", "explanation": "Satır sonuna konan <b>ters bölü (\\)</b>, ifadenin bir alt satırdan devam ettiğini belirtir. Aynı karakter <code>\\n</code>, <code>\\t</code> gibi kaçış dizilerinin de başlangıcıdır."}, {"num": 71, "tag": "2023-2024 vize", "text": "print(\"Merhaba\\nDünya!\") — Yukarıdaki kod parçasının çıktısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Merhaba Dünya!"}, {"letter": "B", "text": "Merhaba\\nDünya!"}, {"letter": "C", "text": "Merhaba (alt satırda) Dünya!"}, {"letter": "D", "text": "Merhaba"}, {"letter": "E", "text": "Dünya!"}], "correct": "C", "explanation": "<code>\\n</code> satır sonu kaçış karakteridir; ekrana ilk satıra <b>Merhaba</b>, ikinci satıra <b>Dünya!</b> yazılır. Ters bölünün kendisi görünmez."}, {"num": 72, "tag": "2025-2026 vize", "text": "a, b, c = 5.0, True, 20 — Yukarıda verilenlere göre aşağıdakilerden hangisinde s bir tam sayıdır (int)?", "options": [{"letter": "A", "text": "s = a + b"}, {"letter": "B", "text": "s = a + c**2"}, {"letter": "C", "text": "s = 2.0 * (c >= a)"}, {"letter": "D", "text": "s = c // 3 - a"}, {"letter": "E", "text": "s = 2 * (c > a)"}], "correct": "E", "explanation": "a bir float olduğu için a'nın karıştığı her işlem float üretir (A, B, D). C şıkkında 2.0 zaten float'tır. E'de ise <code>c &gt; a</code> karşılaştırması <b>True</b> döndürür, <code>2 * True = 2</code> olur ve sonuç <b>int</b>'tir."}, {"num": 73, "tag": "2025-2026 final, 2024-2025 final", "text": "Aşağıda verilen seçeneklerin hangisinde z değişkeninin veri tipi tam sayıdır?", "options": [{"letter": "A", "text": "z = 97 // 2"}, {"letter": "B", "text": "z = 12 / 7"}, {"letter": "C", "text": "z = 1.1 ** 2"}, {"letter": "D", "text": "z = 30 * 1.0"}, {"letter": "E", "text": "z = 121 - 1.8"}], "correct": "A", "explanation": "<code>//</code> tam bölme operatörüdür ve iki taraf da int ise <b>int</b> döndürür (97//2 = 48). Buna karşılık tek bölü <code>/</code> her zaman float verir; float içeren diğer işlemler de float üretir."}, {"num": 74, "tag": "2024-2025 final", "text": "Aşağıda verilen seçeneklerin hangisinde yapılan veri tipi dönüşümü hata mesajı döndürür?", "options": [{"letter": "A", "text": "float(30)"}, {"letter": "B", "text": "int(2.5)"}, {"letter": "C", "text": "float(True)"}, {"letter": "D", "text": "bool(\"Elif\")"}, {"letter": "E", "text": "float(\"Elif\")"}], "correct": "E", "explanation": "Sayıya çevrilebilmesi için metnin sayı biçiminde olması gerekir; <code>float(\"Elif\")</code> <b>ValueError</b> verir. <code>bool(\"Elif\")</code> ise boş olmayan her metni True saydığı için hata vermez."}, {"num": 75, "tag": "2023-2024 final", "text": "Aşağıdaki operatörlerden hangisi üs alma (Örn: 5'in küpü) ifadesinin karşılığıdır?", "options": [{"letter": "A", "text": "**"}, {"letter": "B", "text": "=="}, {"letter": "C", "text": "//"}, {"letter": "D", "text": "*"}, {"letter": "E", "text": "/"}], "correct": "A", "explanation": "Üs alma operatörü <b>**</b>'dır: <code>5 ** 3 = 125</code>. <code>//</code> tam bölme, <code>==</code> eşitlik karşılaştırmasıdır."}, {"num": 76, "tag": "2023-2024 bütünleme", "text": "Aşağıdaki operatörlerden hangisi Python'da kullanılan bir karşılaştırma operatörüdür?", "options": [{"letter": "A", "text": "+"}, {"letter": "B", "text": "="}, {"letter": "C", "text": "not"}, {"letter": "D", "text": ">"}, {"letter": "E", "text": "and"}], "correct": "D", "explanation": "Karşılaştırma operatörleri <code>&gt; &lt; &gt;= &lt;= == !=</code>'dir. <code>=</code> atama, <code>and/not</code> mantıksal, <code>+</code> aritmetik operatördür."}, {"num": 77, "tag": "2022 final", "text": "Aşağıdakilerden hangisi ikili gösterim için doğrudur?", "options": [{"letter": "A", "text": "0x101"}, {"letter": "B", "text": "0b1010"}, {"letter": "C", "text": "0B1020"}, {"letter": "D", "text": "0o101"}, {"letter": "E", "text": "101"}], "correct": "B", "explanation": "İkili (binary) sayılar <b>0b</b> ön ekiyle yazılır ve yalnızca 0-1 rakamlarını içerebilir. <code>0x</code> onaltılık, <code>0o</code> sekizlik ön ekidir; <code>0B1020</code> içinde 2 geçtiği için geçersizdir."}, {"num": 78, "tag": "2025-2026 vize", "text": "metin = \"Kırk kırık küp\" olarak veriliyor. Buna göre aşağıdaki kod satırı çalıştırıldığında x'in değeri kaç olur?", "options": [{"letter": "A", "text": "10"}, {"letter": "B", "text": "11"}, {"letter": "C", "text": "0"}, {"letter": "D", "text": "14"}, {"letter": "E", "text": "4"}], "correct": "B", "explanation": "<code>len(metin)</code> boşluklarla birlikte <b>14</b>'tür. <code>find(\"k\", 0, 14)</code> küçük harfli ilk \"k\"yi arar; \"Kırk\" kelimesinin sonundaki k <b>3. indekstedir</b> (baştaki K büyük harf olduğu için sayılmaz). 14 − 3 = <b>11</b>."}, {"num": 79, "tag": "2025-2026 vize", "text": "Aşağıdakilerden hangisi Python'da koşul ifadeleri ile ilgili bir terim <u>değildir</u>?", "options": [{"letter": "A", "text": "if"}, {"letter": "B", "text": "elif"}, {"letter": "C", "text": "match-case"}, {"letter": "D", "text": "else"}, {"letter": "E", "text": "for"}], "correct": "E", "explanation": "if / elif / else ve 3.10 ile gelen match-case koşul yapılarıdır. <b>for</b> ise bir koşul değil, <b>döngü</b> deyimidir."}, {"num": 80, "tag": "2024-2025 final", "text": "Eğer hafta sonu hava güzelse, pikniğe giderim. Yukarıdaki örnek cümledekine benzer bir karar alma durumu Python programlamada aşağıdaki yapılardan hangisi ile temsil edilebilir?", "options": [{"letter": "A", "text": "Fonksiyonlar"}, {"letter": "B", "text": "Sınıflar"}, {"letter": "C", "text": "Koşul ifadeleri"}, {"letter": "D", "text": "Döngüler"}, {"letter": "E", "text": "Paketler"}], "correct": "C", "explanation": "\"Eğer ... ise ... yaparım\" kalıbı doğrudan <code>if</code> yapısına karşılık gelir. Döngüler tekrar, fonksiyonlar yeniden kullanılabilir kod bloğu, sınıflar nesne şablonu içindir."}, {"num": 81, "tag": "2022 vize", "text": "Yukarıdaki kod çalıştırıldığında ekranda aşağıdaki seçeneklerden hangisi görülecektir?", "options": [{"letter": "A", "text": "Elif"}, {"letter": "B", "text": "Ahmet"}, {"letter": "C", "text": "Ayşe"}, {"letter": "D", "text": "Boş ekran gelir."}, {"letter": "E", "text": "Merhaba"}], "correct": "E", "explanation": "<code>or</code> operatöründe taraflardan birinin doğru olması yeter: <code>x &lt;= y</code> yanlış ama <code>x == 10</code> doğrudur. Bu yüzden ilk blok çalışır, <b>Merhaba</b> yazılır ve else bloğuna hiç girilmez."}, {"num": 82, "tag": "2025-2026 final", "text": "Yukarıda verilen Python kod bloğu çalıştırıldığında aşağıdaki seçeneklerden hangisi döndürülür?", "options": [{"letter": "A", "text": "beyaz"}, {"letter": "B", "text": "#000000"}, {"letter": "C", "text": "sarı"}, {"letter": "D", "text": "kirmizi"}, {"letter": "E", "text": "sari"}], "correct": "B", "explanation": "Değişkenin değeri Türkçe karakterli <b>\"sarı\"</b>, karşılaştırma ise noktasız <b>\"sari\"</b> ile yapılıyor. Bu iki metin eşit olmadığı için hiçbir koşul tutmaz ve <code>else</code> bloğundaki <b>#000000</b> yazdırılır."}, {"num": 83, "tag": "2024-2025 vize", "text": "Yukarıda verilen Python kodları ile ilgili aşağıdaki seçeneklerden hangisi <u>doğrudur</u>?", "options": [{"letter": "A", "text": "Kod bloğunun hatasız çalışması için if bloğundan sonra mutlaka else bloğu eklenmelidir."}, {"letter": "B", "text": "Kod bloğunun hatasız çalışması için 2. satırda = yerine == kullanılmalıdır."}, {"letter": "C", "text": "Kod bloğunun hatasız çalışması için if bloğundan sonra mutlaka elif bloğu eklenmelidir."}, {"letter": "D", "text": "Kod bloğunun hatasız çalışması için 1. satırda = yerine == kullanılmalıdır."}, {"letter": "E", "text": "Python kod bloğu hata vermeden çalıştırılır."}], "correct": "B", "explanation": "<code>if siparis = \"latte\"</code> satırında <b>atama</b> operatörü kullanılmış; koşulda <b>karşılaştırma</b> operatörü <code>==</code> olmalıdır, aksi hâlde SyntaxError alınır. if'ten sonra else/elif zorunlu değildir."}, {"num": 84, "tag": "2024-2025 final", "text": "Yukarıdaki Python kodunda ... ile verilen boşluğun aşağıdaki seçeneklerin hangisi ile tamamlanması uygun olur?", "options": [{"letter": "A", "text": "and"}, {"letter": "B", "text": "else"}, {"letter": "C", "text": "match"}, {"letter": "D", "text": "elif"}, {"letter": "E", "text": "case"}], "correct": "D", "explanation": "if ile else arasında <b>ikinci bir koşul</b> sınanacaksa <code>elif deger &lt; 0:</code> yazılır. <code>else</code> koşul almaz, <code>and</code> mantıksal operatördür."}, {"num": 85, "tag": "2023-2024 vize", "text": "Yukarıdaki kod parçasında, kullanıcı 123456 girer ise, ekrana hangi çıktı verilir?", "options": [{"letter": "A", "text": "Büyük ikramiyeyi kazandınız! / Amorti kazandınız!"}, {"letter": "B", "text": "Kazanmadınız."}, {"letter": "C", "text": "Amorti kazandınız!"}, {"letter": "D", "text": "Büyük ikramiyeyi kazandınız!"}, {"letter": "E", "text": "Büyük ikramiyeyi kazandınız! / Kazanmadınız."}], "correct": "A", "explanation": "Burada <b>iki ayrı if</b> vardır. Birincisi 123456 == 123456 olduğu için \"Büyük ikramiyeyi kazandınız!\" yazar. İkinci if bağımsızdır: 123456 % 10 = 6, amorti2 ile eşit olduğundan \"Amorti kazandınız!\" da yazılır. else yalnızca ikinci if'e bağlıdır."}, {"num": 86, "tag": "2023-2024 vize", "text": "Yukarıdaki kod parçasında, bilet değişkeninin değeri 123457 ise, ekrana hangi çıktı verilir?", "options": [{"letter": "A", "text": "Kazanmadınız."}, {"letter": "B", "text": "Belirtilen değere göre değişir."}, {"letter": "C", "text": "Hata verir."}, {"letter": "D", "text": "Tebrikler büyük ikramiyeyi kazandınız!"}, {"letter": "E", "text": "Amorti kazandınız!"}], "correct": "C", "explanation": "Bu kod parçasında <code>buyuk_ikramiye</code>, <code>amorti1</code> ve <code>amorti2</code> hiç tanımlanmamıştır. İlk karşılaştırma satırında Python <b>NameError</b> fırlatır, program çıktı üretmeden durur."}, {"num": 87, "tag": "2024-2025 bütünleme", "text": "Yukarıda verilen kod bloğu çalıştırıldığında aşağıdakilerden hangisi döndürülür?", "options": [{"letter": "A", "text": "Hata mesajı."}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "True"}, {"letter": "D", "text": "False"}, {"letter": "E", "text": "0"}], "correct": "B", "explanation": "Farklı tipteki iki değer <code>!=</code> ile karşılaştırılabilir; <code>1 != \"iki\"</code> sonucu <b>True</b>'dur. Bu yüzden if bloğu çalışır ve <code>bir</code> değişkeninin değeri olan <b>1</b> ekrana yazılır."}, {"num": 88, "tag": "2022 vize", "text": "Yukarıda verilmiş olan kod çalıştırıldıktan sonra, klavyeden sayi1 için 10, sayi2 için 20 ve islem için - girilirse çıkan sonuç ekranda nasıl görünür?", "options": [{"letter": "A", "text": "Yanlış işlem girdiniz"}, {"letter": "B", "text": "TypeError: unsupported operand type(s) for -: 'int' and 'str'"}, {"letter": "C", "text": "10 * 20 = 200"}, {"letter": "D", "text": "10 - 20 = -10"}, {"letter": "E", "text": "10 + 20 = -10"}], "correct": "D", "explanation": "Girdiler <code>int()</code> ile sayıya çevrildiği için tip hatası oluşmaz. islem \"-\" olduğundan <code>elif</code> dalı çalışır ve <code>format()</code> ile <b>10 - 20 = -10</b> yazdırılır."}, {"num": 89, "tag": "2022 final", "text": "….x ….60 ….y ….70: print(\"Merhaba Dünya\") — Yukarıda verilmiş olan Python kodunda, x değişkeni değerinin 60'dan farklı ve y değişkeninin değerinin 70'den büyük olması durumunda ekrana Merhaba Dünya yazdırmak için boş bırakılan yerlere sırasıyla aşağıdaki seçeneklerden hangisi eklenmelidir?", "options": [{"letter": "A", "text": "if , != , not , >"}, {"letter": "B", "text": "if , == , and , >"}, {"letter": "C", "text": "if , != , and , >"}, {"letter": "D", "text": "if , != , or , >"}, {"letter": "E", "text": "if , == , or , >"}], "correct": "C", "explanation": "\"60'tan farklı\" → <code>x != 60</code>, \"ve\" → <code>and</code>, \"70'ten büyük\" → <code>y &gt; 70</code>. Yapı da bir <code>if</code> ile başlamalıdır: <code>if x != 60 and y &gt; 70:</code>"}, {"num": 90, "tag": "2022 vize", "text": "Yukarıda kullanıcının girdiği iki sayı birbirine eşitse bu sayının 4'e göre modunu alıp ekrana yazdıran python kodu bulunmaktadır. Programın düzgün çalışması için 1, 2, 3, 4 ve 5. satırlarda bulunan ….. ifadesi yerine gelmesi gereken operatör ve ifadeler aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "1. satır int / 2. satır int / 3. satır == / 4. satır % / 5. satır else:"}, {"letter": "B", "text": "1. satır int / 2. satır int / 3. satır != / 4. satır // / 5. satır elif sayi1 == sayi2:"}, {"letter": "C", "text": "1. satır int / 2. satır int / 3. satır = / 4. satır // / 5. satır elif sayi1 != sayi2:"}, {"letter": "D", "text": "1. satır int / 2. satır int / 3. satır != / 4. satır % / 5. satır elif sayi1 == sayi2:"}, {"letter": "E", "text": "1. satır int / 2. satır int / 3. satır = / 4. satır % / 5. satır elif sayi1 != sayi2:"}], "correct": "A", "explanation": "Girdiler sayıya çevrilmeli (<code>int</code>), eşitlik <code>==</code> ile sınanmalı, mod <code>%</code> ile alınmalı ve \"eşit değilse\" durumu için <code>else:</code> yeterlidir. <code>=</code> koşulda kullanılamaz, <code>//</code> mod değil tam bölmedir."}, {"num": 91, "tag": "2023-2024 vize", "text": "Yukardaki kod Python 3.9 ile çalıştırıldığında ekrana ne yazar?", "options": [{"letter": "A", "text": "Çalışmaz hata üretir."}, {"letter": "B", "text": "İşlemci üreticinizi tanıyamadık."}, {"letter": "C", "text": "İşlemci üreticiniz AMD'dir."}, {"letter": "D", "text": "İşlemci üreticiniz ARM'dir."}, {"letter": "E", "text": "İşlemci üreticiniz Intel'dir."}], "correct": "A", "explanation": "<code>match/case</code> yapısı Python'a <b>3.10</b> sürümüyle girmiştir. 3.9'da bu söz dizimi tanınmaz ve SyntaxError alınır; kod hiç çalışmadığı için içerideki mantık (lower() sonrası \"intel\") önemsizdir."}, {"num": 92, "tag": "2023-2024 final", "text": "Aşağıdaki deyimlerden hangisi python 3.10 ile birlikte gelmiştir?", "options": [{"letter": "A", "text": "while"}, {"letter": "B", "text": "if"}, {"letter": "C", "text": "if/else"}, {"letter": "D", "text": "match/case"}, {"letter": "E", "text": "for"}], "correct": "D", "explanation": "Yapısal desen eşleme (<b>structural pattern matching</b>), yani <code>match/case</code>, Ekim 2021'de yayımlanan <b>Python 3.10</b> ile eklenmiştir. Diğerleri dilin ilk sürümlerinden beri vardır."}, {"num": 93, "tag": "2022 final", "text": "match/case koşul ifadesi kaç yılında Python diline entegre edilmiştir?", "options": [{"letter": "A", "text": "2021"}, {"letter": "B", "text": "2010"}, {"letter": "C", "text": "2020"}, {"letter": "D", "text": "1999"}, {"letter": "E", "text": "2022"}], "correct": "A", "explanation": "match/case, Python 3.10 ile birlikte <b>2021</b>'de dile eklenmiştir."}, {"num": 94, "tag": "2022 vize", "text": "Aşağıdaki deyimlerden hangisi koşullu döngüdür?", "options": [{"letter": "A", "text": "if"}, {"letter": "B", "text": "while"}, {"letter": "C", "text": "if else"}, {"letter": "D", "text": "match / case"}, {"letter": "E", "text": "for"}], "correct": "B", "explanation": "<b>while</b> döngüsü, koşul doğru olduğu sürece tekrar eder; bu yüzden \"koşullu döngü\" denir. <code>for</code> ise bir dizi/aralık üzerinde gezen sayaçlı döngüdür, if ise döngü değildir."}, {"num": 95, "tag": "2023-2024 vize", "text": "while döngüsünü kullanırken, döngünün ne zaman sonlanacağını dikkatlice düşünmeniz gerekir. Aksi takdirde, döngü sonsuza kadar dönebilir. Bu sorunu önlemek için, döngünün ne zaman sonlanacağını belirleyen bir …… ifadesi kullanmanız gerekir.", "options": [{"letter": "A", "text": "işlem"}, {"letter": "B", "text": "algoritma"}, {"letter": "C", "text": "for"}, {"letter": "D", "text": "deyim"}, {"letter": "E", "text": "koşul"}], "correct": "E", "explanation": "while döngüsü, kendisine verilen <b>koşul</b> False olana kadar döner. Koşulu değiştirecek bir işlem yoksa (örneğin sayaç artmıyorsa) sonsuz döngü oluşur."}, {"num": 96, "tag": "2023-2024 bütünleme", "text": "While döngüsü için aşağıdakilerden hangisi <u>her zaman</u> doğrudur?", "options": [{"letter": "A", "text": "Koşul ifadesinin \"True\" (doğru) olmasına bağlıdır."}, {"letter": "B", "text": "Sadece yazılım geliştiricinin kontrolüne bağlıdır."}, {"letter": "C", "text": "Belirli bir sayıya ulaştığında sonlanır."}, {"letter": "D", "text": "Belli bir süre sonra otomatik olarak sonlanır."}, {"letter": "E", "text": "Her zaman çalışır."}], "correct": "A", "explanation": "while'ın tek garantisi şudur: koşul <b>True</b> olduğu sürece gövde tekrar eder, False olduğu anda döngü biter. Otomatik sonlanma ya da belirli bir sayıya ulaşma garantisi yoktur."}, {"num": 97, "tag": "2025-2026 final, 2025-2026 bütünleme", "text": "Yukarıdaki Python kodları ile bir \"sonsuz döngü\" elde edilebilmesi için kaç numaralı kod satırı silinmelidir?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "5"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "1"}], "correct": "B", "explanation": "Döngüyü bitiren şey <code>i = i + 1</code> satırıdır; o silinirse i hep 0 kalır, <code>i &lt; 500</code> koşulu asla bozulmaz ve döngü sonsuza kadar döner. 2. satırdaki <code>sayac</code> hiç kullanılmayan bir çeldiricidir."}, {"num": 98, "tag": "2024-2025 bütünleme", "text": "Yukarıda verilen Python kod bloğunda kaç numaralı satır silinirse bir sonsuz döngü elde edilir?", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "5"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "3"}], "correct": "B", "explanation": "Sayaç artırımı olan <code>j = j + 1</code> (4. satır) silinirse j hep 0 kalır ve <code>j &lt; 10</code> koşulu hiç bozulmaz. 5. satır sadece ekrana yazdırır, döngünün bitişini etkilemez."}, {"num": 99, "tag": "2023-2024 vize", "text": "Atlama deyimleri döngüler içerisinde koşulların sağlanmadığı durumlarda işlemi iptal etmek, işlem yapmamak veya atlamak için kullanılan deyimlerdir. ….. kod akışını bir daha dönmemek üzere blok sonuna aktarır …… bulunduğu noktadan sonraki deyimleri çalıştırmadan ilk başa döndürür. ….. hiçbir işlem yapılmayacak yapılarda kullanılır. Yukarıdaki paragraftaki boşluklara sırasıyla aşağıdakilerden hangileri gelmelidir?", "options": [{"letter": "A", "text": "pass, continue, break"}, {"letter": "B", "text": "break, continue, pass"}, {"letter": "C", "text": "for, while, break"}, {"letter": "D", "text": "break, pass, continue"}, {"letter": "E", "text": "for, break, pass"}], "correct": "B", "explanation": "<b>break</b> döngüyü tamamen bitirir, <b>continue</b> o turu atlayıp döngünün başına döner, <b>pass</b> ise \"hiçbir şey yapma\" anlamına gelen yer tutucudur."}, {"num": 100, "tag": "2023-2024 bütünleme", "text": "Aşağıdaki deyimlerden hangisi atlama deyimidir?", "options": [{"letter": "A", "text": "break()"}, {"letter": "B", "text": "return()"}, {"letter": "C", "text": "class()"}, {"letter": "D", "text": "print()"}, {"letter": "E", "text": "input()"}], "correct": "A", "explanation": "Atlama (jump) deyimleri <b>break</b>, <b>continue</b> ve <b>pass</b>'tir; break döngüyü sonlandırır. (Şıkta parantezle yazılmış olması yalnızca kitapçığın yazım tercihidir; break bir fonksiyon değil anahtar sözcüktür.)"}, {"num": 101, "tag": "2022 vize", "text": "Yukarıdaki kod çalıştırıldığında ekranda görülecek ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,1,2,3,4"}, {"letter": "B", "text": "0,1,2,3,4,"}, {"letter": "C", "text": "0,1,2,3,4,5,6,7,8,9,10"}, {"letter": "D", "text": "0,1,2,3,4,5"}, {"letter": "E", "text": "0,1,2,3,4,5,"}], "correct": "B", "explanation": "Döngü i=5 olduğunda <code>break</code> ile kesilir, yani yalnızca 0-4 yazdırılır. <code>end=\",\"</code> her sayıdan <b>sonra</b> virgül koyduğu için çıktı sondaki virgülle birlikte \"0,1,2,3,4,\" olur."}, {"num": 102, "tag": "2024-2025 bütünleme", "text": "Yukarıdaki Python döngüsü çalıştırıldığında aşağıdaki seçeneklerden hangisi döndürülür?", "options": [{"letter": "A", "text": "0 100 200 300 400"}, {"letter": "B", "text": "100 200 300 400 500"}, {"letter": "C", "text": "0 100"}, {"letter": "D", "text": "0 100 200 300 400 500"}, {"letter": "E", "text": "0 500"}], "correct": "A", "explanation": "<code>range(0, 500, 100)</code> 0'dan başlar, 100'er artar ve <b>bitiş değeri olan 500'ü içermez</b>. Bu yüzden 0, 100, 200, 300, 400 yazdırılır."}, {"num": 103, "tag": "2025-2026 final, 2025-2026 bütünleme, 2024-2025 final", "text": "Yukarıdaki Python kodları çalıştırıldığında ekrana kaç adet + yazdırılır?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "2"}, {"letter": "D", "text": "5"}, {"letter": "E", "text": "0"}], "correct": "A", "explanation": "Eşik 60'tır ve <code>&gt;=</code> kullanılmıştır. Listedeki 145, 728, 110 ve 60 bu koşulu sağlar (<b>60 dahil!</b>), yani 4 kez + yazdırılır; 8, 40, 27 ve 59 için - yazılır."}, {"num": 104, "tag": "2025-2026 final, 2024-2025 final", "text": "Yukarıda verilen Python kodları ile 5 dışında kalan tüm elemanların toplamı elde edilmek isteniyor. Buna göre … ile belirtilen boşluğa aşağıdaki seçeneklerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "top"}, {"letter": "B", "text": "say"}, {"letter": "C", "text": "continue"}, {"letter": "D", "text": "pass"}, {"letter": "E", "text": "break"}], "correct": "C", "explanation": "İndeksi 2 olan eleman 5'tir; sayaç bir artırıldıktan sonra <b>o turun kalanını atlamak</b> gerekir. Bunu yapan deyim <code>continue</code>'dur. <code>break</code> döngüyü tamamen bitirir, <code>pass</code> ise hiçbir şey yapmadığı için 5 yine toplanırdı."}, {"num": 105, "tag": "2025-2026 bütünleme, 2024-2025 final", "text": "Yukarıdaki ekran görüntüsünün elde edilebilmesi için aşağıda ... ile verilen boşluğa aşağıdaki seçeneklerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "for j in range(i, len(A))"}, {"letter": "B", "text": "for j in range(0, i)"}, {"letter": "C", "text": "for i in range(0, i+1)"}, {"letter": "D", "text": "for j in range(0, i+1)"}, {"letter": "E", "text": "for j in range(0, i)"}], "correct": "D", "explanation": "Her satırda baştan i'ninci harfe kadar yazılmalı; bu da <code>range(0, i+1)</code> demektir (i dahil). Sayaç adı <b>j</b> olmalıdır, <code>i</code> kullanılırsa dış döngünün sayacı bozulur. <code>range(0, i)</code> son harfi eksik bırakırdı."}, {"num": 106, "tag": "2024-2025 bütünleme", "text": "Python'da liste, demet, sözlük ve kümeler için aşağıda verilenlerden hangisi <u>yanlıştır</u>?", "options": [{"letter": "A", "text": "Listeler değişir (mutable) yapılardır."}, {"letter": "B", "text": "Küme ve sözlükler tanımlanırken { } parantezlerinden faydalanılır."}, {"letter": "C", "text": "Demetler değişir (mutable) yapılardır."}, {"letter": "D", "text": "Kümelerde benzersiz elemanlar yer alır."}, {"letter": "E", "text": "Sözlük sıralı değildir, anahtar-değer çiftleri bulunur."}], "correct": "C", "explanation": "<b>Demet (tuple) değişmezdir (immutable)</b>: oluşturulduktan sonra elemanı değiştirilemez, eklenemez, silinemez. Değişebilen yapı listedir."}, {"num": 107, "tag": "2025-2026 vize", "text": "A = [3, 5, 7, 9, 11] veriliyor. Listenin ilk elemanı olarak 1'in eklenebilmesi için aşağıdaki seçeneklerden hangisi çalıştırılmalıdır?", "options": [{"letter": "A", "text": "A.insert(0, 1)"}, {"letter": "B", "text": "A.insert(1)"}, {"letter": "C", "text": "A.append(1)"}, {"letter": "D", "text": "A.insert(1, 0)"}, {"letter": "E", "text": "A.append(1,0)"}], "correct": "A", "explanation": "<code>insert(indeks, değer)</code> imzasını alır; başa eklemek için indeks <b>0</b> olmalıdır. <code>append()</code> sona ekler ve tek argüman alır; <code>insert(1, 0)</code> ise 1. indekse 0 koyardı."}, {"num": 108, "tag": "2022 final", "text": "Aşağıdaki seçeneklerden hangisi demet tanımlamasına örnek <u>değildir</u>?", "options": [{"letter": "A", "text": "e=(\"Demet\")"}, {"letter": "B", "text": "b=(\"Demet\",)"}, {"letter": "C", "text": "d=(\"Hakan\",1,3,4)"}, {"letter": "D", "text": "c=12,33,44"}, {"letter": "E", "text": "a=()"}], "correct": "A", "explanation": "Virgül olmadan parantez yalnızca gruplama yapar; <code>(\"Demet\")</code> bir <b>str</b>'dir. Demet için virgül şarttır — nitekim <code>c = 12,33,44</code> parantezsiz bile demettir, <code>()</code> ise boş demettir."}, {"num": 109, "tag": "2025-2026 vize", "text": "x = (0, 1, 2, 3) veriliyor. Buna göre aşağıdaki kod satırı çalıştırıldığında hangi seçenek döner?", "options": [{"letter": "A", "text": "5, 2 ile 3'ün arasına eklenir."}, {"letter": "B", "text": "x'te 1 yerine 5 atanır."}, {"letter": "C", "text": "x'te 2 yerine 5 atanır."}, {"letter": "D", "text": "x, veri yapısı gereği eleman atanması işlemine izin vermez, hata mesajı döndürülür."}, {"letter": "E", "text": "5, 1 ile 2'nin arasında eklenir."}], "correct": "D", "explanation": "x bir <b>demettir ve değişmezdir</b>; <code>x[2] = 5</code> satırı <code>TypeError: 'tuple' object does not support item assignment</code> hatası verir."}, {"num": 110, "tag": "2023-2024 final", "text": "demet = (1, 2, 3, 4, 5) — print(demet[1:3]) — Yukarıdaki kod çalıştığında aşağıdaki hangi sonucu döndürür?", "options": [{"letter": "A", "text": "(3, 4)"}, {"letter": "B", "text": "(1, 2)"}, {"letter": "C", "text": "(5, 1)"}, {"letter": "D", "text": "(2, 3)"}, {"letter": "E", "text": "(4, 5)"}], "correct": "D", "explanation": "Dilimlemede <b>başlangıç dahil, bitiş hariçtir</b>: 1. ve 2. indeksler alınır, yani <b>(2, 3)</b>. 3. indeksteki 4 dahil edilmez."}, {"num": 111, "tag": "2024-2025 vize, 2025-2026 vize", "text": "Python'da x = [1, 3, 5, 7, 9] gibi bir liste veriliyor. Aşağıdaki seçeneklerin hangisi bu liste elemanlarının <u>tersten</u> yazdırılmasını sağlar?", "options": [{"letter": "A", "text": "x[-1:]"}, {"letter": "B", "text": "x[: 1]"}, {"letter": "C", "text": "x[: : 1]"}, {"letter": "D", "text": "x[: : -1]"}, {"letter": "E", "text": "x[:1:]"}], "correct": "D", "explanation": "Dilimlemenin üçüncü parametresi <b>adım</b>dır. Adım <code>-1</code> olunca liste sondan başa taranır: <code>[9, 7, 5, 3, 1]</code>. <code>x[::1]</code> listeyi aynen kopyalar, <code>x[-1:]</code> yalnızca son elemanı verir."}, {"num": 112, "tag": "2025-2026 final", "text": "Python'da islem listesi tanımlanıyor. Buna göre aşağıdaki Python kodu hangi seçeneği döndürür?", "options": [{"letter": "A", "text": "['peynir', 'yumurta', 'süt']"}, {"letter": "B", "text": "['ekmek', 'zeytin', 'yumurta']"}, {"letter": "C", "text": "['yumurta', 'zeytin', 'ekmek']"}, {"letter": "D", "text": "['ekmek', 'bal', 'zeytin', 'peynir', 'yumurta', 'süt']"}, {"letter": "E", "text": "['süt', 'yumurta', 'peynir', 'zeytin', 'bal', 'ekmek']"}], "correct": "B", "explanation": "Adım <b>-2</b> olduğu için sondan başa doğru <b>birer atlayarak</b> gidilir: ekmek (5. indeks) → zeytin (3) → yumurta (1). Sonuç <code>['ekmek', 'zeytin', 'yumurta']</code>."}, {"num": 113, "tag": "2024-2025 final", "text": "l1 = [1, 5, 15, 5] — l1.remove(5) — Yukarıda verilen kod satırı çalıştırıldığında l1'in son durumu hangi seçenekte doğru biçimde verilmiştir?", "options": [{"letter": "A", "text": "[1, 5, 15]"}, {"letter": "B", "text": "[1, 1]"}, {"letter": "C", "text": "[5, 1, 5, 15, 5]"}, {"letter": "D", "text": "[1, 15, 5]"}, {"letter": "E", "text": "[1, 5, 15, 5, 5]"}], "correct": "D", "explanation": "<code>remove()</code> yalnızca <b>ilk eşleşen elemanı</b> siler. İlk 5 (1. indeks) çıkarılır, sondaki 5 listede kalır: <code>[1, 15, 5]</code>."}, {"num": 114, "tag": "2022 final", "text": "a = [67,90,22,33,44] — a.extend([12,33]) — a.remove(44) — print(a[3:7]) — Yukarıdaki kodun çıktısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "[33,44,12]"}, {"letter": "B", "text": "[33,12]"}, {"letter": "C", "text": "[22,33,44,12]"}, {"letter": "D", "text": "[44,22,33,12]"}, {"letter": "E", "text": "[33, 12, 33]"}], "correct": "E", "explanation": "<code>extend</code> sonrası liste <code>[67,90,22,33,44,12,33]</code> olur; <code>remove(44)</code> ile <code>[67,90,22,33,12,33]</code> kalır. 3'ten 6'ya kadar dilim (7 hariç) <b>[33, 12, 33]</b> verir."}, {"num": 115, "tag": "2022 final", "text": "a = [67,90,22,33,44] — print(a[-2]) — Yukarıdaki kodun çıktısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "44"}, {"letter": "B", "text": "67"}, {"letter": "C", "text": "33"}, {"letter": "D", "text": "90"}, {"letter": "E", "text": "22"}], "correct": "C", "explanation": "Negatif indeks sondan sayar: <code>a[-1]</code> = 44, <code>a[-2]</code> = <b>33</b>."}, {"num": 116, "tag": "2023-2024 bütünleme", "text": "x = [1, 2, 3] — x.append(4) — print(x) — Yukarıdaki kod çalıştıktan sonra x listesinin değeri aşağıdakilerden hangisi olur?", "options": [{"letter": "A", "text": "[1,2,3,4]"}, {"letter": "B", "text": "[4,1,2,3]"}, {"letter": "C", "text": "[1,4,3,2]"}, {"letter": "D", "text": "[1,4,2,3]"}, {"letter": "E", "text": "[1,2,4,3]"}], "correct": "A", "explanation": "<code>append()</code> yeni elemanı her zaman <b>listenin sonuna</b> ekler. Başa eklemek için <code>insert(0, 4)</code> kullanılırdı."}, {"num": 117, "tag": "2023-2024 bütünleme", "text": "liste = [\"a\", \"b\", \"c\", \"d\"] — liste.clear() — print(liste) — Yukarıdaki kod hangi sonucu döndürür?", "options": [{"letter": "A", "text": "None"}, {"letter": "B", "text": "[\"a\", \"b\", \"c\", \"d\"]"}, {"letter": "C", "text": "TypeError"}, {"letter": "D", "text": "liste"}, {"letter": "E", "text": "[]"}], "correct": "E", "explanation": "<code>clear()</code> listenin tüm elemanlarını siler ama listeyi yok etmez; geriye <b>boş liste</b> <code>[]</code> kalır. (<code>del liste</code> deseydik değişkenin kendisi silinirdi.)"}, {"num": 118, "tag": "2023-2024 final", "text": "liste = [1, 2, 3, 4, 5] — yeni_liste = liste — liste.pop() — print(liste) — Yukarıdaki kodun çıktısı aşağıdakilerden hangisi olmalıdır?", "options": [{"letter": "A", "text": "[1, 2, 3, 4]"}, {"letter": "B", "text": "[1, 2, 3, 4, 5]"}, {"letter": "C", "text": "None"}, {"letter": "D", "text": "Hata üretir"}, {"letter": "E", "text": "[2, 3, 4, 5]"}], "correct": "A", "explanation": "Argümansız <code>pop()</code> <b>son elemanı</b> çıkarır, geriye <code>[1, 2, 3, 4]</code> kalır. Not: <code>yeni_liste</code> aynı nesneyi işaret ettiği için o da değişmiştir (kopya değil, referans)."}, {"num": 119, "tag": "2023-2024 bütünleme", "text": "Aşağıdakilerden hangisi Python'da bir liste oluşturmanın doğru yoludur?", "options": [{"letter": "A", "text": "liste = (1, 2, 3)"}, {"letter": "B", "text": "liste = {1, 2, 3}"}, {"letter": "C", "text": "liste = dict(1, 2, 3)"}, {"letter": "D", "text": "liste = {1, 2, 3: \"değer\"}"}, {"letter": "E", "text": "liste = [1, 2, 3]"}], "correct": "E", "explanation": "Liste <b>köşeli parantez</b> ile tanımlanır. Normal parantez demet, süslü parantez küme/sözlük oluşturur."}, {"num": 120, "tag": "2024-2025 vize, 2025-2026 vize", "text": "a = {\"1\": \"2\", \"3\": \"4\", \"5\": \"6\", \"7\": \"8\"} — list(a.values()) — Yukarıdaki Python kod bloğu çalıştırıldığında aşağıdaki seçeneklerden hangisi döndürülür?", "options": [{"letter": "A", "text": "['2', '4', '6', '8']"}, {"letter": "B", "text": "['8', '6', '4', '2']"}, {"letter": "C", "text": "['1', '3', '5', '7']"}, {"letter": "D", "text": "['1', '2', '3', '4', '5', '6', '7', '8']"}, {"letter": "E", "text": "[ ]"}], "correct": "A", "explanation": "<code>values()</code> sözlüğün <b>değerlerini</b> ekleme sırasıyla döndürür; <code>list()</code> ile listeye çevrilir. Anahtarlar için <code>keys()</code>, ikili için <code>items()</code> kullanılır."}, {"num": 121, "tag": "2024-2025 vize", "text": "tatil = {\"deniz\", \"gunes\", \"kum\"} — tatil.pop() — Yukarıdaki Python kod bloğu çalıştırıldığında aşağıdakilerden hangisi gerçekleşir?", "options": [{"letter": "A", "text": "kum elemanı kümeden çıkarılır."}, {"letter": "B", "text": "gunes elemanı kümeden çıkarılır."}, {"letter": "C", "text": "deniz elemanı kümeden çıkarılır."}, {"letter": "D", "text": "Kümeler için pop() adlı bir fonksiyon tanımlı olmadığından kod bloğu çalıştırıldığında hata mesajı döndürülür."}, {"letter": "E", "text": "tatil kümesi tamamen kaldırılır."}], "correct": "C", "explanation": "Kümelerde <code>pop()</code> tanımlıdır ve <b>rastgele/keyfi</b> bir eleman çıkarır (küme sırasızdır). Kitapçık, ders örneğindeki çıktıya göre \"deniz\" cevabını doğru saymıştır."}, {"num": 122, "tag": "2023-2024 final", "text": "s1 = {1, 2, 3, 4, 5} — s2 = {2, 3, 4, 5, 6} — print(s1.difference(s2)) — Yukarıdaki kod çalıştığında aşağıdaki hangi sonucu döndürür?", "options": [{"letter": "A", "text": "{2, 3, 4, 5}"}, {"letter": "B", "text": "{1}"}, {"letter": "C", "text": "{6}"}, {"letter": "D", "text": "{1, 6, 7}"}, {"letter": "E", "text": "{1, 6}"}], "correct": "B", "explanation": "<b>Fark (difference)</b>, s1'de olup s2'de olmayan elemanları verir; bu da yalnızca <b>{1}</b>'dir. İki yönlü fark istenseydi <code>symmetric_difference()</code> ile {1, 6} bulunurdu."}, {"num": 123, "tag": "2024-2025 final", "text": "k1 = {1, 0, 8, 9, 99} ve k2 = {7, 8, 11, 9} — Yukarıdaki Python kodları yardımı ile iki küme tanımlanıyor. Bu durumda {0, 1, 7, 8, 9, 11, 99} elde edilmesi için aşağıdaki kod satırlarından hangisi çalıştırılmalıdır?", "options": [{"letter": "A", "text": "k1 and k2"}, {"letter": "B", "text": "k1 | k2"}, {"letter": "C", "text": "k1 & k2"}, {"letter": "D", "text": "k2 - k1"}, {"letter": "E", "text": "k1 - k2"}], "correct": "B", "explanation": "İstenen sonuç iki kümenin <b>birleşimidir</b>; bu da <code>|</code> operatörü (ya da <code>union()</code>) ile elde edilir. <code>&</code> kesişim, <code>-</code> fark verir; <code>and</code> küme operatörü değildir."}, {"num": 124, "tag": "2022 final", "text": "Bir nesnenin uzunluğunu döndüren fonksiyon aşağıdaki seçeneklerden hangisidir?", "options": [{"letter": "A", "text": "abs()"}, {"letter": "B", "text": "print()"}, {"letter": "C", "text": "input()"}, {"letter": "D", "text": "len()"}, {"letter": "E", "text": "length()"}], "correct": "D", "explanation": "Uzunluk için yerleşik <b>len()</b> kullanılır. <code>length()</code> diye bir Python fonksiyonu yoktur (bu Java/JS alışkanlığıdır)."}, {"num": 125, "tag": "2022 vize", "text": "Bir sayının mutlak değerini döndüren yerleşik fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "max()"}, {"letter": "B", "text": "abs()"}, {"letter": "C", "text": "len()"}, {"letter": "D", "text": "min()"}, {"letter": "E", "text": "mutlak()"}], "correct": "B", "explanation": "<code>abs(-7)</code> → 7. Mutlak değer için <b>abs()</b> kullanılır; <code>mutlak()</code> diye bir fonksiyon yoktur."}, {"num": 126, "tag": "2023-2024 bütünleme", "text": "Bir dizinin en büyük elemanını döndüren yerleşik fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "sum()"}, {"letter": "B", "text": "max()"}, {"letter": "C", "text": "abs()"}, {"letter": "D", "text": "min()"}, {"letter": "E", "text": "buyuk()"}], "correct": "B", "explanation": "<code>max()</code> en büyüğü, <code>min()</code> en küçüğü, <code>sum()</code> toplamı döndürür."}, {"num": 127, "tag": "2023-2024 bütünleme", "text": "bool(a) işlemi ne işe yarar?", "options": [{"letter": "A", "text": "a değişkenini karmaşık bir sayıya dönüştürür."}, {"letter": "B", "text": "a değişkenini mantıksal bir değere dönüştürür."}, {"letter": "C", "text": "a değişkenini ondalıklı bir sayıya dönüştürür."}, {"letter": "D", "text": "a değişkenini tamsayıya dönüştürür."}, {"letter": "E", "text": "a değişkenini karakter dizisine dönüştürür."}], "correct": "B", "explanation": "<code>bool()</code> değeri <b>True/False</b>'a çevirir. Kural basittir: 0, boş metin, boş liste ve None → False; diğer her şey → True."}, {"num": 128, "tag": "2023-2024 vize", "text": "Mantıksal 've' fonksiyonu ile aynı olan yerleşik fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "all"}, {"letter": "B", "text": "min"}, {"letter": "C", "text": "any"}, {"letter": "D", "text": "abs"}, {"letter": "E", "text": "sum"}], "correct": "A", "explanation": "<code>all(dizi)</code> yalnızca <b>tüm</b> elemanlar doğruysa True döner; bu da mantıksal <b>ve (and)</b> davranışıdır. <code>any()</code> ise \"veya (or)\" gibidir, biri doğruysa True verir."}, {"num": 129, "tag": "2025-2026 final", "text": "Aşağıdakilerden hangisi Python'daki yerleşik fonksiyonlardan (built-in functions) biridir?", "options": [{"letter": "A", "text": "yazdir()"}, {"letter": "B", "text": "ekle()"}, {"letter": "C", "text": "print()"}, {"letter": "D", "text": "hesapla()"}, {"letter": "E", "text": "sil()"}], "correct": "C", "explanation": "<b>print()</b> Python'un yerleşik fonksiyonudur; diğerleri ancak kullanıcının kendisi tanımlarsa var olur."}, {"num": 130, "tag": "2024-2025 final", "text": "Aşağıdaki seçeneklerden hangisi Python'daki hazır (built-in) fonksiyonlardan biri <u>değildir</u>?", "options": [{"letter": "A", "text": "max()"}, {"letter": "B", "text": "type()"}, {"letter": "C", "text": "print()"}, {"letter": "D", "text": "getwd()"}, {"letter": "E", "text": "sum()"}], "correct": "D", "explanation": "<code>getwd()</code> R dilinin çalışma dizini fonksiyonudur. Python'da karşılığı <code>os.getcwd()</code>'dir ve bu da yerleşik değil, <b>os modülüne</b> aittir."}, {"num": 131, "tag": "2022 vize", "text": "Python kodlama dilinde kullanıcıdan veri alınması gereken durumlarda kullanılması gereken kod aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "input()"}, {"letter": "B", "text": "printf()"}, {"letter": "C", "text": "put()"}, {"letter": "D", "text": "get()"}, {"letter": "E", "text": "print()"}], "correct": "A", "explanation": "<b>input()</b> kullanıcıdan veri alır ve daima <b>metin (str)</b> döndürür; sayıya ihtiyaç varsa <code>int()</code>/<code>float()</code> ile çevrilmelidir."}, {"num": 132, "tag": "2025-2026 final, 2025-2026 vize", "text": "x = input(\"Lütfen bir sayı giriniz:\") — x + 5 — Yukarıda verilen kod satırlarına göre aşağıdaki seçeneklerden hangisi gerçekleşir?", "options": [{"letter": "A", "text": "Ekrana 5 yazdırılır."}, {"letter": "B", "text": "Ekrana 0 yazdırılır."}, {"letter": "C", "text": "Kullanıcıdan bir sayı alınır ve x değişkenine atanır. Ardından kullanıcının girdiği sayıya 5 eklenerek ekrana yazdırılır."}, {"letter": "D", "text": "Kullanıcıdan bir sayı alınmak istenmektedir; ancak input() fonksiyonundan geri dönen değer için veri tipi dönüşümü yapılmadığından ikinci satırdaki kod çalıştırıldığında hata mesajı döndürülür."}, {"letter": "E", "text": "x'e \"Lütfen bir sayı giriniz:\" değeri atanır. Bu nedenle de x + 5 kod satırı çalışmaz, hata mesajı döndürür."}], "correct": "D", "explanation": "<code>input()</code> her zaman <b>str</b> döndürür; <code>\"12\" + 5</code> işlemi <code>TypeError: can only concatenate str (not \"int\") to str</code> verir. Çözüm: <code>x = int(input(...))</code>."}, {"num": 133, "tag": "2024-2025 bütünleme", "text": "Yukarıda verilen Python kodları çalıştırıldığında, kullanıcı sıra ile 5, -5, -6, 9, 0, 0 değerlerini giriyor. Buna göre top değişkeninin son değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "10"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "0"}, {"letter": "E", "text": "25"}], "correct": "E", "explanation": "<code>abs()</code> her değeri pozitife çevirir: 5 + 5 + 6 + 9 + 0 + 0 = <b>25</b>. İşaretler dikkate alınsaydı 3 çıkardı (C çeldiricisi)."}, {"num": 134, "tag": "2025-2026 bütünleme", "text": "d1 = tuple(\"Python\") şeklinde tanımlanıyor. Buna göre; sırasıyla yukarıdaki kod satırları çalıştırıldığında a ve b'nin son değeri ne olur?", "options": [{"letter": "A", "text": "a = 8, b = 8"}, {"letter": "B", "text": "a = 8, b = 4"}, {"letter": "C", "text": "a = 0, b = 0"}, {"letter": "D", "text": "a = 2, b = 8"}, {"letter": "E", "text": "a = 2, b = 4"}], "correct": "D", "explanation": "<code>tuple(\"Python\")</code> harfleri tek tek ayırır: ('P','y','t','h','o','n'). <code>count(\"o\")</code> = 1, <code>a += 1</code> ile <b>a = 2</b> olur. <code>b = a</code> (2), <code>index(\"o\")</code> = 4 olduğundan <code>b = 2 * 4 = <b>8</b></code>."}, {"num": 135, "tag": "2023-2024 vize", "text": "Bir fonksiyon ifade bloğunu tanımlamak için kullanılan anahtar kelime aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "func"}, {"letter": "B", "text": "fonksiyon"}, {"letter": "C", "text": "definition"}, {"letter": "D", "text": "def"}, {"letter": "E", "text": "function"}], "correct": "D", "explanation": "Python'da fonksiyon <code>def ad(parametreler):</code> biçiminde <b>def</b> anahtar sözcüğüyle tanımlanır."}, {"num": 136, "tag": "2025-2026 bütünleme", "text": "Aşağıda verilen seçeneklerden hangisi Python'da kullanıcı tarafından tanımlanan bir fonksiyon (user defined function) oluşturmak için kullanılır?", "options": [{"letter": "A", "text": "def"}, {"letter": "B", "text": "break"}, {"letter": "C", "text": "if"}, {"letter": "D", "text": "pass"}, {"letter": "E", "text": "else"}], "correct": "A", "explanation": "Kullanıcı tanımlı fonksiyonlar <b>def</b> ile yazılır. (Tek satırlık isimsiz fonksiyonlar için <code>lambda</code> da kullanılabilir.)"}, {"num": 137, "tag": "2022 vize, 2023-2024 vize", "text": "Bir fonksiyona sınırsız sayıda parametre gönderilebilmesi için hangi operatör kullanılabilir?", "options": [{"letter": "A", "text": "*"}, {"letter": "B", "text": "&"}, {"letter": "C", "text": "+"}, {"letter": "D", "text": "%"}, {"letter": "E", "text": "/"}], "correct": "A", "explanation": "<code>def f(*args):</code> yazımı, gönderilen tüm konumsal argümanları bir <b>demet</b> içinde toplar. Anahtar kelimeli argümanlar için <code>**kwargs</code> kullanılır."}, {"num": 138, "tag": "2023-2024 final", "text": "Python'da bir fonksiyonun çağrılabilmesi için <u>ilk</u> olarak yapılması gereken aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fonksiyonun geri dönüş değeri belirtilmelidir."}, {"letter": "B", "text": "Fonksiyonun tanımlanması veya yüklenmesi gereklidir."}, {"letter": "C", "text": "Fonksiyonun adı ve parametreleri belirlenmelidir."}, {"letter": "D", "text": "Fonksiyonun gövdesi yazılmalıdır."}, {"letter": "E", "text": "Fonksiyonun doc string'i yazılmalıdır."}], "correct": "B", "explanation": "Bir fonksiyon çağrılmadan önce ya kodda <b>tanımlanmış</b> ya da bir modülden <b>içe aktarılmış</b> olmalıdır; aksi hâlde NameError alınır. Ad, gövde ve return zaten tanımlamanın parçalarıdır."}, {"num": 139, "tag": "2023-2024 final", "text": "Python'da bir fonksiyonun geri dönüş değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fonksiyonun doc string'idir."}, {"letter": "B", "text": "Fonksiyonun adı ve parametreleridir."}, {"letter": "C", "text": "Fonksiyonun çağrıldığı yerdir."}, {"letter": "D", "text": "Fonksiyonun tanımlandığı yerdir."}, {"letter": "E", "text": "Fonksiyonun gövdesinde yapılan işlemler sonucunda return ifadesine aktarılan değerdir."}], "correct": "E", "explanation": "Geri dönüş değeri, <code>return</code> ile çağrıldığı yere gönderilen değerdir. <code>return</code> yoksa fonksiyon otomatik olarak <b>None</b> döndürür."}, {"num": 140, "tag": "2022 vize", "text": "Yukardaki gibi return deyimi barındırmayan bir fonksiyon çalıştığında toplam değişkenin değeri …..şeklindedir. Boşluğa aşağıdaki seçeneklerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "False"}, {"letter": "B", "text": "None"}, {"letter": "C", "text": "Null"}, {"letter": "D", "text": "12"}, {"letter": "E", "text": "True"}], "correct": "B", "explanation": "Fonksiyon içindeki <code>toplam</code> yereldir ve dışarı aktarılmaz. <code>return</code> olmadığı için fonksiyon <b>None</b> döndürür; ekrana None yazılır. (Python'da Null yoktur, karşılığı None'dur.)"}, {"num": 141, "tag": "2022 vize", "text": "Yukardaki kod çalıştırıldığında ekranda ne görülecektir?", "options": [{"letter": "A", "text": "Hata üretir"}, {"letter": "B", "text": "19"}, {"letter": "C", "text": "None"}, {"letter": "D", "text": "\"Hesaplayamadım\""}, {"letter": "E", "text": "14"}], "correct": "B", "explanation": "Çağrıda yalnızca <code>sayi2=2</code> verilmiş, sayi1 varsayılan değeri olan 12'de kalmıştır. operator varsayılanı \"+\" olduğu için ilk if çalışır ve <code>toplam = 12 + 2 = 14</code> hesaplanır… ancak fonksiyon <code>sonuc</code> döndürür."}, {"num": 142, "tag": "2023-2024 vize", "text": "def hesapla(x): print(x**3) — hesapla(2) — Yukarıdaki kod çalıştırıldığında ekrana gelen sonuç aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "16"}, {"letter": "B", "text": "6"}, {"letter": "C", "text": "8"}, {"letter": "D", "text": "9"}, {"letter": "E", "text": "12"}], "correct": "C", "explanation": "<code>**</code> üs alma operatörüdür: 2³ = <b>8</b>. Çeldiriciler 2×3=6 ve 2⁴=16'dır."}, {"num": 143, "tag": "2023-2024 final", "text": "def fonksiyon(): / print(\"Merhaba, dünya!\") — Yukarıda verilmiş olan kod parçasına ilişkin olarak aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "def fonksiyon(): satırında : fazladan konulmuştur."}, {"letter": "B", "text": "Her iki satırda girinti hatası vardır."}, {"letter": "C", "text": "print(\"Merhaba, dünya!\") satırı girinti hatası içerir."}, {"letter": "D", "text": "Kod bloğunun yanlış bir şeyi yoktur."}, {"letter": "E", "text": "print fonksiyonu yanlış yazılmıştır."}], "correct": "C", "explanation": "Python'da blok, <b>girinti</b> ile belirlenir. <code>def</code> satırından sonraki gövde içeri kaydırılmalıdır; kaydırılmazsa <code>IndentationError: expected an indented block</code> alınır."}, {"num": 144, "tag": "2025-2026 bütünleme", "text": "def fonksiyonum(a): return (a**2) — Yukarıda verilen Python kodları ile ilgili aşağıdaki seçeneklerden hangisi doğrudur?", "options": [{"letter": "A", "text": "fonksiyonum adlı fonksiyon çağrılmıştır."}, {"letter": "B", "text": "Parametre alan ve değer döndürmeyen bir fonksiyon tanımlanmıştır."}, {"letter": "C", "text": "Parametre almayan ve değer döndüren bir fonksiyon tanımlanmıştır."}, {"letter": "D", "text": "Parametre almayan ve değer döndürmeyen bir fonksiyon tanımlanmıştır."}, {"letter": "E", "text": "Parametre alan ve değer döndüren bir fonksiyon tanımlanmıştır."}], "correct": "E", "explanation": "Fonksiyon <code>a</code> parametresini alır ve <code>return</code> ile karesini döndürür. Kodda yalnızca <b>tanım</b> vardır; çağrı (<code>fonksiyonum(3)</code>) yapılmamıştır."}, {"num": 145, "tag": "2025-2026 bütünleme, 2025-2026 final", "text": "Yukarıda tanımlanan indirim() fonksiyonunun çağrılması ve döndürdüğü değerin karşılanması hangi seçenekte doğru bir şekilde verilmiştir?", "options": [{"letter": "A", "text": "a = indirim(20)"}, {"letter": "B", "text": "b = indirim(1000)"}, {"letter": "C", "text": "a, b = indirim(20)"}, {"letter": "D", "text": "a + b = indirim(1000, 20)"}, {"letter": "E", "text": "a, b = indirim(1000, 20)"}], "correct": "E", "explanation": "Fonksiyon <b>iki parametre</b> ister ve <b>iki elemanlı demet</b> döndürür. Bu yüzden hem iki argüman verilmeli hem de dönen değer iki değişkenle karşılanmalıdır. <code>a + b = ...</code> geçersiz bir atamadır."}, {"num": 146, "tag": "2024-2025 final", "text": "Yukarıda bir mağazanın indirim hesaplamak için kullandığı Python fonksiyonu yer almaktadır. indirim_hesapla() fonksiyonuna göre 900 TL'lik alış-veriş yapan bir müşterinin ödeme miktarı aşağıdaki seçeneklerin hangisinde verilmiştir?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "900"}, {"letter": "C", "text": "110"}, {"letter": "D", "text": "810"}, {"letter": "E", "text": "90"}], "correct": "D", "explanation": "900 &lt; 100 koşulu yanlış olduğu için <code>indirim = 0.1</code> olur: <code>900 * (1 − 0.1) = <b>810</b></code>."}, {"num": 147, "tag": "2024-2025 bütünleme", "text": "def topla(x, y, z): return x + y + z — Yukarıda verilen Python fonksiyonu aşağıdaki seçeneklerden hangisindeki gibi çağrılırsa hata mesajı döndürmez?", "options": [{"letter": "A", "text": "topla()"}, {"letter": "B", "text": "topla(50, \"100\", 850)"}, {"letter": "C", "text": "topla(50, 100, 150, 800)"}, {"letter": "D", "text": "topla(50, 100)"}, {"letter": "E", "text": "topla(46, 32, 990)"}], "correct": "E", "explanation": "Fonksiyon <b>tam üç argüman</b> ister; A, D (eksik) ve C (fazla) TypeError verir. B'de sayı ile metin toplanmaya çalışıldığı için yine TypeError alınır. Yalnızca E hatasızdır."}, {"num": 148, "tag": "2024-2025 final", "text": "Aşağıdaki seçeneklerin hangisinde verilen lambda fonksiyonu doğru bir biçimde tanımlanmıştır?", "options": [{"letter": "A", "text": "fonk = lambda x: False if x != 2024 else True"}, {"letter": "B", "text": "fonk = lambda x: False (if x != 2024) (else True)"}, {"letter": "C", "text": "fonk = lambda x(False if x != 2024 else True)"}, {"letter": "D", "text": "fonk = lambda (x: False if x != 2024 else True)"}, {"letter": "E", "text": "fonk = lambda x: if x != 2024 False else True"}], "correct": "A", "explanation": "Söz dizimi <code>lambda parametre: ifade</code> şeklindedir; iki nokta üst üsteden sonra <b>tek bir ifade</b> gelir. Koşullu ifade de <code>değer if koşul else değer</code> sırasıyla yazılır."}, {"num": 149, "tag": "2024-2025 bütünleme, 2025-2026 final", "text": "birlestir = lambda x, y: x + \" \" + y — Yukarıda verilen lambda fonksiyonu aşağıdaki seçeneklerin hangisinde doğru çağrılmıştır?", "options": [{"letter": "A", "text": "birlestir(\"Python\", \"programlama\", \"dersini\", \"seviyorum\")"}, {"letter": "B", "text": "birlestir(\"Python\", \"programlama dersini\", \"seviyorum\")"}, {"letter": "C", "text": "birlestir(\"Python\", \"programlama\", \"dersini seviyorum\")"}, {"letter": "D", "text": "birlestir(\"Python programlama dersini\", \"seviyorum\")"}, {"letter": "E", "text": "birlestir(\"Python programlama\", \"dersini\", \"seviyorum\")"}], "correct": "D", "explanation": "Lambda <b>tam iki parametre</b> (x ve y) tanımlar; bu yüzden yalnızca iki argümanla çağrılabilir. Üç argüman verilen tüm şıklar TypeError üretir."}, {"num": 150, "tag": "2024-2025 bütünleme", "text": "Yukarıda ciftSayilariGetir() adlı bir Python fonksiyonu tanımlanmaktadır. Buna göre, sayiListesi adlı listenin içinden ciftSayilariGetir() fonksiyonu koşullarını sağlayan elemanlar aşağıdaki seçeneklerden hangisi ile elde edilebilir?", "options": [{"letter": "A", "text": "list(map(sayiListesi, ciftSayilariGetir))"}, {"letter": "B", "text": "list(filter(sayiListesi, ciftSayilariGetir))"}, {"letter": "C", "text": "filter(list(ciftSayilariGetir, sayiListesi))"}, {"letter": "D", "text": "list(filter(ciftSayilariGetir, sayiListesi))"}, {"letter": "E", "text": "list(map(ciftSayilariGetir, sayiListesi))"}], "correct": "D", "explanation": "Koşulu sağlayan elemanları <b>süzmek</b> için <code>filter(fonksiyon, dizi)</code> kullanılır; sıra önce fonksiyon, sonra listedir. <code>map()</code> ise süzmez, her elemana fonksiyonu uygulayıp True/False listesi üretirdi."}, {"num": 151, "tag": "2022 final", "text": "Yukarıda tanımlanmış olan fonksiyonda ekrana Fırtına var yazdırmak için hangi hesaplama yapılmalıdır?", "options": [{"letter": "A", "text": "hesapla(3,8)"}, {"letter": "B", "text": "hesapla(3,4)"}, {"letter": "C", "text": "hesapla"}, {"letter": "D", "text": "hesapla(6,4)"}, {"letter": "E", "text": "hesapla(7,3)"}], "correct": "B", "explanation": "\"Fırtına var\" için önce <code>a+b &gt;= 10</code> yanlış, sonra <code>a == 7</code> da yanlış olmalı. <code>hesapla(3,4)</code>: 7 &lt; 10 ✓ ve a = 3 ≠ 7 ✓. (A'da toplam 11, E'de a = 7 olduğu için başka dallar çalışır.)"}, {"num": 152, "tag": "2022 final", "text": "Aynı türdeki nesneleri tanımlayan bir taslak ….. olarak adlandırılır.", "options": [{"letter": "A", "text": "Liste"}, {"letter": "B", "text": "Sınıf"}, {"letter": "C", "text": "Metot"}, {"letter": "D", "text": "Fonksiyon"}, {"letter": "E", "text": "Küme"}], "correct": "B", "explanation": "<b>Sınıf (class)</b>, aynı türden nesnelerin özellik ve davranışlarını tanımlayan şablondur. Bu şablondan üretilen her somut örneğe <b>nesne (object)</b> denir."}, {"num": 153, "tag": "2023-2024 bütünleme", "text": "Nesne Yönelimli Programlamada, bir nesnenin özellikleri ve davranışları aşağıdakilerden hangisinde saklanır?", "options": [{"letter": "A", "text": "Listeler"}, {"letter": "B", "text": "Sınıflar"}, {"letter": "C", "text": "Metotları"}, {"letter": "D", "text": "Fonksiyonlar"}, {"letter": "E", "text": "Değişkenler"}], "correct": "B", "explanation": "Özellikler (nitelikler) ve davranışlar (metotlar) <b>sınıf</b> içinde bir arada tanımlanır; nesne bu sınıfın örneğidir."}, {"num": 154, "tag": "2023-2024 final", "text": "Nesne Yönelimli Programlamada, bir nesnenin özelliklerine ve davranışlarına doğrudan erişimin engellenmesi aşağıdakilerden hangisiyle sağlanır?", "options": [{"letter": "A", "text": "Metot Tanımlama"}, {"letter": "B", "text": "Kapsülleme"}, {"letter": "C", "text": "Sınıf Tanımlama"}, {"letter": "D", "text": "Nesne Tanımlama"}, {"letter": "E", "text": "Kalıtım"}], "correct": "B", "explanation": "<b>Kapsülleme (encapsulation)</b>, verinin dışarıdan doğrudan değiştirilmesini engeller; erişim ancak sınıfın sunduğu metotlarla olur. Python'da bu, ad başına <code>_</code> veya <code>__</code> konarak sağlanır."}, {"num": 155, "tag": "2023-2024 bütünleme", "text": "Zaman zaman yazılan sınıflarda değerlerin değişmesini engelleme veya kısıtlama ihtiyacı duyulmaktadır. Bu durumda ….. adı verilen yöntem kullanılır.", "options": [{"letter": "A", "text": "Miras alma"}, {"letter": "B", "text": "Nesne çağırma"}, {"letter": "C", "text": "Çok Biçimlilik"}, {"letter": "D", "text": "Kapsülleme"}, {"letter": "E", "text": "Sınıf tanımlama"}], "correct": "D", "explanation": "Değere erişimi kısıtlama yöntemi <b>kapsüllemedir</b>. Miras alma kod tekrarını azaltır, çok biçimlilik aynı metodun farklı davranmasını sağlar."}, {"num": 156, "tag": "2022 final", "text": "Aşağıda bir sınıfa ait bazı üyeler verilmiştir. Bu üyelerden hangisi yarı-gizli (semi-private) üyedir?", "options": [{"letter": "A", "text": "personel =[]"}, {"letter": "B", "text": "_personel =[]"}, {"letter": "C", "text": "__personel=[]"}, {"letter": "D", "text": "*personel =[]"}, {"letter": "E", "text": "**personel=[]"}], "correct": "B", "explanation": "<b>Tek alt çizgi</b> (<code>_ad</code>) \"bu üye içseldir, dışarıdan kullanma\" anlamında bir uyarıdır: yarı-gizli (semi-private). <b>Çift alt çizgi</b> (<code>__ad</code>) ise ad karıştırma (name mangling) ile gerçek gizliliğe yaklaşır."}, {"num": 157, "tag": "2023-2024 final", "text": "Aşağıda bir sınıfa ait bazı üyeler verilmiştir. Bu üyelerden hangisi genel (public) üyedir?", "options": [{"letter": "A", "text": "_öğrenci =[]"}, {"letter": "B", "text": "*öğrenci =[]"}, {"letter": "C", "text": "öğrenci = []"}, {"letter": "D", "text": "**öğrenci =[]"}, {"letter": "E", "text": "__öğrenci =[]"}], "correct": "C", "explanation": "Başında alt çizgi bulunmayan üyeler <b>genel (public)</b>'dir ve dışarıdan serbestçe erişilebilir. <code>_</code> yarı-gizli, <code>__</code> gizli üyeyi işaret eder."}, {"num": 158, "tag": "2025-2026 bütünleme, 2024-2025 final", "text": "Yukarıda verilen Python kodlarına göre kapsülleme (encapsulation) kullanılarak gizlenen değişken aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "hesabim"}, {"letter": "B", "text": "bakiye"}, {"letter": "C", "text": "bakiye_goster"}, {"letter": "D", "text": "BankaHesap"}, {"letter": "E", "text": "mktr"}], "correct": "B", "explanation": "<code>self.__bakiye</code> çift alt çizgiyle tanımlandığı için dışarıdan <code>hesabim.__bakiye</code> ile okunamaz; ancak <code>bakiye_goster()</code> metoduyla erişilebilir. Gizlenen üye <b>bakiye</b>'dir."}, {"num": 159, "tag": "2024-2025 bütünleme", "text": "Araba sınıfının dışarıdan <u>erişilemeyen</u> özelliği aşağıdaki seçeneklerden hangisinde verilmiştir?", "options": [{"letter": "A", "text": "model"}, {"letter": "B", "text": "yil"}, {"letter": "C", "text": "marka"}, {"letter": "D", "text": "motor_no"}, {"letter": "E", "text": "renk"}], "correct": "D", "explanation": "<code>__motor_no</code> çift alt çizgiyle tanımlandığı için <b>gizlidir</b>; <code>araba.__motor_no</code> denemesi AttributeError verir. Diğer dört özellik geneldir (public)."}, {"num": 160, "tag": "2025-2026 bütünleme", "text": "Yukarıdaki Python kodları ile bir \"Adres\" sınıfı ve \"Adres\" sınıfının bir örneği tanımlanıyor. Buna göre aşağıdaki seçeneklerden hangisi çalıştırıldığında hata mesajı döndürür?", "options": [{"letter": "A", "text": "adresim.sokak"}, {"letter": "B", "text": "adresim.mahalle"}, {"letter": "C", "text": "adresim.cadde"}, {"letter": "D", "text": "adresim.il"}, {"letter": "E", "text": "adresim.ilce"}], "correct": "A", "explanation": "<code>__sokak</code> gizli üyedir; ad karıştırma nedeniyle dışarıdan <code>adresim.sokak</code> (ya da <code>adresim.__sokak</code>) çağrısı <b>AttributeError</b> verir. Diğerleri genel üyedir."}, {"num": 161, "tag": "2025-2026 final, 2024-2025 final", "text": "Yukarıda verilen \"Bilgisayar\" sınıfına göre aşağıdaki seçeneklerin hangisi hata döndürür?", "options": [{"letter": "A", "text": "bilg.marka"}, {"letter": "B", "text": "bilg.ABC"}, {"letter": "C", "text": "bilg.islemci"}, {"letter": "D", "text": "bilg.sabitDisk"}, {"letter": "E", "text": "bilg.model"}], "correct": "B", "explanation": "<code>ABC</code> bir özellik adı değil, <code>marka</code> özelliğinin <b>değeridir</b>. Nesneye erişim özellik adıyla yapılır: <code>bilg.marka</code> → \"ABC\". <code>bilg.ABC</code> AttributeError verir."}, {"num": 162, "tag": "2024-2025 bütünleme", "text": "Yukarıda tanımlanan Telefon sınıfının bir örneğini oluşturmak için aşağıdaki seçeneklerden hangisi kullanılabilir?", "options": [{"letter": "A", "text": "telefon3 = Telefon(\"ABC\", \"x\", \"16GB\", \"128GB\")"}, {"letter": "B", "text": "telefon2 = Telefon(\"16GB\", \"128GB\", \"ABC\", \"x\")"}, {"letter": "C", "text": "telefon5 = Telefon(\"x\", \"16GB\", \"128GB\")"}, {"letter": "D", "text": "telefon4 = Telefon(\"ABC\", \"x\", \"16GB\")"}, {"letter": "E", "text": "telefon1 = Telefon(\"16GB\", \"128GB\")"}], "correct": "E", "explanation": "<code>marka</code> ve <code>model</code> <b>sınıf değişkenidir</b>, kurucuya verilmez. <code>__init__</code> yalnızca <code>ram</code> ve <code>hafiza</code> ister; dolayısıyla iki argümanlı çağrı doğrudur."}, {"num": 163, "tag": "2024-2025 bütünleme", "text": "Bir robot süpürge (RobotSupurge) sınıfı yukarıda verilen elektronik eşya (ElektronikEsya) sınıfından miras alıyorsa, RobotSupurge sınıfını tanımlamaya aşağıdaki seçeneklerin hangisi ile başlanır?", "options": [{"letter": "A", "text": "class RobotSupurge(ElektronikEsya):"}, {"letter": "B", "text": "def ElektronikEsya(RobotSupurge):"}, {"letter": "C", "text": "class ElektronikEsya(RobotSupurge):"}, {"letter": "D", "text": "def RobotSupurge(ElektronikEsya):"}, {"letter": "E", "text": "define RobotSupurge(ElektronikEsya):"}], "correct": "A", "explanation": "Kalıtımda söz dizimi <code>class AltSınıf(ÜstSınıf):</code> şeklindedir; <b>parantez içindeki ata sınıftır</b>. C'de miras yönü ters, D ve E'de ise class yerine def/define kullanılmıştır."}, {"num": 164, "tag": "2025-2026 final", "text": "Python'da tanımlanan \"duvarSaati\" ve \"kolSaati\" sınıfları \"saat\" sınıfına ait özellik ve metotları kullanabilmektedir. Verilen bu bilgiye göre aşağıdakilerden hangisi <u>kesinlikle yanlıştır</u>?", "options": [{"letter": "A", "text": "\"duvarSaati\" sınıfı, \"saat\" sınıfından miras almaktadır."}, {"letter": "B", "text": "\"saat\" sınıfı, \"duvarSaati\" ve \"kolSaati\" sınıflarının üst/ana sınıfıdır (super/parent class)."}, {"letter": "C", "text": "\"duvarSaati\" ve \"kolSaati\" sınıfları, \"saat\" sınıfının bir metodunu kendi kullanım amaçlarına göre değiştirebilir."}, {"letter": "D", "text": "\"kolSaati\" sınıfı, \"saat\" sınıfından miras almaktadır."}, {"letter": "E", "text": "\"kolSaati\" sınıfı, \"duvarSaati\" sınıfından miras almaktadır."}], "correct": "E", "explanation": "Verilen bilgi yalnızca her iki sınıfın <b>saat</b>'ten türediğini söyler; ikisi <b>kardeş</b> sınıflardır. Birinin diğerinden miras aldığı bilgisi metinden çıkarılamaz, dolayısıyla kesinlikle yanlıştır. (C ise metot ezmeyi, yani override'ı tarif eder ve doğrudur.)"}, {"num": 165, "tag": "2023-2024 bütünleme", "text": "Aşağıdakilerden hangisi yukarıdaki koddaki kuş sınıfının bir özelliğidir?", "options": [{"letter": "A", "text": "ses_çıkar()"}, {"letter": "B", "text": "kanat_sayısı"}, {"letter": "C", "text": "yumurtla()"}, {"letter": "D", "text": "tür"}, {"letter": "E", "text": "hareket()"}], "correct": "B", "explanation": "<b>Özellik (attribute)</b> nesnenin verisidir; parantezli olanlar <b>metottur</b> (davranış). <code>tür</code> ata sınıf Hayvan'dan gelir; Kuş sınıfına <b>özgü</b> özellik <code>kanat_sayısı</code>'dır."}, {"num": 166, "tag": "2023-2024 final", "text": "Yukarıdaki kod parçacığı ne yazdırır?", "options": [{"letter": "A", "text": "Hız sınırı 200 km/s'dir."}, {"letter": "B", "text": "Araba 200 km/s hızlanmaya başladı"}, {"letter": "C", "text": "Araba 250 km/s yavaşlamaya başladı."}, {"letter": "D", "text": "Araba 250 km/s hızlanmaya başladı"}, {"letter": "E", "text": "Hata Oluşturur."}], "correct": "A", "explanation": "<code>araba.hizlan(250)</code> çağrısında <code>250 &gt; 200</code> koşulu doğrudur, bu yüzden if bloğu çalışır ve <b>\"Hız sınırı 200 km/s'dir.\"</b> yazdırılır; else bloğuna hiç girilmez."}, {"num": 167, "tag": "2022 final", "text": "Aşağıdakilerden hangisi Nesne Yönelimli Programlamanın temel özelliklerinden biri <u>değildir</u>?", "options": [{"letter": "A", "text": "Spagetti Programlama"}, {"letter": "B", "text": "Sınıflar"}, {"letter": "C", "text": "Kapsülleme"}, {"letter": "D", "text": "Çok Biçimlilik"}, {"letter": "E", "text": "Nesneler"}], "correct": "A", "explanation": "<b>Spagetti kod</b>, kontrol akışı iç içe geçmiş, izlenemez kodu tarif eden olumsuz bir terimdir; NYP'nin özelliği değil, NYP'nin önlemeye çalıştığı şeydir."}, {"num": 168, "tag": "2022 final", "text": "Tanımlanan nesnenin tipinin belli bir sınıfa ait olup olmadığını kontrol etmek için kullanılan fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "bool()"}, {"letter": "B", "text": "int()"}, {"letter": "C", "text": "istype()"}, {"letter": "D", "text": "type()"}, {"letter": "E", "text": "isinstance()"}], "correct": "E", "explanation": "<code>isinstance(nesne, Sınıf)</code> True/False döndürür ve <b>kalıtımı da dikkate alır</b>. <code>type()</code> yalnızca tipin kendisini verir, alt sınıf ilişkisini görmez."}, {"num": 169, "tag": "2022 final", "text": "Aşağıdaki açıklama hangi dosya modunu göstermektedir? \"Dosya ekleme işlemi için açılır. Daha önceden varolan dosyanın en sonundan eklemeye devam eder. Eğer çağrılan dosya bulunamadıysa yeni bir dosya oluşturur.\"", "options": [{"letter": "A", "text": "r+"}, {"letter": "B", "text": "w"}, {"letter": "C", "text": "a"}, {"letter": "D", "text": "w+"}, {"letter": "E", "text": "r"}], "correct": "C", "explanation": "<b>a (append)</b> modu dosyanın sonuna ekler, dosya yoksa oluşturur. <code>w</code> dosyayı sıfırlar (içeriği siler), <code>r</code> yalnızca okur ve dosya yoksa hata verir."}, {"num": 170, "tag": "2023-2024 final", "text": "Aşağıda verilen dosya modlarından hangisinin açıklaması <u>yanlıştır</u>?", "options": [{"letter": "A", "text": "r: Dosya sadece okunmak için açılır. Bu mod varsayılan moddur."}, {"letter": "B", "text": "b: İkili modda açılır. (resim veya yürütülebilir dosyalar)"}, {"letter": "C", "text": "a: Dosya ekleme işlemi için açılır. Daha önceden var olan dosyanın en sonundan eklemeye devam eder. Eğer çağrılan dosya bulunamadıysa yeni bir dosya oluşturur."}, {"letter": "D", "text": "r+: Dosya hem okunmak hem de yazmak için açılır. Eğer çağrılan dosya bulunamadıysa yeni bir dosya oluşturulur."}, {"letter": "E", "text": "t: Metin modunda açılır. (varsayılan)"}], "correct": "D", "explanation": "<b>r+</b> okuma-yazma için açar ama <b>dosya yoksa oluşturmaz</b>, FileNotFoundError verir. Dosyayı oluşturan modlar <code>w</code>, <code>w+</code>, <code>a</code> ve <code>x</code>'tir."}, {"num": 171, "tag": "2023-2024 bütünleme", "text": "Yukarıdaki kodda, dosya with ifadesi kullanılarak kapatılıyor. Buna göre bu kodda, dosya her zaman kapatılır mı?", "options": [{"letter": "A", "text": "Sadece çöp toplayıcısı çalışırsa dosya kapatılır."}, {"letter": "B", "text": "Kod hatalıdır."}, {"letter": "C", "text": "Evet, her zaman kapatılır."}, {"letter": "D", "text": "Sadece hata yönetimi uygulanırsa dosya kapatılır."}, {"letter": "E", "text": "Hayır, dosya kapatılmaz."}], "correct": "C", "explanation": "<code>with</code> bir <b>bağlam yöneticisidir</b>: blok normal bitse de içeride hata oluşsa da çıkışta <code>close()</code> otomatik çağrılır. Bu yüzden dosya işlemlerinde önerilen yazımdır."}, {"num": 172, "tag": "2023-2024 bütünleme", "text": "Yukarıdaki kodda dosya okutmak isteniliyor. Buna göre bu kodda, dosya nasıl okunur?", "options": [{"letter": "A", "text": "Dosya direkt ekrana aktarılır."}, {"letter": "B", "text": "Dosya tüm satırları bir liste içerisine okunur."}, {"letter": "C", "text": "Dosya satır satır okunur ve karakter dizisine dönüştürülür."}, {"letter": "D", "text": "Kod çalışmaz hatalıdır."}, {"letter": "E", "text": "Dosya tüm satırları metin dizisi içerisine okunur."}], "correct": "D", "explanation": "Kitapçık anahtarı bu soruda <b>D</b> şıkkını doğru kabul etmiştir."}, {"num": 173, "tag": "2022 final", "text": "İstisna oluşturmak için kullanılan ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "try"}, {"letter": "B", "text": "exception"}, {"letter": "C", "text": "finally"}, {"letter": "D", "text": "raise"}, {"letter": "E", "text": "for"}], "correct": "D", "explanation": "<b>raise</b> bilerek istisna fırlatır (örn. <code>raise ValueError(\"hatalı giriş\")</code>). <code>try/except</code> istisnayı yakalar, <code>finally</code> ise her hâlükârda çalışacak bloğu belirtir."}, {"num": 174, "tag": "2022 final", "text": "Aşağıdakilerden hangisi sayısal hesaplamalarda oluşan tüm hatalar için temel bir sınıftır?", "options": [{"letter": "A", "text": "ArithmeticError"}, {"letter": "B", "text": "AssertionError"}, {"letter": "C", "text": "ImportError"}, {"letter": "D", "text": "KeyError"}, {"letter": "E", "text": "StopIteration"}], "correct": "A", "explanation": "<b>ArithmeticError</b>; ZeroDivisionError, OverflowError ve FloatingPointError'ın ortak <b>ata sınıfıdır</b>. Bu yüzden sayısal hataların tümünü tek seferde yakalamak için kullanılabilir."}, {"num": 175, "tag": "2023-2024 final", "text": "Yukarıdaki kod içerisinde try bloğunda hangi tür hata yakalanır?", "options": [{"letter": "A", "text": "ValueError"}, {"letter": "B", "text": "TypeError"}, {"letter": "C", "text": "ZeroDivisionError"}, {"letter": "D", "text": "Hata Yoktur"}, {"letter": "E", "text": "ArithmeticError"}], "correct": "A", "explanation": "<code>int(\"abc\")</code> çağrısı sayıya çevrilemeyen bir metin nedeniyle <b>ValueError</b> fırlatır; bu yüzden ikinci except bloğu çalışır ve \"Geçersiz değer hatası!\" yazılır."}, {"num": 176, "tag": "2023-2024 final", "text": "Girdi olmadığında ve dosyanın sonuna ulaşıldığında ortaya çıkan hata bildirimi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "AttributeError"}, {"letter": "B", "text": "ImportError"}, {"letter": "C", "text": "ArithmeticError"}, {"letter": "D", "text": "OverflowError"}, {"letter": "E", "text": "EOFErroR"}], "correct": "E", "explanation": "<b>EOFError</b> (End Of File), <code>input()</code> okunacak veri bulamadığında ya da dosyanın sonuna beklenmedik şekilde ulaşıldığında fırlatılır."}, {"num": 177, "tag": "2023-2024 bütünleme", "text": "Yukarıdaki programın çalışabilmesi için None yerine <u>sırasıyla</u> hangi yerleşik istisnalar gelmelidir?", "options": [{"letter": "A", "text": "ZeroDivisionError / ValueError"}, {"letter": "B", "text": "ArithmeticError / ValueError"}, {"letter": "C", "text": "ValueError / ArithmeticError"}, {"letter": "D", "text": "ValueError / ZeroDivisionError"}, {"letter": "E", "text": "ValueError / FloatingPointError"}], "correct": "D", "explanation": "Listedeki <code>'a'</code> için <code>int('a')</code> → <b>ValueError</b>, <code>0</code> için <code>1/0</code> → <b>ZeroDivisionError</b>. Mesajların sırası da bunu doğrular: önce \"String değeri tam sayıya bölünemez\", sonra \"Sayı 0'a bölünemez\"."}, {"num": 178, "tag": "2024-2025 vize", "text": "Aşağıdakilerden hangisi Python programlama dili hakkında <u>yanlış</u> bir ifadedir?", "options": [{"letter": "A", "text": "Python yorumlayıcı (interpreter) kullanır."}, {"letter": "B", "text": "Python'da kodların satır satır çalıştırılması mümkündür."}, {"letter": "C", "text": "Python dilinde yazılan kodlar, modül ya da paket halinde gruplandırılabilir."}, {"letter": "D", "text": "Python kodlarındaki istisna durumların (exceptions) yakalanması mümkün değildir."}, {"letter": "E", "text": "Python dili otomatik bellek yönetimi prensibini kullanır."}], "correct": "D", "explanation": "İstisnalar <code>try/except</code> ile yakalanabilir; bu Python'un temel özelliklerinden biridir. Dolayısıyla D ifadesi yanlıştır. Diğerleri (yorumlayıcı, satır satır çalıştırma, modüller, çöp toplayıcı) doğrudur."}, {"num": 179, "tag": "2025-2026 bütünleme, 2024-2025 bütünleme", "text": "Yukarıda verilen Python kodu çalıştırıldığında bir hata mesajı döndürülmektedir. Bu hatanın nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "else if yerine elif yazılmıştır."}, {"letter": "B", "text": "notum == 60 yerine notum = 60 yazılmıştır."}, {"letter": "C", "text": "ort değişkeni tanımlanmadığı halde kullanılmıştır."}, {"letter": "D", "text": "Girintiler uygun biçimde kullanılmamıştır."}, {"letter": "E", "text": "60 için elif ile bir koşul tanımlanmamıştır."}], "correct": "C", "explanation": "Kodda <code>notum</code> tanımlanmış ama koşullarda <code>ort</code> kullanılmıştır. Hata mesajı da bunu söyler: <b>NameError: name 'ort' is not defined</b>. <code>elif</code> yazımı ve girintiler doğrudur."}, {"num": 180, "tag": "2022 final", "text": "Python paket yükleyicisi içerisinde arama yapmak için kullanılan komut aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "show"}, {"letter": "B", "text": "quest"}, {"letter": "C", "text": "seek"}, {"letter": "D", "text": "search"}, {"letter": "E", "text": "find"}], "correct": "D", "explanation": "<code>pip search &lt;kelime&gt;</code> paket dizininde arama yapar. <code>pip show</code> kurulu bir paketin bilgisini verir."}, {"num": 181, "tag": "2023-2024 bütünleme", "text": "pip install requests — Aşağıdaki komut ne döndürür?", "options": [{"letter": "A", "text": "requests modülünü yükler."}, {"letter": "B", "text": "requests modülünün özelliklerini gösterir."}, {"letter": "C", "text": "requests modülünü siler."}, {"letter": "D", "text": "requests modülünü günceller."}, {"letter": "E", "text": "requests modülünü gösterir."}], "correct": "A", "explanation": "<code>pip install</code> paketi indirip <b>kurar</b>. Silmek için <code>uninstall</code>, güncellemek için <code>install --upgrade</code>, bilgi için <code>show</code> kullanılır."}, {"num": 182, "tag": "2023-2024 final", "text": "Yüklü tüm paketlerin normal listesini çıktıya veren pip paket yöneticisi komutu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "search"}, {"letter": "B", "text": "freeze"}, {"letter": "C", "text": "wheel"}, {"letter": "D", "text": "list"}, {"letter": "E", "text": "show"}], "correct": "D", "explanation": "<code>pip list</code> kurulu paketleri okunabilir bir <b>tablo</b> hâlinde listeler. <code>pip freeze</code> ise aynı listeyi <code>paket==sürüm</code> biçiminde, requirements.txt'ye uygun olarak verir."}, {"num": 183, "tag": "2023-2024 bütünleme", "text": "pip freeze — Aşağıdaki komut ne döndürür?", "options": [{"letter": "A", "text": "Yüklü tüm paketlerin listesini çıktıya verir."}, {"letter": "B", "text": "Yüklü tüm paketlerin normal listesini çıktıya verir."}, {"letter": "C", "text": "Yüklü paketler hakkında bilgi verir."}, {"letter": "D", "text": "Paketler içinde arama yapar."}, {"letter": "E", "text": "Yüklü tüm paketlerin requirements formatında listesini çıktıya verir."}], "correct": "E", "explanation": "<code>pip freeze</code> çıktısı doğrudan <code>requirements.txt</code> dosyasına yazılabilecek <b>paket==sürüm</b> biçimindedir; projeyi başka makinede birebir kurmak için kullanılır."}, {"num": 184, "tag": "2022 final", "text": "Aşağıdakilerden hangisi projeyi modüllere ayırmanın avantajı olarak <u>sayılmamaktadır</u>?", "options": [{"letter": "A", "text": "Yeniden Kullanılabilirlik"}, {"letter": "B", "text": "Basitlik"}, {"letter": "C", "text": "Hızlılık"}, {"letter": "D", "text": "Sürdürülebilirlik"}, {"letter": "E", "text": "Kapsam Belirleme"}], "correct": "C", "explanation": "Modülerlik kodu <b>yeniden kullanılabilir, basit, sürdürülebilir</b> kılar ve ad çakışmalarını önleyerek <b>kapsam</b> ayırır. Programın <b>çalışma hızını</b> artırmak modülerliğin amacı ve avantajı değildir."}, {"num": 185, "tag": "2023-2024 final", "text": "Standart Kütüphane Modülleri, python geliştiricileri tarafından sunulmuş olan ….. civarı bir sayıda modülden oluşur.", "options": [{"letter": "A", "text": "100"}, {"letter": "B", "text": "20"}, {"letter": "C", "text": "10"}, {"letter": "D", "text": "1000"}, {"letter": "E", "text": "200"}], "correct": "E", "explanation": "Ders notuna göre standart kütüphane <b>200 civarı</b> modül içerir (os, sys, math, random, datetime, json…). Bunlar Python ile birlikte gelir, ayrıca kurulmaz."}, {"num": 186, "tag": "2022 final", "text": "from random import randint — print(randint(10,30)) — Yukarıdaki programın üretebileceği çıktı aşağıdakilerden hangisi olabilir?", "options": [{"letter": "A", "text": "9"}, {"letter": "B", "text": "8.5"}, {"letter": "C", "text": "31"}, {"letter": "D", "text": "12.7"}, {"letter": "E", "text": "12"}], "correct": "E", "explanation": "<code>randint(10, 30)</code> <b>10 ve 30 dahil</b> rastgele bir <b>tam sayı</b> üretir. 9 ve 31 aralık dışıdır; 8.5 ve 12.7 ondalıklı olduğu için randint çıktısı olamaz."}, {"num": 187, "tag": "2023-2024 bütünleme", "text": "from random import shuffle — liste = [1, 2, 3, 4, 5] — shuffle(liste) — print(liste) — Yukarıdaki kod aşağıdakilerden hangisini yapacaktır?", "options": [{"letter": "A", "text": "Listenin ters çevrilmiş halini verecektir."}, {"letter": "B", "text": "None sonucunu üretecektir."}, {"letter": "C", "text": "Listenin rastgele sıralanmış halini verecektir."}, {"letter": "D", "text": "Listenin değiştirilmemiş halini verecektir."}, {"letter": "E", "text": "Hata üretecektir."}], "correct": "C", "explanation": "<code>shuffle()</code> listeyi <b>yerinde (in-place)</b> karıştırır; geriye None döner ama listenin kendisi değişmiştir. Bu yüzden <code>print(liste)</code> karışık sırayı gösterir."}, {"num": 188, "tag": "2023-2024 final", "text": "import time — haftanin_günü = time.strftime(………) — Yukarıdaki kod içerisinde haftanın günü kısaltmasını göstermek için aşağıdakilerden hangisi eklenmelidir?", "options": [{"letter": "A", "text": "%j"}, {"letter": "B", "text": "%a"}, {"letter": "C", "text": "%d"}, {"letter": "D", "text": "%w"}, {"letter": "E", "text": "%y"}], "correct": "B", "explanation": "<code>%a</code> haftanın gününün <b>kısaltmasını</b> verir (Mon, Tue…); tam adı için <code>%A</code> kullanılır. <code>%d</code> ayın günü, <code>%w</code> günün sayısal karşılığı, <code>%j</code> yılın kaçıncı günü olduğudur."}, {"num": 189, "tag": "2024-2025 final", "text": "Python'da NumPy kütüphanesini çağırmak için aşağıdaki seçeneklerden hangisi kullanılabilir?", "options": [{"letter": "A", "text": "install numpy as np"}, {"letter": "B", "text": "return numpy"}, {"letter": "C", "text": "import numpy as np"}, {"letter": "D", "text": "build numpy as np"}, {"letter": "E", "text": "get numpy"}], "correct": "C", "explanation": "Kütüphaneler <code>import</code> ile programa dahil edilir; <code>as np</code> ise kısa bir takma ad verir. <code>install</code> kurulum komutudur (pip), koda yazılmaz."}, {"num": 190, "tag": "2024-2025 final", "text": "Yukarıda tanımlanan a adlı NumPy dizisi için a.size kodu çalıştırılırsa aşağıdakilerden hangisi elde edilir?", "options": [{"letter": "A", "text": "(10,1)"}, {"letter": "B", "text": "10"}, {"letter": "C", "text": "(2,5)"}, {"letter": "D", "text": "5"}, {"letter": "E", "text": "2"}], "correct": "B", "explanation": "<code>size</code> dizideki <b>toplam eleman sayısını</b> verir: 2 satır × 5 sütun = <b>10</b>. Boyut bilgisi (2, 5) için <code>shape</code>, boyut sayısı için <code>ndim</code> kullanılır."}, {"num": 191, "tag": "2024-2025 bütünleme, 2025-2026 bütünleme", "text": "\"yeni\" adlı bir DataFrame'de sütun adları ve bu sütunların veri tipleri görüntülenmek istenirse aşağıdaki Python kod satırlarından hangisi çalıştırılabilir?", "options": [{"letter": "A", "text": "yeni.describe"}, {"letter": "B", "text": "yeni.values"}, {"letter": "C", "text": "yeni.ndim"}, {"letter": "D", "text": "yeni.dtypes"}, {"letter": "E", "text": "yeni.shape"}], "correct": "D", "explanation": "<code>dtypes</code>, her sütunun adını ve veri tipini birlikte listeler. <code>describe()</code> istatistik özeti, <code>values</code> ham değerler, <code>shape</code> satır-sütun sayısı, <code>ndim</code> boyut sayısı verir."}, {"num": 192, "tag": "2024-2025 bütünleme, 2025-2026 bütünleme", "text": "I. Tuple II. List III. Series IV. DataFrame V. Dictionary — Yukarıda verilenlerden hangileri pandas kütüphanesine özgü veri yapılarındandır?", "options": [{"letter": "A", "text": "III ve IV"}, {"letter": "B", "text": "III, IV ve V"}, {"letter": "C", "text": "II, III, IV ve V"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "I ve II"}], "correct": "A", "explanation": "<b>Series</b> (tek boyutlu) ve <b>DataFrame</b> (tablo) pandas'a özgüdür. Tuple, list ve dictionary ise Python'un kendi yerleşik veri yapılarıdır."}, {"num": 193, "tag": "2025-2026 final, 2024-2025 bütünleme", "text": "Yukarıda tanımlanan s1 için aşağıdakilerden hangisi <u>yanlıştır</u>?", "options": [{"letter": "A", "text": "s1'deki elemanların indeks değerleri 0 1 2 3 4'tür."}, {"letter": "B", "text": "s1 serisinin elemanlarının veri tipi tam sayıdır."}, {"letter": "C", "text": "s1.values serinin eleman değerlerini döndürür."}, {"letter": "D", "text": "s1 bir pandas serisidir."}, {"letter": "E", "text": "s1.index serinin indeks değerlerini döndürür."}], "correct": "B", "explanation": "Tanımda <code>dtype=np.dtype(float)</code> verildiği için elemanlar <b>float</b> olarak saklanır (2.0, 4.0 …). <code>np.arange(5)</code> ise indeksleri 0-4 yapar, diğer ifadeler doğrudur."}, {"num": 194, "tag": "2025-2026 final, 2024-2025 final", "text": "Yukarıdaki DataFrame'den Sehir sütununu kaldırmak için aşağıdaki seçeneklerden hangisi kullanılabilir?", "options": [{"letter": "A", "text": "df = df.del(\"Sehir\", axis = 1)"}, {"letter": "B", "text": "df = df.remove(\"Sehir\", axis = 1)"}, {"letter": "C", "text": "df = df.drop(\"Sehir\", axis = 1)"}, {"letter": "D", "text": "df = df.drop(\"Sehir\", axis = 0)"}, {"letter": "E", "text": "df = df.del(\"Sehir\", axis = 0)"}], "correct": "C", "explanation": "pandas'ta silme işlemi <code>drop()</code> ile yapılır; <b>axis=1 sütun</b>, axis=0 satır demektir. <code>del</code> ve <code>remove</code> DataFrame metodu değildir."}, {"num": 195, "tag": "2024-2025 final", "text": "I. Veri bilimi çalışmaları. II. Matematik ve istatistik başta olmak üzere çeşitli bilimsel hesaplamalar. III. Yazılım geliştirme. IV. Oyun geliştirme. — Yukarıda belirtilen alanların hangisi ya da hangilerinde Python programlama dili kullanılmaktadır?", "options": [{"letter": "A", "text": "I, II ve III"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "I, II, III ve IV"}], "correct": "E", "explanation": "Python <b>genel amaçlı</b> bir dildir: veri bilimi (pandas, scikit-learn), bilimsel hesaplama (NumPy, SciPy), yazılım geliştirme (Django, Flask) ve oyun geliştirme (Pygame) alanlarının hepsinde kullanılır."}, {"num": 196, "tag": "2023-2024 final", "text": "Aşağıdaki hangi fonksiyon \"10.2\" string yapısını ondalık sayıya çevirir?", "options": [{"letter": "A", "text": "complex()"}, {"letter": "B", "text": "int()"}, {"letter": "C", "text": "float()"}, {"letter": "D", "text": "ord()"}, {"letter": "E", "text": "str()"}], "correct": "C", "explanation": "<code>float(\"10.2\")</code> → 10.2. <code>int(\"10.2\")</code> denemesi ValueError verir, çünkü int() ondalık içeren metni doğrudan çeviremez."}, {"num": 197, "tag": "2023-2024 bütünleme", "text": "….., bilgisayarlarda kullanıcıların özel amaçları doğrultusunda kullanmasını sağlayan kod, komut ve programlardır. Yukarıdaki cümlede boş bırakılan yere aşağıdaki seçeneklerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Python"}, {"letter": "B", "text": "Donanım"}, {"letter": "C", "text": "Yazılım"}, {"letter": "D", "text": "İşletim Sistemleri"}, {"letter": "E", "text": "Akış Şeması"}], "correct": "C", "explanation": "Kod, komut ve programların bütününe <b>yazılım</b> denir. Donanım fiziksel bileşenleri, işletim sistemi ise yazılımın yalnızca bir alt türünü ifade eder."}, {"num": 198, "tag": "2023-2024 bütünleme", "text": "Bir dizinin uzunluğunu döndüren yerleşik fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "abs()"}, {"letter": "B", "text": "sum()"}, {"letter": "C", "text": "uzunluk()"}, {"letter": "D", "text": "min()"}, {"letter": "E", "text": "len()"}], "correct": "E", "explanation": "Uzunluk her zaman <b>len()</b> ile alınır: <code>len(\"merhaba\")</code> → 7, <code>len([1,2,3])</code> → 3. <code>uzunluk()</code> ve <code>length()</code> Python'da yoktur."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

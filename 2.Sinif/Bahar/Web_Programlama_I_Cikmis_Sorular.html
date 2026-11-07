@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Programlama I (AYBS4006) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Web Programlama I (AYBS4006) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Web Programlama I (AYBS4006) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Web Programlama I (AYBS4006) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Web Programlama I (AYBS4006) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>91 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">91</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Web_Programlama_I_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (91)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">91</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Web_Programlama_I_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Web Proglama 1 2025 Vize", "text": "O anda bulunulan sayfadan Liste.html sayfasındaki Etiket adıyla işaretlenmiş konuma gitmek için hangisi kullanılır ?", "options": [{"letter": "A", "text": "<a href=\" Liste.html#Etiket\">...</a>"}, {"letter": "B", "text": "<a href=\" Liste.html/Etiket\">...</a>"}, {"letter": "C", "text": "<a name=\" Liste.html#Etiket\">...</a>"}, {"letter": "D", "text": "<a src=\" Liste.html#Etiket\">...</a>"}, {"letter": "E", "text": "<a href=\" #Etiket Liste.html \">...</a>"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 2, "tag": "Web Proglama 1 2025 Vize, Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdakilerden hangisi bir web sayfasının kullanılabilirliği iyi diyebilmek için taşıması beklenen özelliklerden biri değildir ?", "options": [{"letter": "A", "text": "Web sitesinde iletişim bilgileri ve iletişim formu bulunmalıdır."}, {"letter": "B", "text": "Web sayfasında gezinmek için kullanılan menü kullanıcının kolayca görüp kullanabileceği bir yerde bulunmalıdır."}, {"letter": "C", "text": "İçerik çok fazla ise arama kutusu bulunmalıdır."}, {"letter": "D", "text": "Önemli kelimeler kalın olarak veya özel renklerle vurgulanmalıdır."}, {"letter": "E", "text": "Çok renkli olmalıdır."}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 3, "tag": "Web Proglama 1 2025 Vize", "text": "Web sayfasında &nbsp; karakterleri yazılırsa ekranda ne görünür ?", "options": [{"letter": "A", "text": "Bir karakter boşluk verilir."}, {"letter": "B", "text": "Bir karakter altı çizili yazılır."}, {"letter": "C", "text": "Bir karakter koyu yazılır."}, {"letter": "D", "text": "Bir karakter sola eğilir."}, {"letter": "E", "text": "Bir karakter sağa eğilir."}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 4, "tag": "Web Proglama 1 2025 Vize", "text": "Aşağıdakilerden hangisi Word Wide Web Consortium (W3C) tarafından belirlenen standartlardan biri değildir?", "options": [{"letter": "A", "text": "MathML"}, {"letter": "B", "text": "PNG"}, {"letter": "C", "text": "XHTML"}, {"letter": "D", "text": "MathLab"}, {"letter": "E", "text": "XML"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 5, "tag": "Web Proglama 1 2025 Vize", "text": "Aşağıdakilerden hangisi doğru link verme formatıdır?", "options": [{"letter": "A", "text": "<a url=\"http://Htmldersleri.org\">Htmldersleri.org</a>"}, {"letter": "B", "text": "<a name=\"http://Htmldersleri.org\">Htmldersleri.org</a>"}, {"letter": "C", "text": "<a>http://Htmldersleri.org</a>"}, {"letter": "D", "text": "<a href=\"http://Htmldersleri.org\">Htmldersleri</a>"}, {"letter": "E", "text": "<a src=\"http://Htmldersleri.org\">Htmldersleri.org</a>"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 6, "tag": "Web Proglama 1 2025 Vize", "text": "Kare ile işaretlenmiş madde imli liste oluşturmak için kullanılacak doğru kod hangisidir?", "options": [{"letter": "A", "text": "<ul type=\"disk\">"}, {"letter": "B", "text": "<ul type=\"square\">"}, {"letter": "C", "text": "<dd type=\"square\">"}, {"letter": "D", "text": "<ul type=\"circle\">"}, {"letter": "E", "text": "<ol type=\"square\">"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 7, "tag": "Web Proglama 1 2025 Vize, Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Bir üst klasördeki Resimler klasörü içindeki up.png resmini ekranda eni boyu 30 piksel olacak şekilde gösteren ve üzerine tıklandığında aynı sayfa içinde \"ust\" adı ile işaretlenmiş konuma gidilmesini sağlayan kod parçası hangisidir ?", "options": [{"letter": "A", "text": "<A href=\"#ust\"> <IMG src=\"../Resimler/up.png\" width=\"30px\" heigth=\"30px\"></A>"}, {"letter": "B", "text": "<A href=\"ust\"> <IMG src=\"Resimler/up.png\" width=\"30px\" heigth=\"30px\"></A>"}, {"letter": "C", "text": "<A href=\"#ust\"> <IMG src=\"../Resimler/up.png\" width=\"70px\" heigth=\"70px\"></A>"}, {"letter": "D", "text": "<A href=\"#up\"> <IMG src=\"Resimler/../ust.png\" width=\"30px\" heigth=\"30px\"></A>"}, {"letter": "E", "text": "<A name=\"#ust\"> <IMG href=\"../Resimler/up.png\" width=\"30px\" heigth=\"30px\"></A>"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 8, "tag": "Web Proglama 1 2025 Vize", "text": "Sayfanın arka plan rengini yeşil olacak şekilde düzenlemek için aşağıdaki kod satırından hangisi kullanılır ?", "options": [{"letter": "A", "text": "<body bgcolor=”0000FF”>"}, {"letter": "B", "text": "<body backgroundcolor=”00FF00”>"}, {"letter": "C", "text": "<body background=”00FF00”>"}, {"letter": "D", "text": "<body bgcolor=”00FF00”>"}, {"letter": "E", "text": "<body color=”FFFF00”>"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 9, "tag": "Web Proglama 1 2025 Vize", "text": "Tarayıcıların ana eleman standardı hangisi tarafından oluşturulmuştur ?", "options": [{"letter": "A", "text": "W3C"}, {"letter": "B", "text": "En iyi kullanım deneyimi"}, {"letter": "C", "text": "DNS"}, {"letter": "D", "text": "World Wide Web Consortium"}, {"letter": "E", "text": "TSE"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 10, "tag": "Web Proglama 1 2025 Vize, Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi geçerli bir IP adresidir ?", "options": [{"letter": "A", "text": "193.-100.3.52"}, {"letter": "B", "text": "193.255.315"}, {"letter": "C", "text": "121.256.168.1"}, {"letter": "D", "text": "193.255.141.522"}, {"letter": "E", "text": "121.161.255.12"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 11, "tag": "Web Proglama 1 2025 Vize", "text": "Bir web sitesinin internetteki adı ile adresine verilen isim nedir ?", "options": [{"letter": "A", "text": "Web Hosting"}, {"letter": "B", "text": "Host Name"}, {"letter": "C", "text": "Task Name"}, {"letter": "D", "text": "Domain Name"}, {"letter": "E", "text": "DNS WEB PROGRAMLAMA I B P3.G9372 06-03-2025 13:38:22 WEB PROGRAMLAMA I B P3.G9372 06-03-2025 13:38:22 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 12, "tag": "Web Proglama 1 2025 Vize, Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Türk Standartları Enstitüsünün tanımladığı ISO 9241 no'lu standardın bir bölümü ve bir ürünün belirli kullanıcılar tarafından belirli amaçlarla etkili (effective), verimli (efficient) ve belirli bir kullanım çerçevesinde memnuniyetle (satisfaction) kullanabilme derecesi olarak tanımlanan kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Etkililik"}, {"letter": "B", "text": "Tasarım"}, {"letter": "C", "text": "Kullanılabilirlik"}, {"letter": "D", "text": "İşlemsellik"}, {"letter": "E", "text": "İşlevsellik"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 13, "tag": "Web Proglama 1 2025 Vize", "text": "Bir web sayfasına bulunduğu dizinin iki üst dizinindeki resim.gif dosyasını eklemek için nasıl bir kod yazmak gerekir?", "options": [{"letter": "A", "text": "<img src=//resim.gif>"}, {"letter": "B", "text": "<img src=resim/resim.gif>"}, {"letter": "C", "text": "<img src=../resim.gif>"}, {"letter": "D", "text": "<img src=../resim/resim.gif>"}, {"letter": "E", "text": "<img src=../../resim.gif>"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 14, "tag": "Web Proglama 1 2025 Vize", "text": "Blink Rendering Engine’i kullanan tarayıcılar hangi şıkta doğru verilmiştir?", "options": [{"letter": "A", "text": "Chrome, Safari"}, {"letter": "B", "text": "Safari"}, {"letter": "C", "text": "Chrome, Opera, Edge"}, {"letter": "D", "text": "Safari, Firefox"}, {"letter": "E", "text": "Chrome, IE, Edge"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 15, "tag": "Web Proglama 1 2025 Vize", "text": "Aktif frame’i sırasıyla %40, %30 ve %30 ölçülerde üç yatay frame’e bölmek için kullanılan kod hangisidir ?", "options": [{"letter": "A", "text": "<frameset rows=40,30,30>...</frameset>"}, {"letter": "B", "text": "<frameset rows=40%,30%,30%>...</frameset>"}, {"letter": "C", "text": "<frameset cols=40%,30%,30%>...</frameset>"}, {"letter": "D", "text": "<frameset cols=%40,%30,%30>...</frameset>"}, {"letter": "E", "text": "<frameset rows=%40,%30,%30>...</frameset>"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 16, "tag": "Web Proglama 1 2025 Vize, Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Resimler klasörü içindeki bg.png dosyasını HTML sayfanın arka planı olarak ayarlamak için yazılacak kod satırı hangisidir ?", "options": [{"letter": "A", "text": "<head background=”resimler/bg.png”> ... </head>"}, {"letter": "B", "text": "<html background=”resimler/bg.png”> ... </html>"}, {"letter": "C", "text": "<body bgimage=”resimler/bg.png”> ... </body>"}, {"letter": "D", "text": "<body background-image=”bg/resimler.png”> ... </body>"}, {"letter": "E", "text": "<body background=”resimler/bg.png”> ... </body>"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 17, "tag": "Web Proglama 1 2025 Vize", "text": "Resim üzerinde belli bir bölgenin belli bir şekilde işaretlenmesi için kullanılan etiket ve özellikleri hangisinde doğru verilmiştir ?", "options": [{"letter": "A", "text": "<AREA shape=\" \" coords=\" \">"}, {"letter": "B", "text": "<AREA shape=\" \" points=\" \">"}, {"letter": "C", "text": "<MAP area=\" \" coords=\" \">"}, {"letter": "D", "text": "<AREA map=\" \" points=\" \">"}, {"letter": "E", "text": "<MAP shape=\" \" coords=\" \">"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 18, "tag": "Web Proglama 1 2025 Vize", "text": "Aşağıdakilerden hangisi renklendirme işlemi için doğru bir kullanımdır ?", "options": [{"letter": "A", "text": "<font color=\"#0,256,0\"> Kırmızı </font>"}, {"letter": "B", "text": "<font color=\"#FFFF00\"> Mavi </font>"}, {"letter": "C", "text": "<font color=\"rgb(256,0,0)\"> Kırmızı </font>"}, {"letter": "D", "text": "<font color=\"#rgb(255,0,255)\"> Kırmızı </font>"}, {"letter": "E", "text": "<font color=\"Kırmızı\"> Blue </font>"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 19, "tag": "Web Proglama 1 2025 Vize", "text": "Web tarayıcıları hakkında verilenlerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Web tarayıcılar CSS kodlarını yorumlayabilirler."}, {"letter": "B", "text": "Web tarayıcılar istemci tarafın bağlantı isteğinde bulunmak için kullandığı uygulamalardır."}, {"letter": "C", "text": "Web tarayıcılar C++ dilinde yazılmış kodları derlemek için kullanılır."}, {"letter": "D", "text": "Web tarayıcılar Javascript kodlarını işletebilirler."}, {"letter": "E", "text": "Web tarayıcılar HTML dilini yorumlayabilirler."}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 20, "tag": "Web Proglama 1 2025 Vize", "text": "Birbirleri ile iletişim kurarak World Wide Web’i meydana getiren iki bileşen hangisidir?", "options": [{"letter": "A", "text": "HTTP – SMTP"}, {"letter": "B", "text": "HTTP – HTTPS"}, {"letter": "C", "text": "İstemci – Sunucu"}, {"letter": "D", "text": "Alıcı - Verici"}, {"letter": "E", "text": "Yazıcı – Okuyucu"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 21, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar, Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Yukarıdaki html sayfa browserda açıldığında ekranda nasıl bir görüntü olur ?", "options": [{"letter": "A", "text": "24"}, {"letter": "B", "text": "undefined"}, {"letter": "C", "text": "23"}, {"letter": "D", "text": "5"}, {"letter": "E", "text": "28"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 22, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "JavaScript’te; Yukarıdaki şeklinde tanımlanmış olan a, b, c ve d değişkenleri arasında yapılan aşağıdaki karşılaştırmalardan hangisi diğerlerinden farklı bir değer üretir?", "options": [{"letter": "A", "text": "(b>=d)"}, {"letter": "B", "text": "(a===c)"}, {"letter": "C", "text": "(a==c)"}, {"letter": "D", "text": "(a!=c)"}, {"letter": "E", "text": "(b==d)"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 23, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Sayfaya eklenen resim.jpg dosyası ile resimden sonra gelen metinlerin üst satırı resmin ortası ile hizalanacak şekilde olmasını sağlayacak satır hangisidir ?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 24, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdakilerden hangisi JSON’da desteklenen veri tiplerinden biri değildir?", "options": [{"letter": "A", "text": "object"}, {"letter": "B", "text": "array"}, {"letter": "C", "text": "number"}, {"letter": "D", "text": "string"}, {"letter": "E", "text": "date"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 25, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Hazırlanan web sayfasını; başlık bölümüne 1.seviye başlık olarak “İstanbul Üniversitesi” ve dipnot bölümüne de “© 2021” yazacak şekilde düzenlemek için doğru kod parçası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "<html> <head> <meta charset=\"utf-8\"> <script type=\"text/JavaScript\"> function Mesaj() { var i = 10, sayi = 0; do { --i; if (i == 7) continue; sayi += i; } while (i > 5); return sayi; } </script> </head> <body> <script> document.write(Mesaj()); </script> </body> </html> var a=5, b=7, c=\"5\", d=7.2; <img src=\"resim.jpg\" align=\"center\"> <img src=”logo.png” align=”center”> <img src=\"resim.jpg\" align=\"middle\"> <img src=\"logo.jpg\" align=\"top\"> <img src=\"resim.jpg\" align=\"bottom\"> <header> <h2> İstanbul Üniversitesi </ h2> </header> <footer> &#174; 2021 </ footer> <header>İstanbul Üniversitesi </header > <footer> 169; 2021 </ footer> <header> İstanbul Üniversitesi </heade r> <footer> &#174; 2021 </ footer> <header> <h1> İstanbul Üniversitesi </ h1> </header> <footer> &#169; 2021 </footer> < footer> <h2> İstanbul Üniversitesi < /h2> </ footer> < header> © 2021 </header > WEB PROGRAMLAMA I B P355875.G20354 24-06-2026 13:17:46 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 26, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Tablo üstüne 2020 Yılı Üretim Dökümü başlığı yazan HTML kodu hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 27, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar, WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Bir div’in arka plan rengini daire şeklinde, kırmızı, sarı ve mavi renkler arasında geçişler olacak şekilde düzenleyen ID tanımlamasının CSS kodu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 28, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "<font color=\"rgb(255,0,0)\"> Kırmızı </font> satırı browser'da açıldığında ekranda aşağıdakilerden hangisi görünür?", "options": [{"letter": "A", "text": "Yeşil renkli yazılmış Kırmızı kelimesi görünür."}, {"letter": "B", "text": "Mavi renkli yazılmış font kelimesi görünür."}, {"letter": "C", "text": "Mavi renkli yazılmış Kırmızı kelimesi görünür."}, {"letter": "D", "text": "Kırmızı renkli yazılmış Kırmızı kelimesi görünür."}, {"letter": "E", "text": "Kırmızı renkli yazılmış font kelimesi görünür."}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 29, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Yukarıdaki JavaScript kod satırları çalıştığında ekran çıktısı ne olur?", "options": [{"letter": "A", "text": "11"}, {"letter": "B", "text": ""}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 30, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Yukarıdaki kodun ekran çıktısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 31, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Animasyonun 5 kez çalışacağını tanımlamak için aşağıdakilerden hangisi kullanılır ?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 32, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Kullanıcıya göstermeden form ile birlikte veri taşımak için kullanılan doğru satır aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 33, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdakilerden hangisi XML’nin olumlu özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Esnektir, başka diller tanımlanabilir."}, {"letter": "B", "text": "Lisans sorunu yoktur, platform odaklı olmayan ve çok desteklenen bir dildir."}, {"letter": "C", "text": "Özellikle sayısal data için çok iyi sonuçlar verebilir."}, {"letter": "D", "text": "İnternet tarayıcısı gibi basit araçlarda bile gösterilebilir."}, {"letter": "E", "text": "İnsanların okuyabileceği bir dildir."}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 34, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Web sayfasında <h1 id=\"Baslik1\"> Ders Notları </h1> şeklinde tanımlanmış olan metnin rengini mavi yapan Javascript kodu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 35, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdaki bölüm tanımlamalarından hangisi kullanıldığında web sayfası kendini açıldığı ekran çözünürlüğüne göre ayarlayabilen (responsive) yapıda olup ekranın tamamını kaplar şekilde görünür?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "<select> <option value=\"Pazartesi\">1. Gün</option> <option value=\"Salı\">2. Gün </option> <option value=\"Çarşamba\">3. Gün</option> </select> animation-iteration-count : 5; animation- duration : 5; animation-fill-mode : 5; animation-timing : 5; animation-iteration : 5; <input send=\"hidden\"> <input type=\"file\"> <input type=\"hidden\"> <type input=\"hidden\"> <input type=\"password\"> document.getElementById(\"Baslik1\").sty le.color = \"blue\"; document.getElementById(\"Ders Notları\" ).style.color = \"green\"; document.getElementById(\"h1\").style.co lor = \"blue\"; document.getElementsTagByName(\"Baslik1 \").style.color = \"blue\"; document.getElementById(\"Baslik1\").col or = \"mavi\"; <section width=\"100%\" height=\"100%\"> <section width=\"100px\" height=\"100px\" > <section width=\"70px\" height=\"70px\"> <section > <section width=\"70%\" height=\"70%\"> WEB PROGRAMLAMA I B P355875.G20354 24-06-2026 13:17:46 CEVAPLI"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 36, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Formda girilen bilgilerin url bar’da görünmeden action_page.aspx dosyasına gönderilmesi için yazılması gereken satır aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 37, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdakilerden hangisi işletim sisteminin başlıca görevlerinden değildir?", "options": [{"letter": "A", "text": "Bilgisayar donanımının en etkili yoldan kullanılmasını sağlamak"}, {"letter": "B", "text": "Aritmetiksel ya da mantıksal işlemleri yerine getirmek"}, {"letter": "C", "text": "Problemlere çözüm üretmek"}, {"letter": "D", "text": "Bilgisayar sistemini kullanıma uygun hale getirmek"}, {"letter": "E", "text": "Kullanıcı programlarını çalıştırmak"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 38, "tag": "Web Programlama 1 - 2025-2026 - Bütünleme - Bahar", "text": "Web sayfasında gruplandırılmış nesnelere başlık vermek için kullanılan etiket hangisidir ?", "options": [{"letter": "A", "text": "<title> ... </ title>"}, {"letter": "B", "text": "<legend> ... </ legend>"}, {"letter": "C", "text": "<head> ... </ head>"}, {"letter": "D", "text": "<h1> ... </ h1>"}, {"letter": "E", "text": "<formtitle> ... </ formtitle> <form action=\"action_page.aspx\" method =\"get\"> <form action=\"action_page.aspx\" method =\"post\"> <form src=\"action_page.aspx\" method=\"p ost\"> <form action=\"action_page.aspx\" send=\" post\"> <form src=\"action_page.aspx\" method=\"g et\">"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 39, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Bir nesneye verilen animasyon özelliğinin işleme yönünü tanımlamak için aşağıdaki özelliklerden hangisi kullanılır?", "options": [{"letter": "A", "text": "animation-iteration"}, {"letter": "B", "text": "animation-duration"}, {"letter": "C", "text": "animation-direction"}, {"letter": "D", "text": "animation-timing"}, {"letter": "E", "text": "animation-fill-mode"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 40, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "XML ve JSON hakkında aşağıda verilen ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "JSON’da verinin yapısı etiketlerle tanımlanır."}, {"letter": "B", "text": "JSON, XML’e göre daha az tekrar içerir."}, {"letter": "C", "text": "JSON, XML gibi geliştirilebilir bir yapıya sahip değildir."}, {"letter": "D", "text": "JSON okunabilirlik açısından daha kolay ve anlaşılabilirdir."}, {"letter": "E", "text": "JSON, XML’e göre daha küçük ve hızlıdır."}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 41, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Formda girilen bilgilerin url bar’da görünecek şekilde action_page.aspx dosyasına gönderilmesi için yazılması gereken satır hangisidir ?", "options": [{"letter": "A", "text": "<form action=\"action_page.aspx\" send=\"post\">"}, {"letter": "B", "text": "<form src=\"action_page.aspx\" method=\"post\">"}, {"letter": "C", "text": "<form action=\"action_page.aspx\" method=\"get\">"}, {"letter": "D", "text": "<form action=\"action_page.aspx\" method=\"post\">"}, {"letter": "E", "text": "<form src=\"action_page.aspx\" method=\"get\">"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 42, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Web sayfasına logo.png adlı dosyanın eni ve boyu %25 oranda küçültülerek eklenmesini sağlayan satır aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 43, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Bir resmin üzerinde merkez noktası (x,y) = (119,153) ve çapı 22 olan daire şeklindeki alanı işaretleyip o alana tıklandığında www.daire.com.tr adresine gitmeyi sağlayan kod aşağıdakilerden hangisidir ?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 44, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Kullanıcıdan açılan pencere içerisinde metinsel (string) veri girişi almak için kullanılan komut hangisidir ?", "options": [{"letter": "A", "text": "let"}, {"letter": "B", "text": "var"}, {"letter": "C", "text": "document.write()"}, {"letter": "D", "text": "confirm"}, {"letter": "E", "text": "prompt"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 45, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Hangi etiket arasına yazılan kodlar tarayıcı tarafından JavaScript kodu olarak algılanır?", "options": [{"letter": "A", "text": "<script> ... </script>"}, {"letter": "B", "text": "<java> ... </java>"}, {"letter": "C", "text": "<scripting> ... </scripting>"}, {"letter": "D", "text": "<javascript> ... </javascript>"}, {"letter": "E", "text": "<jscript> ... </jscript>"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "CSS kodlamada özellik ve değer ikilileri arasında hangi noktalama işareti kullanılır ?", "options": [{"letter": "A", "text": ";"}, {"letter": "B", "text": "<>"}, {"letter": "C", "text": ":"}, {"letter": "D", "text": "{}"}, {"letter": "E", "text": "-"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 47, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Web sayfasında © simgesinin görünmesi için aşağıdakilerden hangisi yazılmalıdır?", "options": [{"letter": "A", "text": "&#069;"}, {"letter": "B", "text": "&bnsp;"}, {"letter": "C", "text": "&#nbsp;"}, {"letter": "D", "text": "&#lst;"}, {"letter": "E", "text": "&#169;"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 48, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Yukarıdaki görünüme sahip bir giriş nesnesi oluşturmak için kullanılacak html kod satırı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "<input type=\"datetime\" name=\"time\">"}, {"letter": "B", "text": "<input type=\"time\" name=\"time\">"}, {"letter": "C", "text": "<input type=\"clock\" name=\"time\">"}, {"letter": "D", "text": "<input type=\"week\" name=\"time\">"}, {"letter": "E", "text": "<input type=\"localtime\" name=\"time\">"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 49, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Formunuza her satırı 50 karakterden oluşan 4 satırlık yazı yazılabilecek alan eklemek için kullanılan form nesnesi hangisidir?", "options": [{"letter": "A", "text": "<textarea id=\"50\" name=\"4\">"}, {"letter": "B", "text": "<textarea rows=\"4\" cols=\"50\">"}, {"letter": "C", "text": "<textarea rows=\"50\" cols=\"4\">"}, {"letter": "D", "text": "<textarea id=\"4\" cols=\"50\">"}, {"letter": "E", "text": "<textarea rows=\"4\" name=\"50\">"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 50, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Yukarıdaki JavaScript kod satırları çalıştığında nasıl bir sonuç üretir?", "options": [{"letter": "A", "text": "iiiiii"}, {"letter": "B", "text": "iiii"}, {"letter": "C", "text": "19i18i15"}, {"letter": "D", "text": "201917"}, {"letter": "E", "text": "201715"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 51, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi HTML5 ile gelen, genel bölümler oluşturmak için kullanılan etikettir ?", "options": [{"letter": "A", "text": "<div>"}, {"letter": "B", "text": "<footer>"}, {"letter": "C", "text": "<nav>"}, {"letter": "D", "text": "<section>"}, {"letter": "E", "text": "<header>"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 52, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Input nesnesi ile kullanıcıdan alınacak mail adresin olması gereken format kontrolü için kullanılan özellik hangisidir?", "options": [{"letter": "A", "text": "pattern"}, {"letter": "B", "text": "placeholder"}, {"letter": "C", "text": "email"}, {"letter": "D", "text": "required"}, {"letter": "E", "text": "type"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 53, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "XML kısaltmasının açılımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Extensible Markup Language"}, {"letter": "B", "text": "Extra Modern Link"}, {"letter": "C", "text": "Example Markup Language"}, {"letter": "D", "text": "Extra Markup Language"}, {"letter": "E", "text": "X-Markup Language"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 54, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "İşletim sistemi, dosya yönetimi konusunda aşağıdaki aktivitelerin hangisinden sorumlu değildir?", "options": [{"letter": "A", "text": "Dosyalar ve dizinler üzerinde değişiklik yapabilmek için temel yetenekleri destekleme"}, {"letter": "B", "text": "Dizin oluşturma ve silme"}, {"letter": "C", "text": "Dosya yaratma ve silme"}, {"letter": "D", "text": "Dosyadaki renkleri düzenleme"}, {"letter": "E", "text": "Dosyaların yedeklerini sabit diske alabilme var i=20; while(i>15){ --i; if (i==17) continue; document.write(\"i\"); } WEB PROGRAMLAMA I B P787296.G19672 08-05-2026 14:50:40 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 55, "tag": "Web Programlama 1 - 2025-2026 - Final - Bahar", "text": "Bir üst klasörde bulunan \"müzik1 adlı klasör içerisindeki \"music.mp3\" dosyası, HTML sayfası yüklendiğinde otomatik olarak çalışmaya başlayacak ve bittiğinde tekrar çalacak şekilde yerleştirilmek isteniyor. Ayrıca kullanıcıya yönlendirme imkanı sunan kontrol butonlarının da görünmesi isteniyor. Tüm bu isterlerin yerine getirilmesi için aşağıdaki seçeneklerden hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "<audio src=\"music.mp3\" type=\"audio/mp4 \" controls autoplay loop=\"true\"> </aud io> <video src=\"../muzik/music.mp3\" type=\" audio/mp4\" controls autoplay loop=\"tru e\"> </ video > <audio src=\"muzik/music.mp3\" type=\"aud io/mp3\" autoplay loop=\"true\"> </audio> <audio src=\"../muzik/music.mp3\" type=\" audio/mp3\" controls autoplay loop=\"tru e\"> </audio> <video src=\"../muzik/music.mp3\" type=\" audio/mp3\" controls loop=\"false\"> </ v ideo>"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 56, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi GPU (Grafik İşlem Birimi)’nun özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "İşlemcilere göre çok daha az çekirdeğe (core) sahiptir."}, {"letter": "B", "text": "İşlemcilere göre çok daha fazla çekirdeğe (core) sahiptir."}, {"letter": "C", "text": "Daha kısıtlı bir alanda matematiksel ağırlıklı işlemleri yerine getirir."}, {"letter": "D", "text": "Rendering işlemleri yapar."}, {"letter": "E", "text": "Physics ve AI Calculation yapar."}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 57, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "\"tıklandığında\" açılacak konumu Etiket adıyla işaretlemek için hangisi kullanılır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 58, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Bir web sayfası hangi etiket çifti ile başlar ve biter?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 59, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Tarayıcılarda bağlanılmak istenen URL’in girildiği alana ne ad verilir?", "options": [{"letter": "A", "text": "Durum Çubuğu"}, {"letter": "B", "text": "Adres Çubuğu"}, {"letter": "C", "text": "Kaydırma Çubuğu"}, {"letter": "D", "text": "İçerik Alanı"}, {"letter": "E", "text": "Yer İmleri"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 60, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Bir satırdaki bütün verilerin hücrelerin içinde sağa yaslanarak yazılmasını sağlayan kod hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 61, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Sunucu (server) ve istemci (client) arasındaki veri transferinin güvenli bir alt yapıda gerçekleşmesini sağlayan, güvenliği sağlamak için kurallar ve yöntemler düzenleyen protokol aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "URN"}, {"letter": "B", "text": "DHTML"}, {"letter": "C", "text": "HTTPS"}, {"letter": "D", "text": "HTTP"}, {"letter": "E", "text": "FTP"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 62, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "İşletim Sistemlerinin, birden fazla işlem varsa bunlardan hangisinin önce çalışacağına, sırasının ne olacağına karar vermesi işlemine ne ad verilir?", "options": [{"letter": "A", "text": "İşlemci Zamanlama"}, {"letter": "B", "text": "Programlama"}, {"letter": "C", "text": "Kodlama"}, {"letter": "D", "text": "İşlemci Kodlama"}, {"letter": "E", "text": "İşlemci Planlama"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 63, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Yukarıdaki kod satırı ne için kullanılır?", "options": [{"letter": "A", "text": "Daha önce tanımlanan font özellik tanımlarını geçersiz kılmak için"}, {"letter": "B", "text": "Bir satır aşağıdan devam etmek için"}, {"letter": "C", "text": "Daha önce tanımlanan align özellik tanımlarını geçersiz kılmak için"}, {"letter": "D", "text": "Bir satır alttan itibaren tüm metin ve resimleri silmek için"}, {"letter": "E", "text": "Bir satır alttan itibaren tüm resimleri silmek için <a name=\"Etiket\">...</a> <a href=\"#Etiket\">...</a> <a href=\"Etiket\">...</a> <a src=\"Etiket\">...</a> <a path=\"Etiket\">...</a> <body> ... </body> <title> ... </title> <html> ... </html> <style> ... </style> <head> ... </head> <table align=\"right\"> <hr align=\"right\"> <tr align=\"right\"> <th align=\"right\"> <row align=\"right\"> <br clear=”all”> WEB PROGRAMLAMA I A P355875.G18992 27-03-2026 10:23:33 CEVAPLI"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 64, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar, WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Metin kelimesinin sayfadaki diğer elemanlardan ayrı ve arka plan rengi kırmızı olacak bir bölüme alınmış olup sayfanın ortasında görünmesini sağlayacak olan kod satırı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 65, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi bir eğitim kurumuna ait web sayfasının adresine örnek olabilir?", "options": [{"letter": "A", "text": "www.istanbul.gov.tr"}, {"letter": "B", "text": "www.tdb.org.tr"}, {"letter": "C", "text": "www.yandex.com"}, {"letter": "D", "text": "www.iuc.edu.tr"}, {"letter": "E", "text": "www.ttnet.net.tr"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 66, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "DHCP (Dynamic Host Configuration Protocol) sunucuları tarafından otomatik olarak dağıtılan IP türü hangisidir?", "options": [{"letter": "A", "text": "Statik IP"}, {"letter": "B", "text": "HTTP"}, {"letter": "C", "text": "TCP/IP"}, {"letter": "D", "text": "Sabit IP"}, {"letter": "E", "text": "Dinamik IP"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 67, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Tabloda sadece bir satırın zemin rengini belirleyen özellik (attribute) hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 68, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Yukarıda yazılan satırın browserda (tarayıcıda) açıldığında görüntüsü nasıl olur?", "options": [{"letter": "A", "text": "Metin kelimesi ekranda ortalanmış olarak yazılır."}, {"letter": "B", "text": "Metin kelimesi ekranda koyu renkle yazılır."}, {"letter": "C", "text": "Metin kelimesi ekranda parlak renkle yazılır."}, {"letter": "D", "text": "Metin kelimesi ekranda sola dayalı olarak yazılır."}, {"letter": "E", "text": "Metin kelimesi ekranda sağa dayalı olarak yazılır."}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 69, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Sırasız liste başlatma etiketi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 70, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar, WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Bir web sayfasındaki linkin üzerine tıklandığında mouse basılı iken görünecek metin rengini tanımlamak için hangi özellik kullanılır?", "options": [{"letter": "A", "text": "LINKTEXT"}, {"letter": "B", "text": "LINK"}, {"letter": "C", "text": "VLINK"}, {"letter": "D", "text": "ALINK"}, {"letter": "E", "text": "TEXT <DIV align=\"center\" bgcolor=\"#FF0000\"> Metin </DIV> <DIV align=\"right\" bgcolor=\"#FF0000\"> Metin </DIV> <DIV align=\"center\" bgcolor=\"#FF00FF\"> Metin </DIV> <FONT align=\"left\" bgcolor=\"#FF0000\"> Metin </FONT> <a align=\"center\" bgcolor=\"#FF0000\"> M etin </a> <tr color=\"red\"> </tr> <tablerow bgcolor=\"#050505\"> </tablero w> <row bgcolor=\"#050505\"> </row> <tr bgcolor=\"#050505\"> </tr> <row> bgcolor=\"red\" </row> <P align=”right”> Metin </P> <li> ... </li> <ul> ... </ul> <ol> ... </ol> <bl> ... </bl> <dl> ... </dl> WEB PROGRAMLAMA I A P355875.G18992 27-03-2026 10:23:33 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 71, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "<MAP> etiket bloğunun arasında tıklanabilir alanlar ve hedef linkler tanımlamak için kullanılan etiket hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 72, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Yazı, resim, ses, film gibi pek çok farklı yapıdaki verilere etkileşimli bir şekilde ulaşmayı sağlayan web sayfaları ağı hangisidir?", "options": [{"letter": "A", "text": "HTML"}, {"letter": "B", "text": "WWW"}, {"letter": "C", "text": "HTTP"}, {"letter": "D", "text": "XHTML"}, {"letter": "E", "text": "HTTPS"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 73, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "Temel görevi yazı, görüntü, video gibi çeşitli verileri ve bunları içeren sayfaları birbirine basitçe bağlamak, buna ek olarak söz konusu sayfaların web tarayıcısı yazılımları tarafından düzgün olarak görüntülenmesi için gerekli kuralları belirlemek olan aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "XML"}, {"letter": "B", "text": "SMTP"}, {"letter": "C", "text": "URN"}, {"letter": "D", "text": "HTML"}, {"letter": "E", "text": "IMAP"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 74, "tag": "Web Programlama I - 2025-2026 - Vize - Bahar", "text": "3. seviye başlık olan “Web Programlama” kelimelerinin bulunduğu konumu WebPrg adıyla isimlendirmek için kullanılacak komut satırı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "<map> ... </map> <poly> ... </poly> <name> ... </name> <shape> ... </shape> <area> ... </area> <A src=\"#WebPrg\"> <h1>Web Programlama< /h1> </A> <A name=\"WebPrg\"> <h3>Web Programlama< /h3> </A> <A name=\"WebPrg\"> Web Programlama </A> <A name=\"#WebPrg\"> <h2>Web Programlama </h2> </A> <A name=\" Web Programlama\"> <h3> WebPr g </h3> </A>"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 75, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Sayfa açıldığında konumlanılması istenen nesneye aşağıdaki özelliklerden hangisi verilmelidir ?", "options": [{"letter": "A", "text": "enabled"}, {"letter": "B", "text": "readonly"}, {"letter": "C", "text": "required"}, {"letter": "D", "text": "placeholder"}, {"letter": "E", "text": "autofocus"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 76, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Yukarıdaki Javascript kod satırları çalıştığında ekran çıktısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "15"}, {"letter": "B", "text": "19"}, {"letter": "C", "text": "17"}, {"letter": "D", "text": "20"}, {"letter": "E", "text": "18"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 77, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Yukarıdaki JavaScript kodları çalıştığında ekranda görülecek çıktı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "84"}, {"letter": "B", "text": "1 9 5"}, {"letter": "C", "text": "4 8"}, {"letter": "D", "text": "1235678"}, {"letter": "E", "text": "159"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 78, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Görüntüleme motoru ile kullanıcı arayüzü arasındaki etkileşimi birbirine bağlama görevini yerine getiren yapı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "JS Interpreter"}, {"letter": "B", "text": "UI Backend"}, {"letter": "C", "text": "User Interface"}, {"letter": "D", "text": "Web Tarayıcısı"}, {"letter": "E", "text": "Tarayıcı Motoru"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 79, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Çalışma dizininin iki üst klasöründeki Resimler klasöründe yer alan Harita.jpg dosyası üzerinde belirli yerleri işaretleyen harita adındaki MAP’in kullanılması için aşağıdaki kod satırlarından hangisi yazılmalıdır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 80, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Yukarıdaki komut satırı ile kullanıcıdan alınan tam sayı değeri üzerinde matematiksel işlem uygulayabilmek için aşağıdaki kod satırlarından hangisi yazılmalıdır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 81, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Video ya da audio nesnesi ile sayfaya eklenen medya dosyasının, kontrol edilmesinde kullanılacak butonların eklenmesini sağlamak için aşağıdakilerden hangi özellik kullanılmalıdır ?", "options": [{"letter": "A", "text": "controls=\"false\""}, {"letter": "B", "text": "controls=\"true\""}, {"letter": "C", "text": "autoplay =\"true\""}, {"letter": "D", "text": "autoplay"}, {"letter": "E", "text": "controls var x = 5, y=8; alert(++x*2+y--); for (var i = 1; i < 10; i++) if(i%4==0) document.write(i+\"<BR>\"); <IMG href=\"../../Resimler/Harita.jpg\" map=\"#harita\"> <IMG source=\"#Resimler/Harita.jpg\" use map=\"#harita\"> <IMG src=\"../../Resimler/Harita.jpg\" u semap=\"#harita\"> <IMG href=\"../../Resimler/#Harita.jpg\" usemap=\"#harita\"> <IMG src=\"../Resimler/Harita.jpg\" use_ map=\"#harita\"> var sayi = prompt(\"Sayı =\"); var sayiInt = parseInt(sayi); parseFloat(sayi); var sayiInt = parseString(sayi); var sayiInt = toString(sayi); parseInteger(sayi); WEB PROGRAMLAMA I A P355543.G12126 19-06-2025 15:40:03 WEB PROGRAMLAMA I A P355543.G12126 19-06-2025 15:40:03 CEVAPLI CEVAPLI"}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 82, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "http://mail.istanbul.edu.tr/~sci/ders/webprog.html ifadesinde http:// ile aşağıdakilerden hangisi ifade edilir?", "options": [{"letter": "A", "text": "URL"}, {"letter": "B", "text": "Domain Name"}, {"letter": "C", "text": "Kullanılan Protokol"}, {"letter": "D", "text": "Host Name"}, {"letter": "E", "text": "URN"}], "correct": "C", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 83, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Aşağıdakilerden hangisi XML kullanım alanlarından biri değildir ?", "options": [{"letter": "A", "text": "Referans kütüphaneleri düzenleyerek data standartları oluşturmak"}, {"letter": "B", "text": "Program yazmak"}, {"letter": "C", "text": "B2B süreçlerinde hızlı ve kesin çözümler sunmak"}, {"letter": "D", "text": "Farklı platformlar arasındaki data paylaşımını ve transferini kolaylaştırmak"}, {"letter": "E", "text": "Yeni diller yaratmak"}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 84, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Sayfada ayrılan bir bölüm içinde www.istanbul.edu.tr adresinin açılmasını sağlamak için yazılacak kod hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 85, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Aşağıdakilerden hangisi seçilen açı ya da yöne göre seçilen renkler arasında geçişler oluşturarak gelişmiş bir görsellik sunar ?", "options": [{"letter": "A", "text": "radial-gradient"}, {"letter": "B", "text": "gradient"}, {"letter": "C", "text": "rgba"}, {"letter": "D", "text": "linear-gradient"}, {"letter": "E", "text": "background"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 86, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Video ya da audio nesnesi ile sayfaya eklenen medya dosyasının sayfa yüklendiğinde otomatik olarak çalmaya başlamasını sağlamak için aşağıdaki özelliklerden hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": "autoplay"}, {"letter": "B", "text": "autoplay =\"true\""}, {"letter": "C", "text": "play =\"false\""}, {"letter": "D", "text": "autoplay =\"false\""}, {"letter": "E", "text": "controls"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 87, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Form alanına girilen bilgileri temizleyen HTML düğmesi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "reset"}, {"letter": "B", "text": "submit"}, {"letter": "C", "text": "call"}, {"letter": "D", "text": "send"}, {"letter": "E", "text": "button <DIV align=\"center\" bgcolor=\"#FF0000\"> Metin </DIV> <DIV align=\"right\" bgcolor=\"#FF0000\"> Metin </DIV> <DIV align=\"center\" bgcolor=\"#FF00FF\"> Metin </DIV> <a align=\"center\" bgcolor=\"#FF0000\"> M etin </a> <FONT align=\"left\" bgcolor=\"#FF0000\"> Metin </FONT> <FRAMESET src=\"http://www.istanbul.edu .tr\"> <FRAMESET href=istanbul.edu.tr> <FRAME href=\"http://www.istanbul.edu.t r\"> <FRAME src=istanbul.edu.tr> <FRAME src=\"http://www.istanbul.edu.tr \"> .div { background:radial-gradient(circ le, red, yellow, blue); } #div { background:linear-gradient(circ le, red, yellow, blue); } #div { background:radial-gradient(circ le, red, yellow, blue); } .div { background:linear-gradient(circ le, red, yellow, blue); } div { background:radial-gradient(circl e, red, yellow, blue); } WEB PROGRAMLAMA I A P355543.G12126 19-06-2025 15:40:03 WEB PROGRAMLAMA I A P355543.G12126 19-06-2025 15:40:03 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 88, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Bir web sayfası yüklenirken gerçekleşmesini istediğimiz işlem adımlarını içeren myFunction() adlı fonksiyonu hangi Javascript satırı ile çağırılmalıdır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 89, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "HTML'de bir alanına girilecek metnin Türkçe dil kuralına uygun yazılıp yazılmadığını kontrol etmek için aşağıdaki seçeneklerden hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 90, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "<?xml version=\"1.0\"> I. <note> II. <to age=29>Tove</to> III. <from>Jani</from> IV. </note> V. Yukarıdaki XML dosya örneğine göre aşağıdakilerden hangisi söylenebilir?", "options": [{"letter": "A", "text": "Yalnız I yanlıştır."}, {"letter": "B", "text": "I ve III yanlıştır."}, {"letter": "C", "text": "Tüm satırları doğrudur."}, {"letter": "D", "text": "II ve III yanlıştır."}, {"letter": "E", "text": "I ve V yanlıştır."}], "correct": "B", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 91, "tag": "WEB PROGRAMLAMA I BÜTÜNLEME SINAVI2024-2025", "text": "Üzerine tıklandığında A, B, C bilgilerinin açılır liste ile sunulduğu bir yapı oluşturmak için kullanılan HTML kodu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": "<body onclick=\"myFunction()\"> <body onload=\"myFunction()\"> <title onload=\"myFunction()\"> head.onload=\"myFunction()\"; <html onclick=\"myFunction()\"> <input type=\"text\" spellcheck=\"true\" L ang=\"eng\"> <input type=\"check\" spell=\"true\" Lang= \"tr\"> <input type=\"text\" spellcheck=\"false\" Lang=\"tr\"> <input type=\"text\" spellcheck=\"true\" L ang=\"tr\"> <input type=\"text\" check=\"true\" Lang=\" tr\"> <input list=\"liste\"> <datalist id=\"liste\"> <option value=\"A, B, C\"> </datalist> <input list=\"liste\"> <option value=\"A\"> <option value=\"B\"> <option value=\"C\"> </input> <input list=\"liste\"> <datalist id=\"liste\"> <value=\"A\"> < value=\"B\"> < value=\"C\"> </datalist> <input list=\"liste\"> <datalist id=\"liste\"> <option value=\"A\"> <option value=\"B\"> <option value=\"C\"> </datalist> <data id=\"liste\"> <option value=\"A\"> <option value=\"B\"> <option value=\"C\"> </data>"}], "correct": "D", "explanation": "AUZEF Web Programlama I müfredatı uyarınca doğru seçenek D'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

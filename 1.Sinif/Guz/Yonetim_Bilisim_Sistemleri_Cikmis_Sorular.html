@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim Bilişim Sistemleri — Kapsamlı Ders Anlatımı ve Çözümlü Sorular - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 1. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Yönetim Bilişim Sistemleri — Kapsamlı Ders Anlatımı ve Çözümlü Sorular - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">1. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Yönetim Bilişim Sistemleri — Kapsamlı Ders Anlatımı ve Çözümlü Sorular Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Yönetim Bilişim Sistemleri — Kapsamlı Ders Anlatımı ve Çözümlü Sorular - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Yönetim Bilişim Sistemleri — Kapsamlı Ders Anlatımı ve Çözümlü Sorular dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>38 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>1. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">38</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Yonetim_Bilisim_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (38)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">38</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Yonetim_Bilisim_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Paket anahtarlamada bir paket içerisinde aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Paketi gönderinin adresi"}, {"letter": "B", "text": "Veri"}, {"letter": "C", "text": "Paketin izleyeceği yol"}, {"letter": "D", "text": "Paketin varış adresi"}, {"letter": "E", "text": "Hata kontrol bitleri"}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 2, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Manyetik disk ve teypler, optik diskler, çok katmanlı sayısal diskler (digital video disc veya DVD), yoğun diskler (compact disc veya CD) ve taşınabilir bellekler (flash memory) aşağıdakilerden hangi gruba girerler?", "options": [{"letter": "A", "text": "Rasgele erişilebilir bellek"}, {"letter": "B", "text": "Depolanmış bellek"}, {"letter": "C", "text": "İç bellek"}, {"letter": "D", "text": "Dış bellek"}, {"letter": "E", "text": "Kaydedilebilir bellek"}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 3, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Mobil geniş bant kablosuz erişim (MBWA), ..... Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "güvenliği arttırılmış bir protokoldür."}, {"letter": "B", "text": "hareketli IP kullanılan bir protokoldür."}, {"letter": "C", "text": "mücadeleci bir protokoldür."}, {"letter": "D", "text": "iletim kontrol protokolüdür."}, {"letter": "E", "text": "hata kontrol protokolüdür."}], "correct": "B", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 4, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "…………… yaklaşımında veri ve işlemler birbirinden ayrıldığı için yalnızca düzeltilmesi gereken işlemler yeniden kodlanmak durumunda kalmaktadır. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi gelebilir?", "options": [{"letter": "A", "text": "Uzatılabilir biçimleme dili (XML)"}, {"letter": "B", "text": "Uygulama programlama ara yüzü"}, {"letter": "C", "text": "Nesneye dayalı programlama"}, {"letter": "D", "text": "Görsel programlama"}, {"letter": "E", "text": "Yordamsal programlama"}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 5, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Aşağıdaki hangi topolojide iletilen sinyal kapalı bir çember içerisinde düğümden düğüme çevrim yapmaktadır?", "options": [{"letter": "A", "text": "Halka ağ topolojisi"}, {"letter": "B", "text": "Ağaç ağ topolojisi"}, {"letter": "C", "text": "Doğrusal ağ topolojisi"}, {"letter": "D", "text": "Şelale ağ topolojisi"}, {"letter": "E", "text": "Yıldız ağ topolojisi"}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 6, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Aşağıdakilerden hangisi üçüncü nesil diller için söylenebilir?", "options": [{"letter": "A", "text": "1980’lerde ortaya çıkmıştır, düşük seviyelidir."}, {"letter": "B", "text": "1940’larda ortaya çıkmıştır, yüksek seviyelidir."}, {"letter": "C", "text": "1950’lerde ortaya çıkmıştır, orta seviyelidir."}, {"letter": "D", "text": "1980’lerde ortaya çıkmıştır, yüksek seviyelidir."}, {"letter": "E", "text": "Üçüncü nesil diller teorik olarak vardır, ancak kullanılmamaktadır."}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 7, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Aşağıdakilerden hangisi birim zamanda iletilen veri cinsinden ölçülen ve verinin ne kadar hızlı iletildiğini veren bir göstergedir?", "options": [{"letter": "A", "text": "İletim oranı"}, {"letter": "B", "text": "Veri iletim hızı"}, {"letter": "C", "text": "Bant yüksekliği"}, {"letter": "D", "text": "Yüksek bant"}, {"letter": "E", "text": "Bant genişliği"}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 8, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME, YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Finans enformasyon sistemleri aşağıdakilerden hangisini kapsamaz?", "options": [{"letter": "A", "text": "Bütçeleme ve tahmin"}, {"letter": "B", "text": "Yatırım analizi"}, {"letter": "C", "text": "Diğer finans enformasyon sistemleri"}, {"letter": "D", "text": "Nakit yönetimi"}, {"letter": "E", "text": "Maliyet muhasebesi"}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 9, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Aşağıdakilerden hangisi bir enformasyon sisteminde yer alan her bir programın ayrı sınanmasıdır?", "options": [{"letter": "A", "text": "Sistem sınaması"}, {"letter": "B", "text": "Kabul edilirlik sınaması"}, {"letter": "C", "text": "Program sınaması"}, {"letter": "D", "text": "Birim sınaması"}, {"letter": "E", "text": "Paralel sınama"}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 10, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Alt sistem ile ana sistem arasındaki doğru kıyaslama aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bir sistemin alt sistemleri aslında sistem değildir, bunlar sistem bileşenidir."}, {"letter": "B", "text": "Bir sistemin tüm alt sistemlerinin hedefiyle sistemin hedefi aynıdır."}, {"letter": "C", "text": "Bir sistemin alt sistemlerinin hedefleriyle kendisinin hedefi tamamen farklıdır."}, {"letter": "D", "text": "Alt sistemlerin hepsinin hedefleri, sistemin hedefini meydana getirir."}, {"letter": "E", "text": "Bir alt sistem bir başka sistemle bağlantılı olduğundan bunların bir alt sistemi olmaz."}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 11, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Aşağıdakilerden hangisi XML ailesinin bir parçasıdır?", "options": [{"letter": "A", "text": "Dosya aktarımı protokolü (FTP)"}, {"letter": "B", "text": "Çerez (Cookie)"}, {"letter": "C", "text": "Gerçekten basit dağıtım (RSS)"}, {"letter": "D", "text": "Web günlüğü (Blog)"}, {"letter": "E", "text": "Ses yayıncılığı (Podcasting)"}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 12, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Bit’leri temsil etmek için elektrik yerine ışıktan yararlanan kablo aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İki damarlı kablo"}, {"letter": "B", "text": "Elektrik kabloları"}, {"letter": "C", "text": "Koaksiyel kablo"}, {"letter": "D", "text": "Eş eksenli kablo"}, {"letter": "E", "text": "Optik-lif (fiber-optik) kablo"}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 13, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Kelime işlem yazılımları, elektronik tablo yazılımları, yatırım analiz yazılımları ve proje yönetimi yazılımları hangi yazılım türüne girer?", "options": [{"letter": "A", "text": "Sistem yazılımları"}, {"letter": "B", "text": "Uygulama yazılımları"}, {"letter": "C", "text": "ERP yazılımları"}, {"letter": "D", "text": "Ofis yazılımları"}, {"letter": "E", "text": "Ticari yazılımlar"}], "correct": "B", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 14, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Aşağıdakilerden hangisi işletmelerin stratejik avantajlarından biri olan maliyetlerin düşürülmesinde devrim niteliğinde olmuştur?", "options": [{"letter": "A", "text": "Japonların otomobil üretiminde robot işçilerden yararlanması"}, {"letter": "B", "text": "Hintlilerin interneti keşfi"}, {"letter": "C", "text": "Çinlilerin otomobil üretiminde robot işçilerden yararlanması"}, {"letter": "D", "text": "Japonların maliyet muhasebesini kullanmaları"}, {"letter": "E", "text": "Bazı benzin istasyonlarında robotların kullanılması"}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 15, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Kaynak kodlarıyla temin edilen yazılımlar …................. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Daha maliyetli yazılımlardır."}, {"letter": "B", "text": "Derlenmiş olarak temin edilen yazılımlardır."}, {"letter": "C", "text": "Çoklu ortam yazılımlarıdır."}, {"letter": "D", "text": "Açık kaynak yazılımdır."}, {"letter": "E", "text": "Oyun yazılımlarıdır."}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 16, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Aşağıdakilerden hangisi \"Pixel\" teriminin karşılığıdır?", "options": [{"letter": "A", "text": "Bir görüntü öğesinin renk sayısıdır."}, {"letter": "B", "text": "Profilli düz ekran teknolojisidir."}, {"letter": "C", "text": "İki görüntü öğesi arasındaki uzaklıktır."}, {"letter": "D", "text": "Katot ışınlı tüp teknolojisidir."}, {"letter": "E", "text": "Bir ekrandaki en küçük görüntü ögesidir."}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 17, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "• Bölgeler hücrelere ayrılmıştır. • İletişim için her bir hücrenin merkezinde bir alıcı-verici bulunur. Yukarıda verilen özellikler aşağıdakilerden hangisine aittir?", "options": [{"letter": "A", "text": "Görüntülü toplantı"}, {"letter": "B", "text": "Cep telefonu"}, {"letter": "C", "text": "Faks"}, {"letter": "D", "text": "Elektronik ticaret"}, {"letter": "E", "text": "Eşler arası dosya paylaşımı"}], "correct": "B", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 18, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "İşletmelerde temel olarak uz iletişim ağları kaç ana gruba ayrılır?", "options": [{"letter": "A", "text": "Telefon ve bilgisayar olmak üzere iki ana gruba ayrılır."}, {"letter": "B", "text": "İntranet, extranet ve internet olmak üzere üç ana gruba ayrılır."}, {"letter": "C", "text": "Kablolu ve kablosuz olmak üzere iki ana gruba ayrılır."}, {"letter": "D", "text": "İnternet ve web olmak üzere iki ana gruba ayrılır."}, {"letter": "E", "text": "Yerel ve geniş olmak üzere iki ana gruba ayrılır."}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 19, "tag": "2025- 2026 YÖNETİM BİLİŞİM SİSTEMLERİ BÜTÜNLEME", "text": "Ağ üzerindeki tüm aygıtların, diğerlerinin iletim sürelerine karşı mücadele verdiği protokol aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ethernet"}, {"letter": "B", "text": "HTTP"}, {"letter": "C", "text": "TCP/IP"}, {"letter": "D", "text": "FTP"}, {"letter": "E", "text": "USB"}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 20, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Bazı kişisel bilgisayar üreticileri müşterilerinin kendi bilgisayarlarını Web üzerinden, genellikle de daha ucuza, oluşturmalarına imkân sunmaktadır. Yukarıdaki örnek aşağıdakilerden hangisine uygundur?", "options": [{"letter": "A", "text": "Pazara yeni rakiplerin girişinin engellenmesi"}, {"letter": "B", "text": "Değiştirme maliyetinin yükselmesi"}, {"letter": "C", "text": "Mal ve hizmetlerin geliştirilmesi"}, {"letter": "D", "text": "Yeni mal ve hizmet sunulması"}, {"letter": "E", "text": "Mal ve hizmetlerin farklılaştırılması"}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 21, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "1 PB = …… bit. Yukarıdaki boşluğa aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "10245 x 8"}, {"letter": "B", "text": "10242"}, {"letter": "C", "text": "10245"}, {"letter": "D", "text": "10244"}, {"letter": "E", "text": "10242 x 8"}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 22, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Aşağıdakilerden hangisi tutulan ışığın geri dönüş açısına göre verinin 1 ya da 0 olduğunu belirler?", "options": [{"letter": "A", "text": "Manyetik disk"}, {"letter": "B", "text": "Optik lif"}, {"letter": "C", "text": "Optik Disk"}, {"letter": "D", "text": "Manyetik teyp"}, {"letter": "E", "text": "Optik bellek"}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 23, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Bilişim terimi Türk Dil Kurumu’nun açıklamasına göre aşağıdakilerden hangisini çağrıştırmaktadır?", "options": [{"letter": "A", "text": "Sanayileşmiş toplum"}, {"letter": "B", "text": "Bilgi ve iletişim"}, {"letter": "C", "text": "Bilgi ve teknoloji"}, {"letter": "D", "text": "Bilgisayar ve insan"}, {"letter": "E", "text": "Bir bilim dalı"}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 24, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Aşağıdakilerden hangisi sistem analistinin görevlerinden biri değildir?", "options": [{"letter": "A", "text": "Karşılaştırmalı olarak sonuçların sunulması"}, {"letter": "B", "text": "Hedeflerin, kısıtların ve alternatiflerin belirlenmesi"}, {"letter": "C", "text": "Fizibilite çalışması yaparak, muhtemel alternatif sonuçların maliyet, kazanç ve risklerinin araştırılması"}, {"letter": "D", "text": "İş süreçlerinin yönetilmesi ve sorunların raporlanması"}, {"letter": "E", "text": "Organizasyonun karşılaştığı ve ES yardımıyla çözülecek problemin analiz edilmesi"}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 25, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Aşağıdakilerden hangisi açık değiştirme maliyeti örneğidir?", "options": [{"letter": "A", "text": "Yazılım değiştirildiğinde alınması gereken yeni personel ve eğitimler"}, {"letter": "B", "text": "Çalışanların değiştirilmesinde karşılaşılan uyum süreci ve bunun maliyeti"}, {"letter": "C", "text": "Yazılım değiştirildiğinde alınması gereken eğitimler ve zaman maliyeti"}, {"letter": "D", "text": "Üretim bandı değiştiğinde ortaya çıkan zaman ve işçilik maliyeti"}, {"letter": "E", "text": "Kullanıcının cep telefonu sözleşmesini tarihinden önce iptal etmesi halinde katlanacağı maliyet"}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 26, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Muhasebe enformasyon sistemleri aşağıdakilerden hangisini kapsamaz?", "options": [{"letter": "A", "text": "Maliyet muhasebesi"}, {"letter": "B", "text": "Bütçeleme ve tahmin"}, {"letter": "C", "text": "Raporlar"}, {"letter": "D", "text": "Alacak ve borçlar"}, {"letter": "E", "text": "Hareket işleme sistemi"}], "correct": "B", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 27, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "…… aslında tüm organizasyonun, örgütsel birimler, faaliyetler, işlevler ve veri parçaları bazında incelenmesini önermektedir. Böylece işletmenin ihtiyacı olan enformasyon doğru tespit edilecektir. Yukarıda boş bırakılan yere aşağıdakilerden hangisi gelebilir?", "options": [{"letter": "A", "text": "İşletme analizi"}, {"letter": "B", "text": "Sistem geliştirme"}, {"letter": "C", "text": "Süreç geliştirme"}, {"letter": "D", "text": "İş süreçlerinin yeniden yeniden yapılanması"}, {"letter": "E", "text": "Kritik başarı unsurları yöntemi"}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 28, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Amerikan imalat sistemi ile internet arasındaki ilişki aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İnternet teknolojilerinin büyük bir kısmı Amerikan imalat sanayisi tarafından geliştirilmiştir."}, {"letter": "B", "text": "İnternet bileşenlerinin tamamının işlemci, bellek, depolama aygıtları ve ağ gibi fiziksel aygıtlardır."}, {"letter": "C", "text": "Her ikisi de aynı dönemlerde Amerika’da ortaya çıkmıştır ve benzer sürelerde yaygınlaşmışlardır."}, {"letter": "D", "text": "Amerikan imalat sanayisi büyük ölçüde internet teknolojilerinin kullanılmasıyla geliştirilmiştir."}, {"letter": "E", "text": "İnternetin temeli olan paylaşılabilir teknoloji devrimi Amerikan imalat sanayi ile ortaya çıkmıştır."}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 29, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Canlandırma aşağıdaki hangi enformasyon sistemlerinde vardır?", "options": [{"letter": "A", "text": "Tedarik zinciri yönetim sistemleri"}, {"letter": "B", "text": "Mühendislik enformasyon sistemleri"}, {"letter": "C", "text": "Coğrafi enformasyon sistemleri"}, {"letter": "D", "text": "Karar destek sistemleri"}, {"letter": "E", "text": "Müşteri ilişkileri yönetim sistemleri YÖNETİM BİLİŞİM SİSTEMLERİ A P3.G5933 03-11-2024 19:45:05 YÖNETİM BİLİŞİM SİSTEMLERİ A P3.G5933 03-11-2024 19:45:05 CEVAPLI CEVAPLI"}], "correct": "B", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 30, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Enformasyon toplama ve saklama organizasyonlar için neden çok önemlidir?", "options": [{"letter": "A", "text": "Kârlılığı arttırabilmek enformasyona ihtiyaç duyduğu için"}, {"letter": "B", "text": "Yöneticiler enformasyona önem verdiği ve onu kolay elde edemediği için"}, {"letter": "C", "text": "Problem çözme ve karar verme süreçleri enformasyona ihtiyaç duyduğu için"}, {"letter": "D", "text": "İleriye yönelik olarak enformasyon ve bilgi tahmini yapabilmek için"}, {"letter": "E", "text": "Geçmiş deneyimlerden yararlanmak enformasyon gerektirdiği için"}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 31, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "\"Tarayıcı .....\" Yukarıdaki boşluğu uygun şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "optik karakter tanıma cihazıdır."}, {"letter": "B", "text": "kaynaktan girdi cihazıdır."}, {"letter": "C", "text": "çıktı cihazıdır."}, {"letter": "D", "text": "optik girdi cihazıdır."}, {"letter": "E", "text": "barkod okuyucudur."}], "correct": "B", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 32, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Hangi teknolojide kristalin ışığı farklı yansıtması sonucu görüntü oluşur?", "options": [{"letter": "A", "text": "Profilli düz ekran teknolojisi"}, {"letter": "B", "text": "Böyle bir teknoloji türü bulunmamaktadır"}, {"letter": "C", "text": "Yüksek çözünürlük teknolojisi"}, {"letter": "D", "text": "Işık yayan diyıt teknolojisi"}, {"letter": "E", "text": "Katot ışınlı tüp teknolojisi"}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 33, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Aşağıdakilerden hangisi risk taşıyan kararlardan biridir?", "options": [{"letter": "A", "text": "Operasyonel karar"}, {"letter": "B", "text": "Örgütsel karar"}, {"letter": "C", "text": "Yapısal olmayan karar"}, {"letter": "D", "text": "Teknik karar"}, {"letter": "E", "text": "Yapısal karar"}], "correct": "C", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 34, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Patent ve telif hakkından yararlanılarak aşağıdaki hangi stratejik avantaj sağlanabilir?", "options": [{"letter": "A", "text": "Pazara yeni rakiplerin girişinin engellenmesi"}, {"letter": "B", "text": "Mal ve hizmetlerin farklılaştırılması"}, {"letter": "C", "text": "Müşteri sayısının arttırılması"}, {"letter": "D", "text": "Yeni mal ve hizmetlerin sunulması"}, {"letter": "E", "text": "Değiştirme maliyetinin yükselmesi"}], "correct": "A", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 35, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Bilişim teknolojisi işletme değerinde nasıl bir ayrıcalık yaratır?", "options": [{"letter": "A", "text": "Daha pahalı ve bilinen bilişim teknolojileri işletme değerinde ayrıcalık yaratabilir."}, {"letter": "B", "text": "Bilişim teknolojisi herhangi bir ayrıcalık yaratmaz zira herkes tarafından erişilebilmektedir."}, {"letter": "C", "text": "Yalnızca sınanmış bilişim teknolojileri işletme değerinde ayrıcalık yaratabilir."}, {"letter": "D", "text": "Bakım ve destek bilişim teknolojisinin işletme değerinde ayrıcalık yaratabilmesini sağlar."}, {"letter": "E", "text": "Teknolojinin kendisinden çok onun nasıl kullanıldığı ayrıcalık yaratabilmektedir."}], "correct": "E", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 36, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "…………… bir organizasyonun enformasyon ihtiyaçlarının, yöneticilerin az sayıdaki kritik başarı unsuruna bağlı olduğunu öne süren bir yaklaşımdır. Bu hedeflere ulaşılacak olursa organizasyonun da başarısı garanti altına alınır. Yukarıda boş bırakılan yere aşağıdakilerden hangisi gelebilir?", "options": [{"letter": "A", "text": "Süreç geliştirme"}, {"letter": "B", "text": "Sistem geliştirme"}, {"letter": "C", "text": "İşletme analizi"}, {"letter": "D", "text": "Stratejik analiz"}, {"letter": "E", "text": "İş süreçlerinin yeniden yeniden yapılanması"}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 37, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Aşağıdakilerden hangisi \"Dvorak\" kavramının karşılığıdır?", "options": [{"letter": "A", "text": "Optik cihazlara verilen isimdir."}, {"letter": "B", "text": "Bir dış bellek türüdür"}, {"letter": "C", "text": "Bir işletim sistemidir."}, {"letter": "D", "text": "Bir klavye türüdür."}, {"letter": "E", "text": "Merkezî işlem birimi türüdür."}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 38, "tag": "YÖNETİM BİLİŞİM SİSTEMLERİ-2024-VİZE-A", "text": "Aşağıdakilerden hangisi sistem tanımlarından biri değildir?", "options": [{"letter": "A", "text": "Yol ve yöntem"}, {"letter": "B", "text": "Bir sonuç elde etmeye yarayan yöntemler düzeni"}, {"letter": "C", "text": "Bir aracı oluşturan düzen"}, {"letter": "D", "text": "Bir aracı oluşturan örgüt"}, {"letter": "E", "text": "Düzen, düzenek, tertibat"}], "correct": "D", "explanation": "AUZEF Yonetim Bilisim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

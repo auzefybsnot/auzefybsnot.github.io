@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematik II - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 1. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Matematik II - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">1. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Matematik II Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Matematik II - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Matematik II dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>57 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>1. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">57</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Matematik_II_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (57)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">57</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Matematik_II_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "AUZEF MATEMATİK II - 2021 - VİZE, Matematik II - 2025-2026 - Vize - Bahar", "text": "İlk elemanı 50, ortak farkı 8 olan dizinin ilk 16 elemanı toplamı kaçtır?", "options": [{"letter": "A", "text": "2120"}, {"letter": "B", "text": "1760"}, {"letter": "C", "text": "1590"}, {"letter": "D", "text": "1428"}, {"letter": "E", "text": "2000"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 2, "tag": "AUZEF MATEMATİK II - 2021 - VİZE, Matematik 2 2025 Vize", "text": "Bir atölyede üretilen A ve B gibi iki farklı ürün için oluşan toplam maliyet fonksiyonu; C(x,y)= 2x² + 5y + 3000 Olduğuna göre, A ürününde x=50, B ürününde y=100 adet üretildiği taktirde toplam maliyet ne kadar olur?", "options": [{"letter": "A", "text": "4500"}, {"letter": "B", "text": "8500"}, {"letter": "C", "text": "5000"}, {"letter": "D", "text": "7500"}, {"letter": "E", "text": "6500"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 3, "tag": "Matematik 2 2024-2025", "text": "Yukarıda verilen girdi çıktı tablosuna göre A sektörüne olan toplam talep (XA) ne kadardır?", "options": [{"letter": "A", "text": "2400"}, {"letter": "B", "text": "1200"}, {"letter": "C", "text": "1300"}, {"letter": "D", "text": "1000"}, {"letter": "E", "text": "1400"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 4, "tag": "Matematik 2 2024-2025", "text": "x’i bulabilmek için aşağıdaki hangi işlem yapılmalıdır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 5, "tag": "Matematik 2 2024-2025, Matematik II - 2025-2026 - Vize - Bahar", "text": "Yukarıdaki tabloda işçi sayısına göre yapılan toplam üretim bilgileri görülmektedir. Buna göre işçi sayısı 3'ten 4'e çıkarıldığında marjinal emek verimliliği kaç olur?", "options": [{"letter": "A", "text": "8"}, {"letter": "B", "text": "12"}, {"letter": "C", "text": "4"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "10"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 6, "tag": "Matematik 2 2024-2025", "text": "Yukarıda verilen denklem sisteminin çözümü aşağıdakilerden hangisinde doğru olarak verilmektedir?", "options": [{"letter": "A", "text": "(2, 1)"}, {"letter": "B", "text": "(1, 2)"}, {"letter": "C", "text": "(1, 1)"}, {"letter": "D", "text": "(-1, 1)"}, {"letter": "E", "text": "(1, -1)"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 7, "tag": "Matematik 2 2024-2025", "text": "Yukarıda verilen maksimizasyon doğrusal programlama modelinde üretilen iki ürüne ait birim kârlar sırasıyla kaçtır?", "options": [{"letter": "A", "text": "1 ve 1"}, {"letter": "B", "text": "3 ve 4"}, {"letter": "C", "text": "80 ve 180"}, {"letter": "D", "text": "4 ve 2"}, {"letter": "E", "text": "2 ve 5"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 8, "tag": "Matematik 2 2024-2025, Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑔(𝑥, 𝑦) = 3𝑥+ 5𝑦+ 15 Yukarıdaki fonksiyonda kaç bağımsız değişken bulunmaktadır?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "5"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "1"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 9, "tag": "Matematik 2 2024-2025", "text": "Yukarıda verilen grafikte koyu boyalı OABC bölgesi doğrusal programlamada hangi isimle adlandırılır?", "options": [{"letter": "A", "text": "Kesin çözüm bölgesi"}, {"letter": "B", "text": "Optimal çözüm bölgesi"}, {"letter": "C", "text": "Uygun olmayan çözüm bölgesi"}, {"letter": "D", "text": "Sonsuz çözüm bölgesi"}, {"letter": "E", "text": "Uygun çözüm bölgesi MATEMATİK II A P355875.G10976 07-05-2025 16:05:56 MATEMATİK II A P355875.G10976 07-05-2025 16:05:56 CEVAPLI CEVAPLI"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 10, "tag": "Matematik 2 2024-2025", "text": "Yukarıda verilen girdi çıktı tablosuna göre a22 değeri kaç olur?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "1000"}, {"letter": "C", "text": "0,4"}, {"letter": "D", "text": "0,2"}, {"letter": "E", "text": "1"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 11, "tag": "Matematik 2 2024-2025", "text": "Yukarıda girdi çıktı oranları ve iki farklı sektöre ilişkin verilen toplam taleplere göre, birinci sektörde çıktı üretebilmek için birinci sektörden kullanılan miktar parasal tutar olarak ne kadardır?", "options": [{"letter": "A", "text": "500"}, {"letter": "B", "text": "800"}, {"letter": "C", "text": "300"}, {"letter": "D", "text": "600"}, {"letter": "E", "text": "750"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 12, "tag": "Matematik 2 2024-2025", "text": "Yukarıda verilen grafikte gri alan bir doğrusal programlama probleminin uygun çözüm bölgesini gösterdiğine göre, Z=3x+4y amaç fonksiyonu B noktası için hangi değeri alır?", "options": [{"letter": "A", "text": "48"}, {"letter": "B", "text": "35"}, {"letter": "C", "text": "42"}, {"letter": "D", "text": "38"}, {"letter": "E", "text": "30"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 13, "tag": "Matematik 2 2024-2025", "text": "𝐴= 2 1 5 3 ⎡ ⎣⎢ ⎤ ⎦⎥ Yukarıda A matrisi verildiğine göre 𝐴2matrisi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "2 1 5 3 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "B", "text": "2 1 25 14 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "C", "text": "4 1 25 9 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "D", "text": "9 5 25 14 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "E", "text": "9 5 5 3 ⎡ ⎣⎢ ⎤ ⎦⎥"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 14, "tag": "Matematik 2 2024-2025", "text": "𝑢= 𝑓(𝑥, 𝑦, 𝑧) = 𝑥3 + 𝑦3 + 𝑧3  Yukarıda verilen fonksiyonda 𝑓(1, 2, 3)hangi değeri alır?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "36"}, {"letter": "C", "text": "8"}, {"letter": "D", "text": "9"}, {"letter": "E", "text": "6"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 15, "tag": "Matematik 2 2024-2025", "text": "∑𝑘=1 ∞ 12 . 3 10 ! \" 𝑘 Yuarıda verilen serinin toplamı kaçtır?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "3"}, {"letter": "C", "text": "12"}, {"letter": "D", "text": "1/3"}, {"letter": "E", "text": "9"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 16, "tag": "Matematik 2 2024-2025", "text": "𝑞𝐴= 500 −3𝑞𝐴+ 2𝑞𝐵𝑞𝐵= 500 + 𝑞𝐴−4𝑞𝐵 Yukarıda A ve B gibi iki ürüne ilişkin talep fonksiyonları verilmektedir. Buna göre bu iki ürün hakkında aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "A ve B ürünleri birbirleri ile ilşkili değildir."}, {"letter": "B", "text": "A ürünü, B ürününün ne tamamlayıcısı ne de ikamesidir."}, {"letter": "C", "text": "A ve B ürünleri birbirinin ikamesidir."}, {"letter": "D", "text": "B ürünü, A ürününün ne tamamlayıcısı ne de ikamesidir."}, {"letter": "E", "text": "A ve B ürünleri birbirinin tamamlayıcısıdır."}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 17, "tag": "Matematik 2 2024-2025", "text": "𝐴= 2 3 −1 4 ⎡ ⎣⎢ ⎤ ⎦⎥ Yukarıda A matrisi verilmiştir. Buna göre 3A matrisinin determinantı kaçtır?", "options": [{"letter": "A", "text": "99"}, {"letter": "B", "text": "72"}, {"letter": "C", "text": "101"}, {"letter": "D", "text": "27"}, {"letter": "E", "text": "15 MATEMATİK II A P355875.G10976 07-05-2025 16:05:56 MATEMATİK II A P355875.G10976 07-05-2025 16:05:56 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 18, "tag": "Matematik 2 2024-2025", "text": "𝐴= 2 5 3 8 ⎡ ⎣⎢ ⎤ ⎦⎥ Yuarıda verilen A matrisinini tersi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "𝐴−1 = −2 3 5 −8 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "B", "text": "𝐴−1 = 8 5 3 2 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "C", "text": "𝐴−1 = 2 5 3 8 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "D", "text": "𝐴−1 = 2 −5 −3 8 ⎡ ⎣⎢ ⎤ ⎦⎥"}, {"letter": "E", "text": "𝐴−1 = 8 −5 −3 2 ⎡ ⎣⎢ ⎤ ⎦⎥"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 19, "tag": "Matematik 2 2024-2025", "text": "𝑑𝑦 𝑑𝑥−2𝑥+ 5 = 0 𝑣𝑒 𝑦(0) = 3 Yukarıda verilen bilgilere göre diferansiyel denklemin çözümü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "𝑦= 2𝑥−5"}, {"letter": "B", "text": "𝑦= 𝑥2 −5𝑥+ 3"}, {"letter": "C", "text": "𝑦= 𝑥2 −5𝑥"}, {"letter": "D", "text": "𝑦= −2𝑥+ 5"}, {"letter": "E", "text": "𝑦= 𝑥2 −5𝑥−3"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 20, "tag": "Matematik 2 2024-2025", "text": "𝑦𝑡+1 −𝑦𝑡= 3 𝑣𝑒 𝑦0 = 3 ise, 𝑦4aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "11"}, {"letter": "B", "text": "14"}, {"letter": "C", "text": "20"}, {"letter": "D", "text": "17"}, {"letter": "E", "text": "8"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 21, "tag": "Matematik 2 2024-2025", "text": "Yukarıda verilen denklem sisteminde, katsayılar matrisinin rankının 1 olması için k sayısı kaç olmalıdır?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "-4"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "-2"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 22, "tag": "Matematik 2 2024-2025, Matematik II - 2025-2026 - Vize - Bahar", "text": "20000 TL anapara % 10 bileşik faiz ile 3 yıl değerlendirilirse, bu 3 yılın sonunda yatırım toplamı ne kadar olur?", "options": [{"letter": "A", "text": "24200"}, {"letter": "B", "text": "26620"}, {"letter": "C", "text": "24000"}, {"letter": "D", "text": "29282"}, {"letter": "E", "text": "26000"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 23, "tag": "Matematik 2 2025 Vize", "text": "Üç değişkenli fonksiyonda kaç tane bağımsız, kaç tane bağımlı değişken bulunur?", "options": [{"letter": "A", "text": "2 Bağımsız, 1 Bağımlı"}, {"letter": "B", "text": "1 Bağımsız, 2 Bağımlı"}, {"letter": "C", "text": "3 Bağımsız, 1 Bağımlı"}, {"letter": "D", "text": "1 Bağımsız, 3 Bağımlı"}, {"letter": "E", "text": "2 Bağımsız, 2 Bağımlı"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 24, "tag": "Matematik 2 2025 Vize", "text": "f (x,y) = 4x2 + 8xy + 4y2 iki değişkenli fonksiyon için f (1, ­1) değeri kaç olur?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "0"}, {"letter": "C", "text": "-1"}, {"letter": "D", "text": "16"}, {"letter": "E", "text": "1"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 25, "tag": "Matematik 2 2025 Vize", "text": "Q=10.K0,5.L0,5 üretim fonksiyonu için sermaye K=400, işçilik L=225 olduğu durumda çıktı (üretim) miktarı kaç olur?", "options": [{"letter": "A", "text": "3000"}, {"letter": "B", "text": "2000"}, {"letter": "C", "text": "4500"}, {"letter": "D", "text": "1500"}, {"letter": "E", "text": "1000"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 26, "tag": "Matematik 2 2025 Vize", "text": "xt=5.xt­1 ve x1=2 ise x5=?", "options": [{"letter": "A", "text": "25"}, {"letter": "B", "text": "250"}, {"letter": "C", "text": "500"}, {"letter": "D", "text": "50"}, {"letter": "E", "text": "1250"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 27, "tag": "Matematik 2 2025 Vize", "text": "Yukarıda verilen fonksiyon için (1, 1) noktası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yerel maksimum noktasıdır."}, {"letter": "B", "text": "Global maksimum noktasıdır."}, {"letter": "C", "text": "Yerel minimum noktasıdır."}, {"letter": "D", "text": "Eyer (semer) noktasıdır."}, {"letter": "E", "text": "Bu nokta hakkında bir şey söylenemez."}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 28, "tag": "Matematik 2 2025 Vize", "text": "Yukarıda verilen amaç fonksiyonu aşağıdaki hangi (x,y) sıralı ikilisi için maksimum olur?", "options": [{"letter": "A", "text": "(1, 0)"}, {"letter": "B", "text": "(0, 0)"}, {"letter": "C", "text": "(0, 1)"}, {"letter": "D", "text": "(1, 2)"}, {"letter": "E", "text": "(2, 1)"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 29, "tag": "Matematik 2 2025 Vize", "text": "Aşağıda verilen dizinin limiti kaçtır?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "1"}, {"letter": "D", "text": "-3/2"}, {"letter": "E", "text": "2/3"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 30, "tag": "Matematik 2 2025 Vize", "text": "fonksiyonu aşağıdaki (x, y) sayı çiftlerinin hangisinde en büyük değeri alır?", "options": [{"letter": "A", "text": "(1, 1)"}, {"letter": "B", "text": "(2, 3)"}, {"letter": "C", "text": "(0, 2)"}, {"letter": "D", "text": "(1, 0)"}, {"letter": "E", "text": "(2, 2)"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 31, "tag": "Matematik 2 2025 Vize", "text": "fonksiyonu için x'e göre birinci mertebeden kısmi türev fonksiyonu aşağıdaki şıklardan hangisinde verilmiştir?", "options": [{"letter": "A", "text": "5x"}, {"letter": "B", "text": "5x2+x"}, {"letter": "C", "text": "x+4y"}, {"letter": "D", "text": "4x+y"}, {"letter": "E", "text": "4x+4y"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 32, "tag": "Matematik 2 2025 Vize", "text": "aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "y=cex"}, {"letter": "B", "text": "y=2x"}, {"letter": "C", "text": "y=ce2x"}, {"letter": "D", "text": "y=x"}, {"letter": "E", "text": "y=c"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 33, "tag": "Matematik 2 2025 Vize", "text": "z = f (x,y) = 2x3 + 3x2y2 + y3 fonksiyonunun y'ye göre ikinci mertebeden kısmi türevi fyy (1,1) değeri kaçtır?", "options": [{"letter": "A", "text": "9"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "12"}, {"letter": "D", "text": "18"}, {"letter": "E", "text": "24 MATEMATİK II A P355543.G8999 17-03-2025 08:46:20 MATEMATİK II A P355543.G8999 17-03-2025 08:46:20 CEVAPLI CEVAPLI"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 34, "tag": "Matematik 2 2025 Vize", "text": "z=f (x,y)=5x+4y fonksiyonunun x’e göre kısmi türevi fx (x,y) aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "5"}, {"letter": "D", "text": "-5"}, {"letter": "E", "text": "20"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 35, "tag": "Matematik 2 2025 Vize", "text": "Yukarıda verilen serinin toplamı kaçtır?", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "1,33"}, {"letter": "C", "text": "0,33"}, {"letter": "D", "text": "1,3"}, {"letter": "E", "text": "0,3"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 36, "tag": "Matematik 2 2025 Vize", "text": "Aşağıda verilen serinin üçüncü kısmi toplamı kaçtır?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "14"}, {"letter": "C", "text": "9"}, {"letter": "D", "text": "5"}, {"letter": "E", "text": "1"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 37, "tag": "Matematik 2 2025 Vize", "text": "Yukarıda verilen diferansiyel denklem kaçıncı mertebe, kaçıncı derecedendir?", "options": [{"letter": "A", "text": "Birinci mertebe, ikinci dereceden"}, {"letter": "B", "text": "İkinci mertebe, üçüncü dereceden"}, {"letter": "C", "text": "İkinci mertebe, birinci dereceden"}, {"letter": "D", "text": "Üçüncü mertebe, ikinci dereceden"}, {"letter": "E", "text": "İkinci mertebe, ikinci dereceden"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 38, "tag": "Matematik 2 2025 Vize", "text": "İlk elemanı 20, ortak farkı 3 olan aritmetik dizinin ilk 11 elemanı toplamı kaçtır?", "options": [{"letter": "A", "text": "365"}, {"letter": "B", "text": "385"}, {"letter": "C", "text": "50"}, {"letter": "D", "text": "335"}, {"letter": "E", "text": "438"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 39, "tag": "Matematik 2 2025 Vize", "text": "Yukarıda verilen diferansiyel denklemin çözümü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "y=ln x"}, {"letter": "B", "text": "y=3x3+c"}, {"letter": "C", "text": "y=x2+c"}, {"letter": "D", "text": "y=x+c"}, {"letter": "E", "text": "y=x3+c"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 40, "tag": "Matematik 2 2025 Vize", "text": "Yukarıda verilen fark denklemi kaçıncı mertebedendir?", "options": [{"letter": "A", "text": "Üçüncü mertebeden"}, {"letter": "B", "text": "Beşinci mertebeden"}, {"letter": "C", "text": "Dördüncü mertebeden"}, {"letter": "D", "text": "İkinci mertebeden"}, {"letter": "E", "text": "Birinci mertebeden"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 41, "tag": "Matematik 2 2025 Vize", "text": "İlk elemanı 25, ortak farkı 7 olan dizinin genel terimi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 42, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑓(𝑥, 𝑦) = 2 + 4𝑥𝑦−𝑥2 −𝑦2 Yukarıda verilen iki değişkenli fonksiyonun𝑥'e göre ikinci mertebeden kısmi türevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "-4"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "-2"}, {"letter": "D", "text": "-3"}, {"letter": "E", "text": "0"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 43, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑦𝑡+3 −𝑦𝑡+2 + 𝑦𝑡+1 −4𝑦𝑡= 0 Yukarıda verilen fark denklemi kaçıncı mertebeden fark denklemidir?", "options": [{"letter": "A", "text": "Üçüncü mertebeden"}, {"letter": "B", "text": "İkinci mertebeden"}, {"letter": "C", "text": "Dördüncü mertebeden"}, {"letter": "D", "text": "Birinci mertebeden"}, {"letter": "E", "text": "Beşinci mertebeden"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 44, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑘=1 ∞ 20 1 3 ! \" 𝑘 Yukarıda verilen serinin toplamı kaçtır?", "options": [{"letter": "A", "text": "20"}, {"letter": "B", "text": "20/3"}, {"letter": "C", "text": "30"}, {"letter": "D", "text": "1/3"}, {"letter": "E", "text": "10"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 45, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "Yukarıda verilen diferansiyel denklemin çözümü aşağıdakilerden hangisi olabilir?", "options": [{"letter": "A", "text": "y=x"}, {"letter": "B", "text": "y=ln x"}, {"letter": "C", "text": "y=x2"}, {"letter": "D", "text": "y=c"}, {"letter": "E", "text": "y=A.e3x"}], "correct": "E", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek E'dir."}, {"num": 46, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑄= 100 . 𝐾0,3 . 𝐿0,7 Yukarıda verilen üretim fonksiyonu için Sermaye (𝐾) ve Emek (𝐿) yarıya düşürüldüğünde çıktı miktarı ne olur?", "options": [{"letter": "A", "text": "4 kat azalır"}, {"letter": "B", "text": "İki kat artar"}, {"letter": "C", "text": "Değişmez"}, {"letter": "D", "text": "İki kat azalır"}, {"letter": "E", "text": "4 kat artar"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 47, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "Bir geometrik seri toplamında ortak çarpan r=0,5 iken yukarıda verilen limit işleminin sonucu hangi değeri alır?", "options": [{"letter": "A", "text": "500"}, {"letter": "B", "text": "800"}, {"letter": "C", "text": "600"}, {"letter": "D", "text": "700"}, {"letter": "E", "text": "400"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 48, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑑𝑦 𝑑𝑥= 3𝑦 Yukarıda verilen diferansiyel denklemin çözümü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "y=3x"}, {"letter": "B", "text": "y=e3x+c"}, {"letter": "C", "text": "y=0"}, {"letter": "D", "text": "y=3x+c"}, {"letter": "E", "text": "y=In(x) MATEMATİK II A P355875.G18616 07-04-2026 11:21:58 CEVAPLI"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 49, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "2𝑑𝑦 𝑑𝑥−12𝑥= 0 Yukarıda verilen diferansiyel denklemin çözümü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "𝑦= 3𝑥2 + 𝑐"}, {"letter": "B", "text": "𝑦= ln 𝑥+ 𝑐"}, {"letter": "C", "text": "𝑦= 𝑥+ 𝑐"}, {"letter": "D", "text": "𝑦= 𝑥2 + 𝑐"}, {"letter": "E", "text": "𝑦= 1 𝑥+ 𝑐"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 50, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑧= ln (𝑥2 + 𝑦2 −16) Yukarıda verilen z fonksiyonu kaç değişkenli fonksiyondur?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "4"}], "correct": "D", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek D'dir."}, {"num": 51, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "Yukarıda verilen üç değişkenli fonksiyon; x=16, y=18 ve z=24 için hangi değeri alır?", "options": [{"letter": "A", "text": "16"}, {"letter": "B", "text": "20"}, {"letter": "C", "text": "34"}, {"letter": "D", "text": "18"}, {"letter": "E", "text": "17"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 52, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "Aşağıda iki ürüne ilişkin talep fonksiyonları verilmektedir. Buna göre bu iki ürün hakkında aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "İki ürün birbirinin hem tamamlayıcısı hem de ikamesidir."}, {"letter": "B", "text": "İki ürün aynı ürünlerdir."}, {"letter": "C", "text": "İki ürün birbirinin ikamesidir."}, {"letter": "D", "text": "İki ürün birbirinin tamamlayıcısıdır."}, {"letter": "E", "text": "İki ürün birbirinin ne tamamlayıcısı ne de ikamesidir."}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}, {"num": 53, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑧= 𝑓𝑥, 𝑦 ( ) = 2𝑥3 + 3𝑥𝑦  + 4𝑦2 Yukarıda verilen fonksiyonun x'e göre ikinci mertebeden kısmi türevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "6𝑥2 + 2 𝑦 "}, {"letter": "B", "text": "12𝑥"}, {"letter": "C", "text": "12𝑥+ 𝑦 "}, {"letter": "D", "text": "12"}, {"letter": "E", "text": "6𝑥+ 3𝑦"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 54, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑦𝑡+1 −2𝑦𝑡= 0 Yukarıda verilen fark denkleminin çözümü aşağıdakilerden hangisi olabilir?", "options": [{"letter": "A", "text": "𝑦𝑡 = 𝑒2𝑡"}, {"letter": "B", "text": "𝑦𝑡 = 𝑒𝑡"}, {"letter": "C", "text": "𝑦𝑡 = ln 𝑡"}, {"letter": "D", "text": "𝑦𝑡 = 𝑒𝑡+ 1"}, {"letter": "E", "text": "𝑦𝑡 = 𝑒𝑡+1"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 55, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑓(𝑥, 𝑦) = 𝑥2 + 3𝑥𝑦+ 𝑦2 Yukarıda verilen iki değişkenli fonksiyonda 𝑓 (1, 1) hangi değere eşittir?", "options": [{"letter": "A", "text": "3"}, {"letter": "B", "text": "5"}, {"letter": "C", "text": "1"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "2"}], "correct": "B", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek B'dir."}, {"num": 56, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "𝑓(𝑥, 𝑦) = ln (𝑥2 + 𝑦2) Yukarıda verilen logaritmik fonksiyon aşağıdakilerden hangisinde tanımlıdır?", "options": [{"letter": "A", "text": "𝑥2 + 𝑦2 > 0"}, {"letter": "B", "text": "ln (𝑥2 + 𝑦2) > 0"}, {"letter": "C", "text": "𝑥2 + 𝑦2 ≤0"}, {"letter": "D", "text": "𝑥2 + 𝑦2 = 0"}, {"letter": "E", "text": "𝑥2 + 𝑦2 ≥0"}], "correct": "A", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek A'dir."}, {"num": 57, "tag": "Matematik II - 2025-2026 - Vize - Bahar", "text": "an = { n2 } dizisinin ilk 15 elemanı toplamı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "12"}, {"letter": "B", "text": "124"}, {"letter": "C", "text": "1240"}, {"letter": "D", "text": "1200"}, {"letter": "E", "text": "120"}], "correct": "C", "explanation": "AUZEF Matematik II müfredatı uyarınca doğru seçenek C'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

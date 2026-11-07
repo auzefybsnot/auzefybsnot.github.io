@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olasılık ve İstatistik (AYBS3001) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Olasılık ve İstatistik (AYBS3001) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Olasılık ve İstatistik (AYBS3001) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Olasılık ve İstatistik (AYBS3001) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Olasılık ve İstatistik (AYBS3001) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>86 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">86</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Olasilik_ve_Istatistik_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (86)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">86</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Olasilik_ve_Istatistik_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Aşağıdaki sola çarpık serinin graﬁğine bakıldığında a,b ve c sıralamasıyla hangisi mod, hangisi medyan, hangisi aritmetik ortalamadır?", "options": [{"letter": "A", "text": "Mod – medyan – aritmetik ortalama"}, {"letter": "B", "text": "Mod – aritmetik ortalama – medyan"}, {"letter": "C", "text": "Medyan – mod – aritmetik ortalama"}, {"letter": "D", "text": "Aritmetik ortalama – medyan – mod"}, {"letter": "E", "text": "Aritmetik ortalama – mod – medyan"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 2, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "“Bu graﬁk türünde beş adet istatistiksel özet bir arada görülür. Bunlar; Xmax, Xmin, Q1 (1. Çeyrek yani küçükten büyüğe sıralanmış bir seriyi %25’ten kesen değer), Q2 (2. Çeyrek, asıl adı medyandır, küçükten büyüğe sıralanmış bir seriyi %50’den kesen değer), Q3 (3. Çeyrek yani küçükten büyüğe sıralanmış bir seriyi %75’ten kesen değer).” Yukarıda tarif edilen graﬁk türü hangisidir?", "options": [{"letter": "A", "text": "Çizgi diyagramı"}, {"letter": "B", "text": "Nokta diyagramı"}, {"letter": "C", "text": "Box –Whisker diyagramı"}, {"letter": "D", "text": "Daire graﬁği"}, {"letter": "E", "text": "Histogram"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 3, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Xi Ti 8 6 6 9 5 1 2 8 9 6 Yukarıdaki serinin tartılı aritmetik ortalaması kaçtır?", "options": [{"letter": "A", "text": "7.4"}, {"letter": "B", "text": "5.9"}, {"letter": "C", "text": "4.7"}, {"letter": "D", "text": "6.3"}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 4, "tag": "2023-2024 Vize Olasılık ve İstatistik, 2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Aşağıdakilerden hangisi istatistiksel analiz sonuçlarını etkilemeyeceği düşünülen ve örneklem hacmi büyüdükçe birbirini tolere eden hata türüne bir örnektir?", "options": [{"letter": "A", "text": "Tartının sürekli olarak 10 gr. fazla tartması"}, {"letter": "B", "text": "Metrenin 1 cm eksik ölçmesi"}, {"letter": "C", "text": "Daktilonun b yerine v harﬁ basması"}, {"letter": "D", "text": "Termometrenin normalden 1.5 derece yüksek göstermesi"}, {"letter": "E", "text": "Anketörün cinsiyetlerden bazılarını yanlış kodlaması"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 5, "tag": "2023-2024 Vize Olasılık ve İstatistik, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Ordudaki rütbeler – Cinsiyet – Bir insanın boy uzunluğu Yukarıdaki verilerin türleri hangi şıkta doğru olarak sıralanmıştır?", "options": [{"letter": "A", "text": "Ordinal – sürekli nicel - nominal"}, {"letter": "B", "text": "Ordinal – nominal – sürekli nicel"}, {"letter": "C", "text": "Nominal – ordinal – sürekli nicel"}, {"letter": "D", "text": "Sürekli nicel – nominal - ordinal"}, {"letter": "E", "text": "Sürekli nicel – ordinal - nominal"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 6, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Bir fonksiyonun kesikli tesadüﬁ değişkenler için olasılık fonksiyonu olabilmesi aşağıdaki hangi koşulu sağlaması ile mümkündür?", "options": [{"letter": "A", "text": "P(X)=1,15"}, {"letter": "B", "text": "P(X)≥1"}, {"letter": "C", "text": "P(X)≥1,5"}, {"letter": "D", "text": "P(X)≥0"}, {"letter": "E", "text": "P(X)≤0"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 7, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Çarpıklık değeri eksi (- ) işareti olan bir serinin dağılım yapısını en iyi ifade eden cümle hangisidir?", "options": [{"letter": "A", "text": "Dağılım simetrik bir dağılım değildir."}, {"letter": "B", "text": "Dağılım asimetrik bir yapı gösterir."}, {"letter": "C", "text": "Dağılım simetrik bir dağılımdır."}, {"letter": "D", "text": "Dağılım sola yatık bir asimetriye sahiptir."}, {"letter": "E", "text": "Dağılım sağa yatık bir asimetriye sahiptir. YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > OLASILIK VE İSTATİSTİK A"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 8, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Box-Whisker graﬁğinde ortadan bölen değer aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Q1"}, {"letter": "B", "text": "Aritmetik ortalama"}, {"letter": "C", "text": "Harmonik ortalama"}, {"letter": "D", "text": "Medyan"}, {"letter": "E", "text": "Mod"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 9, "tag": "2023-2024 Vize Olasılık ve İstatistik, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Sadece gözlem değerlerinin yer aldığı diziler (seriler) nasıl isimlendirilir?", "options": [{"letter": "A", "text": "Basit Seri"}, {"letter": "B", "text": "Frekans Serisi"}, {"letter": "C", "text": "Kümülatif (Birikimli) Seri"}, {"letter": "D", "text": "Gruplanmış Seri"}, {"letter": "E", "text": "Bileşik Seri"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 10, "tag": "2023-2024 Vize Olasılık ve İstatistik, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "1 ile 10 arasında tekrarlamasız 3 tam sayı seçildiğinde, aşağıdaki ifadelerden hangisi doğru olur?", "options": [{"letter": "A", "text": "4,6,7 en büyük standart sapmaya sahiptir."}, {"letter": "B", "text": "1,2,10 en büyük standart sapmaya sahiptir."}, {"letter": "C", "text": "5,6,7 en büyük standart sapmaya sahiptir."}, {"letter": "D", "text": "1, 2, 3 en büyük standart sapmaya sahiptir."}, {"letter": "E", "text": "8, 9, 10 en büyük standart sapmaya sahiptir."}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "2023-2024 Vize Olasılık ve İstatistik, 2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "İstanbul nüfusu 16 milyon olarak tahmin edilmiştir. Bu nüfusun %21’i üniversite mezunu, %39’i lise, %34'ü ilköğretim mezunu ve kalanlar ise eğitimsizlerden oluşmaktadır. Bu seri daire graﬁği ile ifade edildiğinde, ilköğretim mezunlarına ait dilimin açısal ölçümü kaçtır?", "options": [{"letter": "A", "text": "122"}, {"letter": "B", "text": "144"}, {"letter": "C", "text": "84"}, {"letter": "D", "text": "180"}, {"letter": "E", "text": "76"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 12, "tag": "2023-2024 Vize Olasılık ve İstatistik, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Verilerin sınıf (grup) büyüklüklerini dikkate alarak karşılaştırılmasını mümkün kılan graﬁk hangisidir?", "options": [{"letter": "A", "text": "Nokta Graﬁk"}, {"letter": "B", "text": "Histogram"}, {"letter": "C", "text": "Eğri Graﬁk"}, {"letter": "D", "text": "Düz Graﬁk"}, {"letter": "E", "text": "Çubuk Graﬁk"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 13, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Bir serinin basıklığını ifade eden değer arttıkça serinin şekli hangi bağlamda değişir?", "options": [{"letter": "A", "text": "Normalleşir."}, {"letter": "B", "text": "Pürüzsüz hale gelir."}, {"letter": "C", "text": "Sivrileşir."}, {"letter": "D", "text": "Basıklaşır."}, {"letter": "E", "text": "Netleşir."}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 14, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Aşağıdaki veri kümesi için ∑(X - ) ‘in sonucu hangi seçenekte doğru verilmiştir? (12 21 33 45 59)", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "3"}, {"letter": "C", "text": "0"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "4"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 15, "tag": "2023-2024 Vize Olasılık ve İstatistik, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Veri kümesi bir kitle gibi düşünüldüğünde; yukarıdaki frekans serisinin standart sapması nedir?", "options": [{"letter": "A", "text": "3,40"}, {"letter": "B", "text": "4.11"}, {"letter": "C", "text": "5,11"}, {"letter": "D", "text": "4,40"}, {"letter": "E", "text": "2,55"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 16, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Aritmetik ortalaması 25, varyansı 16 olan serinin değişim katsayısı yüzde kaçtır?", "options": [{"letter": "A", "text": "16"}, {"letter": "B", "text": "24"}, {"letter": "C", "text": "22"}, {"letter": "D", "text": "18"}, {"letter": "E", "text": "20 YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > OLASILIK VE İSTATİSTİK A"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 17, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "50 10 50-65 8 65-80 1 Yukarıdaki serinin kartiller arası fark değeri (yani Q3-Q1) nedir?", "options": [{"letter": "A", "text": "32.971"}, {"letter": "B", "text": "28.971"}, {"letter": "C", "text": "30.971"}, {"letter": "D", "text": "26.971"}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 18, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "Gözlem değerlerinin yanına gözlem değerinin kaç kez tekrarlandığı kaydedilerek oluşturulan serilere ne ad verilir?", "options": [{"letter": "A", "text": "Sınıﬂanmış seri"}, {"letter": "B", "text": "Basit seri"}, {"letter": "C", "text": "Birikimli seri"}, {"letter": "D", "text": "Bileşik seri"}, {"letter": "E", "text": "Frekans serisi"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 19, "tag": "2023-2024 Vize Olasılık ve İstatistik", "text": "5 çocuklu bir ailede 2 erkek çocuk olması olasılığı nedir?", "options": [{"letter": "A", "text": "4/32"}, {"letter": "B", "text": "2/32"}, {"letter": "C", "text": "10/32"}, {"letter": "D", "text": "8/32"}, {"letter": "E", "text": "6/32"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 20, "tag": "2023-2024 Vize Olasılık ve İstatistik, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Bir şehirde yaşayan 50000 kişinin %15’i üniversite mezunu, %35’i lise, kalanlar ilköğretim mezunudur. Bu seri daire graﬁği ile gösterilmek istenirse lise mezunlarına ait dilimin açısal ölçümü kaçtır?", "options": [{"letter": "A", "text": "126"}, {"letter": "B", "text": "272"}, {"letter": "C", "text": "54"}, {"letter": "D", "text": "180"}, {"letter": "E", "text": "260 1 D 2 C 3 B 4 E 5 B 6 D 7 D 8 D 9 A 10 B 11 A 12 B 13 C 14 C 15 E 16 A 17 E 18 E 19 C 20 A YAYINLANMIŞ DOKÜMAN 3 Test Bitti"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 21, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Bir okuldaki 200 öğrenciye derslerin blok halinde yapılması fikri sorulmuştur. Öğrencilerin kararlarına ilişkin bilgi tablodaki gibidir. Tablodaki bilgilere göre aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "P( K/T) = 0,6"}, {"letter": "B", "text": "P(K/B) = 0,75"}, {"letter": "C", "text": "P(R/K) = 0,25"}, {"letter": "D", "text": "P(E/T) = 0,4"}, {"letter": "E", "text": "P(R/E) = 0,225"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 22, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Türkiye'de TV dizilerinin %20'si beğenilmekte ve bunların %50 si ise yurt dışına satılmaktadır. Beğenilmeyenlerin ise %70'si yurtdışına satılmaktadır. Bir dizinin yurt dışına satılması durumunda ülkemizde de beğenilen dizi olma olasılığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,1850"}, {"letter": "B", "text": "0,5515"}, {"letter": "C", "text": "0,1130"}, {"letter": "D", "text": "0,1515"}, {"letter": "E", "text": "0,4020"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 23, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "2 adet zar atıldığında gelen sayılar toplamı 5 ise zarlardan birinin 4 olma olasılığı nedir?", "options": [{"letter": "A", "text": "1/4"}, {"letter": "B", "text": "2/5"}, {"letter": "C", "text": "3/4"}, {"letter": "D", "text": "1/2"}, {"letter": "E", "text": "1/5"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 24, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Türkiye'de ailelerin %15'i akşam yemeği sonrası sadece kahve, %50'si sadece çay ve %10'u ise hem kahve hem çay tüketmektedir. Bir ailenin kahve tükettiği biliniyorsa bu ailenin aynı zamanda çay tüketme olasılığı nedir?", "options": [{"letter": "A", "text": "0,60"}, {"letter": "B", "text": "0,20"}, {"letter": "C", "text": "0,40"}, {"letter": "D", "text": "0,50"}, {"letter": "E", "text": "0,30"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 25, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME, OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Aritmetik ortalaması 25, varyansı 16 olan serinin değişim katsayısı yüzde olarak aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "24"}, {"letter": "B", "text": "18"}, {"letter": "C", "text": "16"}, {"letter": "D", "text": "22"}, {"letter": "E", "text": "20"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 26, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Gerçekte doğru olan H0 hipotezi reddedildiğinde aşağıdaki hata tiplerinden hangi tip hata gerçekleşmiş olur?", "options": [{"letter": "A", "text": "β Hatası"}, {"letter": "B", "text": "γ Hatası"}, {"letter": "C", "text": "α Hatası"}, {"letter": "D", "text": "1 – β Hatası"}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 27, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Bir öğrenci Türkçe dersinden 70, Müzik dersinden 80 almıştır. Bu derslere ilişkin sınıf ortalamaları ve standart sapmaları aşağıdaki gibidir. Bu bilgiler doğrultusunda aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Öğrenci Müzik dersinde tam sınıf ortalamasında bir başarı göstermiştir."}, {"letter": "B", "text": "Öğrenci Türkçe dersinde sınıf ortalamasının 1 standart sapma altında kalmıştır."}, {"letter": "C", "text": "Öğrenci Türkçe dersinde sınıf ortalamasının üzerinde bir başarı göstermiştir."}, {"letter": "D", "text": "Öğrenci Türkçe dersinde tam sınıf ortalamasında bir başarı göstermiştir."}, {"letter": "E", "text": "Öğrenci Müzik dersinde sınıf ortalamasının 2 standart sapma altında kalmıştır."}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 28, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "1000 müşterisinden 800 tanesi A marka deterjan kullanıcısı olduğunu belirtmektedir. Müşteriler arasından tesadüfi ve iadesiz olarak 20 kişi seçilirse bu müşterilerin 14 tanesinin A markasının kullanıcısı olma olasılığı değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,25"}, {"letter": "B", "text": "0,27"}, {"letter": "C", "text": "0,15"}, {"letter": "D", "text": "0,44"}, {"letter": "E", "text": "0,11"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 29, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Hilesiz bir para 6 kez atıldığında en az 4 kez yazı gelme ihtimali aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "11/32"}, {"letter": "B", "text": "13/32"}, {"letter": "C", "text": "7/32"}, {"letter": "D", "text": "15/32"}, {"letter": "E", "text": "9/32"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 30, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Bir şirket A bölgesinde petrol arama çalışmalarına başlamıştır. Eğer şirket A bölgesinde az petrol bulursa kazancı 100.000 $, çok petrol bulursa kazancı 170.000$ ve hiç petrol bulamazsa kaybı 80.000$ olacaktır. Bu üç durumun olasılıkları sırasıyla şöyledir: 0,5; 0,25; 0,25. Şirketin beklenen kazancı değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "82.500 $"}, {"letter": "B", "text": "72.500 $"}, {"letter": "C", "text": "62.500 $"}, {"letter": "D", "text": "92.500 $"}, {"letter": "E", "text": "52.500 $"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 31, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "𝑓(𝑥) = 𝑎 𝑥3 ise 0 < 𝑥< 10 aralığında bir olasılığın yoğunluk fonksiyonu olabilmesi için a kaça eşit olmalıdır?", "options": [{"letter": "A", "text": "-150"}, {"letter": "B", "text": "-50"}, {"letter": "C", "text": "-100"}, {"letter": "D", "text": "-200"}, {"letter": "E", "text": "-250"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 32, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Bir paranın 4 kez atıldığı varsayılıyor. 1’den fazla tura gelme olasılığı nedir?", "options": [{"letter": "A", "text": "8/16"}, {"letter": "B", "text": "9/16"}, {"letter": "C", "text": "12/16"}, {"letter": "D", "text": "10/16"}, {"letter": "E", "text": "11/16"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 33, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Aşağıdaki olaylardan hangisi Poisson dağılımına uymaz?", "options": [{"letter": "A", "text": "Bir havalimanına bir saat boyunca inen uçakların sayısı"}, {"letter": "B", "text": "Homojen bir paranın 5 defa atılması sonucunda üste gelen yazıların sayısı"}, {"letter": "C", "text": "Bir sayfadaki imla hatalarının sayısı"}, {"letter": "D", "text": "10 dönümlük bir ormanda bulunan ağaç sayısı"}, {"letter": "E", "text": "Bir kavşakta bir yılda meydana gelen ortalama kaza sayısı"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 34, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "2 zar atıldığında zarların üste gelen yüzlerindeki sayılar toplamının 4’ten büyük olduğu biliniyorken, toplamın çift sayı olması ihtimali aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "18/30"}, {"letter": "B", "text": "14/30"}, {"letter": "C", "text": "8/30"}, {"letter": "D", "text": "20/30"}, {"letter": "E", "text": "10/30"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 35, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Bir para 3 kez atılıyor. Ortaya çıkacak yazı sayısına ilişkin beklenen değer aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "E(X)=1,5"}, {"letter": "B", "text": "E(X)=3"}, {"letter": "C", "text": "E(X)=2,5"}, {"letter": "D", "text": "E(X)=2"}, {"letter": "E", "text": "E(X)=1"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 36, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "200 sayfalık bir kitaba 100 imla hatası rastgele dağıtılıyor. Rastgele seçilen bir sayfada 2 imla hatası olma ihtimali değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,0758"}, {"letter": "B", "text": "0,0958"}, {"letter": "C", "text": "0,2958"}, {"letter": "D", "text": "0,0858"}, {"letter": "E", "text": "0,1958"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 37, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Yukarıdaki sola çarpık serinin grafiğine bakıldığında a,b ve c sıralamasıyla hangisi mod, hangisi medyan, hangisi aritmetik ortalamadır?", "options": [{"letter": "A", "text": "Mod – aritmetik ortalama – medyan"}, {"letter": "B", "text": "Aritmetik ortalama – medyan – mod"}, {"letter": "C", "text": "Medyan – mod – aritmetik ortalama"}, {"letter": "D", "text": "Aritmetik ortalama – mod – medyan"}, {"letter": "E", "text": "Mod – medyan – aritmetik ortalama"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 38, "tag": "2025- 2026 OLASILIK VE İSTATİSTİK BÜTÜNLEME", "text": "Box­Whisker grafiğinde ortadan bölen değer aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Medyan"}, {"letter": "B", "text": "Q1"}, {"letter": "C", "text": "Harmonik ortalama"}, {"letter": "D", "text": "Mod"}, {"letter": "E", "text": "Aritmetik ortalama"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 39, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir araştırmada veri toplama işlemi sırasında yapılabilen ve hep aynı yönde saptamalara (hatalara) Sebep olarak araştırma sonuçlarına yandı kılan hata türü ......... denir?", "options": [{"letter": "A", "text": "Hata"}, {"letter": "B", "text": "Önemli hata"}, {"letter": "C", "text": "Tesadüfi hata"}, {"letter": "D", "text": "Sistematik hata"}, {"letter": "E", "text": "Rölöve hata"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 40, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aynı koşullar sağlanarak tekrar edildiğinde aynı sorunları veren ve genellikle fizik kimya vb. bilim alanlarında rastlanan olaylara ...... denir?", "options": [{"letter": "A", "text": "Tipik olay"}, {"letter": "B", "text": "Deney"}, {"letter": "C", "text": "Gözlem"}, {"letter": "D", "text": "Veri"}, {"letter": "E", "text": "Kolektif olay"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 41, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "İstatistik alanında yapılan bir çalışmanın konusunu oluşturan ve kollektif olay olarak nitelenen olayların her birine......denir?", "options": [{"letter": "A", "text": "Birim"}, {"letter": "B", "text": "İnsan"}, {"letter": "C", "text": "Vasıf"}, {"letter": "D", "text": "Veri"}, {"letter": "E", "text": "Şık"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 42, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Geometrik dizi özelliği gösteren ya da aşırı değer içeren serilerde analitik (duyarlı) ortalama ile daha temsili bir ortalama hesaplanmak istendiğinde............... kullanılmalıdır. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Kareli ortalama"}, {"letter": "B", "text": "Medyan"}, {"letter": "C", "text": "Aritmetik ortalama"}, {"letter": "D", "text": "Mod"}, {"letter": "E", "text": "Geometrik ortalama"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 43, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir veri kümesinin özetlemek akılda kalıcı tek bir değer olarak ifade etmek ya da o veri kümesini temsil etmek amacıyla hesaplanan ve kullanılan istatistiki ölçülere verilen genel ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ortanca"}, {"letter": "B", "text": "Mod"}, {"letter": "C", "text": "Medyan"}, {"letter": "D", "text": "Egemen deger"}, {"letter": "E", "text": "Ortalama"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 44, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aşağıdaki ortalamalardan hangisi ortalama hesabında birimlerin logaritmalarını kullanır?", "options": [{"letter": "A", "text": "Mod"}, {"letter": "B", "text": "Medyan"}, {"letter": "C", "text": "Aritmetik ortalama"}, {"letter": "D", "text": "Kareli ortalama"}, {"letter": "E", "text": "Geometrik ortalama İSTATİSTİK 2020 VİZE SORULARI Hazırlayan: Lord"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 45, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Zaman vasfını şıklarına göre düzenlenmiş verileri (serilere) ........... denir. Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Birleşik seriler"}, {"letter": "B", "text": "Panel veriler"}, {"letter": "C", "text": "Zaman serileri"}, {"letter": "D", "text": "Bölünme serileri"}, {"letter": "E", "text": "Mekan serileri"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 46, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Gözlem değerlerinin toplamı sıfır olduğunda ya da gözlem değerleri arasında (-) işaretli değer bulunduğunda bu tür serilerin ortalaması hesaplanmak istendiğinde ...........kullanılır. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Aritmetik ortalama"}, {"letter": "B", "text": "Geometrik ortalama"}, {"letter": "C", "text": "Negatif değer bulunan seride ortalama hesaplanamaz"}, {"letter": "D", "text": "Kareli ortalama"}, {"letter": "E", "text": "Toplamı 0 olan seride ortalama hesaplanmaz"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 47, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Verileri düzenlemek amacıyla verinin birbirine yakın şıklarını mümkün olduğunca homojen sınıflarda toplamak suretiyle oluşturulan serilere .........denir Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tasnif edilmiş seri"}, {"letter": "B", "text": "Ayırma"}, {"letter": "C", "text": "Sıralama"}, {"letter": "D", "text": "Düzenleme"}, {"letter": "E", "text": "Sınıflanmış frekens serisi"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 48, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aşağıda verilen ortalamalardan hangisi analitik (duyarlı) ortalamalar arasında yer almaz?", "options": [{"letter": "A", "text": "Aritmetik ortalama"}, {"letter": "B", "text": "Geometrik ortalama"}, {"letter": "C", "text": "Duyarlı ortalama"}, {"letter": "D", "text": "Medyan (ortalama)"}, {"letter": "E", "text": "Kareli ortalama"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 49, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir ana kütleyi başka ana kütleden ayırt eden özelliklere diğer deyişle bir ana kütleyi karakterize eden ve niteleyen değerlere.......... denir. Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tam sayım"}, {"letter": "B", "text": "Örnekleme"}, {"letter": "C", "text": "İstatistik"}, {"letter": "D", "text": "Parametre"}, {"letter": "E", "text": "Rölöve"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 50, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aşağıda sıralanan vasıflardan hangisi nicel vasıf özelliği taşımaktadır?", "options": [{"letter": "A", "text": "Doğum yeri"}, {"letter": "B", "text": "Eğitim durumu"}, {"letter": "C", "text": "Boy uzunlugu"}, {"letter": "D", "text": "Meslek"}, {"letter": "E", "text": "Medeni durum İSTATİSTİK 2020 VİZE SORULARI Hazırlayan: Lord"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 51, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir öğrenci bir dönem boyunca girdiği matematik sınavlarından 92, 95 ve 98 almıştır. Öğrencinin matematik dersinde aldığı puanların aritmetik ortalaması nedir?", "options": [{"letter": "A", "text": "95"}, {"letter": "B", "text": "96"}, {"letter": "C", "text": "92"}, {"letter": "D", "text": "91"}, {"letter": "E", "text": "94"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 52, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aşağıdaki ortalamalardan hangisi analitik olmayan ( duyarsız) bir ortalamadır?", "options": [{"letter": "A", "text": "Duyarlı ortalama"}, {"letter": "B", "text": "Mod ( egemen deger)"}, {"letter": "C", "text": "Geometrik ortalama"}, {"letter": "D", "text": "Aritmetik ortalama"}, {"letter": "E", "text": "Kareli ortalama"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 53, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "istatistiki araştırmaya konu olan bir birimin uzun süre zarfında gözlenmesi Mümkünse ya da bir birim uzun ömürlü olarak tanımlanıyosa bu tür birimlere ..........denir. Yukarıdaki boşluğa aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Devamlı birim"}, {"letter": "B", "text": "Maddi birim"}, {"letter": "C", "text": "Soyut birim"}, {"letter": "D", "text": "Somut birim"}, {"letter": "E", "text": "Ani birim"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 54, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aşağıdaki ortalamalardan hangisi birimlerin kareleri üzerinden hesaplanır?", "options": [{"letter": "A", "text": "Aritmetik ortalama"}, {"letter": "B", "text": "Geometrik ortalama"}, {"letter": "C", "text": "Medyan"}, {"letter": "D", "text": "Mod"}, {"letter": "E", "text": "Kareli ortalama"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 55, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "istatistik çalışması yapılırken veri toplama işleminin doğrudan araştırmacı tarafından yapılması halinde bu tür verilere .............denir. Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Rölöve"}, {"letter": "B", "text": "Soru formu"}, {"letter": "C", "text": "Birincil veri"}, {"letter": "D", "text": "İkincil veri"}, {"letter": "E", "text": "Veri toplama"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 56, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aşağıda verilen vasıflardan hangisi nitel vasfa örnektir?", "options": [{"letter": "A", "text": "Bel cevresi"}, {"letter": "B", "text": "Cinsiyet"}, {"letter": "C", "text": "Kilo"}, {"letter": "D", "text": "Boy"}, {"letter": "E", "text": "Yas İSTATİSTİK 2020 VİZE SORULARI Hazırlayan: Lord"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 57, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "50 50-70 70-100 Yukarıda verilen sınıflanmış dağılımda sınıflara ilişkin sınıf orta noktaları sırasıyla hangi şıkta doğru olarak verilmiştir?", "options": [{"letter": "A", "text": "0, 20, 50, 70"}, {"letter": "B", "text": "10, 25, 60, 80"}, {"letter": "C", "text": "15, 35, 65, 85"}, {"letter": "D", "text": "20, 50 , 70, 100"}, {"letter": "E", "text": "10, 35, 60, 85"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 58, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aşağıdaki verilen ortalamalardan hangisi analitik olmayan ve duyarsız Oortalamalar içinde yer almaz?", "options": [{"letter": "A", "text": "Kareli ortalama"}, {"letter": "B", "text": "Ortanca"}, {"letter": "C", "text": "Egemen deger"}, {"letter": "D", "text": "Mod"}, {"letter": "E", "text": "Medyan"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 59, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Gözlem değerlerini küçükten büyüğe ( ya da büyükten küçüğe) sıraladığımızda tam ortada yer alan değere …………….denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Kareli ortalama"}, {"letter": "B", "text": "Duyarlı ortalama"}, {"letter": "C", "text": "Geometrik ortalama"}, {"letter": "D", "text": "Aritmetik ortalama"}, {"letter": "E", "text": "Medyan (Ortanca)"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 60, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Veri düzenleme araçlarından biri olan gruplama işlemi sırasında sınıfların ………….. tutulması sınıf içi homojenliğine zarar vererek detayların kaybolmasına yol açar. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Geniş"}, {"letter": "B", "text": "Dar"}, {"letter": "C", "text": "Aralıklı"}, {"letter": "D", "text": "Sayısal"}, {"letter": "E", "text": "Sayısal olmayan"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 61, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Aynı koşullar sağlanarak tekrar edildiğinde aynı sonuçları veren ve genellikle fizik, kimya vb. bilim alanlarında rastlanan olaylara ………….denir. Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kollektif olay"}, {"letter": "B", "text": "Deney"}, {"letter": "C", "text": "Tipik olay"}, {"letter": "D", "text": "Gözlem"}, {"letter": "E", "text": "Veri İSTATİSTİK 2020 VİZE SORULARI Hazırlayan: Lord"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 62, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Verilerin, homojen alt gruplar şeklinde düzenlendiği sınıflanmış serilerin grafik sunumuna…….. denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Histogram"}, {"letter": "B", "text": "Çubuk grafik"}, {"letter": "C", "text": "Serpilme diyagramı"}, {"letter": "D", "text": "Daire dilimleri"}, {"letter": "E", "text": "Bindirmeli grafik"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 63, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "İstatistiki araştırmaya konu olan ve maddi ya da fiziki bir varlığa sahip bulunan birimlere ……………. denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Görünür birim"}, {"letter": "B", "text": "Maddi birim"}, {"letter": "C", "text": "Soyut birim"}, {"letter": "D", "text": "Varlık birim"}, {"letter": "E", "text": "Somut birim"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 64, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir öğrenci, üniversite sınavına hazırlık aşamasında fen bilimleri alanında 4 deneme sınavına katılmış ve 60, 70, 80 ve 90 puanlarını almıştır. Buna göre, öğrencinin fen bilimleri testinde ortalama puanı nedir?", "options": [{"letter": "A", "text": "75"}, {"letter": "B", "text": "95"}, {"letter": "C", "text": "70"}, {"letter": "D", "text": "98"}, {"letter": "E", "text": "60"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 65, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Verinin, homojen sınıflar yaratmak suretiyle gruplama işlemine tabi tutulması sonucunda oluşturulan sınıflarda bulunabilecek en küçük değere ……………..denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Sınıf alt sınırı"}, {"letter": "B", "text": "Sınıf üst sınırı"}, {"letter": "C", "text": "Sınıf aralığı"}, {"letter": "D", "text": "Sınıf genişliği"}, {"letter": "E", "text": "Sınıf ortası"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 66, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir istatistiki çalışma kapsamında toplanan verileri birbirine yakın homojen gruplara toplamak suretiyle oluşturulan alt ve üst sınırı belli aralıkların her birine …………….denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Tasnif"}, {"letter": "B", "text": "Sınıf"}, {"letter": "C", "text": "Frekans"}, {"letter": "D", "text": "Sınır"}, {"letter": "E", "text": "Birim İSTATİSTİK 2020 VİZE SORULARI Hazırlayan: Lord"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 67, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir istatistiki araştırma yapabilmek için veriye ihtiyaç vardır ve bu veri toplama işlemine …………….denir. Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Birim"}, {"letter": "B", "text": "Rölöve (derleme)"}, {"letter": "C", "text": "Şık"}, {"letter": "D", "text": "Vasıf"}, {"letter": "E", "text": "Veri"}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 68, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir istatistiki çalışma kapsamında toplanan veriler içinde yer alan her bir gözlem değerinin veri içinde kaç kez tekrar ettiğini gösteren değere ………..denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Frekans"}, {"letter": "B", "text": "Tasnif"}, {"letter": "C", "text": "Grup"}, {"letter": "D", "text": "Sınıf"}, {"letter": "E", "text": "Birim"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 69, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir veri kümesi içinde yer alan gözlem değerleri arasında önem farkı bulunması durumunda ortalama hesabı yapılırken ………….ortalama tercih edilmelidir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Ağırlıklı"}, {"letter": "B", "text": "Medyan"}, {"letter": "C", "text": "Mod"}, {"letter": "D", "text": "Ağırlıksız"}, {"letter": "E", "text": "Tartısız"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 70, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir araştırma kapsamında toplanan verilerin aynı şıkların bir araya getirilmesi ya da bir araya toplanması şeklinde düzenlenmesi işlemine…….. denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Sınıflama"}, {"letter": "B", "text": "Sıralama"}, {"letter": "C", "text": "Düzenleme"}, {"letter": "D", "text": "Gruplama"}, {"letter": "E", "text": "Tasnif"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 71, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bazı araştırmalarda, zaman, maliyet vb. sebeplerle araştırma kapsamında yer alan tüm birimlerin değil, bu birimlerin içinden belirli yöntemlerle seçilen az sayıda birimin gözlenmesi suretiyle ana kütle hakkında bilgi sahibi olunabilir. Bu yönteme …………… denir. Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Örnek kütle"}, {"letter": "B", "text": "Parametre"}, {"letter": "C", "text": "Veri toplama"}, {"letter": "D", "text": "Örnekleme"}, {"letter": "E", "text": "Ana kütle"}], "correct": "A", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek A'dir."}, {"num": 72, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Verilerin, hem zaman hem mekân vasfına göre düzenlenmesiyle elde edilen serilere ………………veriler denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Bölünme"}, {"letter": "B", "text": "Mekân"}, {"letter": "C", "text": "Panel"}, {"letter": "D", "text": "Zaman"}, {"letter": "E", "text": "Bileşik İSTATİSTİK 2020 VİZE SORULARI Hazırlayan: Lord"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 73, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Verilerin küçükten büyüğe ya da büyükten küçüğe doğru sıralanması suretiyle oluşturulan seriye……..denir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Tasnif edilmiş seri"}, {"letter": "B", "text": "Sınıflanmış seri"}, {"letter": "C", "text": "Basit seri (Dizi)"}, {"letter": "D", "text": "Bileşik seri"}, {"letter": "E", "text": "Gruplanmış seri"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 74, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Bir araştırmada veri toplama işlemi sırasında yapılabilen ve hep aynı yönde sapmalara (hatalara) sebep olarak araştırma sonuçlarını yanlı kılan hata türüne ………………… denir. Yukarıdaki boşluğa gelecek uygun seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hata"}, {"letter": "B", "text": "Önemli hata"}, {"letter": "C", "text": "Tesadüfi hata"}, {"letter": "D", "text": "Sistematik hata"}, {"letter": "E", "text": "Rölöve hatası"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 75, "tag": "ISTATISTIK 2020 VIZE SORULARI", "text": "Veri kümesi içinde yer alan aşırı değerlere karşı en duyarlı ortalama aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Mod"}, {"letter": "B", "text": "Geometrik ortalama"}, {"letter": "C", "text": "Hepsi"}, {"letter": "D", "text": "Aritmetik ortalama"}, {"letter": "E", "text": "Medyan"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 76, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "\"Gözlem değerlerinin ortalamadan uzaklıklarına bakarak verilerin ........ ölçebiliriz.\" cümlesinde boş bırakılan yere gelebilecek en uygun ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "medyan değerini"}, {"letter": "B", "text": "mod değerini"}, {"letter": "C", "text": "ortanca değerini"}, {"letter": "D", "text": "harmonik ortalamasını"}, {"letter": "E", "text": "dağılımını"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 77, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Serinin en büyük ve en küçük değerleri arasındaki fark aşağıdaki seçeneklerden hangisinde en doğru şekilde ifade edilmiştir?", "options": [{"letter": "A", "text": "Standart Hata"}, {"letter": "B", "text": "Standar Sapma"}, {"letter": "C", "text": "Değişim Katsayısı"}, {"letter": "D", "text": "Değişim Aralığı"}, {"letter": "E", "text": "Varyans"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 78, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Yukarıdaki serinin Harmonik ortalaması aşağıdaki seçeneklerin hangisinde doğru verilmiştir? (Sonucu tamsayı olacak biçimde yuvarlayınız.)", "options": [{"letter": "A", "text": "7"}, {"letter": "B", "text": "9"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "11"}, {"letter": "E", "text": "5"}], "correct": "C", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek C'dir."}, {"num": 79, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Bir serinin basıklığını ifade eden değer arttıkça serinin şekli aşağıdaki hangi bağlamda değişir?", "options": [{"letter": "A", "text": "Normalleşir."}, {"letter": "B", "text": "Sivrileşir."}, {"letter": "C", "text": "Pürüzsüz hale gelir."}, {"letter": "D", "text": "Basıklaşır."}, {"letter": "E", "text": "Netleşir."}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 80, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Borçlarından dolayı tasfiye edilen bir firmanın borç dağılımına ait asimetri (çarpıklık) durumunu en makul açıklayabilen seçenek hangisidir?", "options": [{"letter": "A", "text": "Her iki tarafı da aynıdır."}, {"letter": "B", "text": "Negatif asimetriye sahiptir."}, {"letter": "C", "text": "Asimetrik bir durumu olamaz."}, {"letter": "D", "text": "Pozitif asimetriye sahiptir."}, {"letter": "E", "text": "Mutlak simetriktir."}], "correct": "B", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek B'dir."}, {"num": 81, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Aşağıdakilerden hangisi değişim katsayısının üstünlüklerinden değildir?", "options": [{"letter": "A", "text": "Farklı değişkenleri bir arada ele alabilmeye imkan tanır."}, {"letter": "B", "text": "Yüzde olarak karşılaştırma yapmayı mümkün kılar."}, {"letter": "C", "text": "Oransal bir değişim değeri verir."}, {"letter": "D", "text": "Ortalamaların tercihini kolaylaştırır."}, {"letter": "E", "text": "Farklı birimlere sahip serilerin karşılaştırılmasını mümkün kılar."}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 82, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "(12 21 33 45 59) Yukarıdaki veri kümesi için∑ 𝑋−𝑋 ) ! \" ‘in sonucu hangi seçenekte doğru verilmiştir?", "options": [{"letter": "A", "text": "3"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "0"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "2"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 83, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "“Bu grafik türünde beş adet istatistiksel özet bir arada görülür. Bunlar; Xmax, Xmin, Q1 (1. Çeyrek yani küçükten büyüğe sıralanmış bir seriyi %25’ten kesen değer), Q2 (2. Çeyrek, asıl adı medyandır, küçükten büyüğe sıralanmış bir seriyi %50’den kesen değer), Q3 (3. Çeyrek yani küçükten büyüğe sıralanmış bir seriyi %75’ten kesen değer).” Yukarıda tarif edilen grafik türü hangisidir?", "options": [{"letter": "A", "text": "Histogram"}, {"letter": "B", "text": "Nokta diyagramı"}, {"letter": "C", "text": "Çizgi diyagramı"}, {"letter": "D", "text": "Box –Whisker diyagramı"}, {"letter": "E", "text": "Daire grafiği"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 84, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Bir serinin dağılımını (bölünmesini / şeklini) anlamak için aşağıdaki seçeneklerden hangisinden yararlanmak gerekmez?", "options": [{"letter": "A", "text": "Ortalamalardan"}, {"letter": "B", "text": "Tanımından"}, {"letter": "C", "text": "Çarpıklıktan"}, {"letter": "D", "text": "Basıklıktan"}, {"letter": "E", "text": "Momentlerden"}], "correct": "E", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek E'dir."}, {"num": 85, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "Gruplanmış açık uçlu olmayan serilerde grup / sınıf değerini bulmak için yapılan işlem aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Gruplanmış sınıfın en düşük olan değeri kullanılır."}, {"letter": "B", "text": "Bu tür gruplanmış serilerde sınıf değeri hesaplanamaz."}, {"letter": "C", "text": "Gruplanmış sınıfın frekans değeri kullanılır."}, {"letter": "D", "text": "Gruplanmış sınıfın en yüksek ve en düşük değeri arasındaki farkın yarısı kullanılır."}, {"letter": "E", "text": "Gruplanmış sınıfın en yüksek değeri kullanılır."}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}, {"num": 86, "tag": "OLASILIK VE İSTATİSTİK 2025-2026 VİZE", "text": "{ 10,100,1000} değerlerinin aritmetik ortalaması ile geometrik ortalaması arasındaki fark değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "250"}, {"letter": "B", "text": "270"}, {"letter": "C", "text": "220"}, {"letter": "D", "text": "300"}, {"letter": "E", "text": "290"}], "correct": "D", "explanation": "AUZEF Olasilik ve Istatistik müfredatı uyarınca doğru seçenek D'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

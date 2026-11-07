@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgi Sistemleri Proje Yönetimi (AYBS6006) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 3. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Bilgi Sistemleri Proje Yönetimi (AYBS6006) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">3. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Bilgi Sistemleri Proje Yönetimi (AYBS6006) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Bilgi Sistemleri Proje Yönetimi (AYBS6006) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Bilgi Sistemleri Proje Yönetimi (AYBS6006) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>137 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>3. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">137</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Bilgi_Sistemleri_Proje_Yonetimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (137)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">137</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Bilgi_Sistemleri_Proje_Yonetimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılım proje ekibinde genellikle yer almaz?", "options": [{"letter": "A", "text": "Sistem analisti"}, {"letter": "B", "text": "Proje yöneticisi"}, {"letter": "C", "text": "Destekleyici"}, {"letter": "D", "text": "Takım lideri"}, {"letter": "E", "text": "Üretim müdürü"}], "correct": "E", "explanation": "Üretim müdürü, yazılım projelerinde değil; fiziksel ürün üreten imalat sektörü fabrikalarında yer alır."}, {"num": 2, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bireysel proje sınıflandırılmasına örnek gösterilebilir?", "options": [{"letter": "A", "text": "Fabrika yapmak"}, {"letter": "B", "text": "Yeni bir araba tasarlamak"}, {"letter": "C", "text": "Yeni bir işletim sistemi tasarlamak"}, {"letter": "D", "text": "Doğum günü daveti organize etmek"}, {"letter": "E", "text": "Otoyol inşa etmek"}], "correct": "D", "explanation": "Büyük ekipler gerektirmeyen, kişisel hedeflerle yürütülen projeler bireyseldir."}, {"num": 3, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Paydaş analiz gruplandırmasında aşağıdakilerden hangisi bulunmamaktadır?", "options": [{"letter": "A", "text": "Potansiyel çekimser gruplar"}, {"letter": "B", "text": "Etkin proje tarafı olabilecek gruplar"}, {"letter": "C", "text": "Projeden faydalananlar"}, {"letter": "D", "text": "Potansiyel karşıtlar"}, {"letter": "E", "text": "Potansiyel destekçiler"}], "correct": "A", "explanation": "Çekimserlik anlık bir durumdur. Paydaşlar destekçi, karşıt veya faydalanıcı olarak kategorize edilir."}, {"num": 4, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2024,2026,Banko, Vize, 1 Kez Çıktı!", "text": "Bir yazılım projesi gözden geçirilirken aşağıdaki yöntemlerin hangisine başvurulmaz?", "options": [{"letter": "A", "text": "Kod teftişi"}, {"letter": "B", "text": "Müşteri incelemesi"}, {"letter": "C", "text": "Genel gözden geçirme"}, {"letter": "D", "text": "Satır satır inceleme"}, {"letter": "E", "text": "Denetim"}], "correct": "D", "explanation": "Müşteri kodu incelemez, ürünün sonucunu test eder (Kabul Testi). Diğerleri iç kalite kontrol yöntemleridir."}, {"num": 5, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden davranışlardan hangisi ekip ruhunu zedelemez?", "options": [{"letter": "A", "text": "Ortak hedefler benimsemek"}, {"letter": "B", "text": "İşi aşırı sahiplenmek"}, {"letter": "C", "text": "Yeterince plan yapmamak"}, {"letter": "D", "text": "Kişiselleştirmek"}, {"letter": "E", "text": "Hatayı kişilerde görmek"}], "correct": "A", "explanation": "Bireysel çıkarların ötesine geçip ortak bir hedefe yönelmek takım ruhunu güçlendirir."}, {"num": 6, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdaki yazılım geliştirme modellerinden hangisi gerçek anlamda bir yazılım geliştirme modeli olarak görülmemektedir?", "options": [{"letter": "A", "text": "Doğrusal Geliştirme Modelleri"}, {"letter": "B", "text": "Yinelemeli Geliştirme Modelleri"}, {"letter": "C", "text": "Servis Tabanlı Geliştirme Modelleri"}, {"letter": "D", "text": "Kod Eksenli Geliştirme Modeli"}, {"letter": "E", "text": "Modüler Geliştirme Modelleri"}], "correct": "D", "explanation": "Hiçbir planlama/tasarım yapmadan doğrudan kod yazmaya başlamak mühendislik değil plansızlıktır."}, {"num": 7, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Proje yöneticisinin doğru kararları alabilmesi ve liderlik yapabilmesi için aşağıdaki verilen hangi özelliğe sahip olmaması gerekir?", "options": [{"letter": "A", "text": "Sorumluluk alma"}, {"letter": "B", "text": "Azim"}, {"letter": "C", "text": "Ekibi üzerinde etkili olma"}, {"letter": "D", "text": "Kararlılık"}, {"letter": "E", "text": "İçe dönük olma"}], "correct": "E", "explanation": "Proje yöneticisi sürekli iletişim kuran biridir. Dışa dönük ve iletişime açık olması liderlik için şarttır."}, {"num": 8, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2024,2026,Banko, Vize, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje yönetim süreçlerinden biri değildir?", "options": [{"letter": "A", "text": "Planlama"}, {"letter": "B", "text": "Yürütme"}, {"letter": "C", "text": "Kapanış"}, {"letter": "D", "text": "Geri bildirim"}, {"letter": "E", "text": "İzleme ve kontrol etme"}], "correct": "D", "explanation": "Geri bildirim (feedback) süreç içinde kullanılan bir araçtır, 5 ana PMBOK süreç grubundan biri değildir."}, {"num": 9, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2026,Banko, Vize, 2 Kez Çıktı!", "text": "Birçok birimin birlikte çalışmasıyla gerçekleştirilen örgütlenme tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Matris tipi örgütlenme"}, {"letter": "B", "text": "Çalışan odaklı örgütlenme"}, {"letter": "C", "text": "Proje odaklı örgütlenme"}, {"letter": "D", "text": "Ürün odaklı örgütlenme"}, {"letter": "E", "text": "Fonksiyonel örgütlenme"}], "correct": "A", "explanation": "Çalışanların hem kendi departman yöneticilerine hem de proje yöneticisine rapor verdiği yapıdır."}, {"num": 10, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Bir projede yapılabilecek işlemler ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bina ya da alt yapı inşa edilemez."}, {"letter": "B", "text": "Kuruluşların yapısında değişiklik yapılabilir."}, {"letter": "C", "text": "Yenilenmiş bir bilgi sistemi geliştirilemez."}, {"letter": "D", "text": "Mevcut ürün ya da süreç yenilenemez."}, {"letter": "E", "text": "Projeyi etkileyebilecek varsayımlar kabul edilemez."}], "correct": "B", "explanation": "Projeler organizasyonlarda değişim yaratır. Şirketin yapısı, departmanları değiştirilebilir."}, {"num": 11, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2024,2026,Banko, Vize, 1 Kez Çıktı!", "text": "Bir yazılım projesinde donanım ve ağ altyapısı gibi yapıların belirlendiği plan türü hangisidir?", "options": [{"letter": "A", "text": "Test planı"}, {"letter": "B", "text": "Risk planı"}, {"letter": "C", "text": "Devreye alma planı"}, {"letter": "D", "text": "Eğitim planı"}, {"letter": "E", "text": "Kalite güvence planı"}], "correct": "C", "explanation": "Yazılımın canlı ortamda çalışabilmesi için donanım/ağ kurulumlarını içeren adımlar Devreye Alma (Deployment) planıdır."}, {"num": 12, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2024,2026,Banko, Vize, 1 Kez Çıktı!", "text": "Proje yönetim planındaki kapsam kontrolü içinde aşağıdakilerden hangisi yer almaz?", "options": [{"letter": "A", "text": "Maliyet gider planı"}, {"letter": "B", "text": "Gereksinim yönetimi planı"}, {"letter": "C", "text": "Yapılandırma yönetimi planı"}, {"letter": "D", "text": "Kapsam temel çizgisi"}, {"letter": "E", "text": "Değişiklik yönetimi planı"}], "correct": "A", "explanation": "Maliyet gider planı, 'Maliyet Yönetimi' alanına aittir. Kapsam (Scope) projede neyin yapılacağı ile ilgilidir."}, {"num": 13, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılım projesinde ilk olarak düşünülen ve ele alınan maliyet kalemlerinden biri değildir?", "options": [{"letter": "A", "text": "Geliştirme ekibi"}, {"letter": "B", "text": "Teslimat"}, {"letter": "C", "text": "Reklam ve satış giderleri"}, {"letter": "D", "text": "Yönetim"}, {"letter": "E", "text": "Yazılım altyapısı"}], "correct": "C", "explanation": "Reklam giderleri operasyonel (işletme) maliyetleridir. Projenin kendi varoluş bütçesinde ilk kalem değildir."}, {"num": 14, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,Final,2020,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!, Final, 4 Kez Çıktı!", "text": "Bilgi çağı yönetim akımı hangi tarihten sonra tam anlamıyla bir bilim şeklini almıştır?", "options": [{"letter": "A", "text": "1975"}, {"letter": "B", "text": "1950"}, {"letter": "C", "text": "1964"}, {"letter": "D", "text": "1930"}, {"letter": "E", "text": "1945 BİLGİ SİSTEMLERİ PROJE YÖNETİMİ A P787296.G18995 25-03-2026 05:51:20 CEVAPLI"}], "correct": "B", "explanation": "Sistem teorilerinin doğuşu ve bilgisayarların sanayiye girmesiyle birlikte 1950 sonrasında disiplin haline gelmiştir."}, {"num": 15, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,Final,2020,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Final, 4 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir kaynak türü değildir?", "options": [{"letter": "A", "text": "Malzemeler"}, {"letter": "B", "text": "Proje taslağı"}, {"letter": "C", "text": "Proje personeli"}, {"letter": "D", "text": "Malî varlıklar"}, {"letter": "E", "text": "Önceki projelerden elde edilen tecrübeler"}], "correct": "B", "explanation": "Proje taslağı bir kaynak değil, projenin kendisini anlatan bir dokümandır. İnsan, para ve malzeme temel kaynaklardır."}, {"num": 16, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize,Final,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi Çevik Yazılım Geliştirme Modelleri’nin temel prensiplerinden biri değildir?", "options": [{"letter": "A", "text": "Çalışan yazılıma ayrıntılı belgelemeden daha çok önem verilir."}, {"letter": "B", "text": "Planı katı şekilde takip etmek yerine değişimlere cevap verilir."}, {"letter": "C", "text": "Müşteriyle doğrudan iletişim dolaylı yollara tercih edilir."}, {"letter": "D", "text": "Kişiler ve kişilerarası etkileşime, süreç ve araçtan daha çok önem verilir."}, {"letter": "E", "text": "Risk yönetimi, yazılım geliştirme sürecine entegre edilir."}], "correct": "E", "explanation": "Risk yönetimi Agile Manifesto'nun resmi çekirdek prensipleri arasında bu ifadeyle geçmez."}, {"num": 17, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2026,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılım geliştirilirken en çok aranan özellikler arasında yer almaz?", "options": [{"letter": "A", "text": "Güvenlik"}, {"letter": "B", "text": "Standartlaşma"}, {"letter": "C", "text": "Süreklilik"}, {"letter": "D", "text": "Tekrar kullanılabilirlik"}, {"letter": "E", "text": "İzlenebilme"}], "correct": "B", "explanation": "Süreklilik IT servis yönetiminin bir konusudur, yazılım mimarisinin aranan direkt bir özelliği değildir."}, {"num": 18, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Yazılım sürecindeki aşamaların birbirini ileriye doğru takip ettiği ve fazla bir geri dönüş yaşanamayacağı varsayımından yola çıkarak önerilen modellerin genel ismi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Şelale modelleri"}, {"letter": "B", "text": "Kod eksenli geliştirme modelleri"}, {"letter": "C", "text": "Yinelemeli geliştirme modelleri"}, {"letter": "D", "text": "V modelleri"}, {"letter": "E", "text": "Doğrusal geliştirme modelleri"}], "correct": "E", "explanation": "Aşamaların yukarıdan aşağıya (şelale gibi) birbirini izlediği ve geri dönüşün zor olduğu geleneksel modeldir."}, {"num": 19, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize,2022,2023,2024,2026,Dikkat, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi ISO 21500 toplantısına katılımcı ülkeler arasında bulunmamaktadır?", "options": [{"letter": "A", "text": "İsrail"}, {"letter": "B", "text": "Finlandiya"}, {"letter": "C", "text": "Türkiye"}, {"letter": "D", "text": "Brezilya"}, {"letter": "E", "text": "Japonya"}], "correct": "C", "explanation": "<span class='warning-text'>⚠️ DİKKAT:</span> İsrail, ISO 21500 standart komitesinde yer alan ülkeler listesinde sayılmamaktadır. Türkiye bu listeye dahildir, şaşırtmacaya düşmeyin."}, {"num": 20, "tag": "Bilgi Sistemleri Proje Yönetimi - 2025-2026 - Vize - Bahar, Vize, 2 Kez Çıktı!, Final, 4 Kez Çıktı!", "text": "Proje Kapsam Yönetimi’nde Ayrıştırma aktiviteleri ile ilgili aşağıdakilerden hangisi söylenemez?", "options": [{"letter": "A", "text": "İş Kırılım Yapısı’nın yapılandırılması ve düzenlenmesi"}, {"letter": "B", "text": "Teslimatların saptanması"}, {"letter": "C", "text": "Çalışanların toplanma derecesinin gerekli ve yeterli olduğunun doğrulanması"}, {"letter": "D", "text": "Bağlantılı çalışmaların düzenlenmesi"}, {"letter": "E", "text": "İş Kırılım Yapısı’nın bileşenleri için tanımlama kodlarının oluşturulması ve atanması"}], "correct": "C", "explanation": "Ayrıştırma (Decomposition) işleri bölmek içindir. Ekibin toplanması insan kaynaklarının konusudur."}, {"num": 21, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,Büt,2023,2024,Banko,Dikkat, Final,Büt,2023,2024,2026,Banko,Dikkat, Final, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir projede kalite planlanması kısmındaki girdilerden biri değildir?", "options": [{"letter": "A", "text": "Risk listesi"}, {"letter": "B", "text": "Fayda-maliyet analizi"}, {"letter": "C", "text": "Çevresel işletme faktörleri"}, {"letter": "D", "text": "Maliyet performansı temel çizgisi"}, {"letter": "E", "text": "Zaman çizelgesi temel çizgisi"}], "correct": "B", "explanation": "<span class='warning-text'>⚠️ DİKKAT:</span> Fayda-Maliyet analizi bir 'Girdi' (Doküman) değil, planı oluştururken içeride kullanılan bir 'Araç ve Teknik'tir."}, {"num": 22, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024,Dikkat, Final, 1 Kez Çıktı!", "text": "“Proje türleri çeşitli olduğundan, projeler için gerçekleştirilecek plan türleri de oldukça çeşitlidir. Bir projenin içerisinde de birçok farklı plan yapmak gerekebilir.“ şeklindeki bir ifade aşağıdakilerden hangisi için söylenebilir?", "options": [{"letter": "A", "text": "Planın Kaynakları"}, {"letter": "B", "text": "Planın Yönetimi"}, {"letter": "C", "text": "Planın Zamanı"}, {"letter": "D", "text": "Planın Bütçesi"}, {"letter": "E", "text": "Planın Planı"}], "correct": "E", "explanation": "<span class='warning-text'>⚠️ DİKKAT:</span> Kulağa tuhaf gelse de literatürdeki tam karşılığı budur. Projedeki tüm alt planların da nasıl yapılacağını belirleyen üst çatı kavram 'Planın Planı'dır."}, {"num": 23, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,Büt,2023,2024,Banko, Final,Büt,2023,2024,2026,Banko, Final, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": ".....; projenin başlatılması, yönetilmesi, yürütülmesi, izlenmesi, kontrolü ve kapatılmasını içermektedir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Proje zaman yönetimi"}, {"letter": "B", "text": "Entegrasyon yönetimi"}, {"letter": "C", "text": "Proje risk yönetimi"}, {"letter": "D", "text": "Plan yönetimi"}, {"letter": "E", "text": "Organizasyon yönetimi"}], "correct": "B", "explanation": "Tüm süreçleri, planları ve fazları birleştirip ana orkestra şefliğini yapan bilgi alanı Entegrasyon Yönetimi'dir."}, {"num": 24, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final, 1 Kez Çıktı!", "text": "Bir yazılım projesinde herhangi bir kaynağın maliyet olarak kabul edilebilmesi için aşağıdakilerden hangisinin gerçekleşmesi gerekmektedir?", "options": [{"letter": "A", "text": "Belli bir ücretin üzerinde olması"}, {"letter": "B", "text": "Yazılımın tamamına yayılmış olması"}, {"letter": "C", "text": "Matematiksel şekilde formülize edilmiş olması"}, {"letter": "D", "text": "Parasal olarak ifade edilmesi"}, {"letter": "E", "text": "Yazılımın başında belirlenmiş olması"}], "correct": "D", "explanation": "Bir eforun veya teçhizatın maliyet sayılabilmesi için finansal (parasal) bir karşılığa çevrilebilmesi gerekir."}, {"num": 25, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final, 1 Kez Çıktı!", "text": "Belli bir anda bir yazılım projesinin ne kadarının tamamlandığı, ne kadarının tamamlanmadığı net bir biçimde ölçülemez. Bunun sebebi yazılım projelerinin sahip olduğu özellik aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Müşteri bağımlı olması"}, {"letter": "B", "text": "Karmaşık olması"}, {"letter": "C", "text": "Esnek olması"}, {"letter": "D", "text": "Standart olmaması"}, {"letter": "E", "text": "Görünür bir ürün olmaması"}], "correct": "E", "explanation": "Fiziksel bir ilerleme olmadığı için yazılımın tamamlanma oranını gözle ölçmek zordur."}, {"num": 26, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,Büt,2022,2023,2024,Banko,Dikkat, Final,Büt,2022,2023,2024,2026,Banko,Dikkat, Final, 2 Kez Çıktı!, Büt, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje yönetimi planının güncellenebilecek ögelerinden biri değildir?", "options": [{"letter": "A", "text": "Maliyet temel çizgisi"}, {"letter": "B", "text": "Performans temel çizgisi"}, {"letter": "C", "text": "Kapsam temel çizgisi"}, {"letter": "D", "text": "Zaman çizelgesi temel çizgisi"}, {"letter": "E", "text": "Tedarik yönetimi planı"}], "correct": "B", "explanation": "<span class='warning-text'>⚠️ DİKKAT:</span> Performans çizgisi tek başına bağımsız güncellenen bir belge değildir. Kapsam, Maliyet ve Zaman çizgilerinin birleşik (kümülatif) bir sonucudur."}, {"num": 27, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje yöneticilerinin sahip olması beklenen kişisel bir özellik değildir?", "options": [{"letter": "A", "text": "Güçlü motivasyon"}, {"letter": "B", "text": "Sosyal beceri"}, {"letter": "C", "text": "Maliyet odaklı olma"}, {"letter": "D", "text": "Güvenilirlik ve güçlü karakter"}, {"letter": "E", "text": "Analitik yetenekler"}], "correct": "C", "explanation": "Maliyeti yönetmek mesleki bir görevdir ancak 'maliyet odaklı olma' yöneticinin sahip olması gereken bir sosyal/davranışsal beceri (soft skill) değildir."}, {"num": 28, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,Büt,2023,2024,Banko, Final,Büt,2023,2024,2026,Banko, Final, 1 Kez Çıktı!, Final, 2 Kez Çıktı!", "text": "“Seçilen satıcı en düşük sahip olma maliyetini sağlayacak mı? Yoksa başka sebeplerden dolayı mı bu satıcı seçildi?” gibi soruların cevabını veren seçim kriteri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Risk"}, {"letter": "B", "text": "Yöntem yaklaşımı"}, {"letter": "C", "text": "İhtiyacın anlaşılması"}, {"letter": "D", "text": "Teknik kaynaklar"}, {"letter": "E", "text": "Yaşam döngüsü maliyeti"}], "correct": "E", "explanation": "Ürünün satın alma fiyatı dışında kullanım süresince yaratacağı tüm giderleri (TCO) kapsayan ölçüt yaşam döngüsü maliyetidir."}, {"num": 29, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılımın kabul kriteri olabilir?", "options": [{"letter": "A", "text": "Modül isimleri"}, {"letter": "B", "text": "Modül sayısı"}, {"letter": "C", "text": "Modül uzunlukları"}, {"letter": "D", "text": "Modül geliştirme süreleri"}, {"letter": "E", "text": "Modüllerin hızı"}], "correct": "E", "explanation": "Kabul kriterleri performans şartlarıdır. Sistemin çalışma 'hızı' müşterinin kabul şartıdır; kod süresi veya uzunluğu değildir."}, {"num": 30, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,Büt,2022,2024,Banko,Dikkat, Final, 1 Kez Çıktı!, Final, 2 Kez Çıktı!", "text": "Yazılım projelerinde maliyetler aşağıdakilerden hangisi ile ifade edilmez?", "options": [{"letter": "A", "text": "Klasik para birimleri"}, {"letter": "B", "text": "Kullanılan teçhizatlar"}, {"letter": "C", "text": "Personelin çalışma günleri"}, {"letter": "D", "text": "Kod-satır sayısı"}, {"letter": "E", "text": "Personelin çalışma saatleri"}], "correct": "B", "explanation": "<span class='warning-text'>⚠️ DİKKAT:</span> Kod-satır sayısı (LOC) projenin 'büyüklüğünü' (ebatını) ölçer, maliyetini (para/efor) değil."}, {"num": 31, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024, Final,2024,2026, Final, 1 Kez Çıktı!", "text": "Proje iletişim gereksinimlerinin belirlenmesinde aşağıda verilen bilgilerin hangisi kullanılamaz?", "options": [{"letter": "A", "text": "Organizasyon şemaları"}, {"letter": "B", "text": "Projede yer alacak disiplinler"}, {"letter": "C", "text": "Projenin süresi"}, {"letter": "D", "text": "Bölümler ve uzmanlıklar"}, {"letter": "E", "text": "Dâhilî bilgi ihtiyaçları"}], "correct": "C", "explanation": "Kim, kime, hangi bilgiyi raporlayacak sorusunun cevabı organizasyon şemasındadır. Projenin uzun veya kısa olması iletişim ağını belirlemez."}, {"num": 32, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi projenin kapatılması kısmında kontrol edilmesi gereken hususlardan biri değildir?", "options": [{"letter": "A", "text": "Projenin hedeflerine ulaşması"}, {"letter": "B", "text": "Projenin müşteri ihtiyaçlarını sağlaması"}, {"letter": "C", "text": "Proje çalışmalarının tamamlanması"}, {"letter": "D", "text": "Projenin maliyetinin hesaplanması"}, {"letter": "E", "text": "Proje modüllerinin sonuçlanması BİLGİ SİSTEMLERİ PROJE YÖNETİMİ A P355875.G11360 18-04-2025 14:47:44 BİLGİ SİSTEMLERİ PROJE YÖNETİMİ A P355875.G11360 18-04-2025 14:47:44 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "Maliyet planlama ve yürütme aşamasında hesaplanır. Kapanışta maliyet yeniden hesaplanmaz, sadece hedefler denetlenir."}, {"num": 33, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final, 1 Kez Çıktı!, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılım projesinin iletişim yönetimi kısmında gerçekleşen ilerlemeyi, planlanan ilerlemeyle karşılaştırmalı olarak değerlendirmeye olanak sağlayan tekniktir?", "options": [{"letter": "A", "text": "Organizasyonel süreç varlıkları"}, {"letter": "B", "text": "Çalışma performans bilgileri"}, {"letter": "C", "text": "Çalışma performans ölçümleri"}, {"letter": "D", "text": "Proje yönetim planı"}, {"letter": "E", "text": "Bütçe tahminleri"}], "correct": "C", "explanation": "Gerçek durumu planla kıyaslayan teknik Çalışma Performans Ölçümleridir."}, {"num": 34, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024, Final, 1 Kez Çıktı!", "text": "Bazı durumlarda proje yöneticisi bir işin süresini tahmin ederken eğer kendi deneyimlerine güvenmiyorsa veya süre tahminiyle ilgili fikir danışması gerektiğini düşünüyorsa farklı kişilerin görüşlerine de başvurur. Aşağıdakilerden hangisi yukarıda ifade edilen yöntemlerden biridir?", "options": [{"letter": "A", "text": "Yedek süre analizi"}, {"letter": "B", "text": "Uzman görüşü"}, {"letter": "C", "text": "Üç nokta tahmini"}, {"letter": "D", "text": "Parametrik tahmin"}, {"letter": "E", "text": "Örneksel tahmin"}], "correct": "C", "explanation": "Konu hakkında yeterli tarihsel veri yoksa o alanda yetkin kişilere danışarak yapılan tahmine Uzman Görüşü denir."}, {"num": 35, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final, 1 Kez Çıktı!", "text": "Risklerin projeyi etkileyebileceğini belirleme ve bunların özelliklerini belgeleme sürecine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Risklerin tanımlanması"}, {"letter": "B", "text": "Revize edilmiş paydaş toleransları"}, {"letter": "C", "text": "Risk kırılım yapısı"}, {"letter": "D", "text": "Olasılık ve etki matrisi"}, {"letter": "E", "text": "Risk olasılığı ve etkisinin tanımları"}], "correct": "A", "explanation": "Riskleri bulup risk listesine kaydetme sürecine 'Risklerin Tanımlanması' denir."}, {"num": 36, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final, 1 Kez Çıktı!", "text": "Proje bütçesi ile ilgili gerçekleştirilen yedek maliyet analizi ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Aktivite maliyet tahmininin hazırlanmasında kullanılır."}, {"letter": "B", "text": "Proje hakkında daha kesin bilgilere ulaşıldığında güncellenir."}, {"letter": "C", "text": "Maliyetlerdeki belirsizliği ele almak için kullanılır."}, {"letter": "D", "text": "Zaman çizelgesi belgelerinde belirtilmektedir."}, {"letter": "E", "text": "Yedek maliyet tahminî maliyetin bir yüzdesi ya da sabit bir sayı olabilir."}], "correct": "A", "explanation": "Yedek Maliyet bütçe/para ile ilgilidir, zaman belgelerinde (takvimlerde) değil Maliyet Temel Çizgisinde belirtilir."}, {"num": 37, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,Büt,2023,2024,Dikkat,Banko, Final, 1 Kez Çıktı!", "text": "Aşağıdaki kavram kısaltması ve eşleştirmelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "BPA: Binary Process Accept – İkilik İşlem Kabulü"}, {"letter": "B", "text": "BPM : Business Process Management - İş Süreç Yönetim Araçları"}, {"letter": "C", "text": "XML : Extensible Markup Language - Genişletilebilir İşaretleme Dili"}, {"letter": "D", "text": "CMMI : Capability Maturity Model Integrated - Entegre Yeteneklilik Olgunluğu Modeli"}, {"letter": "E", "text": "BPMS: Business Process Management Suite - Bütünleşik İş Süreç Yönetim Araçları"}], "correct": "A", "explanation": "<span class='warning-text'>⚠️ DİKKAT:</span> BPA'nın gerçek açılımı 'Business Process Analysis' (İş Süreçleri Analizi) şeklindedir. 'Binary Process Accept' bilerek uydurulmuş geçersiz bir çeldiricidir."}, {"num": 38, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024, Final, 1 Kez Çıktı!", "text": "Bilimsel Yönetim akımı ile ilgili aşağıdaki hangi prensip tanımı doğru verilmiştir?", "options": [{"letter": "A", "text": "İşlerin geliştirilmesinde standart yöntemler kullanılması"}, {"letter": "B", "text": "Alınacak işçilerin seçiminde geleneksel yöntemlerden faydalanılması"}, {"letter": "C", "text": "Gruplar arası iletişimin azaltılması"}, {"letter": "D", "text": "Yönetim ve işçi görevleri arasında fonksiyonel ayrımın yapılması"}, {"letter": "E", "text": "İşbirliğinin bulunmaması"}], "correct": "D", "explanation": "Taylor'ın Bilimsel Yönetim yaklaşımında işin düşünülmesini (yönetim) ile uygulanması (işçi) arasında kesin bir ayrım yapılır."}, {"num": 39, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024, Final,2024,2026, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi fayda­maliyet analizinde ele alınacak bir durumdur?", "options": [{"letter": "A", "text": "Ortaya çıkacak olan faydanın getireceği ek maliyetler"}, {"letter": "B", "text": "Analizler sonucunda ortaya çıkacak olan faydalar"}, {"letter": "C", "text": "Kalite gereksinimlerine uyulmasının başlıca faydaları"}, {"letter": "D", "text": "Harcanan maliyetin getireceği faydalar"}, {"letter": "E", "text": "Analizler sonucunda ortaya çıkacak olan ek maliyetler"}], "correct": "A", "explanation": "Kalite maliyetine katlanmanın (denetim vs.) karşılığında sağlanacak kalite faydaları ele alınır."}, {"num": 40, "tag": "BİLGİ SİSTEMLERİ PROJE YÖNETİMİ 2024-2025 Final, Final,2024, Final, 1 Kez Çıktı!", "text": "Kritik yol metoduyla analiz edilmiş olan bir zaman çizelgesine uygulanan tekniğe verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Zaman çizelgesini sıkıştırma"}, {"letter": "B", "text": "Kritik yol yöntemi"}, {"letter": "C", "text": "Kritik zincir metodu"}, {"letter": "D", "text": "Kaynak dengeleme"}, {"letter": "E", "text": "Zaman çizelgesi ağ analizi"}], "correct": "D", "explanation": "Projeyi daha erken bitirmek için kritik yoldaki aktiviteleri paralel çalıştırmaya (crashing/fast-tracking) Zaman Çizelgesini Sıkıştırma denir."}, {"num": 41, "tag": "Vize,Final,2022,2023,2024,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!, Final, 4 Kez Çıktı!", "text": "Yazılım projesi geliştirme aşamalarından biri olan ve öncelikle dikkat edilmesi gereken planlama aşaması ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "İzlenecek yöntemin seçilmesi"}, {"letter": "B", "text": "Kullanılacak kaynakların belirlenmesi"}, {"letter": "C", "text": "Müşteri ve üst yönetimin gözden geçirmesi"}, {"letter": "D", "text": "Süre takvimlerinin belirlenmesi"}, {"letter": "E", "text": "Belirlenmiş süre ve mali kısıtların dikkate alınması"}], "correct": "C", "explanation": "Gözden geçirme ve onay (review) aşamaları planlamanın içinde değil, yürütme veya izleme/kapanış aşamalarında yapılır."}, {"num": 42, "tag": "Vize,Final,Büt,2022,2023,2024,Banko, Vize,Final,Büt,2022,2023,2024,2026,Banko, Büt, 2 Kez Çıktı!", "text": "...... proje teslimatlarının, çalışmaların ve teslimatların çalışma paketi seviyesinde tanımlandığı noktaya ulaşılana kadar daha küçük ve daha yönetilebilir bileşenlere bölünmesidir.", "options": [{"letter": "A", "text": "Ayrıştırma"}, {"letter": "B", "text": "Proje kapsam bildirimi"}, {"letter": "C", "text": "Proje belgesi güncellemeleri"}, {"letter": "D", "text": "Organizasyonel süreç varlıkları"}, {"letter": "E", "text": "Uzman görüşü"}], "correct": "A", "explanation": "Büyük proje işlerini en alt seviyedeki iş paketlerine kadar detaylandırarak bölme eylemine literatürde 'Ayrıştırma' (Decomposition) denir."}, {"num": 43, "tag": "Büt,2023,2024,Banko, Büt, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje maliyetine doğrudan etki eden bir faktör değildir?", "options": [{"letter": "A", "text": "Piyasa ve ekonomik koşullar"}, {"letter": "B", "text": "Projenin büyüklüğü"}, {"letter": "C", "text": "Projede çalışan kişiler"}, {"letter": "D", "text": "Projede kullanılan teknolojiler"}, {"letter": "E", "text": "Proje süresi"}], "correct": "A", "explanation": "Büyüklük, ekip boyutu ve teknolojiler doğrudan üretim kalemleridir. Piyasa koşulları ise dışsal (çevresel) faktörlerdir."}, {"num": 44, "tag": "Final,Büt,2023,2024,Banko, Final,Büt,2023,2024,2026,Banko, Büt, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Bir cep telefonu firmasının büyük veri vb. gelişmelerin ardından daha hafif ve daha yüksek bellekli bir cep telefonu üretmek için yeni bir projeye onay vermesi aşağıdakilerden hangisi ile ifade edilebilir?", "options": [{"letter": "A", "text": "Teknolojik ilerleme"}, {"letter": "B", "text": "Organizasyonun ihtiyacı"}, {"letter": "C", "text": "Çevre üzerindeki etkiler"}, {"letter": "D", "text": "Pazardaki talep"}, {"letter": "E", "text": "Müşterilerin talebi"}], "correct": "A", "explanation": "Yeni teknolojilerin (büyük veri vb.) ortaya çıkmasıyla firmaların bu duruma uyum sağlamak için proje başlatması 'Teknolojik İlerleme' kategorisine girer."}, {"num": 45, "tag": "Final,Büt,2023,2024,Banko, Final,Büt,2023,2024,2026,Banko, Büt, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Projelerdeki zaman ilişkileri belirlenirken en çok kullanılan öncel ilişkisi türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İzleme-kontrol"}, {"letter": "B", "text": "Gelişme-bitiş"}, {"letter": "C", "text": "Değerlendirme-sonuç"}, {"letter": "D", "text": "Bitiş-başlangıç"}, {"letter": "E", "text": "Başlangıç-başlangıç"}], "correct": "D", "explanation": "Aktivitelerin birbirini izlemesinde en sık kullanılan standart ilişki 'Bitiş-Başlangıç'tır (A bitmeden B başlayamaz)."}, {"num": 46, "tag": "Final,Büt,2023,2024,Banko, Büt, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir paydaş sınıflandırma modeli değildir?", "options": [{"letter": "A", "text": "Güç/katılım tablosu"}, {"letter": "B", "text": "Analiz modeli"}, {"letter": "C", "text": "Katılım/etki tablosu"}, {"letter": "D", "text": "Güç çıkar tablosu"}, {"letter": "E", "text": "Güç, aciliyet ve meşruiyet modeli"}], "correct": "B", "explanation": "Analiz modeli hiçbir yöntemi tarif etmeyen çok genel bir tanımdır. Diğerleri PMI sınıflandırma matrisleridir."}, {"num": 47, "tag": "Final,Büt,2023,2024,Banko, Final,Büt,2023,2024,2026,Banko, Final, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi risklerin tanımlanması kısmında kullanılan bir girdi değildir?", "options": [{"letter": "A", "text": "Çevresel İşletme Faktörleri"}, {"letter": "B", "text": "Eski Risk Analizleri"}, {"letter": "C", "text": "Maliyet Yönetimi Planı"}, {"letter": "D", "text": "Paydaş Listesi"}, {"letter": "E", "text": "Zaman Çizelgesi Yönetimi Planı"}], "correct": "B", "explanation": "Eski risk analizleri geçmiş verilere aittir ve 'Organizasyonel Süreç Varlıkları' olarak geçer. Diğerleri sürecin doğrudan PMBOK girdileridir."}, {"num": 48, "tag": "Final,Büt,2023,2024,Banko", "text": "Bir yazılım projesinin iletişim yönetimi kısmında gerçekleşen ilerlemeyi, planlanan ilerlemeyle karşılaştırmalı olarak değerlendirmeye olanak sağlayan teknik hangisidir?", "options": [{"letter": "A", "text": "Organizasyonel süreç varlıkları"}, {"letter": "B", "text": "Çalışma performans bilgileri"}, {"letter": "C", "text": "Çalışma performans ölçümleri"}, {"letter": "D", "text": "Proje yönetim planı"}, {"letter": "E", "text": "Bütçe tahminleri"}], "correct": "C", "explanation": "O anki gerçek durumu planla kıyaslayıp analiz etme işlemine Performans Ölçümleri (Measurements) denir."}, {"num": 49, "tag": "Final,Büt,2022,2024,Banko, Final, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Projenin kullanıcı istek, teknik gereksinim ve standartlarını karşılayacak şekilde hatasız geliştirilmesi için gerekli kontrol testleri yapmaktan sorumlu olan kişi kimdir?", "options": [{"letter": "A", "text": "Ürün yöneticisi"}, {"letter": "B", "text": "Arayüz geliştirici"}, {"letter": "C", "text": "Kalite / Test mühendisi"}, {"letter": "D", "text": "Yardımcı ürün geliştirici"}, {"letter": "E", "text": "Sistem analisti"}], "correct": "C", "explanation": "Yazılımın gereksinimlere uyup uymadığını doğrulamak, hataları (bug) bulmak ve kalite standartlarını test etmek doğrudan Kalite Güvence (QA) / Test Mühendisinin görevidir."}, {"num": 50, "tag": "Final,Büt,2023,2024,Banko, Final, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılım projesinin iletişim yönetimi kısmında yargıya dayalı metotlar arasında yer almaz?", "options": [{"letter": "A", "text": "Anketler"}, {"letter": "B", "text": "Senaryo kurma"}, {"letter": "C", "text": "Örneksel öngörü"}, {"letter": "D", "text": "Tahminsel öngörüler"}, {"letter": "E", "text": "Delphi tekniği"}], "correct": "A", "explanation": "Anketler kitle istatistiğine dayanır; Delphi veya öngörüler gibi 'Uzman Yargısına' dayanan nitel bir metot değildir."}, {"num": 51, "tag": "Final,Büt,2023,2024,Banko", "text": "Projelerde risk yönetiminin nasıl yapılandırılacağını ve gerçekleşeceğini açıklamak için izlenen yol aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Risk kırılım yapısı"}, {"letter": "B", "text": "Risk kategorileri"}, {"letter": "C", "text": "Risklerin tanımlanması"}, {"letter": "D", "text": "Risk yönetim planı"}, {"letter": "E", "text": "Risk olasılığı/etkisi"}], "correct": "D", "explanation": "Risklerin nasıl ele alınacağını ve bütçeleneceğini kurala bağlayan çatı belge Risk Yönetim Planı'dır."}, {"num": 52, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje kavramı için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Sürekli tekrarlanan işlerdir"}, {"letter": "B", "text": "Rutin faaliyetlerdir"}, {"letter": "C", "text": "Belirli süre ve bütçeye sahiptir"}, {"letter": "D", "text": "Standart ürünler üretir"}, {"letter": "E", "text": "Süresizdir"}], "correct": "C", "explanation": "Projenin en temel tanımı; belirli bir başlangıç ve bitiş tarihi olan (süreli), kendine has bir bütçesi ve kaynakları bulunan özgün çabalardır."}, {"num": 53, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi projeyi günlük işlerden ayıran bir özelliktir?", "options": [{"letter": "A", "text": "Süreklilik"}, {"letter": "B", "text": "Rutinlik"}, {"letter": "C", "text": "Tekrarlanabilirlik"}, {"letter": "D", "text": "Benzersizlik"}, {"letter": "E", "text": "Sabit maliyet"}], "correct": "D", "explanation": "Bir projenin sonucunda ortaya çıkan ürün, hizmet veya sonuç 'özgündür' (benzersizdir). Daha önce tam anlamıyla aynı şartlarda yapılmamıştır."}, {"num": 54, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje üçgenini oluşturan temel unsurlar hangileridir?", "options": [{"letter": "A", "text": "Zaman - İnsan - Kalite"}, {"letter": "B", "text": "Bütçe - İnsan - Kapsam"}, {"letter": "C", "text": "Zaman - Bütçe - Kapsam"}, {"letter": "D", "text": "Kapsam - Risk - Kalite"}, {"letter": "E", "text": "Zaman - Teknoloji - İnsan"}], "correct": "C", "explanation": "Proje yönetiminin 'Demir Üçgeni' Kapsam, Zaman ve Bütçe unsurlarından oluşur."}, {"num": 55, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi projenin başarısız olma nedenlerinden biridir?", "options": [{"letter": "A", "text": "Net hedefler"}, {"letter": "B", "text": "Güçlü iletişim"}, {"letter": "C", "text": "Deneyimli ekip"}, {"letter": "D", "text": "Gereksinimlerin yanlış tanımlanması"}, {"letter": "E", "text": "Yeterli dokümantasyon"}], "correct": "D", "explanation": "Müşterinin ne istediğinin doğru analiz edilmemesi, projenin hüsranla sonuçlanmasına neden olan en büyük faktörüdür."}, {"num": 56, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje fikri hangi aşamayı ifade eder?", "options": [{"letter": "A", "text": "Tamamlanmış proje"}, {"letter": "B", "text": "Uygulama süreci"}, {"letter": "C", "text": "Taslak düşünce"}, {"letter": "D", "text": "Test aşaması"}, {"letter": "E", "text": "Devreye alma"}], "correct": "C", "explanation": "Fikir aşaması, henüz ortada plan veya onay yokken ortaya çıkan ilk 'taslak düşünce' evresidir."}, {"num": 57, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Mevcut durum analizi neden yapılır?", "options": [{"letter": "A", "text": "Projeyi iptal etmek için"}, {"letter": "B", "text": "Sorunu doğru anlamak için"}, {"letter": "C", "text": "Kod yazmak için"}, {"letter": "D", "text": "Test yapmak için"}, {"letter": "E", "text": "Zaman uzatmak için"}], "correct": "B", "explanation": "Bir problemi çözmeden önce 'şu an neredeyiz ve sorun tam olarak ne?' sorusuna cevap vermek için as-is analizi yapılır."}, {"num": 58, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Paydaşlar kimlerdir?", "options": [{"letter": "A", "text": "Sadece proje ekibi"}, {"letter": "B", "text": "Sadece müşteriler"}, {"letter": "C", "text": "Projeden etkilenen tüm kişi ve kurumlar"}, {"letter": "D", "text": "Sadece yöneticiler"}, {"letter": "E", "text": "Sadece sponsorlar"}], "correct": "C", "explanation": "Paydaş (Stakeholder), projenin sonucundan olumlu ya da olumsuz etkilenebilecek, projeye ilgi duyan herkestir."}, {"num": 59, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Ölçülebilir, ulaşılabilir, gerçekçi hedefler hangi analizde tanımlanır?", "options": [{"letter": "A", "text": "Paydaş analizi"}, {"letter": "B", "text": "Sorun analizi"}, {"letter": "C", "text": "Hedef analizi"}, {"letter": "D", "text": "Risk analizi"}, {"letter": "E", "text": "Mevcut durum analizi"}], "correct": "C", "explanation": "Hedeflerin SMART kriterlerine göre belirlenmesi doğrudan 'Hedef Analizi'nin konusudur."}, {"num": 60, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje hedeflerine ulaşmak için yöntemlerin belirlendiği aşama hangisidir?", "options": [{"letter": "A", "text": "Planlama"}, {"letter": "B", "text": "Strateji analizi"}, {"letter": "C", "text": "Sorun analizi"}, {"letter": "D", "text": "Kapsam analizi"}, {"letter": "E", "text": "Test"}], "correct": "B", "explanation": "Hedeflere 'nasıl, hangi yöntemle' ulaşılacağının seçildiği analize Strateji Analizi denir."}, {"num": 61, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje yaşam döngüsünde ilk aşama hangisidir?", "options": [{"letter": "A", "text": "Yürütme"}, {"letter": "B", "text": "Kontrol"}, {"letter": "C", "text": "Başlatma"}, {"letter": "D", "text": "Kapatma"}, {"letter": "E", "text": "Test"}], "correct": "C", "explanation": "PMI standartlarına göre proje döngüsü: Başlatma -> Planlama -> Yürütme -> İzleme/Kontrol -> Kapanış."}, {"num": 62, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje yönetimi kaç temel süreç grubundan oluşur?", "options": [{"letter": "A", "text": "3"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "5"}, {"letter": "D", "text": "6"}, {"letter": "E", "text": "7"}], "correct": "C", "explanation": "5 temel süreç grubu vardır: Başlangıç, Planlama, Yürütme, İzleme ve Kontrol, Kapanış."}, {"num": 63, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje yöneticisinin temel sorumluluğu hangisidir?", "options": [{"letter": "A", "text": "Kod yazmak"}, {"letter": "B", "text": "Grafik tasarlamak"}, {"letter": "C", "text": "Zaman, maliyet ve kapsamı dengelemek"}, {"letter": "D", "text": "Donanım kurmak"}, {"letter": "E", "text": "Test yapmak"}], "correct": "C", "explanation": "Yönetici teknik işleri yapmaz, projenin demir üçgeni olan kısıtları dengede tutarak süreci yönetir."}, {"num": 64, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Yönetici ile lider arasındaki temel fark nedir?", "options": [{"letter": "A", "text": "Lider plan yapmaz"}, {"letter": "B", "text": "Yönetici vizyon sahibidir"}, {"letter": "C", "text": "Lider değişimi teşvik eder"}, {"letter": "D", "text": "Yönetici ekip yönetmez"}, {"letter": "E", "text": "Lider sorumluluk almaz"}], "correct": "C", "explanation": "Yönetici mevcut düzeni korur, Lider ise vizyon sunar ve değişime öncülük eder."}, {"num": 65, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Henry Fayol hangi yönetim akımının öncüsüdür?", "options": [{"letter": "A", "text": "Bilimsel yönetim"}, {"letter": "B", "text": "İnsan ilişkileri"}, {"letter": "C", "text": "Genel yönetim"}, {"letter": "D", "text": "Süreç tabanlı"}, {"letter": "E", "text": "Bilgi çağı"}], "correct": "C", "explanation": "Fayol, 14 yönetim ilkesini ortaya koyan 'Genel Yönetim' (Yönetim Süreci) yaklaşımının kurucusudur."}, {"num": 66, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Kumanda birliği ilkesi neyi ifade eder?", "options": [{"letter": "A", "text": "Birden fazla yöneticiden emir"}, {"letter": "B", "text": "Herkesin lider olması"}, {"letter": "C", "text": "Çalışanın tek yöneticiden emir alması"}, {"letter": "D", "text": "Ekip çalışması"}, {"letter": "E", "text": "Yetki devri"}], "correct": "C", "explanation": "Fayol'un bu ilkesi, karmaşayı önlemek için bir çalışanın sadece bir üst amirinden emir alması gerektiğini savunur."}, {"num": 67, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Bilimsel yönetim akımının öncüsü kimdir?", "options": [{"letter": "A", "text": "Fayol"}, {"letter": "B", "text": "Deming"}, {"letter": "C", "text": "Taylor"}, {"letter": "D", "text": "Mayo"}, {"letter": "E", "text": "Drucker"}], "correct": "C", "explanation": "İşleri kronometre ile ölçen 'Bilimsel Yönetim' (Taylorizm) ilkelerini ortaya koyan kişi Frederick W. Taylor'dır."}, {"num": 68, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "İnsan ilişkileri okuluna göre verimliliği en çok etkileyen faktör hangisidir?", "options": [{"letter": "A", "text": "Maaş"}, {"letter": "B", "text": "Teknoloji"}, {"letter": "C", "text": "Sosyal ilişkiler"}, {"letter": "D", "text": "Donanım"}, {"letter": "E", "text": "Planlama"}], "correct": "C", "explanation": "Elton Mayo'nun deneyleri, insanın sadece parayla motive olmadığını, çalışma ortamındaki sosyal ilişkilerin verimliliği artırdığını göstermiştir."}, {"num": 69, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Fonksiyonel örgütlenmenin özelliği nedir?", "options": [{"letter": "A", "text": "Proje yöneticisi tüm yetkilere sahiptir"}, {"letter": "B", "text": "Departmanlara göre yapılandırılır"}, {"letter": "C", "text": "Herkes projeye bağlıdır"}, {"letter": "D", "text": "Esneklik çok yüksektir"}, {"letter": "E", "text": "Geçici yapıdır"}], "correct": "B", "explanation": "Şirketin uzmanlık alanlarına (fonksiyonlarına/departmanlarına) göre kalıcı yapılandırıldığı örgütlenmedir."}, {"num": 70, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Proje odaklı örgütlenmede yetki kimdedir?", "options": [{"letter": "A", "text": "Fonksiyonel yönetici"}, {"letter": "B", "text": "Üst yönetim"}, {"letter": "C", "text": "Proje yöneticisi"}, {"letter": "D", "text": "Müşteri"}, {"letter": "E", "text": "Sponsor"}], "correct": "C", "explanation": "Tüm kaynaklar projelere atandığı için bütçe ve ekip üzerindeki en yüksek otorite Proje Yöneticisine aittir."}, {"num": 71, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Matris örgütlenmenin dezavantajı nedir?", "options": [{"letter": "A", "text": "Kaynak yetersizliği"}, {"letter": "B", "text": "İletişim kopukluğu"}, {"letter": "C", "text": "Çift yöneticiden emir alma"}, {"letter": "D", "text": "Esneklik"}, {"letter": "E", "text": "Hız"}], "correct": "C", "explanation": "Matris yapıda bir çalışan hem departman müdürüne hem de proje yöneticisine bağlıdır, bu da kumanda birliğini bozar."}, {"num": 72, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Planlama neden gereklidir?", "options": [{"letter": "A", "text": "Zaman kaybettirir"}, {"letter": "B", "text": "Projeyi karmaşıklaştırır"}, {"letter": "C", "text": "Kontrol ve koordinasyon sağlar"}, {"letter": "D", "text": "Motivasyonu düşürür"}, {"letter": "E", "text": "Gereksizdir"}], "correct": "C", "explanation": "İşlerin sırasını belirler, ekipler arası koordinasyon sağlar ve sapmaların tespit edilmesini mümkün kılar."}, {"num": 73, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Planlama yapılmazsa ne olur?", "options": [{"letter": "A", "text": "Verim artar"}, {"letter": "B", "text": "Proje daha hızlı biter"}, {"letter": "C", "text": "Zaman ve bütçe izlenemez"}, {"letter": "D", "text": "Risk azalır"}, {"letter": "E", "text": "Kalite artar"}], "correct": "C", "explanation": "Başlangıçta belirlenmiş bir plan (baseline) yoksa, ne kadar geç kalındığı kıyaslanıp izlenemez."}, {"num": 74, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Yazılım projelerinde büyüklük arttıkça ne olur?", "options": [{"letter": "A", "text": "Maliyet azalır"}, {"letter": "B", "text": "Süre kısalır"}, {"letter": "C", "text": "Karmaşıklık artar"}, {"letter": "D", "text": "Planlama ihtiyacı azalır"}, {"letter": "E", "text": "Risk azalır"}], "correct": "C", "explanation": "Yazılımda eklenen modüller arttıkça iletişim kanalları üstel olarak artar, bu da projeyi çok daha karmaşık hale getirir."}, {"num": 75, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Kapsam planı neyi tanımlar?", "options": [{"letter": "A", "text": "Zaman çizelgesini"}, {"letter": "B", "text": "Maliyetleri"}, {"letter": "C", "text": "Yapılacak ve yapılmayacak işleri"}, {"letter": "D", "text": "Testleri"}, {"letter": "E", "text": "Kaynakları"}], "correct": "C", "explanation": "Kapsam projenin sınırlarını çizer, nelerin projeye dahil olup olmadığını netleştirir."}, {"num": 76, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Risk planının amacı nedir?", "options": [{"letter": "A", "text": "Riskleri yok saymak"}, {"letter": "B", "text": "Riskleri artırmak"}, {"letter": "C", "text": "Olası tehditleri yönetmek"}, {"letter": "D", "text": "Zamanı uzatmak"}, {"letter": "E", "text": "Maliyeti artırmak"}], "correct": "C", "explanation": "Potansiyel olumsuz olayları önceden belirleyip etkilerini azaltmak için strateji geliştirmektir."}, {"num": 77, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Kalite güvencesi ne zaman yapılır?", "options": [{"letter": "A", "text": "Ürün bittikten sonra"}, {"letter": "B", "text": "Ürün üretilmeden önce"}, {"letter": "C", "text": "Sadece testte"}, {"letter": "D", "text": "Devreye almada"}, {"letter": "E", "text": "Bakımda"}], "correct": "B", "explanation": "Kalite Güvencesi (QA), hatayı oluşmadan önlemek için standartları ürün üretilmeden önce belirler."}, {"num": 78, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Test planı neyi belirler?", "options": [{"letter": "A", "text": "Kapsamı"}, {"letter": "B", "text": "Riskleri"}, {"letter": "C", "text": "Testin nasıl ve ne zaman yapılacağını"}, {"letter": "D", "text": "Bütçeyi"}, {"letter": "E", "text": "Organizasyonu"}], "correct": "C", "explanation": "Test stratejisini, metodolojiyi ve bu işlemlerin takvim üzerinde ne zaman koşulacağını belirler."}, {"num": 79, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Devreye alma planı neyi kapsar?", "options": [{"letter": "A", "text": "Kod yazımı"}, {"letter": "B", "text": "Analiz"}, {"letter": "C", "text": "Gerçek ortamda kurulum"}, {"letter": "D", "text": "Tasarım"}, {"letter": "E", "text": "Test"}], "correct": "C", "explanation": "Devreye alma (Deployment), bitmiş uygulamanın canlı/gerçek sunucu ortamına aktarılması sürecidir."}, {"num": 80, "tag": "Vize,2020, Vize, 1 Kez Çıktı!", "text": "Yazılım projelerinde ürün neden zordur?", "options": [{"letter": "A", "text": "Fizikseldir"}, {"letter": "B", "text": "Standarttır"}, {"letter": "C", "text": "Soyut ve görünmezdir"}, {"letter": "D", "text": "Değişmezdir"}, {"letter": "E", "text": "Kolay ölçülür"}], "correct": "C", "explanation": "İnşaatın aksine, yazılım fiziksel varlığı olmayan soyut bir ürün olduğu için ilerlemeyi gözle ölçmek zordur."}, {"num": 81, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Yazılım projelerinde en zor izlenen unsur hangisidir?", "options": [{"letter": "A", "text": "Donanım"}, {"letter": "B", "text": "İnsan"}, {"letter": "C", "text": "Ürün"}, {"letter": "D", "text": "Bütçe"}, {"letter": "E", "text": "Test"}], "correct": "C", "explanation": "Yazılım kod yazılırken ortaya somut, elle tutulur bir şey çıkmadığı için izlemek zordur."}, {"num": 82, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Yazılım projelerinde süreç neden standart değildir?", "options": [{"letter": "A", "text": "Donanım farklıdır"}, {"letter": "B", "text": "İnsan yoktur"}, {"letter": "C", "text": "Teknoloji ve ekipler değişkendir"}, {"letter": "D", "text": "Planlama yapılmaz"}, {"letter": "E", "text": "Test yoktur"}], "correct": "C", "explanation": "Gereksinimler, kullanılan diller ve ekip yetenekleri her projede değiştiği için sabit bir süreç oturtulamaz."}, {"num": 83, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Kodla ve düzelt yaklaşımı hangi modeldir?", "options": [{"letter": "A", "text": "Şelale"}, {"letter": "B", "text": "V Modeli"}, {"letter": "C", "text": "Kod eksenli"}, {"letter": "D", "text": "Spiral"}, {"letter": "E", "text": "Scrum"}], "correct": "C", "explanation": "Planlamasız doğrudan koda girilen 'Build-and-Fix' yaklaşımı doğrudan Kod Eksenli Geliştirme Modeli'dir."}, {"num": 84, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Kod eksenli modelin en büyük sorunu nedir?", "options": [{"letter": "A", "text": "Hızlı olması"}, {"letter": "B", "text": "Dokümantasyon eksikliği"}, {"letter": "C", "text": "Kullanıcı memnuniyeti"}, {"letter": "D", "text": "Düşük maliyet"}, {"letter": "E", "text": "Basitlik"}], "correct": "B", "explanation": "Kodu yazan kişi ayrıldığında ortada belge olmadığı için sistemi yönetmek imkansız hale gelir."}, {"num": 85, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Şelale modelinin temel varsayımı nedir?", "options": [{"letter": "A", "text": "Gereksinimler değişkendir"}, {"letter": "B", "text": "Aşamalar geri dönüşlüdür"}, {"letter": "C", "text": "Gereksinimler sabittir"}, {"letter": "D", "text": "Test en sonda yapılmaz"}, {"letter": "E", "text": "Kullanıcı sürekli değişir"}], "correct": "C", "explanation": "Şelale modeli analizlerin eksiksiz yapıldığını ve müşterinin fikrini değiştirmeyeceğini (sabit kalacağını) varsayar."}, {"num": 86, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Şelale modelinin en büyük dezavantajı hangisidir?", "options": [{"letter": "A", "text": "Planlama"}, {"letter": "B", "text": "Dokümantasyon"}, {"letter": "C", "text": "Esnek olmaması"}, {"letter": "D", "text": "Yönetim kolaylığı"}, {"letter": "E", "text": "Netlik"}], "correct": "C", "explanation": "Geriye dönüş zor olduğu için yeni taleplere karşı şelale modeli esnek değildir."}, {"num": 87, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "V Modeli'nde analiz aşamasının karşılığı hangi testtir?", "options": [{"letter": "A", "text": "Birim testi"}, {"letter": "B", "text": "Entegrasyon testi"}, {"letter": "C", "text": "Kabul testi"}, {"letter": "D", "text": "Performans testi"}, {"letter": "E", "text": "Sistem testi"}], "correct": "C", "explanation": "V modelinde en üstteki 'Gereksinim Analizi'nin sağ taraftaki (doğrulama) karşılığı 'Kabul Testleri'dir."}, {"num": 88, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Yinelemeli modellerin en önemli avantajı nedir?", "options": [{"letter": "A", "text": "Sabit gereksinim"}, {"letter": "B", "text": "Geç ürün"}, {"letter": "C", "text": "Erken çalışan ürün"}, {"letter": "D", "text": "Yüksek maliyet"}, {"letter": "E", "text": "Katı yapı"}], "correct": "C", "explanation": "Ürün parça parça geliştirildiği için müşteriye projenin erken aşamalarında 'çalışan bir ürün' sunulur."}, {"num": 89, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Artımlı modelde her artım neyi temsil eder?", "options": [{"letter": "A", "text": "Taslak"}, {"letter": "B", "text": "Kod parçası"}, {"letter": "C", "text": "Çalışan sürüm"}, {"letter": "D", "text": "Test sonucu"}, {"letter": "E", "text": "Doküman"}], "correct": "C", "explanation": "Her bir modül geliştirilip eklendiğinde ortaya teste açık çalışan yeni bir sürüm çıkar."}, {"num": 90, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Sarmal model hangi yaklaşıma dayanır?", "options": [{"letter": "A", "text": "Zaman odaklı"}, {"letter": "B", "text": "Risk odaklı"}, {"letter": "C", "text": "Maliyet odaklı"}, {"letter": "D", "text": "Doküman odaklı"}, {"letter": "E", "text": "Kullanıcı odaklı"}], "correct": "B", "explanation": "Barry Boehm'in Sarmal (Spiral) modelinin merkezinde Risk Analizi yatar."}, {"num": 91, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Çevik yaklaşımların temel değeri hangisidir?", "options": [{"letter": "A", "text": "Ayrıntılı dokümantasyon"}, {"letter": "B", "text": "Sözleşmeler"}, {"letter": "C", "text": "Çalışan yazılım"}, {"letter": "D", "text": "Katı planlar"}, {"letter": "E", "text": "Uzun süreçler"}], "correct": "C", "explanation": "Çevik (Agile) Manifesto'ya göre kapsamlı dokümantasyon yerine çalışan yazılıma değer verilir."}, {"num": 92, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Scrum'da sprint süresi genellikle ne kadardır?", "options": [{"letter": "A", "text": "6 ay"}, {"letter": "B", "text": "3-5 ay"}, {"letter": "C", "text": "1-4 hafta"}, {"letter": "D", "text": "1 yıl"}, {"letter": "E", "text": "Belirsiz"}], "correct": "C", "explanation": "Scrum'da işler 'Sprint' adı verilen kısa döngülerde yapılır, bu genellikle 1-4 hafta arasındadır."}, {"num": 93, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Modüler geliştirme ne sağlar?", "options": [{"letter": "A", "text": "Karmaşıklık artışı"}, {"letter": "B", "text": "Yönetim zorluğu"}, {"letter": "C", "text": "Esneklik ve yönetilebilirlik"}, {"letter": "D", "text": "Tek ekip zorunluluğu"}, {"letter": "E", "text": "Uzun süre"}], "correct": "C", "explanation": "Sistemi bağımsız modüllere bölmek devasa bir sistemi yönetmeyi kolaylaştırır ve esneklik sağlar."}, {"num": 94, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Servis tabanlı mimarinin en önemli avantajı nedir?", "options": [{"letter": "A", "text": "Platform bağımlılığı"}, {"letter": "B", "text": "Entegrasyon zorluğu"}, {"letter": "C", "text": "Platform bağımsızlığı"}, {"letter": "D", "text": "Güvensizlik"}, {"letter": "E", "text": "Yavaşlık"}], "correct": "C", "explanation": "SOA'da uygulamalar standart protokoller üzerinden konuştuğu için farklı dillerle yazılmış olsalar bile haberleşirler."}, {"num": 95, "tag": "Vize,2022, Vize, 1 Kez Çıktı!", "text": "Yazılım projelerinde en kritik kaynak hangisidir?", "options": [{"letter": "A", "text": "Donanım"}, {"letter": "B", "text": "Yazılım"}, {"letter": "C", "text": "İnsan"}, {"letter": "D", "text": "Zaman"}, {"letter": "E", "text": "Para"}], "correct": "C", "explanation": "Donanımınız ne kadar iyi olursa olsun, kodu yazacak yetenekli insan gücü olmadan proje üretilemez."}, {"num": 96, "tag": "Vize,2022,2023,2024,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi yazılım projelerinin yönetimini zorlaştıran nedenlerden birisi değildir?", "options": [{"letter": "A", "text": "Çok az sayıda unsurdan etkilenmesi"}, {"letter": "B", "text": "Metodoloji ve teknolojilerin sürekli değişmesi"}, {"letter": "C", "text": "Yapılan hataların kolay bir biçimde fark edilememesi"}, {"letter": "D", "text": "Soyut nitelik taşıması"}, {"letter": "E", "text": "Kişi sayısının genellikle diğer projelerden az olması"}], "correct": "A", "explanation": "Yazılım projeleri aksine donanım, ağ, güvenlik, müşteri gibi 'çok fazla' unsurdan etkilendiği için yönetimi zordur."}, {"num": 97, "tag": "Vize,2022,2023,2024,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Her bir gereksinimin projedeki bir ihtiyacı nasıl karşıladığını açıklayan teknik aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Grup yaratıcılık teknikleri"}, {"letter": "B", "text": "Gereksinim dokümantasyonu"}, {"letter": "C", "text": "Görüşmeler"}, {"letter": "D", "text": "Fikir/zihin haritalama"}, {"letter": "E", "text": "Odak grupları"}], "correct": "B", "explanation": "İhtiyaçların yazılım işlevlerine nasıl dönüştüğünü belgelendirmek dokümantasyonun görevidir."}, {"num": 98, "tag": "Vize,2022,2023,2024,2026,Banko, Vize, 2 Kez Çıktı!, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi yazılım projeleri üzerinde test yapılmasının amaçlarından biri değildir?", "options": [{"letter": "A", "text": "Yazılım sürecini baştan başlatmak"}, {"letter": "B", "text": "Ürüne ve geliştiriciye saygınlık kazandırmak"}, {"letter": "C", "text": "Yapılan hataların tekrarlanmasını önlemek"}, {"letter": "D", "text": "Ürün çalıştırılmadan önce kalitesini ölçmek"}, {"letter": "E", "text": "Zaman ve maliyet tasarrufu yapmak"}], "correct": "A", "explanation": "Test süreçleri hataları bulup iyileştirmek içindir, tüm projeyi çöpe atıp süreci sıfırlamak için değildir."}, {"num": 99, "tag": "Vize,2024", "text": "......, paydaş ihtiyaç ve beklentilerin ayrıntılı şekilde tanımlanmasıdır.", "options": [{"letter": "A", "text": "Tutarlılık"}, {"letter": "B", "text": "Doğrulanabilme"}, {"letter": "C", "text": "Çözümleri değil istekleri ifade etme"}, {"letter": "D", "text": "Gerçekleştirebilme"}, {"letter": "E", "text": "Analiz"}], "correct": "E", "explanation": "Gereksinim Analizi, paydaşların istek ve beklentilerini detaylıca tanımlama işidir."}, {"num": 100, "tag": "Final,2022, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi çevik yöntemlerin ilkelerinden birisi değildir?", "options": [{"letter": "A", "text": "Sponsor yazılım ilerlemesinin birincil ölçüsüdür."}, {"letter": "B", "text": "Sürdürülebilir geliştirmeyi teşvik etmektedir."}, {"letter": "C", "text": "Teknik mükemmeliyet ve iyi tasarım konusundaki sürekli özen ve çevikliği artırır."}, {"letter": "D", "text": "Projenin temelinde motive olmuş bireyler yer almalıdır."}, {"letter": "E", "text": "Bir yazılım takımında bilgi alışverişinin en etkili yöntemi yüz yüze iletişimdir."}], "correct": "A", "explanation": "Agile Manifesto'ya göre 'Çalışan yazılım (working software)', ilerlemenin birincil ölçüsüdür. Sponsor değil."}, {"num": 101, "tag": "Final,2022, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir projenin operasyon grubuna veya bir sonraki aşamaya aktarıldığını gösteren resmi dokümantasyondur?", "options": [{"letter": "A", "text": "Proje dosyaları"}, {"letter": "B", "text": "Proje kapanış belgeleri"}, {"letter": "C", "text": "Tarihsel bilgiler"}, {"letter": "D", "text": "Proje takvimleri"}, {"letter": "E", "text": "Risk listeleri"}], "correct": "B", "explanation": "Bir ürünün operasyon birimine devredildiğini gösteren resmi onay belgeleri Proje Kapanış Belgeleridir."}, {"num": 102, "tag": "Final,2022, Final, 1 Kez Çıktı!", "text": "..........tarihsel bilgiler ile diğer değişkenler arasındaki istatistiksel ilişki kullanılarak maliyet, süre gibi aktivite parametreleri için tahmini değerler hesaplanır.", "options": [{"letter": "A", "text": "Uzman görüşü"}, {"letter": "B", "text": "Örneksel tahmin"}, {"letter": "C", "text": "Parametrik tahmin"}, {"letter": "D", "text": "Yedek süre analizi"}, {"letter": "E", "text": "Üç nokta tahminleri"}], "correct": "C", "explanation": "Tarihsel verileri matematiksel formüllere veya istatistiksel verilere (Örn: satır başına düşen maliyet) vurarak yapılan hesaplama Parametrik tahmindir."}, {"num": 103, "tag": "Final,2022, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi üst ve alt tanımlama sınırları, taraflar arasında yapılan sözleşmelere dayanan tekniktir?", "options": [{"letter": "A", "text": "Kıyaslama"}, {"letter": "B", "text": "Kontrol grafikleri"}, {"letter": "C", "text": "İstatistiksel örnekleme"}, {"letter": "D", "text": "Akış şeması"}, {"letter": "E", "text": "Deney tasarımı"}], "correct": "B", "explanation": "Kalitenin stabil olup olmadığını anlamak için kullanılan alt ve üst sınır (UCL/LCL) barındıran teknik Kontrol Grafikleridir."}, {"num": 104, "tag": "Final,2022, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi risk yönetiminin olumlu sonuçlarından biri değildir?", "options": [{"letter": "A", "text": "Kontrolü sağlar"}, {"letter": "B", "text": "Kayıpları önler"}, {"letter": "C", "text": "Güvence sağlar"}, {"letter": "D", "text": "Belirsizliği önler"}, {"letter": "E", "text": "Üretimi yavaşlatır"}], "correct": "E", "explanation": "Risk yönetiminin amacı üretimi yavaşlatmak değil; tehlikeleri bertaraf ederek güvenli ve hızlı ilerlemeyi sağlamaktır."}, {"num": 105, "tag": "Final,2022, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi fayda / maliyet analizinin avantajlarından birisi değildir?", "options": [{"letter": "A", "text": "Paydaş memnuniyetinde azalış"}, {"letter": "B", "text": "Aynı işin baştan yapılma durumlarının azaltılması"}, {"letter": "C", "text": "Üretkenlik artışı"}, {"letter": "D", "text": "Maliyetlerin düşmesi"}, {"letter": "E", "text": "Gereksiz maliyetlerin öngörülmesi"}], "correct": "A", "explanation": "Memnuniyetin azalması avantaj değil başarısızlıktır."}, {"num": 106, "tag": "Final,2022, Final,2022,2026, Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje maliyetlerinin tahminine en çok etki eden faktörlerden birisi değildir?", "options": [{"letter": "A", "text": "Yapılabilirlik"}, {"letter": "B", "text": "Proje süresi"}, {"letter": "C", "text": "Organizasyon politikaları"}, {"letter": "D", "text": "Proje takımının deneyimi"}, {"letter": "E", "text": "Yönetimsel faktörler"}], "correct": "A", "explanation": "Yapılabilirlik (Fizibilite) proje onayından önce yapılır. Maliyet tahmini ise proje başladıktan sonra planlama evresinde yapılır."}, {"num": 107, "tag": "Final,2022, Final, 1 Kez Çıktı!", "text": "Projenin başlangıcından tamamlanmasına kadar, maliyet alternatiflerinin tanımlanmasını ve değerlendirmesini kapsayan sürece ne ad verilir?", "options": [{"letter": "A", "text": "Proje maliyet tahmini"}, {"letter": "B", "text": "Aktivite maliyet tahmini"}, {"letter": "C", "text": "İşgücü maliyet tahmini"}, {"letter": "D", "text": "Yedek maliyet tahmini"}, {"letter": "E", "text": "Uzman tahmini"}], "correct": "A", "explanation": "Sürecin tümüne doğrudan 'Proje Maliyet Tahmini' denir."}, {"num": 108, "tag": "Büt,2023, Büt, 1 Kez Çıktı!", "text": "Aşağıdaki çiftlerden hangisi kalite kontrolünde kullanılan ve birbirlerinin özel bir türü olan yapılardır?", "options": [{"letter": "A", "text": "Neden-Sonuç Diyagramı - Organizasyonel Süreç Varlığı"}, {"letter": "B", "text": "Kontrol Grafiği - Akış Şeması"}, {"letter": "C", "text": "Onaylanmış Değişiklik Talebi - Çalışma Performansı"}, {"letter": "D", "text": "Histogram - Pareto Grafiği"}, {"letter": "E", "text": "Eğilim Grafiği - Dağılım Şeması"}], "correct": "D", "explanation": "Pareto Grafiği (80/20 kuralı), verilerin çubuklarla büyükten küçüğe sıralandığı özel bir Histogram türüdür."}, {"num": 109, "tag": "Büt,2023, Final,Büt,2023,2026, Büt, 1 Kez Çıktı!", "text": "Proje yönetimi ile ilgili kimi senaryolarda zaman çizelgesi hazırlanırken sınırlı kaynaklar hesaba katılır ve sonuç olarak bu zaman çizelgesi ileride değişebilecek bir özellik taşıyacak şekilde hazırlanır. Bu teknik nedir?", "options": [{"letter": "A", "text": "Kritik zincir metodu"}, {"letter": "B", "text": "Zaman çizelgesi ağ analizi"}, {"letter": "C", "text": "Kritik yol metodu"}, {"letter": "D", "text": "Çevresel işletme faktörleri"}, {"letter": "E", "text": "Paralel çalışma"}], "correct": "A", "explanation": "Kritik Yol Metodundan (CPM) farklı olarak, 'Kritik Zincir Metodu' kaynak kısıtlılıklarını ve tamponları hesaba katarak plan yapar."}, {"num": 110, "tag": "Büt,2023, Büt, 1 Kez Çıktı!", "text": "I. Risk listesi belirlenirken rakipleri incelemeye gerek yoktur. II. Yasal düzenlemeler risk olasılıklarını etkiler. III. Kur değişimleri maliyet riskleri arasında yer alır.", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "II ve III"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "Yalnız I"}], "correct": "C", "explanation": "Yasal değişimler ve kurlar risktir. Rakipleri incelememek ise hatadır, zira rekabet en büyük risklerden biridir (I yanlış)."}, {"num": 111, "tag": "Büt,2023, Final,Büt,2023,2026, Büt, 1 Kez Çıktı!", "text": "Aşağıdaki eşleştirmelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Proje kısıtları: Projenin gerçekleşmesi için dikkat edilmesi gereken hususlar"}, {"letter": "B", "text": "Ayrıştırma: Projenin daha küçük parçalara bölünmesi"}, {"letter": "C", "text": "Odak grubu: Önceden belirlenmiş paydaşlar"}, {"letter": "D", "text": "Paydaş: Projeden etkilenen kişiler"}, {"letter": "E", "text": "Diktatörlük: Tek bir kişinin karar vermesi"}], "correct": "A", "explanation": "Kısıtlar sadece 'dikkat edilecek' şeyler değil; bütçe ve zaman gibi kesin aşılamaz sınırlardır."}, {"num": 112, "tag": "Büt,2023, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılım projesinde teknolojik anlamda oluşabilecek risklerden biri değildir?", "options": [{"letter": "A", "text": "Başarı olasılığı"}, {"letter": "B", "text": "Maliyet tahminleri"}, {"letter": "C", "text": "Ürün yapılabilirliği"}, {"letter": "D", "text": "Tasarımın başarısı"}, {"letter": "E", "text": "Müşteri beklentileri"}], "correct": "B", "explanation": "Maliyet Tahminleri finansal/yönetsel bir risktir. Ürün fizibilitesi ve tasarım ise doğrudan teknolojik risklerdir."}, {"num": 113, "tag": "Büt,2023, Final,Büt,2023,2026, Büt, 1 Kez Çıktı!", "text": "Proje yöneticisi nasıl kullanıcıya bir adım yakın duruyorsa, kurum üst yönetimi de benzer şekilde, adaletten ayrılmamak şartıyla, proje yöneticisine bir adım yakın durmalıdır. Bu ifade nedir?", "options": [{"letter": "A", "text": "Tahmin etmek"}, {"letter": "B", "text": "Kalite standartlarını belirlemek"}, {"letter": "C", "text": "Yetki ve sorumluluk dengesi kurmak"}, {"letter": "D", "text": "Proje durumunu bilmek"}, {"letter": "E", "text": "Kullanıcıya bir adım yakın durmak"}], "correct": "C", "explanation": "Proje yöneticisine sorumluluk verilirken arkasında durup ona yeterli yetkiyi de sağlamak denge kurmaktır."}, {"num": 114, "tag": "Büt,2023, Final,Büt,2023,2026, Büt, 1 Kez Çıktı!", "text": "Merkezîleşme ne anlama gelmektedir?", "options": [{"letter": "A", "text": "Her projede özel olarak uzmanlaşmaya ihtiyaç duyulmasıdır."}, {"letter": "B", "text": "Yönetimin bütünleşmesi ve kararların en üst seviyede alınmasıdır."}, {"letter": "C", "text": "Planı sadece bir kişinin yapmasıdır."}, {"letter": "D", "text": "Tek bir faaliyetin düşünülmesidir."}, {"letter": "E", "text": "Proje yöneticilerinin otoriteye sahip olmasıdır."}], "correct": "B", "explanation": "Yetki devrinin az olduğu, tüm kararların kurumun en tepe noktasında (merkezde) toplandığı yönetim biçimidir."}, {"num": 115, "tag": "Büt,2023, Final,Büt,2023,2026, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir yazılım projesindeki bir iç risk değildir?", "options": [{"letter": "A", "text": "Proje sponsorunun bütçe ayırmaktan vazgeçmesi"}, {"letter": "B", "text": "Geliştiricilerin uyumsuz modül geliştirmesi"}, {"letter": "C", "text": "Yazılım ortamının programlama diline uymaması"}, {"letter": "D", "text": "Proje ekibinden birinin hastalanması"}, {"letter": "E", "text": "Yanlış veri seti kullanılması"}], "correct": "A", "explanation": "Sponsorun bütçeyi kesmesi ekibin kontrolü dışındadır ve şirket üst yönetiminden kaynaklanan dışsal bir risktir."}, {"num": 116, "tag": "Büt,2023, Final,Büt,2023,2026, Büt, 1 Kez Çıktı!", "text": "Yazılım projelerinin esnek olması ne anlama gelmektedir?", "options": [{"letter": "A", "text": "Standart bulunmaması"}, {"letter": "B", "text": "Bir defalık proje olması"}, {"letter": "C", "text": "Yazılımın görünür bir ürün olmaması"}, {"letter": "D", "text": "Geliştirme sürecinin standart olmaması"}, {"letter": "E", "text": "Yazılım ürünlerinde kolayca değişiklik yapılabilmesi"}], "correct": "E", "explanation": "Fiziksel ürünlerin aksine, yazılım ürünlerinde sadece kod satırları değiştirilerek ürün çok kolay modifiye edilebilir."}, {"num": 117, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje tedarik yönetiminde çevresel işletme faktörlerinden biri değildir?", "options": [{"letter": "A", "text": "Tedarikçiler"}, {"letter": "B", "text": "Pazarda mevcut olan ürünler"}, {"letter": "C", "text": "Kaynak seçimi kriterleri"}, {"letter": "D", "text": "Bölgeye özgü gereksinimler"}, {"letter": "E", "text": "Hizmetler ve sonuçlar"}], "correct": "C", "explanation": "Kaynak seçimi kriterleri dışsal bir faktör değil, proje ekibi tarafından üretilen bir iç belgedir."}, {"num": 118, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje zaman yönetiminde zaman çizelgesinin geliştirilmesi kısmında güncellenebilecek hususlardan biri değildir?", "options": [{"letter": "A", "text": "Aktivite özellikleri"}, {"letter": "B", "text": "Kaynaklar"}, {"letter": "C", "text": "Aktivite kaynak gereksinimleri"}, {"letter": "D", "text": "Risk listesi"}, {"letter": "E", "text": "Takvim"}], "correct": "B", "explanation": "Kaynaklar (insan/makine) fiziksel varlıklardır. Belgesel olarak güncellenen şey 'kaynak gereksinimi' veya takvim dokümanlarıdır."}, {"num": 119, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Benzin sıkıntısına çözüm olarak yakıtı daha verimli kullanan otomobiller üretmek hangi sosyal ihtiyacın sonucu olarak oluşturulmuştur?", "options": [{"letter": "A", "text": "Rakiplerdeki talep"}, {"letter": "B", "text": "Çevre üzerindeki etkiler"}, {"letter": "C", "text": "Sektördeki genel talep"}, {"letter": "D", "text": "Müşterilerdeki talep"}, {"letter": "E", "text": "Organizasyondaki ihtiyaç"}], "correct": "B", "explanation": "Doğal kaynakların tükenmesi (benzin) gibi ekolojik sorunlara üretilen çözümler Çevre Üzerindeki Etkiler kategorisindedir."}, {"num": 120, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi özel bir teknik olan kök analizini kapsamaktadır?", "options": [{"letter": "A", "text": "İstatistiksel analiz"}, {"letter": "B", "text": "Kalite denetimleri"}, {"letter": "C", "text": "Süreç analizi"}, {"letter": "D", "text": "Fayda/maliyet analizi"}, {"letter": "E", "text": "Kalite kontrol ölçümleri"}], "correct": "C", "explanation": "Süreci inceleyip verimsizliğin kaynağına (kök neden) inmek, Süreç Analizi (Process Analysis) kapsamında yapılır."}, {"num": 121, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi projelerde bütçenin belirlenmesi kısmında görüşü alınabilecek uzmanlardan biri değildir?", "options": [{"letter": "A", "text": "Sektör grupları"}, {"letter": "B", "text": "Proje yöneticisi"}, {"letter": "C", "text": "Mesleki ve teknik birlikler"}, {"letter": "D", "text": "Müşteriler"}, {"letter": "E", "text": "Danışmanlar"}], "correct": "D", "explanation": "Maliyet kalemlerinin tespiti teknik bir işlemdir. Müşteri ürünün alıcısıdır, bütçe kıvrımlarını belirleyecek uzman kaynak değildir."}, {"num": 122, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi gerçekleştirme aşamasının unsurlarından birisi değildir?", "options": [{"letter": "A", "text": "Kullanıcı ara yüzleri"}, {"letter": "B", "text": "Kod teftişi"}, {"letter": "C", "text": "Veri tabanı dosyaları"}, {"letter": "D", "text": "Bileşenler"}, {"letter": "E", "text": "Raporlar"}], "correct": "B", "explanation": "Kod Teftişi inşa etme değil, yazılan kodun Test ve Kalite Kontrol aşamasının unsurudur."}, {"num": 123, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdaki modellerin hangileri aynı kategori içerisinde yer alır?", "options": [{"letter": "A", "text": "Şelale Modeli - V Model"}, {"letter": "B", "text": "Modüler Geliştirme - Spiral Model"}, {"letter": "C", "text": "Evrimsel Geliştirme - Spiral Model"}, {"letter": "D", "text": "V Model- Spiral Model"}, {"letter": "E", "text": "Kod Eksenli - Evrimsel"}], "correct": "A", "explanation": "İkisi de aşamaların birbirini izlediği Geleneksel/Doğrusal Geliştirme Modelleri kategorisindedir."}, {"num": 124, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi ayrıntılı proje kapsam bildiriminde bulunan maddelerden biri değildir?", "options": [{"letter": "A", "text": "Proje teslimatları"}, {"letter": "B", "text": "Ürün kabul kriterleri"}, {"letter": "C", "text": "Proje kısıtları"}, {"letter": "D", "text": "Proje varsayımları"}, {"letter": "E", "text": "Ürün reklam çalışmaları"}], "correct": "E", "explanation": "Reklam operasyonel bir pazarlama sürecidir, yazılım geliştirme projesinin teknik Kapsam Bildiriminde yer almaz."}, {"num": 125, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi yazılım proje yönetiminde yer alan bir plan değildir?", "options": [{"letter": "A", "text": "Test planı"}, {"letter": "B", "text": "Zaman planı"}, {"letter": "C", "text": "Risk planı"}, {"letter": "D", "text": "Satın alma planı"}, {"letter": "E", "text": "Maliyet planı"}], "correct": "D", "explanation": "PMBOK terminolojisinde ticari eylemin resmi adı Satın Alma değil, 'Tedarik Yönetimi Planı'dır."}, {"num": 126, "tag": "Büt,2024, Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi İnsan İlişkileri Okulu'ndaki temel prensiplerden biri değildir?", "options": [{"letter": "A", "text": "Ürünler mutlaka standartlaştırılmalıdır."}, {"letter": "B", "text": "Parasal kazanç, gruba aidiyet kadar önemli değildir."}, {"letter": "C", "text": "Gayri resmi gruplar güçlü etkilere sahiptir."}, {"letter": "D", "text": "Yöneticinin ilgisi kişinin verimini arttırır."}, {"letter": "E", "text": "Kişiler tecrit edilemez. Grup olarak görülmelidir."}], "correct": "A", "explanation": "İşlerin ve ürünlerin standartlaştırılması (insan yerine iş odaklılık) Taylor'ın Bilimsel Yönetim ilkesidir, insan ilişkileri okulunun değil."}, {"num": 127, "tag": "Vize, 1 Kez Çıktı!", "text": "Bilgi çağı yönetiminde ön plana çıkan unsur hangisidir?", "options": [{"letter": "A", "text": "Fiziksel güç"}, {"letter": "B", "text": "Standart üretim"}, {"letter": "C", "text": "Bilgi ve teknoloji"}, {"letter": "D", "text": "Hiyerarşi"}, {"letter": "E", "text": "Tek yönlü iletişim"}], "correct": "C", "explanation": "Endüstri çağından Bilgi çağına geçişle birlikte en değerli sermaye fiziksel güçten çıkıp entelektüel sermayeye (bilgi) kaymıştır."}, {"num": 128, "tag": "Vize, 1 Kez Çıktı!", "text": "\"......, paydaş ihtiyaç ve beklentilerin ayrıntılı şekilde tanımlanmasıdır.\" cümlesinde bırakılan boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Tutarlılık"}, {"letter": "B", "text": "Doğrulanabilme"}, {"letter": "C", "text": "Çözümleri değil istekleri ifade etme"}, {"letter": "D", "text": "Gerçekleştirebilme"}, {"letter": "E", "text": "Analiz"}], "correct": "E", "explanation": "İhtiyaçları tanımlama süreci 'Analiz'dir."}, {"num": 129, "tag": "Final, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Kalite bir ürün veya hizmetin belirlenen veya olabilecek ........... karşılama kabiliyetine dayanan özelliklerin toplamıdır. Şeklinde verilen tamamlamada boş bırakılan alana aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Listeleri"}, {"letter": "B", "text": "İhtiyaçları"}, {"letter": "C", "text": "Paydaşları"}, {"letter": "D", "text": "Analizleri"}, {"letter": "E", "text": "Verileri"}], "correct": "B", "explanation": "Kalite ürünün müşteri ihtiyaçlarına uygunluğudur."}, {"num": 130, "tag": "Final, 1 Kez Çıktı!", "text": "Bir Üniversitenin gelirlerini artıracak yeni bir bölüm açmaya / yaratmaya yönelik projeye onay verilmesi aşağıdakilerden hangisi ile ifade edilir?", "options": [{"letter": "A", "text": "Çevre üzerinde etkiler"}, {"letter": "B", "text": "Organizasyonun ihtiyacı"}, {"letter": "C", "text": "Teknolojik İlerleme"}, {"letter": "D", "text": "Pazardaki talep"}, {"letter": "E", "text": "Müşterilerin talebi"}], "correct": "B", "explanation": "Kurumun finansal hedefi kendi organizasyonel ihtiyacıdır."}, {"num": 131, "tag": "Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi projede risk yönetiminin nasıl yaptırılacağını ve gerçekleşeceğinin açıklamak için izlenen yoldur?", "options": [{"letter": "A", "text": "Risk kırılım yapısı"}, {"letter": "B", "text": "Risk kategorileri"}, {"letter": "C", "text": "Risklerin tanımlanması"}, {"letter": "D", "text": "Risk yönetim planı"}, {"letter": "E", "text": "Risk olasılığı ve etkisinin tanımlanması"}], "correct": "D", "explanation": "Sürecin nasıl işleyeceğini kurala bağlayan belge Risk Yönetim Planıdır."}, {"num": 132, "tag": "Final, 1 Kez Çıktı!", "text": "Genellikle doğruluğu güvence altına almak için ürün kapsam tanımının çoğu zaman projede gözden geçirmeye imkan sağlayan girdi türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Araç ve teknikler"}, {"letter": "B", "text": "Öncelik şeması metodu"}, {"letter": "C", "text": "Organizasyonel süreç varlıkları"}, {"letter": "D", "text": "Proje kapsam bildirimi"}, {"letter": "E", "text": "Süreç varlıkları"}], "correct": "D", "explanation": "Sınırları çizen belge Proje Kapsam Bildirimidir."}, {"num": 133, "tag": "Final, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi proje yönetimi planının güncellenebilecek öğelerinden birisi değildir?", "options": [{"letter": "A", "text": "Performans temel çizgisi"}, {"letter": "B", "text": "Kapsam temel çizgisi"}, {"letter": "C", "text": "Maliyet temel çizgisi"}, {"letter": "D", "text": "Tedarik yönetim planı"}, {"letter": "E", "text": "Zaman çizelgesi temel çizgisi"}], "correct": "A", "explanation": "Performans çizgisi bağımsız bir belge değildir, diğer 3 çizginin sonucudur."}, {"num": 134, "tag": "Büt, 1 Kez Çıktı!, Büt, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi ürün kapsam tanımı, hizmet tanımı, sonuç tanımı kabul kriterleri hakkında önemli bilgiler içeren girdi olarak gösterilmektedir?", "options": [{"letter": "A", "text": "İş birliği anlaşmaları"}, {"letter": "B", "text": "Kapsam temel çizgisi"}, {"letter": "C", "text": "Gereksinim dokümantasyonu"}, {"letter": "D", "text": "Risk analizi"}, {"letter": "E", "text": "Projenin diğer planlama çizelgeleri"}], "correct": "B", "explanation": "Kapsam bildirimlerini içinde barındıran ve onaylı sınırları belirten asıl doküman Kapsam Temel Çizgisidir."}, {"num": 135, "tag": "Büt, 1 Kez Çıktı!", "text": "Aşağıdakilerden hangisi projelerde bütçenin belirlenmesi kısmındaki girdiler den biri değildir?", "options": [{"letter": "A", "text": "Aktivite maliyet tahminleri"}, {"letter": "B", "text": "Proje zaman çizelgesi"}, {"letter": "C", "text": "Kaynak takvimleri"}, {"letter": "D", "text": "Tahminlerin temeli"}, {"letter": "E", "text": "Ortak maliyetler"}], "correct": "E", "explanation": "Ortak maliyetler muhasebesel bir terimdir, bütçe belirleme sürecinin resmi PMBOK girdisi (dokümanı) değildir."}, {"num": 136, "tag": "Büt, 2 Kez Çıktı!", "text": "Aşağıdaki kısaltma ve eşleştirmelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "BPMS: Business Process Management Suite - Bütünleşik İş Süreç Yönetim Araçları"}, {"letter": "B", "text": "BPA: Binary Process Accept - İkilik İşlem Kabulü"}, {"letter": "C", "text": "CMMI: Capability Maturity Model Integrated - Entegre Yeteneklilik Olgunluğu Modeli"}, {"letter": "D", "text": "XML: Extensible Markup Language - Genişletilebilir İşaretleme Dili"}, {"letter": "E", "text": "BPM: Business Process Management - İş Süreç Yönetim Araçları"}], "correct": "B", "explanation": "BPA'nın gerçek açılımı Business Process Analysis (İş Süreçleri Analizi) şeklindedir."}, {"num": 137, "tag": "Büt, 2 Kez Çıktı!", "text": "Projede risk yönetiminin nasıl yapılandırılacağını ve gerçekleşeceğini açıklamak için izlenen yol aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Risk olasılığı ve etkisinin tanımlanması"}, {"letter": "B", "text": "Risk kategorileri"}, {"letter": "C", "text": "Risk kırılım yapısı"}, {"letter": "D", "text": "Risklerin tanımlanması"}, {"letter": "E", "text": "Risk yönetim planı"}], "correct": "E", "explanation": "Risk bütçesinin ve sürecin kurallarını belirleyen ana belge 'Risk Yönetim Planı'dır."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilişim Sistemleri Analiz ve Tasarımı (AYBS8002) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 4. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Bilişim Sistemleri Analiz ve Tasarımı (AYBS8002) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">4. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Bilişim Sistemleri Analiz ve Tasarımı (AYBS8002) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Bilişim Sistemleri Analiz ve Tasarımı (AYBS8002) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Bilişim Sistemleri Analiz ve Tasarımı (AYBS8002) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>91 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>4. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">91</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Bilisim_Sistemleri_Analiz_ve_Tasarimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (91)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">91</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Bilisim_Sistemleri_Analiz_ve_Tasarimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Final", "text": "Aşağıdakilerden hangisi mimari tasarımların güvenlik gereksinimleri arasında sayılabilir?", "options": [{"letter": "A", "text": "Erişim kontrolü"}, {"letter": "B", "text": "Sistem entegrasyonu"}, {"letter": "C", "text": "Çok dillilik"}, {"letter": "D", "text": "Özelleştirme"}, {"letter": "E", "text": "Kapasite"}], "correct": "A", "explanation": "ACIKLAMA::Erişim kontrolü (yetkilendirme) doğrudan güvenlik gereksinimidir. Kapasite performans, çok dillilik kullanılabilirlik başlığındadır."}, {"num": 2, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2024 Bütünleme, Tek Ders 2024", "text": "Aşağıdakilerden hangisi pozitif risk stratejilerinden birisi değildir?", "options": [{"letter": "A", "text": "Riski geliştirme"}, {"letter": "B", "text": "Riski paylaşma"}, {"letter": "C", "text": "Riski kabul etme"}, {"letter": "D", "text": "Riskten yararlanma"}, {"letter": "E", "text": "Riski devretme"}], "correct": "E", "explanation": "ACIKLAMA::Pozitif (fırsat) stratejileri: yararlanma, paylaşma, geliştirme, kabul. 'Devretme (transfer)' bir NEGATİF/tehdit stratejisidir."}, {"num": 3, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme", "text": "Aşağıdaki hangi veri tabanı modeli tarihsel sıralamada daha önce kullanılmıştır?", "options": [{"letter": "A", "text": "Nesne Yönelimi"}, {"letter": "B", "text": "Ağ"}, {"letter": "C", "text": "Dosya tabanları"}, {"letter": "D", "text": "Hiyerarşik"}, {"letter": "E", "text": "İlişkisel"}], "correct": "D", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 4, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme", "text": "Proje beyanı ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Son ürün ile ilgili tahminleri içerir."}, {"letter": "B", "text": "İş paketi ile ekip elemanlarının eşleştirmelerini içerir."}, {"letter": "C", "text": "Proje riskleri ile ilgili bir liste içerir."}, {"letter": "D", "text": "Maksimum izin verilen süre tahminlerini içerir."}, {"letter": "E", "text": "Ana amaç ve alt amaçları içerir."}], "correct": "B", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 5, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2024 Bütünleme", "text": "Bir ürünün fiyatındaki değişimlerin, satış miktarı üzerinde nasıl etki oluşturduğu aşağıdaki hangi bilişim sistemi ile belirlenebilir?", "options": [{"letter": "A", "text": "Bilgi Çalışanı Sistemi"}, {"letter": "B", "text": "Coğrafi Bilgi Sistemi"}, {"letter": "C", "text": "Hareket İşleme Sistemi"}, {"letter": "D", "text": "Yönetim Bilişim Sistemi"}, {"letter": "E", "text": "Karar Destek Sistemi"}], "correct": "E", "explanation": "ACIKLAMA::'Ne olursa ne olur' (what-if) analizleri KDS'nin uzmanlık alanıdır. Senaryo/duyarlılık analizi → KDS."}, {"num": 6, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme", "text": "Bir iş kırılımında en üst seviye aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Aktivite"}, {"letter": "B", "text": "Aşama"}, {"letter": "C", "text": "Güncelleme"}, {"letter": "D", "text": "Proje"}, {"letter": "E", "text": "İş Paketi"}], "correct": "D", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 7, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Final", "text": "Aşağıdakilerden hangisi sahte DNS yardımıyla hassas bilgilerin çalınmasını amaçlayan güvenlik tehtididir?", "options": [{"letter": "A", "text": "Ara kapı"}, {"letter": "B", "text": "Hizmet reddi"}, {"letter": "C", "text": "Araya girme"}, {"letter": "D", "text": "Balık tutma (Yemleme)"}, {"letter": "E", "text": "IP sahteciliği"}], "correct": "D", "explanation": "ACIKLAMA::Sahte DNS ile kullanıcıyı taklit siteye yönlendirip bilgi çalma = pharming/phishing (balık tutma/yemleme)."}, {"num": 8, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2024 Bütünleme, 2025 Final, 2025-2026 Final", "text": "Aşağıdakilerden hangisi mantık modellemede kullanılan görsel araçtır?", "options": [{"letter": "A", "text": "Yapısal dil"}, {"letter": "B", "text": "Çok kriterli karar verme"}, {"letter": "C", "text": "Doğal dil işleme"}, {"letter": "D", "text": "Karar tabloları"}, {"letter": "E", "text": "Karar ağaçları"}], "correct": "E", "explanation": "ACIKLAMA::Karar ağaçları dallanan görsel bir gösterimdir. Yapısal dil ve karar tabloları metin/tablo tabanlıdır → görsel değildir."}, {"num": 9, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Bütünleme, 2025-2026 Final", "text": "Aşağıdakilerden hangisi sistemin hayata geçirilmesi sürecindeki sürdürülebilirlik faaliyetleri arasında sayılabilir?", "options": [{"letter": "A", "text": "Bakım"}, {"letter": "B", "text": "Kodlama"}, {"letter": "C", "text": "Test"}, {"letter": "D", "text": "Güvenirlik"}, {"letter": "E", "text": "Kurulum"}], "correct": "A", "explanation": "ACIKLAMA::Sistem devreye alındıktan SONRA süregelen (sürdürülebilirlik) faaliyet Bakımdır. Test/kodlama/kurulum devreye alma öncesi geliştirme adımlarıdır. Banko."}, {"num": 10, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2024 Bütünleme", "text": "Farklı teknolojilerin kullanılmasının zorunlu olduğu projeler için en doğru sistem geliştirme metodolojisi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sistem prototipleme"}, {"letter": "B", "text": "Paralel Geliştirme"}, {"letter": "C", "text": "v modeli"}, {"letter": "D", "text": "Şelale modeli"}, {"letter": "E", "text": "Tasarım prototipleme"}], "correct": "E", "explanation": "ACIKLAMA::Farklı/yeni teknolojilerin denenmesi gereken durumda prototipleme, teknik belirsizliği erken azaltır. Resmî anahtar 'Tasarım prototipleme'yi işaretliyor."}, {"num": 11, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2022-2023 Final, 2023 Final, 2024 Bütünleme", "text": "Yaş bilgisinin girilmesi gereken bir ekranda 120 sayısından daha büyük bir değerin girişine müsaade edilmemesi aşağıdaki hangi girdi kontrolü ile alakalıdır?", "options": [{"letter": "A", "text": "Biçim"}, {"letter": "B", "text": "Tamlık"}, {"letter": "C", "text": "Aralık"}, {"letter": "D", "text": "Veri tabanı"}, {"letter": "E", "text": "Tutarlılık"}], "correct": "C", "explanation": "ACIKLAMA::Belirli alt-üst sınırlar arasında değer kabulü aralık (range) kontrolüdür."}, {"num": 12, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025 Final, 2025-2026 Bütünleme, 2025-2026 Final", "text": "Fonksiyonel olmayan gereksinimler ile alakalı aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bir sistemin \"ne\" yapması gerektiğini ifade eder."}, {"letter": "B", "text": "Performans ile alakalıdır."}, {"letter": "C", "text": "Başarısızlık durumunda sistem bir bütün olarak kullanışsız hale gelir."}, {"letter": "D", "text": "İşlevleri destekleyen gereksinimlerdir."}, {"letter": "E", "text": "Ölçümü kolay değildir."}], "correct": "A", "explanation": "ACIKLAMA::'Ne' yapılacağını FONKSİYONEL gereksinim söyler. Fonksiyonel olmayan gereksinim 'nasıl/ne kadar iyi' (performans, güvenlik, kullanılabilirlik) ile ilgilenir. Banko."}, {"num": 13, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme", "text": "Ebeveyn diyagramı çizimleri için aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Diyagramda temel fonksiyonlar süreç olarak verilir."}, {"letter": "B", "text": "Bağlam diyagramındaki akışlar ile dengeli olarak çizilir."}, {"letter": "C", "text": "Harici varlıklar diyagram içerisinde tekrar edilebilir."}, {"letter": "D", "text": "Veri depolarına diyagram içerisinde yer verilmez."}, {"letter": "E", "text": "Süreçler birden fazla girdi alıp birden fazla çıktı üretebilir."}], "correct": "D", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 14, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar", "text": "Veri akış diyagramlarında harici varlık bileşeninin kullanımı ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bir harici varlık birden fazla süreçle etkileşime girmez."}, {"letter": "B", "text": "Bütün veri akış diyagramı seviyelerinde kullanılabilir."}, {"letter": "C", "text": "Harici varlıklar arasında akışa izin verilmez."}, {"letter": "D", "text": "Harici varlıklar ile veri depoları arasında akış olmaz."}, {"letter": "E", "text": "Harici varlıklar birden fazla tekrar edilebilir. BİLİŞİM SİSTEMLERİ ANALİZ VE TASARIMI B 1 P355543.G2780 31-05-2024 11:35:07 CEVAPLI"}], "correct": "A", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 15, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2024 Bütünleme", "text": "Risk analizi aşağıdaki hangi sistem geliştirme aşamasında yürütülen bir faaliyettir?", "options": [{"letter": "A", "text": "Uygulama"}, {"letter": "B", "text": "Analiz"}, {"letter": "C", "text": "Planlama"}, {"letter": "D", "text": "Tasarım"}, {"letter": "E", "text": "İzleme"}], "correct": "C", "explanation": "ACIKLAMA::Risklerin belirlenip yanıtlanması Planlama aşamasında yapılır. İncelik: 'mantık modelleme = Analiz' ama 'risk analizi = Planlama'. Sınav bu ikisini yan yana sorup şaşırtıyor."}, {"num": 16, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2024 Bütünleme, 2025 Final, 2025-2026 Final", "text": "Etnografi (gözlem) süreci ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Gözlem yapılacak kişilere gözlem yapıldığı hissettirilmelidir."}, {"letter": "B", "text": "Gözlem yapılırken ön plana çıkılmamalıdır."}, {"letter": "C", "text": "Gözlem özellikle iş anındaki bireyler ile etkileşimli olarak yapılmalıdır."}, {"letter": "D", "text": "Gözlem yapılırken önemsiz faaliyetlere odaklanılması gerekir."}, {"letter": "E", "text": "Gözlem yapılırken mümkün olduğu kadar not almaktan kaçınılmalıdır."}], "correct": "B", "explanation": "ACIKLAMA::Etnografide gözlemci doğal davranışı bozmamak için ön plana çıkmadan, müdahalesiz izler (Hawthorne etkisini azaltmak için)."}, {"num": 17, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2024 Bütünleme, Tek Ders 2024", "text": "OSI referans modelinde aşağıdaki hangi aşama yer almaz?", "options": [{"letter": "A", "text": "İletişim"}, {"letter": "B", "text": "Dokümantasyon"}, {"letter": "C", "text": "Fiziksel bağlantı"}, {"letter": "D", "text": "Aktarım"}, {"letter": "E", "text": "Servisler"}], "correct": "B", "explanation": "ACIKLAMA::OSI katmanları veri iletişimiyle ilgilidir; 'Dokümantasyon' bir OSI katmanı/aşaması değildir."}, {"num": 18, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2022-2023 Final, 2023 Final, 2024 Bütünleme", "text": "Eğer bir tabloda benzersiz kayıt içeren tek bir sütun yoksa birden fazla sütunun birlikte benzersiz bir birleşik grup oluşturduğu anahtar türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yabancı"}, {"letter": "B", "text": "Aday"}, {"letter": "C", "text": "Bileşik"}, {"letter": "D", "text": "İkincil"}, {"letter": "E", "text": "Süper"}], "correct": "C", "explanation": "ACIKLAMA::Tek başına yetmeyip birlikte benzersizliği sağlayan çoklu sütun = bileşik (composite) anahtar."}, {"num": 19, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2024 Bütünleme, 2025-2026 Bütünleme", "text": "Web sayfaları için mutlaka bir ana sayfa tasarlanması gerekliliğini ifade eden tasarım faktörü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Promosyon"}, {"letter": "B", "text": "Grafikler"}, {"letter": "C", "text": "Sunum Tipleri"}, {"letter": "D", "text": "İçerik"}, {"letter": "E", "text": "Metin"}], "correct": "C", "explanation": "ACIKLAMA::Sayfaların düzeni/hiyerarşisi ve zorunlu ana sayfa, sunum tipleri (presentation) tasarım faktörü kapsamındadır."}, {"num": 20, "tag": "Bilişim Sistemleri Analiz ve Tasarım 2024 Bütünleme, 2024 Bütünleme, Tek Ders 2024", "text": "Mantık modelleri aşağıdaki hangi veri akış elemanının iç yapısını açıklar?", "options": [{"letter": "A", "text": "Veri deposu"}, {"letter": "B", "text": "Süreç"}, {"letter": "C", "text": "Harici varlık"}, {"letter": "D", "text": "İç varlık"}, {"letter": "E", "text": "Veri akışı BİLİŞİM SİSTEMLERİ ANALİZ VE TASARIMI B 2 P355543.G2780 31-05-2024 11:35:07 CEVAPLI"}], "correct": "B", "explanation": "ACIKLAMA::Mantık modelleme (yapısal dil, karar tablosu/ağacı) bir SÜRECİN içindeki kural/mantığı ayrıntılandırır."}, {"num": 21, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme, 2025-2026 Final", "text": "Gösterge paneli tasarımlarında grafikerin geleceği tahmin edebilme yeteneğini sağlamaları aşağıdaki hangi bileşen sayesindedir?", "options": [{"letter": "A", "text": "Senaryo tasarımı"}, {"letter": "B", "text": "Erişilebilirlik"}, {"letter": "C", "text": "Metin madenciliği"}, {"letter": "D", "text": "Görsel analitik"}, {"letter": "E", "text": "Kullanılabilirlik"}], "correct": "D", "explanation": "ACIKLAMA::Görsel analitik (visual analytics), veriden örüntü çıkarıp öngörü/tahmin üretmeyi görsel araçlarla mümkün kılar."}, {"num": 22, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme, 2025-2026 Final", "text": "Aşağıdakilerden hangisi ebeveyn diyagramındaki süreçlere verilen isimlerden olamaz?", "options": [{"letter": "A", "text": "İlan yönetimi"}, {"letter": "B", "text": "Sistem yönetimi"}, {"letter": "C", "text": "Raporlama"}, {"letter": "D", "text": "Geciken sipariş kontrolü"}, {"letter": "E", "text": "Değerlendirme"}], "correct": "D", "explanation": "ACIKLAMA::Süreç isimleri genel/işlevsel olmalı (yönetim, raporlama). 'Geciken sipariş kontrolü' bir istisna/koşula özgü olduğu için üst düzey süreç adı olamaz."}, {"num": 23, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar", "text": "Ağaç yapısındaki temel ağ topolojisi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Veri Yolu"}, {"letter": "B", "text": "Halka"}, {"letter": "C", "text": "Örgü"}, {"letter": "D", "text": "Hiyerarşik"}, {"letter": "E", "text": "Yıldız"}], "correct": "D", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 24, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2023-2024 Final, 2025-2026 Bütünleme, Tek Ders 2024", "text": "Belirli bir zaman aralığında tamamlanan iş sayısı, aşağıdaki iş yükü yöntemlerinden hangi metriği açıklamaktadır?", "options": [{"letter": "A", "text": "Bekleme süresi"}, {"letter": "B", "text": "Geri dönüş süresi"}, {"letter": "C", "text": "Verim"}, {"letter": "D", "text": "Bant genişliği"}, {"letter": "E", "text": "Tepki süresi"}], "correct": "C", "explanation": "ACIKLAMA::Birim zamanda tamamlanan iş sayısı verim (throughput) metriğidir."}, {"num": 25, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2023 Vize, 2023-2024 Final, 2024 Final, 2025 Final, 2025-2026 Bütünleme, Tek Ders 2024", "text": "Proje beyanlarında aşağıdaki soruların hangisinin cevabı yer almaz?", "options": [{"letter": "A", "text": "Tahmini bütçe nedir?"}, {"letter": "B", "text": "Projenin kapsamı nedir?"}, {"letter": "C", "text": "Projenin beklenen çıktıları nedir?"}, {"letter": "D", "text": "Son kullanıcılar kimlerdir?"}, {"letter": "E", "text": "Proje gereksinimleri nelerdir?"}], "correct": "E", "explanation": "ACIKLAMA::Proje beyanı kapsam, bütçe, çıktı ve gereksinimleri özetler; 'son kullanıcılar kimlerdir' detay analiz sorusudur, beyanda yer almaz. Banko."}, {"num": 26, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2022-2023 Final, 2023 Vize, 2023 Final, 2025-2026 Bütünleme", "text": "Risk yanıtı geliştirme faaliyetinin çıktısı hangi dokümandır?", "options": [{"letter": "A", "text": "Bilinen riskler"}, {"letter": "B", "text": "Risk yönetim planı"}, {"letter": "C", "text": "Risk analizi"}, {"letter": "D", "text": "Risk kütüğü"}, {"letter": "E", "text": "Yeni riskler"}], "correct": "B", "explanation": "ACIKLAMA::Risk yanıtları geliştirilince güncellenen ve tüm riskleri/planları tutan belge Risk Kütüğü'dür (risk register)."}, {"num": 27, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2023-2024 Vize, 2024 Vize, 2025-2026 Bütünleme, Tek Ders 2024", "text": "Proje yürütme sürecindeki iş kırılımda yer alan her bir göreve ilgili personelin atanması için kullanılan matris yöntem aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "RACI"}, {"letter": "B", "text": "SIMPLEX"}, {"letter": "C", "text": "JAD"}, {"letter": "D", "text": "RAD"}, {"letter": "E", "text": "CRUD"}], "correct": "A", "explanation": "ACIKLAMA::RACI = Responsible, Accountable, Consulted, Informed; görev–kişi sorumluluk matrisidir. RAD/JAD geliştirme yöntemi, CRUD veri işlemi, SIMPLEX doğrusal programlamadır. Banko."}, {"num": 28, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar", "text": "Bir siparişi geç veya zamanında teslim edilebilir. Müşteri zamanında veya geç onay verebilir veya hiç onay vermez. Bu koşulları karşılamak için oluşturulan karar tablosu için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Sütun sayısı en az 7 olmalıdır."}, {"letter": "B", "text": "En az 5 kural vardır."}, {"letter": "C", "text": "En fazla 2 kural oluşturulabilir."}, {"letter": "D", "text": "5 sütundan oluşur."}, {"letter": "E", "text": "En fazla 6 adet kural olabilir."}], "correct": "E", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 29, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar", "text": "Bir vatandaş ile kimlik numarası arasındaki ilişki hangi tür ilişkiye örnek gösterilebilir?", "options": [{"letter": "A", "text": "Çoka-Çok"}, {"letter": "B", "text": "Tekli İlişki"}, {"letter": "C", "text": "Çoka-Bir"}, {"letter": "D", "text": "Bire-Çok"}, {"letter": "E", "text": "Bire-Bir"}], "correct": "E", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 30, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B", "text": "Aşağıdakilerden hangisi ekstrem programlama değerlerinden birisi değildir?", "options": [{"letter": "A", "text": "Geri bildirim"}, {"letter": "B", "text": "Test"}, {"letter": "C", "text": "İletişim"}, {"letter": "D", "text": "Sadelik"}, {"letter": "E", "text": "Saygı"}], "correct": "B", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 31, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme, 2025-2026 Final", "text": "Aşağıdakilerden hangisi sadece fiziksel veri tabanlarında yer alır?", "options": [{"letter": "A", "text": "Birincil anahtar"}, {"letter": "B", "text": "Varlık adı"}, {"letter": "C", "text": "Tablo isimleri"}, {"letter": "D", "text": "Yabancı anahtar"}, {"letter": "E", "text": "Varlık İlişkisi"}], "correct": "C", "explanation": "ACIKLAMA::Mantıksal modelde 'varlık', fiziksel modelde 'tablo' konuşulur. 'Tablo isimleri' fiziksel tasarıma özgüdür."}, {"num": 32, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar", "text": "Karmaşık kural yapıları ve çokça kombinasyon olduğu durumlarda aşağıdaki hangi mantık modelleme yapısı tercih edilmelidir?", "options": [{"letter": "A", "text": "Çok kriterli karar verme"}, {"letter": "B", "text": "Doğal dil işleme"}, {"letter": "C", "text": "Karar tabloları"}, {"letter": "D", "text": "Yapısal dil"}, {"letter": "E", "text": "Karar ağaçları BİLİŞİM SİSTEMLERİ ANALİZ VE TASARIMI A P355875.G20355 04-06-2026 16:30:04 CEVAPLI"}], "correct": "C", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 33, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme", "text": "Bir işletme, verilerini arşivleyecek yeterli depolama cihazına sahip değilse dışarıdan bu hizmeti kiralamayı tercih edebilir. Bu durumda başvurulacak bulut hizmet modeli aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Analitik sağlama hizmet modeli"}, {"letter": "B", "text": "Yazılım sağlama hizmet modeli"}, {"letter": "C", "text": "Altyapı sağlama hizmet modeli"}, {"letter": "D", "text": "Platform sağlama hizmet modeli"}, {"letter": "E", "text": "Veri sağlama hizmet modeli"}], "correct": "C", "explanation": "ACIKLAMA::Depolama/sunucu gibi donanım altyapısını kiralamak IaaS (Altyapı Hizmeti) modelidir."}, {"num": 34, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2025-2026 Bütünleme", "text": "Yapısal metodolojiler ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Genel olarak çok hızlı son ürüne ulaşılır."}, {"letter": "B", "text": "Sadece spiral modelde prototip kullanılır."}, {"letter": "C", "text": "b modeli bakım faaliyetlerine özellikle önem verir."}, {"letter": "D", "text": "v modelinde her aşamada testler geçirilir."}, {"letter": "E", "text": "Şelale modelinde gereksinimler önceden belirli olmalıdır."}], "correct": "A", "explanation": "ACIKLAMA::Yapısal (şelale/v vb.) yaklaşımlar aşama aşama ve YAVAŞ ilerler; hızlı son ürün RAD/çevik yöntemlerin özelliğidir. 'çok hızlı son ürün' ifadesi yanlıştır."}, {"num": 35, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B", "text": "Aşağıda verilen karar seviyesi ve bilişim sistemi eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Hareket işleme sistemleri – Operasyonel seviye"}, {"letter": "B", "text": "Karar destek sistemleri – Operasyonel seviye"}, {"letter": "C", "text": "Yönetim bilişim sistemleri – Orta (Taktiksel) seviye"}, {"letter": "D", "text": "Üst yönetici destek sistemleri – Stratejik seviye"}, {"letter": "E", "text": "Bilgi çalışanı sistemleri – Orta (Taktiksel) seviye"}], "correct": "B", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 36, "tag": "Bilişim Sistemleri Analiz ve Tasarımı - 2025-2026 - Bütünleme - Bahar, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme, Tek Ders 2024", "text": "Aşağıdakilerden hangisi gereksinimlerin doğrulanması sürecindeki gözden geçirme yöntemindeki aşamalardan değildir?", "options": [{"letter": "A", "text": "Ön değerlendirme"}, {"letter": "B", "text": "Dağıtım"}, {"letter": "C", "text": "Planlama"}, {"letter": "D", "text": "Toplantı"}, {"letter": "E", "text": "Hazırlık"}], "correct": "A", "explanation": "ACIKLAMA::Gözden geçirme (review) aşamaları planlama, hazırlık, toplantı ve dağıtımdır. 'Ön değerlendirme' bu listede yer almaz. Dört ayrı kaynak bu cevabı doğruluyor."}, {"num": 37, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "Bir risk meydana geldiğinde; riske verilecek yanıt, olası B planı ve B planını tetikleyen faaliyet hangi risk yanıtlama belgesinde tablolar halinde verilir?", "options": [{"letter": "A", "text": "Acil durum planı"}, {"letter": "B", "text": "Gereksinim listesi"}, {"letter": "C", "text": "Risk şiddeti matrisi"}, {"letter": "D", "text": "Yedekleme ve kurtarma beyanı"}, {"letter": "E", "text": "Geri bildirim beyanı"}], "correct": "A", "explanation": "ACIKLAMA::'B planı + onu tetikleyen olay' tanımı acil durum (contingency) planına aittir."}, {"num": 38, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B", "text": "'Bir web sitesinin bir saatteki ortalama çökme sayısı 2,7\" olarak hesaplanmıştır.' Bu ifadedeki 2,7 değeri aşağıdakilerden hangisine tekabül etmektedir?", "options": [{"letter": "A", "text": "Bilgi"}, {"letter": "B", "text": "Bilişim"}, {"letter": "C", "text": "İhsan"}, {"letter": "D", "text": "Bilgelik"}, {"letter": "E", "text": "Veri"}], "correct": "B", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 39, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023-2024 Vize, 2024 Vize, Tek Ders 2024", "text": "Bilgisayarların hızlarını ve işlem yapma kapasitelerini (iş yüklerini) belirleyen donanım parçası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Birincil Saklama Ünitesi (RAM)"}, {"letter": "B", "text": "Ekran kartı"}, {"letter": "C", "text": "Anakart"}, {"letter": "D", "text": "İkincil Saklama Ünitesi (Sabit Disk)"}, {"letter": "E", "text": "Merkezi İşlem Birimi (CPU)"}], "correct": "E", "explanation": "ACIKLAMA::İşlem hızı/kapasitesi CPU ile belirlenir. RAM geçici bellek, disk kalıcı depolamadır."}, {"num": 40, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2023-2024 Vize, 2024 Vize, Tek Ders 2024", "text": "Mantık modelleme hangi sistem geliştirme aşamasında yürütülen bir faaliyettir?", "options": [{"letter": "A", "text": "Tasarım"}, {"letter": "B", "text": "Planlama"}, {"letter": "C", "text": "İzleme"}, {"letter": "D", "text": "Analiz"}, {"letter": "E", "text": "Uygulama"}], "correct": "D", "explanation": "ACIKLAMA::Mantıksal (fiziksel olmayan) modelleme 'ne' sorusunu yanıtlar; bu analiz aşamasının işidir. Dikkat: RİSK analizi ise Planlama aşamasındadır (bir sonraki soruyla karıştırmayın)."}, {"num": 41, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "Gerekli olan bir sunucunun satın alınmasına hangi fizibilite aşamasında karar verilir?", "options": [{"letter": "A", "text": "Operasyonel"}, {"letter": "B", "text": "Organizasyonel"}, {"letter": "C", "text": "Teknik"}, {"letter": "D", "text": "Yasal"}, {"letter": "E", "text": "Çizelge"}], "correct": "C", "explanation": "ACIKLAMA::Donanım/altyapı (sunucu) ihtiyacı teknik fizibilitede değerlendirilir. Maliyet ekonomik, süre çizelge fizibilitesidir."}, {"num": 42, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "Bir bilişim sistemi içerisindeki bütün fiziksel cihaz ve ekipmanları anlatan kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yazılım"}, {"letter": "B", "text": "Donanım"}, {"letter": "C", "text": "Prosedür"}, {"letter": "D", "text": "Veri tabanı"}, {"letter": "E", "text": "Ağ"}], "correct": "B", "explanation": "ACIKLAMA::Fiziksel, elle tutulan her cihaz = donanım (hardware). Yazılım soyut programlardır. Basit ama bedava puan."}, {"num": 43, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B", "text": "Gösterge panelleri genelde aşağıda verilen bilişim sistemlerinden hangisinde tercih edilir?", "options": [{"letter": "A", "text": "Ofis Otomasyon Sistemleri"}, {"letter": "B", "text": "Bilgi Çalışanı Sistemi"}, {"letter": "C", "text": "Üst Yönetici Destek Sistemi"}, {"letter": "D", "text": "Hareket İşleme Sistemi"}, {"letter": "E", "text": "Süreç Kontrol Sistemleri"}], "correct": "C", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 44, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023-2024 Vize, 2024 Vize, Tek Ders 2024", "text": "Aşağıdakilerden hangisi sistem isteğini tetikleyebilecek unsurlar arasında sayılamaz?", "options": [{"letter": "A", "text": "Devamsızlık oranlarındaki düşüşler"}, {"letter": "B", "text": "Hiçbir şekilde yerine getirilemeyen görevler"}, {"letter": "C", "text": "Son üründe meydana gelen hatalar"}, {"letter": "D", "text": "Sürekli yanlış çıktı veren raporlar"}, {"letter": "E", "text": "Süreç içerisindeki görevlerin eksik sonlanması"}], "correct": "A", "explanation": "ACIKLAMA::Sistem isteğini SORUNLAR tetikler. Devamsızlığın DÜŞMESİ olumlu bir gelişmedir, sorun değildir; dolayısıyla tetikleyici sayılmaz."}, {"num": 45, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2025-2026 Final", "text": "Prince II proje sertifikasyonunda iş paketleri hangi aşamada belirlenir?", "options": [{"letter": "A", "text": "Seçme"}, {"letter": "B", "text": "Aşamaları Yönetme"}, {"letter": "C", "text": "Sonlandırma"}, {"letter": "D", "text": "Teslimatı Yönetme"}, {"letter": "E", "text": "Yönlendirme"}], "correct": "D", "explanation": "ACIKLAMA::PRINCE2'de iş paketleri (work packages) yönlendirme/aşama yönetimi kapsamında tanımlanır; anahtar 'Yönlendirme'yi veriyor."}, {"num": 46, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B", "text": "Hızlı uygulama geliştirme ile ilgili verilen aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Çok uzun projelerde kullanılır."}, {"letter": "B", "text": "Gereksinimlerin tamamının başlangıçta belli olmasına gerek yoktur."}, {"letter": "C", "text": "Son ürüne en erken ulaşım esastır."}, {"letter": "D", "text": "Tasarım prototipleri ile gereksinimleri toplayabilir."}, {"letter": "E", "text": "Zaman kısıtlı projelerde tercih edilir. BİLİŞİM SİSTEMLERİ ANALİZ VE TASARIMI B P355543.G9373 17-03-2025 08:58:09 BİLİŞİM SİSTEMLERİ ANALİZ VE TASARIMI B P355543.G9373 17-03-2025 08:58:09 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 47, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize, 2023-2024 Vize, 2024 Vize, 2025-2026 Final, Tek Ders 2024", "text": "Scrum yönteminde proje yönetimi görevini hangi takım elemanı üstlenir?", "options": [{"letter": "A", "text": "Lider"}, {"letter": "B", "text": "Patron"}, {"letter": "C", "text": "Scrum Ustası"}, {"letter": "D", "text": "Ustabaşı"}, {"letter": "E", "text": "Ürün Sahibi"}], "correct": "C", "explanation": "ACIKLAMA::Scrum Master (Scrum Ustası) süreci kolaylaştırır ve engelleri kaldırır; Ürün Sahibi ise 'ne yapılacağına' karar verir. Banko soru."}, {"num": 48, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B, 2023 Vize", "text": "Aşağıdakilerden hangisi projelerin bütünleşik değerlendirmesinde kullanılmaz?", "options": [{"letter": "A", "text": "Çok kriterli karar verme"}, {"letter": "B", "text": "Nominal grup tekniği"}, {"letter": "C", "text": "Delphi"}, {"letter": "D", "text": "Pazar dengesi analizi"}, {"letter": "E", "text": "Ağırlıklı ortalama"}], "correct": "D", "explanation": "ACIKLAMA::Bütünleşik değerlendirmede ÇKKV, nominal grup, Delphi ve ağırlıklı ortalama kullanılır. 'Pazar dengesi analizi' bu grupta değildir."}, {"num": 49, "tag": "YönetimBilişimSistemleriAnalizveTasarım-2025 Vize-B", "text": "En fazla emek ve süre gerektiren proje yönetimi aşaması aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bakım"}, {"letter": "B", "text": "Uygulama"}, {"letter": "C", "text": "Başlama"}, {"letter": "D", "text": "Sonlandırma"}, {"letter": "E", "text": "Planlama"}], "correct": "B", "explanation": "AUZEF Bilisim Sistemleri Analiz ve Tasarimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 50, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025-2026 Bütünleme, 2025-2026 Final, Tek Ders 2024", "text": "${t_kararseviye}<br>Aşağıda verilen karar seviyesi ve bilişim sistemi eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Hareket işleme sistemleri – Operasyonel seviye"}, {"letter": "B", "text": "Karar destek sistemleri – Operasyonel seviye"}, {"letter": "C", "text": "Bilgi çalışanı sistemleri – Orta (Taktiksel) seviye"}, {"letter": "D", "text": "Üst yönetici destek sistemleri – Stratejik seviye"}, {"letter": "E", "text": "Yönetim bilişim sistemleri – Orta (Taktiksel) seviye"}], "correct": "B", "explanation": "ACIKLAMA::KDS yarı-yapısal kararları destekler ve orta/taktiksel–yönetim seviyesindedir; operasyonel seviye Hareket İşleme Sistemlerinindir. Kendi görüşüm: piramidi bir kez ezberleyin (operasyonel→HİS, taktiksel→YBS/KDS/Bilgi çalışanı, stratejik→ÜYDS), bu soru garanti puandır ve neredeyse her dönem geliyor."}, {"num": 51, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize, Tek Ders 2024", "text": "Gösterge panelleri (dashboard) genelde hangi bilişim sisteminde tercih edilir?", "options": [{"letter": "A", "text": "Üst Yönetici Destek Sistemi"}, {"letter": "B", "text": "Hareket İşleme Sistemi"}, {"letter": "C", "text": "Bilgi Çalışanı Sistemi"}, {"letter": "D", "text": "Ofis Otomasyon Sistemleri"}, {"letter": "E", "text": "Süreç Kontrol Sistemleri"}], "correct": "A", "explanation": "ACIKLAMA::Gösterge panelleri özet, görsel ve stratejik göstergeler sunar; bu da üst yönetime hitap eden ÜYDS'nin işidir. Püf noktası: 'özet + görsel + üst düzey' gördüğünüzde ÜYDS deyin."}, {"num": 52, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025 Final", "text": "Kütüphaneden alınan bir kitabın, çıkarken öğrenci tarafından kendi üzerine alındığı bilişim sistemi hangisine örnektir?", "options": [{"letter": "A", "text": "Hareket İşleme Sistemi"}, {"letter": "B", "text": "Bilgi Çalışanı Sistemi"}, {"letter": "C", "text": "Karar Destek Sistemi"}, {"letter": "D", "text": "Yönetim Bilişim Sistemi"}, {"letter": "E", "text": "Üst Yönetici Destek Sistemi"}], "correct": "A", "explanation": "ACIKLAMA::Ödünç verme günlük, rutin, kayıt tutan bir işlemdir → Hareket İşleme Sistemi (TPS). Yorumum: 'tek tek işlem/kayıt' anahtar kelimesi HİS'i işaret eder."}, {"num": 53, "tag": "2023 Final, 2023-2024 Final, 2024 Final", "text": "Aşağıdakilerden hangisi taktik seviye bir bilişim sistemi değildir?", "options": [{"letter": "A", "text": "Coğrafi Bilgi Sistemi"}, {"letter": "B", "text": "Yönetim Bilişim Sistemi"}, {"letter": "C", "text": "Karar Destek Sistemi"}, {"letter": "D", "text": "Üst Yönetici Destek Sistemi"}, {"letter": "E", "text": "Bilgi Çalışanı Sistemi"}], "correct": "A", "explanation": "ACIKLAMA::Resmî anahtar Coğrafi Bilgi Sistemi'ni işaretliyor (klasik taktiksel üçlü YBS-KDS-Bilgi Çalışanı dışında kalır)."}, {"num": 54, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "Hangi yapısal metodolojide tasarım prototipleri kullanılır?", "options": [{"letter": "A", "text": "Spiral Model"}, {"letter": "B", "text": "Şelale Modeli"}, {"letter": "C", "text": "Paralel Geliştirme"}, {"letter": "D", "text": "v Modeli"}, {"letter": "E", "text": "Aşamalı Geliştirme"}], "correct": "A", "explanation": "ACIKLAMA::Spiral model her turda risk analizi + prototip üretir. Şelale ve v modeli prototipsiz, doğrusal ilerler."}, {"num": 55, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025 Final, 2025-2026 Final, Tek Ders 2024", "text": "Eğer bir sistemde kullanıcı gereksinimleri net değilse aşağıdaki hangi sistem geliştirme metodolojisini kullanmak uygun olmaz?", "options": [{"letter": "A", "text": "Şelale Modeli"}, {"letter": "B", "text": "Çevik Modeller"}, {"letter": "C", "text": "Evrimsel Prototipleme"}, {"letter": "D", "text": "Aşamalı Geliştirme"}, {"letter": "E", "text": "Spiral Model"}], "correct": "A", "explanation": "ACIKLAMA::Şelale, gereksinimlerin baştan tam ve sabit olmasını şart koşar; belirsizlik varsa uygun DEĞİLDİR. Çevik/spiral/prototip ise belirsizlikle başa çıkmak için idealdir. 2023-2024 Vize ve Tek Ders anahtarları Şelale'yi doğruluyor."}, {"num": 56, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "En fazla emek ve süre gerektiren proje yönetimi aşaması hangisidir?", "options": [{"letter": "A", "text": "Planlama"}, {"letter": "B", "text": "Uygulama"}, {"letter": "C", "text": "Başlama"}, {"letter": "D", "text": "Bakım"}, {"letter": "E", "text": "Sonlandırma"}], "correct": "A", "explanation": "ACIKLAMA::Ders anlatımında fizibilite, WBS, çizelgeleme ve risk analizinin toplandığı Planlama, en emek-yoğun aşama olarak veriliyor. 2023 Vize, 2023-2024 Vize ve @sakkarit Planlama diyor."}, {"num": 57, "tag": "2023 Vize, 2023-2024 Final, 2024 Final, 2025-2026 Final", "text": "Nispeten kısa süreli projeler için toplam proje süresi aşağıdaki yöntemlerin hangisi ile belirlenir?", "options": [{"letter": "A", "text": "Gantt"}, {"letter": "B", "text": "İş Kırılımı"}, {"letter": "C", "text": "Fizibilite"}, {"letter": "D", "text": "Risk analizi"}, {"letter": "E", "text": "Tornado grafiği"}], "correct": "A", "explanation": "ACIKLAMA::Gantt çizelgesi, faaliyetleri zamana yayarak toplam süreyi görselleştirir; kısa/orta projeler için pratiktir. Uzun-karmaşık projelerde CPM/PERT tercih edilir."}, {"num": 58, "tag": "2023 Vize, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme", "text": "Aşağıdakilerden hangisi ekstrem programlama (XP) değerlerinden birisi değildir?", "options": [{"letter": "A", "text": "Test"}, {"letter": "B", "text": "İletişim"}, {"letter": "C", "text": "Sadelik"}, {"letter": "D", "text": "Geri bildirim"}, {"letter": "E", "text": "Saygı"}], "correct": "A", "explanation": "ACIKLAMA::XP değerleri: iletişim, sadelik, geri bildirim, cesaret ve saygı. Test bir DEĞER değil, bir uygulamadır (pratik). Banko."}, {"num": 59, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize, 2025 Final, Tek Ders 2024", "text": "Aşağıdakilerden hangisi çevik metotlar için yanlıştır?", "options": [{"letter": "A", "text": "Değişim yönetimi ile kapsam kaymasına neden olur."}, {"letter": "B", "text": "Paydaşlar ile iletişimi artırır."}, {"letter": "C", "text": "Müşteri katılımını yükseltir."}, {"letter": "D", "text": "Ürünün kabul görme ihtimalini artırır."}, {"letter": "E", "text": "Dokümantasyonu düşürür."}], "correct": "A", "explanation": "ACIKLAMA::Çevik yaklaşım değişimi YÖNETEREK kapsam kaymasını (scope creep) önlemeye çalışır; 'neden olur' demek yanlıştır. Banko soru."}, {"num": 60, "tag": "2022-2023 Final, 2023 Vize, 2023 Final, 2023-2024 Final, 2024 Final", "text": "Hızlı uygulama geliştirme (RAD) ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Çok uzun projelerde kullanılır."}, {"letter": "B", "text": "Tasarım prototipleri ile gereksinimleri toplayabilir."}, {"letter": "C", "text": "Son ürüne en erken ulaşım esastır."}, {"letter": "D", "text": "Zaman kısıtlı projelerde tercih edilir."}, {"letter": "E", "text": "Gereksinimlerin tamamının başlangıçta belirli olmasına gerek yoktur."}], "correct": "A", "explanation": "ACIKLAMA::RAD tam tersine kısa, zaman-kısıtlı projeler içindir; 'çok uzun projeler' ifadesi yanlıştır. Banko."}, {"num": 61, "tag": "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025 Final", "text": "Bir iş kırılımında (WBS) en üst seviye aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Proje"}, {"letter": "B", "text": "Aşama"}, {"letter": "C", "text": "İş Paketi"}, {"letter": "D", "text": "Aktivite"}, {"letter": "E", "text": "Güncelleme"}], "correct": "A", "explanation": "ACIKLAMA::WBS hiyerarşisi: Proje → Aşama → İş Paketi → Aktivite/Görev. En tepe = Proje."}, {"num": 62, "tag": "2022-2023 Final, 2023 Final, 2024 Bütünleme", "text": "Proje beyanı (proje bildirgesi) ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "İş paketi ile ekip elemanlarının eşleştirmelerini içerir."}, {"letter": "B", "text": "Son ürün ile ilgili tahminleri içerir."}, {"letter": "C", "text": "Maksimum izin verilen süre tahminlerini içerir."}, {"letter": "D", "text": "Ana amaç ve alt amaçları içerir."}, {"letter": "E", "text": "Proje riskleri ile ilgili bir liste içerir."}], "correct": "A", "explanation": "ACIKLAMA::Görev–kişi ataması (RACI) yürütme/planlama detayıdır, proje beyanının işi değildir. Beyan; amaç, kapsam, tahmin ve riskleri özetler."}, {"num": 63, "tag": "2023 Vize, 2025 Final, 2025-2026 Final", "text": "Aşağıdakilerden hangisi proje planlama ve kontrol riski değildir?", "options": [{"letter": "A", "text": "Eksik veya yanlış gereksinimlerin oluşturulması"}, {"letter": "B", "text": "Çıktı tahminlerinin gerçekçi olmaması"}, {"letter": "C", "text": "Planlama faaliyetlerine yeteri kadar önem verilmemesi"}, {"letter": "D", "text": "Sürenin yanlış belirlenmesi"}, {"letter": "E", "text": "Bütçenin yanlış modellenmesi"}], "correct": "A", "explanation": "ACIKLAMA::Eksik/yanlış gereksinim bir ANALIZ (gereksinim) riskidir; diğerleri süre, bütçe, tahmin gibi planlama-kontrol riskleridir."}, {"num": 64, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "Aşağıdakilerden hangisi projeler için doğru değildir?", "options": [{"letter": "A", "text": "Projeler kesin süreçlerdir, belirsizlik içermez."}, {"letter": "B", "text": "Kaynak yönetimi projeler için temel görevlerdendir."}, {"letter": "C", "text": "Her proje çıktısı değer yaratmalıdır."}, {"letter": "D", "text": "Projelerin benzersiz bir amacı vardır."}, {"letter": "E", "text": "Projelerin kesin bir başlangıcı ve sonu vardır."}], "correct": "A", "explanation": "ACIKLAMA::Projeler doğası gereği belirsizlik ve risk içerir; 'belirsizlik içermez' ifadesi yanlıştır."}, {"num": 65, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "Firmaların günlük faaliyetlerini etkileyen belirsizlikler hangi risk kalemi altında değerlendirilir?", "options": [{"letter": "A", "text": "Süreç riski"}, {"letter": "B", "text": "Kullanıcı riski"}, {"letter": "C", "text": "Proje riski"}, {"letter": "D", "text": "Günlük risk"}, {"letter": "E", "text": "Ürün riski"}], "correct": "A", "explanation": "ACIKLAMA::Günlük operasyon/işleyişe ait belirsizlikler süreç riski başlığındadır."}, {"num": 66, "tag": "2023 Vize, 2023-2024 Vize, 2024 Vize", "text": "Bir işlem, ürün veya sürecin israflardan arındırılarak sadece değer katan unsurlarla yapılması ifadesi hangi kavramı karşılamaktadır?", "options": [{"letter": "A", "text": "Yalınlık"}, {"letter": "B", "text": "Gereksinim"}, {"letter": "C", "text": "Geçerlilik"}, {"letter": "D", "text": "Ölçeklenebilirlik"}, {"letter": "E", "text": "Planlama"}], "correct": "A", "explanation": "ACIKLAMA::İsrafın (waste) elenip yalnızca değer katan işlerin bırakılması yalın (lean) düşüncenin özüdür → Yalınlık."}, {"num": 67, "tag": "2023-2024 Vize, 2024 Vize, Tek Ders 2024", "text": "${t_kritikyol}<br>Bir projede 1. ve 2. faaliyetin öncülü yoktur. 3 numaralı faaliyetin öncülleri 1 ve 2 dir. 4 numaralı faaliyet için 1, 2 ve 3 öncüldür. Süreler sırasıyla 5, 7, 8 ve 10 olduğuna göre kritik yol hangisidir?", "options": [{"letter": "A", "text": "2 - 3 - 4"}, {"letter": "B", "text": "1 - 2"}, {"letter": "C", "text": "1 - 2 - 3"}, {"letter": "D", "text": "1 - 2 - 4"}, {"letter": "E", "text": "3 - 4"}], "correct": "A", "explanation": "ACIKLAMA::4 bitmesi için 3, 3 bitmesi için 1 ve 2 tamamlanmalı. Paralel giren 1(5) ve 2(7)'den daha uzun olan 2 kritiktir. Kritik yol = en uzun süreli yol: 2 → 3 → 4 = 7 + 8 + 10 = 25."}, {"num": 68, "tag": "2022-2023 Final, 2023 Final, 2024 Bütünleme", "text": "Hangi veri tabanı modeli tarihsel sıralamada daha önce kullanılmıştır?", "options": [{"letter": "A", "text": "Hiyerarşik"}, {"letter": "B", "text": "Ağ"}, {"letter": "C", "text": "Dosya tabanları"}, {"letter": "D", "text": "İlişkisel"}, {"letter": "E", "text": "Nesne Yönelimi"}], "correct": "A", "explanation": "ACIKLAMA::Veri tabanı MODELLERİ içinde en eskisi hiyerarşiktir (sonra ağ → ilişkisel → nesne). 2022-2023 Final ve 2024 Bütünleme anahtarları Hiyerarşik'i işaretliyor."}, {"num": 69, "tag": "2022-2023 Final, 2023 Final, 2023-2024 Final, 2025-2026 Bütünleme, Tek Ders 2024", "text": "${t_er}<br>Bir vatandaş ile kimlik numarası arasındaki ilişki hangi tür ilişkiye örnek gösterilebilir?", "options": [{"letter": "A", "text": "Bire-Bir"}, {"letter": "B", "text": "Çoka-Bir"}, {"letter": "C", "text": "Çoka-Çok"}, {"letter": "D", "text": "Bire-Çok"}, {"letter": "E", "text": "Tekli ilişki"}], "correct": "A", "explanation": "ACIKLAMA::Her vatandaşın tek bir kimlik numarası, her kimlik numarasının tek bir vatandaşı vardır → 1:1. Banko."}, {"num": 70, "tag": "2023-2024 Final, 2024 Final", "text": "${t_er}<br>Yazar ve kitap varlıkları arasındaki ilişki aşağıdaki ilişki türlerinden hangisine örnektir?", "options": [{"letter": "A", "text": "Çoka-Çok"}, {"letter": "B", "text": "Bire-Çok"}, {"letter": "C", "text": "Çoka-Bir"}, {"letter": "D", "text": "Bire-Bir"}, {"letter": "E", "text": "Tekli İlişki"}], "correct": "A", "explanation": "ACIKLAMA::Bir yazarın birden çok kitabı, bir kitabın birden çok yazarı olabilir → N:M (çoka-çok). Çözümü için bir bağlantı (ara) tablosu gerekir."}, {"num": 71, "tag": "2025 Final, 2025-2026 Bütünleme", "text": "Tek bir boş değere (null) müsaade eden, tamamen benzersiz değerler içeren anahtar türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tekil"}, {"letter": "B", "text": "Aday"}, {"letter": "C", "text": "Yabancı"}, {"letter": "D", "text": "Birincil"}, {"letter": "E", "text": "Süper"}], "correct": "A", "explanation": "ACIKLAMA::Tekil (unique) anahtar benzersizliği sağlar ama tek bir null'a izin verir. Birincil anahtar ise null kabul etmez. Ayrım tam da burada."}, {"num": 72, "tag": "2022-2023 Final, 2023 Final, 2025-2026 Final", "text": "Veri sözlüklerinde veri depoları ile ilgili tablolarda hangi sütun yer almaz?", "options": [{"letter": "A", "text": "Mantık modeli"}, {"letter": "B", "text": "Birincil anahtar"}, {"letter": "C", "text": "Veri deposu açıklaması"}, {"letter": "D", "text": "Veri deposu adı"}, {"letter": "E", "text": "Veri deposu numarası"}], "correct": "A", "explanation": "ACIKLAMA::Veri deposu kaydında ad, numara, açıklama, birincil anahtar bulunur; 'mantık modeli' ise bir sütun değildir."}, {"num": 73, "tag": "2025 Final", "text": "${t_er}<br>İlişkisel veri tabanındaki bir tabloda 2, 3, 4. sütunların işçi; 5, 6, 7. sütunların ise iş bilgilerini içerdiği görülmektedir. Bu tablonun iki farklı tabloya ayrılmasını zorlayan normalizasyon formu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "2NF"}, {"letter": "B", "text": "1NF"}, {"letter": "C", "text": "0NF"}, {"letter": "D", "text": "3NF"}, {"letter": "E", "text": "4NF"}], "correct": "A", "explanation": "ACIKLAMA::Kısmi bağımlılığı (bir alt kümenin başka alanları belirlemesi) gidermek ve işçi/iş verisini ayrı tablolara koymak 2. Normal Form'un (2NF) gereğidir."}, {"num": 74, "tag": "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final, 2025-2026 Bütünleme", "text": "Karmaşık kural yapıları ve çokça kombinasyon olduğu durumlarda hangi mantık modelleme yapısı tercih edilmelidir?", "options": [{"letter": "A", "text": "Karar tabloları"}, {"letter": "B", "text": "Yapısal dil"}, {"letter": "C", "text": "Doğal dil işleme"}, {"letter": "D", "text": "Karar ağaçları"}, {"letter": "E", "text": "Çok kriterli karar verme"}], "correct": "A", "explanation": "ACIKLAMA::Çok sayıda koşul-kombinasyonu düzenli biçimde ele almak için karar tabloları idealdir (tüm kombinasyonları kural sütunlarıyla kapsar). Banko."}, {"num": 75, "tag": "2022-2023 Final, 2023-2024 Final, 2025 Final, 2025-2026 Final", "text": "Bağlam diyagramı ile alakalı aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bağlam diyagramında harici varlıklar arasındaki akışa izin verilir."}, {"letter": "B", "text": "Sadece 1 süreç içerir."}, {"letter": "C", "text": "Kullanılan süreç, son ürün olan yazılım ile adlandırılır."}, {"letter": "D", "text": "Her bir yazılım projesinden tek bir defa çizilir."}, {"letter": "E", "text": "Sistem ile harici varlıklar arasındaki veri akışını gösterir."}], "correct": "A", "explanation": "ACIKLAMA::Bağlam diyagramı tek süreç + harici varlıklar gösterir; harici varlıklar ARASINDA akışa izin verilmez (sistem dışıdırlar). Banko."}, {"num": 76, "tag": "2022-2023 Final, 2023 Final, 2024 Bütünleme, 2025-2026 Bütünleme, Tek Ders 2024", "text": "Veri akış diyagramlarında (DFD) harici varlık bileşeninin kullanımı ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bir harici varlık birden fazla süreçle etkileşime girmez."}, {"letter": "B", "text": "Harici varlıklar ile veri depoları arasında akış olmaz."}, {"letter": "C", "text": "Harici varlıklar arasında akışa izin verilmez."}, {"letter": "D", "text": "Harici varlıklar birden fazla tekrar edilebilir."}, {"letter": "E", "text": "Bütün veri akış diyagramı seviyelerinde kullanılabilir."}], "correct": "A", "explanation": "ACIKLAMA::Bir harici varlık BİRDEN FAZLA süreçle etkileşebilir; 'girmez' demek yanlıştır. Diğer maddeler (varlıklar-depolar arası akış yok, varlıklar arası akış yok) doğrudur."}, {"num": 77, "tag": "2024 Bütünleme, 2025 Final", "text": "Ebeveyn (level-0) diyagramı çizimleri için aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Veri depolarına diyagram içerisinde yer verilmez."}, {"letter": "B", "text": "Diyagramda temel fonksiyonlar süreç olarak verilir."}, {"letter": "C", "text": "Bağlam diyagramındaki akışlar ile dengeli olarak çizilir."}, {"letter": "D", "text": "Harici varlıklar diyagram içerisinde tekrar edilebilir."}, {"letter": "E", "text": "Süreçler birden fazla girdi alıp birden fazla çıktı üretebilir."}], "correct": "A", "explanation": "ACIKLAMA::Ebeveyn/0-seviye diyagramda veri depoları GÖSTERİLİR; 'yer verilmez' ifadesi yanlıştır."}, {"num": 78, "tag": "2025 Final, 2025-2026 Bütünleme", "text": "${t_topoloji}<br>Ağaç yapısındaki temel ağ topolojisi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hiyerarşik"}, {"letter": "B", "text": "Veri Yolu"}, {"letter": "C", "text": "Halka"}, {"letter": "D", "text": "Örgü"}, {"letter": "E", "text": "Yıldız"}], "correct": "A", "explanation": "ACIKLAMA::Dallanan ağaç yapısı = hiyerarşik topoloji (birden çok yıldızın bir omurgaya bağlanmış hâli)."}, {"num": 79, "tag": "2024 Bütünleme, 2025 Final", "text": "Bir yazılım sistemi içerisindeki farklı modüller arası entegrasyonu bütüncül olarak değerlendiren test türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sistem"}, {"letter": "B", "text": "Günlük"}, {"letter": "C", "text": "Birim"}, {"letter": "D", "text": "Yönetim"}, {"letter": "E", "text": "Kabul"}], "correct": "A", "explanation": "ACIKLAMA::Tüm modüllerin bir araya gelmiş hâlini bütüncül değerlendiren sistem testidir. Birim testi tek modülü, kabul testi kullanıcı gereksinimini ölçer."}, {"num": 80, "tag": "2023 Vize, 2023-2024 Final, 2024 Final", "text": "${t_fmea}<br>Hata türleri ve etkileri analizinde (FMEA) gereksinimlerin eksik belirlenmesi riski için şiddet 7, olasılık 8, tespit ihtimali 10 belirlenmiştir. Bu durumda risk öncelik skoru (RÖS) kaçtır?", "options": [{"letter": "A", "text": "560"}, {"letter": "B", "text": "66"}, {"letter": "C", "text": "25"}, {"letter": "D", "text": "121"}, {"letter": "E", "text": "8,33"}], "correct": "A", "explanation": "ACIKLAMA::RÖS = Şiddet × Olasılık × Tespit = 7 × 8 × 10 = 560. Toplama değil, çarpım."}, {"num": 81, "tag": "2025 Final", "text": "Bir yazılım dilinde aşağıdaki özelliklerden hangisinin olması beklenmez?", "options": [{"letter": "A", "text": "Genelleştirilebilirlik"}, {"letter": "B", "text": "Okunabilirlik"}, {"letter": "C", "text": "Çevrilebilirlik"}, {"letter": "D", "text": "Yalınlık"}, {"letter": "E", "text": "Bağımsızlık"}], "correct": "A", "explanation": "ACIKLAMA::Yazılım dilinden beklenen nitelikler okunabilirlik, çevrilebilirlik, yalınlık ve bağımsızlıktır; 'genelleştirilebilirlik' bu listede beklenen bir özellik değildir."}, {"num": 82, "tag": "2025 Final", "text": "Sürücü güncelleme faaliyeti aşağıdaki bakım türlerinden hangisi içerisinde değerlendirilir?", "options": [{"letter": "A", "text": "Uyarlayıcı"}, {"letter": "B", "text": "Düzeltici"}, {"letter": "C", "text": "Önleyici"}, {"letter": "D", "text": "Denetleyici"}, {"letter": "E", "text": "İyileştirici"}], "correct": "A", "explanation": "ACIKLAMA::Sistemi değişen ortama/donanıma uydurmak (sürücü güncelleme) uyarlayıcı (adaptive) bakımdır."}, {"num": 83, "tag": "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final", "text": "Farklı sistem parçalarının benzer girdilere karşı aynı şekilde tepki üretmesi girdi tasarımının hangi kriteri ile alakalıdır?", "options": [{"letter": "A", "text": "Kararlılık"}, {"letter": "B", "text": "Yalınlık"}, {"letter": "C", "text": "Etkililik"}, {"letter": "D", "text": "Kullanılabilirlik"}, {"letter": "E", "text": "Erişilebilirlik"}], "correct": "A", "explanation": "ACIKLAMA::Benzer girdiye her yerde aynı/tutarlı tepki = kararlılık (tutarlılık) kriteridir. Banko."}, {"num": 84, "tag": "2022-2023 Final, 2023 Final, 2025 Final", "text": "Bir sistemin periyodik bakımlar dışında sürekli çalışabilir halde olması hangi mimari gereksinim ile açıklanabilir?", "options": [{"letter": "A", "text": "Güvenirlik"}, {"letter": "B", "text": "Esneklik"}, {"letter": "C", "text": "Hız"}, {"letter": "D", "text": "Kapasite"}, {"letter": "E", "text": "Erişim kontrolü"}], "correct": "A", "explanation": "ACIKLAMA::Kesintisiz/sürekli çalışabilirlik güvenirlik (reliability/availability) gereksinimidir."}, {"num": 85, "tag": "2022-2023 Final, 2023 Final, 2025 Final", "text": "Aşağıdaki çıktı türlerinden hangisi interaktiftir?", "options": [{"letter": "A", "text": "Gösterge paneli"}, {"letter": "B", "text": "Podcast"}, {"letter": "C", "text": "Sunumlar"}, {"letter": "D", "text": "İnfografik"}, {"letter": "E", "text": "Basılı materyal"}], "correct": "A", "explanation": "ACIKLAMA::Gösterge paneli kullanıcının filtreleyip etkileşebildiği dinamik/interaktif çıktıdır. Diğerleri tek yönlü/durağandır."}, {"num": 86, "tag": "2023-2024 Final, 2025 Final, 2025-2026 Bütünleme", "text": "${t_karartablosu}<br>Bir sipariş geç veya zamanında teslim edilebilir. Müşteri zamanında veya geç onay verebilir veya hiç onay vermez. Bu koşulları karşılamak için oluşturulan karar tablosu için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "En fazla 6 adet kural olabilir."}, {"letter": "B", "text": "En az 5 kural vardır."}, {"letter": "C", "text": "5 sütundan oluşur."}, {"letter": "D", "text": "En fazla 2 kural oluşturulabilir."}, {"letter": "E", "text": "Sütun sayısı en az 7 olmalıdır."}], "correct": "A", "explanation": "ACIKLAMA::Teslim 2 durum (zamanında/geç), onay 3 durum (zamanında/geç/yok). Kombinasyon = 2 × 3 = 6 → en fazla 6 kural (sütun)."}, {"num": 87, "tag": "2025 Final, 2025-2026 Final", "text": "Aşağıdakilerden hangisi üç tıklama kuralını en iyi anlatan tanımlamadır?", "options": [{"letter": "A", "text": "Sistemde herhangi bir ekrana en fazla üç tıkla ulaşılmalıdır."}, {"letter": "B", "text": "Sistem en fazla 3 fare tıklamasına müsaade etmelidir."}, {"letter": "C", "text": "Sistem 3. fare tıklamasında ana sayfaya dönmelidir."}, {"letter": "D", "text": "Sistem 3 tıklama ile arayüzleri kapatmaya müsaade etmelidir."}, {"letter": "E", "text": "Sistemi çok kısa süre içerisinde üç tıklama yapılmasına müsaade etmemelidir."}], "correct": "A", "explanation": "ACIKLAMA::Üç tıklama kuralı: kullanıcı istediği içeriğe en çok üç tıklamada erişebilmeli (kullanılabilirlik/navigasyon ilkesi)."}, {"num": 88, "tag": "2023 Vize, 2024 Vize, Tek Ders 2024", "text": "${t_dikw}<br>Bir web sitesinin bir saatteki ortalama çökme sayısı 2,7 olarak hesaplanmıştır. Bu ifadedeki 2,7 değeri aşağıdakilerden hangisine tekabül etmektedir?", "options": [{"letter": "A", "text": "Bilişim"}, {"letter": "B", "text": "Veri"}, {"letter": "C", "text": "Bilgi"}, {"letter": "D", "text": "İhsan"}, {"letter": "E", "text": "Bilgelik"}], "correct": "A", "explanation": "ACIKLAMA::Resmî CEVAPLI formların çoğu (2024 Vize, Tek Ders 2024) 'işlenmiş/hesaplanmış' olduğu için bu değeri 'Bilişim' kabul ediyor."}, {"num": 89, "tag": "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final, 2025 Final", "text": "Bir sosyal ağ tasarımı yapılıyor ise, terör, kadına şiddet ve ırkçılık gibi unsurlarla ilgili paylaşımların sistem tarafından kısıtlanması hangi tür gereksinime örnektir?", "options": [{"letter": "A", "text": "Etik"}, {"letter": "B", "text": "Güvenirlik"}, {"letter": "C", "text": "Çevresel"}, {"letter": "D", "text": "Yasal"}, {"letter": "E", "text": "Kullanılabilirlik"}], "correct": "A", "explanation": "ACIKLAMA::Zararlı/ayrımcı içeriğin engellenmesi topluma karşı sorumluluk taşıyan ETİK gereksinimdir. (Bazı bağlamlarda yasal ile örtüşse de anahtar Etik'i veriyor.)"}, {"num": 90, "tag": "2022-2023 Final, 2023 Final, 2023-2024 Final, 2024 Final, 2025-2026 Final", "text": "Yığın (batch) ve çevrimiçi (online) veri işleme süreçleri ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Yığın işlemede kurtarma ve yeniden başlatma kolaydır."}, {"letter": "B", "text": "Yığın işlemede işlem sırası tahmin edilemez."}, {"letter": "C", "text": "Çevrimiçi işleme nispeten daha az donanım ve programlama gerektirir."}, {"letter": "D", "text": "Yığın işlemede olayın olduğu anda verinin işlenmesi esastır."}, {"letter": "E", "text": "Çevrimiçi işleme tek seferde daha fazla veri işler."}], "correct": "A", "explanation": "ACIKLAMA::Yığın işleme gruplar/kontrol noktaları hâlinde çalıştığından hata sonrası kurtarma/yeniden başlatma kolaydır. 'Anlık işleme' çevrimiçinin (online) özelliğidir. Banko."}, {"num": 91, "tag": "2022-2023 Final, 2023 Final", "text": "En kısa sürede tamamlanan Scrum toplantısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Günlük Scrum"}, {"letter": "B", "text": "Açılış grafikleri"}, {"letter": "C", "text": "Sprint Planlama"}, {"letter": "D", "text": "Sprint Retrospektif"}, {"letter": "E", "text": "Sprint Değerlendirme"}], "correct": "A", "explanation": "ACIKLAMA::Günlük Scrum (daily stand-up) tipik olarak 15 dakikayı geçmeyen, en kısa Scrum etkinliğidir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İşletim Sistemleri — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 3. Sınıf Dersleri</a>
+    <span class="agy-doc-title">İşletim Sistemleri — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">3. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>İşletim Sistemleri — Ders Anlatımı Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>İşletim Sistemleri — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">İşletim Sistemleri — Ders Anlatımı dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>185 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>3. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">185</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Isletim_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (185)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">185</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Isletim_Sistemleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2025-2026 Büt", "text": "Aşağıdaki Linux dağıtımlardan hangisi Debian tabanlıdır?", "options": [{"letter": "A", "text": "openSUSE"}, {"letter": "B", "text": "Red Hat"}, {"letter": "C", "text": "Gentoo"}, {"letter": "D", "text": "Ubuntu"}, {"letter": "E", "text": "Fedora"}], "correct": "D", "explanation": "💡 Açıklama: Ubuntu, Debian tabanlı ve kullanıcı dostu olmasıyla bilinen en popüler Linux dağıtımlarından biridir.[cite: 15]"}, {"num": 2, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2023-2024 Büt, 2025-2026 Final, 2025-2026 Büt", "text": "Linux’de dosya ve dizin izinleri bilgisinde bulunan ilk karakter neyi temsil etmektedir?", "options": [{"letter": "A", "text": "Grup iznini"}, {"letter": "B", "text": "Okuma iznini"}, {"letter": "C", "text": "Çalıştırma iznini"}, {"letter": "D", "text": "Yazma iznini"}, {"letter": "E", "text": "Dosya veya klasör olduğu bilgisini"}], "correct": "E", "explanation": "💡 Açıklama: 'ls -l' komut çıktısındaki 10 karakterlik izin dizesinin ilk karakteri dosyanın türünü belirtir (örn: '-' normal dosya, 'd' dizin, 'l' link).[cite: 12]"}, {"num": 3, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2023-2024 Final, 2025-2026 Büt", "text": "Linux konsolda görüntülenen “turkey@sakarya:~$” ifadesi için aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "sakarya isimli bilgisayara bağlanılmıştır."}, {"letter": "B", "text": "turkey isimli kullanıcı işlem yapmaktadır."}, {"letter": "C", "text": "superuser yetkisi ile işlem yapılmaktadır."}, {"letter": "D", "text": "Kullanıcı, home dizinindedir."}, {"letter": "E", "text": "$ işareti normal bir kullanıcıyı temsil etmektedir."}], "correct": "C", "explanation": "💡 Açıklama: Komut satırının sonundaki \"$\" işareti standart yetkili (sınırlı) kullanıcıyı belirtir. Superuser (root) yetkisinde çalışılsaydı bu işaret \"#\" olurdu.[cite: 10]"}, {"num": 4, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2023-2024 Final", "text": "Çok fazla bilgisayarı olan bir kurumun aşağıdaki Windows lisanslarından hangisini seçmesi kurum için daha kârlı olur?", "options": [{"letter": "A", "text": "Eğitim Lisansı"}, {"letter": "B", "text": "OEM Lisansı"}, {"letter": "C", "text": "Toplu Lisans"}, {"letter": "D", "text": "Ticari Lisans"}, {"letter": "E", "text": "Parekende Lisansı"}], "correct": "C", "explanation": "💡 Açıklama: Kurumların çok sayıdaki cihazları için tek bir anahtarla (KMS vb. ile) etkinleştirme yapabildikleri ekonomik lisans modeli Toplu (Volume) Lisans'tır.[cite: 10]"}, {"num": 5, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi proseslerin bellek bölümlerine yerleştirilmesi için işletim sistemi tarafından kullanılan yöntemlerden biri değildir?", "options": [{"letter": "A", "text": "First-fit algoritması"}, {"letter": "B", "text": "Best-fit algoritması"}, {"letter": "C", "text": "Swap-in algoritması"}, {"letter": "D", "text": "Worst-fit algoritması"}, {"letter": "E", "text": "Next-fit algoritması"}], "correct": "C", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 6, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "50 silindir içeren bir disk düşünelim. Disk kafası başlangıçta 5 nolu silindirde bulunmaktadır. Sırasıyla 5, 15, 20, 10, 25, 40, 50 nolu silindirlere istek vardır. Silindirin toplam kafa hareketi FCFS planlama algoritması kullanılarak bulunacak değer aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "75"}, {"letter": "B", "text": "65"}, {"letter": "C", "text": "70"}, {"letter": "D", "text": "45"}, {"letter": "E", "text": "55"}], "correct": "B", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 7, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Windows servisleri ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Kullanıcı isteği ile yeniden başlatılabilir."}, {"letter": "B", "text": "Kullanıcı kendi servisini tanımlayabilir."}, {"letter": "C", "text": "Servis yönetimi services.msc ile yapılır."}, {"letter": "D", "text": "Sistem başlangıcında otomatik başlatılabilir."}, {"letter": "E", "text": "Systemd kullanılarak prosesler başlatılır."}], "correct": "E", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 8, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi prosesler arasındaki iletişim için kullanılan mekanizmalardan biri değildir?", "options": [{"letter": "A", "text": "Soketler"}, {"letter": "B", "text": "Sinyaller"}, {"letter": "C", "text": "Veri hatları"}, {"letter": "D", "text": "Mesaj geçişleri"}, {"letter": "E", "text": "Paylaşımlı bellek"}], "correct": "C", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek C'dir."}, {"num": 9, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2025-2026 Büt", "text": "Sayfa tablosu kullanılarak mantıksal adresin fiziksel adrese dönüştürülme adımları hangi seçenekte doğru olarak verilmektedir?", "options": [{"letter": "A", "text": "• Sayfa tablosunun temel adresi ile sayfa numarası toplanır. • Elde edilen değer ile sayfa tablosundan çerçeve numarası alınır. • Çerçeve numarasının yanına offset değeri konur ve fiziksel adres elde edilir."}, {"letter": "B", "text": "• Sayfa numarası ile sayfa tablosuna gidilir. • Sayfa tablosundan çerçeve numarası alınır. • Çerçeve numarasının yanına offset değeri konur ve fiziksel adres elde edilir."}, {"letter": "C", "text": "• Sayfa tablosundan sayfa numarası alınır. • Sayfa numarası offset değeri ile toplanır ve fiziksel adres elde edilir."}, {"letter": "D", "text": "• Sayfa numarası ile sayfa tablosuna gidilir. • Sayfa tablosundan çerçeve numarası alınır. • Çerçeve numarası ile offset değeri toplanır ve fiziksel adres elde edilir."}, {"letter": "E", "text": "• Sayfa tablosundan sayfa numarası alınır. • Sayfa numarasının yanına offset değeri konur ve fiziksel adres elde edilir."}], "correct": "B", "explanation": "💡 Açıklama: CPU'nun ürettiği adresteki sayfa numarası ile sayfa tablosundan çerçeve numarası (frame) bulunur ve yanına sapma (offset) eklenerek fiziksel adrese ulaşılır.[cite: 15]"}, {"num": 10, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi Windows sunucu işletim sistemlerinin avantajlarından biri değildir?", "options": [{"letter": "A", "text": "Arayüzler ile kolaylıkla güncellenebilmesi."}, {"letter": "B", "text": "Microsoft tarafından uzun dönemli destek garantisinin verilmesi."}, {"letter": "C", "text": "Microsoftun diğer ürünleri ile uyumlu çalışabilmesi."}, {"letter": "D", "text": "Kolay yönetilebilir olması."}, {"letter": "E", "text": "Açık kaynaklı olması."}], "correct": "E", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 11, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Linuxde /etc/passwd dosyası kullanım amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Servislerin şifrelerini saklar."}, {"letter": "B", "text": "Kullanıcı bilgilerini saklar."}, {"letter": "C", "text": "Sistemde kullanılan tüm şifreleri saklar."}, {"letter": "D", "text": "Kullanıcı şifrelerini saklar."}, {"letter": "E", "text": "Şifreleme anahtarlarını saklar."}], "correct": "B", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 12, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2023-2024 Büt", "text": "rsync için aşağıdakilerden hangisi yanlış bir ifadedir?", "options": [{"letter": "A", "text": "Her seferinde dosyaların üzerine yazar."}, {"letter": "B", "text": "Klasörleri belirtilen hedefe kopyalar."}, {"letter": "C", "text": "Ağ üzerinden senkronizasyon yapabilir."}, {"letter": "D", "text": "SSH üzerinden çalışabilir."}, {"letter": "E", "text": "Şifreli yedekleme yapabilir. İŞLETİM SİSTEMLERİ A P355543.G8206 18-12-2024 09:17:41 İŞLETİM SİSTEMLERİ A P355543.G8206 18-12-2024 09:17:41 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "💡 Açıklama: rsync'in en büyük avantajı \"fark\" (delta) algoritması kullanmasıdır; her seferinde tüm dosyaların üzerine yazmaz, sadece değişen kısımları günceller.[cite: 12]"}, {"num": 13, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Aşağıdaki Windows lisanslama modellerinden hangisi, işletim sistemi donanımla birlikte verildiğinde geçerlidir?", "options": [{"letter": "A", "text": "OEM Lisansı"}, {"letter": "B", "text": "Toplu Lisans"}, {"letter": "C", "text": "Perakende Lisansı"}, {"letter": "D", "text": "Academic Volume Licensing"}, {"letter": "E", "text": "FPP Lisansı"}], "correct": "A", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 14, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Kilitlenmeden kaçınmak için aşağıda verilen algoritmalardan hangisi kullanılmaktadır?", "options": [{"letter": "A", "text": "A*"}, {"letter": "B", "text": "Ters parça algoritması"}, {"letter": "C", "text": "Dizgi hizalama"}, {"letter": "D", "text": "Banker algoritması"}, {"letter": "E", "text": "Dijistra algoritması"}], "correct": "D", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 15, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "cd komutunun, kabuk yerleşik komutu olup olmadığını aşağıdakilerden hangisi ile öğrenebilir?", "options": [{"letter": "A", "text": "info cd"}, {"letter": "B", "text": "which cd"}, {"letter": "C", "text": "man cd"}, {"letter": "D", "text": "help cd"}, {"letter": "E", "text": "type cd"}], "correct": "E", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek E'dir."}, {"num": 16, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2025-2026 Büt", "text": "Aşağıdaki seçeneklerden hangisi dizinlerin saklanma yapılarından biri değildir?", "options": [{"letter": "A", "text": "İki seviyeli dizinler"}, {"letter": "B", "text": "Yığın yapısındaki dizinler"}, {"letter": "C", "text": "Ağaç yapısı şeklinde olan dizinler"}, {"letter": "D", "text": "Tek seviyeli dizinler"}, {"letter": "E", "text": "Döngüsel olmayan graf yapısındaki dizinler"}], "correct": "B", "explanation": "💡 Açıklama: İşletim sistemlerinde dizin mimarileri tek seviyeli, iki seviyeli, ağaç yapısı ve döngüsel olmayan graf şeklinde düzenlenir. Yığın (Stack) bir dizin yapısı değil, bellek yönetim birimidir.[cite: 15]"}, {"num": 17, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2025-2026 Final", "text": "Linuxde kabukta çalıştırılmak istenen bir script dosyasının uzantısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "ssh"}, {"letter": "B", "text": "sc"}, {"letter": "C", "text": "run"}, {"letter": "D", "text": "sh"}, {"letter": "E", "text": "exe"}], "correct": "D", "explanation": "💡 Açıklama: Linux kabuk (shell) betik dosyaları genellikle '.sh' uzantısı kullanılarak adlandırılır.[cite: 14]"}, {"num": 18, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "İşletim sistemlerinde dosya yönetimi ile ilgili olarak aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dosya yapısı içerisinde bulunan veri ve programlar belleğin farklı bölümlerinde saklanabilirler."}, {"letter": "B", "text": "Veriler ve programlar bilgisayarda dosyalar halinde saklanırlar."}, {"letter": "C", "text": "Dosyaların yedeğinin alınması işletim sisteminin dosya yönetimi kapsamında gerçekleştirdiği aktivitelerden biridir."}, {"letter": "D", "text": "Dosya yapısı fiziksel bir yapıdır."}, {"letter": "E", "text": "Benzer dosyalar bir araya gelerek dizinleri oluşturur."}], "correct": "D", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek D'dir."}, {"num": 19, "tag": "İşletim Sistemleri 2024-2025 Bütünleme", "text": "Aşağıdakilerden hangisi bir işletim sisteminin temel görevlerinden biri değildir?", "options": [{"letter": "A", "text": "Ekran yönetimi"}, {"letter": "B", "text": "Ağ yönetimi"}, {"letter": "C", "text": "Dosya yönetimi"}, {"letter": "D", "text": "Proses yönetimi"}, {"letter": "E", "text": "Bellek yönetimi"}], "correct": "A", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 20, "tag": "İşletim Sistemleri 2024-2025 Bütünleme, 2025-2026 Büt", "text": "Linuxte servis tanım dosyalarının uzantısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "service"}, {"letter": "B", "text": "srv"}, {"letter": "C", "text": "init"}, {"letter": "D", "text": "serv"}, {"letter": "E", "text": "unit"}], "correct": "A", "explanation": "💡 Açıklama: Systemd altyapısında tanımlanan tüm servis dosyaları '.service' uzantısına sahiptir.[cite: 15]"}, {"num": 21, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2025-2026 Final", "text": "Aşağıdakilerden hangisi proseslerin dinamik bölümlere yerleştirilmesi için işletim sistemi tarafından kullanılan yöntemlerden biri değildir?", "options": [{"letter": "A", "text": "Next-fit algoritması"}, {"letter": "B", "text": "First-fit algoritması"}, {"letter": "C", "text": "Best-fit algoritması"}, {"letter": "D", "text": "Swap in algoritması"}, {"letter": "E", "text": "Worst-fit algoritması"}], "correct": "D", "explanation": "💡 Açıklama: Swap in, prosesin diskten ana belleğe alınması işlemidir, boş yer arama algoritması değildir."}, {"num": 22, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2025-2026 Büt", "text": "Aşağıda verilen yöntemlerden hangisi ile kritik bölge problemi çözüme kavuşmaz?", "options": [{"letter": "A", "text": "Peterson algoritması"}, {"letter": "B", "text": "Global paylaşılan “turn” değişkeni"}, {"letter": "C", "text": "Dekker algoritması"}, {"letter": "D", "text": "Monitörler"}, {"letter": "E", "text": "Ortak değişken çözümü"}], "correct": "E", "explanation": "💡 Açıklama: Sadece sıradan bir ortak değişken kullanmak senkronizasyon sağlamaz ve yarış durumu oluşmasına engel olamaz."}, {"num": 23, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Aşağıdakilerden hangisi disk üzerinde tutulan dosyalara erişmek için kullanılan yöntemlerdendir?", "options": [{"letter": "A", "text": "Doğrudan erişim"}, {"letter": "B", "text": "Kuyruk erişim"}, {"letter": "C", "text": "İndekslenmiş erişim"}, {"letter": "D", "text": "Bağlı erişim"}, {"letter": "E", "text": "Dolaylı erişim"}], "correct": "C", "explanation": "💡 Açıklama: İndekslenmiş erişim, dosyalara doğrudan ve hızlı erişim sağlamak için bir indeks tablosu kullanan dosya erişim yöntemlerinden biridir."}, {"num": 24, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "İşletim sistemleri yazılımları hakkında aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Birçok farklı işletim sistemi yazılımı geliştirilmiştir."}, {"letter": "B", "text": "İşletim sistemleri donanım kaynaklarını yöneten ve donanım ile kullanıcı arasındaki etkileşimi sağlayan yazılımlardır."}, {"letter": "C", "text": "İşletim sistemleri yalnızca bellek üzerinde çalışır ve diskte saklanmaz."}, {"letter": "D", "text": "İşletim sistemleri, donanımın karmaşıklığından kullanıcıyı soyutlar."}, {"letter": "E", "text": "İşletim sistemleri sistem yazılımlarına girmektedir."}], "correct": "C", "explanation": "💡 Açıklama: İşletim sistemi dosyaları kalıcı olarak sabit diskte (veya SSD) saklanır ve bilgisayar başlatıldığında buradan ana belleğe yüklenerek çalışır."}, {"num": 25, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Boru hattı veri modelinde bilgi …… komutuyla okunur, ……. komutuyla yazılır. Yukarıdaki cümlede boş bırakılan yerlere sırasıyla aşağıda terimlerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Read-Set"}, {"letter": "B", "text": "Read- Write"}, {"letter": "C", "text": "Wake-Write"}, {"letter": "D", "text": "Sleep-Wake"}, {"letter": "E", "text": "Test- Set"}], "correct": "B", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek B'dir."}, {"num": 26, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2025-2026 Büt", "text": "Ana bellek ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Oluşturulan dosya ve klasörler ana bellek üzerinde tutulurlar."}, {"letter": "B", "text": "Ana bellek kısıtlı boyuta sahiptir."}, {"letter": "C", "text": "Ana belleğin bölmelerine yerleştirilen program parçalarının ana bellekteki konumu proses kontrol bloğu kaydedicisi tarafından saklanır."}, {"letter": "D", "text": "Ana bellek kontrollü erişime izin verir."}, {"letter": "E", "text": "Bilgisayarda geçici olarak verilerin saklandığı merkeze ana bellek denir."}], "correct": "A", "explanation": "💡 Açıklama: Dosya ve klasörler kalıcı depolama birimlerinde tutulurlar; ana bellek (RAM) geçici bir depolama birimidir."}, {"num": 27, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2022 Final", "text": "Aşağıdakilerden hangisi bilgisayar sistemlerinin temel bileşenlerinden biri değildir?", "options": [{"letter": "A", "text": "Kullanıcı"}, {"letter": "B", "text": "Ağ"}, {"letter": "C", "text": "Donanım"}, {"letter": "D", "text": "SSD"}, {"letter": "E", "text": "Yazılım"}], "correct": "D", "explanation": "💡 Açıklama: Bilgisayar sistemlerinin 4 temel mimari bileşeni vardır: Donanım, İşletim Sistemi, Uygulama Programları ve Kullanıcılar. SSD bir donanım alt birimidir."}, {"num": 28, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Dinamik bölümleme ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dinamik bölümlemede, dış parçalanma problemi oluşmaz."}, {"letter": "B", "text": "Dinamik bölümlemede, iç parçalanma problemi oluşmaz."}, {"letter": "C", "text": "Aynı anda belleğe yüklenecek proses sayısı dinamiktir."}, {"letter": "D", "text": "Proseslerin boyutuna göre dinamik olarak bellek bölümlendirilir."}, {"letter": "E", "text": "Proseslerin boyutu ile ilgili bir kısıtlama söz konusu değildir."}], "correct": "A", "explanation": "💡 Açıklama: Dinamik bölümlemede prosesler bellekten ayrıldıkça aralarda küçük boşluklar kalır ve dış parçalanma problemi kesinlikle oluşur."}, {"num": 29, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2023-2024 Büt", "text": "Aşağıda verilen programlama dillerinden hangisinde yorumlayıcı kullanılmaktadır?", "options": [{"letter": "A", "text": "XML"}, {"letter": "B", "text": "C++"}, {"letter": "C", "text": "C#"}, {"letter": "D", "text": "C"}, {"letter": "E", "text": "Pascal"}], "correct": "A", "explanation": "💡 Açıklama: C# kodları IL (Intermediate Language) koduna derlenir ve çalışma zamanında JIT derleyicisi/yorumlayıcısı ile çalıştırılır."}, {"num": 30, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Dosya ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Her dosyanın bir oluşturulma zamanı vardır."}, {"letter": "B", "text": "Dosyada dosya araması veya kelime araması yapılabilir."}, {"letter": "C", "text": "Bir fotoğraf dosyasının uzantısı .mp4 olabilir."}, {"letter": "D", "text": "Benzer özellikler gösteren bir dizi kaydın tutulabilmesini sağlayan bir veri yapısıdır."}, {"letter": "E", "text": "Her dosyanın bir türü vardır."}], "correct": "C", "explanation": "💡 Açıklama: .mp4 video ve ses verilerini tutan bir formatıdır. Fotoğraf dosyaları genelde .jpg, .png gibi uzantılara sahip olur."}, {"num": 31, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2025-2026 Final", "text": "Proses küçük bir alan kaplasa dahi tahsis edilen bölümün tamamını elde tutar. Bu durum .......... olarak bilinir. Yukarıda verilen cümlede boş bırakılan yere gelmesi gereken en uygun terim aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Segmente"}, {"letter": "B", "text": "Dış parçalanma"}, {"letter": "C", "text": "Bellek bölümü"}, {"letter": "D", "text": "Sıkıştırma"}, {"letter": "E", "text": "İç parçalanma"}], "correct": "E", "explanation": "💡 Açıklama: Sabit boyutlu bloklara yerleştirilen küçük proseslerin blok içinde kullanmadığı boş kısımlara iç parçalanma (internal fragmentation) denir."}, {"num": 32, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2025-2026 Büt", "text": "Dinamik bölümlemede tahsis edilen bölümler ve boş alanların kayıtlarının tutulması gerekir. İşletim sistemi bu görevi icra edebilmek için hangi veri yapısını kullanır?", "options": [{"letter": "A", "text": "Kuyruk veri yapısı"}, {"letter": "B", "text": "Dizi"}, {"letter": "C", "text": "Ağaç veri yapısı"}, {"letter": "D", "text": "Yığın veri yapısı"}, {"letter": "E", "text": "Bağlantılı liste veri yapısı İŞLETİM SİSTEMLERİ A P355875.G13010 13-10-2025 18:29:18 CEVAPLI"}], "correct": "E", "explanation": "💡 Açıklama: Bellekteki boş ve dolu blokların başlangıç adresleri ve boyutları genellikle bir bağlantılı liste veri yapısı kullanılarak takip edilir."}, {"num": 33, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Sayfalama tekniği ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Sayfa ve çerçeve boyutu işletim sistemi tarafından belirlenir."}, {"letter": "B", "text": "Prosesin bir sayfası ana bellekteki bir çerçeve içerisinde depolanır."}, {"letter": "C", "text": "Ana bellek, sayfa ile aynı boyutta çerçeve (frame) ismini verdiğimiz bölümlere ayrılır."}, {"letter": "D", "text": "Aynı prosese ait sayfalar ana bellekte bulunan arda ardına gelen çerçevelere kaydedilmelidir."}, {"letter": "E", "text": "Proses sayfa (page) şeklinde küçük ve eşit boyutlarda bölümlendirilir."}], "correct": "D", "explanation": "💡 Açıklama: Sayfalama tekniğinin avantajı, sayfalara ait verilerin bellekte ardışık bulunma zorunluluğunu ortadan kaldırmasıdır."}, {"num": 34, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Aşağıdaki seçeneklerden hangisi diskte bulunan boş alanların yönetiminde kullanılan yöntemlerden biridir?", "options": [{"letter": "A", "text": "Döngüsel olmayan liste"}, {"letter": "B", "text": "Inode"}, {"letter": "C", "text": "Yığın veri yapısı"}, {"letter": "D", "text": "Kuyruk veri yapısı"}, {"letter": "E", "text": "Bit vektör"}], "correct": "E", "explanation": "💡 Açıklama: Bit vektörü (Bitmap), disk üzerindeki blokların boş mu (0) dolu mu (1) olduğunu takip etmek için kullanılan temel bir yöntemdir."}, {"num": 35, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Proses P0 P1 P2 Varış zamanı (AT) 0 3 5 Burst time (BT) 2 3 4 Yukarıdaki tabloda P0, P1 ve P2 isminde 3 farklı proses bekleme kuyruğundadır. Sistemin kuantum süresi=2’dir. Buna göre Round Robin algoritması kullanılarak hazırlanan aşağıdaki GANTT çizelgelerinden hangisi doğrudur?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Isletim Sistemleri müfredatı uyarınca doğru seçenek A'dir."}, {"num": 36, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "İşletim sistemleri aşağıdaki temel görevlerden hangisini gerçekleştirmez?", "options": [{"letter": "A", "text": "Giriş-çıkış birimlerinin yönetimi"}, {"letter": "B", "text": "Bellek yönetimi"}, {"letter": "C", "text": "Proses yönetimi"}, {"letter": "D", "text": "Virüs taraması"}, {"letter": "E", "text": "Disk yönetimi"}], "correct": "D", "explanation": "💡 Açıklama: Virüs taraması işletim sisteminin çekirdek görevlerinden biri değildir; bu işlem üçüncü parti güvenlik yazılımlarının görevidir."}, {"num": 37, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2025-2026 Büt", "text": "50 silindir içeren bir disk düşünelim. Disk kafası başlangıçta 5 nolu silindirde durmaktadır. Sırasıyla 40, 15, 20, 5, 4 nolu silindirlere istek yapılmıştır. Buna göre silindirin toplam kafa hareketi miktarını FCFS planlama algoritmasını kullanarak hesapladığınızda sonuç aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "99"}, {"letter": "B", "text": "81"}, {"letter": "C", "text": "45"}, {"letter": "D", "text": "70"}, {"letter": "E", "text": "37"}], "correct": "B", "explanation": "💡 Açıklama: FCFS'ye göre sırayla gidilir: "}, {"num": 38, "tag": "İşletim Sistemleri 2025-2026 Vize A, 2025-2026 Büt", "text": "Semaforlar ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Prosesler arasındaki senkronizasyonu sağlamak için geliştirilmiştir."}, {"letter": "B", "text": "V() işleminde değişken test edilir ve değeri azaltılır."}, {"letter": "C", "text": "P() işleminde değişken test edilir ve değeri azaltılır."}, {"letter": "D", "text": "Semafor yapısında P() ve V() işlemleri tanımlanır."}, {"letter": "E", "text": "P() ve V() işlemleri atomik yapıdadır."}], "correct": "B", "explanation": "💡 Açıklama: V() işleminde semafor değeri test edilip azaltılmaz; kaynak serbest bırakıldığı için semafor değeri artırılır."}, {"num": 39, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Aşağıdakilerden hangisi kritik bölge problemini çözmek için geliştirilen yazılıma dayalı çözümlerden biri değildir?", "options": [{"letter": "A", "text": "Peterson algoritması"}, {"letter": "B", "text": "“turn” değişkeni"}, {"letter": "C", "text": "Kesmeleri aktif veya pasif yapmak"}, {"letter": "D", "text": "Ortak değişken kullanımı"}, {"letter": "E", "text": "İlgili değişken mekanizması"}], "correct": "C", "explanation": "💡 Açıklama: Kesmeleri (interrupts) aktif/pasif hale getirmek donanımsal düzeyde sağlanan bir işletim sistemi çekirdek senkronizasyon çözümüdür."}, {"num": 40, "tag": "İşletim Sistemleri 2025-2026 Vize A", "text": "Disk planlama parametrelerine ait tanımlamalar yapılmıştır. Hangi seçenekte yapılan tanımlama hatalıdır?", "options": [{"letter": "A", "text": "Transfer süresi: Verilerin aktarılması için geçen süredir."}, {"letter": "B", "text": "Bant genişliği: Transfer edilen toplam byte’dır."}, {"letter": "C", "text": "Disk cevaplama süresi: Giriş-çıkış işlemleri için bekleyen her bir isteğe harcanan sürenin ortalamasıdır."}, {"letter": "D", "text": "Arama zamanı: Disk kolunun istenen sektörü içeren silindire gelmesi için geçen süredir."}, {"letter": "E", "text": "Dönme gecikmesi: İlgili sektörün disk kolu pozisyonundan geçmesi için gereken süredir."}], "correct": "B", "explanation": "💡 Açıklama: Bant genişliği transfer edilen 'toplam' byte değil, 'birim zamanda' (saniyede) transfer edilen veri miktarıdır."}, {"num": 41, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "1. Aşağıdakilerden hangisi disk üzerinde tutulan dosyalara erişmek için kullanılan yöntemlerdendir?", "options": [{"letter": "A", "text": "İndekslenmiş erişim"}, {"letter": "B", "text": "Rastgele erişim"}, {"letter": "C", "text": "Bağlı erişim"}, {"letter": "D", "text": "Kuyruk erişim"}, {"letter": "E", "text": "Dolaylı erişim"}], "correct": "A", "explanation": "💡 Açıklama: İndekslenmiş erişim, dosyalara doğrudan ve hızlı erişim sağlamak için bir indeks tablosu kullanan dosya erişim yöntemlerinden biridir."}, {"num": 42, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "2. Disk planlama parametrelerine ait tanımlamalar yapılmıştır. Hangi seçenekte yapılan tanımlama hatalıdır?", "options": [{"letter": "A", "text": "Transfer süresi: Verilerin aktarılması için geçen süredir."}, {"letter": "B", "text": "Disk cevaplama süresi: Giriş-çıkış işlemleri için bekleyen her bir isteğe harcanan sürenin ortalamasıdır."}, {"letter": "C", "text": "Bant genişliği: Transfer edilen toplam byte'dır."}, {"letter": "D", "text": "Dönme gecikmesi: İlgili sektörün disk kolu pozisyonundan geçmesi için gereken süredir."}, {"letter": "E", "text": "Arama zamanı: Disk kolunun istenen sektörü içeren silindire gelmesi için geçen süredir."}], "correct": "C", "explanation": "💡 Açıklama: Bant genişliği (bandwidth) transfer edilen 'toplam' byte değil, 'birim zamanda' (saniyede) transfer edilen veri miktarıdır."}, {"num": 43, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "3. Aşağıdakilerden hangisi bilgisayar sistemlerinin temel bileşenlerinden biri değildir?", "options": [{"letter": "A", "text": "Kullanıcı"}, {"letter": "B", "text": "Donanım"}, {"letter": "C", "text": "Ağ"}, {"letter": "D", "text": "SSD"}, {"letter": "E", "text": "Yazılım"}], "correct": "D", "explanation": "💡 Açıklama: Bilgisayar sistemlerinin genel temel bileşenleri Donanım, İşletim Sistemi, Uygulama Programları ve Kullanıcılardır. SSD bir donanım alt birimidir."}, {"num": 44, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "4. Proses senkronizasyonunu sağlamak için aşağıda verilen yöntemlerden hangisi kullanılmaz?", "options": [{"letter": "A", "text": "İlgili değişken mekanizması"}, {"letter": "B", "text": "Turnaround around yöntemi"}, {"letter": "C", "text": "Ortak değişken kullanımı"}, {"letter": "D", "text": "Global paylaşılan \"turn\" değişkeni"}, {"letter": "E", "text": "Dekker algoritması"}], "correct": "B", "explanation": "💡 Açıklama: Turnaround time, bir prosesin sisteme girişi ile bitişi arasında geçen süredir; senkronizasyon yöntemi değil, işlemci planlama metriğidir."}, {"num": 45, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "5. İşletim sistemleri aşağıdaki temel görevlerden hangisini gerçekleştirmez?", "options": [{"letter": "A", "text": "Virüs taraması"}, {"letter": "B", "text": "Proses yönetimi"}, {"letter": "C", "text": "Bellek yönetimi"}, {"letter": "D", "text": "Giriş-çıkış birimlerinin yönetimi"}, {"letter": "E", "text": "Disk yönetimi"}], "correct": "A", "explanation": "💡 Açıklama: Virüs taraması işletim sisteminin çekirdek görevlerinden biri değildir; bu işlem genellikle üçüncü parti güvenlik yazılımlarının görevidir."}, {"num": 46, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "6. • Dosyalar aynı isme sahip olamaz. • Farklı türlerdeki dosyalar aynı dizin içerisinde yer alır. • Farklı kullanıcıların dosyaları aynı dizin altında tutulmaktadır. • Aynı türdeki dosyaları gruplandırmak mümkün değildir. Yukarıda tanımlamaları yapılan dizin saklama (hiyerarşisi) yapısı hangisidir?", "options": [{"letter": "A", "text": "Döngüsel olmayan graf yapısındaki dizinler"}, {"letter": "B", "text": "Ağaç yapısı şeklinde olan dizinler"}, {"letter": "C", "text": "Tek seviyeli dizinler"}, {"letter": "D", "text": "İki seviyeli dizinler"}, {"letter": "E", "text": "Yığın yapısındaki dizinler"}], "correct": "C", "explanation": "💡 Açıklama: Tüm dosyaların tek bir kök dizin altında toplandığı yapı tek seviyeli dizindir. Gruplama yapılamaz ve aynı isimde iki dosya barındırılamaz."}, {"num": 47, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "7. Hangisi bir işletim sisteminin temel görevlerinden biri değildir?", "options": [{"letter": "A", "text": "Proses yönetimi"}, {"letter": "B", "text": "Ağ yönetimi"}, {"letter": "C", "text": "Ekran yönetimi"}, {"letter": "D", "text": "Dosya yönetimi"}, {"letter": "E", "text": "Bellek yönetimi"}], "correct": "C", "explanation": "💡 Açıklama: İşletim sisteminin temel yöneticileri Proses, Bellek, Dosya ve I/O yönetimidir. Ekran yönetimi ayrı bir çekirdek temel bileşen olarak sınıflandırılmaz."}, {"num": 48, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "8. Proses küçük bir alan kaplasa dahi tahsis edilen bölümün tamamını elde tutar. Bu durum ....... olarak bilinir. Yukarıda verilen cümle aşağıda verilen terimlerden hangisiyle en uygun şekilde tamamlanır?", "options": [{"letter": "A", "text": "Dış parçalanma"}, {"letter": "B", "text": "Sıkıştırma"}, {"letter": "C", "text": "Segmente"}, {"letter": "D", "text": "İç parçalanma"}, {"letter": "E", "text": "Bellek bölümü"}], "correct": "D", "explanation": "💡 Açıklama: Sabit boyutlu bellek bloklarında, prosese tahsis edilen alan prosesin ihtiyacından büyükse, arta kalan kullanılamayan boşluğa iç parçalanma denir."}, {"num": 49, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "9. Aşağıdakilerden hangisi proseslerin dinamik bölümlere yerleştirilmesi için işletim sistemi tarafından kullanılan yöntemlerden biri değildir?", "options": [{"letter": "A", "text": "Swap in algoritması"}, {"letter": "B", "text": "Next-fit algoritması"}, {"letter": "C", "text": "First-fit algoritması"}, {"letter": "D", "text": "Worst-fit algoritması"}, {"letter": "E", "text": "Best-fit algoritması"}], "correct": "A", "explanation": "💡 Açıklama: Swap in, prosesin diskten ana belleğe alınması işlemidir, bellek yerleştirme (boş yer arama) algoritması değildir."}, {"num": 50, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "10. Proses P0(AT:0, BT:2), P1(AT:3, BT:3), P2(AT:5, BT:4) bekleme kuyruğundadır. Kuantum süresi 2'dir. Buna göre Round Robin algoritması kullanılarak hazırlanan aşağıdaki GANTT Çizelgelerinden hangisi doğrudur?", "options": [{"letter": "A", "text": "P0(0-2), P1(2-3), P2(6-10)"}, {"letter": "B", "text": "P0(0-2), P1(2-5), P2(5-7), P1(7-8), P2(8-10)"}, {"letter": "C", "text": "P0(0-1), P1(1-4), P2(4-9)"}, {"letter": "D", "text": "P0(0-2), P1(2-4), P2(4-6), P1(6-7), P2(7-9)"}, {"letter": "E", "text": "P0(0-2), P1(2-4), P2(4-6), P1(6-8), P2(8-9)"}], "correct": "B", "explanation": "💡 Açıklama: Proseslerin varış zamanları ve 2 birimlik kuantum süresi dikkate alındığında işlemciyi sırayla ve parçalı kullanan doğru sıralama B şıkkıdır."}, {"num": 51, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "11. Aşağıdakilerden hangisi birden fazla prosesin ana belleğe yerleştirilmesi için kullanılan teknikler biri değildir?", "options": [{"letter": "A", "text": "Sabit bölümleme"}, {"letter": "B", "text": "Dinamik bölümleme"}, {"letter": "C", "text": "Sayfalama"}, {"letter": "D", "text": "Sanal bellek"}, {"letter": "E", "text": "Disk bölümleme"}], "correct": "E", "explanation": "💡 Açıklama: Disk bölümleme (partitioning) sabit disk üzerindeki veriyi organize etme yöntemidir, bellek (RAM) yönetimi tekniği değildir."}, {"num": 52, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "12. Dinamik bölümlemede tahsis edilen bölümler ve boş alanların kayıtlarının tutulması gerekir. İşletim sistemi bu görevi icra edebilmek için hangi veri yapısını kullanır?", "options": [{"letter": "A", "text": "Kuyruk veri yapısı"}, {"letter": "B", "text": "Yığın veri yapısı"}, {"letter": "C", "text": "Bağlantılı liste veri yapısı"}, {"letter": "D", "text": "Ağaç veri yapısı"}, {"letter": "E", "text": "Dizi"}], "correct": "C", "explanation": "💡 Açıklama: Bellekteki boş ve dolu blokların başlangıç adresleri ve boyutları işletim sistemi tarafından genellikle bağlantılı liste kullanılarak takip edilir."}, {"num": 53, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "13. Heap bölümü ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "C dilinde malloc/free komutları ile heap bölümü yönetilir."}, {"letter": "B", "text": "Dinamik bellek sağlamak için kullanılır."}, {"letter": "C", "text": "Bir program çalışma zamanı sırasında belleğe ihtiyaç duyduğu zaman kullanılır."}, {"letter": "D", "text": "Programcı tarafından talep edilen miktarda heap bölümünde yer ayrılır."}, {"letter": "E", "text": "Program yürütülmeden önce derleyici tarafından boyutu statik olarak belirlenemeyen değişkenler saklanır."}], "correct": "B", "explanation": "💡 Açıklama: Cevap anahtarına göre B seçeneği yanlıştır."}, {"num": 54, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "14. Varış sırasını dikkate alarak disk planlamasını yapan algoritma hangisidir?", "options": [{"letter": "A", "text": "LOOK algoritması"}, {"letter": "B", "text": "FCFS algoritması"}, {"letter": "C", "text": "C-LOOK algoritması"}, {"letter": "D", "text": "SSTF (shortest seek time first) algoritması"}, {"letter": "E", "text": "SCAN algoritması"}], "correct": "B", "explanation": "💡 Açıklama: FCFS (First Come First Serve), talepleri sadece geliş sırasına göre işleyen en basit disk planlama algoritmasıdır."}, {"num": 55, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "15. - Bellek prosesin büyüklüğüne göre büyüyüp, küçülemez. - İç parçalanma ve dış parçalanma problemleri yaşanabilir. - Bellek eşit veya farklı büyüklüklerde bölümlere ayrılabilir. - Proses parçalara ayrılmaz. Yukarıda verilen bilgiler birden fazla prosesin ana belleğe yerleştirilmesi için kullanılan tekniklerden hangisine aittir?", "options": [{"letter": "A", "text": "Sabit bölümleme"}, {"letter": "B", "text": "Sanal bellek"}, {"letter": "C", "text": "Dinamik bölümleme"}, {"letter": "D", "text": "Segmentasyon"}, {"letter": "E", "text": "TLB"}], "correct": "A", "explanation": "💡 Açıklama: Belleğin önceden sabit boyutlu alanlara bölündüğü ve prosesin boyutuna bakılmaksızın bu bloklara tahsis edildiği yöntem Sabit Bölümleme'dir."}, {"num": 56, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "16. Ana dizin -> Kullanıcı1, Kullanıcı2 -> Kullanıcı dizini -> Dosya Girdisi. Yukarıda verilen şekil hangi dizin hiyerarşisini temsil eder?", "options": [{"letter": "A", "text": "Tek seviyeli dizinler"}, {"letter": "B", "text": "Ağaç yapısı şeklinde olan dizinler"}, {"letter": "C", "text": "Yığın yapısındaki dizinler"}, {"letter": "D", "text": "İki seviyeli dizinler"}, {"letter": "E", "text": "Döngüsel olmayan graf yapısındaki dizinler"}], "correct": "D", "explanation": "💡 Açıklama: Bir ana (kök) dizin altında kullanıcılara ait dizinlerin yer aldığı yapı İki Seviyeli Dizin yapısıdır."}, {"num": 57, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "17. Diskten ana belleğin boş bir alanına program veya program parçasının taşınması işlemine ...... denir. Yukarıda verilen cümle aşağıda verilen terimlerden hangisiyle en uygun şekilde tamamlanır?", "options": [{"letter": "A", "text": "Bellek yönetimi"}, {"letter": "B", "text": "Swap out"}, {"letter": "C", "text": "Disk yönetimi"}, {"letter": "D", "text": "Öncelik ataması"}, {"letter": "E", "text": "Swap in"}], "correct": "E", "explanation": "💡 Açıklama: Swap in (Takasa alma), çalıştırılacak veya kaldığı yerden devam edecek bir prosesin diskten ana belleğe (RAM) yüklenmesi işlemidir."}, {"num": 58, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "18. Bilgisayar sistemlerinin ana bileşenleri aşağıdakilerden hangisini içerir?", "options": [{"letter": "A", "text": "Sadece kullanıcı"}, {"letter": "B", "text": "Yalnızca yazılım"}, {"letter": "C", "text": "Kullanıcı ve ağ"}, {"letter": "D", "text": "Yazılım ve donanım"}, {"letter": "E", "text": "Yalnızca donanım"}], "correct": "D", "explanation": "💡 Açıklama: Bir bilgisayar sistemi en temel mimari düzeyde donanım ve bu donanımı yönetip kullanılmasını sağlayan yazılımdan oluşur."}, {"num": 59, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "19. Aşağıdakilerden hangisi kritik bölge problemini çözmek için geliştirilen yazılıma dayalı çözümlerden biri değildir?", "options": [{"letter": "A", "text": "Peterson algoritması"}, {"letter": "B", "text": "İlgili değişken mekanizması"}, {"letter": "C", "text": "\"turn\" değişkeni"}, {"letter": "D", "text": "Ortak değişken kullanımı"}, {"letter": "E", "text": "Kesmeleri aktif veya pasif yapmak"}], "correct": "E", "explanation": "💡 Açıklama: Kesmeleri aktif/pasif hale getirmek donanımsal düzeyde sağlanan bir senkronizasyon çözümüdür."}, {"num": 60, "tag": "2022 Vize, 2022 Vize, 2023-2024 Vize", "text": "20. Proseslere ait özelliklerden biri olan program sayıcının görevi nedir?", "options": [{"letter": "A", "text": "Prosesin durumunu saklar."}, {"letter": "B", "text": "Prosesin öncelik değerini saklar."}, {"letter": "C", "text": "Açık dosyaların listesi saklanır."}, {"letter": "D", "text": "Prosesin çalışması esnasında oluşan veriler kaydedicilerde tutulur."}, {"letter": "E", "text": "Prosesin en son çalıştırılan komutunun adresini saklar."}], "correct": "E", "explanation": "💡 Açıklama: Program Sayıcısı (PC), çalışmakta olan prosesin işleyeceği bir sonraki komutun bellek adresini tutan özel bir yazmaçtır."}, {"num": 61, "tag": "2024-2025 Vize", "text": "1. Öncelik temelli planlama algoritması ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Kesintisiz ve kesintili öncelik temelli algoritma olmak üzere 2 farklı yaklaşımı vardır."}, {"letter": "B", "text": "Kesintili öncelik değerinde, proses çalışır durumdayken kendisinden daha öncelikli bir prosesin gelmesi durumunda CPU yeni gelen prosese anahtarlanır."}, {"letter": "C", "text": "Öncelik değerini ifade eden sayısal değerin yüksek olması her zaman prosesin daha öncelikli olduğunu gösterir."}, {"letter": "D", "text": "Önceliği yüksek olan proses ilk önce CPU'ya anahtarlanır."}, {"letter": "E", "text": "Proses süreci boyunca öncelik değeri değişmezse sabit öncelik ismi verilir."}], "correct": "C", "explanation": "💡 Açıklama: Bazı işletim sistemlerinde (örneğin Unix/Linux) düşük sayısal değer yüksek önceliği ifade eder (örneğin 0 en yüksek öncelik olabilir). Bu nedenle her zaman yüksek sayı yüksek öncelik demek değildir."}, {"num": 62, "tag": "2024-2025 Vize", "text": "2. Aşağıdakilerden hangisi disk üzerinde tutulan dosyalara erişmek için kullanılan yöntemlerdendir?", "options": [{"letter": "A", "text": "Dolaylı erişim"}, {"letter": "B", "text": "İndekslenmiş erişim"}, {"letter": "C", "text": "Doğrudan erişim"}, {"letter": "D", "text": "Kuyruk erişim"}, {"letter": "E", "text": "Bağlı erişim"}], "correct": "B", "explanation": "💡 Açıklama: İndekslenmiş erişim, dosyalara erişimi hızlandırmak için bir indeks yapısının kullanıldığı temel dosya erişim yöntemlerinden biridir."}, {"num": 63, "tag": "2024-2025 Vize", "text": "3. Dinamik bölümleme ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dinamik bölümlemede, iç parçalanma problemi oluşmaz."}, {"letter": "B", "text": "Proseslerin boyutu ile ilgili bir kısıtlama söz konusu değildir."}, {"letter": "C", "text": "Proseslerin boyutuna göre dinamik olarak bellek bölümlendirilir."}, {"letter": "D", "text": "Aynı anda belleğe yüklenecek proses sayısı dinamiktir."}, {"letter": "E", "text": "Dinamik bölümlemede, dış parçalanma problemi oluşmaz."}], "correct": "E", "explanation": "💡 Açıklama: Dinamik bölümlemede prosesler bellekten ayrıldıkça aralarda küçük boşluklar kalır ve dış parçalanma (external fragmentation) problemi kesinlikle oluşur."}, {"num": 64, "tag": "2024-2025 Vize", "text": "4. Öncelik temelli planlama algoritması ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Temel amacı giriş/çıkış işlemlerine bağlı veya CPU'ya bağlı prosesler arasından en iyi seçimleri yapmaktır."}, {"letter": "B", "text": "İş planlayıcısı görevini en uygun şekilde gerçekleştirmezse eğer giriş-çıkış işlemleri uzun süren prosesler, diğer proseslerin çok daha fazla beklemesine neden olabilir."}, {"letter": "C", "text": "İş planlayıcısı olarakta bilinir."}, {"letter": "D", "text": "Diskten prosesleri seçerler ve ana bellekte yer alan hazır kuyruğunda prosesleri tutarlar."}, {"letter": "E", "text": "CPU planlayıcısı olarakta bilinir."}], "correct": "E", "explanation": "💡 Açıklama: Seçenekler \"İş planlayıcısı (Uzun vadeli planlayıcı)\" ile \"CPU planlayıcısı (Kısa vadeli planlayıcı)\" arasındaki farkları anlatmaktadır. İş planlayıcısı, CPU planlayıcısı olarak bilinmez; ikisi farklı bileşenlerdir."}, {"num": 65, "tag": "2024-2025 Vize", "text": "5. 50 silindir içeren bir disk düşünelim. Disk kafası başlangıçta 5 nolu silindirde durmaktadır. Sırasıyla 40, 15, 20, 5, 4 nolu silindirlere istek yapılmıştır. Buna göre silindirin toplam kafa hareketi miktarını FCFS planlama algoritmasını kullanarak hesapladığınızda sonuç aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "37"}, {"letter": "B", "text": "70"}, {"letter": "C", "text": "45"}, {"letter": "D", "text": "81"}, {"letter": "E", "text": "99"}], "correct": "D", "explanation": "💡 Açıklama: FCFS'ye göre sırayla gidilir: "}, {"num": 66, "tag": "2024-2025 Vize", "text": "6. Aşağıda verilen ifadelerden hangisi bilgisayar sistemleri için yanlış bir ifadedir?", "options": [{"letter": "A", "text": "CPU, ana bellek gibi donanım birimleri dahili donanım birimlerine örnektir."}, {"letter": "B", "text": "Bilgisayarla entegre olan kasanın içinde yer alan donanım birimlerine, harici donanım birimleri denir."}, {"letter": "C", "text": "Yazılımlar ve sürücüler donanım birimlerinin çalışmasını sağlarlar."}, {"letter": "D", "text": "Kullanıcılar uygulama yazılımlarına doğrudan erişebilir."}, {"letter": "E", "text": "Kullanıcılar bilgisayara komutlar verebilir."}], "correct": "B", "explanation": "💡 Açıklama: Kasanın içinde yer alan donanımlara (anakart, RAM, CPU) \"dahili (internal)\" donanım denir, harici denmez."}, {"num": 67, "tag": "2024-2025 Vize", "text": "7. Aşağıdaki seçeneklerden hangisi diskte bulunan boş alanların yönetiminde kullanılan yöntemlerden biridir?", "options": [{"letter": "A", "text": "Döngüsel olmayan liste"}, {"letter": "B", "text": "Inode"}, {"letter": "C", "text": "Bit vektör"}, {"letter": "D", "text": "Kuyruk veri yapısı"}, {"letter": "E", "text": "Yığım veri yapısı"}], "correct": "C", "explanation": "💡 Açıklama: Bit vektörü (Bitmap), disk üzerindeki blokların boş mu (0) dolu mu (1) olduğunu takip etmek için kullanılan temel bir boş alan yönetimi tekniğidir."}, {"num": 68, "tag": "2024-2025 Vize", "text": "8. Aşağıda verilen yöntemlerden hangisi ile kritik bölge problemi çözüme kavuşmaz?", "options": [{"letter": "A", "text": "Dekker algoritması"}, {"letter": "B", "text": "Global paylaşılan \"turn\" değişkeni"}, {"letter": "C", "text": "Peterson algoritması"}, {"letter": "D", "text": "Monitörler"}, {"letter": "E", "text": "Ortak değişken çözümü"}], "correct": "E", "explanation": "💡 Açıklama: Sadece sıradan bir ortak değişken kullanmak senkronizasyon sağlamaz ve \"Race Condition\" (yarış durumu) oluşmasına engel olamaz."}, {"num": 69, "tag": "2024-2025 Vize", "text": "9. Boru hattı veri modelinde bilgi ...... komutuyla yazılır, ...... komutuyla okunur. Yukarıdaki cümlede boş bırakılan yerlere sırasıyla aşağıda terimlerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Test-Set"}, {"letter": "B", "text": "Read-Write"}, {"letter": "C", "text": "Wake-Write"}, {"letter": "D", "text": "Read-Set"}, {"letter": "E", "text": "Sleep-Wake"}], "correct": "B", "explanation": "💡 Açıklama: Standart olarak veriler 'Write' ile yazılır, 'Read' ile okunur (Seçeneklerde sıra sorulmuş, şıklardaki eşleşmelere göre yazma/okuma komutları eşleştirilir)."}, {"num": 70, "tag": "2024-2025 Vize", "text": "10. Ana bellek ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Ana bellek kontrollü erişime izin verir."}, {"letter": "B", "text": "Ana bellek kısıtlı boyuta sahiptir."}, {"letter": "C", "text": "Bilgisayarda geçici olarak verilerin saklandığı merkeze ana bellek denir."}, {"letter": "D", "text": "Ana belleğin bölmelerine yerleştirilen program parçalarının ana bellekteki konumu proses kontrol bloğu kaydedicisi tarafından saklanır."}, {"letter": "E", "text": "Oluşturulan dosya ve klasörler ana bellek üzerinde tutulurlar."}], "correct": "E", "explanation": "💡 Açıklama: Dosya ve klasörler kalıcı depolama birimlerinde (Sabit disk, SSD) tutulurlar; ana bellek (RAM) geçici bir depolama birimidir."}, {"num": 71, "tag": "2024-2025 Vize", "text": "11. Aşağıda verilen aktivitelerden hangisi işletim sisteminin bellek yönetimi kapsamında gerçekleştirilmez?", "options": [{"letter": "A", "text": "Diskten ana belleğe program parçalarını getirmek."}, {"letter": "B", "text": "Tahsis edilen bellek alanını gerektiğinde geri almak."}, {"letter": "C", "text": "Disk planlaması yapmak."}, {"letter": "D", "text": "Ana bellekten diske prosesleri taşımak."}, {"letter": "E", "text": "Proseslere ana bellekte yer tahsis etmek."}], "correct": "C", "explanation": "💡 Açıklama: Disk planlaması, bellek (RAM) yönetiminin değil, I/O ve Disk yönetiminin (Storage Management) bir görevidir."}, {"num": 72, "tag": "2024-2025 Vize", "text": "12. Aşağıda verilen programlama dillerinden hangisinde yorumlayıcı kullanılmaktadır?", "options": [{"letter": "A", "text": "C#"}, {"letter": "B", "text": "XML"}, {"letter": "C", "text": "Pascal"}, {"letter": "D", "text": "C"}, {"letter": "E", "text": "C++"}], "correct": "A", "explanation": "💡 Açıklama: C, C++, Pascal doğrudan makine koduna derlenen (compiled) dillerdir. C# kodları ise IL (Intermediate Language) koduna derlenir ve çalışma zamanında CLR (Common Language Runtime) JIT derleyicisi/yorumlayıcısı ile çalıştırılır."}, {"num": 73, "tag": "2024-2025 Vize", "text": "13. Proses küçük bir alan kaplasa dahi tahsis edilen bölümün tamamını elde tutar. Bu durum... olarak bilinir. Yukarıda verilen cümlede boş bırakılan yere gelmesi gereken en uygun terim aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Dış parçalanma"}, {"letter": "B", "text": "Segmente"}, {"letter": "C", "text": "İç parçalanma"}, {"letter": "D", "text": "Bellek bölümü"}, {"letter": "E", "text": "Sıkıştırma"}], "correct": "C", "explanation": "💡 Açıklama: Sabit boyutlu bloklara yerleştirilen küçük proseslerin blok içinde kullanmadığı boş kısımlara iç parçalanma (internal fragmentation) denir."}, {"num": 74, "tag": "2024-2025 Vize", "text": "14. • Kök seviyesinde dizin vardır. • Kök seviyesindeki dizinlere dosya veya başka dizinler bağlanabilir. • Bu dizinlere başka dizinler veya dosyalar bağlanabilir. • Her kullanıcıya ait bir dizin yapısı vardır. Yukarıda tanımlamaları yapılan dizin saklama (hiyerarşisi) yapısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tek seviyeli dizinler"}, {"letter": "B", "text": "İki seviyeli dizinler"}, {"letter": "C", "text": "Döngüsel olmayan graf yapısındaki dizinler"}, {"letter": "D", "text": "Ağaç yapısı şeklinde olan dizinler"}, {"letter": "E", "text": "Yığın yapısındaki dizinler"}], "correct": "D", "explanation": "💡 Açıklama: Kök dizinle başlayıp alt dizinlere ve o alt dizinlerden de başka dizin/dosyalara limitsiz inilebilen hiyerarşik yapı Ağaç (Tree) dizin yapısıdır."}, {"num": 75, "tag": "2024-2025 Vize", "text": "15. Semaforlar ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Prosesler arasındaki senkronizasyonu sağlamak için geliştirilmiştir."}, {"letter": "B", "text": "P() işleminde değişken test edilir ve değeri azaltılır."}, {"letter": "C", "text": "Semafor yapısında P() ve V() işlemleri tanımlanır."}, {"letter": "D", "text": "V() işleminde değişken test edilir ve değeri azaltılır."}, {"letter": "E", "text": "P() ve V() işlemleri atomik yapıdadır."}], "correct": "D", "explanation": "💡 Açıklama: V() (signal) işleminde semafor değeri test edilip azaltılmaz; tam tersine serbest bırakılan kaynak için semafor değeri artırılır."}, {"num": 76, "tag": "2024-2025 Vize", "text": "16. İşletim sistemleri yazılımları hakkında aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "İşletim sistemleri yalnızca bellek üzerinde çalışır ve diskte saklanmaz."}, {"letter": "B", "text": "İşletim sistemleri sistem yazılımlarına girmektedir."}, {"letter": "C", "text": "Birçok farklı işletim sistemi yazılımı geliştirilmiştir."}, {"letter": "D", "text": "İşletim sistemleri, donanımın karmaşıklığından kullanıcıyı soyutlar."}, {"letter": "E", "text": "İşletim sistemleri donanım kaynaklarını yöneten ve donanım ile kullanıcı arasındaki etkileşimi sağlayan yazılımlardır."}], "correct": "A", "explanation": "💡 Açıklama: İşletim sistemi dosyaları kalıcı olarak sabit diskte (veya SSD) saklanır ve bilgisayar başlatıldığında buradan ana belleğe (RAM) yüklenerek çalışır."}, {"num": 77, "tag": "2024-2025 Vize", "text": "17. Dosya ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bir fotoğraf dosyasının uzantısı .mp4 olabilir."}, {"letter": "B", "text": "Her dosyanın bir türü vardır."}, {"letter": "C", "text": "Benzer özellikler gösteren bir dizi kaydın tutulabilmesini sağlayan bir veri yapısıdır."}, {"letter": "D", "text": "Her dosyanın bir oluşturulma zamanı vardır."}, {"letter": "E", "text": "Dosyada dosya araması veya kelime araması yapılabilir."}], "correct": "A", "explanation": "💡 Açıklama: .mp4 video ve ses verilerini tutan bir medya kapsayıcı formatıdır. Fotoğraf dosyaları genelde .jpg, .png, .gif gibi uzantılara sahip olur."}, {"num": 78, "tag": "2024-2025 Vize", "text": "18. Bellekte boş bölgelerin büyükleri sırasıyla 8K, 7K, 5K, 10K, 3K'dır. Büyüklüğü 3K ve 5K olan iki proses belleğe yerleştirilmek isteniyor. Worst-fit algoritması kullanıldığında sırasıyla 3K ve 5K'lık prosesler belleğin aşağıdaki hangi bölümlerine yerleştirilir?", "options": [{"letter": "A", "text": "8K-10K"}, {"letter": "B", "text": "8K-7K"}, {"letter": "C", "text": "3K-5K"}, {"letter": "D", "text": "10K-8K"}, {"letter": "E", "text": "8K-5K"}], "correct": "D", "explanation": "💡 Açıklama: Worst-fit (en kötü uyum) prosesi her zaman en büyük boş alana yerleştirir. İlk gelen 3K'lık proses en büyük olan 10K'ya yerleşir. Ardından gelen 5K'lık proses, kalan boşluklar arasındaki en büyük olan 8K'ya yerleşir."}, {"num": 79, "tag": "2024-2025 Vize", "text": "19. İşletim sistemi Proses1(4MB), Proses2(2MB), Proses3(8MB), Proses4(6MB) şeklinde belleğin bölündüğü şekli temsil eden tanım hangisidir?", "options": [{"letter": "A", "text": "Dinamik bölümleme"}, {"letter": "B", "text": "Sanal bellek"}, {"letter": "C", "text": "Statik bölümleme"}, {"letter": "D", "text": "Sabit bölümleme"}, {"letter": "E", "text": "Segmentasyon"}], "correct": "D", "explanation": "💡 Açıklama: Ana belleğin önceden farklı veya eşit büyüklükte (4MB, 2MB, 8MB gibi) belirli bloklara ayrıldığı yönteme Sabit Bölümleme (Fixed Partitioning) adı verilir."}, {"num": 80, "tag": "2024-2025 Vize", "text": "20. Sayfalama tekniği ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Aynı prosese ait sayfalar ana bellekte bulunan arda ardına gelen çerçevelere kaydedilmelidir."}, {"letter": "B", "text": "Prosesin bir sayfası ana bellekteki bir çerçeve içerisinde depolanır."}, {"letter": "C", "text": "Ana bellek, sayfa ile aynı boyutta çerçeve (frame) ismini verdiğimiz bölümlere ayrılır."}, {"letter": "D", "text": "Proses sayfa (page) şeklinde küçük ve eşit boyutlarda bölümlendirilir."}, {"letter": "E", "text": "Sayfa ve çerçeve boyutu işletim sistemi tarafından belirlenir."}], "correct": "A", "explanation": "💡 Açıklama: Sayfalama tekniğinin en büyük avantajı, prosese ait sayfaların bellekte art arda (ardışık) bulunma zorunluluğunu ortadan kaldırmasıdır; boş bulunan herhangi bir çerçeveye kaydedilebilirler."}, {"num": 81, "tag": "2025-2026 Vize", "text": "Boru hattı veri modelinde bilgi ...... komutuyla yazılır, ...... komutuyla okunur. Yukarıdaki cümlede boş bırakılan yerlere sırasıyla aşağıda terimlerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Read-Set"}, {"letter": "B", "text": "Read-Write"}, {"letter": "C", "text": "Wake-Write"}, {"letter": "D", "text": "Sleep-Wake"}, {"letter": "E", "text": "Test-Set"}], "correct": "B", "explanation": "💡 Açıklama: Standart olarak veriler 'Write' ile yazılır, 'Read' ile okunur."}, {"num": 82, "tag": "2025-2026 Vize, 2025-2026 Final", "text": "Proses P0(AT:0, BT:2), P1(AT:3, BT:3), P2(AT:5, BT:4) bekleme kuyruğundadır. Kuantum süresi 2'dir. Buna göre Round Robin algoritması kullanılarak hazırlanan aşağıdaki GANTT Çizelgelerinden hangisi doğrudur?", "options": [{"letter": "A", "text": "P0(0-2), P1(2-3), P2(6-10)"}, {"letter": "B", "text": "P0(0-2), P1(2-5), P2(5-7), P1(7-8), P2(8-10)"}, {"letter": "C", "text": "P0(0-1), P1(1-4), P2(4-9)"}, {"letter": "D", "text": "P0(0-2), P1(2-4), P2(4-6), P1(6-7), P2(7-9)"}, {"letter": "E", "text": "P0(0-2), P1(2-4), P2(4-6), P1(6-8), P2(8-9)"}], "correct": "B", "explanation": "💡 Açıklama: Proseslerin varış zamanları ve 2 birimlik kuantum süresi dikkate alındığında doğru sıralama B şıkkıdır."}, {"num": 83, "tag": "2022 Final", "text": "#!/bin/bash yas=20 if [ $yas -gt 21 ] then echo \"21 den buyük!\" elif [ $yas -lt 20 ] then echo \"20 den küçük!\" else echo \"20 yaşında!\" fi Scripti çalıştırıldığında hangi çıktıyı verir?", "options": [{"letter": "A", "text": "21 den büyük!"}, {"letter": "B", "text": "20 yaşında!"}, {"letter": "C", "text": "Hata verir"}, {"letter": "D", "text": "20 den küçük!"}, {"letter": "E", "text": "21 yaşında!"}], "correct": "B", "explanation": "💡 Açıklama: Değişken değeri 20 olduğu için if ve elif koşullarını sağlamaz, else bloğuna girerek '20 yaşında!' çıktısını verir."}, {"num": 84, "tag": "2022 Final", "text": "Bellekte boş bölgelerin büyükleri sırasıyla 2K, 5K, 10K, 3K'dır. Büyüklüğü 3K ve 5K olan iki proses belleğe yerleştirilmek isteniyor. First-fit algoritması kullanıldığında sırasıyla 3K ve 5K'lık prosesler belleğin hangi bölümlerine yerleştirilir?", "options": [{"letter": "A", "text": "5K-10K"}, {"letter": "B", "text": "3K-5K"}, {"letter": "C", "text": "10K-3K"}, {"letter": "D", "text": "10K-5K"}, {"letter": "E", "text": "5K-3K"}], "correct": "A", "explanation": "💡 Açıklama: First-fit (ilk uygun) algoritmasına göre 3K prosesi ilk uygun olan 5K bloğuna, ardından gelen 5K prosesi ise kalan boşluklardan ilk uygun olan 10K bloğuna yerleşir."}, {"num": 85, "tag": "2022 Final", "text": "Pwd komutu için aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Yeni klasör oluşturmak için kulanılır"}, {"letter": "B", "text": "Kullanıcıya şifre atamak için kullanılır."}, {"letter": "C", "text": "Dizin değiştirmek için kullanılır."}, {"letter": "D", "text": "Kullanıcı şifresini değiştirmek için kullanılır."}, {"letter": "E", "text": "Kullanıcının terminalde bulunduğu dizini gösterir."}], "correct": "E", "explanation": "💡 Açıklama: Linux'ta 'pwd' (print working directory) komutu kullanıcının o an bulunduğu dizinin tam yolunu ekrana yazdırır."}, {"num": 86, "tag": "2022 Final", "text": "Stack bölümü ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Stack işaretçisi ile heap işaretçisi karşılaşırsa kullanılabilir boş belleğin tükendiği anlamına gelir."}, {"letter": "B", "text": "\"En son giren en önce çıkar-FIFO\" mantığı ile çalışır."}, {"letter": "C", "text": "Bir program tarafından çağrılan bir fonksiyonun yerel değişkenlerini, yerel fonksiyonlarını ve dönüş adreslerini saklar."}, {"letter": "D", "text": "Programın çalıştırılabilir komutlarının bulunduğu bölümdür."}, {"letter": "E", "text": "Stack işaretçisi yığının en üst noktasını gösterir."}], "correct": "D", "explanation": "💡 Açıklama: Programın çalıştırılabilir komutları Text (Kod) bölümünde bulunur, Stack (Yığın) bölümünde değil."}, {"num": 87, "tag": "2022 Final", "text": "Aşağıdaki komutlardan hangisi ile linuxde servisler yönetilir?", "options": [{"letter": "A", "text": "systemctl"}, {"letter": "B", "text": "servicectl"}, {"letter": "C", "text": "systemd"}, {"letter": "D", "text": "serviced"}, {"letter": "E", "text": "apt-get"}], "correct": "A", "explanation": "💡 Açıklama: Modern Linux dağıtımlarında servisleri başlatmak, durdurmak ve durumlarını kontrol etmek için 'systemctl' komutu kullanılır."}, {"num": 88, "tag": "2022 Final", "text": "SSH servisinin çalışıp çalışmadığı aşağıdaki komutlardan hangisi ile kontrol edilir?", "options": [{"letter": "A", "text": "sudo systemctl status ssh"}, {"letter": "B", "text": "sudo servicestat ssh"}, {"letter": "C", "text": "sudo status ssh"}, {"letter": "D", "text": "sudo service ssh status"}, {"letter": "E", "text": "sudo ssh status"}], "correct": "A", "explanation": "💡 Açıklama: systemd kullanan Linux sistemlerinde SSH servisinin durumu 'sudo systemctl status ssh' komutu ile kontrol edilir."}, {"num": 89, "tag": "2022 Final", "text": "Aşağıdakilerden hangisi Linux'de çalışan güvenlik duvarı uygulamasıdır?", "options": [{"letter": "A", "text": "iptables"}, {"letter": "B", "text": "fwservice"}, {"letter": "C", "text": "firewalld"}, {"letter": "D", "text": "ipfwil"}, {"letter": "E", "text": "Ifconfig"}], "correct": "A", "explanation": "💡 Açıklama: Linux'ta ağ paketlerini filtrelemek ve güvenlik duvarı kurallarını yönetmek için kullanılan temel araç iptables'tır."}, {"num": 90, "tag": "2022 Final", "text": "Aşağıdaki algoritmalardan hangisi disk planlama algoritmalarından biri değildir?", "options": [{"letter": "A", "text": "SSTF (shortest seek time first) algoritması"}, {"letter": "B", "text": "FCFS algoritması"}, {"letter": "C", "text": "SJF algoritması"}, {"letter": "D", "text": "LOOK algoritması"}, {"letter": "E", "text": "SCAN algoritması"}], "correct": "C", "explanation": "💡 Açıklama: SJF (Shortest Job First) bir işlemci (CPU) planlama algoritmasıdır, disk planlama algoritması değildir."}, {"num": 91, "tag": "2022 Final, 2023-2024 Büt, 2025-2026 Büt", "text": "Linux dağıtımları ile ilgili aşağıdaki bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Farklı donanımlar için çeşitlendirilebilir."}, {"letter": "B", "text": "Debian bir linux dağıtımıdır."}, {"letter": "C", "text": "Tüm dağıtımlar GNU tarafından çıkarılır."}, {"letter": "D", "text": "Ubuntu Debian tabanlı bir linux dağıtımıdır."}, {"letter": "E", "text": "Farklı amaçlar için özelleştirilmişlerdir."}], "correct": "C", "explanation": "💡 Açıklama: Linux dağıtımları tek bir kurum (GNU) tarafından değil; çeşitli topluluklar, şirketler ve bağımsız gruplar tarafından geliştirilip çıkarılır."}, {"num": 92, "tag": "2022 Final", "text": "Bir klasör içindeki öğelerin izin bilgisi aşağıdaki komutlardan hangisi ile öğrenilebilir?", "options": [{"letter": "A", "text": "ls"}, {"letter": "B", "text": "cd"}, {"letter": "C", "text": "ls -l"}, {"letter": "D", "text": "ls -p"}, {"letter": "E", "text": "list"}], "correct": "C", "explanation": "💡 Açıklama: 'ls -l' (long format) komutu, dosyaların ve dizinlerin okuma/yazma/çalıştırma izinlerini, sahibini ve boyutunu detaylı olarak listeler."}, {"num": 93, "tag": "2022 Final", "text": "Linux nedir?", "options": [{"letter": "A", "text": "Bir işletim sistemi uygulamasıdır."}, {"letter": "B", "text": "Bir işletim sistemi çekirdeğidir."}, {"letter": "C", "text": "Bir kütüphanedir."}, {"letter": "D", "text": "Bir işletim sistemidir."}, {"letter": "E", "text": "Bir kişi adıdır."}], "correct": "B", "explanation": "💡 Açıklama: Teknik anlamda Linux, donanım ile yazılım arasındaki iletişimi sağlayan bir işletim sistemi çekirdeğidir (kernel)."}, {"num": 94, "tag": "2022 Final", "text": "Segmentasyonla ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Segment tablosu kaydedicisi, segment tablosunun başlangıç adresini saklar."}, {"letter": "B", "text": "Segmentasyon, ana belleğin farklı boyutlarda bölümlere ayrıldığı bir bellek yönetim tekniğidir."}, {"letter": "C", "text": "Ana bellekteki her bir bölüm segment olarak isimlendirilir."}, {"letter": "D", "text": "Segmentasyonda mantıksal adres segment adresi ve offset değerinden oluşur."}, {"letter": "E", "text": "Prosesler eşit boyutlarda bölümlere ayrılmaktadır."}], "correct": "E", "explanation": "💡 Açıklama: Segmentasyonda prosesler eşit boyutlara değil, mantıksal yapılarına göre farklı/değişken boyutlarda bölümlere (segmentlere) ayrılır."}, {"num": 95, "tag": "2022 Final", "text": "Aşağıdaki komutlardan hangisi gizli dosya/dizinleri listeler?", "options": [{"letter": "A", "text": "ls -r"}, {"letter": "B", "text": "ls -a"}, {"letter": "C", "text": "ls"}, {"letter": "D", "text": "ls -h"}, {"letter": "E", "text": "ls -l"}], "correct": "B", "explanation": "💡 Açıklama: Linux'ta başında nokta (.) olan gizli dosya ve dizinleri listelemek için 'ls -a' (all) komutu kullanılır."}, {"num": 96, "tag": "2022 Final", "text": "Aşağıda verilen aktivitelerden hangisi işletim sisteminin proses yönetimi kapsamında gerçekleştirilir?", "options": [{"letter": "A", "text": "Disk planlaması"}, {"letter": "B", "text": "Spooling işlemlerini gerçekleştirmek"}, {"letter": "C", "text": "Ana belleği prosesler arasında en etkin bir şekilde paylaştırmak"}, {"letter": "D", "text": "Sistemde oluşan veri akışının denetlenmesi"}, {"letter": "E", "text": "Kilitlenme probleminin üstesinden gelebilecek mekanizma sağlamak"}], "correct": "E", "explanation": "💡 Açıklama: Kilitlenme (Deadlock) yönetimi ve önlenmesi, işletim sisteminin proses (işlem) yönetimi görevleri arasındadır."}, {"num": 97, "tag": "2022 Final", "text": "Aşağıdaki komutlardan hangisi auzef isimli kullanıcıyı Linux'de oluşturur?", "options": [{"letter": "A", "text": "sudo udd -c \"AUZEF\" auzef"}, {"letter": "B", "text": "sudo useradd -c \"AUZEF\" auzef"}, {"letter": "C", "text": "sudo user -c \"AUZEF\" auzef"}, {"letter": "D", "text": "sudo uadd -c \"AUZEF\" auzef"}, {"letter": "E", "text": "sudo adduser -c \"AUZEF\" auzef"}], "correct": "B", "explanation": "💡 Açıklama: Linux'ta yeni bir kullanıcı hesabı oluşturmak için temel komut 'useradd' komutudur."}, {"num": 98, "tag": "2022 Final", "text": "Proses kontrol bloğu ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Proses ID ile tanımlanırlar."}, {"letter": "B", "text": "Proses kaydedicilerinin bilgilerini saklamamızı sağlar."}, {"letter": "C", "text": "Prosesin özellikleri proses kontrol bloğunda tutulur."}, {"letter": "D", "text": "Her proses için işletim sistemi tarafından tutulan bir veri yapısıdır."}, {"letter": "E", "text": "Diskte saklanan program parçaları hakkında bilgiler saklar."}], "correct": "E", "explanation": "💡 Açıklama: Proses Kontrol Bloğu (PCB), diskteki program parçalarını değil, aktif olarak çalışan prosesin durumunu, kaydedicilerini ve bellek bilgilerini saklar."}, {"num": 99, "tag": "2022 Final", "text": "Windows'ta, KMS (Key Management Service) hangi amaçla kullanılır?", "options": [{"letter": "A", "text": "Windows sunucuları yönetir."}, {"letter": "B", "text": "Güncellemeler, yerel KMS sunucusu ile yapılır."}, {"letter": "C", "text": "Microsoft Office lisanslama için kullanılır."}, {"letter": "D", "text": "Lisanslar, yerel KMS sunucusunda etkinleştirilir."}, {"letter": "E", "text": "Windows lisanslarını üretir."}], "correct": "D", "explanation": "💡 Açıklama: KMS, kurumsal ağlardaki toplu lisanslama sistemidir. Cihazlar lisanslarını yerel ağdaki KMS sunucusu üzerinden etkinleştirir."}, {"num": 100, "tag": "2022 Final", "text": "Disk üzerinde dosyalara alan tahsis etmede kullanılan yöntemler ile ilgili aşağıda verilen ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bağlı listenin en büyük eksikliği belirli bir bloğa rastgele bir erişim gerçekleştirilememesidir."}, {"letter": "B", "text": "Bitişik tahsis yönteminde dosya bloklarına sabit disk üzerinde arda ardına fiziksel bloklar tahsis edilir."}, {"letter": "C", "text": "Dosya tahsis tablosunda her bir disk bloğu bir girdidir."}, {"letter": "D", "text": "FAT yönteminde istenilen bloğa erişebilmek için bütün listenin dolaşılması gerekir."}, {"letter": "E", "text": "Bağlı liste yapısıyla yer tahsis etme yönteminde dosya blokları sabit disk üzerinde ardı ardına kaydedilmek zorunda değildir."}], "correct": "D", "explanation": "💡 Açıklama: FAT (File Allocation Table) yönteminde, bağlantılar bir tabloda tutulduğu için bütün diski/listeyi dolaşmaya gerek kalmadan ilgili bloğun adresi tablodan hızlıca bulunabilir."}, {"num": 101, "tag": "2022 Final", "text": "OneGet için aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Açık kaynaklıdır."}, {"letter": "B", "text": "Linux ile kullanılamaz."}, {"letter": "C", "text": "Windows 10 ile gelmiştir."}, {"letter": "D", "text": "Bir paket yöneticisidir."}, {"letter": "E", "text": "PowerShell'in bir parçasıdır."}], "correct": "D", "explanation": "💡 Açıklama: OneGet (PackageManagement), kendisi doğrudan bir paket yöneticisi olmaktan ziyade, farklı paket yöneticilerini PowerShell üzerinden yönetmeyi sağlayan bir arayüzdür."}, {"num": 102, "tag": "2022-2023 Büt", "text": "Aşağıdaki Windows sürümlerinden hangisi Microsoft'un özel donanımlar için çıkardığı sürümlerden biri değildir?", "options": [{"letter": "A", "text": "Windows Embedded"}, {"letter": "B", "text": "Windows CE"}, {"letter": "C", "text": "Windows 2000"}, {"letter": "D", "text": "Windows Phone"}, {"letter": "E", "text": "Windows Mobile"}], "correct": "C", "explanation": "💡 Açıklama: Windows 2000 genel amaçlı işletim sistemidir, özel/gömülü donanımlar için değildir."}, {"num": 103, "tag": "2022-2023 Büt", "text": "\"sinav.o isimli bir dosya sadece sahibi tarafından çalıştırılabilir ve okunabilir.\" olarak işaretlenmek istenmektedir. Aşağıdaki komutlardan hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": "chmod 555 sinav.o"}, {"letter": "B", "text": "chmod 777 sinav.o"}, {"letter": "C", "text": "chmod 600 sinav.o"}, {"letter": "D", "text": "chmod 500 sinav.o"}, {"letter": "E", "text": "chmod +x sinav.o"}], "correct": "D", "explanation": "💡 Açıklama: 5 (okuma 4 + çalıştırma 1) sadece sahibine verilir. Grup ve diğerleri için 0 olur (500)."}, {"num": 104, "tag": "2022-2023 Büt", "text": "İşletim sistemi Proses1(4MB)->4MB P1, Proses2(2MB)->2MB P2, Proses3(8MB)->8MB P3, Proses4(6MB)->6MB P4 şeklinde belleğin bölündüğü şekli temsil eden tanım hangisidir?", "options": [{"letter": "A", "text": "Segmentasyon"}, {"letter": "B", "text": "Dinamik bölümleme"}, {"letter": "C", "text": "Sabit bölümleme"}, {"letter": "D", "text": "Statik bölümleme"}, {"letter": "E", "text": "Sanal bellek"}], "correct": "B", "explanation": "💡 Açıklama: Sınav cevap anahtarına göre, bölümlerin proses boyutuna tam uyacak şekilde tahsis edildiği bu gösterim Dinamik Bölümlemeyi ifade etmektedir.[cite: 8, 9]"}, {"num": 105, "tag": "2022-2023 Büt", "text": "Aşağıdakilerden hangisi bir Linux paketi uzantısıdır?", "options": [{"letter": "A", "text": "dep"}, {"letter": "B", "text": "zip"}, {"letter": "C", "text": "rar"}, {"letter": "D", "text": "tar"}, {"letter": "E", "text": "rpm"}], "correct": "E", "explanation": "💡 Açıklama: RPM (Red Hat Package Manager), Red Hat tabanlı Linux dağıtımlarında kullanılan bir paket formatıdır."}, {"num": 106, "tag": "2022-2023 Büt", "text": "Aşağıdaki işletim sistemlerinin hangisi Kubernetes kullanımı için en uygunudur?", "options": [{"letter": "A", "text": "CentOS"}, {"letter": "B", "text": "RancherOS"}, {"letter": "C", "text": "Ubuntu Server"}, {"letter": "D", "text": "Amazon Linux"}, {"letter": "E", "text": "Windows Server 2019"}], "correct": "B", "explanation": "💡 Açıklama: RancherOS, konteynerleri (Docker/Kubernetes) çalıştırmak için özel olarak tasarlanmış, minimal ve hafif bir işletim sistemidir."}, {"num": 107, "tag": "2022-2023 Büt", "text": "50 silindir içeren bir disk olduğu varsayılmaktadır. Disk kafası başlangıçta 5 nolu silindirde bulunmaktadır. Sırasıyla 5, 15, 20, 25, 40, 50 nolu silindirlere istek vardır. Scan planlama algoritması kullanıldığında silindirin toplam kafa hareketi kaç olacaktır?", "options": [{"letter": "A", "text": "70"}, {"letter": "B", "text": "65"}, {"letter": "C", "text": "45"}, {"letter": "D", "text": "55"}, {"letter": "E", "text": "75"}], "correct": "C", "explanation": "💡 Açıklama: SCAN algoritması diskin bir ucuna kadar gider. 5'ten başlayıp 50'ye kadar tek yönde ilerleyeceği için toplam hareket 50 - 5 = 45 olur."}, {"num": 108, "tag": "2022-2023 Büt", "text": "Aşağıdakilerden hangisi CPU planlayıcısı tarafından kullanılan algoritmalardan biri değildir?", "options": [{"letter": "A", "text": "Round Robin"}, {"letter": "B", "text": "PbS"}, {"letter": "C", "text": "FCFS"}, {"letter": "D", "text": "SJF"}, {"letter": "E", "text": "SCAN"}], "correct": "E", "explanation": "💡 Açıklama: SCAN bir disk planlama algoritmasıdır, CPU (işlemci) planlaması için kullanılmaz (Seçenek E OCR'da çıkmamış olsa da cevap anahtarına göre E'dir)."}, {"num": 109, "tag": "2022-2023 Büt", "text": "Bir klasörün içindeki tüm klasörler ve dosyaların sahibi auzef isimli kullanıcı olarak değiştirilmek isteniyor. Aşağıdaki komutlardan hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": "chown -a auzef /klasor"}, {"letter": "B", "text": "chown auzef /klasor"}, {"letter": "C", "text": "chown -R auzef /klasor"}, {"letter": "D", "text": "chmod -R auzef /klasor"}, {"letter": "E", "text": "passwd -R auzef /klasor"}], "correct": "C", "explanation": "💡 Açıklama: chown (change owner) komutu sahipliği değiştirir. -R (recursive) parametresi ise içindeki tüm dosya ve klasörlere de bu işlemi uygular."}, {"num": 110, "tag": "2022-2023 Büt", "text": "Aşağıdaki işletim sistemlerinden hangisi kapalı kaynak kodludur?", "options": [{"letter": "A", "text": "Arch Linux"}, {"letter": "B", "text": "Ubuntu Desktop"}, {"letter": "C", "text": "Knoppix"}, {"letter": "D", "text": "Ubuntu Server"}, {"letter": "E", "text": "Windows"}], "correct": "E", "explanation": "💡 Açıklama: Linux tabanlı işletim sistemleri açık kaynak kodluyken, Microsoft Windows kapalı kaynak kodlu ticari bir işletim sistemidir."}, {"num": 111, "tag": "2022-2023 Büt", "text": "Linux'de kullanıcı eklerken kullanıcının varsayılan grubu ne olur?", "options": [{"letter": "A", "text": "\"KullanıcıAdı+Group\" isimli yeni bir grup."}, {"letter": "B", "text": "User isimli grup."}, {"letter": "C", "text": "Kullanıcı idsi ile aynı idye sahip yeni bir grup."}, {"letter": "D", "text": "SuperUser isimli grup."}, {"letter": "E", "text": "Herhangi bir gruba atanmaz."}], "correct": "C", "explanation": "💡 Açıklama: Varsayılan olarak (User Private Group - UPG konsepti), Linux'ta yeni bir kullanıcı oluşturulduğunda kullanıcı adıyla ve aynı ID ile özel bir grup oluşturulur."}, {"num": 112, "tag": "2022-2023 Büt", "text": "TLB hit nedir?", "options": [{"letter": "A", "text": "Aranan sayfanın ana bellekte bulunamaması durumudur."}, {"letter": "B", "text": "Aranan sayfanın sayfa tablosunda bulunması durumudur."}, {"letter": "C", "text": "Aranan sayfanın sayfa tablosunda bulunamaması durumudur."}, {"letter": "D", "text": "Aranan sayfanın TLB ön belleğinde bulunamaması durumudur."}, {"letter": "E", "text": "Aranan sayfanın TLB ön belleğinde bulunması durumudur."}], "correct": "E", "explanation": "💡 Açıklama: TLB (Translation Lookaside Buffer), sayfa tablosunun önbelleğidir. Aranan sayfanın burada hızlıca bulunmasına TLB hit denir."}, {"num": 113, "tag": "2022-2023 Büt", "text": "Aşağıdakilerden hangisi bir web sunucusu uygulaması değildir?", "options": [{"letter": "A", "text": "Lighttpd"}, {"letter": "B", "text": "Catty"}, {"letter": "C", "text": "Apache"}, {"letter": "D", "text": "IIS"}, {"letter": "E", "text": "Nginx"}], "correct": "B", "explanation": "💡 Açıklama: Apache, IIS, Nginx ve Lighttpd popüler web sunucusu yazılımlarıdır. Catty bunlardan biri değildir (Caddy'nin yanlış yazımı olabilir)."}, {"num": 114, "tag": "2022-2023 Büt", "text": "Linuxde çalışmakta olan proseslerin listesi aşağıdaki komutlardan hangisi ile alınır?", "options": [{"letter": "A", "text": "ps"}, {"letter": "B", "text": "ls -p"}, {"letter": "C", "text": "lsproc"}, {"letter": "D", "text": "bg"}, {"letter": "E", "text": "jobs"}], "correct": "A", "explanation": "💡 Açıklama: 'ps' (process status) komutu, o an sistemde çalışan aktif proseslerin anlık bir listesini verir."}, {"num": 115, "tag": "2022-2023 Büt", "text": "Aşağıdakilerden hangisi kilitlenmenin oluşabilmesi için gerekli olan koşullardan biri değildir?", "options": [{"letter": "A", "text": "Karşılıklı dışlama"}, {"letter": "B", "text": "Kesme durumu yok"}, {"letter": "C", "text": "Döngüsel bekleme"}, {"letter": "D", "text": "Açlık"}, {"letter": "E", "text": "Tut ve bekle"}], "correct": "D", "explanation": "💡 Açıklama: Coffman koşulları (Kilitlenme/Deadlock şartları): Karşılıklı dışlama, Tut ve bekle, Kesinti olmaması, Döngüsel beklemedir. Açlık (Starvation) bu koşullardan biri değildir."}, {"num": 116, "tag": "2022-2023 Büt", "text": "Linux yöneticisi olan bir kullanıcı, postgres kullanıcısı ile işlem yapmak istemektedir. Bunun için aşağıdaki komutlardan hangisini kullanmalıdır?", "options": [{"letter": "A", "text": "sudo -i -u postgres"}, {"letter": "B", "text": "sudo -i postgres"}, {"letter": "C", "text": "sudo login postgres"}, {"letter": "D", "text": "sudo postgres"}, {"letter": "E", "text": "sudo su postgres"}], "correct": "A", "explanation": "💡 Açıklama: Sudo komutunda '-u' (user) parametresi hedef kullanıcıyı belirtir, '-i' (simulate initial login) ise o kullanıcının ortam değişkenleriyle kabuk açmayı sağlar."}, {"num": 117, "tag": "2022-2023 Büt", "text": "/home/user1 dizinindeki tüm dosyaları /home/user2 dizinine kopyalamak için aşağıdaki komutlardan hangisi çalıştırılmalıdır?", "options": [{"letter": "A", "text": "rm -r /home/user1 /home/user2"}, {"letter": "B", "text": "cp -r /home/user1 /home/user2"}, {"letter": "C", "text": "mv -r /home/user1 /home/user2"}, {"letter": "D", "text": "mv /home/user1 /home/user2"}, {"letter": "E", "text": "cp /home/user1 /home/user2"}], "correct": "B", "explanation": "💡 Açıklama: 'cp' (copy) komutu kopyalama yapar, dizinlerin içindekilerle beraber kopyalanması için '-r' (recursive) parametresi gereklidir."}, {"num": 118, "tag": "2022-2023 Büt", "text": "Prosesler ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bilgisayar tarafından çalıştırıldığında özel bir görevi icra eden bir dizi komut prosesleri oluşturur."}, {"letter": "B", "text": "Kod parçalarının bilgisayar tarafından icra edilebilmesi için ana belleğe getirilmesi gerekir."}, {"letter": "C", "text": "Modern işletim sistemleri, çok çekirdekli donanım uzerinde birden fazla prosesi aynı anda çalıştırabilir."}, {"letter": "D", "text": "İşletim sistemi üzerinde bulunduğu sistemin özelliklerine göre proses yönetimini gerçekleştirir."}, {"letter": "E", "text": "Tek işlemcili sistemlerde aynı anda birden fazla proses çalıştırılamaz."}], "correct": "A", "explanation": "💡 Açıklama: Bir dizi komut 'program'ı oluşturur (pasif yapı). Program belleğe yüklenip çalıştırıldığında 'proses' (aktif yapı) adını alır."}, {"num": 119, "tag": "2022-2023 Büt", "text": "Derleyici ve yorumlayıcı yazılımları için aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Yorumlayıcılar, kaynak kodu satır satır veya bloklar halinde yorumlarlar."}, {"letter": "B", "text": "Derleyiciler, yorumlayıcılara nazaran daha hızlıdır."}, {"letter": "C", "text": "Derleyiciler ve yorumlayıcılar aynı görevi icra ederler."}, {"letter": "D", "text": "C++ programlama dilinde yorumlayıcı kullanılmaktadır."}, {"letter": "E", "text": "Derleyiciler, kaynak kodun tamamını hedef koda çevirdikten sonra çalıştırır."}], "correct": "D", "explanation": "💡 Açıklama: C++ derleyici (compiler) kullanan bir programlama dilidir, yorumlayıcı (interpreter) kullanmaz."}, {"num": 120, "tag": "2022-2023 Büt", "text": "Bash scripti içinde bir değişkenin değiştirilmesi istenmiyor ise hangi komut kullanılmalıdır?", "options": [{"letter": "A", "text": "readonly"}, {"letter": "B", "text": "unset"}, {"letter": "C", "text": "alias"}, {"letter": "D", "text": "lock"}, {"letter": "E", "text": "freeze"}], "correct": "A", "explanation": "💡 Açıklama: Bash scriptlerde bir değişkene 'readonly' ataması yapılırsa o değişken sabite dönüşür ve sonrasında değiştirilemez."}, {"num": 121, "tag": "2023-2024 Final", "text": "Varış sırasını dikkate alarak disk planlamasını yapan algoritma aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "FCFS algoritması"}, {"letter": "B", "text": "LOOK algoritması"}, {"letter": "C", "text": "SSTF (shortest seek time first) algoritması"}, {"letter": "D", "text": "SCAN algoritması"}, {"letter": "E", "text": "C-LOOK algoritması"}], "correct": "A", "explanation": "💡 Açıklama: FCFS (First Come First Serve), adından da anlaşıldığı üzere varış (geliş) sırasını dikkate alarak planlama yapar.[cite: 10]"}, {"num": 122, "tag": "2023-2024 Final", "text": "Stack bölümü prosesin hangi bölümünü saklar?", "options": [{"letter": "A", "text": "Bir program tarafından çağrılan bir fonksiyonun ihtiyaç duyabileceği bütün veriler (yerel değişkenler, yerel fonksiyonlar, dönüş adresleri) saklanır."}, {"letter": "B", "text": "Çalışma zamanı sırasında belleğe ihtiyaç duyduğu zaman dinamik bellek sağlamak için kullanılır."}, {"letter": "C", "text": "Herhangi bir değer ataması olmamış tüm genel ve statik değişkenleri içerir."}, {"letter": "D", "text": "Başlangıç değeri atanan global ve statik veri değişkenlerini içerir."}, {"letter": "E", "text": "0 aritmetik değer ile başlatılmış tüm genel ve statik değişkenleri içerir."}], "correct": "A", "explanation": "💡 Açıklama: Stack (yığın), çalışma anında çağrılan fonksiyonların yerel verilerini ve dönüş adreslerini geçici olarak tutan bellek alanıdır.[cite: 10]"}, {"num": 123, "tag": "2023-2024 Final, 2025-2026 Final", "text": "Dizin yapılarının uygulanmasında kullanılan doğrusal liste algoritması ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dosya üzerinde gerçekleştirilecek silme, oluşturma, güncelleme gibi işlemlerin hepsi için liste baştan sona tek tek gezinilmek zorundadır."}, {"letter": "B", "text": "Her bir dosya için bir anahtar-değer çifti oluşturulur."}, {"letter": "C", "text": "Bir dizindeki tüm dosyalar bağlı liste olarak tutulurlar."}, {"letter": "D", "text": "Her bir dosya, veri bloğunun adresini ve dizindeki bir sonraki dosyayı gösteren işaretçiler (pointer) içerir."}, {"letter": "E", "text": "Bağlı liste veri yapısının davranışlarını sergiler."}], "correct": "B", "explanation": "💡 Açıklama: Anahtar-değer (key-value) çifti yaklaşımı doğrusal/bağlı liste yapısına değil, Hash (özet) tablosu dizin mimarisine aittir.[cite: 10]"}, {"num": 124, "tag": "2023-2024 Final", "text": "Kabuk programının gereklilik nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kullanıcıların işletim sisteminde oturum açabilmesi için"}, {"letter": "B", "text": "İşletim sistemin komutlarının oluşturulabilmesi için."}, {"letter": "C", "text": "İşletim sisteminin grafik arayüzlerle kontrol edilebilmesi için."}, {"letter": "D", "text": "İşletim sisteminin başlatılabilmesi için."}, {"letter": "E", "text": "İşletim sistemine bir komut gönderilebilmesi için."}], "correct": "E", "explanation": "💡 Açıklama: Kabuk (Shell), kullanıcının girdiği komutları yorumlayıp işletim sistemi çekirdeğine (kernel) ileten zorunlu komut satırı arayüzüdür.[cite: 10]"}, {"num": 125, "tag": "2023-2024 Final", "text": "Link ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "ln komutu hard ve soft link oluşturmak için kullanılır."}, {"letter": "B", "text": "Soft link ile dizinler linklenebilir."}, {"letter": "C", "text": "Farklı disk bölümleri arasında linkleme için hard link kullanılır."}, {"letter": "D", "text": "Hard link sadece dosyalara uygulanabilir."}, {"letter": "E", "text": "Soft link ile öğelere farklı yetkiler atanabilir."}], "correct": "C", "explanation": "💡 Açıklama: Hard link'ler (sabit bağlantılar) aynı dosya sistemi sınırları içinde geçerlidir; farklı disk bölümleri (partition'lar) arasında kullanılamazlar.[cite: 10]"}, {"num": 126, "tag": "2023-2024 Final", "text": "Çeşitli bölümlerin kullanılmayan alanların toplamı, prosesi yüklemek için yeterli alana sahip olsa bile prosesin yüklenmesi için kullanılamaz. Bu durum ...... olarak bilinir. Yukarıda verilen cümle aşağıda verilen terimlerden hangisiyle en uygun şekilde tamamlanır?", "options": [{"letter": "A", "text": "segmente"}, {"letter": "B", "text": "sıkıştırma"}, {"letter": "C", "text": "dış parçalanma"}, {"letter": "D", "text": "bellek bölümü"}, {"letter": "E", "text": "iç parçalanma"}], "correct": "C", "explanation": "💡 Açıklama: Bellekteki boş alanların toplamı yeterli olmasına rağmen bu boşluklar parçalı ve ardışık değilse, bütünleşik alan isteyen prosese atanamaması durumuna dış parçalanma (external fragmentation) denir.[cite: 10]"}, {"num": 127, "tag": "2023-2024 Final", "text": "Windows NT ailesi aşağıdaki Windows sürümlerinden hangisini içermez?", "options": [{"letter": "A", "text": "Windows 98"}, {"letter": "B", "text": "Windows 10"}, {"letter": "C", "text": "Windows Vista"}, {"letter": "D", "text": "Windows 2000"}, {"letter": "E", "text": "Windows 8"}], "correct": "A", "explanation": "💡 Açıklama: Windows 98, MS-DOS tabanlı klasik 9x ailesinin bir üyesidir. Windows 2000, Vista, 8 ve 10 ise NT (New Technology) çekirdeğini kullanır.[cite: 10]"}, {"num": 128, "tag": "2023-2024 Final", "text": "Aşağıdakilerden hangisi birden fazla prosesin ana belleğe yerleştirilmesi için kullanılan tekniklerden biri değildir?", "options": [{"letter": "A", "text": "Dinamik bölümleme"}, {"letter": "B", "text": "Sanal bellek"}, {"letter": "C", "text": "Sabit bölümleme"}, {"letter": "D", "text": "Disk bölümleme"}, {"letter": "E", "text": "Sayfalama"}], "correct": "D", "explanation": "💡 Açıklama: Disk bölümleme (partitioning) kalıcı veri depolama alanını mantıksal sürücülere ayırmaktır, bir ana bellek (RAM) yönetim tekniği değildir.[cite: 10]"}, {"num": 129, "tag": "2023-2024 Final", "text": "Bir işletim sisteminde güvenliği sağlamak için aşağıdakilerden hangisi yapılmamalıdır?", "options": [{"letter": "A", "text": "Güncellemeler yapılmalıdır."}, {"letter": "B", "text": "Komutlar yetkili kullanıcı olarak çalıştırılmalıdır."}, {"letter": "C", "text": "Antivirüs yazılımı kurulmalıdır."}, {"letter": "D", "text": "Kullanıcı parolaları sık sık değiştirilmelidir."}, {"letter": "E", "text": "Yedek alınmalıdır."}], "correct": "B", "explanation": "💡 Açıklama: Sistemde tüm işlemlerin sürekli yetkili kullanıcı (root/administrator) yetkisiyle çalıştırılması, olası hataların veya zararlı yazılımların sisteme tam zarar vermesine sebep olacağından büyük bir güvenlik riski yaratır.[cite: 10]"}, {"num": 130, "tag": "2023-2024 Final, 2025-2026 Final", "text": "Dağıtık sistemlerle ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dağıtık sistemlerde yatay ölçeklendirme gerçekleştirilebilir."}, {"letter": "B", "text": "Dağıtık sistemlerin hata toleransı yüksektir."}, {"letter": "C", "text": "Yüksek performanslı işlemlerde başarılı performans gösterirler."}, {"letter": "D", "text": "Paralelliği destekler."}, {"letter": "E", "text": "Ağdaki bir sistemin bozulması dağıtık sistemin bozulmasına neden olur."}], "correct": "E", "explanation": "💡 Açıklama: Dağıtık mimarinin en temel özelliği hata toleransı (fault tolerance) barındırmasıdır; düğümlerden (node) birinin çökmesi sistemin genelini devre dışı bırakmaz.[cite: 10]"}, {"num": 131, "tag": "2023-2024 Final", "text": "Gnome masaüstünde aşağıdaki bileşenlerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Uygulamalar"}, {"letter": "B", "text": "Bildirim menüsü"}, {"letter": "C", "text": "Masaüstü öğeleri"}, {"letter": "D", "text": "Alarm menüsü"}, {"letter": "E", "text": "Sistem menüsü"}], "correct": "D", "explanation": "💡 Açıklama: Gnome masaüstü arabiriminin varsayılan temel görsel öğeleri arasında 'Alarm menüsü' diye özel olarak adlandırılmış bir menü bileşeni yoktur.[cite: 10]"}, {"num": 132, "tag": "2023-2024 Final", "text": "Prosesin tüm işlemleri tamamlandığında proses hangi duruma geçer?", "options": [{"letter": "A", "text": "Bekleme"}, {"letter": "B", "text": "Son"}, {"letter": "C", "text": "Hazır"}, {"letter": "D", "text": "Askıya al"}, {"letter": "E", "text": "Yeni"}], "correct": "B", "explanation": "💡 Açıklama: İcra edilecek kodu biten veya işletim sistemi tarafından sonlandırılan bir proses, 'Sonlanmış' (Terminated / Son) duruma geçer.[cite: 10]"}, {"num": 133, "tag": "2023-2024 Final, 2025-2026 Final", "text": "Bir Linux işletim sisteminde auzef isimli kullanıcı oluşturulmuştur. Ancak kullanıcı kilitli gözükmektedir. Aşağıdakilerden hangisi ile yeni oluşturulan kullanıcının kilidi kaldırılabilir?", "options": [{"letter": "A", "text": "sudo passwd auzef"}, {"letter": "B", "text": "sudo passwd -S auzef"}, {"letter": "C", "text": "sudo unlock auzef"}, {"letter": "D", "text": "sudo passwd -l auzef"}, {"letter": "E", "text": "sudo enable auzef"}], "correct": "A", "explanation": "💡 Açıklama: Yeni oluşturulan bir hesap şifresiz olduğu için kilitli sayılır. 'sudo passwd auzef' komutuyla o hesaba geçerli bir şifre atamak hesabın kullanılabilir (aktif) hale gelmesini sağlar.[cite: 10]"}, {"num": 134, "tag": "2023-2024 Final", "text": "Bilgisayar donanımlarını işletim sistemlerine tanıtabilmek amacıyla aşağıda verilen yazılım araçlarının hangisinden faydalanılmaktadır?", "options": [{"letter": "A", "text": "Editörler"}, {"letter": "B", "text": "Sürücüler"}, {"letter": "C", "text": "İşletim sistemleri"}, {"letter": "D", "text": "Derleyiciler"}, {"letter": "E", "text": "Yorumlayıcılar"}], "correct": "B", "explanation": "💡 Açıklama: Sürücüler (Drivers), donanım parçaları ile işletim sistemi arasındaki iletişimi sağlayan özel tanıtıcı yazılımlardır.[cite: 10]"}, {"num": 135, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi Systemd'nin proses id'sidir?", "options": [{"letter": "A", "text": "3"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "5"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "1"}], "correct": "E", "explanation": "💡 Açıklama: Linux mimarisinde Init veya Systemd, çekirdek yüklendikten sonra başlatılan ilk prosestir ve her zaman PID (Proses ID) olarak 1 değerini alır.[cite: 10]"}, {"num": 136, "tag": "2023-2024 Final", "text": "Linuxde /etc/passwd dosyası hangi amaçla kullanılır?", "options": [{"letter": "A", "text": "Şifreleme anahtarlarını saklar."}, {"letter": "B", "text": "Servislerin şifrelerini saklar."}, {"letter": "C", "text": "Sistemde kullanılan tüm şifreleri saklar."}, {"letter": "D", "text": "Kullanıcı şifrelerini saklar."}, {"letter": "E", "text": "Kullanıcı bilgilerini saklar."}], "correct": "E", "explanation": "💡 Açıklama: İsmine rağmen modern sistemlerde şifreleri saklamaz (şifreler shadow dosyasındadır); kullanıcı adları, UID, GID ve home dizini gibi hesap tanımlayıcı bilgileri içerir.[cite: 10]"}, {"num": 137, "tag": "2023-2024 Final, 2025-2026 Büt", "text": "Fedorada paket yöneticisi ile güncelleme yapmak isteyen bir kullanıcı aşağıdaki komutlardan hangisini kullanmalıdır?", "options": [{"letter": "A", "text": "yum update"}, {"letter": "B", "text": "apt-get upgrade"}, {"letter": "C", "text": "fed upgrade"}, {"letter": "D", "text": "dnf upgrade"}, {"letter": "E", "text": "rpm upgade"}], "correct": "D", "explanation": "💡 Açıklama: Fedora Linux, eski yum altyapısı yerine güncel paket yöneticisi olan DNF (Dandified YUM) aracını kullanır.[cite: 10]"}, {"num": 138, "tag": "2023-2024 Final", "text": "Systemd için aşağıdakilerden hangisi yanlış bir ifadedir?", "options": [{"letter": "A", "text": "Bilgisayar açılırken servisleri başlatır"}, {"letter": "B", "text": "Servisleri yeniden başlatır"}, {"letter": "C", "text": "Servislerin loglarını toplar"}, {"letter": "D", "text": "ps komutu ile görüntülenebilir"}, {"letter": "E", "text": "Bilgisayar çalışırken kapanmaz"}], "correct": "D", "explanation": "💡 Açıklama: Sınav cevap anahtarına göre Systemd'nin ps komutu ile görüntülenmesi şıkkı yanlış kabul edilmiştir.[cite: 10]"}, {"num": 139, "tag": "2023-2024 Büt", "text": "Yazılımlar ile ilgili olarak aşağıda verilen ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Sistem yazılımları, uygulama yazılımları ile bilgisayar donanımı arasındaki bağlantıyı sağlar."}, {"letter": "B", "text": "Yazılım, klasik yaklaşımda uygulama yazılımları ve sistem yazılımları olmak üzere 2 ana başlıkta sınıflandırılmaktadır."}, {"letter": "C", "text": "Uygulama yazılımları bir problemi çözmek için geliştirilen özel yazılımlardır."}, {"letter": "D", "text": "İşletim sistemleri yazılımı uygulama yazılımlarına bir örnektir."}, {"letter": "E", "text": "Yazılım olmadan donanım birimleri mekanik işlevlerden ibarettir."}], "correct": "D", "explanation": "💡 Açıklama: İşletim sistemleri \"uygulama yazılımı\" (application software) değil, \"sistem yazılımı\"dır (system software).[cite: 12]"}, {"num": 140, "tag": "2023-2024 Büt", "text": "Heap bölümü ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "C dilinde malloc/free komutları ile heap bölümü yönetilir."}, {"letter": "B", "text": "Program yürütülmeden önce derleyici tarafından boyutu statik olarak belirlenemeyen değişkenler saklanır."}, {"letter": "C", "text": "Programcı tarafından talep edilen miktarda heap bölümünde yer ayrılır."}, {"letter": "D", "text": "Dinamik bellek sağlamak için kullanılır."}, {"letter": "E", "text": "Bir program çalışma zamanı sırasında belleğe ihtiyaç duyduğu zaman kullanılır."}], "correct": "D", "explanation": "💡 Açıklama: Cevap anahtarına göre D seçeneği yanlıştır.[cite: 12]"}, {"num": 141, "tag": "2023-2024 Büt", "text": "man sayfalarının içinde arama yaparak aranan ifadeyi içeren komutları listeleyen komut aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "help"}, {"letter": "B", "text": "which"}, {"letter": "C", "text": "info"}, {"letter": "D", "text": "apropos"}, {"letter": "E", "text": "man"}], "correct": "D", "explanation": "💡 Açıklama: 'apropos' komutu, kılavuz (man) sayfalarının isimleri ve açıklamaları içinde kelime araması yapar.[cite: 12]"}, {"num": 142, "tag": "2023-2024 Büt, 2025-2026 Final", "text": "Linux servis tanim dosyasında [Service] başlığı altında aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Restart"}, {"letter": "B", "text": "ExecStart"}, {"letter": "C", "text": "Type"}, {"letter": "D", "text": "WantedBy"}, {"letter": "E", "text": "ExecStop"}], "correct": "D", "explanation": "💡 Açıklama: 'WantedBy' parametresi [Service] başlığı altında değil, hedefleri ve bağımlılıkları belirten [Install] başlığı altında yer alır.[cite: 12]"}, {"num": 143, "tag": "2023-2024 Büt", "text": "Aşağıda verilen tanımlardan hangisi yanlıştır?", "options": [{"letter": "A", "text": "Sanal bellek ana belleğin boyutunun daha büyük olduğu izlenimi veren aslında bir depolama şeklidir."}, {"letter": "B", "text": "TLB hit; aranan sayfanın TLB ön belleğinde bulunması durumudur."}, {"letter": "C", "text": "Adres dönüşümü CPU tarafından üretilen adresin fiziksel adrese dönüştürülmesidir."}, {"letter": "D", "text": "Sayfa hatası ana bellek üzerinde aradığımız bilginin olmamasıdır."}, {"letter": "E", "text": "TLB; en sık kullanılan segmentlerin tutulduğu bir ön bellektir."}], "correct": "E", "explanation": "💡 Açıklama: TLB (Translation Lookaside Buffer) segmentlerin değil, \"sayfa tablosu (page table)\" girdilerinin (sık kullanılan sayfaların) tutulduğu ön bellektir.[cite: 12]"}, {"num": 144, "tag": "2023-2024 Büt", "text": "Dizin yapısıyla ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dizinler üzerinde dosyayı silme, güncelleme işlemleri gerçekleştirilebilir."}, {"letter": "B", "text": "Dizinler her dosya için bir kayda sahiptirler."}, {"letter": "C", "text": "Dizin içerisindeki dosyalar listelenir."}, {"letter": "D", "text": "Birbirlerine benzer ve ilgili dosyalar bir araya gelerek dizinleri oluştururlar."}, {"letter": "E", "text": "Dizinler, ana bellekte saklanırlar."}], "correct": "E", "explanation": "💡 Açıklama: Dizinler ve dosyalar geçici olan ana bellekte (RAM) değil, kalıcı olan disk (ikincil depolama) üzerinde saklanırlar.[cite: 12]"}, {"num": 145, "tag": "2023-2024 Büt, 2025-2026 Büt", "text": "sudo passwd -e baran komutu hangi amaçla kullanılabilir?", "options": [{"letter": "A", "text": "Kullanıcıyı silmek için"}, {"letter": "B", "text": "Kullanıcıyı kilitlemek için"}, {"letter": "C", "text": "Kullanıcı parolasını geçersiz kılmak için"}, {"letter": "D", "text": "Kullanıcı kilidini kaldırmak için"}, {"letter": "E", "text": "Kullanıcıya bir parola atamak için"}], "correct": "C", "explanation": "💡 Açıklama: passwd komutundaki '-e' (expire) parametresi kullanıcının parolasının süresini anında doldurur (geçersiz kılar) ve ilk girişte parola değiştirmeye zorlar.[cite: 12]"}, {"num": 146, "tag": "2023-2024 Büt", "text": "PowerShell'de \"Add-PackageSource\" ne amaçla kullanılır?", "options": [{"letter": "A", "text": "Depo eklemek için"}, {"letter": "B", "text": "Paket kaynağını görüntülemek için"}, {"letter": "C", "text": "Bir adresten paket indirmek için"}, {"letter": "D", "text": "Paket yöneticilerini listelemek için"}, {"letter": "E", "text": "Paket yüklemek için"}], "correct": "A", "explanation": "💡 Açıklama: Add-PackageSource cmdlet'i, PowerShell paket yöneticisine (PackageManagement) yeni bir paket kaynağı (depo/repository) eklemek için kullanılır.[cite: 12]"}, {"num": 147, "tag": "2023-2024 Büt", "text": "Uzun dönemli planlayıcılarla ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "CPU planlayıcısı olarakta bilinir."}, {"letter": "B", "text": "Temel amacı giriş/çıkış işlemlerine bağlı veya CPU'ya bağlı prosesler arasından en iyi seçimleri yapmaktır."}, {"letter": "C", "text": "İş planlayıcısı olarakta bilinir."}, {"letter": "D", "text": "İş planlayıcısı görevini en uygun şekilde gerçekleştirmezse eğer giriş-çıkış işlemleri uzun süren prosesler, diğer proseslerin çok daha fazla beklemesine neden olabilir."}, {"letter": "E", "text": "Diskten prosesleri seçerler ve ana bellekte yer alan hazır kuyruğunda prosesleri tutarlar."}], "correct": "A", "explanation": "💡 Açıklama: Uzun dönemli planlayıcı \"İş planlayıcısı (Job Scheduler)\" olarak bilinir. CPU planlayıcısı ise kısa dönemli (short-term) planlayıcıdır.[cite: 12]"}, {"num": 148, "tag": "2023-2024 Büt", "text": "• Her kullanıcı için bir dizin oluşturulur. • Ana bir dizin vardır, kullanıcı dizinleri ana dizine bağlanır. • Farklı kullanıcılar aynı isme sahip dosyalar oluşturabilirler. Yukarıda tanımlamaları yapılan dizin saklama (hiyerarşisi) yapısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yığın yapısındaki dizinler"}, {"letter": "B", "text": "İki seviyeli dizinler"}, {"letter": "C", "text": "Tek seviyeli dizinler"}, {"letter": "D", "text": "Ağaç yapısı şeklinde olan dizinler"}, {"letter": "E", "text": "Döngüsel olmayan graf yapısındaki dizinler"}], "correct": "B", "explanation": "💡 Açıklama: Kök dizin altında kullanıcı dizinlerinin yer aldığı ve her kullanıcının kendi dizininde özgürce dosya isimlendirebildiği yapı \"İki seviyeli dizinler\"dir.[cite: 12]"}, {"num": 149, "tag": "2023-2024 Büt", "text": "Linuxde kabukta çalıştırılmak istenen bir script dosyasının uzantısı ne olmalıdır?", "options": [{"letter": "A", "text": "sh"}, {"letter": "B", "text": "exe"}, {"letter": "C", "text": "SC"}, {"letter": "D", "text": "run"}, {"letter": "E", "text": "ssh"}], "correct": "A", "explanation": "💡 Açıklama: Linux kabuk (shell) betik dosyaları genellikle '.sh' (shell script) uzantısı ile kaydedilir.[cite: 12]"}, {"num": 150, "tag": "2023-2024 Büt, 2025-2026 Final, 2025-2026 Büt", "text": "Linuxde 90 ID'sine sahip bir proses için 19 numaralı sinyal gönderilmiştir. Bu proses hangi kod ile tekrar devam ettirilebilir?", "options": [{"letter": "A", "text": "kill 15 90"}, {"letter": "B", "text": "kill STOP 90"}, {"letter": "C", "text": "kill INT 90"}, {"letter": "D", "text": "fg 18 90"}, {"letter": "E", "text": "kill -18 90"}], "correct": "E", "explanation": "💡 Açıklama: 19 numaralı sinyal (SIGSTOP) prosesi duraklatır. Devam ettirmek için 18 numaralı (SIGCONT) sinyali 'kill -18 90' şeklinde gönderilir.[cite: 12]"}, {"num": 151, "tag": "2023-2024 Büt, 2025-2026 Final", "text": "Aşağıdakilerden hangisi bir linux kullanıcı arayüzü değildir?", "options": [{"letter": "A", "text": "LinGUI"}, {"letter": "B", "text": "KDE"}, {"letter": "C", "text": "MATE"}, {"letter": "D", "text": "Xfce"}, {"letter": "E", "text": "Gnome"}], "correct": "A", "explanation": "💡 Açıklama: Gnome, KDE, Xfce ve MATE popüler Linux masaüstü ortamlarıdır (arayüzleridir). LinGUI adında standart bir Linux arayüzü yoktur.[cite: 12]"}, {"num": 152, "tag": "2023-2024 Büt", "text": "- Bellek prosesin büyüklüğüne göre büyüyüp, küçülemez. - İç parçalanma ve dış parçalanma problemleri yaşanabilir. - Bellek eşit veya farklı büyüklüklerde bölümlere ayrılabilir. - Proses parçalara ayrılmaz. Yukarıda verilen bilgiler birden fazla prosesin ana belleğe yerleştirilmesi için kullanılan tekniklerden hangisine aittir?", "options": [{"letter": "A", "text": "TLB"}, {"letter": "B", "text": "Dinamik bölümleme"}, {"letter": "C", "text": "Segmentasyon"}, {"letter": "D", "text": "Sanal bellek"}, {"letter": "E", "text": "Sabit bölümleme"}], "correct": "E", "explanation": "💡 Açıklama: Belleğin önceden sabit boyutlu alanlara bölündüğü ve prosesin boyutuna bakılmaksızın bu bloklara tahsis edildiği yöntem Sabit Bölümleme'dir.[cite: 12]"}, {"num": 153, "tag": "2023-2024 Büt, 2025-2026 Büt", "text": "Gnome kısaltmasının açılımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Galactic Nexus of Multiverse Entities"}, {"letter": "B", "text": "GNU Network Object Model Environment"}, {"letter": "C", "text": "Graphical Network Object Model Environment"}, {"letter": "D", "text": "General Network Object Model Environment"}, {"letter": "E", "text": "Graphical User Interface for Linux"}], "correct": "B", "explanation": "💡 Açıklama: GNOME, ilk geliştirildiğinde \"GNU Network Object Model Environment\" kelimelerinin baş harflerinden oluşturulmuştur.[cite: 12]"}, {"num": 154, "tag": "2023-2024 Büt, 2025-2026 Final", "text": "Bir CentOS kullanıcısı bir paketin ayrıntılarını nasıl görüntüleyebilir?", "options": [{"letter": "A", "text": "apt list paket"}, {"letter": "B", "text": "yum info paket"}, {"letter": "C", "text": "yum list paket"}, {"letter": "D", "text": "fed info paket"}, {"letter": "E", "text": "apt info paket"}], "correct": "B", "explanation": "💡 Açıklama: CentOS ve Red Hat tabanlı sistemlerde paket yönetimi için yum/dnf kullanılır. Bir paketin detayları 'yum info' komutu ile görüntülenir.[cite: 12]"}, {"num": 155, "tag": "2024-2025 Büt", "text": "1. Aşağıdaki Linux dağıtımlardan hangisi Debian tabanlıdır?", "options": [{"letter": "A", "text": "openSUSE"}, {"letter": "B", "text": "Red Hat"}, {"letter": "C", "text": "Gentoo"}, {"letter": "D", "text": "Ubuntu"}, {"letter": "E", "text": "Fedora"}], "correct": "D", "explanation": "💡 Açıklama: Ubuntu, Debian tabanlı ve kullanıcı dostu olmasıyla bilinen en popüler Linux dağıtımlarından biridir.[cite: 13]"}, {"num": 156, "tag": "2024-2025 Büt", "text": "2. Linux'de dosya ve dizin izinleri bilgisinde bulunan ilk karakter neyi temsil etmektedir?", "options": [{"letter": "A", "text": "Grup iznini"}, {"letter": "B", "text": "Okuma iznini"}, {"letter": "C", "text": "Çalıştırma iznini"}, {"letter": "D", "text": "Yazma iznini"}, {"letter": "E", "text": "Dosya veya klasör olduğu bilgisini"}], "correct": "E", "explanation": "💡 Açıklama: 'ls -l' komut çıktısındaki 10 karakterlik izin dizesinin ilk karakteri dosyanın türünü belirtir (örn: '-' normal dosya, 'd' dizin, 'l' link).[cite: 13]"}, {"num": 157, "tag": "2024-2025 Büt", "text": "3. Linux konsolda görüntülenen \"turkey@sakarya:-$\" ifadesi için aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "sakarya isimli bilgisayara bağlanılmıştır."}, {"letter": "B", "text": "turkey isimli kullanıcı işlem yapmaktadır."}, {"letter": "C", "text": "superuser yetkisi ile işlem yapılmaktadır."}, {"letter": "D", "text": "Kullanıcı, home dizinindedir."}, {"letter": "E", "text": "$ işareti normal bir kullanıcıyı temsil etmektedir."}], "correct": "C", "explanation": "💡 Açıklama: Komut satırının sonundaki \"$\" işareti standart/normal yetkili kullanıcıyı belirtir. Superuser (root) yetkisinde çalışılsaydı bu işaret \"#\" olurdu.[cite: 13]"}, {"num": 158, "tag": "2024-2025 Büt", "text": "4. Çok fazla bilgisayarı olan bir kurumun aşağıdaki Windows lisanslarından hangisini seçmesi kurum için daha kârlı olur?", "options": [{"letter": "A", "text": "Eğitim Lisansı"}, {"letter": "B", "text": "OEM Lisansı"}, {"letter": "C", "text": "Toplu Lisans"}, {"letter": "D", "text": "Ticari Lisans"}, {"letter": "E", "text": "Parekende Lisansı"}], "correct": "C", "explanation": "💡 Açıklama: Kurumların çok sayıdaki cihazları için tek bir anahtarla (KMS vb. ile) etkinleştirme yapabildikleri ve maliyet avantajı sağlayan model Toplu (Volume) Lisans'tır.[cite: 13]"}, {"num": 159, "tag": "2024-2025 Büt", "text": "5. Aşağıdakilerden hangisi proseslerin bellek bölümlerine yerleştirilmesi için işletim sistemi tarafından kullanılan yöntemlerden biri değildir?", "options": [{"letter": "A", "text": "First-fit algoritması"}, {"letter": "B", "text": "Best-fit algoritması"}, {"letter": "C", "text": "Swap-in algoritması"}, {"letter": "D", "text": "Worst-fit algoritması"}, {"letter": "E", "text": "Next-fit algoritması"}], "correct": "C", "explanation": "💡 Açıklama: Swap in, prosesin diskten ana belleğe alınması işlemidir, bir boş yer arama/tahsis etme algoritması değildir.[cite: 13]"}, {"num": 160, "tag": "2024-2025 Büt", "text": "6. 50 silindir içeren bir disk düşünelim. Disk kafası başlangıçta 5 nolu silindirde bulunmaktadır. Sırasıyla 5, 15, 20, 10, 25, 40, 50 nolu silindirlere istek vardır. Silindirin toplam kafa hareketi FCFS planlama algoritması kullanılarak bulunacak değer aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "75"}, {"letter": "B", "text": "65"}, {"letter": "C", "text": "70"}, {"letter": "D", "text": "45"}, {"letter": "E", "text": "55"}], "correct": "B", "explanation": "💡 Açıklama: FCFS'ye göre sırayla gidilir: "}, {"num": 161, "tag": "2024-2025 Büt", "text": "7. Windows servisleri ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Kullanıcı isteği ile yeniden başlatılabilir."}, {"letter": "B", "text": "Kullanıcı kendi servisini tanımlayabilir."}, {"letter": "C", "text": "Servis yönetimi services.msc ile yapılır."}, {"letter": "D", "text": "Sistem başlangıcında otomatik başlatılabilir."}, {"letter": "E", "text": "Systemd kullanılarak prosesler başlatılır."}], "correct": "E", "explanation": "💡 Açıklama: Systemd, Linux sistemlerinde kullanılan bir servis ve sistem yöneticisidir; Windows sistemlerde bulunmaz.[cite: 13]"}, {"num": 162, "tag": "2024-2025 Büt", "text": "8. Aşağıdakilerden hangisi prosesler arasındaki iletişim için kullanılan mekanizmalardan biri değildir?", "options": [{"letter": "A", "text": "Soketler"}, {"letter": "B", "text": "Sinyaller"}, {"letter": "C", "text": "Veri hatları"}, {"letter": "D", "text": "Mesaj geçişleri"}, {"letter": "E", "text": "Paylaşımlı bellek"}], "correct": "C", "explanation": "💡 Açıklama: Soketler, sinyaller, mesaj geçişleri ve paylaşımlı bellek birer yazılımsal IPC (Inter-Process Communication) mekanizmasıdır. Veri hatları (data buses) ise donanımsal iletişim yapılarıdır.[cite: 13]"}, {"num": 163, "tag": "2024-2025 Büt", "text": "9. Sayfa tablosu kullanılarak mantıksal adresin fiziksel adrese dönüştürülme adımları hangi seçenekte doğru olarak verilmektedir?", "options": [{"letter": "A", "text": "Sayfa tablosunun temel adresi ile sayfa numarası toplanır. Elde edilen değer ile sayfa tablosundan çerçeve numarası alınır. Çerçeve numarasının yanına offset değeri konur ve fiziksel adres elde edilir."}, {"letter": "B", "text": "Sayfa numarası ile sayfa tablosuna gidilir. Sayfa tablosundan çerçeve numarası alınır. Çerçeve numarasının yanına offset değeri konur ve fiziksel adres elde edilir."}, {"letter": "C", "text": "Sayfa tablosundan sayfa numarası alınır. Sayfa numarası offset değeri ile toplanır ve fiziksel adres elde edilir."}, {"letter": "D", "text": "Sayfa numarası ile sayfa tablosuna gidilir. Sayfa tablosundan çerçeve numarası alınır. Çerçeve numarası ile offset değeri toplanır ve fiziksel adres elde edilir."}, {"letter": "E", "text": "Sayfa tablosundan sayfa numarası alınır. Sayfa numarasının yanına offset değeri konur ve fiziksel adres elde edilir."}], "correct": "B", "explanation": "💡 Açıklama: CPU'nun ürettiği adresteki sayfa numarası ile sayfa tablosundan çerçeve numarası (frame) bulunur ve yanına sapma (offset) eklenerek fiziksel adrese ulaşılır.[cite: 13]"}, {"num": 164, "tag": "2024-2025 Büt", "text": "10. Aşağıdakilerden hangisi Windows sunucu işletim sistemlerinin avantajlarından biri değildir?", "options": [{"letter": "A", "text": "Arayüzler ile kolaylıkla güncellenebilmesi."}, {"letter": "B", "text": "Microsoft tarafından uzun dönemli destek garantisinin verilmesi."}, {"letter": "C", "text": "Microsoftun diğer ürünleri ile uyumlu çalışabilmesi."}, {"letter": "D", "text": "Kolay yönetilebilir olması."}, {"letter": "E", "text": "Açık kaynaklı olması."}], "correct": "E", "explanation": "💡 Açıklama: Windows Server işletim sistemleri kapalı kaynak kodlu, tescilli (proprietary) ve lisanslı ticari ürünlerdir.[cite: 13]"}, {"num": 165, "tag": "2024-2025 Büt", "text": "11. Linuxde /etc/passwd dosyası kullanım amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Servislerin şifrelerini saklar."}, {"letter": "B", "text": "Kullanıcı bilgilerini saklar."}, {"letter": "C", "text": "Sistemde kullanılan tüm şifreleri saklar."}, {"letter": "D", "text": "Kullanıcı şifrelerini saklar."}, {"letter": "E", "text": "Şifreleme anahtarlarını saklar."}], "correct": "B", "explanation": "💡 Açıklama: /etc/passwd dosyası şifreleri değil; kullanıcı adı, UID, GID, home dizini ve varsayılan kabuk (shell) gibi hesap tanımlayıcı bilgilerini içerir.[cite: 13]"}, {"num": 166, "tag": "2024-2025 Büt", "text": "12. rsync için aşağıdakilerden hangisi yanlış bir ifadedir?", "options": [{"letter": "A", "text": "Her seferinde dosyaların üzerine yazar."}, {"letter": "B", "text": "Klasörleri belirtilen hedefe kopyalar."}, {"letter": "C", "text": "Ağ üzerinden senkronizasyon yapabilir."}, {"letter": "D", "text": "SSH üzerinden çalışabilir."}, {"letter": "E", "text": "Şifreli yedekleme yapabilir."}], "correct": "A", "explanation": "💡 Açıklama: rsync, hedefteki dosyalarla kaynak dosyaları karşılaştırıp sadece değişen (fark/delta) kısımları güncelleyerek çalışır, böylece her seferinde tüm verinin üzerine yazmaz.[cite: 13]"}, {"num": 167, "tag": "2024-2025 Büt", "text": "13. Aşağıdaki Windows lisanslama modellerinden hangisi, işletim sistemi donanımla birlikte verildiğinde geçerlidir?", "options": [{"letter": "A", "text": "OEM Lisansı"}, {"letter": "B", "text": "Toplu Lisans"}, {"letter": "C", "text": "Perakende Lisansı"}, {"letter": "D", "text": "Academic Volume Licensing"}, {"letter": "E", "text": "FPP Lisansı"}], "correct": "A", "explanation": "💡 Açıklama: OEM (Original Equipment Manufacturer) lisansı, cihaz üreticileri tarafından bilgisayar donanımıyla birlikte (önceden yüklenmiş olarak) satılan lisans türüdür.[cite: 13]"}, {"num": 168, "tag": "2024-2025 Büt", "text": "14. Kilitlenmeden kaçınmak için aşağıda verilen algoritmalardan hangisi kullanılmaktadır?", "options": [{"letter": "A", "text": "A"}, {"letter": "B", "text": "Ters parça algoritması"}, {"letter": "C", "text": "Dizgi hizalama"}, {"letter": "D", "text": "Banker algoritması"}, {"letter": "E", "text": "Dijistra algoritması"}], "correct": "D", "explanation": "💡 Açıklama: Kilitlenmeden kaçınmak (Deadlock Avoidance) için işletim sistemlerinde Dijkstra tarafından formüle edilen Banker (Bankacı) Algoritması referans alınır.[cite: 13]"}, {"num": 169, "tag": "2024-2025 Büt", "text": "15. ed komutunun, kabuk yerleşik komutu olup olmadığını aşağıdakilerden hangisi ile öğrenebilir?", "options": [{"letter": "A", "text": "info ed"}, {"letter": "B", "text": "which cd"}, {"letter": "C", "text": "man cd"}, {"letter": "D", "text": "help ed"}, {"letter": "E", "text": "type cd"}], "correct": "E", "explanation": "💡 Açıklama: Sınav baskısındaki ed/cd yazım hatalarına rağmen, Linux'ta bir komutun 'built-in' (yerleşik), 'alias' veya harici bir dosya olup olmadığını kontrol etmek için 'type' komutu kullanılır.[cite: 13]"}, {"num": 170, "tag": "2024-2025 Büt", "text": "16. Aşağıdaki seçeneklerden hangisi dizinlerin saklanma yapılarından biri değildir?", "options": [{"letter": "A", "text": "İki seviyeli dizinler"}, {"letter": "B", "text": "Yığın yapısındaki dizinler"}, {"letter": "C", "text": "Ağaç yapısı şeklinde olan dizinler"}, {"letter": "D", "text": "Tek seviyeli dizinler"}, {"letter": "E", "text": "Döngüsel olmayan graf yapısındaki dizinler"}], "correct": "B", "explanation": "💡 Açıklama: İşletim sistemlerinde dizin mimarileri tek seviyeli, iki seviyeli, ağaç yapısı ve döngüsel olmayan (acyclic) graf şeklinde düzenlenir. Yığın (Stack) bir dizin yapısı değil, bellek yönetim birimidir.[cite: 13]"}, {"num": 171, "tag": "2024-2025 Büt", "text": "17. Linuxde kabukta çalıştırılmak istenen bir script dosyasının uzantısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "ssh"}, {"letter": "B", "text": "sc"}, {"letter": "C", "text": "run"}, {"letter": "D", "text": "sh"}, {"letter": "E", "text": "exe"}], "correct": "D", "explanation": "💡 Açıklama: Linux kabuk (shell) betik (script) dosyaları genellikle standart olarak '.sh' uzantısı kullanılarak adlandırılır.[cite: 13]"}, {"num": 172, "tag": "2024-2025 Büt", "text": "18. İşletim sistemlerinde dosya yönetimi ile ilgili olarak aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dosya yapısı içerisinde bulunan veri ve programlar belleğin farklı bölümlerinde saklanabilirler."}, {"letter": "B", "text": "Veriler ve programlar bilgisayarda dosyalar halinde saklanırlar."}, {"letter": "C", "text": "Dosyaların yedeğinin alınması işletim sisteminin dosya yönetimi kapsamında gerçekleştirdiği aktivitelerden biridir."}, {"letter": "D", "text": "Dosya yapısı fiziksel bir yapıdır."}, {"letter": "E", "text": "Benzer dosyalar bir araya gelerek dizinleri oluşturur."}], "correct": "D", "explanation": "💡 Açıklama: Dosya yapısı donanımdan soyutlanmış \"mantıksal\" bir depolama birimidir. Depolama aygıtının kendisi (disk, sektör vb.) fiziksel yapıdır.[cite: 13]"}, {"num": 173, "tag": "2024-2025 Büt", "text": "19. Aşağıdakilerden hangisi bir işletim sisteminin temel görevlerinden biri değildir?", "options": [{"letter": "A", "text": "Ekran yönetimi"}, {"letter": "B", "text": "Ağ yönetimi"}, {"letter": "C", "text": "Dosya yönetimi"}, {"letter": "D", "text": "Proses yönetimi"}, {"letter": "E", "text": "Bellek yönetimi"}], "correct": "A", "explanation": "💡 Açıklama: İşletim sisteminin dört ana temel görevi Proses, Bellek, Dosya ve G/Ç (I/O) yönetimidir. Ekran yönetimi işletim sisteminin tek başına ana bir temel bileşeni değildir.[cite: 13]"}, {"num": 174, "tag": "2024-2025 Büt", "text": "20. Linuxte servis tanım dosyalarının uzantısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "service"}, {"letter": "B", "text": "srv"}, {"letter": "C", "text": "init"}, {"letter": "D", "text": "serv"}, {"letter": "E", "text": "unit"}], "correct": "A", "explanation": "💡 Açıklama: Systemd altyapısında tanımlanan tüm servis dosyaları '.service' uzantısına sahiptir.[cite: 13]"}, {"num": 175, "tag": "2025-2026 Final", "text": "Gerçek zamanlı işletim sistemleri ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Tüm kullanıcılara eşit zaman dilimi ayrılır."}, {"letter": "B", "text": "Görevler hassas bir zamanlama ile icra edilirler."}, {"letter": "C", "text": "Kritik görevler için tercih edilen bir işletim sistemidir."}, {"letter": "D", "text": "Deterministtir."}, {"letter": "E", "text": "Tepki ve işlem süresi oldukça kısadır."}], "correct": "A", "explanation": "💡 Açıklama: Tüm kullanıcılara eşit zaman dilimi ayrılması 'Zaman Paylaşımlı' (Time-Sharing) sistemlerin özelliğidir, Gerçek Zamanlı (Real-Time) sistemlerin değil.[cite: 14]"}, {"num": 176, "tag": "2025-2026 Final", "text": "SSH aşağıdaki portlardan hangisi ile çalışır?", "options": [{"letter": "A", "text": "22"}, {"letter": "B", "text": "21"}, {"letter": "C", "text": "23"}, {"letter": "D", "text": "80"}, {"letter": "E", "text": "25"}], "correct": "A", "explanation": "💡 Açıklama: SSH (Secure Shell) protokolü varsayılan olarak sunucularda TCP 22 numaralı port üzerinden çalışır.[cite: 14]"}, {"num": 177, "tag": "2025-2026 Final", "text": "Bash scriptlerinde değişkenler aşağıdaki işaretlerden hangisi ile birlikte kullanılabilir?", "options": [{"letter": "A", "text": "#degisken"}, {"letter": "B", "text": "degisken"}, {"letter": "C", "text": "=degisken"}, {"letter": "D", "text": "$degisken"}, {"letter": "E", "text": "%degisken"}], "correct": "D", "explanation": "💡 Açıklama: Bash scriptlerinde tanımlanmış bir değişkenin değerini okumak veya kullanmak için başına '$' (dolar) işareti konulur.[cite: 14]"}, {"num": 178, "tag": "2025-2026 Final", "text": "• Kök seviyesinde dizin vardır. • Kök seviyesindeki dizinlere dosya veya başka dizinler bağlanabilir. • Bu dizinlere başka dizinler veya dosyalar bağlanabilir. • Her kullanıcıya ait bir dizin yapısı vardır. Yukarıda tanımlamaları yapılan dizin saklama (hiyerarşisi) yapısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Döngüsel olmayan graf yapısındaki dizinler"}, {"letter": "B", "text": "Tek seviyeli dizinler"}, {"letter": "C", "text": "İki seviyeli dizinler"}, {"letter": "D", "text": "Yığın yapısındaki dizinler"}, {"letter": "E", "text": "Ağaç yapısı şeklinde olan dizinler"}], "correct": "E", "explanation": "💡 Açıklama: Kök dizinle başlayıp alt dizinlere ve o alt dizinlerden de başka dizin/dosyalara limitsiz inilebilen hiyerarşik yapı Ağaç (Tree) dizin yapısıdır.[cite: 14]"}, {"num": 179, "tag": "2025-2026 Final", "text": "Linux işletim sistemi tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Linux çekirdeği üzerine inşa edilmiş açık kaynak kodlu bir işletim sistemidir."}, {"letter": "B", "text": "Sadece sunucularda kullanılan bir işletim sistemidir."}, {"letter": "C", "text": "Bir web tarayıcısıdır."}, {"letter": "D", "text": "Kapalı kaynak kodlu bir işletim sistemidir."}, {"letter": "E", "text": "Sadece kişisel bilgisayarlarda kullanılan bir işletim sistemidir."}], "correct": "A", "explanation": "💡 Açıklama: Linux, açık kaynak kodlu bir çekirdek (kernel) ve bu çekirdek üzerine inşa edilmiş işletim sistemlerinin genel adıdır.[cite: 14]"}, {"num": 180, "tag": "2025-2026 Final", "text": "Windows işletim sistemi için geçerli olan lisanslama modeli aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "BSD Lisansı"}, {"letter": "B", "text": "MIT Lisansı"}, {"letter": "C", "text": "Apache Lisansı"}, {"letter": "D", "text": "GPL (General Public License)"}, {"letter": "E", "text": "OEM (Original Equipment Manufacturer)"}], "correct": "E", "explanation": "💡 Açıklama: BSD, MIT, Apache ve GPL açık kaynak yazılım lisanslarıdır. OEM ise Windows gibi kapalı kaynak işletim sistemlerinin donanım üreticileriyle birlikte sunulan lisanslama modelidir.[cite: 14]"}, {"num": 181, "tag": "2025-2026 Final", "text": "Proseslere ait özelliklerden biri olan program sayıcının görevi nedir?", "options": [{"letter": "A", "text": "Prosesin en son çalıştırılan komutunun adresini saklar."}, {"letter": "B", "text": "Prosesin öncelik değerini saklar."}, {"letter": "C", "text": "Açık dosyaların listesi saklanır."}, {"letter": "D", "text": "Prosesin çalışması esnasında oluşan veriler kaydedicilerde tutulur."}, {"letter": "E", "text": "Prosesin durumunu saklar."}], "correct": "A", "explanation": "💡 Açıklama: Program Sayıcısı (PC), çalışmakta olan prosesin işleyeceği komutların bellek adreslerini tutan özel bir yazmaçtır.[cite: 14]"}, {"num": 182, "tag": "2025-2026 Final", "text": "Linux'de auzef isimli kullanıcı istanbul isimli gruptan çıkarılmak isteniyor. Aşağıdaki komutlardan hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": "sudo passwd -d auzef istanbul"}, {"letter": "B", "text": "sudo gpasswd -d auzef istanbul"}, {"letter": "C", "text": "sudo passwd -u auzef -g istanbul"}, {"letter": "D", "text": "sudo gpasswd -u auzef -g istanbul"}, {"letter": "E", "text": "sudo group -r auzef istanbul"}], "correct": "B", "explanation": "💡 Açıklama: Linux'ta bir kullanıcıyı belirli bir gruptan silmek (delete) için 'gpasswd -d kullanici grup' komutu kullanılır.[cite: 14]"}, {"num": 183, "tag": "2025-2026 Büt", "text": "auzef.txt isimli bir dosyanın grubu editors grubu olarak değiştirilmek isteniyor. Yukarıdaki isteğin gerçekleştirilmesi için aşağıdaki komutlardan hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": "chmod editors auzef.txt"}, {"letter": "B", "text": "chown editors auzef.txt"}, {"letter": "C", "text": "chown :editors auzef.txt"}, {"letter": "D", "text": "chmod 777 editors auzef.txt"}, {"letter": "E", "text": "chmod -group editors auzef.txt"}], "correct": "C", "explanation": "💡 Açıklama: Dosyanın sadece grubunu değiştirmek için 'chown :grup_adi dosya_adi' veya 'chgrp grup_adi dosya_adi' komutu kullanılır. Bu nedenle doğru kullanım 'chown :editors auzef.txt' şeklindedir.[cite: 15]"}, {"num": 184, "tag": "2025-2026 Büt", "text": "Aşağıda verilen aktivitelerden hangisi işletim sisteminin bellek yönetimi kapsamında gerçekleştirilmez?", "options": [{"letter": "A", "text": "Ana bellekten diske prosesleri taşımak."}, {"letter": "B", "text": "Disk planlaması yapmak."}, {"letter": "C", "text": "Tahsis edilen bellek alanını gerektiğinde geri almak."}, {"letter": "D", "text": "Diskten ana belleğe program parçalarını getirmek."}, {"letter": "E", "text": "Proseslere ana bellekte yer tahsis etmek."}], "correct": "B", "explanation": "💡 Açıklama: Disk planlaması, bellek (RAM) yönetiminin değil, I/O ve Disk yönetiminin (Storage Management) bir görevidir.[cite: 15]"}, {"num": 185, "tag": "2025-2026 Büt", "text": "Komut satırından dosya türünü öğrenmek için aşağıdaki komutlardan hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": "type"}, {"letter": "B", "text": "which"}, {"letter": "C", "text": "dir"}, {"letter": "D", "text": "whatis"}, {"letter": "E", "text": "file"}], "correct": "E", "explanation": "💡 Açıklama: Linux'ta bir dosyanın içeriğine bakarak hangi türde (metin, çalıştırılabilir, resim vb.) olduğunu belirlemek için 'file' komutu kullanılır.[cite: 15]"}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAZILIM KALİTE VE TESTİ — AUZEF Master Web - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 4. Sınıf Dersleri</a>
+    <span class="agy-doc-title">YAZILIM KALİTE VE TESTİ — AUZEF Master Web - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">4. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>YAZILIM KALİTE VE TESTİ — AUZEF Master Web Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>YAZILIM KALİTE VE TESTİ — AUZEF Master Web - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">YAZILIM KALİTE VE TESTİ — AUZEF Master Web dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>118 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>4. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">118</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Yazilim_Kalite_ve_Testi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (118)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">118</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Yazilim_Kalite_ve_Testi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024-2025 büt, 2025-2026 büt", "text": "ISO standartlarında yer alan kalite terimleri ile ilgili kısaltmalar ve açıklamalarından hangisi yanlıştır?", "options": [{"letter": "A", "text": "R: Replay/Yeniden yapılabilir"}, {"letter": "B", "text": "A: Achievable/Ulaşılabilir"}, {"letter": "C", "text": "T: Timing/Zamana bağlı"}, {"letter": "D", "text": "S: Specified/Belirli"}, {"letter": "E", "text": "M: Measurable/Ölçülebilir"}], "correct": "A", "explanation": "SMART kalite/hedef kriterlerindeki R harfi 'Relevant' (İlgili) veya bazı bağlamlarda 'Realistic' (Gerçekçi) anlamına gelir. 'Replay' bu kısaltmanın standart bir karşılığı değildir."}, {"num": 2, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2023 final, 2025-2026 büt", "text": "Yazılım testi ile ilgili kavramlar ve açıklamaları eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Test Stratejisi: Testin uygulanma şekli"}, {"letter": "B", "text": "Test Öğesi: Test üzerinde uygulanan veri seti"}, {"letter": "C", "text": "Test Kuluçkası: Testin yürütülmesi için gerekli olan taklit uygulamalar"}, {"letter": "D", "text": "Test Kaydı: Testlerin yürütülmesi ile ilgili detayların tutulması"}, {"letter": "E", "text": "Test Yaklaşımı: Test stratejisinin hayata geçirilmesi"}], "correct": "B", "explanation": "Test öğesi (Test Item), test edilen yazılım bileşeninin kendisidir (form, buton, modül vs.). Veri seti (Test Data) testin üzerinde uygulandığı girdi parametreleridir, testin nesnesi değildir."}, {"num": 3, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme", "text": "Üzerinden Geçme I. Teknik Gözden Geçirme II. Teftiş III. Yukarıda verilen yöntemlerden hangisi veya hangileri hem resmî hem gayrıresmî olabilmektedir?", "options": [{"letter": "A", "text": "II ve III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "I ve III"}, {"letter": "E", "text": "Yalnız III"}], "correct": "C", "explanation": "AUZEF Yazilim Kalite ve Testi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 4, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2025 final, 2023-2024 büt, 2025 final, 2023-2024 büt, 2025-2026 büt", "text": "Aşağıdakilerden hangisi Nesneye Yönelik Kod Metrikleri arasında yer almaz?", "options": [{"letter": "A", "text": "Sınıfın Tetiklediği Metot Sayısı"}, {"letter": "B", "text": "Sınıfın Ağırlıklı Metot Sayısı"}, {"letter": "C", "text": "Kod Satır Sayısı"}, {"letter": "D", "text": "Kalıtım Ağacının Derinliği"}, {"letter": "E", "text": "Alt Sınıf Sayısı"}], "correct": "C", "explanation": "Kod satır sayısı (LOC - Lines of Code) en eski ve temel 'Yordamsal (Procedural)' kod metriğidir. OOP (Nesneye Yönelik) kavramları olan sınıf, kalıtım, metot gibi kavramları içermez."}, {"num": 5, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024 final, 2025-2026 büt, 2025 tek ders", "text": "Aşağıdaki kalite ile ilgili kavramlar ve eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Düzeltici Faaliyet: Belirlenen bir uygunsuzluğun ana sebebini ortadan kaldırmak ve tekrarını engellemek için yapılan faaliyetler"}, {"letter": "B", "text": "Uygunsuzluk: Gerekliliklere uymama durumu"}, {"letter": "C", "text": "Standart Dışı İzin: Şartlara uymayan ürünlere gerektiğinde şartlı/şartsız çıkış izni verme işlemi"}, {"letter": "D", "text": "Doğrulama: Belirlenen şartların karşılandığını gösteren objektif delillere dayalı olarak teyit etme işlemi"}, {"letter": "E", "text": "Önleyici Faaliyet: Potansiyel bir testi ortadan kaldırmak için yapılan faaliyetler"}], "correct": "E", "explanation": "Önleyici faaliyet (Preventive Action), potansiyel bir 'testi' değil, potansiyel bir 'uygunsuzluğu/hatayı' (henüz gerçekleşmemiş olan) ortadan kaldırmak için yapılır."}, {"num": 6, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2022 vize, 2023 vize, 2024 final, 2025-2026 büt, 2025 tek ders", "text": "Aşağıdakilerden hangisi bir belgelendirme hatası değildir?", "options": [{"letter": "A", "text": "Yazılımdaki modüllerden birinin isminin kullanma kılavuzuna yanlış yazılması"}, {"letter": "B", "text": "Yazılımdaki algoritmaların birkaçının akış şemasının yanlış çizilmesi"}, {"letter": "C", "text": "Yazılımdaki veri tabanı tabloları arasındaki ilişkinin yanlış çizilmesi"}, {"letter": "D", "text": "Yazılımda bazı noktalarda yanlış türde değişken kullanılması"}, {"letter": "E", "text": "Yazılımdaki kodlar ile kodların yorum kısımlarının eşleşmemesi"}], "correct": "D", "explanation": "Yanlış türde değişken kullanımı doğrudan kodu bozan yapısal/mantıksal bir hatadır; bir dokümantasyon (belgeleme) hatası değildir."}, {"num": 7, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024-2025 büt, 2025-2026 büt", "text": "Bir web sitesinin birçok versiyonunun incelendiği ve karşılaştırıldığı kullanılabilirlik testlerine ne ad verilmektedir?", "options": [{"letter": "A", "text": "A/B Testi"}, {"letter": "B", "text": "Otomatik Test"}, {"letter": "C", "text": "Geri Bildirim Testleri"}, {"letter": "D", "text": "İzleme testi"}, {"letter": "E", "text": "Laboratuvar Testleri"}], "correct": "A", "explanation": "A/B testi (veya çok değişkenli test), bir arayüzün (web sitesinin) farklı versiyonlarını (A ve B) kullanıcıların eş zamanlı olarak deneyimlemesini sağlayarak hangisinin daha iyi performans gösterdiğini/kullanışlı olduğunu bulmaya yarayan bir test türüdür."}, {"num": 8, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2023 final, 2025-2026 büt", "text": "Yazılım testleri ile ilgili aşağıdaki kavramların hangisi, sistemin beklenen dışında bir durumla karşılaşmasını ifade eder?", "options": [{"letter": "A", "text": "Yanlışlık"}, {"letter": "B", "text": "Kusur"}, {"letter": "C", "text": "Arıza"}, {"letter": "D", "text": "İnsan hatası"}, {"letter": "E", "text": "Anomali"}], "correct": "E", "explanation": "Sistemin normal işleyişine, beklentilere veya tanımlı standartlara uymayan herhangi bir tuhaf, olağandışı durum (henüz hata veya arıza olup olmadığı kesinleşmemiş olsa bile) 'Anomali' olarak adlandırılır."}, {"num": 9, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024-2025 büt, 2025-2026 büt", "text": "Aşağıdakilerden hangisi izlenebilirlik çeşitleri arasında yer almaktadır?", "options": [{"letter": "A", "text": "Aktif izlenebilirlik – Pasif izlenebilirlik"}, {"letter": "B", "text": "Tekli izlenebilirlik – Çoklu izlenebilirlik"}, {"letter": "C", "text": "Otomatik izlenebilirlik – Manuel izlenebilirlik"}, {"letter": "D", "text": "Dikey izlenebilirlik – Yatay izlenebilirlik"}, {"letter": "E", "text": "Tek yönlü izlenebilirlik – Çok yönlü izlenebilirlik"}], "correct": "D", "explanation": "Yazılım testinde izlenebilirlik (Traceability) gereksinimlerin kod ve testlerle olan ilişkisini kurar ve genellikle 'Yatay İzlenebilirlik' (aynı seviyedeki dokümanlar arası) ve 'Dikey İzlenebilirlik' (farklı seviyedeki, örn: gereksinimden koda) olarak ikiye ayrılır."}, {"num": 10, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024 final, 2025-2026 büt, 2025 tek ders", "text": "Gözden Geçirme işleminde Kişisel Hazırlık ile Yeniden Çalışma arasındaki işlem aşağıdaki isimlerden hangisi ile ifade edilemez?", "options": [{"letter": "A", "text": "İnceleme"}, {"letter": "B", "text": "Kaydetme"}, {"letter": "C", "text": "Analiz"}, {"letter": "D", "text": "Gözden geçirme toplantısı"}, {"letter": "E", "text": "Değerlendirme"}], "correct": "C", "explanation": "Resmi gözden geçirme (Review) aşamaları: Hazırlık -> Toplantı/İnceleme/Değerlendirme -> Yeniden Çalışma (Rework) şeklindedir. 'Kaydetme' (Logging) toplantının içindeki bir aktivitedir, sürecin ana aşamalarından birinin ismi değildir."}, {"num": 11, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2023-2024 büt, 2025-2026 büt", "text": "Bir test otomasyonunun Java dilinde yazılan yazılımları, web tabanlı ortamlarda, herhangi bir internet tarayıcısı ile ve Eclipse’te Maven veya Ivy kullanılarak test edebildiği bilinmektedir. Buna göre bu cümlede bu test otomasyonunun hangi özelliği hakkında bilgi verilmemiştir?", "options": [{"letter": "A", "text": "Donanım uyumluluğu"}, {"letter": "B", "text": "IDE uyumluluğu"}, {"letter": "C", "text": "Dil uyumluluğu"}, {"letter": "D", "text": "Platform uyumluluğu"}, {"letter": "E", "text": "Tarayıcı uyumluluğu YAZILIM KALİTE VE TESTİ A P355875.G14323 05-01-2026 15:26:07 CEVAPLI"}], "correct": "A", "explanation": "Cümlede dil (Java), platform (web), tarayıcı (herhangi bir tarayıcı) ve IDE/Araç (Eclipse, Maven, Ivy) özellikleri geçmektedir. Ancak donanım (RAM, işlemci, mimari) uyumluluğuna dair bir bilgi verilmemiştir."}, {"num": 12, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024-2025 büt, 2024-2025 büt, 2025-2026 büt", "text": "Aşağıdakilerden hangisi yazılım test ilerleme raporları içerisinde yer almaz?", "options": [{"letter": "A", "text": "Kalan riskler"}, {"letter": "B", "text": "Gerçekleştirilen testlerin özeti"}, {"letter": "C", "text": "Çıkış kriterleri"}, {"letter": "D", "text": "O test dönemi sırasında neler olduğuna dair bilgiler"}, {"letter": "E", "text": "Testi yapacak kişilerin rolleri"}], "correct": "E", "explanation": "Test ilerleme raporu (Test Progress Report), test sürecinin o anki durumunu, bulguları, riskleri ve çıkış kriterlerinin ne ölçüde sağlandığını özetler. 'Testi yapacak kişilerin rolleri' ilerleme raporunda değil, sürecin en başındaki 'Test Planı'nda (Test Plan) belirlenir ve yazılır."}, {"num": 13, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2022 vize, 2023 vize, 2025 final, 2024-2025 büt, 2025-2026 büt", "text": "Kutu yaklaşımları ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Kara kutu testleri genellikle tek parça halinde yapılır."}, {"letter": "B", "text": "Beyaz kutu testlerinde dış etkiler testi etkilemez."}, {"letter": "C", "text": "Beyaz kutu testleri genellikle detaysız testlerdir."}, {"letter": "D", "text": "Gri kutu testlerinde kısmî bir iç yapı bilgisi mevcuttur."}, {"letter": "E", "text": "Kara kutu testleri algoritma testlerine uygundur."}], "correct": "C", "explanation": "Tam tersine, Beyaz kutu (White Box) testleri, kodun yapısını, dal ve döngülerini kaynak kodu bazında incelediği için en çok detaya inen test türüdür."}, {"num": 14, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2023-2024 büt, 2024-2025 büt, 2025-2026 büt", "text": "Aşağıdakilerden hangisi bir ISTQB sertifikasına sahip olmanın avantajları arasında yer almaz?", "options": [{"letter": "A", "text": "Kariyer ilerlemesini desteklemek için beceriler geliştirme ve genişletme"}, {"letter": "B", "text": "Test çeşitliliğinin artması"}, {"letter": "C", "text": "İşverenlerin güvendiği becerilerin bağımsız, uluslararası kabul görmüş bir doğrulaması"}, {"letter": "D", "text": "Hem mevcut hem de gelecekteki istihdam için taşınabilir yetenek kanıtı"}, {"letter": "E", "text": "Profesyonel güvenilirliği artırma"}], "correct": "B", "explanation": "Sertifikaya sahip olmak profesyonel güvenilirliği artırır, kariyere katkı sağlar ve yetenek kanıtıdır. Ancak kişinin sertifika alması, kurumun uyguladığı 'test çeşitliliğini' (örneğin performans testinden güvenlik testine geçiş) doğrudan ve otomatik olarak artırmaz."}, {"num": 15, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024 final, 2025-2026 büt", "text": "Aşağıdakilerden hangisi yazılım test otomasyonlarına verilen desteği ifade eden bir kavram değildir?", "options": [{"letter": "A", "text": "Entegrasyon"}, {"letter": "B", "text": "Müşteri desteği"}, {"letter": "C", "text": "Makaleler"}, {"letter": "D", "text": "Teknik personel"}, {"letter": "E", "text": "Bloglar"}], "correct": "A", "explanation": "Otomasyon araçlarını kullanırken öğrenme ve sorun çözme desteği sağlayan kanallar: Müşteri desteği, teknik destek personeli, topluluk blogları ve makalelerdir. 'Entegrasyon', aracın bir özelliğidir, destek (support) mekanizması değildir."}, {"num": 16, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize, 2025-2026 büt, 2025 tek ders", "text": "Yazılımlarda bazen bir birimin diğerini olumsuz olarak etkileyebildiği bilinmektedir. Bu durum aşağıdaki testlerin hangisiyle ortaya çıkabilir?", "options": [{"letter": "A", "text": "Kabul testi"}, {"letter": "B", "text": "Saha testi"}, {"letter": "C", "text": "Sistem testi"}, {"letter": "D", "text": "Entegrasyon testi"}, {"letter": "E", "text": "Birim testi"}], "correct": "D", "explanation": "Birimler (modüller) ayrı ayrı çalışırken hata vermeyebilir, ancak birbirleriyle veri alışverişi yapmaya başladıklarında uyumsuzluk çıkıyorsa bu 'Entegrasyon' (bütünleştirme) testinde yakalanır."}, {"num": 17, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2023 final, 2025-2026 büt, 2023 final, 2025-2026 büt, 2024-2025 büt", "text": "Aşağıdakilerden hangisinin test edilmesi kullanılabilirlik testi olarak kabul edilemez?", "options": [{"letter": "A", "text": "Cep telefonu ekranı"}, {"letter": "B", "text": "Web sitesi"}, {"letter": "C", "text": "Buzdolabı elektronik paneli"}, {"letter": "D", "text": "Veri tabanı"}, {"letter": "E", "text": "Öğrenci işleri otomasyonu arayüzü"}], "correct": "D", "explanation": "Kullanılabilirlik (Usability) testi, son kullanıcının sistemle girdiği etkileşimi (arayüzleri) hedefler. Veri tabanı son kullanıcının doğrudan etkileşime girdiği bir arayüz (UI) değil, arka planda (backend) çalışan bir depolama sistemidir."}, {"num": 18, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, 2024 final, 2025 final, 2025-2026 büt, 2025 tek ders", "text": "Aşağıdakilerden hangisi ISTQB’nin yapmakta olduğu özelleşmiş testlerde kontrol edilen bir metriktir?", "options": [{"letter": "A", "text": "İzlenebilirlik"}, {"letter": "B", "text": "Performans"}, {"letter": "C", "text": "Taşınabilirlik"}, {"letter": "D", "text": "Güvenilirlik"}, {"letter": "E", "text": "Uyumluluk"}], "correct": "B", "explanation": "ISTQB modüllerinde 'Güvenlik', 'Test Otomasyonu', 'Mobil' ve 'Performans' (Performance Testing) gibi ileri düzey özelleşmiş (Specialist) test sertifikasyonları ve metrikleri bulunur."}, {"num": 19, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize, 2025-2026 büt, 2025 tek ders", "text": "Bazı yazılım testleri doğrudan yazılımın özelliklerini ve kriterlerini test etmeyi amaçlar. Aşağıdakilerden hangisi bu tip bir test değildir?", "options": [{"letter": "A", "text": "Kurtarılabilirlik Testi"}, {"letter": "B", "text": "Entegrasyon Testi"}, {"letter": "C", "text": "Sürdürülebilirlik Testi"}, {"letter": "D", "text": "Güvenlik Testi"}, {"letter": "E", "text": "Güvenilirlik Testi"}], "correct": "B", "explanation": "Güvenlik, güvenilirlik, sürdürülebilirlik vb. yazılımın spesifik 'kalite niteliklerini' (özelliklerini) ölçen fonksiyonel olmayan test tipleridir. Entegrasyon testi ise modüller arası iletişimi ölçen yapısal bir test aşamasıdır."}, {"num": 20, "tag": "2025-2026 - Yazılım Kalite ve Testi - Bütünleme, Yazılım Kalite Testi 2025-2026 Vize, 2022 vize, 2023 vize, 2024 vize, 2025-2026 vize, 2025-2026 büt, 2025 tek ders", "text": "Aşağıdaki hangi değerlere sahip olan bir yazılım riskinin RPN değeri 12 değildir?", "options": [{"letter": "A", "text": "Sistem Açısından Önemine Göre: Giderilebilir İşlevsellik Kaybı Müşteri Açısından Önemine Göre: Zorunlu Gerçekleşme Olasılığına Göre: Mümkün"}, {"letter": "B", "text": "Sistem Açısından Önemine Göre: Veri Kaybı Müşteri Açısından Önemine Göre: Düzeltilmesi İyi Olacak Gerçekleşme Olasılığına Göre: İhtimal Dahilinde Olmayan"}, {"letter": "C", "text": "Sistem Açısından Önemine Göre: Giderilebilir İşlevsellik Kaybı Müşteri Açısından Önemine Göre: Düzeltilmesi İyi Olacak Gerçekleşme Olasılığına Göre: Muhtemel"}, {"letter": "D", "text": "Sistem Açısından Önemine Göre: İşlevsellik Kaybı Müşteri Açısından Önemine Göre: Zorunlu Gerçekleşme Olasılığına Göre: İhtimal Dahilinde Olmayan"}, {"letter": "E", "text": "Sistem Açısından Önemine Göre: Kozmetik Risk Müşteri Açısından Önemine Göre: İsteğe Bağlı Gerçekleşme Olasılığına Göre: Muhtemel"}], "correct": "E", "explanation": "RPN (Risk Öncelik Numarası) = Şiddet x Olasılık x Saptanabilirlik değerlerinin çarpımıdır. Kozmetik ve isteğe bağlı risklerin çarpan katsayıları çok düşüktür."}, {"num": 21, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize, 2025 final", "text": "Geliştirilecek yazılımla ilgili, kodlardan önce test senaryolarının yazıldığı yaklaşıma verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Dokümantasyon Bazlı Yazılım"}, {"letter": "B", "text": "Kodlama Tabanlı Geliştirme"}, {"letter": "C", "text": "Test Güdümlü Geliştirme"}, {"letter": "D", "text": "Analiz Bazlı Tasarım"}, {"letter": "E", "text": "Bakım Temelli Yazılım"}], "correct": "C", "explanation": "Test-Driven Development (TDD) yaklaşımında süreç tersten işler: Önce test senaryosu ve kodu yazılır, sonra bu testi geçecek kadar üretim kodu yazılır."}, {"num": 22, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2022 vize, 2023 vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Aşağıdaki özelliklerden hangisinin bir yazılım geliştiricide olmasına gerek duyulmazken bir yazılım test uzmanında kesin olarak bulunması beklenir?", "options": [{"letter": "A", "text": "Programlama dilini iyi bilmek"}, {"letter": "B", "text": "Şüphecilik"}, {"letter": "C", "text": "Planlı olmak"}, {"letter": "D", "text": "Analitik olmak"}, {"letter": "E", "text": "Teknik ayrıntılara sahip olmak"}], "correct": "B", "explanation": "Geliştiriciler kodu yapıcı bir şekilde 'çalıştırmak' üzerine odaklanırken, test uzmanları sistemin nerelerden kırılabileceğini bulmak için şüpheci (skeptical) ve yıkıcı bir bakış açısına sahip olmalıdır."}, {"num": 23, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize", "text": "Aşağıdakilerden hangisi fonksiyonel testlerin amaçlarından biri değildir?", "options": [{"letter": "A", "text": "Yazılım biriminin hatasız, güvenilir ve etkin bir şekilde çalışması"}, {"letter": "B", "text": "Yazılım biriminin ihtiyaçları tam olarak karşılayıp karşılamadığının belirlenmesi"}, {"letter": "C", "text": "Yazılım biriminin sistem gereksinimlerine uygun olması"}, {"letter": "D", "text": "Yazılım biriminin kullanıcının isteklerine cevap vermesi"}, {"letter": "E", "text": "Yazılım biriminin yüksek performansa sahip olması"}], "correct": "E", "explanation": "Performans (hız, ölçeklenebilirlik vb.) fonksiyonel olmayan (non-functional) bir test türüdür. Fonksiyonel testler 'sistem ne yapıyor' (işlevi yerine getiriyor mu) sorusuna bakar, 'ne kadar hızlı yapıyor' sorusuna değil."}, {"num": 24, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2023-2024 büt, 2024 vize, 2023-2024 büt, 2025-2026 vize, 2025 tek ders", "text": "Bir yazılımda, sürekli aynı testler yapılması neticesinde belli bir süre sonra hiçbir hatanın bulunmaması aşağıdaki ilkelerin hangisi ile açıklanabilir?", "options": [{"letter": "A", "text": "İçerik Bağımlılık"}, {"letter": "B", "text": "Varlığı Göster, Yokluğu Gösterme"}, {"letter": "C", "text": "Erken Test Gereksinimi"}, {"letter": "D", "text": "Hata Yokluğu Yanılgısı"}, {"letter": "E", "text": "Tarım İlacı Paradoksu"}], "correct": "E", "explanation": "Pesticide Paradox: Tarlaya aynı böcek ilacını sürekli atarsanız, böcekler o ilaca bağışıklık kazanır. Benzer şekilde, yazılıma hep aynı test senaryolarını koşarsanız, bir süre sonra o testler kodda saklanan yeni hataları bulamaz hale gelir."}, {"num": 25, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2022 vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Bir yazılım biriminde küçük çaplı testler yapılmış ve daha büyük çaplı testler için hazırlık aşaması başlamışsa bu durumda bu yazılım biriminin aşağıdaki testlerden hangisini tamamladığı ifade edilir?", "options": [{"letter": "A", "text": "Öncül test"}, {"letter": "B", "text": "Analiz testi"}, {"letter": "C", "text": "Performans testi"}, {"letter": "D", "text": "Duman testi"}, {"letter": "E", "text": "Yük testi"}], "correct": "D", "explanation": "Duman testi (Smoke Testing), sisteme eklenen taze kodun en temel işlevleri bozup bozmadığını kontrol eden ilk testtir. Duman testini geçemeyen yapı, büyük ve detaylı testlere alınmaz."}, {"num": 26, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Bir yazılım testinin aynı koşullar altında birden fazla kez yapılabilmesi aşağıdaki isimlerden hangisi ile ifade edilir?", "options": [{"letter": "A", "text": "Test Tekrarlanabilirliği"}, {"letter": "B", "text": "Doğruluk"}, {"letter": "C", "text": "Test Edilebilirlik"}, {"letter": "D", "text": "Test Analitikliği"}, {"letter": "E", "text": "Test Pratikliği"}], "correct": "A", "explanation": "Aynı girdi ve aynı çevresel koşullar ile aynı testin tekrar tekrar işletildiğinde aynı sonucu vermesi ilkesi 'Tekrarlanabilirlik' (Repeatability) olarak adlandırılır."}, {"num": 27, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize", "text": "“Kurgusuz test” ismine sahip olan yazılım testine bu isim aşağıdaki özelliklerinin hangisine bağlı olarak verilmiştir?", "options": [{"letter": "A", "text": "Test esnasında hangi verilerin kullanıldığı"}, {"letter": "B", "text": "Testin nasıl planlandığı"}, {"letter": "C", "text": "Test esnasında hangi teknolojilerin kullanıldığı"}, {"letter": "D", "text": "Testin nasıl uygulandığı"}, {"letter": "E", "text": "Yazılımın hangi parçasının test edildiği"}], "correct": "B", "explanation": "Kurgusuz (Ad-hoc) test, önceden hazırlanmış bir planı, adımı veya senaryosu olmadığı için bu ismi alır. Doğrudan 'planlama' eksikliğiyle alakalıdır."}, {"num": 28, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2025-2026 vize, 2025 final, 2024 vize, 2025-2026 vize, 2025 final", "text": "Aşağıdakilerden hangisi bir mimarî ve /veya tasarım hatası değildir?", "options": [{"letter": "A", "text": "Yanlış sırada komut kullanmak"}, {"letter": "B", "text": "Belirtilmemiş birincil veri ve veri işleme sınıfları"}, {"letter": "C", "text": "Yazılım üzerinde gerçekleştirilen eksik inceleme"}, {"letter": "D", "text": "İş süreç tasarımının zayıf kalması"}, {"letter": "E", "text": "Yazılımın müşterinin bilgisayarında çalışmaması"}], "correct": "E", "explanation": "Yanlış sırada komut kullanmak kodlama (implementasyon) düzeyinde mantıksal bir hatadır. Mimari veya sistem seviyesi bir tasarım (design) hatası değildir."}, {"num": 29, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize", "text": "Aşağıdakilerden hangisi bir yazılım riskinin Müşteri Açısından Önemine göre yapılmış bir kategorilendirme değildir?", "options": [{"letter": "A", "text": "İsteğe bağlı"}, {"letter": "B", "text": "Kritik"}, {"letter": "C", "text": "Zorunlu"}, {"letter": "D", "text": "Acil"}, {"letter": "E", "text": "Önemli"}], "correct": "B", "explanation": "'Acil' kavramı müşterinin önem düzeyini değil, problemin çözüm önceliğini (Priority) ve zaman boyutunu belirtir. Zorunlu, Önemli, İsteğe bağlı terimleri 'Önem/Şiddet' (Severity) sınıflandırmasıdır."}, {"num": 30, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Aşağıdaki şıklarda verilen test türlerinden hangileri, yazılımda değişiklik yapıldıktan sonraki durumları test eden testlerdir?", "options": [{"letter": "A", "text": "Kurulum Testi – Ölçeklenebilirlik Testi"}, {"letter": "B", "text": "Eşzamanlılık Testi – Hacim Testi"}, {"letter": "C", "text": "Saldırı Bazlı Test – Risk Bazlı Test"}, {"letter": "D", "text": "Bakım Testi – Regresyon Testi"}, {"letter": "E", "text": "Stres Testi – Yük Testi"}], "correct": "D", "explanation": "Yazılımda bir güncelleme, onarım veya kod değişikliği (bakım) yapıldıktan sonra, bu değişikliğin sistemin önceden çalışan diğer kısımlarını bozup bozmadığını kontrol etmek için yapılan teste Regresyon (Gerileme) testi denir."}, {"num": 31, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize", "text": "İngilizce’de yazılım hatası için genellikle bug (böcek) kelimesinin kullanılmasının sebebi nedir?", "options": [{"letter": "A", "text": "Herhangi bir sebebi yoktur, rastgele konulmuş bir isimdir"}, {"letter": "B", "text": "Yazılım hatalarının böceklere benzer şekilde zarar vermesi"}, {"letter": "C", "text": "Böcek ve hata kelimelerinin İngilizce’de aynı kökten gelmesi"}, {"letter": "D", "text": "Yazılım hatalarının fiziksel şeklinin böceğe benzemesi"}, {"letter": "E", "text": "Tespit edilen ilk yazılım hatasının gerçekten bir böcek yüzünden gerçekleşmesi YAZILIM KALİTE VE TESTİ A P355875.G13099 13-10-2025 18:55:32 CEVAPLI"}], "correct": "E", "explanation": "Yazılım tarihinin meşhur bir olayıdır: 1947'de Harvard Mark II bilgisayarının röleleri arasına sıkışan gerçek bir güve (moth) sistemi bozmuş, Grace Hopper tarafından kayıt defterine yapıştırılarak 'bug' kelimesi literatüre geçmiştir."}, {"num": 32, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize", "text": "Aşağıdakilerden hangisi bir yazılım test raporunda genellikle bulunan bilgilerden biri değildir?", "options": [{"letter": "A", "text": "Hangi verilerin kullanıldığı"}, {"letter": "B", "text": "Hangi testin uygulandığı"}, {"letter": "C", "text": "Hangi bileşenin test edildiği"}, {"letter": "D", "text": "Testi kimin gerçekleştirdiği"}, {"letter": "E", "text": "Ne gibi sonuçlar elde edildiği"}], "correct": "D", "explanation": "Test raporlarında testin nesnesi (bileşen), yöntemi, kullanılan veri ve sonuçlar teknik olarak listelenir; testi şahsen kimin yaptığı teknik bir bulgu olarak raporda vurgulanmaz (otomatize araçlar da yapmış olabilir)."}, {"num": 33, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize", "text": "Yeni bir cep telefonu modeli çıktığında bu model genellikle önceki modellerden faydalanılarak test edilir. Bu test işlemine ne isim verilmektedir?", "options": [{"letter": "A", "text": "N-Anahtar Testi (N-Switch Testing)"}, {"letter": "B", "text": "Karar Testi (Decision Testing)"}, {"letter": "C", "text": "Çevik Test (Agile Testing)"}, {"letter": "D", "text": "Karşılaştırma Testi (Benchmark Test)"}, {"letter": "E", "text": "Negatif Test (Negative Testing)"}], "correct": "D", "explanation": "Benchmark testi, bir sistemin (veya yeni donanımın) performansını bilinen bir standartla veya önceki bir sürümle karşılaştırıp kıyaslamak için yapılır."}, {"num": 34, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2022 vize, 2023 vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Test karşılaştırma işlemi esnasında test karşılaştırıcı aşağıdakilerden hangilerini karşılaştırır?", "options": [{"letter": "A", "text": "Beklenen sonuç – gerçekleşen sonuç"}, {"letter": "B", "text": "Test girdisi – test çıktısı"}, {"letter": "C", "text": "Koşul – test kapanışı"}, {"letter": "D", "text": "Test koşulu – test ortamı"}, {"letter": "E", "text": "Test senaryosu – test prosedürü"}], "correct": "A", "explanation": "Yazılım testinin en temel özü, sistemin vermesini 'beklediğimiz' (expected) sonuç ile sistemin çalışma anında 'gerçekleşen' (actual) çıktının eşleşip eşleşmediğine bakmaktır."}, {"num": 35, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2023 vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Öğrenci numaralarının girildiği bir alana girilen tüm değerlerin test edilmesi mümkün değildir. Bunun sebebi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Alana girilebilecek doğru ya da yanlış sonsuz adet değer bulunması"}, {"letter": "B", "text": "Alana girilen bir sayının öğrenci numarası olup olmamasının tespit edilememesi"}, {"letter": "C", "text": "Alana girilecek değerlerin çift ya da tek olabilmesi"}, {"letter": "D", "text": "Alana girilebilecek değerlerin farklı sayıda hane içerebilmesi"}, {"letter": "E", "text": "Farklı alanların da öğrenci numarası değerini içerebilmesi"}], "correct": "A", "explanation": "Yazılım testinin temel prensiplerinden biri 'Egzostif (Tüketici) test imkansızdır' kuralıdır. Bir girdi alanına girilebilecek kombinasyonlar matematiksel olarak sonsuzdur, bu yüzden tüm değerleri test etmek yerine sınır değer analizi ve eşdeğerlik sınıfları kullanılır."}, {"num": 36, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Aşağıdakilerin hangisi bir yazılımda yapılabilecek doğrudan ölçmelere örnek olarak verilemez?", "options": [{"letter": "A", "text": "Yazılımcının kod yazma performansı"}, {"letter": "B", "text": "Veri tabanındaki toplam tablo sayısı"}, {"letter": "C", "text": "Yazılım dokümantasyonunun sayfa sayısı"}, {"letter": "D", "text": "Yazılım testinin süresi"}, {"letter": "E", "text": "Yazılım dosyalarının toplam boyutu"}], "correct": "A", "explanation": "Dosya boyutu, sayfa sayısı, tablo adedi matematiksel olarak sayılabilen 'doğrudan' ölçümlerdir. Performans, kalite, verimlilik gibi kavramlar ise başka parametrelere bağlı 'dolaylı' (indirect) metriklerdir."}, {"num": 37, "tag": "Yazılım Kalite Testi 2025-2026 Vize, 2022 vize, 2023 vize, 2024 vize, 2025-2026 vize, 2025 tek ders", "text": "Aşağıdakilerden hangisi kurtarma testinin kontrolünü gerçekleştirdiği işlemlerden biri değildir?", "options": [{"letter": "A", "text": "Çöken bir modüldeki verilerin yeniden elde edilip edilemediği"}, {"letter": "B", "text": "Yazılımdaki herhangi bir sorunda bilgi kaybı oluşup oluşmadığı"}, {"letter": "C", "text": "Yazılımın dışarıdan saldırıya uğrayıp uğramadığı"}, {"letter": "D", "text": "Çöken bir modülün yeniden eski haline gelip gelmediği"}, {"letter": "E", "text": "Bir geri kurtarma işlemi yapıldığı takdirde zamanlamanın ne kadar olduğu"}], "correct": "C", "explanation": "Dışarıdan saldırı olup olmadığı 'Güvenlik Testi'nin (Security Testing) konusudur. Kurtarma (Recovery) testi sistemin donanım/yazılım çöküşü sonrası nasıl toparlandığına bakar."}, {"num": 38, "tag": "2022 vize, 2023 vize", "text": "Hartford Colesium Binası'nda uygulanan yazılımda bir formülün hesaplanmasında yapılan işlem hatası sonucunda büyük bir maddi kayıp meydana gelmiştir. Burada yapılan hata aşağıdakilerden hangisi ile ifade edilebilir?", "options": [{"letter": "A", "text": "Sözdizim hatası"}, {"letter": "B", "text": "Tasarım hatası"}, {"letter": "C", "text": "Belgeleme hatası"}, {"letter": "D", "text": "Mantık hatası"}, {"letter": "E", "text": "Anomali"}], "correct": "D", "explanation": "İşlem veya formül hataları sistemin mantık akışındaki kusurlardır ve 'Mantık hatası' (Logic error) olarak adlandırılır."}, {"num": 39, "tag": "2022 vize, 2022 vize, 2024-2025 büt", "text": "\"Kullanıcılar, tasarımı ilk kullandıklarında yerine getirmeleri gereken görevleri kolaylıkla yapabiliyorlar mı?\" sorusunun cevabı aşağıdaki kriterlerden hangisini karşılamaktadır?", "options": [{"letter": "A", "text": "Verimlilik"}, {"letter": "B", "text": "Hata yapılabilirlik"}, {"letter": "C", "text": "Hatırlanabilirlik"}, {"letter": "D", "text": "Memnuniyet"}, {"letter": "E", "text": "Öğrenilebilirlik"}], "correct": "E", "explanation": "İlk kullanımda sistemin ne kadar kolay kavrandığı ve işlemlerin yapılabildiği 'Öğrenilebilirlik' (Learnability) kriteriyle ölçülür."}, {"num": 40, "tag": "2022 vize, 2023 vize, 2025 final", "text": "Aşağıdakilerden hangisi bir birim testi çeşidi değildir?", "options": [{"letter": "A", "text": "Sınır Koşulları Testleri"}, {"letter": "B", "text": "Bağımsız Yollar Testleri"}, {"letter": "C", "text": "Hata Yakalama Yolları Testleri"}, {"letter": "D", "text": "Big-Bang Testleri"}, {"letter": "E", "text": "Arayüz Testleri"}], "correct": "D", "explanation": "Big-Bang (Büyük Patlama) testi bir 'Entegrasyon (Bütünleştirme)' testi yaklaşımıdır. Tüm modüllerin tek seferde birleştirilip test edilmesini ifade eder; birim (unit) testi değildir."}, {"num": 41, "tag": "2022 vize, 2024 final", "text": "Genellikle test senaryolarında X ile gösterilen veri setleri denenir. Ancak esasen doğru bir test İçin Y ile gösterilen veri setinin de denenmesi gerekmektedir. Y ile gösterilen veri setlerinin denendiği bu testlere genellikle ne ad verilir?", "options": [{"letter": "A", "text": "Doğru test"}, {"letter": "B", "text": "Analitik test"}, {"letter": "C", "text": "Objektif test"}, {"letter": "D", "text": "Negatif test"}, {"letter": "E", "text": "Yalın test"}], "correct": "D", "explanation": "X, senaryodaki geçerli/beklenen (pozitif) verileri temsil eder. Çerçevenin dışındaki Y ise geçersiz, sınır dışı (hata fırlatması gereken) verilerdir. Bunlarla yapılan testlere Negatif Test denir."}, {"num": 42, "tag": "2022 vize", "text": "Aşağıdaki şekillerde Müşterinin Tarif Ettiği ve Gerçekte Müşterinin İhtiyacı Olan modüllerin karşılaştırılması mizahî bir şekilde verilmiştir. Bu şekiller, yazılım test işlemlerinin hangi kısmının önemli olduğunu göstermektedir?", "options": [{"letter": "A", "text": "Analiz"}, {"letter": "B", "text": "Hazırlık"}, {"letter": "C", "text": "Bakım"}, {"letter": "D", "text": "Implementasyon"}, {"letter": "E", "text": "Tasarım"}], "correct": "A", "explanation": "Bu klasik karikatür, yazılım geliştirme sürecinde 'Gereksinim Analizi'nin ne kadar kritik olduğunu vurgular. Doğru analiz yapılmazsa, müşteri ile üretilen ürün arasında uçurum oluşur."}, {"num": 43, "tag": "2022 vize, 2022 vize, 2023 vize", "text": "Test işlemleri ile ilgili aşağıdaki roller ve açıklamaları eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Test yöneticisi: Test aktivite ve kaynaklarının yönetiminden sorumlu kişidir."}, {"letter": "B", "text": "Test analisti: Yapılan testlerin maliyetlerini çıkartan kişidir."}, {"letter": "C", "text": "Test direktörü: Test yöneticilerini yöneten üst düzey yöneticidir."}, {"letter": "D", "text": "Test mimarı: Bir test organizasyonunu tasarlayan kişidir."}, {"letter": "E", "text": "Aktör: Test edilmekte olan yazılım bileşeni ile etkileşim halinde olan kullanıcıdır."}], "correct": "B", "explanation": "Test analisti, sistem gereksinimlerini analiz edip test senaryolarını tasarlar. Maliyet ve bütçe hesabı test analistinin değil, Test Yöneticisinin (Manager) görevidir."}, {"num": 44, "tag": "2022 vize", "text": "I. Yazılımda aritmetiksel işlemlerde 64 bit kullanılması gerekirken 16 bitlik değerlerin kullanılması... II. Uzunluk ölçümlerinde İngiliz ölçü birimlerinin kullanılması sonucunda uyumsuzluk yaşanması... III. Yıl bilgisinin 2 haneli olarak tasarlanması (Y2K problemi)... Yukarıda verilen yazılım hatalarının hangileri uyumluluk sorunu içermektedir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "I ve ll"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I, II ve III"}], "correct": "E", "explanation": "Farklı donanım mimarileri (bit farkı), bölgesel standart farkları (metrik vs imperial) ve farklı dönem sistemleri (Y2K) arası iletişimde yaşanan bu sorunların tümü uyumluluk (compatibility) kusurlarıdır."}, {"num": 45, "tag": "2022 vize", "text": "Bir yazılımı test ederken, önceden belirlenen durumların dışında, kimi zaman ani, plansız test yapma ihtiyaçları oluşabilir. Bu durumda yapılan testlere ne isim verilmektedir?", "options": [{"letter": "A", "text": "Veri Akış Testi"}, {"letter": "B", "text": "Dış Kaynaklı Test"}, {"letter": "C", "text": "Kurgusuz Test"}, {"letter": "D", "text": "Dal Testi"}, {"letter": "E", "text": "Geliştirme Testi"}], "correct": "C", "explanation": "Önceden planlanmayan, hazırlıksız ve o anki durumu keşfetmeye yönelik yapılan bu test türüne 'Kurgusuz Test' (Ad-hoc veya Exploratory testing) denir."}, {"num": 46, "tag": "2022 vize, 2023 vize", "text": "Aşağıdaki test kavramlarından hangisi test yürütme işlemi ile ilgili değildir?", "options": [{"letter": "A", "text": "Test Direktörü"}, {"letter": "B", "text": "Test Kontrol"}, {"letter": "C", "text": "Test Süreç Grubu"}, {"letter": "D", "text": "Kritik Test Süreçleri"}, {"letter": "E", "text": "Test Koşulu"}], "correct": "E", "explanation": "Test koşulu (Test Condition), test tasarımı ve hazırlık aşamasında çıkarılır. Test yürütme (execution) esnasında değil, ondan önceki evrede oluşturulur."}, {"num": 47, "tag": "2022 vize, 2023 vize", "text": "Test ve kalite kavramlarının zaman ile arasında nasıl bir ilişki vardır?", "options": [{"letter": "A", "text": "Test de kalite de uzun süreli işlemlerdir."}, {"letter": "B", "text": "Kalite kısa süreli, test uzun süreli bir işlemdir."}, {"letter": "C", "text": "Test kısa süreli, kalite uzun süreli bir işlemdir."}, {"letter": "D", "text": "Test de kalite de kısa süreli işlemlerdir."}, {"letter": "E", "text": "Test ve kalitenin süresi ile ilgisi bilinemez."}], "correct": "C", "explanation": "Kalite Güvence (QA), yazılım geliştirme döngüsünün en başından en sonuna süren, sürekli ve uzun süreli bir süreçtir. Test (QC) ise genellikle belirli fazlarda uygulanan daha kısa süreli kontrol aktiviteleridir."}, {"num": 48, "tag": "2022 vize, 2023 vize, 2024 final", "text": "Bir yazılım riskinin sistem açısından kozmetik risk olarak adlandırılmasının sebebi aşağıdakilerden hangisi olabilir?", "options": [{"letter": "A", "text": "Veri kaybına sebep olmaktadır."}, {"letter": "B", "text": "Görsellik veya kullanışlılık olarak zarar vermektedir."}, {"letter": "C", "text": "Çözülmesi çok acildir."}, {"letter": "D", "text": "Kısa süreli çeşitli zararlar vermektedir."}, {"letter": "E", "text": "İşlevsellik kabına yol açmaktadır."}], "correct": "B", "explanation": "Kozmetik hatalar uygulamanın ana işleyişini, mantığını veya verisini bozmaz; butonun yanlış hizada olması gibi salt görselliği veya konforu etkiler."}, {"num": 49, "tag": "2022 vize, 2023 vize", "text": "Aşağıdakilerden hangisi, diğer seçeneklerde verilenleri kapsayacak genel bir test ismidir?", "options": [{"letter": "A", "text": "Stres Testi"}, {"letter": "B", "text": "Performans Testi"}, {"letter": "C", "text": "Yük Testi"}, {"letter": "D", "text": "Hacim Testi"}, {"letter": "E", "text": "Verimlilik Testi"}], "correct": "B", "explanation": "Performans testi çatı (şemsiye) terimdir. Stres testi, yük (load) testi ve hacim (volume) testi donanımın ve yazılımın sınırlarını zorlayan spesifik performans testleridir."}, {"num": 50, "tag": "2022 vize, 2023 vize, 2025 final", "text": "Modüller arasındaki uyumsuzluktan kaynaklanan riskler aşağıdaki isimlerin hangisi ile ifade edilmektedir?", "options": [{"letter": "A", "text": "Arayüz Riskleri"}, {"letter": "B", "text": "Sürdürülebilirlik Riskleri"}, {"letter": "C", "text": "Entegrasyon Riskleri"}, {"letter": "D", "text": "Dokümantasyon Riskleri"}, {"letter": "E", "text": "Performans Riskleri"}], "correct": "C", "explanation": "Ayrı ayrı başarılı çalışan bileşenler (modüller) bir araya getirildiklerinde (entegre edildiklerinde) uyumsuzluk veya çatışma yaşıyorsa bu duruma 'Entegrasyon Riski' denir."}, {"num": 51, "tag": "2023 vize", "text": "Aşağıdakilerden hangisi birim testler için söylenemez?", "options": [{"letter": "A", "text": "Kod parçasının anlaşılmasını kolaylaştırır."}, {"letter": "B", "text": "Kod parçasındaki hataların daha hızlı bir şekilde bulunmasını sağlar."}, {"letter": "C", "text": "Kod parçasının hangi donanımda nasıl çalışacağını analiz eder."}, {"letter": "D", "text": "Kod parçasındaki hata oranını azaltır."}, {"letter": "E", "text": "Kod parçasının başka bir kod parçası tarafından test edilmesini sağlar."}], "correct": "C", "explanation": "Birim (Unit) testleri, kodun donanımla etkileşimini değil, yazılan kod parçacığının (fonksiyon/metot) kendi iç mantığının doğru çalışıp çalışmadığını test eder. Donanım analizleri performans testlerinin konusudur."}, {"num": 52, "tag": "2023 vize", "text": "Test işlemleri ile ilgili aşağıdaki rol ve açıklama eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Test yöneticisi: Test aktivite ve kaynaklarının yönetiminden sorumlu kişidir."}, {"letter": "B", "text": "Test mimarı: Bir test organizasyonunu tasarlayan kişidir."}, {"letter": "C", "text": "Test direktörü: Test yöneticilerini yöneten üst düzey yöneticidir."}, {"letter": "D", "text": "Aktör: Test edilmekte olan yazılım bileşeni ile etkileşim halinde olan kullanıcıdır."}, {"letter": "E", "text": "Test analisti: Yapılan testlerin maliyetlerini çıkartan kişidir."}], "correct": "E", "explanation": "Test analisti, sistem gereksinimlerini inceleyip test senaryolarını tasarlar. Bütçe ve maliyetleri çıkartmak Test Yöneticisinin (Test Manager) görevidir."}, {"num": 53, "tag": "2023 vize", "text": "Bir görme engelli kullanıcı, bir yazılımı kullanırken zorluk çekiyorsa, bu yazılım aşağıdaki testlerin hangisinde gerekli başarıyı gösteremez?", "options": [{"letter": "A", "text": "Erişilebilirlik Testi"}, {"letter": "B", "text": "Fonksiyonalite Testi"}, {"letter": "C", "text": "Güvenlik Testi"}, {"letter": "D", "text": "Rastgele Test"}, {"letter": "E", "text": "Maymun Testi"}], "correct": "A", "explanation": "Görme, duyma veya fiziksel engeli olan dezavantajlı kullanıcıların yazılımı ne kadar rahat kullanabildiğini ölçen testlere Erişilebilirlik (Accessibility) testi denir."}, {"num": 54, "tag": "2023 vize", "text": "Kara kutu testi aşağıdakilerin hangisi ile ilgilenir?", "options": [{"letter": "A", "text": "Programlama dilinin yapısı"}, {"letter": "B", "text": "Algoritmanın karmaşıklığı"}, {"letter": "C", "text": "Kodlardaki hata miktarı"}, {"letter": "D", "text": "Arayüzlerin kullanılabilirliği"}, {"letter": "E", "text": "Modüllerin entegrasyonu"}], "correct": "D", "explanation": "Kara kutu testinde sistemin iç yapısı (kodları) bilinmez. Girdilere karşılık arayüzden dışarıya verilen çıktılar ve sistem davranışları kontrol edilir."}, {"num": 55, "tag": "2023 vize", "text": "Aşağıdakilerden hangisi bir yazılımın farklı sistemlerde, farklı elemanlarla çalışması yapılan testlerden biri değildir?", "options": [{"letter": "A", "text": "Kurulum Testi"}, {"letter": "B", "text": "Taşınabilirlik Testi"}, {"letter": "C", "text": "Yük Testi"}, {"letter": "D", "text": "Uyumluluk Testi"}, {"letter": "E", "text": "Birlikte Çalışabilirlik Testi"}], "correct": "C", "explanation": "Yük (Load) testi sistemin maksimum kullanıcıya veya veri baskısına dayanıklılığını ölçer. Farklı işletim sistemlerinde uyumla çalışabilme konularına bakmaz."}, {"num": 56, "tag": "2023 vize, 2022 vize, 2023 vize", "text": "I. Kullanılan yazılımda aritmetiksel işlemlerde 64 bit kullanılması gerekirken 16 bitlik değerlerin kullanılması... II. Uzunluk ölçümlerinde İngiliz ölçü birimlerinin kullanılması sonucunda uyumsuzluk yaşanması... III. Yıl bilgisinin 2 haneli olarak tasarlanması (Y2K problemi)... Yukarıda verilen yazılım hatalarının hangileri uyumluluk sorunu içermektedir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "I, II ve III"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I ve Il"}], "correct": "B", "explanation": "Farklı donanım işlemci mimarileri, ülkeler arası bölgesel ölçü birimleri ve format sorunlarının bütünü donanımsal ve yazılımsal 'Uyumluluk (Compatibility)' hatalarıdır."}, {"num": 57, "tag": "2024 vize", "text": "Aşağıdakilerden hangisi bir mimari ve/veya tasarım hatası değildir?", "options": [{"letter": "A", "text": "Belirtilmemiş birincil veri ve veri işleme sınıfları"}, {"letter": "B", "text": "Yanlış sırada komut kullanmak"}, {"letter": "C", "text": "Yazılım üzerinde gerçekleştirilen eksik inceleme"}, {"letter": "D", "text": "İş süreç tasarımının zayıf kalması"}, {"letter": "E", "text": "Yazılımın müşterinin bilgisayarında çalışmaması"}], "correct": "B", "explanation": "Yanlış sırada komut kullanmak kodlama (implementasyon) düzeyinde mantıksal bir hatadır. Mimari veya sistem seviyesi bir tasarım (design) hatası değildir."}, {"num": 58, "tag": "2025-2026 vize", "text": "Bir yazılımda, sürekli ayı testler yapılması neticesinde belli bir süre sonra hiçbir hatanın bulunmaması aşağıdaki ilkelerin hangisi ile açıklanabilir?", "options": [{"letter": "A", "text": "İçerik Bağımlılık"}, {"letter": "B", "text": "Varlığı Göster, Yokluğu Gösterme"}, {"letter": "C", "text": "Erken Test Gereksinimi"}, {"letter": "D", "text": "Hata Yokluğu Yanılgısı"}, {"letter": "E", "text": "Tarım İlacı Paradoksu"}], "correct": "E", "explanation": "Pesticide Paradox: Tarlaya aynı böcek ilacını sürekli atarsanız, böcekler o ilaca bağışıklık kazanır. Benzer şekilde, yazılıma hep aynı test senaryolarını koşarsanız, bir süre sonra o testler kodda saklanan yeni hataları bulamaz hale gelir."}, {"num": 59, "tag": "2023 final", "text": "Aşağıdaki durumların hangisi \"doğrulama sapması\"na örnek olarak gösterilebilir?", "options": [{"letter": "A", "text": "Kullanıcı istekleri ile yazılım geliştirme ekibinin isteklerinin örtüşmemesi"}, {"letter": "B", "text": "Yazılım proje lideri ile test uzmanının farklı testleri gerçekleştirmek istemesi"}, {"letter": "C", "text": "Test uzmanının çok yoğun bir şekilde test yapması sonucu testlerin sorunlu olması"}, {"letter": "D", "text": "Yazılım geliştiricinin analist ile anlaşamaması"}, {"letter": "E", "text": "Test uzmanının kodunda bulduğu hatayı yazılım geliştiricinin kabul etmemesi"}], "correct": "E", "explanation": "Doğrulama sapması (Confirmation Bias), kişinin kendi yaptığı işin doğru olduğuna inanarak zıt kanıtları (test uzmanının bulduğu hatayı) reddetme psikolojisidir. Yazılımcının 'benim kodumda hata olmaz' diyerek defansif davranması tipik bir örnektir."}, {"num": 60, "tag": "2023 final", "text": "I. Üzerinden Geçme II.Teknik Gözden Geçirme III.Teftis Yukarıda verilen yöntemlerden hangisi veya hangileri hem resmî hem gayrıresmî olabilmektedir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "II ve III"}], "correct": "C", "explanation": "Üzerinden geçme (Walkthrough) ve Teknik Gözden Geçirme (Technical Review) duruma göre hem resmi (tutanaklı/planlı) hem de gayrıresmi (masa başı ayaküstü) yapılabilir. Teftiş (Inspection) ise her zaman çok katı kurallı ve en resmi (formal) olan yöntemdir."}, {"num": 61, "tag": "2023 final, 2025 final", "text": "Aşağıdakilerden hangisi bir yazılım testinin sınıflandırma şekillerinden biri değildir?", "options": [{"letter": "A", "text": "Seviye"}, {"letter": "B", "text": "Uygulandığı modül"}, {"letter": "C", "text": "Yapılış zamanı"}, {"letter": "D", "text": "Fonksiyonalite"}, {"letter": "E", "text": "Birincil amaçlar"}], "correct": "B", "explanation": "Testler genellikle uygulandığı seviyeye (Birim, Sistem vb.), fonksiyonalitesine (Fonksiyonel/Non-Fonksiyonel) veya amacına göre sınıflandırılır. Spresifik olarak 'uygulandığı modüle göre' diye genel bir literatür sınıflandırması yoktur."}, {"num": 62, "tag": "2023 final", "text": "Bir yazılım testinde yalnızca üniversite mezunları geçerli sınıf ise diğer tüm seçenekler geçersiz sınıf ise bu durumda aşağıdaki tekniklerden hangisini uygulamak gereklidir?", "options": [{"letter": "A", "text": "Tek seçimli denklik sınıfı"}, {"letter": "B", "text": "Sınır değer denklik sınıfı"}, {"letter": "C", "text": "Ayrık değerler denklik sınıfı"}, {"letter": "D", "text": "Sürekli değer denklik sınıfi"}, {"letter": "E", "text": "Karar tablosu denklik sınıfı"}], "correct": "A", "explanation": "Sadece tek bir 'üniversite mezunları' grubunun geçerli kabul edildiği, diğer tüm durumların geçersiz sayıldığı basit ayrım 'Tek seçimli (Single Choice) Denklik Sınıfı' ile ifade edilir."}, {"num": 63, "tag": "2023 final", "text": "Bir yazılımın kalitesiz olması ile ilgili birçok sebep bulunmaktadır. Bunlardan birisi olan \"bir yazılımın kolay anlaşılabilir ve kullanılabilir olmaması\" aşağıdaki kategorilerin hangisine girer?", "options": [{"letter": "A", "text": "Yazılım ekibi tarafındaki sebepler"}, {"letter": "B", "text": "Müşteri tarafındaki sebepler"}, {"letter": "C", "text": "Danışmanlar tarafındaki sebepler"}, {"letter": "D", "text": "Analistler tarafındaki sebepler"}, {"letter": "E", "text": "Test ekibi tarafındaki sebepler"}], "correct": "B", "explanation": "Bu durum genellikle müşterinin/kullanıcının kendi iş süreçlerini ve ne istediğini net ifade edememesinden kaynaklanır. Müşterinin vizyon eksikliği ve karmaşık istekleri, nihai ürünün de anlaşılmaz (kalitesiz) olmasına yol açan müşteri tabanlı sebeplerdir."}, {"num": 64, "tag": "2023 final", "text": "Bir web yazılım test otomasyonunun açık kaynaklı özelliklerin öze hangisini doğrudan etkiler?", "options": [{"letter": "A", "text": "Maliyet"}, {"letter": "B", "text": "Platform uyumluluğu"}, {"letter": "C", "text": "Test türü"}, {"letter": "D", "text": "Kullanıcı deneyimi gereksinimi"}, {"letter": "E", "text": "Entegrasyon"}], "correct": "A", "explanation": "Soru metni PDF'de biraz bozuk ('özelliklerin öze' şeklinde) çıkmış. Ancak bir aracın açık kaynaklı (Open Source) olması, lisans ücreti gerektirmediği için her şeyden önce doğrudan 'Maliyet' boyutunu etkiler."}, {"num": 65, "tag": "2023 final, 2024-2025 büt", "text": "Aşağıdakilerden hangisi her yazılımda oluşabilecek ortak riskler arasında yer almaz?", "options": [{"letter": "A", "text": "mobil uygulama piyasasının değişmesi ile ürünün yeterince indirilmemesi"}, {"letter": "B", "text": "projedeki yazılımların, kodların, algoritmaların, ara yüzlerin, veri tabanlarının ve diğer elemanların geliştirilme ortamı"}, {"letter": "C", "text": "projenin büyüklüğü ve bu büyüklük içerisinde önceden tahmin edilemeyen unsurlar"}, {"letter": "D", "text": "kullanılan tüm teknolojiler"}, {"letter": "E", "text": "müşterinin/kullanıcının tutumu ve proje ekibinden beklentileri"}], "correct": "A", "explanation": "Diğer seçenekler (teknoloji, proje büyüklüğü, müşteri beklentisi) her tür yazılım projesi (web, masaüstü, gömülü vs.) için geçerli genel risklerdir. 'Mobil uygulama piyasası' ise sadece mobil projeleri ilgilendiren spesifik bir risktir."}, {"num": 66, "tag": "2023 final", "text": "Regresyon Testi hangi özelliği ile diğer entegrasyon testlerinden ayrılır?", "options": [{"letter": "A", "text": "Daha önceden test edilmiş ve düzeltilmiş yapılar ile ilgilenir"}, {"letter": "B", "text": "Yazılımların en üst versiyonu ile ilgilenir"}, {"letter": "C", "text": "Sadece mobil yazılımlar ile ilgilenir"}, {"letter": "D", "text": "Klasik yöntemler ile entegrasyon sağlar"}, {"letter": "E", "text": "Sadece donanım entegrasyonu ile ilgilenir"}], "correct": "A", "explanation": "Regresyon (gerileme) testi yeni bir özellik test etmez; daha önce çalışır durumda olduğu doğrulanmış modüllerin, yapılan son değişiklikten (yama vs.) sonra hala çalışıp çalışmadığını kontrol eder."}, {"num": 67, "tag": "2023 final, 2025 final", "text": "Klasik bir gözden geçirme sürecinde aşağıdaki rollerin hangisi yer almamaktadır?", "options": [{"letter": "A", "text": "Yazar"}, {"letter": "B", "text": "Kaydedici"}, {"letter": "C", "text": "Analist"}, {"letter": "D", "text": "Yönetici"}, {"letter": "E", "text": "Gözden Geçirici"}], "correct": "C", "explanation": "Gözden geçirme (Review) süreçlerinin klasik rollerinde Moderatör, Yazar (Author), Kaydedici (Scribe/Recorder) ve Gözden Geçirenler (Reviewers) bulunur. Analist bu spesifik sürecin standart bir rolü değildir."}, {"num": 68, "tag": "2023 final", "text": "\"ISTQB'nin kuruluşunda yer alan ülkelere bakıldığında ISTQB'nin bir ......... kuruluşu olarak başladığı ifade edilebilir.\" Yukarıdaki boşluğa gelebilecek uygun ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Amerika"}, {"letter": "B", "text": "Avrupa"}, {"letter": "C", "text": "Asya"}, {"letter": "D", "text": "Afrika"}, {"letter": "E", "text": "Avustralya"}], "correct": "B", "explanation": "ISTQB (International Software Testing Qualifications Board) 2002 yılında Edinburgh'da (İskoçya) kurulmuştur ve kökeni Avrupa odaklı bir standartlaştırma kuruluna dayanır."}, {"num": 69, "tag": "2023 final", "text": "Aşağıdakilerden hangisi Güvenlik/Güvenilirlik Metrikleri arasında yer almaz?", "options": [{"letter": "A", "text": "Olgunluk"}, {"letter": "B", "text": "Sağlamlık"}, {"letter": "C", "text": "Analitiklik"}, {"letter": "D", "text": "Kurtarılabilirlik"}, {"letter": "E", "text": "Hata Toleransı"}], "correct": "C", "explanation": "ISO 9126 / ISO 25010 kalite standartlarında güvenilirlik (Reliability) alt nitelikleri: Olgunluk (Maturity), Hata toleransı (Fault tolerance) ve Kurtarılabilirlik (Recoverability) vs.'dir. 'Analitiklik' (Analyzability) ise bakılabilirlik/sürdürülebilirlik metriğidir."}, {"num": 70, "tag": "2023 final", "text": "Yazılım test sertifikalarına ihtiyaç duyulmasının temel sebebi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yazılım testinin planlamaya ihtiyaç duyması"}, {"letter": "B", "text": "Yazılım testi ile ilgili sürekli olarak otomasyonlar kullanılması"}, {"letter": "C", "text": "Yazılım testinin yazılım geliştirme sürecinde yer alması"}, {"letter": "D", "text": "Yazılım testinin gittikçe büyüyen bir alan olması"}, {"letter": "E", "text": "Yazılım testinde farklı rollerin yer alması"}], "correct": "D", "explanation": "Yazılım endüstrisinin büyümesi ve test süreçlerinin çok geniş, bağımsız bir disiplin/uzmanlık alanı haline gelmesi (QA mühendisliği), bu alanda standartların belirlenmesi için sertifikasyonlara (ISTQB gibi) ihtiyacı doğurmuştur."}, {"num": 71, "tag": "2023 final", "text": "(Görsel Soru) Yukarıdaki şekil aşağıda verilen analiz ölçeklerinden hangisine aittir?", "options": [{"letter": "A", "text": "Öznel Zihinsel Çaba Sorusu"}, {"letter": "B", "text": "Beklenti Derecelendirmesi"}, {"letter": "C", "text": "Standartlaştırılmış Evrensel Yüzdelik Sıra Anketi"}, {"letter": "D", "text": "Çalışma Sonrası Sistem Kullanılabilirlik Anketi"}, {"letter": "E", "text": "Tek Kolay Soru"}], "correct": "E", "explanation": "Tek Kolay Soru (Single Ease Question - SEQ), kullanıcılara test görevinin hemen ardından uygulanan ve 'Bu görev ne kadar zor/kolaydı?' diye soran, 7'li ölçeğe sahip tek soruluk çok bilinen bir kullanılabilirlik anketidir."}, {"num": 72, "tag": "2023 final", "text": "Hatalı bir ürün tespit edildiğinde bu ürünün tek başına incelenmesi yerine bu ürünü ortaya çıkaran tüm işlemlerin incelenmesini öngören kalite türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hammadde yoluyla kalite"}, {"letter": "B", "text": "Personel yoluyla kalite"}, {"letter": "C", "text": "Araç yoluyla kalite"}, {"letter": "D", "text": "Süreç yoluyla kalite"}, {"letter": "E", "text": "Ürün yoluyla kalite"}], "correct": "D", "explanation": "Kalite güvencesinin (QA) temel felsefesidir. Hatayı üründe bulup düzeltmek (QC) yerine, o hatayı üreten geliştirme 'sürecini' analiz edip iyileştirerek (Süreç kalitesi) hatanın tekrarını baştan engellemek amaçlanır."}, {"num": 73, "tag": "2023 final", "text": "Aşağıdakilerden hangisi, bir yazılım bileşeninde kontrollü olarak sorunlar yaratılarak yapılan testlerden biri değildir?", "options": [{"letter": "A", "text": "Emniyet Testi"}, {"letter": "B", "text": "Saldırı Bazlı Test"}, {"letter": "C", "text": "Arıza Durumu Testi"}, {"letter": "D", "text": "Sağlamlık Testi"}, {"letter": "E", "text": "Kurulum Testi"}], "correct": "E", "explanation": "Emniyet, Saldırı (Pen-test), Arıza (Failure) ve Sağlamlık (Robustness) testlerinde sisteme kasten geçersiz/kötü niyetli veriler yollanarak veya bileşenler kapatılarak arıza simüle edilir. Kurulum testi ise sistemin hedef ortama başarıyla kurulup kurulamadığını ölçen normal bir prosedürdür."}, {"num": 74, "tag": "2023 final", "text": "Bir yazılım testinin ne kadar süreceği ile ilgili aşağıdaki kriterlerden hangisi geçerli değildir?", "options": [{"letter": "A", "text": "Yazılımlar ideal yazılım bileşeni elde edilene kadar test edilmelidir."}, {"letter": "B", "text": "Yazılımlar yazılımın başında belirlenen bir maliyet boyunca test edilmelidir."}, {"letter": "C", "text": "Yazılımlar yazılımın başında belirlenen bir süre boyunca test edilmelidir."}, {"letter": "D", "text": "Yazılımlar proje yöneticisinin belirlediği koşullar sağlanana kadar test edilmelidir."}, {"letter": "E", "text": "Yazılımlar rastgele sayıda test edilmelidir."}], "correct": "E", "explanation": "Test süreci planlıdır ve bir bitiş kriteri (zamanın bitmesi, bütçenin bitmesi, hata oranının hedefe düşmesi vb.) vardır. Rastgele (tesadüfi) bir sayıyla test süreci bitirilmez."}, {"num": 75, "tag": "2023 final, 2025 final, 2024-2025 büt", "text": "\"Bir sınıf içerisinde yer alan kalıtımdan gelen metot sayısı ile metot sayısının toplamıdır.\" şeklinde tanımlanan metrik aşağıdaki kısaltmaların hangisi ile ifade edilmektedir?", "options": [{"letter": "A", "text": "CBO"}, {"letter": "B", "text": "MHF"}, {"letter": "C", "text": "AHF"}, {"letter": "D", "text": "RFC"}, {"letter": "E", "text": "LCOM"}], "correct": "D", "explanation": "RFC (Response For a Class), nesne yönelimli tasarımda (Chidamber & Kemerer metrikleri) bir sınıfa doğrudan gönderilen mesaja yanıt olarak çalışabilecek toplam metot sayısını (kalıtım dahil) ölçen metriktir."}, {"num": 76, "tag": "2024 final", "text": "Verilerin rastgele olarak seçildiği ve bir hayvanın bilgisayar/yazılım kullanmasına atıfta bulunularak isimlendirilen yazılım testinin ismi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kedi Testi"}, {"letter": "B", "text": "Maymun Testi"}, {"letter": "C", "text": "Köpek Testi"}, {"letter": "D", "text": "Kuş Testi"}, {"letter": "E", "text": "Yılan Testi"}], "correct": "B", "explanation": "Maymun testi (Monkey Testing), sisteme rastgele ve anlamsız girdiler (bir maymunun klavyeye basması gibi) verilerek sistemin çöküp çökmeyeceğinin test edildiği rastgele test (random testing) tekniğidir."}, {"num": 77, "tag": "2024 final", "text": "Aşağıdakilerden hangisi yazılım süreçleri arasında sayılamaz?", "options": [{"letter": "A", "text": "Müşteri-satıcıya direkt etkisi olan süreçler"}, {"letter": "B", "text": "Destek süreçleri"}, {"letter": "C", "text": "Analiz süreçleri"}, {"letter": "D", "text": "Mühendislik süreçleri"}, {"letter": "E", "text": "Organizasyon süreçleri"}], "correct": "C", "explanation": "Yazılım Yaşam Döngüsü (SDLC) ve ISO/IEC 12207 standardına göre ana süreç grupları: Temel (Müşteri-Tedarikçi/Mühendislik), Destek ve Organizasyonel süreçlerdir. 'Analiz', mühendislik süreçlerinin içinde yer alan bir adımdır, başlı başına bir ana süreç kategorisi değildir."}, {"num": 78, "tag": "2024 final, 2025 tek ders", "text": "\"Bir yazılım bileşeni ya da sisteminin işlevleri yerine getirip getirmediğini inceleyen metriklere ....... metrikleri adı verilir.\" Yukarıdaki cümle içerisinde yer alan boşluğa aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Fonksiyonalite"}, {"letter": "B", "text": "Sürdürülebilirlik"}, {"letter": "C", "text": "Kullanılabilirlik"}, {"letter": "D", "text": "Taşınabilirlik"}, {"letter": "E", "text": "Uyumluluk"}], "correct": "A", "explanation": "Yazılımın kendisinden beklenen 'işlevleri' (functions) doğru şekilde yerine getirip getirmediğini ölçen metriklere 'Fonksiyonalite' (İşlevsellik) metrikleri denir."}, {"num": 79, "tag": "2024 final, 2023-2024 büt", "text": "Aşağıdakilerden hangisi fonksiyonel olmayan testlerde test edilen bir husus değildir?", "options": [{"letter": "A", "text": "Tekrar kullanım"}, {"letter": "B", "text": "Hata ayıklama"}, {"letter": "C", "text": "Kullanılabilirlik"}, {"letter": "D", "text": "Birlikte çalışabilirlik"}, {"letter": "E", "text": "Ölçeklenebilirlik"}], "correct": "B", "explanation": "Kullanılabilirlik, tekrar kullanılabilirlik (reusability), ölçeklenebilirlik, vb. sistemin kalite nitelikleri (Non-functional) ile ilgilidir. Hata ayıklama (Debugging) ise kodu düzeltme işlemidir, bir test türü veya metrik değildir."}, {"num": 80, "tag": "2024 final", "text": "Bir yazılım bileşeninde X değişkeninin değerinin Y değişkenine bağlı olduğu biliniyorsa, bu durumda test senaryo sayısını düşürmek için aşağıdaki test tekniklerinin hangisi uygulanmalıdır?", "options": [{"letter": "A", "text": "İkili Test"}, {"letter": "B", "text": "Kullanıcı Senaryosu"}, {"letter": "C", "text": "Sınıflandırma Ağacı"}, {"letter": "D", "text": "Karar Tablosu"}, {"letter": "E", "text": "Durum Geçişi"}], "correct": "D", "explanation": "Girdiler (X, Y) arasında mantıksal bir bağımlılık/kombinasyon ilişkisi varsa ve farklı kombinasyonlar farklı sonuçlar doğruyorsa 'Karar Tablosu' (Decision Table) tekniği kullanılır."}, {"num": 81, "tag": "2024 final, 2025 final", "text": "Aşağıdakilerden hangisi bir kurumdaki test araçlarının değerlendirilmesi, uyarlanması, dağıtımı ve desteğinin devam etmesi için başarı faktörleri arasında ver almaz?", "options": [{"letter": "A", "text": "Kullanıcılardan geribildirimleri toplamak"}, {"letter": "B", "text": "Belirli bir aracın kullanıcılarına destek sağlamak"}, {"letter": "C", "text": "Her testi birçok kez gerçekleştirmek"}, {"letter": "D", "text": "Araç kullanımını ve faydalarını izlemek"}, {"letter": "E", "text": "Aracın kullanımı için süreçleri uyarlamak ve geliştirmek"}], "correct": "C", "explanation": "Her testi birçok kez gerçekleştirmek, test operasyonunun kendi içinde bir uygulama kararıdır, bir 'aracın' (tool) kuruma başarılı bir şekilde entegre edilmesi veya uyarlanması için gereken bir faktör değildir."}, {"num": 82, "tag": "2024 final", "text": "Özellik Gizleme Faktörü, Ortalama Ata Sayısı, Eşleme Faktörü gibi kriterler aşağıdaki metrik kümelerinin hangisinde yer almaktadır?", "options": [{"letter": "A", "text": "Yordamsal Kod Metrikleri"}, {"letter": "B", "text": "Sürdürülebilirlik Metrikleri"}, {"letter": "C", "text": "Nesneye Yönelik Kod Metrikleri"}, {"letter": "D", "text": "Uyumluluk Metrikleri"}, {"letter": "E", "text": "Taşınabilirlik Metrikleri"}], "correct": "C", "explanation": "Özellik gizleme (Encapsulation / Attribute Hiding), Ata (Inheritance), Eşleme/Bağlaşım (Coupling) gibi kavramların tümü Nesne Yönelimli Programlama (OOP) (Object-Oriented) metrikleridir."}, {"num": 83, "tag": "2024 final, 2025 tek ders", "text": "Kullanılabilirlik testleri ile ilgili aşağıdaki işlemlerden hangisi en son gerçekleştirilir?", "options": [{"letter": "A", "text": "Test ortamını hazırlama"}, {"letter": "B", "text": "Katılımcı ayarlama"}, {"letter": "C", "text": "Test yürütme"}, {"letter": "D", "text": "Verileri analiz etme"}, {"letter": "E", "text": "Test planını hazırlama"}], "correct": "D", "explanation": "Kullanılabilirlik testi sürecinde önce plan yapılır, test ortamı hazırlanır, katılımcılar ayarlanır, test icra (yürütme) edilir ve en son adım olarak toplanan veriler analiz edilir."}, {"num": 84, "tag": "2024 final", "text": "Katipin gözden geçiricilerin yaptığı işi beğenmemesi ve bu konuyla ilgili hakaret etmesi, gözden geçirmeyi başarısız kılan aşağıdaki faktörlerin hangisine örnek olarak gösterilebilir?", "options": [{"letter": "A", "text": "İyi Tanımlanmamış Rol ve Sorumluluklar"}, {"letter": "B", "text": "Yetersiz Bireysel Hazırlık"}, {"letter": "C", "text": "Eğitim Eksikliği"}, {"letter": "D", "text": "Toplantı Gündeminden Sapma"}, {"letter": "E", "text": "Amacını Aşan Eleştiriler"}], "correct": "E", "explanation": "Gözden geçirme (Review) toplantılarında amaç koda ve ürüne odaklanmaktır. İşi kişiselleştirmek, hakaret etmek veya kişiye saldırmak 'Amacını aşan eleştiriler / Kişisel saldırı' kapsamına girer ve süreci baltalar."}, {"num": 85, "tag": "2024 final, 2025 final", "text": "Bir yazılım test otomasyonunun kararı bir sürüme sahip olmasının gerekli olmama nedeni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yazılımların zaman içinde değişmesi ve güncellenmeye ihtiyaç duyması"}, {"letter": "B", "text": "Yazılımların farklı türlerdeki testleri gerçekleştirmesi"}, {"letter": "C", "text": "Yazılımların analiz edilmesi"}, {"letter": "D", "text": "Yazılımların farklı yazılımlarla entegre olması"}, {"letter": "E", "text": "Yazılımların farklı işlemler gerçekleştirmesi"}], "correct": "A", "explanation": "Soru metninde büyük ihtimalle 'kararlı (stable) bir sürüme' denilmek istenmiş. Test otomasyon araçları da sürekli değişen teknolojiye ve yazılımların güncellemelerine ayak uydurmak zorundadır, bu yüzden statik/sabit (hiç değişmeyen) bir sürümde kalmazlar."}, {"num": 86, "tag": "2024 final, 2025 final", "text": "Yazılım Kullanılabilirlik Ölçüm Envanteri'nde aşağıdaki başlıkların hangisi ele alınmaz?", "options": [{"letter": "A", "text": "Hakimiyet"}, {"letter": "B", "text": "Analitiklik"}, {"letter": "C", "text": "Etki"}, {"letter": "D", "text": "Verimlilik"}, {"letter": "E", "text": "Yardımcılık"}], "correct": "B", "explanation": "SUMI (Software Usability Measurement Inventory) anketinde 5 ana boyut ölçülür: Verimlilik (Efficiency), Etki (Affect/Duygu), Yardımcılık (Helpfulness), Kontrol/Hakimiyet (Control), Öğrenilebilirlik (Learnability). 'Analitiklik' SUMI'nin bir boyutu değildir."}, {"num": 87, "tag": "2024 final", "text": "Türkiye'deki yazılım projelerinin kalitesi konusunda yapılan çalışmaların toplandığı dokümantasyona verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Türkiye Yazılım Dergisi"}, {"letter": "B", "text": "Türkiye Yazılım Kalite Raporu"}, {"letter": "C", "text": "Türkiye Yazılım Testçileri Dokümanı"}, {"letter": "D", "text": "Türkiye Yazılım Projeleri Analizi"}, {"letter": "E", "text": "Türkiye Yazılım Planlaması"}], "correct": "B", "explanation": "Türkiye Yazılım Kalite Raporu (Turkish Software Quality Report), Türkiye Test ve Mükemmellik Derneği / Turkish Testing Board (TTB) tarafından, sektörün kalite ve test olgunluğunu ölçmek için periyodik olarak yayımlanan sektörel bir rapordur."}, {"num": 88, "tag": "2024 final, 2025 tek ders", "text": "Aşağıdakilerden hangisi bir proje riski değildir?", "options": [{"letter": "A", "text": "Politik sorunlar"}, {"letter": "B", "text": "Tedarikçi sorunları"}, {"letter": "C", "text": "Kurumsal sorunlar"}, {"letter": "D", "text": "Teknik sorunlar"}, {"letter": "E", "text": "Hesaplama hataları"}], "correct": "E", "explanation": "Politik, tedarikçi, kurumsal ve ekiple ilgili (teknik/yönetsel) sorunlar bir 'Proje Riski'dir. Yazılımın içindeki bir 'hesaplama hatası' ise ürün riskidir (ürünün kalitesini etkiler)."}, {"num": 89, "tag": "2025 final, 2023-2024 büt", "text": "Aşağıdakilerden hangisi TTB'nin faaliyetleri arasında yer almamaktadır?", "options": [{"letter": "A", "text": "Yapılan yazılımların çeşitlendirilmesi"}, {"letter": "B", "text": "Sektörün yazılım testi ve kalitesi konusunda bilgilendirilmesi"}, {"letter": "C", "text": "Türkiye Bilişim Sektörünün uluslararası pazarlarda rekabet edebilmesi için çalışmalar yapılması"}, {"letter": "D", "text": "Sertifika sınavlarının yapılarak sınavı kazanan adayların sertifikasyonu"}, {"letter": "E", "text": "Yazılım testi konusunda uluslararası kabul görmüş içeriğin Türkçeleştirilmesi"}], "correct": "A", "explanation": "TTB (Turkish Testing Board), test standartlarını belirleyen, sertifikasyon yapan ve sektörü bilinçlendiren bağımsız bir kuruldur. Bizzat 'yazılım yapmak' veya 'yazılımları çeşitlendirmek' gibi ticari bir üretim faaliyeti yoktur."}, {"num": 90, "tag": "2025 final, 2023-2024 büt", "text": "Aşağıdakilerden hangisi kalite kavramı ile ilgili doğru bilinen yanlışlardan biri değildir?", "options": [{"letter": "A", "text": "Kaliteyi, kurumların kalite bölümleri başlatır."}, {"letter": "B", "text": "Kalite problemlerine en alt kademede çalışanlar sebep olur."}, {"letter": "C", "text": "Daha iyisini yapmanın maliyeti başlangıçta karşılanamaz."}, {"letter": "D", "text": "Kalite soyut bir kavramdır ve ölçülemez."}, {"letter": "E", "text": "Kalitenin tanımlanması mümkün değildir."}], "correct": "C", "explanation": "'Kalite soyuttur, tanımlanamaz, sadece alt kademe bozar' gibi ifadeler literatürde 'doğru bilinen yanlışlar (mitler)' listesindedir. Kalitesizliğin maliyeti (rework) her zaman kaliteyi baştan doğru yapmaktan daha pahalıdır; bu yüzden baştan iyisini yapmanın maliyetinin karşılanamayacağı argümanı mantık dışıdır."}, {"num": 91, "tag": "2025 final, 2023-2024 büt", "text": "Aşağıdaki şıklarda verilen görevlerin hangisi test uzmanının görevidir?", "options": [{"letter": "A", "text": "Test uzmanlarının becerilerini ve kariyerlerini geliştirmek"}, {"letter": "B", "text": "Test verilerini hazırlanmak ve elde etmek"}, {"letter": "C", "text": "Kurum için test politikası ve test stratejisi geliştirmek veya bunları gözden geçirmek"}, {"letter": "D", "text": "Testlerin ve ürünün kalitesini değerlendirmek için uygun metrikler oluşturmak"}, {"letter": "E", "text": "Araç seçimi için bütçe önermek"}], "correct": "B", "explanation": "Kariyer gelişimi, bütçe yönetimi, politika/strateji belirleme ve genel metrik inşası Test Yöneticisinin (Test Manager) görevleridir. Sahada kullanılacak test verilerini hazırlamak ise doğrudan Test Uzmanının / Analistinin (Tester/Test Analyst) operasyonel görevidir."}, {"num": 92, "tag": "2025 final, 2024-2025 büt", "text": "\".... dayalı gözden geçirme bir gözden geçirme türüdür.\" Yukarıdaki cümledeki boşluğa aşağıdakilerden hangisi getirilemez?", "options": [{"letter": "A", "text": "Provalara"}, {"letter": "B", "text": "Senaryolara"}, {"letter": "C", "text": "Tekniğe"}, {"letter": "D", "text": "Role"}, {"letter": "E", "text": "Bakış açısına"}], "correct": "C", "explanation": "Gözden geçirme türleri arasında Senaryo dayalı, Rol dayalı, Bakış açısı dayalı (Perspektif) ve Prova dayalı gibi alt başlıklar vardır. 'Tekniğe dayalı' diye adlandırılan spesifik bir gözden geçirme türü yoktur."}, {"num": 93, "tag": "2025 final, 2024-2025 büt", "text": "Kalite maliyetleri genel olarak \"tespit etme maliyetleri\" ve \"önleme maliyetleri\" olarak gruplandırılabilir. Burada tespit edilen veya önlenen en önemli eleman aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hata"}, {"letter": "B", "text": "Ürün"}, {"letter": "C", "text": "Analiz"}, {"letter": "D", "text": "Süreç"}, {"letter": "E", "text": "Yazılım"}], "correct": "A", "explanation": "Kalite maliyeti (Cost of Quality) doğrudan 'Hata'nın (Defect/Bug) maliyetidir. Hatayı ürüne girmeden önce engellemek (önleme) veya müşteriye gitmeden önce bulmak (tespit) bu maliyetin temel ölçütüdür."}, {"num": 94, "tag": "2025 final, 2023-2024 büt", "text": "Aşağıdakilerden hangisi doğrudan yazılım testinde kullanılan veriler ile ilgili bir testtir?", "options": [{"letter": "A", "text": "Dönüşüm Testi"}, {"letter": "B", "text": "Bakım Testi"}, {"letter": "C", "text": "Kullanışlılık Testi"}, {"letter": "D", "text": "Sürdürülebilirlik Testi"}, {"letter": "E", "text": "Eşzamanlılık Testi"}], "correct": "A", "explanation": "Dönüşüm (Conversion) testi, eski bir sistemden yeni bir sisteme geçerken verilerin kayıpsız, formatı bozulmadan ve doğru bir şekilde aktarılıp aktarılmadığını (veri migrasyonunu) kontrol eder."}, {"num": 95, "tag": "2025 final, 2023-2024 büt", "text": "Aşağıdaki \"bir ürün ve o ürünün kullanım bağlamı eşleştirmelerinden hangisi uygun bir eşleştirme değildir?", "options": [{"letter": "A", "text": "ATM sokak"}, {"letter": "B", "text": "Havlu banyo"}, {"letter": "C", "text": "Bistüriameliyathane"}, {"letter": "D", "text": "Kitap mutfak"}, {"letter": "E", "text": "Yazılım bilgisayar"}], "correct": "D", "explanation": "Kullanım bağlamı (Context of Use), bir ürünün doğası gereği nerede kullanılmak üzere tasarlandığını ifade eder. ATM sokağa, havlu banyoya, bistüri ameliyathaneye aittir. Ancak bir kitabın öncelikli kullanım bağlamı mutfak değildir (yemek kitabı istisnası hariç, genel ürün mantığıyla bağdaşmaz)."}, {"num": 96, "tag": "2023-2024 büt, 2024-2025 büt", "text": "Yazılım testi ile ilgili aşağıdaki işlemlerin hangisi test yöneticisinin sorumluluğunda değildir?", "options": [{"letter": "A", "text": "Uygulama"}, {"letter": "B", "text": "Kontrol"}, {"letter": "C", "text": "Gözetim"}, {"letter": "D", "text": "Planlama"}, {"letter": "E", "text": "Tahmin"}], "correct": "A", "explanation": "Test yöneticisi planlama, gözetim, kontrol ve tahmin gibi yönetsel görevleri yürütür. Testin fiilen 'uygulanması' (execution) test uzmanının (tester) görevidir."}, {"num": 97, "tag": "2023-2024 büt", "text": "Aşağıdakilerden hangisi gözden geçirmenin takip aşamasında yer alan bir işlem değildir?", "options": [{"letter": "A", "text": "Çıkış kriterini kontrol etme"}, {"letter": "B", "text": "Metrikleri toplama"}, {"letter": "C", "text": "Bulunan hataları düzeltme"}, {"letter": "D", "text": "Çıkış kriterlerinin karşılandığının kontrol edilmesi"}, {"letter": "E", "text": "Hataların ele alınıp alınmadığını kontrol etme"}], "correct": "C", "explanation": "Gözden geçirmenin (review) takip aşamasında hataların ele alınıp alınmadığı kontrol edilir, metrikler toplanır ve çıkış kriterleri doğrulanır. Ancak hataları bizzat 'düzeltme' (rework) işlemi yazarın (author) sorumluluğundadır, takip aşamasının değil."}, {"num": 98, "tag": "2023-2024 büt", "text": "Bir test otomasyonunda yeni gerçekleşen hataların da tespit edilmesi aşağıdaki işlemlerin hangisi ile ifade edilebilir?", "options": [{"letter": "A", "text": "Hata analizi"}, {"letter": "B", "text": "Hata kırma"}, {"letter": "C", "text": "Hata değerlendirme"}, {"letter": "D", "text": "Hata tespiti"}, {"letter": "E", "text": "Hata takibi"}], "correct": "E", "explanation": "Test otomasyonu ve süreçlerinde, tespit edilen hataların yaşam döngüsünü (açıldı, çözüldü, kapatıldı) izlemek ve yeni hataları listelemek 'Hata takibi' (Defect tracking) işlemiyle ifade edilir."}, {"num": 99, "tag": "2023-2024 büt", "text": "Yukarıdaki şekilde X ile gösterilen kısma aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Birincil test planlama"}, {"letter": "B", "text": "Test otomasyonu seçme"}, {"letter": "C", "text": "Test ortamını hazırlama"}, {"letter": "D", "text": "İkincil test planlama"}, {"letter": "E", "text": "Test verisi elde etme"}], "correct": "C", "explanation": "Kullanılabilirlik testi sürecinin temel adımları: Test ortamını hazırlama -> Katılımcı ayarlama -> Testi yürütme -> Verileri analiz etme şeklindedir."}, {"num": 100, "tag": "2023-2024 büt", "text": "Aşağıdakilerden hangisi bir Yazılım Olgunluk ve Yetenek Modeli değildir?", "options": [{"letter": "A", "text": "TRILLIUM"}, {"letter": "B", "text": "SPICE"}, {"letter": "C", "text": "TICKIT"}, {"letter": "D", "text": "ISO 9000"}, {"letter": "E", "text": "Waterfall"}], "correct": "E", "explanation": "CMMI, SPICE, TRILLIUM, ISO 9000, TICKIT gibi modeller kurumların yazılım süreçlerindeki olgunluğunu ölçer. Waterfall (Şelale) ise bir olgunluk modeli değil, yazılım geliştirme yaşam döngüsü (SDLC) metodolojisidir."}, {"num": 101, "tag": "2023-2024 büt", "text": "Aşağıdakilerden hangisi yazılım testlerindeki bağımsızlık seviyelerini ifade eden bir durum değildir?", "options": [{"letter": "A", "text": "Kurumun dışından gelen bağımsız test uzmanlarının testleri yapması"}, {"letter": "B", "text": "Yazılımların kim olduğu bilinmeyen rastgele kişilerle test edilmesi"}, {"letter": "C", "text": "Kurum içinde bağımsız test ekibi veya grubunun olması"}, {"letter": "D", "text": "Yazılımcıların diğer yazılımcıların kodlarını test etmesi"}, {"letter": "E", "text": "Bağımsız test uzmanı olmadan; yazılımcıların kendi kodlarını test etmesi"}], "correct": "B", "explanation": "Bağımsız test seviyeleri (kendi kodunu test etme, başka yazılımcının test etmesi, kurum içi bağımsız ekip, kurum dışı bağımsız ekip) profesyonel ve tanımlı bir süreçtir. 'Kim olduğu bilinmeyen rastgele kişiler' profesyonel bir bağımsızlık seviyesi değil, kontrolsüz bir durumdur."}, {"num": 102, "tag": "2023-2024 büt", "text": "Aşağıdakilerden hangisi genel kalite metrik grupları arasında yer almaz?", "options": [{"letter": "A", "text": "Fonksiyonalite Metrikleri"}, {"letter": "B", "text": "İzlenebilirlik Metrikleri"}, {"letter": "C", "text": "Kullanılabilirlik Metrikleri"}, {"letter": "D", "text": "Standardizasyon Metrikleri"}, {"letter": "E", "text": "Uyumluluk Metrikleri"}], "correct": "D", "explanation": "Yazılım kalitesi ölçümünde Fonksiyonalite, İzlenebilirlik, Kullanılabilirlik ve Uyumluluk gibi standart metrik grupları vardır. 'Standardizasyon metrikleri' adında genel bir kalite metrik sınıfı literatürde bulunmaz."}, {"num": 103, "tag": "2023-2024 büt", "text": "Aşağıdaki testlerden hangisi genellikle kara kutu yaklaşımını kullanmaz?", "options": [{"letter": "A", "text": "Birim testi"}, {"letter": "B", "text": "Duman testi"}, {"letter": "C", "text": "Stres testi"}, {"letter": "D", "text": "Araştırma testi"}, {"letter": "E", "text": "Beta testi"}], "correct": "A", "explanation": "Birim (Unit) testleri, yazılımın kaynak koduna ve iç mantığına doğrudan erişimi gerektirdiği için Beyaz Kutu (White-Box) yaklaşımı kullanılarak gerçekleştirilir."}, {"num": 104, "tag": "2023-2024 büt", "text": "Ece mağazadan eşi için tıraş makinesi, çocukları için çeşitli kıyafetler, arkadaşı için parfüm, annesi için ise mutfak robotu almıştır. Buna göre aşağıdakilerden hangisi potansiyel kullanıcı değildir?", "options": [{"letter": "A", "text": "Ece"}, {"letter": "B", "text": "Ece'nin arkadaşı"}, {"letter": "C", "text": "Ece'nin çocukları"}, {"letter": "D", "text": "Ece'nin eşi"}, {"letter": "E", "text": "Ece'nin annesi"}], "correct": "A", "explanation": "Ece burada satın alma işlemini gerçekleştiren kişidir (Müşteri/Alıcı). Ürünleri bizzat kullanacak olanlar eşi, çocukları, arkadaşı ve annesidir (Kullanıcılar)."}, {"num": 105, "tag": "2023-2024 büt", "text": "Bir yazılımda gerçekleşebilecek olan sorunların tahmin edilmesi ve bu sayede yapılacak olan testlerin uygun şekilde seçilmesi için aşağıdaki işlemlerden hangisi gerçekleştirilir?", "options": [{"letter": "A", "text": "Risk analizi yapmak"}, {"letter": "B", "text": "Programlama dili hakkında bilgi sahibi olmak"}, {"letter": "C", "text": "Birim testleri"}, {"letter": "D", "text": "Raporlama yapmak"}, {"letter": "E", "text": "Kullanıcı durumlarını belirlemek"}], "correct": "A", "explanation": "Test edilecek öncelikli alanları belirlemek, potansiyel sorunları (riskleri) öngörmek ve sınırlı kaynakları (zaman, bütçe) en doğru yerlere harcamak için 'Risk Analizi' yapılır."}, {"num": 106, "tag": "2024-2025 büt", "text": "ISTQB İleri Seviye bir sertifika almak için aşağıdaki şartların hangisini sağlamak gereklidir?", "options": [{"letter": "A", "text": "En az 100 yazılım testi işlemi gerçekleştirmek"}, {"letter": "B", "text": "Temel Seviye sertifikası almak"}, {"letter": "C", "text": "Güvenlik testi konusunda çalışmak"}, {"letter": "D", "text": "En az 3 sene test konusunda çalışmak"}, {"letter": "E", "text": "Test konusunda uluslararası bir kuruluşta çalışmak"}], "correct": "B", "explanation": "ISTQB sertifikasyon şemasında hiyerarşik bir yapı vardır. İleri Seviye (Advanced Level) bir sınava girebilmek ve sertifika alabilmek için ön koşul (prerequisite) olarak 'Temel Seviye (Foundation Level - CTFL)' sertifikasına sahip olmak zorunludur."}, {"num": 107, "tag": "2024-2025 büt, 2025 tek ders", "text": "Web uygulaması testlerinde aşağıdaki hangi şıkta verilen test genellikle en son olarak yapılır?", "options": [{"letter": "A", "text": "Performans testi"}, {"letter": "B", "text": "Fonksiyonellik testi"}, {"letter": "C", "text": "Uyumluluk testi"}, {"letter": "D", "text": "Güvenlik testi"}, {"letter": "E", "text": "Arayüz testi"}], "correct": "D", "explanation": "Web uygulaması testlerinde arayüz, fonksiyonellik, uyumluluk ve performans testleri sistemin çalışabilirliğini doğrulamak için öncelikli yapılır. Sistem ayağa kalkıp kararlı hale geldikten sonra genellikle en son 'Güvenlik Testi' (Security Testing - penetrasyon testleri dahil) gerçekleştirilir."}, {"num": 108, "tag": "2024-2025 büt", "text": "Aşağıdakilerden hangisi web yazılım test otomasyonlarımda sıklıkla uygulanan bir test çeşidi değildir?", "options": [{"letter": "A", "text": "Beyaz kutu testi"}, {"letter": "B", "text": "Masaüstü test"}, {"letter": "C", "text": "Mobil test"}, {"letter": "D", "text": "Web testi"}, {"letter": "E", "text": "API testi"}], "correct": "A", "explanation": "Web test otomasyon araçları (Selenium, Cypress vb.) genellikle Arayüz (Web, Mobil, Masaüstü) ve API seviyesindeki testleri koşturmak için kullanılır. Beyaz Kutu testleri ise doğrudan kaynak koda yönelik birim testleri olup, geliştiriciler tarafından (JUnit, NUnit vb. ile) uygulanır; klasik 'web test otomasyonu' senaryolarından değildir."}, {"num": 109, "tag": "2024-2025 büt, 2023 final, 2024-2025 büt, 2025-2026 büt", "text": "I. Üzerinden Geçme II. Teknik Gözden Geçirme III. Teftiş Yukarıda verilen yöntemlerden hangisi veya hangileri hem resmi hem gayrıresmî olabilmektedir?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "Yalnız I"}], "correct": "C", "explanation": "Üzerinden geçme (Walkthrough) ve Teknik Gözden Geçirme (Technical Review) duruma göre hem resmi (tutanaklı/planlı) hem de gayrıresmi (masa başı ayaküstü) yapılabilir. Teftiş (Inspection) ise her zaman çok katı kurallı ve en resmi (formal) olan yöntemdir."}, {"num": 110, "tag": "2024-2025 büt", "text": "Aşağıdakilerden hangisi bir yazılım testi giriş kriteri olarak ele alınamaz?", "options": [{"letter": "A", "text": "Test verilerinin ve diğer gerekli kaynakların varlığı"}, {"letter": "B", "text": "Test ortamının kullanılabilir olması"}, {"letter": "C", "text": "Gerekli test araçlarının kullanılabilir olması"}, {"letter": "D", "text": "Önceki test seviyelerinin çıkış kriterlerini karşılayan test öğelerinin varlığı"}, {"letter": "E", "text": "Planlanan testlerin koşturulmuş olması"}], "correct": "E", "explanation": "Giriş kriterleri (Entry Criteria), bir teste 'başlayabilmek' için gereken ön koşullardır (ortamın, verinin hazır olması vb.). 'Testlerin koşturulmuş olması' giriş değil, bir sürecin sonucudur ve testin 'Çıkış Kriterleri' (Exit Criteria) ile ilgilidir."}, {"num": 111, "tag": "2024-2025 büt", "text": "\"Kullamcılar, tasarımı ilk kullandıklarında yerine getirmeleri gereken görevleri kolaylıkla yapabiliyorlar mı?\" sorusunun cevabı aşağıdaki kriterlerden hangisini karşılamaktadır?", "options": [{"letter": "A", "text": "Hatırlanabilirlik"}, {"letter": "B", "text": "Öğrenilebilirlik"}, {"letter": "C", "text": "Hata yapılabilirlik"}, {"letter": "D", "text": "Verimlilik"}, {"letter": "E", "text": "Memnuniyet"}], "correct": "B", "explanation": "İlk kullanımda sistemin ne kadar kolay kavrandığı ve işlemlerin yapılabildiği 'Öğrenilebilirlik' (Learnability) kriteriyle ölçülür."}, {"num": 112, "tag": "2024-2025 büt", "text": "Yazılım testlerine verilen isimler kimi zaman testin nasıl yapıldığı, kimi zaman hangi veriler kullanıldığı, kimi zaman ne zaman yapıldığı, kimi zaman hangi amaçla yapıldığı vb. konularda kullanıcıya fikir vermektedir. Aşağıdaki test isimleri ile verdiği fikirler arasındaki eşleştirmenin hangisi vanıştır?", "options": [{"letter": "A", "text": "Sözdizimsel Test - Yazılımın hangi kısmının test edildiği"}, {"letter": "B", "text": "Dış Kaynakh Test - Kim tarafından yapıldığı"}, {"letter": "C", "text": "Sistem Testi - Testin hangi yaklaşımla yapıldığı"}, {"letter": "D", "text": "Sınır Değer Testi - Test senaryolarının nasıl belirlendiği"}, {"letter": "E", "text": "Kontrol Listesine Dayalı Test - Verilerin nereden elde edildiği"}], "correct": "C", "explanation": "'Sistem Testi', testin hangi yaklaşımla (kara/beyaz kutu) yapıldığını değil, 'yazılımın hangi kısmının (seviyesinin)' test edildiğini gösterir. Sistem testi, birim ve entegrasyon testlerinden sonra gelen bir 'test seviyesi' (Test Level) adıdır."}, {"num": 113, "tag": "2024-2025 büt", "text": "Arıza Durumu, Etki ve Kritiklik Analizi (ADEKA)'da aşağıdakilerden hangisi bulunmaz?", "options": [{"letter": "A", "text": "Olası arıza durumlarını analiz etmek"}, {"letter": "B", "text": "Kritiklik analizi yapmak"}, {"letter": "C", "text": "Hataları çözmek"}, {"letter": "D", "text": "Riskleri belirlemek"}, {"letter": "E", "text": "Arızaların oluşmasını engellemeye çalışmak"}], "correct": "C", "explanation": "ADEKA (FMECA - Failure Mode, Effects and Criticality Analysis) bir risk ve analiz aracıdır. Olası arızaları, etkilerini ve kritiklik derecelerini belirler. Ancak tespit edilen hataları bizzat 'çözmek' bu analiz sürecinin değil, yazılım geliştirme/düzeltme sürecinin işidir."}, {"num": 114, "tag": "2024-2025 büt", "text": "Aşağıdakilerden hangisinin test edilmesi kullamlabilirlik testi olarak kabul edilemez?", "options": [{"letter": "A", "text": "Cep telefonu ekranı"}, {"letter": "B", "text": "Veri tabanı"}, {"letter": "C", "text": "Buzdolabı elektronik paneli"}, {"letter": "D", "text": "Web sitesi"}, {"letter": "E", "text": "Öğrenci işleri otomasyonu arayüzü"}], "correct": "B", "explanation": "Kullanılabilirlik (Usability) testi, son kullanıcının sistemle girdiği etkileşimi (arayüzleri) hedefler. Veri tabanı son kullanıcının doğrudan etkileşime girdiği bir arayüz (UI) değil, arka planda (backend) çalışan bir depolama sistemidir."}, {"num": 115, "tag": "2025-2026 büt", "text": "1. Üzerinden Geçme II. Teknik Gözden Geçirme III. Teftiş Yukarıda verilen yöntemlerden hangisi veya hangileri hem resmî hem gayrıresmî olabilmektedir?", "options": [{"letter": "A", "text": "II ve III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "I ve II"}, {"letter": "D", "text": "I ve III"}, {"letter": "E", "text": "Yalnız III"}], "correct": "C", "explanation": "Üzerinden geçme (Walkthrough) ve Teknik Gözden Geçirme (Technical Review) duruma göre hem resmi (tutanaklı/planlı) hem de gayrıresmi (masa başı ayaküstü) yapılabilir. Teftiş (Inspection) ise her zaman çok katı kurallı ve en resmi (formal) olan yöntemdir."}, {"num": 116, "tag": "2025-2026 büt", "text": "Aşağıdakilerden hangisi Nesneye Yönelik Kod Metrikleri arasında ver almaz?", "options": [{"letter": "A", "text": "Sınıfın Tetiklediği Metot Sayısı"}, {"letter": "B", "text": "Sınıfın Ağırlıklı Metot Sayısı"}, {"letter": "C", "text": "Kod Satır Sayısı"}, {"letter": "D", "text": "Kalıtım Ağacının Derinliği"}, {"letter": "E", "text": "Alt Sınıf Sayısı"}], "correct": "C", "explanation": "Kod satır sayısı (LOC - Lines of Code) en eski ve temel 'Yordamsal (Procedural)' kod metriğidir. OOP (Nesneye Yönelik) kavramları olan sınıf, kalıtım, metot gibi kavramları içermez."}, {"num": 117, "tag": "2025-2026 büt", "text": "Aşağıdakilerden hangisi yazılım test ilerleme raporları içerisinde ver almaz?", "options": [{"letter": "A", "text": "Kalan riskler"}, {"letter": "B", "text": "Gerçekleştirilen testlerin özeti"}, {"letter": "C", "text": "Çıkış kriterleri"}, {"letter": "D", "text": "O test dönemi sırasında neler olduğuna dair bilgiler"}, {"letter": "E", "text": "Testi yapacak kişilerin rolleri"}], "correct": "E", "explanation": "Test ilerleme raporu (Test Progress Report), test sürecinin o anki durumunu, bulguları, riskleri ve çıkış kriterlerinin ne ölçüde sağlandığını özetler. 'Testi yapacak kişilerin rolleri' ilerleme raporunda değil, sürecin en başındaki 'Test Planı'nda (Test Plan) belirlenir ve yazılır."}, {"num": 118, "tag": "2025 tek ders", "text": "Bir yazılımda, sürekli aym testler yapılması neticesinde belli bir süre sonra hiçbir hatanın bulunmaması aşağıdaki ilkelerin hangisi ile açıklanabilir?", "options": [{"letter": "A", "text": "Varlığı Göster, Yokluğu Gösterme"}, {"letter": "B", "text": "İçerik Bağımlılık"}, {"letter": "C", "text": "Hata Yokluğu Yanılgısı"}, {"letter": "D", "text": "Tarım İlacı Paradoksu"}, {"letter": "E", "text": "Erken Test Gereksinimi"}], "correct": "D", "explanation": "Pesticide Paradox: Tarlaya aynı böcek ilacını sürekli atarsanız, böcekler o ilaca bağışıklık kazanır. Benzer şekilde, yazılıma hep aynı test senaryolarını koşarsanız, bir süre sonra o testler kodda saklanan yeni hataları bulamaz hale gelir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

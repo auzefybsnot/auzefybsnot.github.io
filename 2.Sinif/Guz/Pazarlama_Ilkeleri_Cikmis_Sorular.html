@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pazarlama İlkeleri (AYBS3002) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Pazarlama İlkeleri (AYBS3002) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Pazarlama İlkeleri (AYBS3002) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Pazarlama İlkeleri (AYBS3002) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Pazarlama İlkeleri (AYBS3002) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>137 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">137</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Pazarlama_Ilkeleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (137)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">137</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Pazarlama_Ilkeleri_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Ünite 1 Değerlendirme", "text": "Pazarlamacıların, tüketicilerin ihtiyaçlarını karşılamak için sunduğu değer ifade eden öneriler arasında aşağıdakilerden hangisi yoktur?", "options": [{"letter": "A", "text": "Mal"}, {"letter": "B", "text": "Hizmet"}, {"letter": "C", "text": "Para"}, {"letter": "D", "text": "Deneyim"}, {"letter": "E", "text": "Fikir"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 2, "tag": "Ünite 1 Değerlendirme", "text": "Tüketicilerin istedikleri ürünleri istedikleri yerlerde bulunabilir hale getirmek, pazarlamanın hangi faydası ile ifade edilmektedir?", "options": [{"letter": "A", "text": "Şekil Faydası"}, {"letter": "B", "text": "Yer Faydası"}, {"letter": "C", "text": "Zaman faydası"}, {"letter": "D", "text": "Mülkiyet faydası"}, {"letter": "E", "text": "İletişim faydası"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 3, "tag": "Ünite 1 Değerlendirme", "text": "Pazarlama ile ilgili aşağıdakilerden hangisi doğru değildir?", "options": [{"letter": "A", "text": "Pazarlama sadece organizasyonlar tarafından gerçekleştirilebilir faaliyetleri içerir."}, {"letter": "B", "text": "Pazarlama bir işlem/etkileşim aracılığıyla etkilenen herkese değer sunar."}, {"letter": "C", "text": "Pazarlama, üretim öncesinden başlayıp, satış sonrası süreçlere kadar ilerleyen bir süreci kapsar."}, {"letter": "D", "text": "Tanımlanmış bir alanda veya departmandaki bir grup insan tarafından sergilenen aktivitelerden çok daha fazlasını içerir."}, {"letter": "E", "text": "Pazarlama tüketicilere sadece ürün/hizmet ve/veya fikirleri satmayı değil değer ve fayda ulaştırmaya odaklanan süreçleri kapsar."}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 4, "tag": "Ünite 1 Değerlendirme", "text": "Bir tüketicinin mevcut durumu ile ideal durumu veya arzu ettiği durum arasındaki fark ........................... olarak tanımlanmaktadır. Yukarıdaki boşluğa gelebilecek uygun seçeneği belirtiniz.", "options": [{"letter": "A", "text": "İhtiyaç"}, {"letter": "B", "text": "Güdü"}, {"letter": "C", "text": "İstek"}, {"letter": "D", "text": "Arzu"}, {"letter": "E", "text": "Talep 14"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 5, "tag": "Ünite 1 Değerlendirme", "text": "İstekler satın alma gücü ile desteklendiği zaman ................... oluşur. Yukarıdaki boşluğa gelebilecek uygun seçeneği belirtiniz.", "options": [{"letter": "A", "text": "Tatmin"}, {"letter": "B", "text": "Fayda"}, {"letter": "C", "text": "Değer"}, {"letter": "D", "text": "Talep"}, {"letter": "E", "text": "İhtiyaç"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 6, "tag": "Ünite 1 Değerlendirme", "text": "Tüketicinin ihtiyacının tatmini için bir ürüne yönelik duyduğu arzuya ne denir?", "options": [{"letter": "A", "text": "Arz"}, {"letter": "B", "text": "İhtiyaç"}, {"letter": "C", "text": "Tatmin"}, {"letter": "D", "text": "Fayda"}, {"letter": "E", "text": "İstek"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 7, "tag": "Ünite 1 Değerlendirme", "text": "Bir pazarlama önerisi, bir ihtiyaç veya isteği tatmin ettiği zaman ortaya çıkan duruma ne ad verilir?", "options": [{"letter": "A", "text": "Değer"}, {"letter": "B", "text": "Fayda"}, {"letter": "C", "text": "Tatmin"}, {"letter": "D", "text": "Talep"}, {"letter": "E", "text": "Arz"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 8, "tag": "Ünite 1 Değerlendirme", "text": "Aşağıdakilerden hangisi fayda türlerinden biri değildir?", "options": [{"letter": "A", "text": "Karma fayda"}, {"letter": "B", "text": "Şekil faydası"}, {"letter": "C", "text": "Yer faydası"}, {"letter": "D", "text": "Zaman faydası"}, {"letter": "E", "text": "Mülkiyet faydası"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 9, "tag": "Ünite 1 Değerlendirme", "text": "Kendisi, ailesi veya bir yakınının kullanımı için mal ve hizmetleri satın alan kişiler ne tür tüketici olarak tanımlanmaktadır?", "options": [{"letter": "A", "text": "Karma tüketici"}, {"letter": "B", "text": "Çoklu tüketici"}, {"letter": "C", "text": "Toplumsal tüketici"}, {"letter": "D", "text": "Örgütsel tüketici"}, {"letter": "E", "text": "Bireysel tüketici PAZARLAMA İLKELERİ 15"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 10, "tag": "Ünite 1 Değerlendirme", "text": "Aşağıdakilerden hangisi değişimin gerçekleşebilmesi için gereken koşullardan biri değildir?", "options": [{"letter": "A", "text": "Tarafların her birinin, diğer taraf için değerli olabilecek bir şeylere sahip olması gereklidir."}, {"letter": "B", "text": "Tarafların her birinin iletişim ve sevkiyat/teslim kapasitesi olmalıdır."}, {"letter": "C", "text": "En az üç taraf olmalıdır."}, {"letter": "D", "text": "Tarafların her biri değişim teklifini kabul veya reddetmekte özgür olmalıdır."}, {"letter": "E", "text": "Tarafların her biri diğer tarafın işini görmenin arzu edilen veya istenen bir durum olduğuna inanmalıdır."}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 1 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 11, "tag": "Ünite 2 Değerlendirme", "text": "“Anla ve yanıtla” anlayışı hangi pazarlama anlayışı kapsamında ele alınabilir?", "options": [{"letter": "A", "text": "Üretim Anlayışı"}, {"letter": "B", "text": "Ürün Anlayışı"}, {"letter": "C", "text": "Satış Anlayışı"}, {"letter": "D", "text": "Modern Pazarlama Anlayışı"}, {"letter": "E", "text": "Toplumsal Pazarlama Anlayışı"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 12, "tag": "Ünite 2 Değerlendirme", "text": "Satış anlayışı ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bir içten-dışa bakış açısıdır."}, {"letter": "B", "text": "İyi tanımlanmış bir pazar ile başlar."}, {"letter": "C", "text": "İşletmenin var olan ürünlerine odaklanır."}, {"letter": "D", "text": "Kârlı satışlar elde edebilmek için baskın kişisel satış ve reklama başvurur."}, {"letter": "E", "text": "Öncelikli amaç tüketicinin ilgisini çekmeye odaklanmaktır."}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 13, "tag": "Ünite 2 Değerlendirme", "text": "Modern pazarlama anlayışının farklı tanımlarına bakıldığında aşağıdakilerden hangileri öncelikli değildir?", "options": [{"letter": "A", "text": "Müşteri değeri"}, {"letter": "B", "text": "Müşteri yönlülük"}, {"letter": "C", "text": "Uzun dönemli ilişkiler"}, {"letter": "D", "text": "Müşteri karlılığı"}, {"letter": "E", "text": "Satış tutundurma"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 14, "tag": "Ünite 2 Değerlendirme", "text": "Satıcıların pazara hâkim olduğu, büyük miktarlarda ve ucuza mal üretmenin temel sorun olduğu dönem aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Üretim Anlayışı"}, {"letter": "B", "text": "Ürün Anlayışı"}, {"letter": "C", "text": "Satış Anlayışı"}, {"letter": "D", "text": "Modern Pazarlama Anlayışı"}, {"letter": "E", "text": "Toplumsal Pazarlama Anlayışı"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 15, "tag": "Ünite 2 Değerlendirme", "text": "Çift taraflı değer elde etme sürecinde aşağıdakilerden hangisi gerçekleştirilmez?", "options": [{"letter": "A", "text": "Ürünlerin özelliklerini belirlemek"}, {"letter": "B", "text": "Müşteri istek ve ihtiyaçlarını belirlemek"}, {"letter": "C", "text": "Müşteri odaklı pazarlama stratejileri geliştirmek"}, {"letter": "D", "text": "Bütünleşik pazarlama faaliyetleri gerçekleştirmek"}, {"letter": "E", "text": "Müşteri memnuniyeti geliştirmek 30"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 16, "tag": "Ünite 2 Değerlendirme", "text": "Satış anlayışı ____________________ başlayıp ____________________ odaklanırken, pazarlama anlayışı ____________________ başlayıp ____________________ odaklanmaktadır.” ifadesinde boş bırakılan yerlere sırasıyla aşağıdaki ifadelerden hangileri gelmelidir?", "options": [{"letter": "A", "text": "fabrikada / mevcut ürünlere / pazarda / tüketici ihtiyaçlarına"}, {"letter": "B", "text": "fabrikada / tüketici ihtiyaçlarına / pazarda / mevcut ürünlere"}, {"letter": "C", "text": "pazarda / mevcut ürünlere / fabrikada / tüketici ihtiyaçlarına"}, {"letter": "D", "text": "pazarda / tüketici ihtiyaçlarına / fabrikada / mevcut ürünlere"}, {"letter": "E", "text": "pazarda / satışa / fabrikada / eski ürünlere"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 17, "tag": "Ünite 2 Değerlendirme", "text": "İklim değişikliği, ozon tabakasının delinmesi, enerji kaynaklarının kıtlığı, çevrenin kirlenmesi, tüketicilerin sağlıklarında meydana gelen problemler, toplumsal kurallar gibi unsurların dikkate alınmasını gerektiren pazarlama anlayışı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Üretim anlayışı"}, {"letter": "B", "text": "Ürün anlayışı"}, {"letter": "C", "text": "Pazarlama anlayışı"}, {"letter": "D", "text": "Satış anlayışı"}, {"letter": "E", "text": "Toplumsal pazarlama anlayışı"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 18, "tag": "Ünite 2 Değerlendirme", "text": "Aşağıda verilen pazarlama anlayışı ile odak noktası eşleştirmelerinden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Üretim Anlayışı : Biz ne üretebiliriz veya en iyi ne yapabiliriz?"}, {"letter": "B", "text": "Ürün Anlayışı : Biz pazarlamayı en iyi nasıl yaparız?"}, {"letter": "C", "text": "Satış Anlayışı : Biz nasıl daha saldırganca satış yapabiliriz?"}, {"letter": "D", "text": "Pazarlama Anlayışı : Tüketicilerin istek ve ihtiyacı nedir?"}, {"letter": "E", "text": "Toplumsal Pazarlama Anlayışı : Tüketicilerin istek ve ihtiyacı nedir ve topluma nasıl fayda sağlayabiliriz?"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 19, "tag": "Ünite 2 Değerlendirme", "text": "Aşağıdakilerden hangisi pazarlama süreci modelinin basamaklarından biri değildir?", "options": [{"letter": "A", "text": "Pazarı ve müşteri istek ve ihtiyaçlarını anlamak"}, {"letter": "B", "text": "Müşteri odaklı pazarlama stratejileri geliştirmek"}, {"letter": "C", "text": "Kâr etme hedefinde olmama, karı önemsememe"}, {"letter": "D", "text": "Üstün değer için bütünleşik pazarlama"}, {"letter": "E", "text": "Kârlı ilişkiler geliştirme ve müşteri memnuniyeti oluşturma PAZARLAMA İLKELERİ 31"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 20, "tag": "Ünite 2 Değerlendirme", "text": "“Satış anlayışı, ____________________ araçlarını kullanarak __________________ artırmayı hedeflemektedir.” İfadesinde boş bırakılan yerlere sırasıyla aşağıdaki ifadelerden hangileri gelmelidir?", "options": [{"letter": "A", "text": "bütünleşik pazarlama / satış hacmi ve karlılığı"}, {"letter": "B", "text": "satış ve tutundurma / müşteri memnuniyeti"}, {"letter": "C", "text": "bütünleşik pazarlama / müşteri memnuniyeti"}, {"letter": "D", "text": "satış ve tutundurma / satış hacmini ve karlılığını"}, {"letter": "E", "text": "satış / tüketici ihtiyaçlarını"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 2 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 21, "tag": "Ünite 3 Değerlendirme", "text": "Aşağıdakilerden hangisi tüketici pazarının oluşabilmesi için gerekli şartlar arasında değildir?", "options": [{"letter": "A", "text": "Ortak istek ve ihtiyacı paylaşan insanlar olmalı"}, {"letter": "B", "text": "Bu istek ve ihtiyacı giderme hevesi olmalı"}, {"letter": "C", "text": "Bu hevesi paylaşacak insanlar olmalı"}, {"letter": "D", "text": "Satın alma gücüne sahip olmalı (para)"}, {"letter": "E", "text": "Bu gücü kullanma yetkisine sahip olmalı"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 22, "tag": "Ünite 3 Değerlendirme", "text": "Aşağıdakilerden hangisi Tüketici Kara Kutusu modelinin bileşenlerinden değildir?", "options": [{"letter": "A", "text": "İşletmenin Yetenekleri"}, {"letter": "B", "text": "Pazarlama Uyarıcıları"}, {"letter": "C", "text": "Tüketici Özellikleri"}, {"letter": "D", "text": "Tüketici Karar Süreci"}, {"letter": "E", "text": "Tüketicinin Tepkileri"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 23, "tag": "Ünite 3 Değerlendirme", "text": "Aşağıdakilerden hangisi Tüketici Karar Süreci aşamalarından biri değildir?", "options": [{"letter": "A", "text": "Problem tanımlama"}, {"letter": "B", "text": "Bilgi arama"}, {"letter": "C", "text": "Alternatifleri değerlendirme"}, {"letter": "D", "text": "Karar"}, {"letter": "E", "text": "Sipariş verme"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 24, "tag": "Ünite 3 Değerlendirme", "text": "Tüketicilerin algıladığı risklerden fiziksel risk için en uygun örnek hangisidir?", "options": [{"letter": "A", "text": "Satın aldığımız laptop istediğimiz performansta olmayabilir."}, {"letter": "B", "text": "Ürün hem insanlara, hem de diğer eşyalara zarar verebilir."}, {"letter": "C", "text": "Yapılan satın alma beş duyumuza zarar verebilir."}, {"letter": "D", "text": "Teslimatta gecikme yaşanabilir veya tadilatı uzayabilir."}, {"letter": "E", "text": "Ürüne normalde ederinden daha fazla para ödeyebiliriz."}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 25, "tag": "Ünite 3 Değerlendirme", "text": "Aşağıdaki kaynaklardan hangisi tüketicinin bilgi toplama aşamasında başvurduğu kaynaklar arasındadır?", "options": [{"letter": "A", "text": "Aile fertleri"}, {"letter": "B", "text": "Reklamlar"}, {"letter": "C", "text": "Arkadaşlar"}, {"letter": "D", "text": "Kitle iletişim araçları"}, {"letter": "E", "text": "Hepsi PAZARLAMA İLKELERİ 51"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 26, "tag": "Ünite 3 Değerlendirme", "text": "Aşağıdakilerden hangisi tüketicinin bilgi toplama aşamasında, ürüne ve sürece yönelik algıladığı risklerden biri değildir?", "options": [{"letter": "A", "text": "Performans Riski"}, {"letter": "B", "text": "Finansal Risk"}, {"letter": "C", "text": "Zaman Riski"}, {"letter": "D", "text": "Fiziksel Risk"}, {"letter": "E", "text": "Olgunlaşmış Risk"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 27, "tag": "Ünite 3 Değerlendirme", "text": "Aşağıdakilerden hangisi tüketicinin algıladığı riskleri en aza indirmek için faydalandığı farklı bilgi kaynaklarından biri değildir?", "options": [{"letter": "A", "text": "Kişisel kaynaklar"}, {"letter": "B", "text": "Maddi kaynaklar"}, {"letter": "C", "text": "Ticari kaynaklar"}, {"letter": "D", "text": "Kamu (genel) kaynakları"}, {"letter": "E", "text": "Tecrübe cinsinden kaynaklar"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 28, "tag": "Ünite 3 Değerlendirme", "text": "Aşağıdakilerden hangisi tüketici davranışını etkileyen faktörler arasında yer almaz?", "options": [{"letter": "A", "text": "Kültürel faktörler"}, {"letter": "B", "text": "Sosyal faktörler"}, {"letter": "C", "text": "Kişisel faktörler"}, {"letter": "D", "text": "Fiziksel faktörler"}, {"letter": "E", "text": "Psikolojik faktörler"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 29, "tag": "Ünite 3 Değerlendirme", "text": "Bir toplum içerisinde, birbirine benzeyen özellikleri doğrultusunda diğer gruplardan ayrılan; gelir, meslek, eğitim, refah ve diğer değişkenlere göre şekillenmekte olan gruplara ne ad verilmektedir?", "options": [{"letter": "A", "text": "Referans grupları"}, {"letter": "B", "text": "Aile"}, {"letter": "C", "text": "Sosyal sınıf"}, {"letter": "D", "text": "Dış çevre"}, {"letter": "E", "text": "Çevre"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 30, "tag": "Ünite 3 Değerlendirme", "text": "Sigorta, barınma, korunma, alarm sistemleri vb. ihtiyaçlar Maslow’a göre hangi sınıfta yer alır?", "options": [{"letter": "A", "text": "Güvenlik ihtiyacı"}, {"letter": "B", "text": "Fizyolojik ihtiyaçlar"}, {"letter": "C", "text": "Ait olma ve sevgi ihtiyacı"}, {"letter": "D", "text": "Saygınlık ihtiyacı"}, {"letter": "E", "text": "Kendini gerçekleştirme ihtiyacı 52"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 3 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 31, "tag": "Ünite 4 Değerlendirme", "text": "Aşağıdakilerden hangisi örgütsel pazarlarda alıcı türleri arasında yer almaz?", "options": [{"letter": "A", "text": "Eğitim kurumları"}, {"letter": "B", "text": "Vakıflar"}, {"letter": "C", "text": "Belediyeler"}, {"letter": "D", "text": "Perakendeciler"}, {"letter": "E", "text": "Tüketiciler"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 32, "tag": "Ünite 4 Değerlendirme", "text": "Amaçlar ve prosedürler, endüstriyel alıcıların satın alma davranışlarını etkileyen ana faktörlerden hangisi içinde yer almaktadır?", "options": [{"letter": "A", "text": "Çevresel faktörler"}, {"letter": "B", "text": "Örgütsel faktörler"}, {"letter": "C", "text": "Kişisel faktörler"}, {"letter": "D", "text": "Kişiler arası faktörler"}, {"letter": "E", "text": "Satın alıcıya özgü faktörler"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 33, "tag": "Ünite 4 Değerlendirme", "text": "Endüstriyel pazarlarda rutin satın alım durumlarında, endüstriyel alıcıların satın alma sürecinin katılımcılarından hangileri birbirlerine çok benzerdir?", "options": [{"letter": "A", "text": "Kullanıcılar ve Etkileyiciler"}, {"letter": "B", "text": "Etkileyiciler ve Satın Alıcılar"}, {"letter": "C", "text": "Satın Alıcılar ve Karar Vericiler"}, {"letter": "D", "text": "Karar Vericiler ve Eşik Bekçileri"}, {"letter": "E", "text": "Kullanıcılar ve Eşik Bekçileri"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 34, "tag": "Ünite 4 Değerlendirme", "text": "Aşağıdakilerden hangisi endüstriyel alıcıların satın alma davranışını etkileyen faktörler arasında yer almaz?", "options": [{"letter": "A", "text": "İşletmenin iç İşleyişi"}, {"letter": "B", "text": "Kişiler arası dinamikler"}, {"letter": "C", "text": "Tedarik koşulları"}, {"letter": "D", "text": "Kişilik"}, {"letter": "E", "text": "Fikir Liderleri"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 35, "tag": "Ünite 4 Değerlendirme", "text": "Endüstriyel satın alma karar sürecinde, satın alınacak ürünün sunumunun yapılması istendiği aşama aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tedarikçi Araştırması"}, {"letter": "B", "text": "Teklif Alma"}, {"letter": "C", "text": "Tedarikçi Seçimi"}, {"letter": "D", "text": "Sipariş Prosedürünün Belirlenmesi"}, {"letter": "E", "text": "Performansın Değerlendirilmesi 66"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 36, "tag": "Ünite 4 Değerlendirme", "text": "Aşağıdakilerden hangisi örgütsel alıcıların satın alma davranışı modelinde örgütsel alıcının cevapları arasında yer almaz?", "options": [{"letter": "A", "text": "Mal ve hizmet seçimi"}, {"letter": "B", "text": "Ürünün en az 2 yıl garantiye sahip olması"}, {"letter": "C", "text": "Tedarikçi seçimi"}, {"letter": "D", "text": "Teslim koşulları ve ödeme"}, {"letter": "E", "text": "Sipariş miktarı"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 37, "tag": "Ünite 4 Değerlendirme", "text": "Aşağıdakilerden hangisi endüstriyel satın alma sürecinin katılımcılarından biri değildir?", "options": [{"letter": "A", "text": "Kullanıcılar"}, {"letter": "B", "text": "Etkileyiciler"}, {"letter": "C", "text": "Kara vericiler"}, {"letter": "D", "text": "Borsa uzmanları"}, {"letter": "E", "text": "Satın alıcılar"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 38, "tag": "Ünite 4 Değerlendirme", "text": "Aşağıdakilerden hangisi endüstriyel alıcıların karar süreçleri arasında yer almaz?", "options": [{"letter": "A", "text": "Problemin tanımlanması"}, {"letter": "B", "text": "Ürün niteliklerinin belirlenmesi"}, {"letter": "C", "text": "Nihai tüketiciye danışılması"}, {"letter": "D", "text": "Tedarikçi araştırması"}, {"letter": "E", "text": "Teklif alma"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 39, "tag": "Ünite 4 Değerlendirme", "text": "İşletme satın alma merkezindeki ilgili karar alıcıların, tedarikçilerin göreceli önemlerini tespit etmek amacıyla değerlendirmeye tutulması ve aralarından seçim yapılması işlemi endüstriyel karar süreçlerinden hangisinde yapılan işlemlerdir?", "options": [{"letter": "A", "text": "Tedarikçi Seçimi"}, {"letter": "B", "text": "Teklif Alma"}, {"letter": "C", "text": "Tedarikçi Araştırması"}, {"letter": "D", "text": "Sipariş Prosedürünün Belirlenmesi"}, {"letter": "E", "text": "Performansın Değerlendirilmesi"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 4 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 40, "tag": "Ünite 5 Değerlendirme", "text": "Bir kişinin beklentileri ve ürüne ilişkin algılanan performans değerlendirmeleri arasında yapılan karşılaştırmanın sonucuna ________ denir.", "options": [{"letter": "A", "text": "değer"}, {"letter": "B", "text": "tatmin"}, {"letter": "C", "text": "fayda"}, {"letter": "D", "text": "gereksinim"}, {"letter": "E", "text": "talep"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 41, "tag": "Ünite 5 Değerlendirme", "text": "Bir işletmenin müşteri ilişkileri yönetimi uygulayarak aşağıdakilerden hangisi ile ilişkilerini geliştirmesi mümkün değildir?", "options": [{"letter": "A", "text": "Müşterileri"}, {"letter": "B", "text": "İş ortakları"}, {"letter": "C", "text": "Çalışanları"}, {"letter": "D", "text": "Tedarikçileri"}, {"letter": "E", "text": "Rakipleri"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 42, "tag": "Ünite 5 Değerlendirme", "text": "Müşteri ilişkileri yönetimi aşağıdaki anlayışlardan hangisi ile daha çok ilişkilidir?", "options": [{"letter": "A", "text": "Üretim"}, {"letter": "B", "text": "Müşteri deneyimi yönetimi"}, {"letter": "C", "text": "Satış"}, {"letter": "D", "text": "Kâr amacı olmayan yaklaşım"}, {"letter": "E", "text": "Toplumsal pazarlama"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 43, "tag": "Ünite 5 Değerlendirme", "text": "Aşağıdakilerden hangisi müşteri ilişkileri yönetimi kapsamında anahtar kelimeler arasında yer almaz?", "options": [{"letter": "A", "text": "Müşteri Değeri"}, {"letter": "B", "text": "Müşteri Tatmini"}, {"letter": "C", "text": "Kitlesel Pazarlama"}, {"letter": "D", "text": "Müşteri Beklentileri"}, {"letter": "E", "text": "Müşteri Sadakati"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 44, "tag": "Ünite 5 Değerlendirme", "text": "Aşağıdakilerden hangisi Müşteri İlişkileri Yönetiminin Amaçları arasında yer almaz?", "options": [{"letter": "A", "text": "Müşteri ilişkilerinin kârlı hale getirilmesi"}, {"letter": "B", "text": "İşletme veriminin artırılması"}, {"letter": "C", "text": "Müşteri taleplerinin karşılanması"}, {"letter": "D", "text": "Maliyet maksimizasyonunun sağlanması"}, {"letter": "E", "text": "Farklılaşmanın sağlanması PAZARLAMA İLKELERİ 79"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 45, "tag": "Ünite 5 Değerlendirme", "text": "“Müşteri tatmini yaklaşımı, işletmenin mal ve hizmetini kullananların ___________ üzerinde yoğunlaşırken, müşteriye değer sağlama yaklaşımı ise rakip işletmeler arasında müşterilerin _____________ üzerinde yoğunlaşmaktadır.” İfadesinde boş bırakılan yerlere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "tahmin edilmesi / niçin seçim yaptığı"}, {"letter": "B", "text": "tatmin edilmesi / nasıl seçim yaptığı"}, {"letter": "C", "text": "tatmin edilmesi / ne zaman seçim yaptığı"}, {"letter": "D", "text": "tatmin edilmesi / nerede seçim yaptığı"}, {"letter": "E", "text": "tahmin edilmesi / neden seçim yaptığı"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 46, "tag": "Ünite 5 Değerlendirme", "text": "Ürün performansı ile beklentilerin birbirine eşit olduğu durumlarda müşterinin içinde bulunduğu durum nasıl tanımlanır?", "options": [{"letter": "A", "text": "Tatmin"}, {"letter": "B", "text": "Tatminsizlik"}, {"letter": "C", "text": "Hoşnut"}, {"letter": "D", "text": "Memnun"}, {"letter": "E", "text": "Ne tatmin olmuş ne de tatmin olmamış"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 47, "tag": "Ünite 5 Değerlendirme", "text": "Müşterinin bir seçim hakkı olduğunda aynı markayı satın alma ya da her zamanki sıklıkla aynı mağazayı tercih etme eğilimi ve eylemine ne denir?", "options": [{"letter": "A", "text": "Müşteri değeri"}, {"letter": "B", "text": "Müşteri tatmini"}, {"letter": "C", "text": "Müşteri sadakati"}, {"letter": "D", "text": "Müşteri beklentisi"}, {"letter": "E", "text": "Müşteri isteği"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 48, "tag": "Ünite 5 Değerlendirme", "text": "Aşağıdakilerden hangisi müşteri ilişkileri yönetimini (MİY) ortaya çıkaran nedenlerden biri değildir?", "options": [{"letter": "A", "text": "Kitlesel pazarlamanın gittikçe ucuz bir müşteri kazanma yolu olması"}, {"letter": "B", "text": "Pazar payının değil müşteri payının önemli hale gelmesi"}, {"letter": "C", "text": "Yoğun rekabet ortamı"}, {"letter": "D", "text": "Müşteri memnuniyeti ve müşteri sadakati kavramlarının önem kazanması"}, {"letter": "E", "text": "Var olan müşterinin değerinin anlaşılması ve bu müşteriyi elde tutma çabalarına gerek duyulması 80"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 49, "tag": "Ünite 5 Değerlendirme", "text": "“Müşterinin işletmeden yaşamı boyunca yaptığı alımlar için harcadığı paralardan; işletmenin sunduğu mal, hizmet ve müşteri tutmak için harcadığı paraların çıkarılmasıyla elde edilen rakam” olarak tanımlanan kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Müşteri yaşam boyu değeri"}, {"letter": "B", "text": "Müşteri tatmini"}, {"letter": "C", "text": "Müşteri sadakati"}, {"letter": "D", "text": "Müşteri memnuniyeti"}, {"letter": "E", "text": "Müşteri beklentileri"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 5 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 50, "tag": "Ünite 6 Değerlendirme", "text": "Aşağıdaki trendlerden hangisi doğal çevre sorunlarından biri değildir?", "options": [{"letter": "A", "text": "Ham madde yetersizliği"}, {"letter": "B", "text": "Enerji fiyatlarındaki artış"}, {"letter": "C", "text": "Tüketici satın alma davranışındaki değişim"}, {"letter": "D", "text": "Artan nüfus"}, {"letter": "E", "text": "Hükümetin doğal kaynak yönetimine müdahalesi"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 51, "tag": "Ünite 6 Değerlendirme", "text": "Televizyon reklamlarının maliyeti hangi pazarlama çevresi unsuruyla ilgilidir?", "options": [{"letter": "A", "text": "Sosyo-kültürel çevre"}, {"letter": "B", "text": "Politik yasal çevre"}, {"letter": "C", "text": "Teknolojik çevre"}, {"letter": "D", "text": "Rekabet Çevresi"}, {"letter": "E", "text": "Ekonomik çevre"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 52, "tag": "Ünite 6 Değerlendirme", "text": "Firmanın hizmetini etkileyen yakın çevresinde yer alan firma, tedarikçiler, pazarlama aracıları, rakipler, gruplar ve müşteriler gibi aktörleri aşağıdakilerden hangisi açıklar?", "options": [{"letter": "A", "text": "Makro çevre"}, {"letter": "B", "text": "Mikro çevre"}, {"letter": "C", "text": "Pazarlama çevresi"}, {"letter": "D", "text": "Demografik çevre"}, {"letter": "E", "text": "Küresel çevre"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 53, "tag": "Ünite 6 Değerlendirme", "text": "Pazarlamacılar için girdi olarak gereken veya pazarlama faaliyetlerinden etkilenen doğal kaynaklara ________ denir.", "options": [{"letter": "A", "text": "Ham madde pazarı"}, {"letter": "B", "text": "Doğal çevre"}, {"letter": "C", "text": "Teknolojik çevre"}, {"letter": "D", "text": "Yeşil hareket"}, {"letter": "E", "text": "Üretim faktörleri"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 54, "tag": "Ünite 6 Değerlendirme", "text": "Aşağıdakilerden hangisi pazarlama yönetiminin hedef müşterileri ile başarılı ilişkiler kurma ve koruma yeteneğini etkileyen pazarlama dış güçlerini tanımlamak için kullanılır?", "options": [{"letter": "A", "text": "Pazarlama çevresi"}, {"letter": "B", "text": "Kültürel çevre"}, {"letter": "C", "text": "Stratejik planlama"}, {"letter": "D", "text": "Hedef pazarlar"}, {"letter": "E", "text": "Pazarlama karması PAZARLAMA İLKELERİ 93"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 55, "tag": "Ünite 6 Değerlendirme", "text": "İşletmeye üretim faktörleri ile malları sağlayan ve mal ve/veya hizmetlerin işletmeden hedef pazarlara akışına yardımcı olan bağımsız işletmelere ne ad verilir?", "options": [{"letter": "A", "text": "Aracı kuruluşlar"}, {"letter": "B", "text": "Tedarikçiler"}, {"letter": "C", "text": "Rakipler"}, {"letter": "D", "text": "Müşteriler"}, {"letter": "E", "text": "Tüketiciler"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 56, "tag": "Ünite 6 Değerlendirme", "text": "Aşağıdakilerden hangisi makro çevreye ait faktörlerden biri değildir?", "options": [{"letter": "A", "text": "Demografik"}, {"letter": "B", "text": "Ekonomik"}, {"letter": "C", "text": "Örgüt yapısı"}, {"letter": "D", "text": "Politik - Yasal"}, {"letter": "E", "text": "Teknolojik"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 57, "tag": "Ünite 6 Değerlendirme", "text": "Aşağıdakilerden hangisi başlıca demografik çevre faktörlerinden biri değildir?", "options": [{"letter": "A", "text": "Dünya ve ülke nüfusu"}, {"letter": "B", "text": "Nüfusun kadın, erkek ve çocuk dağılımı"}, {"letter": "C", "text": "Nüfusun coğrafi dağılım"}, {"letter": "D", "text": "Nüfusun eğitim düzeyi"}, {"letter": "E", "text": "Ülkenin yönetim biçimi"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 58, "tag": "Ünite 6 Değerlendirme", "text": "Aşağıdakilerden hangisi politik ve yasal çevre değişkenlerinden biri değildir?", "options": [{"letter": "A", "text": "Anti tekel yasalar"}, {"letter": "B", "text": "Vergi yasaları"}, {"letter": "C", "text": "Yabancı sermaye düzenlemeleri"}, {"letter": "D", "text": "Teknolojik gelişmeler"}, {"letter": "E", "text": "Siyasi istikrar 94"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 59, "tag": "Ünite 6 Değerlendirme", "text": "I. İki kıtaya yayılan coğrafyası II. Birçok imparatorluğa ev sahipliği yapmış olması III. Değişik din ve ırklardan oluşan bir nüfusa sahip olması Yukarıda verilenlerden hangileri ülkemizin sosyal ve kültürel çevresini oluşturan zenginliklerdendir?", "options": [{"letter": "A", "text": "I"}, {"letter": "B", "text": "I-II-III"}, {"letter": "C", "text": "II"}, {"letter": "D", "text": "II-III"}, {"letter": "E", "text": "I-II"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 6 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 60, "tag": "Ünite 7 Değerlendirme", "text": "________ pazarlamada, firma çeşitli pazar bölümlerine giderek her bir pazar bölümü için farklı ürünler sunar.", "options": [{"letter": "A", "text": "Bölümlenmiş"}, {"letter": "B", "text": "Farklılaşmamış"}, {"letter": "C", "text": "Farklılaşmış"}, {"letter": "D", "text": "Coğrafi-demografik"}, {"letter": "E", "text": "Niş"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 61, "tag": "Ünite 7 Değerlendirme", "text": "Değişken ihtiyaç ve isteklere sahip farklı gruplardaki tüketicilerin tanımlanması ve profillerinin belirlenmesi ________ olarak tanımlanır.", "options": [{"letter": "A", "text": "bölümlendirme"}, {"letter": "B", "text": "birleşme"}, {"letter": "C", "text": "odaklanma"}, {"letter": "D", "text": "hedefleme"}, {"letter": "E", "text": "ilişki yönetimi"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 62, "tag": "Ünite 7 Değerlendirme", "text": "Bir ________ benzer istek ve ihtiyaçları olan müşterilerden oluşur.", "options": [{"letter": "A", "text": "pazar hedefi"}, {"letter": "B", "text": "pazar konumu"}, {"letter": "C", "text": "pazar bölümü"}, {"letter": "D", "text": "pazar potansiyeli"}, {"letter": "E", "text": "pazar düzeyi"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 63, "tag": "Ünite 7 Değerlendirme", "text": "________ tüketiciler sosyal sınıfa, yaşam tarzına ve kişilik özelliklerine göre farklı gruplara bölünür.", "options": [{"letter": "A", "text": "Psikografik bölümlendirmede"}, {"letter": "B", "text": "Demografik bölümlendirmede"}, {"letter": "C", "text": "Coğrafi bölümlendirmede"}, {"letter": "D", "text": "Davranışsal bölümlendirmede"}, {"letter": "E", "text": "Çoklu bölümlendirmede"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 64, "tag": "Ünite 7 Değerlendirme", "text": "Her bir pazar bölümü için pazar bölümlerinin benzersiz ihtiyaç ve özelliklerine göre bir değer teklifinin oluşturulması ve bu değer teklifinin tüketici zihninde yer edinmesine ilişkin stratejik karara ne denir?", "options": [{"letter": "A", "text": "İhtiyaç temelli bölümlendirme"}, {"letter": "B", "text": "Pazar bölümünü tanımlama"}, {"letter": "C", "text": "Pazar çekiciliğini belirleme"}, {"letter": "D", "text": "Özellik temelli bölümlendirme"}, {"letter": "E", "text": "Konumlandırma 112"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 65, "tag": "Ünite 7 Değerlendirme", "text": "Aşağıdakilerden hangisi hedef pazarlama sürecinin aşamalarından biri değildir?", "options": [{"letter": "A", "text": "İhtiyaçları tatmin edilmemiş pazarları tanımlamak"}, {"letter": "B", "text": "Pazarı bölümlendirmek"}, {"letter": "C", "text": "Üretim yapmak"}, {"letter": "D", "text": "Hedeflenecek pazarı seçmek"}, {"letter": "E", "text": "Pazarlama stratejileri doğrultusunda konumlandırma"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 66, "tag": "Ünite 7 Değerlendirme", "text": "İşletme, değişik pazar bölümlerinin farklılıklarını görmezlikten gelip, bir tek pazarlama karması ile bütün pazarı kaplamak istediğinde ne tür pazarlama stratejisi izlemiş olur?", "options": [{"letter": "A", "text": "Farklılaştırılmış"}, {"letter": "B", "text": "Yoğunlaştırılmış"}, {"letter": "C", "text": "Kategorilendirilmiş"}, {"letter": "D", "text": "Tekilleştirilmiş"}, {"letter": "E", "text": "Farklılaştırılmamış"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 67, "tag": "Ünite 7 Değerlendirme", "text": "Aşağıdakilerden hangisi hedef pazar belirleme stratejilerinin seçimine etki eden faktörler arasında yer almaz?", "options": [{"letter": "A", "text": "Yöneticinin şahsi istekleri"}, {"letter": "B", "text": "İşletme kaynakları"}, {"letter": "C", "text": "Ürün değişkenliği"}, {"letter": "D", "text": "Ürünün hayat evresinde bulunduğu aşama"}, {"letter": "E", "text": "Pazarın değişkenliği"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 68, "tag": "Ünite 7 Değerlendirme", "text": "Aşağıdakilerden hangisi konumlandırma özelliklerinden, “Konumlandırma düşüncesi net olarak ifade edilmelidir” ifadesinin karşılığıdır?", "options": [{"letter": "A", "text": "Gizlilik"}, {"letter": "B", "text": "Açıklık"}, {"letter": "C", "text": "Kompleks olma"}, {"letter": "D", "text": "Basitlik"}, {"letter": "E", "text": "Rekabet edebilme özelliği"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 69, "tag": "Ünite 7 Değerlendirme", "text": "Aşağıdakilerden hangisi yeniden konumlandırmanın başlıca nedenlerinden biri değildir?", "options": [{"letter": "A", "text": "İlk konumlandırmada başarısız olunması"}, {"letter": "B", "text": "Ulaşılmak istenilen konumda çabalanılmasına rağmen başarısız olunması"}, {"letter": "C", "text": "Aynı konumlandırmada çok fazla ve güçlü rakiplerin mevcut olması"}, {"letter": "D", "text": "Mevcut konumlandırmanın çok başarılı olması"}, {"letter": "E", "text": "Yeni bir niş pazarın bulunması ve bundan avantaj sağlanmak istenmesi"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 7 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 70, "tag": "Ünite 8 Değerlendirme", "text": "Otomobil ve ev gibi tüketicilerin hayatları boyunca sadece birkaç kez satın aldıkları ve birim fiyatları oldukça yüksek ürünler hangi kategoriye girerler?", "options": [{"letter": "A", "text": "Kolayda ürünler"}, {"letter": "B", "text": "Beğenmeli ürünler"}, {"letter": "C", "text": "Özelliği olan ürünler"}, {"letter": "D", "text": "Aranan ürünler"}, {"letter": "E", "text": "Aranmayan ürünler"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 71, "tag": "Ünite 8 Değerlendirme", "text": "Buzdolabı satan bir işletmenin buzdolabına 2 yıl garanti vermesi, teslimatını yapması ve satış sonrası hizmetleri vermesi ürünün hangi düzeyine hitap etmektedir?", "options": [{"letter": "A", "text": "Zenginleştirilmiş ürün"}, {"letter": "B", "text": "Çekirdek ürün"}, {"letter": "C", "text": "Somut ürün"}, {"letter": "D", "text": "Soyut ürün"}, {"letter": "E", "text": "Beğenmeli ürün"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 72, "tag": "Ünite 8 Değerlendirme", "text": "Daha çok kolayda mal üreten işletmeler tarafından tercih edilen ve ürünün tüketicilerin bulabileceği her yerde satılmasını sağlayan dağıtım politikası aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Seçimli dağıtım"}, {"letter": "B", "text": "Sınırlı dağıtım"}, {"letter": "C", "text": "Seçkin dağıtım"}, {"letter": "D", "text": "Yoğun dağıtım"}, {"letter": "E", "text": "Özellikli dağıtım"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 73, "tag": "Ünite 8 Değerlendirme", "text": "Aşağıdaki bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Sınırlı sayıda müşteri varsa bu durumda kişisel satış reklama göre daha avantajlıdır."}, {"letter": "B", "text": "Kişisel satış firmada gelir getiren unsurdur."}, {"letter": "C", "text": "Çok sayıda müşteri var ise reklam kişisel satışa göre kullanım üstünlüğüne sahiptir."}, {"letter": "D", "text": "Satış temsilcileri aynı zamanda firma imajını da taşırlar."}, {"letter": "E", "text": "Reklam çift yönlü bir iletişim aracıdır."}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 74, "tag": "Ünite 8 Değerlendirme", "text": "Pazarlama karması elemanlarından hangisi pazarlamanın sağladığı faydaların (zaman, şekil, yer, mülkiyet) tümünü de sağlar?", "options": [{"letter": "A", "text": "Ürün"}, {"letter": "B", "text": "Fiyat"}, {"letter": "C", "text": "Dağıtım"}, {"letter": "D", "text": "Tutundurma"}, {"letter": "E", "text": "Duyurum 130"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 75, "tag": "Ünite 8 Değerlendirme", "text": "Bir satıcının mal ve hizmetlerini tanımlayan veya bunları rakiplerin mal ve hizmetlerinden ayıran bir isim, terim, sembol, tasarım veya herhangi başka bir özellik olarak tanımlanmakta olan kavrama ne ad verilir?", "options": [{"letter": "A", "text": "Patent"}, {"letter": "B", "text": "Logo"}, {"letter": "C", "text": "Marka"}, {"letter": "D", "text": "Lisans"}, {"letter": "E", "text": "Tescil"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 76, "tag": "Ünite 8 Değerlendirme", "text": "Aşağıda verilenlerden hangisi ürün fiyatlandırma kararlarını etkileyen faktörlerden biri değildir?", "options": [{"letter": "A", "text": "Pazarın yapısı"}, {"letter": "B", "text": "Müşterilerin özellikleri"}, {"letter": "C", "text": "Maliyet"}, {"letter": "D", "text": "Teknolojik gelişmeler"}, {"letter": "E", "text": "Rakipler"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 77, "tag": "Ünite 8 Değerlendirme", "text": "Toplam birim maliyet üzerine, belirli bir birim kâr eklenerek elde edilen fiyatlama türü nedir?", "options": [{"letter": "A", "text": "Rekabete dayalı fiyatlandırma"}, {"letter": "B", "text": "Talebe dayalı fiyatlandırma"}, {"letter": "C", "text": "Esnekliğe dayalı fiyatlandırma"}, {"letter": "D", "text": "Arza dayalı fiyatlandırma"}, {"letter": "E", "text": "Maliyete dayalı fiyatlandırma"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 78, "tag": "Ünite 8 Değerlendirme", "text": "Pazarın kaymağını alma stratejisinde fiyata _________ pazarlarda ürüne yüksek fiyat koyarak ________ oranda kâr sağlamak amaçlanmaktadır.", "options": [{"letter": "A", "text": "az duyarlı / yüksek"}, {"letter": "B", "text": "az duyarlı / düşük"}, {"letter": "C", "text": "çok duyarlı / yüksek"}, {"letter": "D", "text": "çok duyarlı / düşük"}, {"letter": "E", "text": "duyarsız / yüksek"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 79, "tag": "Ünite 8 Değerlendirme", "text": "Tüketim ürünleri, tüketicilerin satın alma alışkanlıkları dikkate alınarak dört sınıfa ayrılmaktadır. Aşağıdakilerden hangisi bunlardan biri değildir?", "options": [{"letter": "A", "text": "Teknolojik ürünler"}, {"letter": "B", "text": "Beğenmeli ürünler"}, {"letter": "C", "text": "Kolayda ürünler"}, {"letter": "D", "text": "Özellikli ürünler"}, {"letter": "E", "text": "Aranmayan ürünler"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 8 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 80, "tag": "Ünite 9 Değerlendirme", "text": "___________ fiziksel olarak sahip olunamayan bir iş, hareket ve çabayı içeren soyut mamullerdir. Yukarıdaki boşluğu dolduracak en uygun ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fikir"}, {"letter": "B", "text": "Olay"}, {"letter": "C", "text": "Hizmet"}, {"letter": "D", "text": "Deneyim"}, {"letter": "E", "text": "Fayda"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 81, "tag": "Ünite 9 Değerlendirme", "text": "_______, bir ürünün mal veya hizmet olarak sınıflandırılmasında kullanılan anahtar faktördür. Yukarıdaki boşluğu dolduracak en uygun ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bireysellik"}, {"letter": "B", "text": "Pasif izlenebilme"}, {"letter": "C", "text": "Algılama"}, {"letter": "D", "text": "Soyutluk"}, {"letter": "E", "text": "Örgütsellik"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 82, "tag": "Ünite 9 Değerlendirme", "text": "Aşağıdakilerden hangisi bir araba tamircisinin soyut bileşenlerinden biridir?", "options": [{"letter": "A", "text": "Yedek parçalar"}, {"letter": "B", "text": "Çalışanların üniformaları"}, {"letter": "C", "text": "Yağların depolandığı varil"}, {"letter": "D", "text": "Müşteri bekleme alanı"}, {"letter": "E", "text": "Tamircilerin aldığı eğitim"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 83, "tag": "Ünite 9 Değerlendirme", "text": "Aşağıdakilerden hangi bir hizmet işletmesi örneği değildir?", "options": [{"letter": "A", "text": "Departmanlı Mağaza"}, {"letter": "B", "text": "Lunapark"}, {"letter": "C", "text": "Otel"}, {"letter": "D", "text": "Banka"}, {"letter": "E", "text": "Kağıt Fabrikası"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 84, "tag": "Ünite 9 Değerlendirme", "text": "Hizmetlerin en ayırt edici özelliği aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Heterojenlik"}, {"letter": "B", "text": "Bozulabilirlik"}, {"letter": "C", "text": "Soyutluk"}, {"letter": "D", "text": "Karşılaştırılabilirlik"}, {"letter": "E", "text": "Bölünebilme 146"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 85, "tag": "Ünite 9 Değerlendirme", "text": "Aşağıdakilerden hangisi hizmet üretim ve tüketiminin eş zamanlı olmasından kaynaklanan sorunlardan biri değildir?", "options": [{"letter": "A", "text": "Hizmeti satın almadan önce müşteriler, değerlendirme yapma sansına sahip olmayabilir."}, {"letter": "B", "text": "Hizmet alan müşterilerin diğer müşteriler tarafından izlenmesi olumsuz durumlarda bile faydalıdır."}, {"letter": "C", "text": "Müşteri, hizmet sürecine genellikle fiziksel olarak katıldığı için hizmet aksaklıklarını daha önceden ortaya çıkarmak ve düzeltmek oldukça güçtür."}, {"letter": "D", "text": "Müşterilerin varlığı ve katılımı, hizmet sunanlar açısından bireyler arası etkili bir ilişkinin önemini doğurmaktadır."}, {"letter": "E", "text": "Hizmet ortamında bulunan müşterilerin sergilediği davranış, aynı anda o ortamda bulunan diğer müşterilerin hizmet deneyimlerini azaltabilmektedir."}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 86, "tag": "Ünite 9 Değerlendirme", "text": "I. İnsan (Katılımcılar) II. Fiziksel ortam III. Süreç IV. Fiyat V. Tutundurma Yukarıdakilerden hangisi hizmet pazarlamasının kendine özel durumundan kaynaklanarak pazarlama karmasına eklenen elemanlardır?", "options": [{"letter": "A", "text": "I-II-III"}, {"letter": "B", "text": "III-IV"}, {"letter": "C", "text": "II-IV"}, {"letter": "D", "text": "I-V"}, {"letter": "E", "text": "I-II-V"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 87, "tag": "Ünite 9 Değerlendirme", "text": "Aşağıdakilerden hangisi düşük temas hizmetlerinin özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Diğer temas noktaları ile hizmet üreten işletme, tüketici ile temas halinde olabilecektir."}, {"letter": "B", "text": "Posta, self servis ekipman, telefon, internet sitesi vb. ile temas halinde olacaktır."}, {"letter": "C", "text": "Tüketici hizmet üretim sürecini yakinen görmektedir."}, {"letter": "D", "text": "Hizmet personeli ve diğer tüketicilerle temas olmamaktadır."}, {"letter": "E", "text": "Tüketici hizmet üretim sürecini görmemektedir. PAZARLAMA İLKELERİ 147"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 88, "tag": "Ünite 9 Değerlendirme", "text": "Hizmetin sunulduğu işletme ile müşterinin etkileşimde bulunduğu çevre ve koşulları ifade eden pazarlama karması elemanı hangisidir?", "options": [{"letter": "A", "text": "Ürün"}, {"letter": "B", "text": "Dağıtım"}, {"letter": "C", "text": "İnsan"}, {"letter": "D", "text": "Fiziksel ortam"}, {"letter": "E", "text": "Fiyat"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 89, "tag": "Ünite 9 Değerlendirme", "text": "Hizmetin tüketicinin ihtiyaç duyduğu zamanda hazır bulundurulması ve tutarlı kalitede sunulmasını kapsayan pazarlama karması elemanı hangisidir?", "options": [{"letter": "A", "text": "Fiyat"}, {"letter": "B", "text": "İnsan"}, {"letter": "C", "text": "Tutundurma"}, {"letter": "D", "text": "Ürün"}, {"letter": "E", "text": "Süreç Yönetimi"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 9 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 90, "tag": "Ünite 10 Değerlendirme", "text": "İşletmenin veri tabanlarından toplanan bilgi ________ verilere bir örnektir. Yukarıdaki boşluğu dolduracak en uygun ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "birincil"}, {"letter": "B", "text": "ikincil"}, {"letter": "C", "text": "gözlemsel"}, {"letter": "D", "text": "deneysel"}, {"letter": "E", "text": "etnografik"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 91, "tag": "Ünite 10 Değerlendirme", "text": "İkincil veri ________ . Yukarıdaki boşluğu dolduracak en uygun ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Çoğunlukla anket yoluyla toplanır."}, {"letter": "B", "text": "Toplamak pahalıdır."}, {"letter": "C", "text": "Dış tedarikçilerden satın alınmaz."}, {"letter": "D", "text": "Birincil verileri desteklemek için her zaman gereklidir."}, {"letter": "E", "text": "Güncel olmayabilir."}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 92, "tag": "Ünite 10 Değerlendirme", "text": "Araştırmacı, insanların bilgi vermeye isteksiz ya da bilginin toplanmasının mümkün olmadığı durumlarda hangi yöntemi kullanabilir?", "options": [{"letter": "A", "text": "gözlem"}, {"letter": "B", "text": "anket"}, {"letter": "C", "text": "deney"}, {"letter": "D", "text": "odak grup"}, {"letter": "E", "text": "kişisel mülakat"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 93, "tag": "Ünite 10 Değerlendirme", "text": "Pazarlama araştırması aşağıdakilerden hangisini kapsar?", "options": [{"letter": "A", "text": "Pazarlama fırsatlarının bulunması ve tanımlanması."}, {"letter": "B", "text": "Pazarlama faaliyetlerinin değerlendirilmesi."}, {"letter": "C", "text": "Pazarlama performansının gözlenmesi."}, {"letter": "D", "text": "Pazarlamanın, bir süreç olarak anlaşılmasına katkıda bulunmak."}, {"letter": "E", "text": "Yukarıdakilerin hepsi."}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 94, "tag": "Ünite 10 Değerlendirme", "text": "Pazarlama kararı almak için şirket içindeki veri kaynaklarının araştırılması hangi tür kaynağı ifade etmektedir?", "options": [{"letter": "A", "text": "çevrim içi"}, {"letter": "B", "text": "içsel"}, {"letter": "C", "text": "dışsal"}, {"letter": "D", "text": "kamu"}, {"letter": "E", "text": "birincil 164"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 95, "tag": "Ünite 10 Değerlendirme", "text": "I. Yön gözetmeyen inceleme II. Durumsal inceleme III. Resmi olmayan araştırma IV. Resmi araştırma Yukarıda verilenlerden hangileri pazarlama çevresinde istihbaratın bilgi yöntemlerindendir?", "options": [{"letter": "A", "text": "I"}, {"letter": "B", "text": "II"}, {"letter": "C", "text": "I-III"}, {"letter": "D", "text": "I-II-III-IV"}, {"letter": "E", "text": "II-III"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 96, "tag": "Ünite 10 Değerlendirme", "text": "Pazarlama karar alma süreci için bilgisayar teknolojisini kullanarak, hızlı bilgi sağlamak üzere, veriler, istatistikler, modelleme ve sergileme formatlarının bir araya getirilmesi ile oluşturulan bütünleşik sisteme ne ad verilir?", "options": [{"letter": "A", "text": "Pazar araştırması"}, {"letter": "B", "text": "Pazarlama karması"}, {"letter": "C", "text": "Pazarlama karar destek sistemi"}, {"letter": "D", "text": "Geri bildirim"}, {"letter": "E", "text": "Araştırma sistemi"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 97, "tag": "Ünite 10 Değerlendirme", "text": "Bir araştırma planının tasarımı, aşağıdaki hususlardan hangisini kapsamaz?", "options": [{"letter": "A", "text": "Firma bütçesi"}, {"letter": "B", "text": "Araştırma yaklaşımları"}, {"letter": "C", "text": "Araştırma araçları"}, {"letter": "D", "text": "Örnekleme planı ve örneklem birimi ile ilişki kurma yöntemleri"}, {"letter": "E", "text": "Bilgi kaynakları"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 98, "tag": "Ünite 10 Değerlendirme", "text": "Özel bir amaç veya proje için toplanan bilgilere ___________, farklı amaçlar için toplanmış veya mevcut olan bilgilere ise _____________denir.", "options": [{"letter": "A", "text": "ikincil veriler / birincil veriler"}, {"letter": "B", "text": "birincil veriler / ikincil veriler"}, {"letter": "C", "text": "kalitatif veri / kantitatif veri"}, {"letter": "D", "text": "kantitatif veri / kalitatif veri"}, {"letter": "E", "text": "tanımlayıcı veri / kalitatif veri PAZARLAMA İLKELERİ 165"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 99, "tag": "Ünite 10 Değerlendirme", "text": "I- Yüz-yüze anket II- Posta anketi III- Telefon anketi IV- İnternet anketi Yukarıda belirtilenlerden hangileri en çok kullanılan anket yöntemleridir?", "options": [{"letter": "A", "text": "I"}, {"letter": "B", "text": "II"}, {"letter": "C", "text": "III"}, {"letter": "D", "text": "IV"}, {"letter": "E", "text": "Hepsi"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 10 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 100, "tag": "Ünite 11 Değerlendirme", "text": "Aşağıdakilerden hangisi internetin pazarlama açısından işletmelere ve tüketicilere sağladığı faydalar arasında yer almaz?", "options": [{"letter": "A", "text": "Fırsat eşitliği"}, {"letter": "B", "text": "Zengin bilgi ve karşılıklı etkileşim"}, {"letter": "C", "text": "Uluslararası erişim"}, {"letter": "D", "text": "Bilgilerin daha kolay değerlendirilmesi"}, {"letter": "E", "text": "Kontrol edilebilir satın alma süreci"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 101, "tag": "Ünite 11 Değerlendirme", "text": "______________ mal ve hizmetlerin bir hedef pazara yönelik olarak internet veya dijital araçlar yoluyla oluşturulmasını, dağıtılmasını, tutundurulmasını ve fiyatlandırılmasını içeren stratejik süreçtir. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Elektronik pazarlama"}, {"letter": "B", "text": "Sosyal Medya pazarlaması"}, {"letter": "C", "text": "Veri tabanlı pazarlama"}, {"letter": "D", "text": "Multimedya Pazarlaması"}, {"letter": "E", "text": "Viral Pazarlama"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 102, "tag": "Ünite 11 Değerlendirme", "text": "Aşağıdakilerden hangisi elektronik pazarlamanın avantajları arasında yer almaz?", "options": [{"letter": "A", "text": "Yeni iş fırsatları yaratması"}, {"letter": "B", "text": "Reklâm maliyetlerini azaltması"}, {"letter": "C", "text": "Siparişlerinin değerlendirilmesinde etkinlik sağlaması"}, {"letter": "D", "text": "Stok maliyetlerini düşürmesi"}, {"letter": "E", "text": "Rekabetin yoğunluğunu azaltması"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 103, "tag": "Ünite 11 Değerlendirme", "text": "Aşağıdakilerden hangisi elektronik pazarlama yöntemleri arasında yer almaz?", "options": [{"letter": "A", "text": "Banner"}, {"letter": "B", "text": "Arama motorları"}, {"letter": "C", "text": "Bağlılık, referans ve üyelik programları"}, {"letter": "D", "text": "Çok katlı pazarlama"}, {"letter": "E", "text": "Bloglar PAZARLAMA İLKELERİ 183"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 104, "tag": "Ünite 11 Değerlendirme", "text": "________ anket ve form gibi yöntemlerle tüketicilerden kendi istekleri ile alınan şahsi bilgilerin kullanılarak onların ilgi alanları ve ihtiyaçlarına göre yapılan pazarlama faaliyetlerini kapsar. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İzinli pazarlama"}, {"letter": "B", "text": "İlişkisel pazarlama"}, {"letter": "C", "text": "Veri tabanlı pazarlama"}, {"letter": "D", "text": "Birebir pazarlama"}, {"letter": "E", "text": "Doğrudan Pazarlama"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 105, "tag": "Ünite 11 Değerlendirme", "text": "Aşağıdakilerden hangisi blogların pazarlama faaliyetlerinde kullanılmasının işletmeye sağlayabileceği faydalardan biri değildir?", "options": [{"letter": "A", "text": "Bloglar aracılığıyla müşterilerle düzenli ilişkiler kurulabilir, müşteri tatmini ve sadakati artırılabilir."}, {"letter": "B", "text": "Bloglar aracılığıyla müşterilerin ilgi alanlarına ilişkin bilgi elde edilebilir ve bu bilgiye göre işletmeler pazar stratejisi geliştirebilir."}, {"letter": "C", "text": "Blogların arama motorlarında genelde üst sıralarda olmaları sebebiyle ürün ve marka bilinirliğini artırır."}, {"letter": "D", "text": "Müşteriler ile sürekli kurulan karşılıklı ilişki sayesinde müşteri işletmenin ürün ve hizmetlerin şekillendirilmesine katkı sağlayabilir. Bu da markaya olan güveni artırabilir."}, {"letter": "E", "text": "Bloglar sayesinde ürün ile ilgili olarak çıkabilecek olası dedikodular hızla yayılabilir."}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 106, "tag": "Ünite 11 Değerlendirme", "text": "Katılımcılarına online ortamlarda kendilerini ifade etme, iletişime geçme, gruplara katılma ve bu ortamlara fikir, yorum ve yayınlarıyla katkıda bulunma imkanı sağlayan sosyal içerikli web sitelerine ne ad verilir?", "options": [{"letter": "A", "text": "Sosyal medya"}, {"letter": "B", "text": "İnternet"}, {"letter": "C", "text": "E-ticaret"}, {"letter": "D", "text": "E-pazarlama"}, {"letter": "E", "text": "Viral pazarlama 184"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 107, "tag": "Ünite 11 Değerlendirme", "text": "Aşağıdakilerden hangisi sosyal medya pazarlamasının 5 temel amacından biri değildir?", "options": [{"letter": "A", "text": "Müşterilerde marka farkındalığı oluşturma"}, {"letter": "B", "text": "Markayı takip eden kişi sayısını yükseltme"}, {"letter": "C", "text": "Müşterilerle iletişimi engelleme"}, {"letter": "D", "text": "Markanın web sitesinde trafiği artırma"}, {"letter": "E", "text": "İlgili linkleri web sitenize yönlendirme"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 108, "tag": "Ünite 11 Değerlendirme", "text": "Sosyal medya araçları 5 grup altında sınıflandırılabilir. Aşağıdakilerden hangisi bu sınıflardan biri değildir?", "options": [{"letter": "A", "text": "Sosyal haber siteleri"}, {"letter": "B", "text": "Alışveriş siteleri"}, {"letter": "C", "text": "Sosyal paylaşım siteleri;"}, {"letter": "D", "text": "Sosyal ağ siteleri"}, {"letter": "E", "text": "Sosyal cevaplama siteleri"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 11 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 109, "tag": "Ünite 12 Değerlendirme", "text": "Doğrudan pazarlama uygulamalarının tercih edilmesinde en önemli faktör aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ölçülebilirlik"}, {"letter": "B", "text": "Kontrol edilebilirlik"}, {"letter": "C", "text": "Ulaşılabilirlik"}, {"letter": "D", "text": "Düşük maliyet"}, {"letter": "E", "text": "Güvenilirlik"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 110, "tag": "Ünite 12 Değerlendirme", "text": "Doğrudan satış ile ilgili aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Satış gücü yaratma ve elde tutma maliyeti yüksektir."}, {"letter": "B", "text": "Her bir müşteriyle ayrı ayrı ilgilenilmesi gerekir."}, {"letter": "C", "text": "Perakende satış noktası sayılmayacak yerlerde gerçekleştirilir."}, {"letter": "D", "text": "Doğrudan pazarlamadan biraz daha farklı özelliklere sahiptir."}, {"letter": "E", "text": "Satış temsilcisi ile müşteri arasında doğrudan temasın olması gerekmez."}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 111, "tag": "Ünite 12 Değerlendirme", "text": "Doğrudan pazarlamada kullanılan iletişim araçları arasında aşağıdakilerden hangisi yer almaz?", "options": [{"letter": "A", "text": "Trigger ve zemin reklamları"}, {"letter": "B", "text": "SMS"}, {"letter": "C", "text": "Kiosk"}, {"letter": "D", "text": "Kataloglar"}, {"letter": "E", "text": "Alışveriş Merkezleri"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 112, "tag": "Ünite 12 Değerlendirme", "text": "___________, internetin ve web’in, ticaretin yapılması için kullanılmasıdır. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Modern ticaret"}, {"letter": "B", "text": "E-Ticaret"}, {"letter": "C", "text": "İnternet pazarlaması"}, {"letter": "D", "text": "Elektronik pazarlama"}, {"letter": "E", "text": "İşlem pazarlaması"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 113, "tag": "Ünite 12 Değerlendirme", "text": "Aşağıdakilerden hangisi elektronik ticaret türleri arasında yer almaz?", "options": [{"letter": "A", "text": "İşletmeden Tüketiciye E-ticaret"}, {"letter": "B", "text": "İşletmeden İşletmeye E-ticaret"}, {"letter": "C", "text": "Çalışanlar arası E-Ticaret"}, {"letter": "D", "text": "Tüketiciden Tüketiciye E-ticaret"}, {"letter": "E", "text": "Vatandaş ile hükümet arası E-ticaret PAZARLAMA İLKELERİ 199"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 114, "tag": "Ünite 12 Değerlendirme", "text": "Aşağıdakilerden hangisi e-ticaret sürecini oluşturan eylemlerden biri değildir?", "options": [{"letter": "A", "text": "Satış sonrası bakım, destek, hizmetlerinin satıcının sorumluluğundan çıkması"}, {"letter": "B", "text": "Ticaret öncesi işletmelerin elektronik ortamda bilgilenmesi ve araştırma yürütmesi"}, {"letter": "C", "text": "İşletmelerin elektronik ortamda buluşması"}, {"letter": "D", "text": "Ödeme sürecinin yerine getirilmesi"}, {"letter": "E", "text": "Taahhüdün yerine getirilmesi, mal veya hizmetin müşteriye teslimi"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 115, "tag": "Ünite 12 Değerlendirme", "text": "İşletmelerin diğer işletmelere internet ve bağlı teknolojiler vasıtasıyla satış yapmaya odaklandığı e-ticaret türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "B2C"}, {"letter": "B", "text": "B2B"}, {"letter": "C", "text": "C2C"}, {"letter": "D", "text": "SSL"}, {"letter": "E", "text": "SET"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 116, "tag": "Ünite 12 Değerlendirme", "text": "Network (internet) üzerindeki bilgi transferi sırasında güvenlik ve gizliliğin sağlanması amacıyla Netscape tarafından geliştirilmiş bir güvenlik protokolü hangisidir?", "options": [{"letter": "A", "text": "SET"}, {"letter": "B", "text": "ATM"}, {"letter": "C", "text": "SQL"}, {"letter": "D", "text": "SSL"}, {"letter": "E", "text": "IBM"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 117, "tag": "Ünite 12 Değerlendirme", "text": "Aşağıdakilerden hangisi kapalı ve açık ağlar kullanılarak yapılabilecek iş ve ticaret aktivitelerinden biri değildir?", "options": [{"letter": "A", "text": "Mal ve hizmetlerin elektronik alışverişi"}, {"letter": "B", "text": "Elektronik banka işlemleri ve fon transferi"}, {"letter": "C", "text": "Elektronik para ile ilgili işlemler"}, {"letter": "D", "text": "Elektronik hisse alışverişi ve borsa"}, {"letter": "E", "text": "Gayrimenkul tapusu alım ve satım işlemleri 200"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 118, "tag": "Ünite 12 Değerlendirme", "text": "Aşağıdakilerden hangisi e-ticaretin yararlarından biri değildir?", "options": [{"letter": "A", "text": "Müşterilere evinden veya ofisinden günün her saatinde alışveriş yapabilme imkânı vermektedir."}, {"letter": "B", "text": "Tüketiciler yeni mamul ve ürün bilgilerine kolay ulaşabilmekte, bilgi sahibi olmakta ve alternatif ürünleri karşılaştırarak, kolayca satın alabilmektedir."}, {"letter": "C", "text": "Ticari işlemlerin elektronik ortamda yürütülmesi çok zaman kaybına neden olmaktadır."}, {"letter": "D", "text": "E-Ticaret, ticari faaliyetlerin tabana yayılmasını sağlamış, pazar alanını genişletmiş ve ekonomik yoğunlaşmaya yol açmıştır."}, {"letter": "E", "text": "Tüketiciler için işlem maliyetleri ve nakliye masrafları düşmektedir."}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 12 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 119, "tag": "Ünite 13 Değerlendirme", "text": "Aşağıdakilerden hangisi işletmeleri uluslararası pazarlara yönelten nedenler arasında yer almaz?", "options": [{"letter": "A", "text": "Dünya pazarlarının sunduğu potansiyel"}, {"letter": "B", "text": "Teknolojinin gelişimi"}, {"letter": "C", "text": "İç pazardaki talebin azalması"}, {"letter": "D", "text": "Pazarın geliştirilmek istenmesi"}, {"letter": "E", "text": "İç pazarlardaki rakiplerin azlığı"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 120, "tag": "Ünite 13 Değerlendirme", "text": "Uluslararası pazarlara en kolay giriş yolu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İhracat"}, {"letter": "B", "text": "Lisans Verme"}, {"letter": "C", "text": "Franchising"}, {"letter": "D", "text": "Ortak girişim"}, {"letter": "E", "text": "Doğrudan yatırım"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 121, "tag": "Ünite 13 Değerlendirme", "text": "Bağımsız uluslararası pazarlama aracılarını kullanarak gerçekleştirilen uluslararası pazarlama faaliyeti hangisidir?", "options": [{"letter": "A", "text": "Doğrudan ihracat"}, {"letter": "B", "text": "Dolaylı ihracat"}, {"letter": "C", "text": "Lisans verme"}, {"letter": "D", "text": "Franchising"}, {"letter": "E", "text": "Ortak girişim"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 122, "tag": "Ünite 13 Değerlendirme", "text": "_______________ uluslararası pazarlara girmek isteyen bir işletme tarafından, yurt dışındaki yerel bir üreticiye üretim ve/veya satış izni veya yetkisi verilmesidir. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Doğrudan ihracat"}, {"letter": "B", "text": "Dolaylı ihracat"}, {"letter": "C", "text": "Lisans verme"}, {"letter": "D", "text": "Franchising"}, {"letter": "E", "text": "Ortak girişim"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 123, "tag": "Ünite 13 Değerlendirme", "text": "Her ülkenin sahip olduğu örf, adet, gelenek, norm ve tabular aşağıda yer alan uluslararası pazarlama çevresinin hangisi ile ilişkilidir?", "options": [{"letter": "A", "text": "Ekonomik çevre"}, {"letter": "B", "text": "Politik ve Yasal çevre"}, {"letter": "C", "text": "Kültürel çevre"}, {"letter": "D", "text": "Rekabet çevresi"}, {"letter": "E", "text": "Mikro çevre PAZARLAMA İLKELERİ 215"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 124, "tag": "Ünite 13 Değerlendirme", "text": "Aşağıdakilerden hangisi uluslararası pazarlara açılmak isteyen işletmelerin uygulayabileceği farklı giriş yöntemlerinden biri değildir?", "options": [{"letter": "A", "text": "İhracat"}, {"letter": "B", "text": "Lisans verme"}, {"letter": "C", "text": "İthalat"}, {"letter": "D", "text": "Ortak girişim"}, {"letter": "E", "text": "Doğrudan yatırım"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 125, "tag": "Ünite 13 Değerlendirme", "text": "Yabancı bir ülke pazarına girmenin en kolay yolu nedir?", "options": [{"letter": "A", "text": "Lisans verme"}, {"letter": "B", "text": "İhracat"}, {"letter": "C", "text": "Doğrudan yatırım"}, {"letter": "D", "text": "Ortak girişim"}, {"letter": "E", "text": "İthalat"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 126, "tag": "Ünite 13 Değerlendirme", "text": "Dış pazarlara girmede, endüstriyel ya da ticari uzmanlığın, belli bir bedel karşılığında, kiralanması ya da satın alınmasını sağlayacak anlaşmaya ne ad verilir?", "options": [{"letter": "A", "text": "İhracat"}, {"letter": "B", "text": "İthalat"}, {"letter": "C", "text": "Ortak girişim"}, {"letter": "D", "text": "Lisans verme"}, {"letter": "E", "text": "Doğrudan yatırım"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 127, "tag": "Ünite 13 Değerlendirme", "text": "Üretici veya ihracatçı işletmenin yurt dışında faaliyet gösteren başka bir işletmeyle hatta bazen rakip bir işletmeyle ticari bir amaç için ortaklık kurmasına ne ad verilir?", "options": [{"letter": "A", "text": "İhracat"}, {"letter": "B", "text": "Kooperatif"}, {"letter": "C", "text": "Doğrudan yatırım"}, {"letter": "D", "text": "Birlik"}, {"letter": "E", "text": "Ortak girişim"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}, {"num": 128, "tag": "Ünite 13 Değerlendirme", "text": "Üretici işletmenin riski tek başına üstlenerek, uzun süreli kalabileceğine inandığı yabancı ülke pazarında üretim, tutundurma, satış ve dağıtım faaliyetlerini kendisinin yürütmesine ne ad verilir?", "options": [{"letter": "A", "text": "Doğrudan yatırım"}, {"letter": "B", "text": "Kooperatif"}, {"letter": "C", "text": "Birlik"}, {"letter": "D", "text": "İhracat"}, {"letter": "E", "text": "İthalat"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 13 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 129, "tag": "Ünite 14 Değerlendirme", "text": "Aşağıdakilerden hangisi tüketicilerin ürün boyutu açısından karşılaştıkları etik sorunlar arasında yer almaz?", "options": [{"letter": "A", "text": "Zararlı ürünler"}, {"letter": "B", "text": "Yetersiz tamir-bakım servisleri"}, {"letter": "C", "text": "Bozuk ürünler"}, {"letter": "D", "text": "Etiket fiyatının yüksek tutulması"}, {"letter": "E", "text": "Yetersiz etiket bilgisi"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 130, "tag": "Ünite 14 Değerlendirme", "text": "______________, pazarlama faaliyetlerini sürdürürken, verilen kararların ve oluşturulan stratejilerin toplumun öngördüğü norm ve kurallara uygun olmasıdır. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bilinçli pazarlama"}, {"letter": "B", "text": "Pazarlama etiği"}, {"letter": "C", "text": "Felsefi pazarlama"}, {"letter": "D", "text": "Duyarlı pazarlama"}, {"letter": "E", "text": "Sürdürülebilirlik"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 131, "tag": "Ünite 14 Değerlendirme", "text": "________________ tüketiciler, sosyal çevre ve doğal çevre ile sürdürülebilir ilişkiler kurmak ve devam ettirmektir. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bilinçli pazarlama"}, {"letter": "B", "text": "Çevre pazarlaması"}, {"letter": "C", "text": "Sürdürülebilir pazarlama"}, {"letter": "D", "text": "Uzun vadeli pazarlama"}, {"letter": "E", "text": "Kâr amacı gütmeyen pazarlama"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 132, "tag": "Ünite 14 Değerlendirme", "text": "Aşağıdakilerden hangisi sosyal pazarlama karması elemanlarından biri değildir?", "options": [{"letter": "A", "text": "Kamu"}, {"letter": "B", "text": "Ortaklık"}, {"letter": "C", "text": "Kurallar"}, {"letter": "D", "text": "Politikalar"}, {"letter": "E", "text": "Fon PAZARLAMA İLKELERİ 235"}], "correct": "C", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>C</strong>'dir."}, {"num": 133, "tag": "Ünite 14 Değerlendirme", "text": "Güvenli ürünlerin tasarlanması, üretilmesi, paketlenmesi, tüketiciye ürünle ilgili yeterli bilginin verilmesi, reklamlarda aldatıcı bilgiden kaçınılması gibi faaliyetler _________________ alanındadır. Yukarıdaki boşluğu doğru şekilde tamamlayan seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sosyal sorumluluk"}, {"letter": "B", "text": "Sponsorluk"}, {"letter": "C", "text": "Bilinçli pazarlama"}, {"letter": "D", "text": "Sürdürülebilirlik"}, {"letter": "E", "text": "Modern pazarlama"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 134, "tag": "Ünite 14 Değerlendirme", "text": "Aşağıdakilerden hangisi sürdürülebilir pazarlamanın gerekliliklerinden biri değildir?", "options": [{"letter": "A", "text": "Geri dönüşüm ve atık ayırma işlemlerinin engellenmesi"}, {"letter": "B", "text": "Sürdürülebilir tüketim kalıplarını halka öğretecek kurumların kurulması"}, {"letter": "C", "text": "İsrafa yol açacak tüketim kalıplarının değişmesi"}, {"letter": "D", "text": "Yeni sosyal ve ekonomik kurumlarla alternatif sistemlerin oluşturulması ve toplumu çevreyle ilgili davranışlara teşvik etmesi"}, {"letter": "E", "text": "Yerel ekonomilerin, ithalat yapmak yerine ikamesi olarak yerel ürünlerin kullanılması"}], "correct": "A", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>A</strong>'dir."}, {"num": 135, "tag": "Ünite 14 Değerlendirme", "text": "Aşağıdakilerden hangisi sürdürülebilir pazarlamaya geçiş sürecinde, pazarlama stratejileri oluşturulurken ele alınan ele alınan konulardan biri değildir?", "options": [{"letter": "A", "text": "Atık"}, {"letter": "B", "text": "Çalışanların ev yaşam şartları"}, {"letter": "C", "text": "Kirlenme"}, {"letter": "D", "text": "Küresel ısınma"}, {"letter": "E", "text": "İş yerinde çalışma şartları"}], "correct": "B", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>B</strong>'dir."}, {"num": 136, "tag": "Ünite 14 Değerlendirme", "text": "Ürünlerin belli pazarda yetki verilmemiş işletmeler tarafından dağıtımının yapılmasına ne ad verilir?", "options": [{"letter": "A", "text": "Yeşil pazarlama"}, {"letter": "B", "text": "Siyah pazarlama"}, {"letter": "C", "text": "Beyaz pazarlama"}, {"letter": "D", "text": "Gri pazarlama"}, {"letter": "E", "text": "Kırmız pazarlama"}], "correct": "D", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>D</strong>'dir."}, {"num": 137, "tag": "Ünite 14 Değerlendirme", "text": "Reklamda ürünün olduğundan daha iyi kalitede olduğunun vurgulanması, bilimsel olduğunun ima edilmesi, ürünün içindeki çeşitli kimyasalların vurgulayarak kalite imajının uyandırılması durumu nasıl tanımlanır?", "options": [{"letter": "A", "text": "Pazarlama gereği"}, {"letter": "B", "text": "Satış gereği"}, {"letter": "C", "text": "Ürün tanıtımı gereği"}, {"letter": "D", "text": "Ticari gereksinim"}, {"letter": "E", "text": "Etik dışı"}], "correct": "E", "explanation": "<strong>Açıklamalı Çözüm:</strong><br> AUZEF Pazarlama İlkeleri müfredatı Ünite 14 kazanımları uyarınca doğru seçenek <strong>E</strong>'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

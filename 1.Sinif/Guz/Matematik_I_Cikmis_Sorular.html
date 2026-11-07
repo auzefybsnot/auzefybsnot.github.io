@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematik I (Temel Matematik) — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 1. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Matematik I (Temel Matematik) — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">1. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Matematik I (Temel Matematik) — Ders Anlatımı Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Matematik I (Temel Matematik) — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Matematik I (Temel Matematik) — Ders Anlatımı dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>57 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>1. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">57</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Matematik_I_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (57)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">57</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Matematik_I_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Matematik1 2024-25 büt", "text": "𝑓(𝑥) = 𝑥2 ; 𝑥< 1 𝑥 2 ; 𝑥≥1 ! Yukarıda verilen parçalı fonksiyon için lim 𝑥→1 𝑓(𝑥) limit işleminin sonucu kaçtır?", "options": [{"letter": "A", "text": "1/2"}, {"letter": "B", "text": "0"}, {"letter": "C", "text": "Limit mevcut değildir."}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "2"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 2, "tag": "Matematik1 2024-25 büt", "text": "Yukarıda verilen f (x) fonksiyonunun x =2 için limiti kaçtır?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "Limiti yoktur."}, {"letter": "C", "text": "0"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "3"}], "correct": "D", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 3, "tag": "Matematik1 2024-25 büt, Matematik1 Bütünleme 2023-2024", "text": "Yukarıda verilen doğrunun denklemi aşağıdakilerden hangisi olabilir?", "options": [{"letter": "A", "text": "y = 2x+3"}, {"letter": "B", "text": "y = -2x+3"}, {"letter": "C", "text": "y = -x+3"}, {"letter": "D", "text": "y = 3x+2"}, {"letter": "E", "text": "y = -3x"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 4, "tag": "Matematik1 2024-25 büt", "text": "Bir işçi fındık toplama işinde çalışmaktadır. Hiç ürün toplamadığıdığında bile günlük 300 TL ücret almaktadır. Bu işçi 5 günde 100 kg yaş fındık toplamış ve toplam 7500 TL para kazandığına göre bir kg fındık toplamanın işçilik maliyeti değeri aşağıdakilerden hangsidir?", "options": [{"letter": "A", "text": "60 TL"}, {"letter": "B", "text": "50 TL"}, {"letter": "C", "text": "55 TL"}, {"letter": "D", "text": "45 TL"}, {"letter": "E", "text": "65 TL"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 5, "tag": "Matematik1 2024-25 büt, MATEMATİK I 2024-25 final", "text": "Yukarıda verilen grafik aşağıdaki fonksiyonlardan hangisine aittir?", "options": [{"letter": "A", "text": "𝑓(𝑥) = 𝑥2 −4"}, {"letter": "B", "text": "𝑓(𝑥) = −𝑥2 −2"}, {"letter": "C", "text": "𝑓(𝑥) = 2𝑥2 −4"}, {"letter": "D", "text": "𝑓(𝑥) = −𝑥2 −4"}, {"letter": "E", "text": "𝑓(𝑥) = 𝑥2 + 2"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 6, "tag": "Matematik1 2024-25 büt", "text": "Aşağıdakilerden hangisi reel sayı değildir?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "ln e2"}, {"letter": "C", "text": "9 √"}, {"letter": "D", "text": "1og 6"}, {"letter": "E", "text": "-5"}], "correct": "D", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 7, "tag": "Matematik1 2024-25 büt", "text": "Yukarıda koyu renkli gösterilen küme aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "(B∩C)-A"}, {"letter": "B", "text": "B∪C"}, {"letter": "C", "text": "B∩C"}, {"letter": "D", "text": ""}, {"letter": "A", "text": "(B∪C)"}, {"letter": "E", "text": "(B∪C)-A MATEMATİK I A P355875.G8596 27-12-2024 12:46:05 MATEMATİK I A P355875.G8596 27-12-2024 12:46:05 CEVAPLI CEVAPLI"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 8, "tag": "Matematik1 2024-25 büt", "text": "Yukarıda 𝑔(𝑥)fonksiyonunun türevi ile ilgili bilgiler verilmektedir. Buna göre hangi apsis değerinde veya değerlerinde tepe noktaları bulunmaktadır?", "options": [{"letter": "A", "text": "Sadece x=2"}, {"letter": "B", "text": "Sadece x=-2"}, {"letter": "C", "text": "x=-2 ve x=2"}, {"letter": "D", "text": "x=0"}, {"letter": "E", "text": "Sadece x=-3"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 9, "tag": "Matematik1 2024-25 büt", "text": "Yukarıda bir fonksiyonun grafiği verilmiştir. Buna göre verilen aralıkta fonksiyonun kaç tane tepe noktası bulunmaktadır?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "4"}, {"letter": "D", "text": "5"}, {"letter": "E", "text": "3"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 10, "tag": "Matematik1 2024-25 büt", "text": "lim 𝑥→∞ 3 𝑥2−3𝑥+5 𝑥2−3𝑥 Yukarıda verilen limit işleminin sonucu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "3"}, {"letter": "B", "text": "5"}, {"letter": "C", "text": "-3"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "0"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "Matematik1 2024-25 büt", "text": "∫1 2 𝑥 √𝑑𝑥 Yukarıda verilen integralin sonucu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "𝑥 √ 2 + 𝑐"}, {"letter": "B", "text": "2 𝑥 √+ 𝑐"}, {"letter": "C", "text": "𝑥 √+ 𝑐"}, {"letter": "D", "text": "𝑥2 3 + 𝑐"}, {"letter": "E", "text": "1 𝑥 √+ 𝑐"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 12, "tag": "Matematik1 2024-25 büt", "text": "Bir ürüne ait toplam maliyet fonksiyonu, TC(q)=q2+3q+15 olarak belirlendiğine göre, q=10 için marjinal maliyet MC(q=10) değeri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "20"}, {"letter": "B", "text": "145"}, {"letter": "C", "text": "21"}, {"letter": "D", "text": "7145"}, {"letter": "E", "text": "23"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 13, "tag": "Matematik1 2024-25 büt", "text": "Yukarıda grafiği verilen fonksiyonun değer kümesi aşağıdaki aralıklardan hangisinde değişir?", "options": [{"letter": "A", "text": "(-4,0)"}, {"letter": "B", "text": "(3, -5)"}, {"letter": "C", "text": "(-5, 5)"}, {"letter": "D", "text": "(-4, 4)"}, {"letter": "E", "text": "(0, 3)"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 14, "tag": "Matematik1 2024-25 büt", "text": "Yukarıda apsis ve ordinat değerlerinden bazıları verilmiş olan fonksiyon aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "y = -x ─ 14"}, {"letter": "B", "text": "y = -3x + 2"}, {"letter": "C", "text": "y = x + 2"}, {"letter": "D", "text": "y = 3x ─ 22"}, {"letter": "E", "text": "y = 3x + 2 𝑥 -4 -3 -2 -1 0 1 2 3 4 𝑔'(𝑥) 2 3 0 -3 -2 -1 0 3 2 𝑥 𝑦 -4 -10 -3 -7 -2 -4 -1 -1 0 2 MATEMATİK I A P355875.G8596 27-12-2024 12:46:05 MATEMATİK I A P355875.G8596 27-12-2024 12:46:05 CEVAPLI CEVAPLI"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 15, "tag": "Matematik1 2024-25 büt", "text": "(−6, 0) ve (0, −2) noktalarından geçen doğrunun denklemi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "𝑦= 1 3 𝑥−2"}, {"letter": "B", "text": "𝑦= −1 3 𝑥−2"}, {"letter": "C", "text": "𝑦= −1 3 𝑥+ 2"}, {"letter": "D", "text": "𝑦= 1 3 𝑥+ 2"}, {"letter": "E", "text": "𝑦= 3𝑥−2"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 16, "tag": "Matematik1 2024-25 büt", "text": "∫3𝑥2+1 𝑥3+𝑥+2 𝑑𝑥 Yukarıda verilen integralin sonucu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "ln 3𝑥2 + 1 || || + 𝑐"}, {"letter": "B", "text": "3𝑥2 + 1 + 𝑐"}, {"letter": "C", "text": "𝑥3 + 𝑥+ 2  + 𝑐"}, {"letter": "D", "text": "𝑥3 + 𝑥+ 2 + 𝑐"}, {"letter": "E", "text": "ln 𝑥3 + 𝑥+ 2 || || + 𝑐"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 17, "tag": "Matematik1 2024-25 büt", "text": "Bir ürünün arz fonksiyonu p=f(q)=40+4q ve talep fonksiyonu p=g(q)=180­q2 olarak verildiğine göre, üretici rantı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "2000"}, {"letter": "B", "text": "133,33"}, {"letter": "C", "text": "666,66"}, {"letter": "D", "text": "200"}, {"letter": "E", "text": "400"}], "correct": "D", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 18, "tag": "Matematik1 2024-25 büt", "text": "f(x)=3x fonksiyonunun tersi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "f ­1(x) = log3 3x"}, {"letter": "B", "text": "f ­1(x) = log3 x"}, {"letter": "C", "text": "f ­1(x) = 3-x"}, {"letter": "D", "text": "f ­1(x) = log3 x3"}, {"letter": "E", "text": "f ­1(x) = 3x"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 19, "tag": "Matematik1 2024-25 büt", "text": "Üstel ve logaritmik fonksiyonlarla ilgili olarak, aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "y=bx biçiminde verilen üstel fonksiyonlar y eksenini (0 , 1) noktasında keser."}, {"letter": "B", "text": "Üstel fonksiyonların tanım kümesi reel sayılar kümesinden oluşur."}, {"letter": "C", "text": "Logaritma fonksiyonunun tanım kümesi pozitif reel sayılardan oluşur."}, {"letter": "D", "text": "Negatif reel sayıların da logaritması alınabilir."}, {"letter": "E", "text": "Üstel fonksiyonların görüntü kümesi pozitif reel sayılardan oluşur."}], "correct": "D", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 20, "tag": "Matematik1 2024-25 büt", "text": "53−𝑥= 1 125 Yukarıda verilen denklemin çözümü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "x=6"}, {"letter": "B", "text": "x=-1"}, {"letter": "C", "text": "x=5"}, {"letter": "D", "text": "x=0"}, {"letter": "E", "text": "x=-2"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 21, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda verilen eşitsizliği sağlayan kaç adet tamsayı bulunur?", "options": [{"letter": "A", "text": "18"}, {"letter": "B", "text": "16"}, {"letter": "C", "text": "15"}, {"letter": "D", "text": "20"}, {"letter": "E", "text": "10"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 22, "tag": "Matematik1 Bütünleme 2023-2024", "text": "3x-2y=10 ve x+3y=40 olduğuna göre, 3x 2+7xy-6y 2 ifadesi kaça eşit olur?", "options": [{"letter": "A", "text": "400"}, {"letter": "B", "text": "200"}, {"letter": "C", "text": "10"}, {"letter": "D", "text": "1700"}, {"letter": "E", "text": "40"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 23, "tag": "Matematik1 Bütünleme 2023-2024", "text": "f (x) = ln (x+4+e -3x) olduğuna göre f '(0) kaçtır?", "options": [{"letter": "A", "text": "1/5"}, {"letter": "B", "text": "2/5"}, {"letter": "C", "text": "-1/5"}, {"letter": "D", "text": "0"}, {"letter": "E", "text": "-2/5"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 24, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda üstel ve logaritmik fonksiyon graﬁkleri verilmiştir. Buna göre r + s değeri kaç olur?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "1"}, {"letter": "C", "text": "-1"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "0"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 25, "tag": "Matematik1 Bütünleme 2023-2024", "text": "x-3=0 denkleminin çarpanlarından biri (x+1) olduğuna göre diğer çarpan aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "(2x-3)"}, {"letter": "B", "text": "(x+3)"}, {"letter": "C", "text": "(x-1)"}, {"letter": "D", "text": "(x-3)"}, {"letter": "E", "text": "(2x+3)"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 26, "tag": "Matematik1 Bütünleme 2023-2024", "text": "fonksiyonunun en geniş tanım kümesi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "(-5,8)"}, {"letter": "B", "text": "(0,∞)"}, {"letter": "C", "text": "(5,∞)"}, {"letter": "D", "text": "x ∈ R"}, {"letter": "E", "text": "x<0 YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > MATEMATİK I B"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 27, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda verilen f (x) parçalı fonksiyonu için aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "f (2) = 1 ’dir."}, {"letter": "B", "text": "Fonksiyon R’de tanımlıdır."}, {"letter": "C", "text": "f (0) = 2 ’dir."}, {"letter": "D", "text": "x = 2 noktasında limit mevcuttur."}, {"letter": "E", "text": "Fonksiyon x = 2 noktasında süreklidir."}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 28, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Bir sınıftaki tüm öğrencilerden 50'si matematik dersini, 60'ı istatistik dersini, 70'i de bilgisayar dersini almaktadır. Matematik ve istatistik derslerini birlikte alan 15, istatistik ve bilgisayar derslerini birlikte alan 25, matematik ve bilgisayar derslerini birlikte alan 20 öğrenci bulunmaktadır. Her üç dersi alan 5 öğrenci bulunduğuna göre, bu sınıfta toplam kaç öğrenci bulunmaktadır?", "options": [{"letter": "A", "text": "150"}, {"letter": "B", "text": "180"}, {"letter": "C", "text": "125"}, {"letter": "D", "text": "90"}, {"letter": "E", "text": "120"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 29, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda verilen fonksiyonu graﬁğine göre aşağıdaki işlemin sonucu kaçtır?", "options": [{"letter": "A", "text": "0"}, {"letter": "B", "text": "-2"}, {"letter": "C", "text": "-1"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "2"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 30, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda f(x) ve g(x) fonksiyonları tanımlanmıştır. Buna göre ( g o f )(1) kaçtır?", "options": [{"letter": "A", "text": "11"}, {"letter": "B", "text": "9"}, {"letter": "C", "text": "10"}, {"letter": "D", "text": "12"}, {"letter": "E", "text": "8"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 31, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda f fonksiyonunun (-3, 5) aralığında türevine ilişkin graﬁk verilmiştir. Buna göre fonksiyon bu aralıkta kaç noktada tepe yapmaktadır?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "0"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "1"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 32, "tag": "Matematik1 Bütünleme 2023-2024", "text": "q, üretim adedini göstermek üzere, yukarıda bir atölyede belirli bir dönemde oluşan toplam maliyet fonksiyonu verilmektedir. Buna göre q=50 için marjinal maliyet kaç olur?", "options": [{"letter": "A", "text": "200"}, {"letter": "B", "text": "120"}, {"letter": "C", "text": "210"}, {"letter": "D", "text": "150"}, {"letter": "E", "text": "110 YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > MATEMATİK I B"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 33, "tag": "Matematik1 Bütünleme 2023-2024, MATEMATİK I 2024-25 final", "text": "Bir ürünün üretimine ilişkin belli bir dönemde oluşan Marjinal Maliyet fonksiyonu MC(q)=8q olarak belirlenmiş ise ve bu dönemde oluşan sabit maliyet FC=500 ise toplam maliyet fonksiyonu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "TC(q)=2q+500"}, {"letter": "B", "text": "TC(q)=4(q 3/3)+500q"}, {"letter": "C", "text": "TC(q)=(q 2/2)+500"}, {"letter": "D", "text": "TC(q)=4q 2+500"}, {"letter": "E", "text": "TC(q)=4q 2+500q"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 34, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Aşağıda verilen limit işleminin sonucu kaçtır?", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "1/2"}, {"letter": "C", "text": "Limit mevcut değildir."}, {"letter": "D", "text": "-1"}, {"letter": "E", "text": "-1/2"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 35, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda verilen integral işleminin sonucu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "3"}, {"letter": "C", "text": "-3"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "-1"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 36, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Sayılarla iligi aşağıdakilerden hangisi kesinlikle doğrudur?", "options": [{"letter": "A", "text": "İki irrasyonel sayının oranı her zaman irrasyonel sayıdır."}, {"letter": "B", "text": "İki irrasyonel sayının çarpımı her zaman irrasyonel sayıdır."}, {"letter": "C", "text": "Rasyonel sayılar da reel sayı ekseni üzerinde gösterilir."}, {"letter": "D", "text": "İrrasyonel bir sayı ile rasyonel bir sayının çarpımı rasyonel sayı olur."}, {"letter": "E", "text": "İki irrasyonel sayının toplamı her zaman irrasyonel sayıdır."}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 37, "tag": "Matematik1 Bütünleme 2023-2024", "text": "Yukarıda verilen graﬁk hangi üstel fonksiyonun graﬁğidir?", "options": [{"letter": "A", "text": "y=4 -x"}, {"letter": "B", "text": "y=3+(1/3) x"}, {"letter": "C", "text": "y=4(1/3) x"}, {"letter": "D", "text": "y=e -x"}, {"letter": "E", "text": "y=4x"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 38, "tag": "Matematik1 Bütünleme 2023-2024", "text": "y = x 2 - 9 parabolü ile x -ekseni arasında kalan bölgenin alanı kaç birim karedir?", "options": [{"letter": "A", "text": "90"}, {"letter": "B", "text": "36"}, {"letter": "C", "text": "27"}, {"letter": "D", "text": "72"}, {"letter": "E", "text": "54"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 39, "tag": "Matematik1 Bütünleme 2023-2024", "text": "20.000 TL anapara yıllık % 42 nominal faizle bankaya yatırılmıştır. Faiz oranının yıldan yıla değişmediği varsayımı altında iki yılın sonunda hesapta toplam ne kadar para olur? (Not: Bileşik faiz hesaplanacaktır.)", "options": [{"letter": "A", "text": "40656"}, {"letter": "B", "text": "40328"}, {"letter": "C", "text": "28400"}, {"letter": "D", "text": "42000"}, {"letter": "E", "text": "84000 1 D 2 A 3 E 4 A 5 A 6 D 7 E 8 C 9 D 10 C 11 A 12 E 13 D 14 B 15 B 16 C 17 C 18 E 19 B 20 B YAYINLANMIŞ DOKÜMAN 4 Test Bitti"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 40, "tag": "MATEMATİK I 2024-25 final", "text": "Aşağıdaki doğrulardan hangisi 𝑦= (1/2)𝑥−3 doğrusal fonksiyonunun grafiğidir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 41, "tag": "MATEMATİK I 2024-25 final", "text": "y=x2+3x fonksiyonuna x=2 'de çizilen teğetin eğimi kaçtır?", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "7"}, {"letter": "D", "text": "-3"}, {"letter": "E", "text": "3"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 42, "tag": "MATEMATİK I 2024-25 final", "text": "Yukarıda bir parçalı fonksiyon grafiği görülmektedir. Bu fonksiyon aşağıdaki apsis değerlerinin hangisinde süreklidir?", "options": [{"letter": "A", "text": "x=4"}, {"letter": "B", "text": "x=3"}, {"letter": "C", "text": "x=1"}, {"letter": "D", "text": "x=2"}, {"letter": "E", "text": "x=0"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 43, "tag": "MATEMATİK I 2024-25 final", "text": "∫1 𝑒2 𝑑𝑥 𝑥 Yukarıda verilen belirli integralin sonucu kaçtır?", "options": [{"letter": "A", "text": "e"}, {"letter": "B", "text": "-2"}, {"letter": "C", "text": "e2"}, {"letter": "D", "text": "0"}, {"letter": "E", "text": "2"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 44, "tag": "MATEMATİK I 2024-25 final", "text": "Yukarıda verilen fonksiyon grafiğine göre aşağıdaki hangi noktada bir yerel minimum vardır?", "options": [{"letter": "A", "text": "B"}, {"letter": "B", "text": "A"}, {"letter": "C", "text": "C"}, {"letter": "D", "text": "E"}, {"letter": "E", "text": "D"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 45, "tag": "MATEMATİK I 2024-25 final", "text": "Yukarıda grafiği verilen fonksiyon için sağ ve sol limit değerleri sırasıyla aşağıdakilerden hangisidir? lim 𝑥→2+ 𝑓(𝑥) ve lim 𝑥→2−𝑓(𝑥)", "options": [{"letter": "A", "text": "4 - 3"}, {"letter": "B", "text": "1 - 3"}, {"letter": "C", "text": "3 - 1"}, {"letter": "D", "text": "3 - 3"}, {"letter": "E", "text": "4 - 4"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "MATEMATİK I 2024-25 final", "text": "2 ≥𝑥 𝑦≤2 Yukarıda verilen eşitsizlik sisteminin çözüm aralığı harf veya harfler şeklinde aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "D"}, {"letter": "B", "text": "B"}, {"letter": "C", "text": "C"}, {"letter": "D", "text": "B ve C"}, {"letter": "E", "text": "A"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 47, "tag": "MATEMATİK I 2024-25 final", "text": "Aşağıdaki kümelerden hangisi sonlu kümedir?", "options": [{"letter": "A", "text": "Tek doğal sayılar kümesi"}, {"letter": "B", "text": "Rasyonel sayılar kümesi"}, {"letter": "C", "text": "Reel sayılar kümesi"}, {"letter": "D", "text": "Üç basamaklı tam sayılar kümesi"}, {"letter": "E", "text": "İrrasyonel sayılar kümesi MATEMATİK I A P355543.G7072 05-12-2024 10:27:56 MATEMATİK I A P355543.G7072 05-12-2024 10:27:56 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 48, "tag": "MATEMATİK I 2024-25 final", "text": "Yukarıda grafiği verilen fonksiyon kaçıncı dereceden polinom fonksiyondur?", "options": [{"letter": "A", "text": "İkinci dereceden polinom fonksiyon"}, {"letter": "B", "text": "Sıfırıncı dereceden polinom fonksiyon"}, {"letter": "C", "text": "Üçüncü dereceden polinom fonksiyon"}, {"letter": "D", "text": "Birinci dereceden polinom fonksiyon"}, {"letter": "E", "text": "Dördüncü dereceden polinom fonksiyon"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 49, "tag": "MATEMATİK I 2024-25 final", "text": "Yukarıda üstel ve logaritmik fonksiyon grafikleri verilmiştir. Buna göre 𝑟+ 𝑠 değeri kaç olur?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "-1"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "0"}], "correct": "A", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek A'dir."}, {"num": 50, "tag": "MATEMATİK I 2024-25 final", "text": "12 √ −3 √ 27 √ Yukarıdaki matematiksel işleminin sonucu kaçtır?", "options": [{"letter": "A", "text": "-1"}, {"letter": "B", "text": "0"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "1/3"}, {"letter": "E", "text": "-1/3"}], "correct": "D", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek D'dir."}, {"num": 51, "tag": "MATEMATİK I 2024-25 final", "text": "𝑓(𝑥) = 𝑥2−1 𝑥−1 ; 𝑥≠ 1 2𝑥−1 ; 𝑥= 1 ! Yukarıda verilen fonksiyon için, lim 𝑥→1 𝑓(𝑥) = ?", "options": [{"letter": "A", "text": "-2"}, {"letter": "B", "text": "5"}, {"letter": "C", "text": "1"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "2"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 52, "tag": "MATEMATİK I 2024-25 final", "text": "Aşağıdaki ifadelerden hangisi 6𝑚2 + 13𝑚−5 'in bir çarpanıdır?", "options": [{"letter": "A", "text": "2m - 5"}, {"letter": "B", "text": "m - 5"}, {"letter": "C", "text": "2m + 5"}, {"letter": "D", "text": "3m - 5"}, {"letter": "E", "text": "m + 5"}], "correct": "C", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek C'dir."}, {"num": 53, "tag": "MATEMATİK I 2024-25 final", "text": "f(x)=x2­x+3 fonksiyonunun türevi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "x-1"}, {"letter": "B", "text": "2x-3"}, {"letter": "C", "text": "2x"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "2x-1"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 54, "tag": "MATEMATİK I 2024-25 final", "text": "2𝑥+ 1 | | < 7 Yukarıda verilen denklemin çözüm aralığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "(-4, 3]"}, {"letter": "B", "text": "(-4, 3)"}, {"letter": "C", "text": "[-4, 3]"}, {"letter": "D", "text": "[-4, 3)"}, {"letter": "E", "text": "( −∞, −4) ∪(3, ∞) MATEMATİK I A P355543.G7072 05-12-2024 10:27:56 MATEMATİK I A P355543.G7072 05-12-2024 10:27:56 CEVAPLI CEVAPLI"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 55, "tag": "MATEMATİK I 2024-25 final", "text": "Yukarıda verilen sıralı ikililer aşağıdaki hangi fonksiyonun noktaları olabilir?", "options": [{"letter": "A", "text": "𝑦 = 5𝑥"}, {"letter": "B", "text": "𝑦 = 5𝑥2"}, {"letter": "C", "text": "𝑦 = 𝑥5"}, {"letter": "D", "text": "𝑦 = log 𝑥"}, {"letter": "E", "text": "𝑦 = 5𝑥"}], "correct": "E", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek E'dir."}, {"num": 56, "tag": "MATEMATİK I 2024-25 final", "text": "∫ 2𝑥. ln 2 . 𝑑𝑥 Yukarıda verilen integral işleminin sonucu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "1+c"}, {"letter": "B", "text": "2𝑥+ 𝑐"}, {"letter": "C", "text": "2𝑥+1 + 𝑐"}, {"letter": "D", "text": "𝑥. 2𝑥+ 𝑐"}, {"letter": "E", "text": "ln 𝑥 ( ) + 𝑐"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}, {"num": 57, "tag": "MATEMATİK I 2024-25 final", "text": "Yukarıdaki grafikte verilen fonksiyonun tanım aralığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "(-5, 3)"}, {"letter": "B", "text": "(-4, 4)"}, {"letter": "C", "text": "(-5, 4)"}, {"letter": "D", "text": "(0, 4)"}, {"letter": "E", "text": "(-4, 5)"}], "correct": "B", "explanation": "AUZEF Matematik I müfredatı uyarınca doğru seçenek B'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

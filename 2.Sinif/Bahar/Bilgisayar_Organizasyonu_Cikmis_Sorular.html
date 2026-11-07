@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgisayar Organizasyonu (AYBS4004) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Bilgisayar Organizasyonu (AYBS4004) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Bilgisayar Organizasyonu (AYBS4004) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Bilgisayar Organizasyonu (AYBS4004) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Bilgisayar Organizasyonu (AYBS4004) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>59 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">59</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Bilgisayar_Organizasyonu_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (59)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">59</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Bilgisayar_Organizasyonu_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi Flynn bilgisayar sınıflandırmasında yer alan bir kategori değildir?", "options": [{"letter": "A", "text": "SISMD"}, {"letter": "B", "text": "MISD"}, {"letter": "C", "text": "SISD"}, {"letter": "D", "text": "SIMD"}, {"letter": "E", "text": "MIMD"}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 2, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi chiplet yaklaşımını en doğru şekilde tanımlar?", "options": [{"letter": "A", "text": "Tüm işlemci bileşenlerinin tek bir büyük yonga üzerinde üretildiği tasarım yaklaşımıdır."}, {"letter": "B", "text": "Yalnızca bellek birimlerini içeren özel amaçlı yongalardır."}, {"letter": "C", "text": "Bir işlemcinin farklı işlevsel bileşenlerinin ayrı küçük yongalar hâlinde üretilip tek bir paket içinde birleştirilmesi yaklaşımıdır."}, {"letter": "D", "text": "Analog devrelerin sayısal devrelere dönüştürülmesini sağlayan bir yöntemdir."}, {"letter": "E", "text": "Sadece grafik işlemciler için kullanılan bir donanım teknolojisidir."}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 3, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi heterojen sistemlerin temel özelliğini en doğru şekilde açıklar?", "options": [{"letter": "A", "text": "Tüm işlemciler aynı komut kümesini ve veri yolunu kullanır."}, {"letter": "B", "text": "Sistemde veri düzeyinde paralellik mümkün değildir."}, {"letter": "C", "text": "Sistem giriş/çıkış işlemleri için tasarlanmıştır."}, {"letter": "D", "text": "Sistemde farklı türde işlemciler veya hızlandırıcılar bir arada çalışarak görevleri paylaşır."}, {"letter": "E", "text": "Sistemde yalnızca tek tip işlemci kullanılır."}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 4, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi bulut bilişimin (cloud computing) temel tanımını en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "Tüm verilerin kişisel bilgisayarlarda saklandığı bir sistem"}, {"letter": "B", "text": "İnternet üzerinden esnek, ölçeklenebilir ve talep üzerine sunulan bilgi işlem kaynakları ve hizmetleri"}, {"letter": "C", "text": "İşlemcilerin tek bir görev üzerinde ardışık çalışmasını sağlayan mimari"}, {"letter": "D", "text": ""}, {"letter": "E", "text": "posta ve web tarayıcı hizmetleri sağlayan bir sistem"}, {"letter": "E", "text": "Sadece büyük veri merkezlerinde bulunan sabit donanım bileşenlerinden oluşan sistem"}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 5, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi yoklama (polling) ve kesme (interrupt) yöntemleri ile ilgili doğru bir ifadedir?", "options": [{"letter": "A", "text": "Yoklama yöntemi yalnızca giriş verileri için kullanılır, kesme yöntemi yalnızca çıkış verileri için kullanılır."}, {"letter": "B", "text": "Her iki yöntemde de işlemci veri aktarımı için beklemek zorunda değildir."}, {"letter": "C", "text": "Yoklama ve kesme yöntemleri yalnızca RAM ve ROM arasında veri iletiminde kullanılır."}, {"letter": "D", "text": "Kesme yöntemi işlemcinin sürekli cihaz durumunu kontrol etmesini gerektirir, yoklama ise cihazın hazır olmasını bekler."}, {"letter": "E", "text": "Yoklama yöntemi işlemcinin sürekli olarak cihazı kontrol etmesini gerektirir; kesme yöntemi ise cihaz hazır olduğunda işlemciyi bilgilendirir."}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 6, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi veri düzeyinde paralellik (Data­Level Parallelism – DLP) kavramını en doğru şekilde açıklar?", "options": [{"letter": "A", "text": "İşlemcinin bir komutu, aynı işlem tipindeki çok sayıda veri üzerinde uygulaması"}, {"letter": "B", "text": "İşlemcinin yalnızca giriş/çıkış aygıtlarıyla paralel olarak veri alışverişi yapması"}, {"letter": "C", "text": "İşlemcinin ardışık olarak komutları çalıştırması"}, {"letter": "D", "text": "İşlemcinin aynı anda birden fazla programı çalıştırması"}, {"letter": "E", "text": "İşlemcinin her komutu tek bir veriye paralel olarak uygulaması"}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 7, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi EXCHANGE komutunun temel işlevini doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "İki operandın içeriklerini karşılıklı olarak yer değiştirir."}, {"letter": "B", "text": "İki operandın değerlerini geçici olarak kopyalar."}, {"letter": "C", "text": "Program akışını başka bir adrese yönlendirir."}, {"letter": "D", "text": "İki operandı toplayarak sonucu saklar."}, {"letter": "E", "text": "Bir operandın değerini sıfırlar."}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 8, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi veri seçici (multiplexer – MUX) devresinin temel görevini en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "Verileri geçici olarak saklamak"}, {"letter": "B", "text": "Bir giriş sinyalini birden fazla çıkışa aynı anda iletmek"}, {"letter": "C", "text": "Birden fazla girişten yalnızca birini, seçim hatlarına göre çıkışa aktarmak"}, {"letter": "D", "text": "Giriş sinyalinin tersini üretmek"}, {"letter": "E", "text": "İkili verileri kodlamak ve daha az hatta dönüştürmek"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 9, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi dağıtık sistemin temel tanımını en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "Yalnızca internet tarayıcıları üzerinde çalışan uygulamalar"}, {"letter": "B", "text": "Veri depolama amaçlı kullanılan sunuculardan oluşan sistemler"}, {"letter": "C", "text": "Tek bir fiziksel bilgisayar üzerinde çalışan ve tüm işlemleri merkezi olarak yöneten sistemler"}, {"letter": "D", "text": "Birden fazla bağımsız bilgisayarın ağ üzerinden birbirine bağlanarak ortak bir amaç için birlikte çalıştığı sistemler"}, {"letter": "E", "text": "İşlemcilerin tek komut ve tek veri üzerinde çalıştığı sistemler"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 10, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi bloklayıcı (blocking) giriş/çıkış zamanlama modelinin temel özelliğini en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "İşlemci, I/O işlemi devam ederken diğer görevleri yürütür."}, {"letter": "B", "text": "İşlemci, I/O sırasında enerji tasarrufu yapar ve uyku moduna geçer."}, {"letter": "C", "text": "I/O cihazı veri hazır olduğunda işlemciyi kesme ile bilgilendirir."}, {"letter": "D", "text": "Veriler yalnızca ağ cihazlarıyla transfer edilir."}, {"letter": "E", "text": "İşlemci, I/O işlemi tamamlanana kadar bekler ve başka işlem yapamaz. BİLGİSAYAR ORGANİZASYONU A P787296.G20540 08-05-2026 16:05:34 CEVAPLI"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 11, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi bellek cihazının temel görevini en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "Mantık kapılarının çalışmasını kontrol eder."}, {"letter": "B", "text": "İşlemci içindeki aritmetik ve mantıksal işlemleri gerçekleştirir."}, {"letter": "C", "text": "Bilgisayarın diğer birimleri arasındaki veri iletimini sağlar."}, {"letter": "D", "text": "Verileri geçici veya kalıcı olarak saklayarak işlemcinin ihtiyaç duyduğu bilgilere hızlı erişim sağlar."}, {"letter": "E", "text": "Giriş/çıkış aygıtlarından veri toplar ve internet bağlantısını sağlar."}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 12, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi RAM ve ROM bellekler arasındaki temel farkı doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "RAM elektrik kesildiğinde veriyi korur, ROM ise veriyi kaybeder."}, {"letter": "B", "text": "RAM daha yavaş çalışır, ROM ise daha hızlıdır."}, {"letter": "C", "text": "RAM yalnızca kalıcı veri saklar, ROM ise geçici veri saklar."}, {"letter": "D", "text": "RAM hem okunabilir hem yazılabilir, ROM ise sadece okunabilir."}, {"letter": "E", "text": "RAM sadece işletim sistemi için kullanılır, ROM ise sadece uygulamalar için kullanılır."}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 13, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Bir işlemci bir programı çalıştırırken aşağıdaki değerlere sahiptir: Toplam komut sayısı: 1000 Ortalama CPI (komut başına çevrim sayısı): 2 Saat sinyali periyodu: 1 ns Buna göre programın toplam çalışma süresi kaç nanosaniyedir?", "options": [{"letter": "A", "text": "3000"}, {"letter": "B", "text": "2000"}, {"letter": "C", "text": "1000"}, {"letter": "D", "text": "4000"}, {"letter": "E", "text": "500"}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 14, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi komut düzeyinde paralellik (ILP) kavramını en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "Bellek ile işlemci arasındaki veri transferinin hızlandırılması"}, {"letter": "B", "text": "Giriş/çıkış cihazlarının eş zamanlı çalışması"}, {"letter": "C", "text": "Birden fazla programın aynı anda çalıştırılması"}, {"letter": "D", "text": "İşlemcinin tek bir komut üzerinde ardışık olarak çalışması"}, {"letter": "E", "text": "İşlemcinin bir komutun tamamlanmasını beklemeden birden fazla komutu aynı anda yürütmesi"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 15, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi bilgisayar sistemlerindeki bellek hiyerarşisinin temel amacını en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "İşlemciye en hızlı şekilde veri sağlamak ve maliyeti optimize etmek için farklı hız ve kapasitede bellek katmanları kullanmak"}, {"letter": "B", "text": "Bellek cihazlarının elektrik tüketimini azaltmak"}, {"letter": "C", "text": "RAM ve ROM’u birbirinden ayırmak"}, {"letter": "D", "text": "Tüm verileri tek bir bellek türünde saklamak"}, {"letter": "E", "text": "Verileri uzun süreli depolamak"}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 16, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi giriş/çıkış cihazlarının veri erişim (data access) türleri arasında yer almaz?", "options": [{"letter": "A", "text": "Ağ (Network) cihazları"}, {"letter": "B", "text": "Karakter (Character) cihazları"}, {"letter": "C", "text": "Grafik (Graphics) cihazları"}, {"letter": "D", "text": "Blok (Block) cihazları"}, {"letter": "E", "text": "Bayt (Byte) cihazları"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 17, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi önbelleğin (cache memory) bilgisayar sistemlerindeki temel amacını en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "Giriş/çıkış aygıtlarının hızını artırmak"}, {"letter": "B", "text": "İşlemci ile ana bellek arasındaki hız farkını azaltarak sistem performansını artırmak"}, {"letter": "C", "text": "Ağ üzerinden veri iletimini hızlandırmak"}, {"letter": "D", "text": "Verilerin kalıcı olarak saklanmasını sağlamak"}, {"letter": "E", "text": "Programların derlenmesini sağlamak"}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 18, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi tampon (buffer) kapısının temel görevini en doğru şekilde ifade eder?", "options": [{"letter": "A", "text": "Girişlerden yalnızca biri 1 olduğunda çıkış 1 olur."}, {"letter": "B", "text": "Birden fazla giriş sinyalini mantıksal olarak karşılaştırır."}, {"letter": "C", "text": "Giriş sinyalinin tersini çıkışa verir."}, {"letter": "D", "text": "Analog sinyalleri sayısal sinyallere dönüştürür."}, {"letter": "E", "text": "Girişteki sinyali değiştirmeden, aynı değeri çıkışa ileterek sinyalin güçlendirilmesini ve iletimini sağlar."}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 19, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdakilerden hangisi yerel alan ağı (LAN – Local Area Network) kavramını en doğru şekilde tanımlar?", "options": [{"letter": "A", "text": "Sadece kablosuz iletişim teknolojileriyle çalışan ağlardır."}, {"letter": "B", "text": "Kıtalar arası veri iletişimini sağlayan geniş ölçekli ağlardır."}, {"letter": "C", "text": "Sınırlı bir coğrafi alan içinde (ev, okul, ofis gibi) bulunan cihazların birbirine bağlandığı ağlardır."}, {"letter": "D", "text": "Mobil cihazlar arasında kurulan geçici ağlardır."}, {"letter": "E", "text": "Yalnızca internet servis sağlayıcıları tarafından kullanılan ağlardır."}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 20, "tag": "Bilgisayar Organizasyonu - 2025-2026 - Final - Bahar", "text": "Aşağıdaki ifadelerden hangisi MOVE R1, #10 komutu için söylenebilecek doğru bir ifadedir?", "options": [{"letter": "A", "text": "10 numaralı bellek adresi R1’e atanır ve dolaylı adresleme kullanılır."}, {"letter": "B", "text": "Sabit bir değer R1 yazmacına yüklenir ve anında adresleme kullanılır."}, {"letter": "C", "text": "R1 yazmacındaki veri 10 numaralı yazmaca taşınır ve yazmaç adresleme kullanılır."}, {"letter": "D", "text": "Bellekten belleğe veri aktarımı yapılır ve indeksli adresleme kullanılır."}, {"letter": "E", "text": "10 numaralı bellek adresindeki veri R1 yazmacına taşınır ve doğrudan adresleme kullanılır."}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 21, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bellek adres alanının bir kısmını kullanan G/Ç türü hangisidir?", "options": [{"letter": "A", "text": "İzole G/Ç"}, {"letter": "B", "text": "Ortak G/Ç"}, {"letter": "C", "text": "Adresli G/Ç"}, {"letter": "D", "text": "Genel G/Ç"}, {"letter": "E", "text": "Bellek eşlemeli G/Ç"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 22, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Hangisi bir veri yolu tahkim tekniğidir?", "options": [{"letter": "A", "text": "Zorunlu istek"}, {"letter": "B", "text": "Denetleyici"}, {"letter": "C", "text": "N sıralı"}, {"letter": "D", "text": "Kontrol"}, {"letter": "E", "text": "Daisy-chain"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 23, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "D/A Dönüştürücünün çıkışında hangisi görülür", "options": [{"letter": "A", "text": "Yürütülecek talimat adresi"}, {"letter": "B", "text": "tek eşlik biti"}, {"letter": "C", "text": "Bir sensör tarafından tespit edilen dijital sinyal"}, {"letter": "D", "text": "n-bit dijital bilgi girişlerine karşılık gelen analog voltaj"}, {"letter": "E", "text": "Cihaz tarafından üretilen analog sinyalin dijital bit modeli"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 24, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bir CPU'nun iki ana bileşeni hangisidir?", "options": [{"letter": "A", "text": "Register-Datapath"}, {"letter": "B", "text": "Control Unit - Register"}, {"letter": "C", "text": "Datpath - Control Unit"}, {"letter": "D", "text": "ALU-BUS"}, {"letter": "E", "text": "ALU - Control Unit"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 25, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "İşaretli tam sayı gösteriminde bir sayının negatif olduğu nasıl belirtilir?", "options": [{"letter": "A", "text": "En düşük değerlikli bit 1 dir."}, {"letter": "B", "text": "Sayının önünd bulunur."}, {"letter": "C", "text": "En yüksek değerlikli bit 1 dir."}, {"letter": "D", "text": "En yüksek değerlikli bit 0 dir."}, {"letter": "E", "text": "En düşük değerlikli bit 0 dir."}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 26, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Aşağıdakilerin hangisinde 16lık sayı tabanının rakamları doğru verilmiştir?", "options": [{"letter": "A", "text": "0-1-2-3-4-5-6-7-8-9-10-A-B-C-D-E"}, {"letter": "B", "text": "0-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15"}, {"letter": "C", "text": "1-2-3-4-5-6-7-8-9-A-B-C-D-E-F-G"}, {"letter": "D", "text": "0-1-2-3-4-5-6-7-8-9-A-B-C-D-E-F"}, {"letter": "E", "text": "1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 27, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Aşağıdakilerden hangisi kontrol biriminin görevlerinden değildir?", "options": [{"letter": "A", "text": "Verilerin aktarılmasını izlemek"}, {"letter": "B", "text": "ALU'ya yapacağı işlemi bildirmek."}, {"letter": "C", "text": "verileri iletmek"}, {"letter": "D", "text": "Komutların yürütülmesini izlemek."}, {"letter": "E", "text": "Aktif görevlere kesme uygulamak."}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 28, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Aşağıdakilerden hangisi asenkron veri iletişiminde bulunmaz", "options": [{"letter": "A", "text": "kontrol sinyali"}, {"letter": "B", "text": "Slave"}, {"letter": "C", "text": "Clock"}, {"letter": "D", "text": "Master"}, {"letter": "E", "text": "Veri yolu"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 29, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bir devrenin çıktısının aynı devreye giriş olarak verilmesine ne denir?", "options": [{"letter": "A", "text": "Bool işlevi"}, {"letter": "B", "text": "Flip-Flop"}, {"letter": "C", "text": "Ardışıl Devre"}, {"letter": "D", "text": "Geri besleme"}, {"letter": "E", "text": "Kombinasyonel devre"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 30, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Mümkün olabilecek en yüksek hızlı işlemler için operandlar nerede saklanmalıdır?", "options": [{"letter": "A", "text": "ACC"}, {"letter": "B", "text": "PC"}, {"letter": "C", "text": "Bellek"}, {"letter": "D", "text": "IR"}, {"letter": "E", "text": "ALU"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 31, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bir taramanın başlangıcında veya belirli zaman aralıklarında belirli bir değerle başlatılan hata denetleme mekanizması aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kernel"}, {"letter": "B", "text": "Watchdog Timer"}, {"letter": "C", "text": "RTOS"}, {"letter": "D", "text": "BELLEK"}, {"letter": "E", "text": "CPU"}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 32, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Verileri bölümlere ayırarak bir ağ üzerindeki trafik miktarını azaltan birim aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Host"}, {"letter": "B", "text": "Network"}, {"letter": "C", "text": "Brigde"}, {"letter": "D", "text": "Link"}, {"letter": "E", "text": "Router"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 33, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bellek hızı CPU'ya göre çok düşük olduğunda sistemin tamamı nasıl etkilenir?", "options": [{"letter": "A", "text": "sistem çalışmaz"}, {"letter": "B", "text": "Hızlanır."}, {"letter": "C", "text": "Yavaşlar"}, {"letter": "D", "text": "Sistem hata verir."}, {"letter": "E", "text": "Değişmez."}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 34, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "LAN lar hangi teknolojiye dayanır", "options": [{"letter": "A", "text": "Ethernet"}, {"letter": "B", "text": "Bluetooth"}, {"letter": "C", "text": "Wireless"}, {"letter": "D", "text": "Router"}, {"letter": "E", "text": "GSM"}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 35, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "ALU (Arithmetik ve Mantık Birimi)'nun görevi nedir?", "options": [{"letter": "A", "text": "Bellek biriminden alınan verileri işler ve işlenen verileri bellek birimine geri depolar."}, {"letter": "B", "text": "Programları depolar"}, {"letter": "C", "text": "Programları makine diline çevirir."}, {"letter": "D", "text": "Diğer birimlerin faaliyetlerini kontrol eder."}, {"letter": "E", "text": "Program sayaç yazmacı ve Adres yazmacı üzerinde aritmetik ve mantık işlemleri gerçekleştirir."}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 36, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Gelen iletişim bağlantılarından aldığı verileri giden iletişim bağlantıları aracılığıyla ileten aygıtlara ne ad verilir?", "options": [{"letter": "A", "text": "Host"}, {"letter": "B", "text": "Network"}, {"letter": "C", "text": "Brigde"}, {"letter": "D", "text": "Router"}, {"letter": "E", "text": "Link"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 37, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Hangi RAM türünde güç mevcut olduğu sürece veri kaybı olmaz?", "options": [{"letter": "A", "text": "DDRAM"}, {"letter": "B", "text": "EDORAM"}, {"letter": "C", "text": "SDROM"}, {"letter": "D", "text": "DRAM"}, {"letter": "E", "text": "SRAM"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 38, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Tüm gömülü sistemler de bulunan ve sistemin başlatılmasını sağlayan öğe aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kernel"}, {"letter": "B", "text": "Watchdog timer"}, {"letter": "C", "text": "RTOS"}, {"letter": "D", "text": "Frimware"}, {"letter": "C", "text": "CPU"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 39, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Veri yolu denetleyicisinin görevi nedir?", "options": [{"letter": "A", "text": "veri yolu meşguliyetini kaldırmak"}, {"letter": "B", "text": "veri yolunu açıp kapatmak"}, {"letter": "C", "text": "Veri yolu yöneticisini belirlemek."}, {"letter": "D", "text": "Veri yolu iletişimini sağlamak."}, {"letter": "E", "text": "Veri yoluna enerji sağlamak."}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 40, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bir registerin görevi nedir?", "options": [{"letter": "A", "text": "Veri iletimi"}, {"letter": "B", "text": "Veri işleme"}, {"letter": "C", "text": "Veri kontrolü"}, {"letter": "D", "text": "Veri depolama"}, {"letter": "E", "text": "Veri değiştirme"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 41, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "101001012 sayısının 1'e tümleyeni kaçtır", "options": [{"letter": "A", "text": "10100000²"}, {"letter": "B", "text": "11100101²"}, {"letter": "C", "text": "01011010²"}, {"letter": "D", "text": "10000001²"}, {"letter": "E", "text": "01011011²"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 42, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Çok amaçlı kullanılabilen kapı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "NAND"}, {"letter": "B", "text": "XOR"}, {"letter": "C", "text": "NOR"}, {"letter": "D", "text": "NOT"}, {"letter": "E", "text": "AND"}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 43, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "13DA8A2D sayısının big Endian gösteriminde 2. Baytta hangi sayı bulunur", "options": [{"letter": "A", "text": "1D"}, {"letter": "B", "text": "13"}, {"letter": "C", "text": "DA"}, {"letter": "D", "text": "A2"}, {"letter": "E", "text": "8A"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 44, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Sık erişilen verileri ana bellekte depolamak yerine CPU ya daha yakın depolayarak bellek erişimini hızlandırmak için İnşallah kullanılan birim aşağıdakilerden hangisidir", "options": [{"letter": "A", "text": "RAM"}, {"letter": "B", "text": "Ana bellek"}, {"letter": "C", "text": "sabit disk"}, {"letter": "D", "text": "ön bellek"}, {"letter": "E", "text": "ara bellek"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 45, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Hangisi bir ağ bileşeni değildir", "options": [{"letter": "A", "text": "Router"}, {"letter": "B", "text": "Bellek"}, {"letter": "C", "text": "Brigde"}, {"letter": "D", "text": "Link E) Host"}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 46, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Aşağıdakilerden hangisi genel amaçlı bir bilgisayarın donanım birimlerinden değildir", "options": [{"letter": "A", "text": "Kontrol birimi"}, {"letter": "B", "text": "Aritmetik ve mantık birimi"}, {"letter": "C", "text": "Bellek birimi"}, {"letter": "D", "text": "Derleyici"}, {"letter": "E", "text": "Giriş/ Çıkış birimi"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 47, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bir problemi çözmek için gereken mantıksal adım dizisi nedir?", "options": [{"letter": "A", "text": "Yazılım"}, {"letter": "B", "text": "Algoritma"}, {"letter": "C", "text": "Assembly"}, {"letter": "D", "text": "Assembler"}, {"letter": "E", "text": "Nesne kodu"}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 48, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Aşağıdakilerden hangisi VMEbus görevlerindendir?", "options": [{"letter": "A", "text": "Cihazlar arasındaki etkileşimi kesin olarak tanımlayan protokolleri belirtmek"}, {"letter": "B", "text": "Arayüzlü cihazların dahili faaliyetlerini bozarak cihazlar arasında iletişimi engellemek"}, {"letter": "C", "text": "Performansın sistemin ara yüzü ile sinirh olduğu bir sistem sağlamak."}, {"letter": "D", "text": "Tasarimcinin sistem uyumluluğunu etkileyerek maliyeti ve/veya performansi optimize için geniş bir tasarim araligi sağlamak"}, {"letter": "E", "text": "Sistem protokolunu açıklayan terminoloji ve tanimlan gizlemek."}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 49, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "ASCII veya EBCDIC kodu kullanılan karakter dizileri karakter başına ne kadar yer kaplar?", "options": [{"letter": "A", "text": "1 bayt"}, {"letter": "B", "text": "4 bit"}, {"letter": "C", "text": "8 bayt"}, {"letter": "D", "text": "1 bit"}, {"letter": "E", "text": "4 bayt"}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 50, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "10100101² sayısının 2'ye tümleyeni kaçtır?", "options": [{"letter": "A", "text": "01011010²"}, {"letter": "B", "text": "11011010²"}, {"letter": "C", "text": "10000001²"}, {"letter": "D", "text": "01011011²"}, {"letter": "E", "text": "11011011²"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 51, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "8 bloklu bir ön bellekte doğrudan eşleme yöntemi ile ana belleğin 8. Bloğu ön belleğin hangi bloğuna eşlenir?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "0"}, {"letter": "D", "text": "6"}, {"letter": "E", "text": "8"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 52, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "13DA8A2D sayısının little Endian gösteriminde 2. Baytta hangi sayı bulunur?", "options": [{"letter": "A", "text": "2D"}, {"letter": "B", "text": "8A"}, {"letter": "C", "text": "13"}, {"letter": "D", "text": "A2"}, {"letter": "E", "text": "DA"}], "correct": "B", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek B'dir."}, {"num": 53, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Eşler arası ağ mimarisi ile ilgili hangisi yanlıştır?", "options": [{"letter": "A", "text": "Ağ üzerindeki her bilgisayarın eşit yeteneği ve sorumluluğu vardır."}, {"letter": "B", "text": "istemciler ve sunucular arasında kesin bir ayrım yoktur."}, {"letter": "C", "text": "Ağır yükler altında istemci/sunucuya göre daha düşük performans sunarlar."}, {"letter": "D", "text": "İstemci/sunucu ağlarından daha basittirler."}, {"letter": "E", "text": "Ağdaki her bilgisayar ya bir istemci ya da sunucudur."}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 54, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Hangi bellek türünü yeniden programlamadan önce içindeki verilerin silinmesi gereklidir", "options": [{"letter": "A", "text": "PROM"}, {"letter": "B", "text": "EEPROM"}, {"letter": "C", "text": "Flash Bellek"}, {"letter": "D", "text": "EPROM"}, {"letter": "E", "text": "ROM"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 55, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "İletilen bilgilerin alıcı ana bilgisayarlar ile gönderen ana bilgisayarlar arasında taşındığı yollara ne ad verilir?", "options": [{"letter": "A", "text": "Link"}, {"letter": "B", "text": "Network"}, {"letter": "C", "text": "Brigde"}, {"letter": "D", "text": "Router"}, {"letter": "E", "text": "Host"}], "correct": "A", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek A'dir."}, {"num": 56, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Bir BOOL cebri değişkeni kaç farklı değer alabilir", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "0"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "1"}], "correct": "D", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek D'dir."}, {"num": 57, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "İnternet hangi ag türündendir", "options": [{"letter": "A", "text": "WLAN"}, {"letter": "B", "text": "PAN"}, {"letter": "C", "text": "LAN"}, {"letter": "D", "text": "MAN"}, {"letter": "E", "text": "WAN"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}, {"num": 58, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Ana bellek için......... ve önbellek için......... olacak şekilde her iki teknoloji de sıklıkla birlikte kullanılır. Boşluğa gelecek kelimeler hangisinde doğru sırada verilmiştir?", "options": [{"letter": "A", "text": "ROM RAM"}, {"letter": "B", "text": "PROM-SRAM"}, {"letter": "C", "text": "DRAM-SRAM"}, {"letter": "D", "text": "DRAM-PROM"}, {"letter": "E", "text": "RAM-SRAM"}], "correct": "C", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek C'dir."}, {"num": 59, "tag": "BİLGİSAYAR ORGANİZASYONU FİNAL AUZEF", "text": "Dijital sistemlerde kullanılan en çok sayı sistemi hangisidir", "options": [{"letter": "A", "text": "Ternary"}, {"letter": "B", "text": "Decimal"}, {"letter": "C", "text": "Hexadecimal"}, {"letter": "D", "text": "Octal"}, {"letter": "E", "text": "Binary 41. Hangisi Multibus II alt Sistemlerinden değildir"}, {"letter": "A", "text": "PCI-express baglantisi"}, {"letter": "B", "text": "G/Ç genişletmeleri için iSBX veri yolu"}, {"letter": "C", "text": "Seri ve paralel sistem veri yollanı"}, {"letter": "D", "text": "Bellek genişletme veri yolu"}, {"letter": "E", "text": "CPU veri yolu 42. Sistem veri yolu bileşenleri hangi seçenekte doğru verilmiştir"}, {"letter": "A", "text": "adres veri yolu- talimat veriyolu- data veri yolu"}, {"letter": "B", "text": "adres veri yolu- DMA veri yolu- data veri yolu"}, {"letter": "C", "text": "adres veri yolu- kontrol veri yolu- data veri yolu"}, {"letter": "D", "text": "adres veri yolu-kontrol veri yolu- G/Ç veri yolu"}, {"letter": "E", "text": "işlemci veri yolu- kontrol veri yolu- data veri yolu 43. Ağ referans modellerinin en üst katmanı aşağıdakilerden hangisidir?"}, {"letter": "A", "text": "Fiziksel"}, {"letter": "B", "text": "Nakit"}, {"letter": "C", "text": "Sunum"}, {"letter": "D", "text": "Ağ"}, {"letter": "E", "text": "Uygulama 44. Bir veya birkaç önceden belirlenmiş görevi gerçekleştirmek için tasarlanmış özel amaçlı bir sistemlere ne denir?"}, {"letter": "A", "text": "Gömülü sistem"}, {"letter": "B", "text": "RTOS"}, {"letter": "C", "text": "CPU"}, {"letter": "D", "text": "Network"}, {"letter": "E", "text": "İşletim sistemi 45. Hangisi Multibus Il nin özelliklerinden değildir?"}, {"letter": "A", "text": "G/Ç genişletmeleri için iSBX veri yolu kullanır."}, {"letter": "B", "text": "CPU-bellek veri yolu ve sistem veri yolu arasındaki etkinliklerin ayrılmasıyla yüksek performansı elde edilir."}, {"letter": "C", "text": "Ses ve görüntü için HDMI aktarımını destekler."}, {"letter": "D", "text": "Dağıtık bir tahkim şeması kullanır."}, {"letter": "E", "text": "Ara bağlantı alanındaki durumu kendi kendine test etme ve raporlama yeteneğine sahiptir. 46. Aranan verinin bulunduğu Ana bellek bloğunun tamamının ön belleğe yüklenmesine ne denir"}, {"letter": "A", "text": "bütünsellik ilkesi"}, {"letter": "B", "text": "Tamamlama ilkesi"}, {"letter": "C", "text": "Yerellik ilkesi"}, {"letter": "D", "text": "Topluluk ilkesi"}, {"letter": "E", "text": "Blok ilkesi 47-13DABA2D sayısının BİG ENDİAN gösteriminde 2. Baytta hangi sayı bulunur? -BA 48-Aynı yonga üzerinde inşa edilmiş işlemci,bellek ve diğer destek birimleri bütününe ne ad verilir? -Mikro işlemci BAŞARILAR…"}], "correct": "E", "explanation": "AUZEF Bilgisayar Organizasyonu müfredatı uyarınca doğru seçenek E'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

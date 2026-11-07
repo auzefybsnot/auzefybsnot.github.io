@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üretim Yönetimi (AYBS3004) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Üretim Yönetimi (AYBS3004) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Üretim Yönetimi (AYBS3004) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Üretim Yönetimi (AYBS3004) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Üretim Yönetimi (AYBS3004) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>133 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">133</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Uretim_Yonetimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (133)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">133</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Uretim_Yonetimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2023-2024 Vize Üretim Yönetimi, 2023-2024 vize", "text": "Ürünün parça sayısını, alt gruplarını ve opsiyonlarını azaltmaya çalışmaya ne ad verilir?", "options": [{"letter": "A", "text": "Tasarım standartlaştırma"}, {"letter": "B", "text": "Tasarım ﬁzibilite"}, {"letter": "C", "text": "Tasarım süreci"}, {"letter": "D", "text": "Tasarım modülerliği"}, {"letter": "E", "text": "Tasarım yalınlaştırma"}], "correct": "A", "explanation": "Kitap: \"<b>Tasarım yalınlaştırması</b> ürünün parça sayısını, alt gruplarını ve opsiyonlarını azaltmaya çalışmaktadır.\" Standartlaştırma = standart parça kullanmak; modülerlik = standart modülleri birleştirerek farklı ürün üretmek."}, {"num": 2, "tag": "2023-2024 Vize Üretim Yönetimi, 2023-2024 vize, 2025-2026 final", "text": "Sınıfının en iyisi olan ürün ve süreçleri bulma, kendi ürün ve süreçlerini ölçme, sonuçlar neticesinde gelişme sağlamak için önerilerde bulunmaya ne ad verilir?", "options": [{"letter": "A", "text": "Süreç"}, {"letter": "B", "text": "Kıyaslama"}, {"letter": "C", "text": "Sınıﬂama"}, {"letter": "D", "text": "Ölçme"}, {"letter": "E", "text": "Değerlendirme"}], "correct": "A", "explanation": "Bu, <b>kıyaslamanın</b> (benchmarking) kitaptaki tanımıdır. Kıyaslama yapılan şirket tamamen farklı bir iş alanından da olabilir (ör. hız için Federal Express, ödeme için American Express)."}, {"num": 3, "tag": "2023-2024 Vize Üretim Yönetimi", "text": "..... ﬁyatlandırma kararlarını ve karlarını etkileyen önemli bir değişkendir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Piyasaya hızlı tepki verme"}, {"letter": "B", "text": "Ürün ve hizmet tasarımı"}, {"letter": "C", "text": "Kalite"}, {"letter": "D", "text": "Konum"}, {"letter": "E", "text": "Bir kuruluşun çıktı maliyeti"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 4, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 vize, 2025-2026 vize", "text": "Bir projede uygulanabilecek tasarım özelliklerini araştırmak için rakip bir ürünü dikkatli bir şekilde sökme ve incelemeyi ifade etmeye ne ad verilir?", "options": [{"letter": "A", "text": "Kıyaslama"}, {"letter": "B", "text": "Fikir üretme"}, {"letter": "C", "text": "Dikey mühendislik"}, {"letter": "D", "text": "Tersine mühendislik"}, {"letter": "E", "text": "Rekabet"}], "correct": "A", "explanation": "<b>Tersine mühendislik</b>: rakip ürünü dikkatlice söküp incelemek. Ford Taurus örneği: rakiplerin 400 özelliği değerlendirilmiş, 300'den fazla parça kopyalanmış/uyarlanmıştır. \"Dikey mühendislik\" diye bir kavram yoktur."}, {"num": 5, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 vize, 2025-2026 vize", "text": "Üretim sırasında parça değiştirilebilmesini, daha yüksek hacimli üretim ve satın almanın yapılmasını, stoklara yatırımın azalmasını, satın alma ve materyal yüklemenin kolaylaştırılmasını, daha az kalite denetimleri yapılmasını ve üretimdeki zorlukların azalmasını mümkün kılan aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Fizibilite"}, {"letter": "B", "text": "Standartlaştırma"}, {"letter": "C", "text": "Yalınlaştırma"}, {"letter": "D", "text": "İdame edilebilirlik"}, {"letter": "E", "text": "Kolaylaştırma"}], "correct": "A", "explanation": "Bu uzun fayda listesi kitapta <b>standartlaştırmanın</b> faydalarıdır: parça değiştirilebilirliği, yüksek hacimli üretim ve satın alma, stok yatırımının azalması, kolay satın alma ve malzeme yükleme, daha az kalite denetimi. İpucu: \"parça değiştirilebilmesi\" = standart parça."}, {"num": 6, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 vize, 2025-2026 vize, 2025-2026 final", "text": "Makine araç gereçlerinin satıldığı bir dükkânda tüm matkaplar bir bölümde, tornalar bir başka bölümde, freze makineleri ise başka bir bölümde konumlandırılmıştır. Aşağıdakilerden hangisi ifade edilen yerleşim türüdür?", "options": [{"letter": "A", "text": "Sabit yerleşim"}, {"letter": "B", "text": "Ürün yerleşimi"}, {"letter": "C", "text": "Proses yerleşim"}, {"letter": "D", "text": "Bilgisayarlı yerleşim"}, {"letter": "E", "text": "Hücresel yerleşim"}], "correct": "A", "explanation": "Kitabın <b>proses (fonksiyonel) yerleşim</b> için verdiği örnek birebir budur: benzer faaliyetler (matkaplar, tornalar, frezeler) kendi bölümlerinde toplanır. Alışveriş merkezindeki kadın/erkek/çocuk reyonları da proses yerleşimidir."}, {"num": 7, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2022-2023 vize, 2023-2024 vize, 2025-2026 vize", "text": "..... stratejisi müşteriye benzersiz bir değerin sunulacağı pazarda nasıl rekabete girileceğini belirler. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Öz yetenekler"}, {"letter": "B", "text": "Firmanın konumlandırma"}, {"letter": "C", "text": "Sipariş niteleyicileri"}, {"letter": "D", "text": "Sipariş kazandırıcıları"}, {"letter": "E", "text": "Birincil görev"}], "correct": "A", "explanation": "Kitap: \"<b>Firmanın konumlandırma stratejisi</b> müşteriye benzersiz bir değerin sunulacağı pazarda nasıl rekabete girileceğini belirler.\" Stratejik konumlandırma bir ya da iki önemli şeye odaklanıp onları en iyi seviyeye getirme seçimidir; hiçbir firma herkes için her şeyi sağlayamaz."}, {"num": 8, "tag": "2023-2024 Vize Üretim Yönetimi, 2023-2024 vize, 2024-2025 bütünleme", "text": "Tüm faaliyetlerin belirlenip belirlenmediği ve yapılan faaliyetlerin uygun sıra ile yapılıp yapılmadığından emin olmayı kapsamaktadır. Yukarıda verilen bilgide proje yönetim elemanlarının hangi özelliğinden bahsedilmiştir?", "options": [{"letter": "A", "text": "Proje ekibi"}, {"letter": "B", "text": "Proje sermayesi"}, {"letter": "C", "text": "Proje planlama"}, {"letter": "D", "text": "Proje kontrolü"}, {"letter": "E", "text": "Görev ayrımı yapısı"}], "correct": "A", "explanation": "Kitap: \"<b>Kontrol</b> tüm faaliyetlerin belirlenip belirlenmediği ve yapılan faaliyetlerin uygun sıra ile yapılıp yapılmadığından emin olmayı kapsamaktadır.\" Proje yönetimi iki evredir: planlama ve kontrol."}, {"num": 9, "tag": "2023-2024 Vize Üretim Yönetimi, 2023-2024 vize", "text": "Müşterinin satın almaya karar vermesini belirleyen bir ürün veya hizmetin özelliklerine ne ad verilir?", "options": [{"letter": "A", "text": "Öz yetenekler"}, {"letter": "B", "text": "Sipariş niteleyiciler"}, {"letter": "C", "text": "Firmayı konumlandırma"}, {"letter": "D", "text": "Sipariş kazandırıcıları"}, {"letter": "E", "text": "Birincil görev YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > ÜRETİM YÖNETİMİ A"}], "correct": "A", "explanation": "Kitap: \"<b>Sipariş niteleyiciler</b> müşterinin satın almaya karar vermesini belirleyen bir ürün veya hizmetin özellikleridir. Sipariş kazandırıcılar ise –satın alma kararının <b>son</b> faktörü– pazardaki siparişleri elde eden özelliklerdir.\" Niteleyici = aday listesine girme şartı; kazandırıcı = seçilme sebebi."}, {"num": 10, "tag": "2023-2024 Vize Üretim Yönetimi", "text": "..... ﬁrmaların ﬁnansal kaynak operasyon yetenekleri, tedarik zinciri yetenekleri, tüketici istek ve ihtiyaçları arasında kurulan bir eşleşme sağlamak için ﬁrmanın birçok alanının ortak çabalarını yansıtır. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Kalite"}, {"letter": "B", "text": "Piyasaya hızlı tepki verme"}, {"letter": "C", "text": "Bir kuruluşun çıktı maliyeti"}, {"letter": "D", "text": "Ürün ve hizmet tasarımı"}, {"letter": "E", "text": "Konum"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "2023-2024 Vize Üretim Yönetimi, 2022-2023 vize, 2023-2024 vize, 2024-2025 bütünleme", "text": "\"Yeni ürün yeni bir teknoloji gerektiriyor mu? Risk veya sermaye yatırımı çok mu büyük? Şirket gerekli teknolojiyi destekleyen yeterli iş gücü ve yönetim becerisine sahip midir? Üretim için yeterli kapasite mevcut mudur? Yeni teknoloji şirket için bir rekabet avantajı yaratıyor mu? Bu yeni teknoloji ﬁrmanın ana faaliyet alanıyla uyumlu mu?\" gibi sorular tasarım sürecinin hangi aşamasında sorulur?", "options": [{"letter": "A", "text": "Fonksiyonel tasarım"}, {"letter": "B", "text": "Fikir üretme"}, {"letter": "C", "text": "Biçim tasarımı"}, {"letter": "D", "text": "Fizibilite"}, {"letter": "E", "text": "Ön tasarım"}], "correct": "A", "explanation": "Bu sorular <b>fizibilite çalışmasının</b> son halkası olan <b>teknik ve stratejik analizde</b> sorulur. Fizibilite: pazar analizi → ekonomik analiz → teknik ve stratejik analiz. Sorular \"yapabilir miyiz, değer mi?\" sorusudur; tasarımın kendisine henüz geçilmemiştir."}, {"num": 12, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2022-2023 vize, 2023-2024 vize, 2024-2025 vize, 2025-2026 vize", "text": "E-İş ortamında yapılan işlemler yönetimine aşağıdakilerden hangisi örnek verilebilir?", "options": [{"letter": "A", "text": "CB2"}, {"letter": "B", "text": "C22"}, {"letter": "C", "text": "B2C"}, {"letter": "D", "text": "CBB"}, {"letter": "E", "text": "B22"}], "correct": "A", "explanation": "E-ticaretin dört kategorisi <b>B2B, B2C, C2B ve C2C</b>'dir (B = business/işletme, C = customer/müşteri, 2 = \"to\"). Seçeneklerde yalnızca <b>B2C</b> (işletmeden müşteriye; Amazon gibi online perakendecilik) gerçek bir kategoridir; diğerleri harflerin karıştırılmasıyla uydurulmuş."}, {"num": 13, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 vize, 2024-2025 vize, 2025-2026 vize", "text": "Verimli sistemleri -işi gerçekleştirmek için gereken sistemleri- düzenleyen ve etkin hâle getiren yönetim sistemi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İşlemler yönetimi"}, {"letter": "B", "text": "Finans yönetimi"}, {"letter": "C", "text": "Stok yönetimi"}, {"letter": "D", "text": "Kaynak yönetimi"}, {"letter": "E", "text": "Üretim yönetimi"}], "correct": "A", "explanation": "Kitabın ilk cümlesi kelimesi kelimesine budur: <b>İşlemler Yönetimi</b>, verimli sistemleri –işi gerçekleştirmek için gereken sistemleri– düzenler ve etkin hâle getirir. \"Üretim yönetimi\" en güçlü çeldiricidir ama tanım işlemler yönetimine aittir."}, {"num": 14, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 vize, 2025-2026 vize", "text": "Ortak teşebbüs, lisans anlaşmaları, araştırma konsorsiyumları, tedarikçi ortaklıkları ve doğrudan pazarlama anlaşmaları gibi stratejik bağlılıkların artması artan …………… bir diğer kanıtıdır. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "gücün"}, {"letter": "B", "text": "sosyalleşmenin"}, {"letter": "C", "text": "küreselleşmenin"}, {"letter": "D", "text": "güvenilirliğin"}, {"letter": "E", "text": "küçülmenin"}], "correct": "A", "explanation": "Kitap (Ünite 2) kelimesi kelimesine: \"...stratejik bağlılıkların artması artan <b>küreselleşmenin</b> bir diğer kanıtıdır.\" Örnek: GM–Toyota ortak teşebbüsü, MCI–British Telecom ortaklığı."}, {"num": 15, "tag": "2023-2024 Vize Üretim Yönetimi, 2023-2024 vize", "text": "Parti üretiminin ekonomik bir şekilde alıp sattığından daha büyük miktarlarda ve daha standartlaşmış ürünlere gereksinim duyan üreticiler tarafından kullanılmaktadır. Yukarıda özelliği ifade edilen üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kitle üretim"}, {"letter": "B", "text": "Parti üretimi"}, {"letter": "C", "text": "Sipariş üzerine üretim"}, {"letter": "D", "text": "Stok için üretim"}, {"letter": "E", "text": "Proje tipi üretim"}], "correct": "A", "explanation": "Kitap: \"Aynı zamanda tekrarlı üretim olarak da bilinen <b>kitle üretimi</b> parti üretiminin ekonomik bir şekilde alıp sattığından daha büyük miktarlarda ve daha standartlaşmış ürünlere gereksinim duyan üreticiler tarafından kullanılmaktadır.\""}, {"num": 16, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2022-2023 vize, 2023-2024 vize, 2024-2025 vize, 2025-2026 vize", "text": "Bir işletmeyi birleştiren, alınan kararların tutarlı olmasını ve işletmenin doğru yolda ilerlemesini sağlayan ortak vizyona ne ad verilir?", "options": [{"letter": "A", "text": "Vizyon"}, {"letter": "B", "text": "Yönetim"}, {"letter": "C", "text": "Strateji"}, {"letter": "D", "text": "Misyon"}, {"letter": "E", "text": "Hedef"}], "correct": "A", "explanation": "Kitap: \"<b>Strateji</b>; bir işletmeyi birleştiren, alınan kararların tutarlı olmasını ve işletmenin doğru yolda ilerlemesini sağlayan ortak vizyondur.\" Tanımın içinde \"vizyon\" kelimesi geçtiği için \"Vizyon\" şıkkı tuzaktır; sorulan kavram stratejidir."}, {"num": 17, "tag": "2023-2024 Vize Üretim Yönetimi", "text": "Üretim sürecinin küçük görevler serisine bölündüğünü ve bu durumunda her bir görevin farklı işçilerce gerçekleştirildiği iş bölümünü ortaya çıkararak ileri süren kimdir?", "options": [{"letter": "A", "text": "Eli Whitney"}, {"letter": "B", "text": "Frank - Lilian Gilberth"}, {"letter": "C", "text": "Frederick Taylor"}, {"letter": "D", "text": "Henry Ford"}, {"letter": "E", "text": "Adam Smith YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > ÜRETİM YÖNETİMİ A"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 18, "tag": "2023-2024 Vize Üretim Yönetimi, ÜRETİM YÖNETİMİ 2025-2026 VİZE", "text": "…………….. rekabet eden şirketlerin tüm gereksiz harcamalarını ortadan kaldırılmak için sürekli çalışmasıdır. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Maliyet"}, {"letter": "B", "text": "Kalite"}, {"letter": "C", "text": "Verimlilik"}, {"letter": "D", "text": "Hız"}, {"letter": "E", "text": "Esneklik"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 19, "tag": "2023-2024 Vize Üretim Yönetimi, 2023-2024 vize", "text": "Üretim proseslerinde kullanılan (ekipman, otomasyon gibi) sermaye ve iş gücü kaynaklarının karışımına ne ad verilir?", "options": [{"letter": "A", "text": "Sermaye yoğunluğu"}, {"letter": "B", "text": "Dikey bütünleşme"}, {"letter": "C", "text": "Proses stratejisi"}, {"letter": "D", "text": "Müşteri katılımı"}, {"letter": "E", "text": "Proses esnekliği"}], "correct": "A", "explanation": "Proses stratejisinin dört boyutundan biri: <b>Sermaye yoğunluğu</b> = üretim proseslerinde kullanılan (ekipman, otomasyon gibi) sermaye ve iş gücü kaynaklarının <b>karışımı</b>. Diğerleri: proses esnekliği, dikey bütünleşme, müşteri katılımı."}, {"num": 20, "tag": "2023-2024 Vize Üretim Yönetimi, 2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2023-2024 vize, 2024-2025 vize, 2025-2026 vize, 2025-2026 bütünleme", "text": "Aşağıdakilerden hangisi etkin bir yerleşim yerinin özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "İş gücünü etkin bir şekilde kullanmaktadır."}, {"letter": "B", "text": "Alanı etkin bir şekilde kullanmaktadır."}, {"letter": "C", "text": "Boşa harcanan veya gereksiz faaliyeti yok etmektedir."}, {"letter": "D", "text": "Materyal yükleme maliyetlerini en aza indirmektedir."}, {"letter": "E", "text": "Üretim devir süresini ve müşteri hizmet süresini arttırmaktadır. 1 E 2 B 3 E 4 D 5 B 6 C 7 B 8 D 9 B 10 D 11 D 12 C 13 A 14 C 15 A 16 C 17 E 18 A 19 A 20 E YAYINLANMIŞ DOKÜMAN 3 Test Bitti"}], "correct": "A", "explanation": "Etkin yerleşim üretim devir süresini ve müşteri hizmet süresini <b>AZALTIR</b>, artırmaz. Kitaptaki 14 maddelik listede: malzeme yükleme maliyetini en aza indirir, alanı ve iş gücünü etkin kullanır, engelleri ve gereksiz faaliyeti yok eder, esneklik sağlar, kapasiteyi artırır..."}, {"num": 21, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final, 2025-2026 bütünleme", "text": "Tedarikçiden müşteriye dek uzanan bir değer zincirindeki faaliyetler serisine ne ad verilir?", "options": [{"letter": "A", "text": "Çıktı"}, {"letter": "B", "text": "Geri bildirim"}, {"letter": "C", "text": "İhtiyaçlar"}, {"letter": "D", "text": "Girdi"}, {"letter": "E", "text": "Dönüşüm süreci"}], "correct": "A", "explanation": "Kitap: \"<b>Dönüşüm sürecinin kendisi</b> tedarikçiden müşteriye dek uzanan bir değer zincirindeki faaliyetler serisi olarak görülebilir.\" Girdi, çıktı, geri bildirim ve ihtiyaçlar bu sürecin parçalarıdır; seri olarak tanımlanan şey dönüşüm sürecinin kendisidir."}, {"num": 22, "tag": "2023-2024-Üretim Yönetimi-Final, ÜRETİM YÖNETİMİ 2024-25 Final, 2023-2024 final, 2024-2025 final", "text": "Gantt şeması öncelik ilişkilerini net bir şekilde gösterememekte ve dolayısıyla kullanımı küçük projelerle sınırlanmaktadır. Ağ içindeki öncelik ilişkisini görmek daha kolay olduğundan çok faaliyetli büyük projelerde kullanılan teknik aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ağ"}, {"letter": "B", "text": "CPM / PERT"}, {"letter": "C", "text": "AON"}, {"letter": "D", "text": "AOA"}, {"letter": "E", "text": "POM/QM for Windows"}], "correct": "A", "explanation": "Kitap: \"<b>CPM/PERT</b> ile ağ içindeki öncelik ilişkisini görmek daha kolaydır ve bu yüzden CPM/PERT özellikle <b>çok faaliyetli büyük projeler</b> için popülerdir.\" AON/AOA ağ çizim biçimleri, POM/QM ise yazılımdır."}, {"num": 23, "tag": "2023-2024-Üretim Yönetimi-Final, ÜRETİM YÖNETİMİ 2024-25 Final, 2023-2024 final, 2024-2025 final", "text": "Yönetici ve ekipten ne yapılmasının beklendiğinin belirlenebilmesi için projenin amaçları açık bir şekilde tanımlanmaktadır. Yukarıdaki ifadede proje yönetim elemanlarından hangisi tanımlanmıştır?", "options": [{"letter": "A", "text": "Proje ekibi"}, {"letter": "B", "text": "Proje sermayesi"}, {"letter": "C", "text": "Proje kontrolü"}, {"letter": "D", "text": "Görev ayrımı yapısı"}, {"letter": "E", "text": "Proje planlama"}], "correct": "A", "explanation": "Kitap: \"Projeyi <b>planlama</b>, yönetici ve ekipten ne yapılmasının beklendiğinin belirlenebilmesi için projenin amaçlarının açık bir şekilde tanımlanmasıdır.\" Planlamanın ilk öğesi de \"proje amacını belirlemek\"tir."}, {"num": 24, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final, 2025-2026 final", "text": "Daha az faaliyet ve öncelik ilişkisi bulunan küçük projeleri planlama ve programlama konusunda geleneksel yönetim tekniği aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "POM/QM for Windows"}, {"letter": "B", "text": "CPM / PERT"}, {"letter": "C", "text": "Gantt şeması"}, {"letter": "D", "text": "AOA"}, {"letter": "E", "text": "AON"}], "correct": "A", "explanation": "Kitap: \"<b>Gantt Şeması</b> kısmen daha az faaliyet ve öncelik ilişkisi bulunan küçük projeleri planlama ve programlama konusunda geleneksel bir yönetim tekniğidir.\" 1914'te Henry Gantt geliştirmiştir; CPM/PERT'in öncüsüdür."}, {"num": 25, "tag": "2023-2024-Üretim Yönetimi-Final, 2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2023-2024 final, 2025-2026 bütünleme", "text": "İşletme girdilerinin ne ölçüde üretileceğini ve çıktıların üretimin hangi aşamasında kontrol edileceğini belirten durum aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Rota esnekliği"}, {"letter": "B", "text": "Dikey bütünleşme"}, {"letter": "C", "text": "Süreç stratejisi"}, {"letter": "D", "text": "Parasal kaynaklar"}, {"letter": "E", "text": "Müşteri talebi"}], "correct": "A", "explanation": "<b>Dikey bütünleşme</b>: firmanın girdileri ne ölçüde kendisinin üreteceği ve çıktıları üretimin hangi aşamasında kontrol edeceği. Ham maddeden satışa kadar her şeyi yapan firma \"tamamen dikey bütünleşmiştir\"."}, {"num": 26, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final", "text": "Faaliyet alanları arasında bilgi paylaşımı yoluyla şirketin iş proseslerini organize ettiği ve yönettiği yazılım aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "ERP"}, {"letter": "B", "text": "MRP"}, {"letter": "C", "text": "SCM"}, {"letter": "D", "text": "CRM"}, {"letter": "E", "text": "CPC"}], "correct": "A", "explanation": "Ünite 14'ün ilk cümlesi: \"<b>Kurumsal kaynak planlaması (ERP)</b>; faaliyet alanları arasında bilgi paylaşımı yoluyla şirketin iş proseslerini organize ettiği ve yönettiği bir yazılımdır.\" MRP malzeme ihtiyaç planlaması, SCM tedarik zinciri, CRM müşteri ilişkileri, CPC müşterek ürün ticaretidir."}, {"num": 27, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final", "text": "Tekrarlı üretim olarak bilinen üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sürekli üretim"}, {"letter": "B", "text": "Kitle üretim"}, {"letter": "C", "text": "Sipariş üzerine üretim"}, {"letter": "D", "text": "Parti üretimi"}, {"letter": "E", "text": "Proje tipi üretim"}], "correct": "A", "explanation": "<b>Kitle üretimi = tekrarlı üretim</b>. Talep sabit, hacim yüksek; sistem sermaye yoğun ve oldukça tekrarlıdır. Akış hattı ve montaj hattıyla bağlantılıdır."}, {"num": 28, "tag": "2023-2024-Üretim Yönetimi-Final", "text": "Mal ve hizmetin ham madde aşamasından nihai kullanıcıya (müşteriye) akışına, dönüşmesine ve bilgi akışlarına ilişkin tüm faaliyetlere ne ad verilir?", "options": [{"letter": "A", "text": "Geri bildirim zinciri"}, {"letter": "B", "text": "Dönüşüm zinciri"}, {"letter": "C", "text": "Üretim zinciri"}, {"letter": "D", "text": "Hizmet zinciri"}, {"letter": "E", "text": "Tedarik zinciri"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 29, "tag": "2023-2024-Üretim Yönetimi-Final", "text": "Manavlar hangi yerleşim türünü kullanmaktadırlar?", "options": [{"letter": "A", "text": "Proses yerleşim"}, {"letter": "B", "text": "Ürün yerleşimi"}, {"letter": "C", "text": "Hücresel yerleşim"}, {"letter": "D", "text": "Hizmet yerleşimi"}, {"letter": "E", "text": "Montaj hattı yerleşim"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 30, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final", "text": "Japonya, Almanya ve Avrupa Birliği ülkelerinde iş gücü oranı daha ..... Amerika’daki iş gücü oranı son derece ..... bir artış göstermektedir. Yukarıdaki cümlede boş bırakılan yerlere sırasıyla aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "düzenliyken / hareketli"}, {"letter": "B", "text": "düzensizken / sabit"}, {"letter": "C", "text": "düzensizken / hareketli"}, {"letter": "D", "text": "düzenliyken / sabit"}, {"letter": "E", "text": "sabitken / düzensiz YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > ÜRETİM YÖNETİMİ A"}], "correct": "A", "explanation": "Şekil 2.1 yorumu: Japonya, Almanya ve AB'de iş gücü oranı daha <b>düzensizken</b>, Amerika'daki iş gücü oranı son derece <b>sabit</b> bir artış göstermektedir. Kodlama: \"ABD = sabit\", diğerleri = \"düzensiz\"."}, {"num": 31, "tag": "2023-2024-Üretim Yönetimi-Final, ÜRETİM YÖNETİMİ 2025-2026 VİZE", "text": "• Büyük meblağlara mal olmaktadır. • Bir müşteri için eşi benzeri olmayan üretimi ifade etmektedir. • Müşteriler azdır ve müşteri katılımı yoğundur. • Müşteriler ürün tasarımı konusunda son derece ilgilidirler. Yukarıda ifade edilen özellikler hangi üretim çeşidine aittir?", "options": [{"letter": "A", "text": "Sürekli üretim"}, {"letter": "B", "text": "Sipariş üzerine üretim"}, {"letter": "C", "text": "Proje tipi üretim"}, {"letter": "D", "text": "Stok için üretim"}, {"letter": "E", "text": "Parti üretimi"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 32, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final, 2025-2026 final", "text": "Avantajları; etkinliği, düşük birim başına maliyeti, üretme ve kontrol kolaylığı ve hızıdır. Dezavantajları ise yüksek ekipman maliyeti, insan kapasitesini kullanabilme eksikliği, talep değişikliklerine, teknolojiye veya üretim tasarımına uyum sorunları ve kişisel müşteri taleplerinin cevaplanabilme yetersizliğini kapsamaktadır. Yukarıda özellikleri sıralanan üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kitle üretim"}, {"letter": "B", "text": "Stok için üretim"}, {"letter": "C", "text": "Proje tipi üretim"}, {"letter": "D", "text": "Parti üretimi"}, {"letter": "E", "text": "Sipariş üzerine üretim"}], "correct": "A", "explanation": "Kitaptaki <b>kitle üretiminin</b> avantaj ve dezavantaj listesi birebir. Ayırt edici ipucu: \"<b>hızı</b>\" ve \"<b>kişisel müşteri taleplerine cevap verememe</b>\". Sürekli üretimin avantajları ise \"etkinlik, kontrol kolaylığı ve <b>büyük kapasite</b>\"dir."}, {"num": 33, "tag": "2023-2024-Üretim Yönetimi-Final", "text": "Bir ﬁrmanın diğer ﬁrmalardan daha iyi yaptığı işi yani onun ayırt edici karakterini ifade etmeye ne ad verilir?", "options": [{"letter": "A", "text": "Firmayı konumlandırma"}, {"letter": "B", "text": "Sipariş kazandırıcıları"}, {"letter": "C", "text": "Birincil görev"}, {"letter": "D", "text": "Öz yetenekler"}, {"letter": "E", "text": "Sipariş niteleyiciler"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 34, "tag": "2023-2024-Üretim Yönetimi-Final, 2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 final, 2025-2026 vize, 2025-2026 bütünleme", "text": "Aşağıdakilerden hangisi etkili bir tasarım sürecinin özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Tasarımın işe yarar olması için gerekli kontrolleri en aza indirir."}, {"letter": "B", "text": "Müşteri ihtiyaçlarının en basit ve en az maliyetli bir şekilde karşılanmasını sağlar."}, {"letter": "C", "text": "Ürün ve hizmet özellikleriyle müşteri ihtiyaçlarını eşleştirir."}, {"letter": "D", "text": "Yeni bir ürün veya hizmet tasarlamak için gereken zamanı azaltır."}, {"letter": "E", "text": "Ürün ve hizmetin kalitesi üzerindeki etkisi oldukça küçüktür."}], "correct": "A", "explanation": "Kitap tersini söyler: \"Tasarımın ürün ve hizmetin kalitesi üzerindeki etkisi <b>oldukça BÜYÜKTÜR</b>.\" Etkin tasarım sürecinin dört özelliği: ihtiyaçları özelliklerle eşleştirir, en basit/en az maliyetli karşılar, tasarım süresini azaltır, gerekli kontrolleri en aza indirir."}, {"num": 35, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final", "text": "Müşteriden işletmeye E-İş ortamı işlemler yönetimi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "CBB"}, {"letter": "B", "text": "C22"}, {"letter": "C", "text": "C2B"}, {"letter": "D", "text": "C2C"}, {"letter": "E", "text": "CC2"}], "correct": "A", "explanation": "Müşteriden (Customer) işletmeye (Business) → <b>C2B</b>. Müşteri ne istediğini işletmeye bildirir, işletme kabul ya da ret eder; normal ticaret akışının <b>tersidir</b>. Örnek: Priceline'da müşterinin uçak koltuğu için fiyat teklif etmesi. C2C ise müşteriler arasıdır (eBay, Napster)."}, {"num": 36, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final, 2025-2026 final", "text": "Aşağıdakilerden hangisi girdiye örnek verilemez?", "options": [{"letter": "A", "text": "Hizmet"}, {"letter": "B", "text": "İş gücü"}, {"letter": "C", "text": "Sermaye"}, {"letter": "D", "text": "Materyal"}, {"letter": "E", "text": "Makine"}], "correct": "A", "explanation": "Kitaptaki girdiler: <b>materyal, makine, iş gücü, yönetim ve sermaye</b>. Mal ve <b>hizmet</b> ise dönüşüm sürecinin <b>çıktısıdır</b>. Yani hizmet girdi değil, çıktıdır."}, {"num": 37, "tag": "2023-2024-Üretim Yönetimi-Final, ÜRETİM YÖNETİMİ 2024-25 Final", "text": "Yukarıdaki üretim yerleşim türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ürün yerleşimi"}, {"letter": "B", "text": "Sabit yerleşim"}, {"letter": "C", "text": "Bilgisayarlı yerleşim"}, {"letter": "D", "text": "Proses yerleşim"}, {"letter": "E", "text": "Hücresel yerleşim"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 38, "tag": "2023-2024-Üretim Yönetimi-Final", "text": "I. Proses yerleşim II. Ürün yerleşimi III. Sabit yerleşim IV. Hareketli yerleşim Yukarıdakilerden hangisi veya hangileri üretim yerleşimi türlerindendir?", "options": [{"letter": "A", "text": "I, II ve III"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "II ve IV"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I, II ve IV YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > ÜRETİM YÖNETİMİ A"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 39, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final", "text": "Şirketlerin muhasebe, lojistik, üretim, personel, kalite gibi bilgi kaynaklarının entegre bir şekilde planlanıp yönetilmelerini sağlayan parametrik modüllerden oluşmuş sistemlere ne ad verilir?", "options": [{"letter": "A", "text": "Toplam üretim planlama"}, {"letter": "B", "text": "Tedarik zinciri yönetimi"}, {"letter": "C", "text": "Tedarik planlama"}, {"letter": "D", "text": "Kurumsal kaynak planlama"}, {"letter": "E", "text": "Toplam kalite planlama"}], "correct": "A", "explanation": "Tüm birimlerin (muhasebe, satış, üretim, İK...) <b>tek bir yazılımda entegre</b> edilmesi ve <b>modüllerden</b> oluşması → <b>Kurumsal kaynak planlama (ERP)</b>. Kitap: \"ERP sistemleri tek ya da bir bütün halinde kullanılabilen bir dizi uygulama modülünü içermektedir.\""}, {"num": 40, "tag": "2023-2024-Üretim Yönetimi-Final, 2023-2024 final", "text": "Esas olarak üretime karar vermek, programları dağıtmak ve stok seviyelerini kurmak için kullanılan tahmin belirleme aralığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sabit aralıklı"}, {"letter": "B", "text": "Uzun aralıklı"}, {"letter": "C", "text": "Kısa aralıklı"}, {"letter": "D", "text": "Orta aralıklı"}, {"letter": "E", "text": "Değişken aralıklı 1 E 2 B 3 E 4 C 5 B 6 A 7 B 8 E 9 D 10 B 11 C 12 A 13 D 14 E 15 C 16 A 17 D 18 A 19 D 20 C YAYINLANMIŞ DOKÜMAN 3 Test Bitti"}], "correct": "A", "explanation": "Kitap: <b>Kısa aralıklı</b> tahminler gelecekteki yaklaşık 2 yıla kadarki günlük, haftalık, aylık satışlar içindir ve \"esas olarak üretime karar verme, programları dağıtma ve stok seviyelerini kurmak için\" kullanılır. Uzun aralıklı tahmin ise stratejik planlar içindir."}, {"num": 41, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME", "text": "Tedarikçiden müşteriye kadar uzanan bir değer zincirindeki faaliyetler serisine ne ad verilir?", "options": [{"letter": "A", "text": "İhtiyaçlar"}, {"letter": "B", "text": "Çıktı"}, {"letter": "C", "text": "Girdi"}, {"letter": "D", "text": "Geri bildirim"}, {"letter": "E", "text": "Dönüşüm süreci"}], "correct": "E", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 42, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final, 2025-2026 bütünleme", "text": "Aşağıdakilerden hangisi ürün yerleşimi türünün özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Yüksek düzeyde talep."}, {"letter": "B", "text": "Esnektir."}, {"letter": "C", "text": "İnsan işgücü çok azdır."}, {"letter": "D", "text": "Otomatiktir."}, {"letter": "E", "text": "Etkilidir ve kolay kullanımlıdır."}], "correct": "B", "explanation": "Kitap: \"Ürün yerleşiminin avantajı <b>etkinliği ve kolay kullanımıdır</b>. Dezavantajı ise <b>esnek olmayışıdır</b>.\" Yüksek talep sayesinde proses yerleşiminden daha otomatiktir. \"Esnektir\" proses yerleşiminin özelliğidir."}, {"num": 43, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2023-2024 final, 2025-2026 bütünleme", "text": "Bir firmanın diğer firmalardan daha iyi yaptığı işi, yani onun ayırt edici karakterini ifade etmeye verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sipariş niteleyiciler"}, {"letter": "B", "text": "Sipariş kazandırıcıları"}, {"letter": "C", "text": "Birincil görev"}, {"letter": "D", "text": "Öz yetenekler"}, {"letter": "E", "text": "Firmayı konumlandırma"}], "correct": "D", "explanation": "<b>Öz yetenek</b>, firmanın diğer firmalardan daha iyi yaptığı işi, yani ayırt edici yeteneğini ifade eder (özel hizmet, iyi kalite, hızlı teslimat, düşük maliyet olabilir). Birincil görev = firmanın ne iş yaptığı (misyon); konumlandırma = pazarda nasıl rekabet edileceği."}, {"num": 44, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2025-2026 bütünleme", "text": "Müşteriler için mal üreten ve hizmet sağlayan diğer fonksiyonel alanlarla birbirini etkileyen teknik ve organizasyon merkezi olan alan aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İnsan kaynakları"}, {"letter": "B", "text": "Üretim"}, {"letter": "C", "text": "Finans"}, {"letter": "D", "text": "Pazarlama"}, {"letter": "E", "text": "İşlemler"}], "correct": "E", "explanation": "Şekil 1.2'nin adı \"<b>Teknik merkez olarak İşlemler</b>\"dir. Kitap: çoğu firmaya göre işlemler, müşteriler için mal üreten ve hizmet sağlayan diğer fonksiyonel alanlarla birbirini etkileyen teknik ve organizasyon \"merkezi\"dir."}, {"num": 45, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final, 2025-2026 bütünleme", "text": "Bir birimin son ürünün üretimi için gerekli malzemelerin, bileşenlerin ve alt­montaj gruplarını ve bunların kullanım miktarlarını gösteren listelere verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Akış şeması"}, {"letter": "B", "text": "Rota"}, {"letter": "C", "text": "Stok kayıtları"}, {"letter": "D", "text": "Değişiklik raporları"}, {"letter": "E", "text": "Malzeme listesi"}], "correct": "E", "explanation": "Son ürün için gerekli malzeme, bileşen ve alt montajları ve <b>miktarlarını</b> gösteren liste <b>malzeme listesidir</b> (BOM; kitapta \"ürün reçetesi\"). MRP prosesinin ilk adımı ürün reçetesini ortaya koymaktır. Rota = işlemlerin hangi makinede, hangi sırayla yapılacağı."}, {"num": 46, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, ÜRETİM YÖNETİMİ 2024-25 Final", "text": "Beklenen talep hacmi ve kesinliği I. Büyüme, müşteri hizmetleri ve rekabet koşullarındaki stratejik amaçlar II. Büyüme ve işlem maliyetleri III. Planlı üretim IV. Kapasitenin ne kadar arttırılacağı yukarıdakilerden hangisi veya hangilerine bağlıdır?", "options": [{"letter": "A", "text": "Yalnız II"}, {"letter": "B", "text": "I ve II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "I, II ve III"}, {"letter": "E", "text": "III ve IV"}], "correct": "D", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 47, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2024-2025 bütünleme, 2025-2026 bütünleme", "text": "Teslimatın doğru ….. yapılması üretim bölümünün etkinliğini değerlendirmek için önemli parametrelerden biridir. Yukarıdaki ifadede boş bırakılan yere aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "kalitede"}, {"letter": "B", "text": "zamanda"}, {"letter": "C", "text": "hızda"}, {"letter": "D", "text": "miktarda"}, {"letter": "E", "text": "üretim maliyette"}], "correct": "B", "explanation": "Üretimin etkinliği değerlendirilirken teslimatın <b>doğru zamanda</b> yapılması temel ölçütlerden biridir (zamanında teslimat). Kitap da tedarik zincirinin temel amacını \"mümkün olduğunca <b>zamanında dağıtım</b> açısından üst düzey müşteri hizmeti\" olarak verir."}, {"num": 48, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2023-2024 bütünleme, 2025-2026 final, 2025-2026 bütünleme", "text": "Proses planlama, ürün reçetesi prosesi, ürün maliyetlendirme, teknik değişiklik siparişlerini yönlendirme, malzeme gereksinimlerini planlama, kaynakları bölüştürme, üretimi planlama ve gözlemlemeyi kapsayan ERP modülü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İnsan kaynakları"}, {"letter": "B", "text": "Finans ve muhasebe"}, {"letter": "C", "text": "Satış"}, {"letter": "D", "text": "Pazarlama"}, {"letter": "E", "text": "Üretim ve malzeme ÜRETİM YÖNETİMİ A P787296.G13792 13-01-2026 15:05:41 CEVAPLI"}], "correct": "E", "explanation": "Kitap: <b>Üretim ve malzeme yönetimi</b> modülü proses planlamayı, ürün reçetesi prosesini ve ürün maliyetlendirmeyi yürütür, teknik değişiklik siparişlerini yönlendirir, malzeme gereksinimlerini planlar, kaynakları bölüştürür ve üretimi planlayıp gözlemler. Üç dönem çıktı."}, {"num": 49, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2025-2026 bütünleme", "text": "E­ticaret olarak bilinen kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": ""}, {"letter": "E", "text": "işletme"}, {"letter": "B", "text": ""}, {"letter": "E", "text": "perakende"}, {"letter": "C", "text": ""}, {"letter": "E", "text": "pazarlama"}, {"letter": "D", "text": ""}, {"letter": "E", "text": "iş"}, {"letter": "E", "text": ""}, {"letter": "E", "text": "tedarik"}], "correct": "D", "explanation": "Kitap: \"Aynı zamanda <b>e-ticaret</b> olarak da bilinen <b>E-iş</b> fiziksel proseslerin elektronik olanlarla yer değiştirmesi olarak ifade edilmektedir.\" Ünite 1'de de internet üzerindeki ticaret \"elektronik ticaret, e-ticaret ya da e-iş\" diye anılır."}, {"num": 50, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME", "text": "Yukarıda verilen üretim yerleşim türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ürün yerleşimi"}, {"letter": "B", "text": "Sabit yerleşim"}, {"letter": "C", "text": "Proses yerleşim"}, {"letter": "D", "text": "Hücresel yerleşim"}, {"letter": "E", "text": "Bilgisayarlı yerleşim"}], "correct": "C", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 51, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2025-2026 bütünleme", "text": "Aşağıdakilerden hangisi Hayes ve Wheelwright’ın önerdiği dört rekabetçi önceliklerden biri değildir?", "options": [{"letter": "A", "text": "Teslim süresi"}, {"letter": "B", "text": "Maliyet"}, {"letter": "C", "text": "Esneklik"}, {"letter": "D", "text": "Yenilik"}, {"letter": "E", "text": "Kalite"}], "correct": "D", "explanation": "Hayes ve Wheelwright'ın dört rekabetçi önceliği: <b>maliyet, kalite, esneklik ve teslimat (teslim süresi/güvenilirliği)</b>. \"Yenilik\" bu dörtlüde yoktur. Kitaptaki dört rekabet önceliği de buna paraleldir: maliyet, kalite, esneklik, <b>hız</b>."}, {"num": 52, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2024-2025 bütünleme, 2025-2026 bütünleme", "text": "Temelinde israfla mücadeleyi barındıran üretim yaklaşımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Tam zamanında üretim"}, {"letter": "B", "text": "Esnek üretim"}, {"letter": "C", "text": "Yalın üretim"}, {"letter": "D", "text": "Değişim mühendisliği"}, {"letter": "E", "text": "Tedarik zinciri yönetimi"}], "correct": "C", "explanation": "İsrafla (muda) mücadele <b>yalın üretimin</b> temelidir. Kitapta JIT de \"fazlalığı yok etmenin bir sonucu\" olarak anlatılır; bu yüzden JIT güçlü bir çeldiricidir. Ancak iki bütünlemenin anahtarı da <b>yalın üretimdir</b>: yalın üretim, JIT'i de içine alan daha geniş israf karşıtı yaklaşımdır."}, {"num": 53, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2024-2025 bütünleme, 2025-2026 final, 2025-2026 bütünleme", "text": "Aşağıdakilerden hangisi proje yönetim elemanlarından biri değildir?", "options": [{"letter": "A", "text": "Proje kontrolü"}, {"letter": "B", "text": "Görev ayrımı yapısı"}, {"letter": "C", "text": "Proje sermayesi"}, {"letter": "D", "text": "Proje planlama"}, {"letter": "E", "text": "Proje ekibi"}], "correct": "C", "explanation": "Proje yönetiminin <b>dört temel elementi</b>: proje ekibi, proje planlama, görev ayrımı yapısı (WBS), proje kontrolü. \"<b>Proje sermayesi</b>\" bu listede yoktur — üç dönem üst üste çıktı."}, {"num": 54, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2025-2026 bütünleme", "text": "Aşağıdakilerden hangisi çok fonksiyonlu çalışanlar ve genel amaçlı makineler JIT (tam zamanlı üretim) sisteminin temel faktörüdür?", "options": [{"letter": "A", "text": "Esnek kaynaklar"}, {"letter": "B", "text": "Çekme üretim sistemi"}, {"letter": "C", "text": "Kanban üretim kontrolü"}, {"letter": "D", "text": "Küçük parti üretimi"}, {"letter": "E", "text": "Hücresel yerleşimler"}], "correct": "A", "explanation": "Kitap: \"<b>Çok fonksiyonlu çalışanlar ve genel amaçlı makineler</b> şeklindeki <b>esnek kaynaklar</b> konsepti JIT'in kilit faktörü olarak bilinmektedir.\" Çoğu kişi bunun JIT'in <b>ilk</b> faktörü olduğunun farkında değildir."}, {"num": 55, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2023-2024 bütünleme, 2025-2026 bütünleme", "text": "Başlıca dezavantajları birim başına yüksek maliyet, ürün karmasında sık değişiklikler, karmaşık programlama sorunları, kapasite gereksinimlerindeki varyasyonlar ve iş tamamlama süresindeki uzunluk olan üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Parti üretimi"}, {"letter": "B", "text": "Proje tipi üretim"}, {"letter": "C", "text": "Stok için üretim"}, {"letter": "D", "text": "Sipariş üzerine üretim"}, {"letter": "E", "text": "Sürekli üretim"}], "correct": "A", "explanation": "Bu beşli kitapta <b>parti üretiminin dezavantajlarıdır</b>: yüksek birim maliyet, ürün karmasında sık değişiklik, karmaşık programlama, kapasite gereksinimlerinde varyasyon, uzun iş tamamlama süresi. (Avantajları: esneklik, kişiselleştirme, itibarlı kalite.)"}, {"num": 56, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2023-2024 bütünleme, 2025-2026 bütünleme", "text": "Aşağıdakilerden hangisi müşteri taleplerini karşılamak için malların, hizmetlerin ve bunlarla ilgili bilgilerin kaynak noktası ile tüketim noktası arasındaki ileri ve geri yönlü akış ile ilgilidir?", "options": [{"letter": "A", "text": "Lojistik yönetimi"}, {"letter": "B", "text": "Tedarik zinciri yönetimi"}, {"letter": "C", "text": "Malzeme akış yönetimi"}, {"letter": "D", "text": "Stok kontrol yönetimi"}, {"letter": "E", "text": "Malzeme gereksinim planlaması"}], "correct": "A", "explanation": "Bu, <b>lojistik yönetiminin</b> standart tanımıdır: müşteri taleplerini karşılamak için mal, hizmet ve ilgili bilgilerin <b>kaynak noktası ile tüketim noktası</b> arasındaki <b>ileri ve geri yönlü</b> akışının planlanması ve kontrolü. Tedarik zinciri yönetimi daha geniştir (tüm zincirin koordinasyonu)."}, {"num": 57, "tag": "2025- 2026 ÜRETİM YÖNETİMİ BÜTÜNLEME, 2025-2026 final, 2025-2026 bütünleme", "text": "Benzer biçim veya faaliyet gereksinimlerine ait parça ailelerini işleyebilmek adına benzer olmayan makineleri bir araya getirmektedir. Yukarıda ifade edilen özellik JIT sisteminin hangi temel faktörüdür?", "options": [{"letter": "A", "text": "Hücresel yerleşimler"}, {"letter": "B", "text": "Kanban üretim kontrolü"}, {"letter": "C", "text": "Esnek kaynaklar"}, {"letter": "D", "text": "Çekme üretim sistemi"}, {"letter": "E", "text": "Küçük parti üretimi"}], "correct": "A", "explanation": "Kitap: \"<b>Hücreler</b> benzer biçim veya faaliyet gereksinimlerine ait parça ailelerini işleyebilmek adına <b>benzer olmayan makineleri</b> bir araya getirmektedir.\" Hücre içi düzen küçük bir montaj hattına benzer, genellikle <b>U-şeklindedir</b>."}, {"num": 58, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final", "text": "Aşağıdakilerden hangisi proje planlama prosesinin ögelerinden biri değildir?", "options": [{"letter": "A", "text": "Proje amacını/amaçlarını belirlemek"}, {"letter": "B", "text": "Süre tahminlerini gerçekleştirmek"}, {"letter": "C", "text": "Faaliyetleri belirlemek"}, {"letter": "D", "text": "Proje ekibi kurmak"}, {"letter": "E", "text": "Öncelik ilişkilerini kurmak"}], "correct": "D", "explanation": "Proje planlama öğeleri: amaçları belirlemek, faaliyetleri belirlemek, öncelik ilişkilerini kurmak, süre tahminleri, tamamlanma süresini belirlemek, program amaçlarını kontrol etmek, kaynak gereksinimlerini belirlemek. <b>Proje ekibi</b> ayrı bir elementtir, planlamanın öğesi değildir."}, {"num": 59, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2022-2023 vize, 2024-2025 final", "text": "Tüketiciler ..... , bir ürün veya hizmetin tüketicinin amacını ne kadar iyi karşıladığına göre değerlendirir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Piyasaya hızlı tepki vermeyi"}, {"letter": "B", "text": "Kaliteyi"}, {"letter": "C", "text": "Ürün ve hizmet tasarımını"}, {"letter": "D", "text": "Konumu"}, {"letter": "E", "text": "Bir kuruluşun çıktı maliyetini"}], "correct": "B", "explanation": "\"Amacını ne kadar iyi karşıladığı\" = <b>kalite</b>. Kalite, ürün ya da hizmetin müşterinin beklentisine/amacına uygunluk derecesidir. Kitap da kaliteyi müşterinin tutum ve beklentisinin anlaşılmasıyla başlatır."}, {"num": 60, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final, 2025-2026 final", "text": "Aşağıdakilerden hangisi tedarik zincirindeki tüm faaliyet ve operasyonlar arasında bağ kurmayı sağlar?", "options": [{"letter": "A", "text": "Konum"}, {"letter": "B", "text": "Stok"}, {"letter": "C", "text": "Bilgi"}, {"letter": "D", "text": "Ürün"}, {"letter": "E", "text": "Taşıma"}], "correct": "C", "explanation": "Kitap: \"<b>Bilgi</b>; tedarikçi, üretici/imalatçı, dağıtıcı, perakendeci ve müşterileri kapsayan tüm tedarik zinciri proses ve faaliyetleri arasında önemli bir <b>bağlantıdır</b>.\" Bilgi, zincirin her iki yönünde akar ve koordinasyonun kilit faktörüdür."}, {"num": 61, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, ÜRETİM YÖNETİMİ 2025-2026 VİZE", "text": "..... fiyatlandırma kararlarını ve karlarını etkileyen önemli bir değişkendir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Kalite"}, {"letter": "B", "text": "Ürün ve hizmet tasarımı"}, {"letter": "C", "text": "Piyasaya hızlı tepki verme"}, {"letter": "D", "text": "Konum"}, {"letter": "E", "text": "Bir kuruluşun çıktı maliyeti"}], "correct": "E", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 62, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final", "text": "Hizmet üretimine ilişkin tüm tesis, faaliyet ve etkinlikler kapsamına verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Geri bildirim zinciri"}, {"letter": "B", "text": "Üretim zinciri"}, {"letter": "C", "text": "Hizmet zinciri"}, {"letter": "D", "text": "Tedarik zinciri"}, {"letter": "E", "text": "Dönüşüm zinciri"}], "correct": "D", "explanation": "Kitap (Ünite 10): \"Şirketin <b>tedarik zinciri</b>; tedarikçiden müşteriye ürün ve hizmet üretimine ilişkin tüm tesis, faaliyet ve etkinlikleri kapsamaktadır.\" Sorudaki \"hizmet\" kelimesi \"Hizmet zinciri\" şıkkına çekmek için konmuş bir tuzaktır."}, {"num": 63, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2023-2024 bütünleme, 2024-2025 final", "text": "Yinelemeli üretim olarak adlandırılan üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sipariş üzerine üretim"}, {"letter": "B", "text": "Sürekli üretim"}, {"letter": "C", "text": "Parti üretimi"}, {"letter": "D", "text": "Kitle üretim"}, {"letter": "E", "text": "Proje tipi üretim"}], "correct": "D", "explanation": "\"Yinelemeli\" = \"tekrarlı\". Kitap kitle üretimini \"aynı zamanda <b>tekrarlı üretim</b> olarak da bilinen\" diye tanıtır → <b>kitle üretim</b>. Sürekli üretim de tekrar eder ama adı \"proses endüstrisi\"dir."}, {"num": 64, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final", "text": "Bir bilgisayarın bataryası 20 saatte 4 kez bitiyorsa arıza oranı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "% 30"}, {"letter": "B", "text": "% 80"}, {"letter": "C", "text": "% 20"}, {"letter": "D", "text": "% 25"}, {"letter": "E", "text": "% 50"}], "correct": "C", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 65, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2022-2023 vize, 2024-2025 final", "text": "Müşterinin sipariş ettiği az veya orta büyüklükteki ürün miktarını ve çok çeşitli kısa üretim koşumu ve değişken ürün talebi ile nitelendirilen üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Parti üretimi"}, {"letter": "B", "text": "Sürekli üretim"}, {"letter": "C", "text": "Sipariş üzerine üretim"}, {"letter": "D", "text": "Stok için üretim"}, {"letter": "E", "text": "Proje tipi üretim ÜRETİM YÖNETİMİ A P355543.G6939 27-11-2024 10:16:05 ÜRETİM YÖNETİMİ A P355543.G6939 27-11-2024 10:16:05 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "Kitaptaki tanım: <b>Parti üretimi</b>, müşterinin sipariş ettiği az veya orta büyüklükteki ürün miktarı ve çok çeşitli kısa üretim koşumu ile değişken ürün talebiyle nitelenir. Küçük grup ya da partilerde mal işlenir."}, {"num": 66, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final", "text": "Bilgisayar Sayısal Kontrol (CNC) makinesi tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yalnızca basit şekiller ve tasarımlar üretebilen bir makine"}, {"letter": "B", "text": "Aynı anda birden fazla işlemi yapabilen makine"}, {"letter": "C", "text": "İnsan operatörler tarafından manuel olarak çalıştırılan bir makine"}, {"letter": "D", "text": "Hareketlerini kontrol etmek için önceden belirlenmiş kodlanmış komutları kullanan bir makine"}, {"letter": "E", "text": "Yukarıdakilerin hiçbiri"}], "correct": "D", "explanation": "CNC makinesi, hareketlerini <b>önceden belirlenmiş, kodlanmış komutlarla</b> (bilgisayar belleğindeki program) kontrol eden makinedir. Kitap: 1970'lerden itibaren delikli şeritlerin yerini bilgisayar belleğinde depolanan yazılım kılavuzları almıştır; operatör artık makine ayarlarına karar vermez."}, {"num": 67, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final", "text": "Stok yönetiminde cevabı aranan temel sorular aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Nasıl ve kim sipariş verecek?"}, {"letter": "B", "text": "Ne kadar ve ne zaman sipariş verilecek?"}, {"letter": "C", "text": "Nasıl ve ne zaman sipariş verilecek?"}, {"letter": "D", "text": "Nereye ve ne zaman sipariş verilecek?"}, {"letter": "E", "text": "Neden ve ne zaman sipariş verilecek?"}], "correct": "B", "explanation": "Kitap: stok kararları \"öncelikli olarak stoku optimal bir düzeyde tutmak adına <b>ne kadar</b> ve <b>ne zaman</b> sipariş verileceği ile ilgilidir.\" EOQ \"ne kadar\"ı, yeniden sipariş noktası \"ne zaman\"ı cevaplar."}, {"num": 68, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final", "text": "McDonald’s'ın öğleden önceki saatlerde mutfaklarını meşgul tutmak adına kahvaltı hizmeti sunması I. Krep restoranlarının öğle ve akşam yemeği vermesi II. Ocak ayında mayo satışı yapılması III. Yukarıdakilerden hangisi veya hangileri talep yönetimi konusunda kaynak atıllığına örnektir?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I ve II"}], "correct": "E", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 69, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final", "text": "Hızlı yanıt I. Just-in-time (tam zamanında üretim) II. VMI (tedarikçinin yönettiği stok) III. Stoksuz envanter IV. Yukarıdakilerden hangileri tedarik zinciri sürekli yenileme varyanslarındandır?", "options": [{"letter": "A", "text": "II, III ve IV"}, {"letter": "B", "text": "I, II ve IV"}, {"letter": "C", "text": "I, II ve III"}, {"letter": "D", "text": "I, III ve IV"}, {"letter": "E", "text": "I, II, III ve IV"}], "correct": "E", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 70, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final, 2024-2025 final", "text": "Aşağıdaki makine tiplerinden hangisi CNC teknolojisi ile kontrol edilmez?", "options": [{"letter": "A", "text": "Mekanik öğütücüler"}, {"letter": "B", "text": "Tornalar"}, {"letter": "C", "text": "Yönlendiriciler"}, {"letter": "D", "text": "Öğütücüler"}, {"letter": "E", "text": "Değirmenler"}], "correct": "A", "explanation": "Torna, freze/değirmen, router (yönlendirici) ve taşlama/öğütücü makineleri CNC ile kontrol edilebilir. \"<b>Mekanik</b> öğütücü\" ise tanımı gereği elle/mekanik mekanizmayla çalışır, bilgisayar kontrolü yoktur."}, {"num": 71, "tag": "ÜRETİM YÖNETİMİ 2024-25 Final", "text": "Yukarıdaki yerleşim türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Proses yerleşim"}, {"letter": "B", "text": "Hücresel yerleşim"}, {"letter": "C", "text": "Ürün yerleşimi"}, {"letter": "D", "text": "Bilgisayarlı yerleşim"}, {"letter": "E", "text": "Sabit yerleşim"}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 72, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 final, 2024-2025 vize, 2025-2026 vize", "text": "Mal ve hizmetin ham madde aşamasından nihai kullanıcıya (müşteriye) ulaştırılması ve bilgi akışlarının sağlanması aşağıdakilerden hangisi ile ifade edilir?", "options": [{"letter": "A", "text": "Geribildirim zinciri"}, {"letter": "B", "text": "Tedarik zinciri"}, {"letter": "C", "text": "Hizmet zinciri"}, {"letter": "D", "text": "Dönüşüm zinciri"}, {"letter": "E", "text": "Üretim zinciri"}], "correct": "B", "explanation": "Ünite 9'un ilk cümlesi: \"<b>Tedarik zinciri</b> mal ve hizmetin ham madde aşamasından nihai kullanıcıya (müşteriye) akışı, dönüşmesine ilişkin ve bilgi akışlarına ilişkin tüm faaliyetleri kapsamaktadır.\""}, {"num": 73, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2023-2024 final, 2024-2025 vize, 2025-2026 vize", "text": "Sebze ve meyve satan manavlar aşağıdaki hangi yerleşim türünü kullanmaktadırlar?", "options": [{"letter": "A", "text": "Proses yerleşim"}, {"letter": "B", "text": "Montaj hattı yerleşim"}, {"letter": "C", "text": "Ürün yerleşimi"}, {"letter": "D", "text": "Hücresel yerleşim"}, {"letter": "E", "text": "Hizmet yerleşimi"}], "correct": "E", "explanation": "Kitap, <b>hizmet yerleşimi</b> başlığı altında: perakendede amaç teşhir alanı başına kârı maksimize etmek; müşteri akışını azaltmak yerine (belli bir noktaya kadar) artırmak daha faydalıdır. \"<b>Manavlar bu yöntemi kullanmaktadırlar.</b>\" (Süt bir uca, ekmek diğer uca konur; müşteri koridorları gezer.)"}, {"num": 74, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2024-2025 vize, 2025-2026 vize", "text": "Üretim süreçlerinde kullanılan sermaye ve iş gücü kaynaklarının olmazsa olmazı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Hızlı birleşme"}, {"letter": "B", "text": "Müşteri yaoğunluğu"}, {"letter": "C", "text": "Süreç seçimi"}, {"letter": "D", "text": "Sermaye yoğunluğu"}, {"letter": "E", "text": "Süreç sıtratejisi stratejisi"}], "correct": "D", "explanation": "Soru kökü bozuk yazılmış olsa da anahtar kelimeler \"<b>sermaye ve iş gücü kaynakları</b>\"dır → <b>sermaye yoğunluğu</b>. Bu iki kaynağın karışımı kitapta sermaye yoğunluğu olarak tanımlanır."}, {"num": 75, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2024-2025 vize, 2025-2026 vize", "text": "Üretimde esnek olan, çıktıyı kişiselleştiren, kaliteli üretim özelliği olan üretim aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sürekli üretim"}, {"letter": "B", "text": "Stok için üretim"}, {"letter": "C", "text": "Sipariş üzerine üretim"}, {"letter": "D", "text": "Proje tipi üretim"}, {"letter": "E", "text": "Parti üretimi"}], "correct": "E", "explanation": "Kitap: parti üretim sisteminin <b>avantajları</b> sistemin <b>esnekliği</b>, <b>çıktının kişiselleştirilmesi</b> ve <b>itibarlı kalitedir</b>. Soru bu üç avantajı birebir sayıyor → parti üretimi."}, {"num": 76, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2024-2025 vize, 2025-2026 vize", "text": "Ürün ve hizmet tasarımına yönelik hangi yaklaşım, üretim veya hizmet sunma sürecindeki her adımı analiz ederek israfı azaltmaya ve verimliliği artırmaya odaklanır?", "options": [{"letter": "A", "text": "Üretilebilirlik için tasarım"}, {"letter": "B", "text": "Estetik için tasarım"}, {"letter": "C", "text": "Altı Sigma için Tasarım"}, {"letter": "D", "text": "Güvenilirlik için tasarım"}, {"letter": "E", "text": "Sürdürülebilirlik için tasarım"}], "correct": "C", "explanation": "<b>Altı Sigma için tasarım</b> (DFSS), sürecin her adımını ölçüp analiz ederek değişkenliği ve israfı azaltmayı, verimliliği artırmayı hedefler. Üretilebilirlik için tasarım (DFM) \"kolay ve ucuz üretilebilir\" tasarıma, güvenilirlik için tasarım arıza olasılığına, sürdürülebilirlik için tasarım çevreye odaklanır."}, {"num": 77, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE, 2024-2025 vize, 2025-2026 vize", "text": "Aşağıdakilerden hangisi proje planlama araçlarından biri değildir?", "options": [{"letter": "A", "text": "PERT-CPM"}, {"letter": "B", "text": "PERT-KALİTE"}, {"letter": "C", "text": "GANT"}, {"letter": "D", "text": "PERT"}, {"letter": "E", "text": "CPM"}], "correct": "A", "explanation": "Sınavın resmî cevap anahtarı iki dönemde de <b>PERT-CPM</b>'i işaretlemiştir. Kitapta araçların adı \"<b>CPM/PERT</b>\" şeklindedir; Gantt, CPM ve PERT ayrı ayrı da araçtır."}, {"num": 78, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE", "text": "Üretim sürecinin küçük görevler serisine bölündüğünü ve görevlerin farklı işçilerce gerçekleştirildiği iş bölümünü ortaya çıkaran kişi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Frank - Lilian Gilberth"}, {"letter": "B", "text": "Eli Whitney"}, {"letter": "C", "text": "Adam Smith"}, {"letter": "D", "text": "Henry Ford"}, {"letter": "E", "text": "Frederick Taylor"}], "correct": "C", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 79, "tag": "ÜRETİM YÖNETİMİ 2025-2026 VİZE", "text": "Fabrikada etkin bir yerleşim önemlidir. Aşağıdakilerden hangisi etkin bir yerleşimin özelliklerinden değildir?", "options": [{"letter": "A", "text": "Üretim devir süresini ve müşteri hizmet süresini arttırmaktadır."}, {"letter": "B", "text": "İş gücünü etkin bir şekilde kullanmaktadır."}, {"letter": "C", "text": "Materyal yükleme maliyetlerini en aza indirmektedir."}, {"letter": "D", "text": "Alanı etkin bir şekilde kullanmaktadır."}, {"letter": "E", "text": "Boşa harcanan veya gereksiz faaliyeti yok etmektedir."}], "correct": "A", "explanation": "AUZEF Uretim Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 80, "tag": "2022-2023 vize, 2024-2025 bütünleme", "text": "Aşağıdakilerden hangisi işletmelerin temel fonksiyon alanlarından biri değildir?", "options": [{"letter": "A", "text": "İşlemler"}, {"letter": "B", "text": "Üretim"}, {"letter": "C", "text": "Pazarlama"}, {"letter": "D", "text": "İnsan kaynakları"}, {"letter": "E", "text": "Finans"}], "correct": "B", "explanation": "Kitaba göre bir işletmenin <b>dört temel fonksiyon alanı</b>: pazarlama, finans, <b>işlemler</b> ve insan kaynaklarıdır. Listede \"üretim\" ayrı bir alan olarak yer almaz; üretim işlemler fonksiyonunun içindedir. Tuzak: \"Üretim yönetimi\" dersindesin diye üretimi işaretleme."}, {"num": 81, "tag": "2022-2023 vize, 2023-2024 vize, 2024-2025 vize, 2025-2026 vize", "text": "Üretim sürecinin küçük görevler serisine bölündüğünü ve bu durumda her bir görevin farklı işçilerce gerçekleştirildiği iş bölümünü ortaya çıkararak ileri süren kimdir?", "options": [{"letter": "A", "text": "Eli Whitney"}, {"letter": "B", "text": "Frank - Lilian Gilberth"}, {"letter": "C", "text": "Frederick Taylor"}, {"letter": "D", "text": "Henry Ford"}, {"letter": "E", "text": "Adam Smith"}], "correct": "E", "explanation": "<b>Adam Smith</b>, <i>Wealth of Nations</i> (1776) kitabında üretimin küçük görevlere bölündüğünü ve <b>iş bölümünü</b> ortaya koymuştur. Whitney → değiştirilebilir parçalar (1790'lar); Taylor → bilimsel yönetim; Gilbreth'ler → Taylor'un fikirlerini genişleten verimlilik uzmanları; Ford → 1913, T Model ve seri üretim."}, {"num": 82, "tag": "2022-2023 vize", "text": "Strateji belirleme dört temel adımdan oluşur. Bu bilgiye göre aşağıdakilerden hangisi bu adımlardan biri değildir?", "options": [{"letter": "A", "text": "Genel maliyet liderliği"}, {"letter": "B", "text": "Öz yetenekleri değerlendirme"}, {"letter": "C", "text": "Birincil bir görev belirleme"}, {"letter": "D", "text": "Sipariş kazandırıcılar ve sipariş niteleyiciler"}, {"letter": "E", "text": "Firmayı konumlandırma"}], "correct": "A", "explanation": "Strateji belirlemenin dört adımı: <b>1)</b> birincil görev belirleme, <b>2)</b> öz yetenekleri değerlendirme, <b>3)</b> sipariş kazandırıcı ve niteleyicileri belirleme, <b>4)</b> firmayı konumlandırma. \"Genel maliyet liderliği\" Porter'ın rekabet stratejilerinden biridir, bu listede yoktur."}, {"num": 83, "tag": "2024-2025 bütünleme, 2025-2026 final", "text": "Aşağıdakilerden hangisi rekabet stratejisi belirlemenin temel adımlarından biri değildir?", "options": [{"letter": "A", "text": "İkincil görev belirleme"}, {"letter": "B", "text": "Sipariş niteleyicilerin belirlenmesi"}, {"letter": "C", "text": "Birincil görev belirleme"}, {"letter": "D", "text": "Öz yetenekleri belirleme"}, {"letter": "E", "text": "Firmayı konumlandırma"}], "correct": "A", "explanation": "Dört adımda \"<b>birincil</b> görev\" vardır, \"ikincil görev\" diye bir adım yoktur. Diğer dört şık (birincil görev, öz yetenek, sipariş niteleyici/kazandırıcı, konumlandırma) adımların ta kendisidir."}, {"num": 84, "tag": "2022-2023 vize, 2023-2024 vize, 2024-2025 vize, 2025-2026 vize", "text": "…………….. rekabet eden şirketlerin tüm gereksiz harcamalarını ortadan kaldırmak için sürekli çalışmasıdır. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Kalite"}, {"letter": "B", "text": "Esneklik"}, {"letter": "C", "text": "Verimlilik"}, {"letter": "D", "text": "Hız"}, {"letter": "E", "text": "Maliyet"}], "correct": "E", "explanation": "Kitap: \"<b>Maliyet</b> konusunda rekabet eden şirketler tüm gereksiz harcamaların ortadan kaldırılması için bıkmadan usanmadan çalışmaktadırlar.\" Örnekler: Lincoln Electric, Southwest Havayolları. \"Verimlilik\" çağrışımla çeldiricidir."}, {"num": 85, "tag": "2022-2023 vize, 2023-2024 vize, 2024-2025 final, 2025-2026 vize", "text": "..... fiyatlandırma kararlarını ve kârlarını etkileyen önemli bir değişkendir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Kalite"}, {"letter": "B", "text": "Ürün ve hizmet tasarımı"}, {"letter": "C", "text": "Piyasaya hızlı tepki verme"}, {"letter": "D", "text": "Konum"}, {"letter": "E", "text": "Bir kuruluşun çıktı maliyeti"}], "correct": "E", "explanation": "Bu soru ailesi (5 şık hep aynı: kalite, tasarım, hızlı tepki, konum, çıktı maliyeti) \"işletmeler nasıl rekabet eder?\" listesinden gelir. Fiyat ve kârı doğrudan etkileyen değişken <b>bir kuruluşun çıktı maliyetidir</b>: maliyet düşükse fiyat düşürülebilir ya da kâr marjı artar."}, {"num": 86, "tag": "2022-2023 vize, 2023-2024 vize", "text": "..... firmaların finansal kaynak, operasyon yetenekleri, tedarik zinciri yetenekleri, tüketici istek ve ihtiyaçları arasında kurulan bir eşleşme sağlamak için firmanın birçok alanının ortak çabalarını yansıtır. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Kalite"}, {"letter": "B", "text": "Piyasaya hızlı tepki verme"}, {"letter": "C", "text": "Bir kuruluşun çıktı maliyeti"}, {"letter": "D", "text": "Ürün ve hizmet tasarımı"}, {"letter": "E", "text": "Konum"}], "correct": "D", "explanation": "Finans, operasyon, tedarik zinciri ve müşteri ihtiyaçlarını <b>eşleştirmek için birçok alanın ortak çabası</b> gereken şey <b>ürün ve hizmet tasarımıdır</b>. Ünite 5'teki çok fonksiyonlu tasarım ekipleri fikri de aynı mantığa dayanır."}, {"num": 87, "tag": "2023-2024 bütünleme", "text": "....., değişikliklere cevap verme yeteneğidir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Piyasaya hızlı tepki vermek"}, {"letter": "B", "text": "Stok yönetimi"}, {"letter": "C", "text": "Hizmet"}, {"letter": "D", "text": "Esneklik"}, {"letter": "E", "text": "Tedarik zinciri yönetimi"}], "correct": "D", "explanation": "<b>Esneklik</b>, değişikliklere cevap verme yeteneğidir. Kitapta esneklik; geniş ürün hattı sunma, yeni ürünler çıkarma, mevcutları hızla dönüştürme ve müşteri taleplerine karşılık verme olarak anlatılır. \"Piyasaya hızlı tepki\" zamana (hıza) vurgu yapar."}, {"num": 88, "tag": "2024-2025 vize", "text": "..... mal arzını etkin bir şekilde taleple eşleştirerek rekabet avantajı sağlayabilir. Yukarıdaki boşluğa aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Tedarik zinciri yönetimi"}, {"letter": "B", "text": "Hizmet"}, {"letter": "C", "text": "Esneklik"}, {"letter": "D", "text": "Piyasaya hızlı tepki vermek"}, {"letter": "E", "text": "Stok yönetimi"}], "correct": "E", "explanation": "Arzı (eldeki malı) taleple eşleştiren araç <b>stok yönetimidir</b>. Ünite 12'nin ilk cümlesi de aynı fikirdedir: stok yönetiminin amacı müşteri talebini karşılamak ve maliyeti azaltmak için <b>yeterli</b> stok bulundurmaktır."}, {"num": 89, "tag": "2022-2023 vize, 2025-2026 final", "text": "Rafine yağ, kimyasallar ve besin maddeleri aşağıdaki üretim yöntemlerinin hangisiyle üretilmektedir?", "options": [{"letter": "A", "text": "Sürekli üretim"}, {"letter": "B", "text": "Sipariş üzerine üretim"}, {"letter": "C", "text": "Proje tipi üretim"}, {"letter": "D", "text": "Parti üretimi"}, {"letter": "E", "text": "Stok için üretim"}], "correct": "A", "explanation": "Kitap (4.2): \"Rafine yağ, kimyasallar ve besin maddeleri <b>sürekli üretim</b> yöntemiyle üretilmektedir.\" Sürekli üretim; çok standart, çok yüksek hacimli ürünler, yüksek otomasyon ve genellikle 24 saat kesintisiz işleyiş demektir."}, {"num": 90, "tag": "2022-2023 vize", "text": "Robert Kaplan ve David Norton tarafından geliştirilen kurumsal karne firmanın performansını dört kritik alanda incelemektedir. Aşağıdakilerden hangisi firmanın performansını incelemede ele alınan kritik alanlardan biri değildir?", "options": [{"letter": "A", "text": "Süreçler"}, {"letter": "B", "text": "Öğrenme ve büyüme"}, {"letter": "C", "text": "Üretim"}, {"letter": "D", "text": "Müşteri"}, {"letter": "E", "text": "Finans"}], "correct": "C", "explanation": "Kurumsal karnenin (Balanced Scorecard) dört alanı: <b>Finans</b> (hissedarlara nasıl bakmalıyız), <b>Müşteri</b>, <b>Süreçler</b> (hangi iş süreçlerinde üstün olmalıyız), <b>Öğrenme ve Büyüme</b>. \"Üretim\" ayrı bir alan değildir; süreçler başlığının içinde düşünülür."}, {"num": 91, "tag": "2024-2025 vize", "text": "İşletmelerde ürün ve hizmet tasarımının temel amacı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Müşteri ihtiyaç ve tercihlerini karşılamak"}, {"letter": "B", "text": "Mevzuata uygunluğu sürdürmek"}, {"letter": "C", "text": "Üretim maliyetlerini en aza indirmek"}, {"letter": "D", "text": "Hissedar temettülerini artırmak"}, {"letter": "E", "text": "Çalışan memnuniyetini en üst düzeye çıkarmak"}], "correct": "A", "explanation": "Ünite 5 şu cümleyle açılır: \"Tüm işletmelerin amacı müşterileri için ürün ve hizmet üretmektir.\" Tasarım sürecinin ilk adımı da müşteriyi anlamak ve ihtiyaçlarını betimlemektir. Temel amaç <b>müşteri ihtiyaç ve tercihlerini karşılamaktır</b>; maliyet ve mevzuat ikincil kısıtlardır."}, {"num": 92, "tag": "2024-2025 bütünleme", "text": "Tasarım ürününün nasıl yapıldığını ve müşteri kullanımına uygun performans özelliklerini araştıran tasarım süreci aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Ön tasarım"}, {"letter": "B", "text": "Fizibilite"}, {"letter": "C", "text": "Biçim tasarımı"}, {"letter": "D", "text": "Fikir üretme"}, {"letter": "E", "text": "Fonksiyonel tasarım"}], "correct": "E", "explanation": "Kitap: \"<b>Fonksiyonel tasarım</b> ürünün nasıl yapıldığıyla alakalıdır. Müşteri kullanımına uygun performans özelliklerini araştırır.\" Bu evrede bakılan iki performans özelliği <b>güvenilirlik</b> ve <b>idame ettirilebilirliktir</b>. Biçim tasarımı ise şekil, renk, boyut, stil (görünüm) ile ilgilidir."}, {"num": 93, "tag": "2022-2023 vize, 2024-2025 final", "text": "Bir bilgisayarın bataryası 20 saatte 4 kez bitiyorsa arıza oranı yüzde kaçtır?", "options": [{"letter": "A", "text": "%30"}, {"letter": "B", "text": "%80"}, {"letter": "C", "text": "%20"}, {"letter": "D", "text": "%25"}, {"letter": "E", "text": "%50"}], "correct": "C", "explanation": "Arıza oranı = arıza sayısı / süre = 4 / 20 = <b>0,20 = %20</b>. Kitaptaki örnek birebir budur; devamında <b>MTBF = 1 / arıza oranı = 1 / 0,20 = 5 saat</b> bulunur. %25 (=1/4) ve %50 tipik hesap hatası çeldiricileridir."}, {"num": 94, "tag": "2023-2024 bütünleme", "text": "I. Arıza modu ve etki analizi<br>II. Arıza ağacı analizi<br>III. Değer analizi<br>IV. Risk analizi<br>Tasarım sonuçlandırılmadan önce olası hataların analizi yukarıdaki tekniklerden hangisi veya hangileri ile yapılmaktadır?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "Yalnız I"}, {"letter": "D", "text": "Yalnız III"}, {"letter": "E", "text": "I, II ve III"}], "correct": "E", "explanation": "Tasarımın gözden geçirilmesinde <b>üç teknik</b> vardır: <b>FMEA</b> (arıza modu ve etki analizi), <b>FTA</b> (arıza ağacı analizi) ve <b>VA</b> (değer analizi). \"Risk analizi\" bu üçlüde yoktur."}, {"num": 95, "tag": "2022-2023 vize, 2024-2025 vize", "text": "Kaynakların talep, teknoloji, ürün-hizmet ve kaynak uygunluğuna cevaben düzenlenebilme kolaylığına ne ad verilir?", "options": [{"letter": "A", "text": "Müşteri katılımı"}, {"letter": "B", "text": "Sermaye yoğunluğu"}, {"letter": "C", "text": "Proses esnekliği"}, {"letter": "D", "text": "Proses stratejisi"}, {"letter": "E", "text": "Dikey bütünleşme"}], "correct": "C", "explanation": "<b>Proses esnekliği</b>: kaynakların talep, teknoloji, ürün-hizmet ve kaynak uygunluğuna cevaben düzenlenebilme kolaylığı. Anahtar kelime \"<b>düzenlenebilme kolaylığı</b>\"."}, {"num": 96, "tag": "2022-2023 vize, 2023-2024 final, 2025-2026 vize", "text": "• Büyük meblağlara mal olmaktadır.<br>• Bir müşteri için eşi benzeri olmayan üretimi ifade etmektedir.<br>• Müşteriler azdır ve müşteri katılımı yoğundur.<br>• Müşteriler ürün tasarımı konusunda son derece ilgilidirler.<br>Yukarıda ifade edilen özellikler hangi üretim çeşidine aittir?", "options": [{"letter": "A", "text": "Sürekli üretim"}, {"letter": "B", "text": "Sipariş üzerine üretim"}, {"letter": "C", "text": "Proje tipi üretim"}, {"letter": "D", "text": "Stok için üretim"}, {"letter": "E", "text": "Parti üretimi"}], "correct": "C", "explanation": "Kitap (6.1): \"<b>Proje</b> şahsi bir müşteri için eşi benzeri olmayan üretimi ifade etmektedir. Büyük meblağlara mal olma ve uzun sürme eğilimindedir. Bu nedenle müşteriler azdır ve müşteri katılımı yoğundur.\" Örnek: bina, uçak, gemi, rock konseri."}, {"num": 97, "tag": "2022-2023 vize, 2024-2025 vize", "text": "Sipariş atölyesi olarak bilinen üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sipariş üzerine üretim"}, {"letter": "B", "text": "Parti üretimi"}, {"letter": "C", "text": "Stok için üretim"}, {"letter": "D", "text": "Proje tipi üretim"}, {"letter": "E", "text": "Sürekli üretim"}], "correct": "B", "explanation": "Kitap: \"<b>Parti üretim sistemi</b> aynı zamanda <b>sipariş atölyesi</b> olarak da bilinmektedir.\" (Örnek: makine atölyesi, matbaa, fırın, mobilya.) \"Sipariş\" kelimesi yüzünden \"sipariş üzerine üretim\" en güçlü tuzaktır."}, {"num": 98, "tag": "2023-2024 bütünleme, 2024-2025 vize, 2025-2026 final", "text": "Siparişlerin atölye ortamında üretildiği üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Stok için üretim"}, {"letter": "B", "text": "Sipariş üzerine üretim"}, {"letter": "C", "text": "Parti üretimi"}, {"letter": "D", "text": "Proje tipi üretim"}, {"letter": "E", "text": "Sürekli üretim"}], "correct": "C", "explanation": "\"Atölye\" kelimesi → <b>parti üretimi</b> (sipariş atölyesi / job shop). İş, ihtiyacına göre torna bölümüne, boya bölümüne... gönderilir; belli bir ürün üzerinde çalışma <b>kesikli/aralıklıdır</b>."}, {"num": 99, "tag": "2023-2024 bütünleme", "text": "Birim başına düşük maliyet, üretme ve kontrol kolaylığı olan hızlı üretim tipi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Stok için üretim"}, {"letter": "B", "text": "Proje tipi üretim"}, {"letter": "C", "text": "Kitle üretim"}, {"letter": "D", "text": "Sipariş üzerine üretim"}, {"letter": "E", "text": "Parti üretimi"}], "correct": "C", "explanation": "Düşük birim maliyet + üretme ve kontrol kolaylığı + <b>hız</b> = <b>kitle üretiminin</b> avantajları. Parti üretiminde birim maliyet yüksektir; proje tipi üretimde ise büyük meblağlar söz konusudur."}, {"num": 100, "tag": "2023-2024 bütünleme", "text": "CNC programlamada G kodu ne anlama gelmektedir?", "options": [{"letter": "A", "text": "Üretilen ürünün modeli veya tasarımı"}, {"letter": "B", "text": "Makineyi programlayan operatörün adı"}, {"letter": "C", "text": "CNC makinelerini programlamak için kullanılan dil"}, {"letter": "D", "text": "Üretim için kullanılan malzemenin türü"}, {"letter": "E", "text": "Geometrik kod"}], "correct": "E", "explanation": "CNC'de <b>G kodları</b> \"geometrik\" (hazırlayıcı) kodlardır: takımın hangi geometride hareket edeceğini (doğrusal, dairesel, hızlı konumlama vb.) söyler. Cevap anahtarı <b>E</b>'dir."}, {"num": 101, "tag": "2022-2023 vize, 2023-2024 final", "text": "I. Proses yerleşim<br>II. Ürün yerleşimi<br>III. Sabit yerleşim<br>IV. Hareketli yerleşim<br>Yukarıdakilerden hangisi veya hangileri üretim yerleşimi türlerindendir?", "options": [{"letter": "A", "text": "I, II ve III"}, {"letter": "B", "text": "Yalnız III"}, {"letter": "C", "text": "II ve IV"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I, II ve IV"}], "correct": "A", "explanation": "Kitap: \"<b>Üç temel üretim yerleşimi</b> (proses, ürün ve sabit yerleşim) ve üç karma yerleşim (hücresel yerleşim, esnek üretim sistemleri ve karma modelli montaj hatları) bulunmaktadır.\" \"Hareketli yerleşim\" diye bir tür yoktur."}, {"num": 102, "tag": "2023-2024 final, 2025-2026 bütünleme, 2024-2025 final", "text": "Aşağıdaki şekilde verilen üretim yerleşim türü hangisidir?", "options": [{"letter": "A", "text": "Ürün yerleşimi"}, {"letter": "B", "text": "Sabit yerleşim"}, {"letter": "C", "text": "Bilgisayarlı yerleşim"}, {"letter": "D", "text": "Proses yerleşim"}, {"letter": "E", "text": "Hücresel yerleşim"}], "correct": "D", "explanation": "Şekilde makineler <b>fonksiyonlarına göre bölümlere</b> ayrılmış (Torna Bölümü, Frezeleme Bölümü, Delme Bölümü, Taşlama, Boyama, Montaj) ve parça bölümler arasında ileri geri dolaşıyor → <b>proses yerleşim</b>. Kitaptaki Şekil 7.2 \"Üretimde Proses Yerleşimi\" budur."}, {"num": 103, "tag": "2024-2025 final", "text": "Aşağıdaki mağaza krokisinde görülen yerleşim türü hangisidir?", "options": [{"letter": "A", "text": "Proses yerleşim"}, {"letter": "B", "text": "Hücresel yerleşim"}, {"letter": "C", "text": "Ürün yerleşimi"}, {"letter": "D", "text": "Bilgisayarlı yerleşim"}, {"letter": "E", "text": "Sabit yerleşim"}], "correct": "A", "explanation": "Mağaza reyonlara (kadın, erkek, çocuk, kozmetik, ayakkabı) ayrılmış → <b>proses yerleşim</b>. Kitap: \"Bir alışveriş merkezinde de kadın kıyafetleri, erkek kıyafetleri, çocuk kıyafetleri, kozmetik ürünler ve ayakkabılar farklı bölümlerde yer almaktadır.\" (Şekil 7.1: Hizmette proses yerleşimi.)"}, {"num": 104, "tag": "2023-2024 bütünleme", "text": "I. Esnektir.<br>II. Verimlidir.<br>III. İş kuyrukları oluşmaktadır.<br>IV. Birimden birime hareket, zaman kaybına neden olabilmektedir.<br>Yukarıdakilerden hangileri prosese göre yerleşim türünün özelliklerindendir?", "options": [{"letter": "A", "text": "I, III ve IV"}, {"letter": "B", "text": "I, II ve III"}, {"letter": "C", "text": "II, III ve IV"}, {"letter": "D", "text": "I, II ve IV"}, {"letter": "E", "text": "I ve IV"}], "correct": "A", "explanation": "Proses yerleşiminin avantajı <b>esnekliği</b>, dezavantajı <b>verimsizliğidir</b>. Kitap: gerileme yaygındır, birimden birime hareket zaman kaybına neden olabilir ve <b>iş kuyrukları</b> oluşur. II (\"verimlidir\") yanlış → I, III ve IV."}, {"num": 105, "tag": "2024-2025 vize", "text": "Montaj hattı ürün faaliyet sırasına göre bir hat boyunca düzenlenen faaliyetleri düzenleyen yerleşim türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Proses yerleşim"}, {"letter": "B", "text": "Bilgisayarlı yerleşim"}, {"letter": "C", "text": "Ürün yerleşimi"}, {"letter": "D", "text": "Hücresel yerleşim"}, {"letter": "E", "text": "Sabit yerleşim"}], "correct": "C", "explanation": "Kitap: \"Daha çok <b>montaj hattı</b> olarak bilinen <b>ürün yerleşimi</b>, montaj gerektiren bir ürün için faaliyet sırasına göre bir hat boyunca oluşan faaliyetleri düzenlemektir.\" Kitle üretimi ve tekrarlı işlemler için uygundur."}, {"num": 106, "tag": "2024-2025 bütünleme", "text": "GT, verimliliği ve üretkenliği hangi yöntemle artırır?", "options": [{"letter": "A", "text": "Tesis yerleşimini optimize ederek ve alan gereksinimlerini azaltarak"}, {"letter": "B", "text": "Kalite kontrol kontrollerine olan ihtiyacı ortadan kaldırarak"}, {"letter": "C", "text": "İnsan operatörlerinden asgari denetim talep ederek"}, {"letter": "D", "text": "Kurulum sürelerini ve değişimleri azaltarak"}, {"letter": "E", "text": "Üretim için benzer parçaları ailelere göre gruplandırarak"}], "correct": "E", "explanation": "<b>Grup teknolojisi (GT)</b>, benzer işlem gereksinimli parçaları <b>parça ailelerine</b> ayırıp bunları hücrelerde işlemektir. Hücresel yerleşim GT konsepti temelinde kurulur; üretim akış analizi (PFA) parça ailelerini tanımlayan bir GT tekniğidir. (Kurulum süresinin azalması bunun <i>sonucudur</i>, yöntemi değil.)"}, {"num": 107, "tag": "2024-2025 bütünleme, 2025-2026 final", "text": "Aşağıdakilerden hangisi işletmelerin proje yönetim elemanlarından biridir?", "options": [{"letter": "A", "text": "Proje yöntemi"}, {"letter": "B", "text": "Proje ekibi"}, {"letter": "C", "text": "Proje konusu"}, {"letter": "D", "text": "Proje tarihi"}, {"letter": "E", "text": "Proje ismi"}], "correct": "B", "explanation": "Dört element: <b>proje ekibi</b>, proje planlama, görev ayrımı yapısı, proje kontrolü. Şıklarda bunlardan yalnızca \"proje ekibi\" var. Ekibin en önemli üyesi proje yöneticisidir."}, {"num": 108, "tag": "2023-2024 bütünleme", "text": "Gantt şemasına göre avantajı, faaliyetler arasındaki öncelik ilişkilerini tasvir etmek adına bir ağ kullanıyor olmasıdır. Yukarıda özelliği belirtilen yöntem aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "AOA"}, {"letter": "B", "text": "AON"}, {"letter": "C", "text": "POM/QM for Windows"}, {"letter": "D", "text": "CPM / PERT"}, {"letter": "E", "text": "PMP"}], "correct": "D", "explanation": "Kitap: \"<b>CPM/PERT'in</b> Gantt şemasına göre avantajı faaliyetler arasındaki öncelik ilişkilerini tasvir etmek adına bir <b>ağ</b> kullanıyor olmasıdır.\" CPM 1956'da Du Pont'ta, PERT ise Polaris Füze Projesi için ABD Donanması'nda geliştirildi."}, {"num": 109, "tag": "2023-2024 bütünleme", "text": "I. Satın alma<br>II. Stok<br>III. Tesis yerleşimi<br>IV. Ulaşım ve dağıtım<br>V. Planlama<br>Yukarıdakilerden hangileri tedarik zinciri faaliyetlerindendir?", "options": [{"letter": "A", "text": "I, II, IV ve V"}, {"letter": "B", "text": "I, II, III ve IV"}, {"letter": "C", "text": "I, II ve III"}, {"letter": "D", "text": "II, III ve IV"}, {"letter": "E", "text": "I, III ve IV"}], "correct": "B", "explanation": "Kitap: \"Tedarik zinciri faaliyetleri; <b>satın alma, stok, üretim, programlama, tesis yerleşimi, ulaşım ve dağıtımı</b> içermektedir.\" Listede \"programlama\" var ama \"planlama\" yok → I, II, III ve IV."}, {"num": 110, "tag": "2023-2024 bütünleme", "text": "Aşağıdakilerden hangisi tedarikçi seçim kararını etkileyen temel faktörlerden biri değildir?", "options": [{"letter": "A", "text": "Envanter"}, {"letter": "B", "text": "Güvenilirlik"}, {"letter": "C", "text": "Kalite"}, {"letter": "D", "text": "Fiyat"}, {"letter": "E", "text": "Üretim kapasitesi"}], "correct": "A", "explanation": "Tedarikçi seçilirken fiyat, <b>kalite, güvenilirlik</b>, esneklik ve üretim kapasitesine bakılır. Kitap (Ünite 1): online ihalelerde rekabet düşük fiyatı ifade etse de tedarikçi seçimi aynı zamanda kalite, güvenilirlik ve esneklik gibi sürekli faktörlere dayanır. \"Envanter\" alıcının kendi stok kararıdır, tedarikçi seçim faktörü değildir."}, {"num": 111, "tag": "2022-2023 vize, 2024-2025 vize, 2024-2025 bütünleme, 2025-2026 final", "text": "Ürün kimliği, sıra numarası, kaynağı ve varış yeri, özel ambalajlama prosedürleri, maliyet, sipariş numarası gibi bilgileri içeren seçenek aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bilgi teknolojisi"}, {"letter": "B", "text": "E-iş"}, {"letter": "C", "text": "İnternet"}, {"letter": "D", "text": "Barkod"}, {"letter": "E", "text": "Elektronik veri"}], "correct": "D", "explanation": "Kitap: \"<b>Barkod</b> mal hakkındaki bilginin tanımlanmasını içermektedir. Ürün kimliği, sıra numarası, kaynağı ve varış yeri, özel ambalajlama prosedürleri, maliyet, sipariş numarası gibi bilgileri içermektedir.\" Kasada tarandığında satış noktası verisi oluşturur. Dört dönem çıktı."}, {"num": 112, "tag": "2024-2025 bütünleme", "text": "Aşağıdakilerden hangisi e-iş ortamındaki işlemlerin özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Dayanıklılık"}, {"letter": "B", "text": "Yalıtım"}, {"letter": "C", "text": "Paralellik"}, {"letter": "D", "text": "Tutarlılık"}, {"letter": "E", "text": "Atomiklik"}], "correct": "C", "explanation": "Elektronik işlemlerin (transaction) dört özelliği <b>ACID</b> ile bilinir: <b>A</b>tomiklik (ya hep ya hiç), <b>C</b>onsistency/Tutarlılık, <b>I</b>solation/Yalıtım, <b>D</b>urability/Dayanıklılık. \"Paralellik\" bu dörtlüde yoktur."}, {"num": 113, "tag": "2023-2024 bütünleme", "text": "Noel zamanlarında çevrim içi sitelerindeki müşterilerin en büyük şikâyeti genellikle meşgul telefonlar ve cevap verilmeyen e-mail kuyrukları olmaktadır. Bu gibi kötü müşteri hizmetleri durumları aşağıdaki aksaklıklardan hangisine örnektir?", "options": [{"letter": "A", "text": "Bilgi teknolojileri sorunu"}, {"letter": "B", "text": "Elektronik veri sorunu"}, {"letter": "C", "text": "Müşteri temsilcisi sorunu"}, {"letter": "D", "text": "Satın alma işlemleri sorunu"}, {"letter": "E", "text": "E-iş sorunu"}], "correct": "A", "explanation": "Bu örnek kitapta \"<b>Bilgi Teknolojileri Sorunları</b>\" başlığı altında geçer. Aynı başlıktaki diğer sorunlar: e-iş girişimlerinin karmaşası ve maliyeti, beklenenden fazla destek ekibi ihtiyacı, hassas bilgi güvenliği ve veri mahremiyeti."}, {"num": 114, "tag": "2024-2025 final", "text": "I. Hızlı yanıt<br>II. Just-in-time (tam zamanında üretim)<br>III. VMI (tedarikçinin yönettiği stok)<br>IV. Stoksuz envanter<br>Yukarıdakilerden hangileri tedarik zinciri sürekli yenileme varyanslarındandır?", "options": [{"letter": "A", "text": "II, III ve IV"}, {"letter": "B", "text": "I, II ve IV"}, {"letter": "C", "text": "I, II ve III"}, {"letter": "D", "text": "I, III ve IV"}, {"letter": "E", "text": "I, II, III ve IV"}], "correct": "E", "explanation": "Kitap (Ünite 10): \"Sürekli yenileme varyansları <b>hızlı yanıt, just-in-time, VMI (tedarikçinin yönettiği stok) ve stoksuz envanteri</b> kapsamaktadır.\" Dördü de listede."}, {"num": 115, "tag": "2023-2024 bütünleme", "text": "..... tahminler genellikle şirket ve endüstri türüne göre gelecekteki yaklaşık 2 yıla kadarki günlük, haftalık veya aylık satış talepleri içindir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Orta aralıklı"}, {"letter": "B", "text": "Kısa aralıklı"}, {"letter": "C", "text": "Değişken aralıklı"}, {"letter": "D", "text": "Uzun aralıklı"}, {"letter": "E", "text": "Sabit aralıklı"}], "correct": "B", "explanation": "\"<b>2 yıla kadar</b>\" + \"günlük, haftalık, aylık\" → <b>kısa aralıklı</b> tahmin. 2 yıldan uzun dönem için yapılan tahmin <b>uzun aralıklıdır</b>. Kitap \"orta aralıklı\" bir tahmin türü tanımlamaz; bu şık tuzaktır."}, {"num": 116, "tag": "2024-2025 bütünleme", "text": "Aşağıdakilerden hangisi talepteki sürekli büyümeye ilişkin kapasite artırımı stratejilerindendir?", "options": [{"letter": "A", "text": "Ortalama kapasite stratejisi"}, {"letter": "B", "text": "Planlama kapasitesi"}, {"letter": "C", "text": "Stok azaltma stratejisi"}, {"letter": "D", "text": "Stok belirleme stratejisi"}, {"letter": "E", "text": "Fiili kapasite eksikliği"}], "correct": "A", "explanation": "Talepteki sürekli büyümeye karşı üç kapasite stratejisi: <b>önde kapasite</b> (talepten önce, agresif), <b>kapasite gerilemesi</b> (talep belgelendikten sonra, tutucu) ve <b>ortalama kapasite</b> (beklenen ortalama taleple örtüşecek kadar)."}, {"num": 117, "tag": "2024-2025 final, 2025-2026 bütünleme", "text": "I. Beklenen talep hacmi ve kesinliği<br>II. Büyüme, müşteri hizmetleri ve rekabet koşullarındaki stratejik amaçlar<br>III. Büyüme ve işlem maliyetleri<br>IV. Planlı üretim<br>Kapasitenin ne kadar arttırılacağı yukarıdakilerden hangisi veya hangilerine bağlıdır?", "options": [{"letter": "A", "text": "I, II ve III"}, {"letter": "B", "text": "Yalnız I"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "III ve IV"}, {"letter": "E", "text": "I ve II"}], "correct": "A", "explanation": "Kitap: \"Kapasitenin ne kadar arttırılacağı (1) beklenen talebin hacmi ve kesinliği; (2) büyüme, müşteri hizmetleri ve rekabet koşullarındaki stratejik amaçlara ve (3) büyüme ve işlem maliyetlerine bağlıdır.\" \"Planlı üretim\" listede yok."}, {"num": 118, "tag": "2024-2025 bütünleme", "text": "I. Sabit maliyetler daha fazla sayıda birime yayılabilmektedir.<br>II. Üretim maliyeti ürün seviyesiyle doğrusal olarak artış göstermektedir.<br>III. Materyal alımları için miktar iskontosu mevcuttur.<br>IV. İşletme verimliliği çalışanlar deneyim kazandıkça artmaktadır.<br>Yukarıdakilerden hangilerinde ölçek ekonomisi durumları geçerlidir?", "options": [{"letter": "A", "text": "I, II ve III"}, {"letter": "B", "text": "I ve IV"}, {"letter": "C", "text": "II, III ve IV"}, {"letter": "D", "text": "I, II ve IV"}, {"letter": "E", "text": "I, III ve IV"}], "correct": "E", "explanation": "Ölçek ekonomisi şu durumlarda geçerlidir: sabit maliyetler daha çok birime yayılır, üretim maliyeti ürün seviyesiyle doğrusal olarak <b>artış GÖSTERMEZ</b>, miktar iskontosu vardır, verimlilik deneyimle artar. II'deki \"doğrusal artış gösterir\" ifadesi kitabın tersidir → I, III ve IV."}, {"num": 119, "tag": "2024-2025 bütünleme, 2025-2026 final", "text": "Firmanın 6 ila 12 ay gibi ortalama bir vadede talebi karşılayabileceği kaynak kapasitesi planlaması aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sermaye planlaması"}, {"letter": "B", "text": "Tedarik planlaması"}, {"letter": "C", "text": "Kapasite planlaması"}, {"letter": "D", "text": "Toplam üretim planlaması"}, {"letter": "E", "text": "İşbirlikçi planlama"}], "correct": "D", "explanation": "Kitap: \"<b>Toplam üretim planlaması (APP)</b> firmanın <b>6 ila 12 ay</b> gibi ortalama bir vadede talebi karşılayabileceği kaynak kapasitesini ifade etmektedir.\" Kapasite planlaması ise yeni tesis gibi <b>uzun vadeli</b> (1 yıl+) stratejik karardır."}, {"num": 120, "tag": "2024-2025 final", "text": "I. McDonald's'ın öğleden önceki saatlerde mutfaklarını meşgul tutmak adına kahvaltı hizmeti sunması<br>II. Krep restoranlarının öğle ve akşam yemeği vermesi<br>III. Ocak ayında mayo satışı yapılması<br>Yukarıdakilerden hangisi veya hangileri talep yönetimi konusunda kaynak atıllığına örnektir?", "options": [{"letter": "A", "text": "Yalnız III"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I ve II"}], "correct": "E", "explanation": "Talep yönetiminin <b>ikinci yaklaşımı</b>: kaynakların atıllığını incelemek ve bu kaynaklar için talep oluşturmak → McDonald's kahvaltısı, krep restoranlarının öğle-akşam yemeği, ısıtma firmalarının klima satması. \"Ocak'ta mayo satışı\" ise <b>birinci yaklaşımın</b> (talebi farklı zamana kaydırma) örneğidir."}, {"num": 121, "tag": "2025-2026 final", "text": "Ortaklaşa yönetilmek için ürünleri seçme, tek bir müşteri talep tahmini oluşturma ve tedarik zincirinde üretimi senkronize etmeyi içeren planlama tekniği aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Üretim planlaması"}, {"letter": "B", "text": "Tedarik planlaması"}, {"letter": "C", "text": "Sermaye planlaması"}, {"letter": "D", "text": "İşbirlikçi planlama"}, {"letter": "E", "text": "Karşılanabilen miktar"}], "correct": "D", "explanation": "Kitap: \"<b>İşbirliğine dayalı planlama</b> CPFR'nin bir parçasıdır. Üretim bakımından, CPFR ortaklaşa yönetilmek için ürünleri seçme, tek bir müşteri talep tahmini oluşturma ve tedarik zincirinde üretimi senkronize etmeyi içermektedir.\" Karşılanabilen miktar bunun bir <i>örneğidir</i>."}, {"num": 122, "tag": "2024-2025 bütünleme", "text": "Stok yönetimi tanımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Müşterilere ürün tedarik etmek için kullanılan bir sistem"}, {"letter": "B", "text": "Üretim sürecini yönetmek için kullanılan bir sistem"}, {"letter": "C", "text": "Stok seviyelerinin izlenmesi ve kontrol edilmesi için kullanılan bir sistem"}, {"letter": "D", "text": "Satış süreçlerinin yönetimi için kullanılan bir sistem"}, {"letter": "E", "text": "Finansal kayıtların tutulmasını sağlayan bir sistem"}], "correct": "C", "explanation": "Stok yönetimi, <b>stok seviyelerinin izlenmesi ve kontrol edilmesi</b> sistemidir. Kitap: \"Stok sistemi ne kadar sipariş yapılacağı ve siparişin ne zaman yapılacağını belirleyerek <b>stok düzeyini kontrol etmektedir</b>.\""}, {"num": 123, "tag": "2024-2025 bütünleme, 2025-2026 final", "text": "Talepteki belirsizliklere karşı tutulan stok miktarına verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kontrol stoğu"}, {"letter": "B", "text": "Emniyet stoğu"}, {"letter": "C", "text": "Tükenmiş stok"}, {"letter": "D", "text": "Acil stok seviyesi"}, {"letter": "E", "text": "Riskli stok"}], "correct": "B", "explanation": "Kitap: \"Güvenlik veya <b>tampon stok</b> diye adlandırılan ek bir stok üretim taleplerindeki değişiklikleri karşılamak adına tutulmaktadır.\" Talep belirsizken stoksuz kalmayı önlemek için teslim süresi talebine eklenen stok = <b>emniyet (güvenli) stoğu</b>."}, {"num": 124, "tag": "2024-2025 vize", "text": "Aşağıdakilerden hangisi işletmeleri stok bulundurmaya yönelten nedenler arasında değildir?", "options": [{"letter": "A", "text": "Stoktan teslim gibi bir imajla rekabet gücünü arttırma"}, {"letter": "B", "text": "Tedarikçilerden doğan problemlere karşı koruma arzusu"}, {"letter": "C", "text": "Farklı ürünlerin aynı tesiste üretilebilmesini sağlamak"}, {"letter": "D", "text": "Talepteki değişikliklere cevap verebilmek"}, {"letter": "E", "text": "Stoklanan malzemenin raf ömürlerinin kısa olması"}], "correct": "E", "explanation": "Raf ömrünün <b>kısa</b> olması stok tutmaktan <b>kaçınma</b> nedenidir (mal bozulur, modası geçer). Stok tutma nedenleri: müşteri talebini karşılamak, talep belirsizliği (güvenli stok), mevsimsel talep, tedarikçi gecikmelerine karşı koruma, fiyat/miktar indirimleri, evreler arası bağımsızlık."}, {"num": 125, "tag": "2024-2025 bütünleme", "text": "Stok seviyesi önceden belirlenen bir düzeye düşünce sabit bir miktar kadar sipariş verilmesi yaklaşımına verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Gözle kontrol sistemi"}, {"letter": "B", "text": "Devresel gözden geçirme sistemi"}, {"letter": "C", "text": "Sürekli gözden geçirme sistemi"}, {"letter": "D", "text": "Tam zamanında üretim sistemi"}, {"letter": "E", "text": "İki kutu sistemi"}], "correct": "C", "explanation": "<b>Sürekli (sabit sipariş miktarlı) sistem</b>: eldeki stok yeniden sipariş noktasına düşer düşmez <b>aynı sabit miktarda</b> (EOQ) sipariş verilir. Periyodik (devresel) sistemde ise belli aralıklarla <b>değişken</b> miktarda sipariş verilir. İki kutu sistemi sürekli sistemin görsel bir uygulamasıdır ama genel yaklaşımın adı \"sürekli gözden geçirme\"dir."}, {"num": 126, "tag": "2024-2025 bütünleme", "text": "Aşağıdakilerden hangisi toplam stok maliyetini hesaplamak için gerekli maliyet bileşenlerinden biri değildir?", "options": [{"letter": "A", "text": "Sipariş verme maliyeti"}, {"letter": "B", "text": "Üretim maliyeti"}, {"letter": "C", "text": "Stokta bulundurma maliyeti"}, {"letter": "D", "text": "Stok dışı kalma maliyeti"}, {"letter": "E", "text": "Birim satın alma maliyeti"}], "correct": "B", "explanation": "Toplam stok maliyetinin bileşenleri: <b>sipariş verme</b> maliyeti, <b>stokta bulundurma</b> maliyeti, <b>stok dışı kalma</b> (stoksuzluk) maliyeti ve miktar iskontosu varsa <b>birim satın alma</b> maliyeti (P·D). \"Üretim maliyeti\" stok maliyeti değildir."}, {"num": 127, "tag": "2023-2024 bütünleme, 2025-2026 final", "text": "Stoksuz üretim olarak adlandırılan üretim çeşidi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sürekli üretim"}, {"letter": "B", "text": "Toplam kalite yönetimi"}, {"letter": "C", "text": "Tam zamanında üretim"}, {"letter": "D", "text": "Sipariş üzerine üretim"}, {"letter": "E", "text": "Tedarik zinciri yönetimi"}], "correct": "C", "explanation": "<b>Tam zamanında üretim (JIT)</b>, parça ve malzemeler ancak gerektiğinde geldiği için \"stoksuz üretim\" diye anılır. Kitap: JIT, parça ve materyallere gereksinim duyulana kadar bunların sağlanmadığı bir stok sistemidir; tampon stoku ortadan kaldırır."}, {"num": 128, "tag": "2023-2024 bütünleme", "text": "Bu sistemde sipariş sürekli olarak nakil hâlindedir. Bulundurulan tek stok, bir sonraki sipariş hazırlanana kadarki kullanımı karşılamak için gereken miktardır. Yukarıda ifade edilen özellik JIT sisteminin hangi temel faktörüdür?", "options": [{"letter": "A", "text": "Hücresel yerleşimler"}, {"letter": "B", "text": "Esnek kaynaklar"}, {"letter": "C", "text": "Çekme üretim sistemi"}, {"letter": "D", "text": "Küçük parti üretimi"}, {"letter": "E", "text": "Kanban üretim kontrolü"}], "correct": "E", "explanation": "Ohno, iki kutu sisteminde birinci kutuyu kaldırıp sipariş kartını (kanban) ikinci kutunun üstüne koydu: \"Bu sistemde sipariş sürekli olarak nakil halindedir. Bulundurulan tek stok bir sonraki sipariş hazırlanana kadarki kullanımı karşılamak için gereken miktardır. <b>Bu konsept kanban sisteminin temelini oluşturmaktadır.</b>\""}, {"num": 129, "tag": "2023-2024 bütünleme", "text": "Üretimdeki her bir parçanın sürekli bir akış içerisinde, istasyonlar arasında beklemeden bir istasyondan diğerine, ara stoklar biriktirmeden, sürekli olarak ilerlemesini hedefleyen yalın üretim tekniği aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sıfır hatalı iş akış tekniği"}, {"letter": "B", "text": "Tekli dakikalarda kalıp değişimi"}, {"letter": "C", "text": "Hat dengelemesi"}, {"letter": "D", "text": "Kanban"}, {"letter": "E", "text": "Tek parça akışı"}], "correct": "E", "explanation": "<b>Tek parça akışı</b> (one-piece flow): parçalar partiler hâlinde beklemeden, tek tek ve ara stok oluşmadan istasyondan istasyona akar. SMED kalıp değişim süresini, hat dengeleme istasyon iş yüklerini, kanban ise çekme sinyalini ilgilendirir."}, {"num": 130, "tag": "2024-2025 bütünleme", "text": "Bir işletmenin coğrafi olarak farklı bölgelerde bulunan fabrikalarının, depolarının ve tedarikçi firmalarının kaynaklarını eş güdümlü olarak planlaması aşağıdakilerden hangisi ile ifade edilmektedir?", "options": [{"letter": "A", "text": "Ana üretim programlama"}, {"letter": "B", "text": "Malzeme gereksinim planlaması"}, {"letter": "C", "text": "Kurumsal kaynak planlaması"}, {"letter": "D", "text": "Tedarik zinciri yönetimi"}, {"letter": "E", "text": "Üretim kaynakları planlaması"}], "correct": "C", "explanation": "Farklı yerlerdeki fabrika, depo ve tedarikçi kaynaklarının <b>tek sistemde eş güdümlü</b> planlanması <b>kurumsal kaynak planlamasıdır (ERP)</b>. Kitap: küresel şirketler ERP'den çok yarar sağlar; bir modüldeki işlem anında şirket merkezi, fabrikalar, tedarikçiler ve satış ofislerindeki modüllere yansır."}, {"num": 131, "tag": "2023-2024 bütünleme, 2025-2026 final", "text": "Yatırım yönetimi, maliyet kontrolü, hazine yönetimi, varlık yönetimi ve girişim kontrolünü kapsayan ERP modülü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Satış ve pazarlama"}, {"letter": "B", "text": "Finans ve muhasebe"}, {"letter": "C", "text": "Üretim"}, {"letter": "D", "text": "Malzeme"}, {"letter": "E", "text": "İnsan kaynakları"}], "correct": "B", "explanation": "Kitap: \"<b>Finans ve muhasebe</b> modülü; finansal muhasebe, yatırım yönetimi, maliyet kontrolü, hazine yönetimi, varlık yönetimi ve girişim kontrolünü kapsamaktadır.\""}, {"num": 132, "tag": "2023-2024 bütünleme", "text": "Dağıtım gereksinimleri, ulaşım yönetimi, teslimat programları ve ihracat kontrolleri ile faturalama, iskonto prosesleri, ürün kayıtları ve müşteri şikâyetlerini kapsayan ERP modülü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Malzeme"}, {"letter": "B", "text": "Üretim"}, {"letter": "C", "text": "Satış ve pazarlama"}, {"letter": "D", "text": "İnsan kaynakları"}, {"letter": "E", "text": "Finans ve muhasebe"}], "correct": "C", "explanation": "Bu liste kitapta <b>satış ve pazarlama</b> modülünün içindedir. \"Faturalama\" kelimesi finans çağrıştırsa da kitap faturalama, iskonto, ürün kayıtları ve müşteri şikâyetlerini satış modülünde sayar."}, {"num": 133, "tag": "2025-2026 final", "text": "Sipariş prosesi, ürün yapılandırma ve dağıtım fiyatlandırmaları gibi müşteri-odaklı faaliyetleri destekleyen ERP modülü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "İnsan kaynakları"}, {"letter": "B", "text": "Satış ve pazarlama"}, {"letter": "C", "text": "Malzeme"}, {"letter": "D", "text": "Finans ve muhasebe"}, {"letter": "E", "text": "Üretim"}], "correct": "B", "explanation": "Kitap: \"<b>Satış ve pazarlama</b> modülü; sipariş prosesi, ürün yapılandırma ve dağıtım fiyatlandırmaları gibi <b>müşteri-odaklı</b> faaliyetleri desteklemektedir.\""}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

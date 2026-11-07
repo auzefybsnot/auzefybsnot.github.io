@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nesneye Yönelik Programlama — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 2. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Nesneye Yönelik Programlama — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">2. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Nesneye Yönelik Programlama — Ders Anlatımı Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Nesneye Yönelik Programlama — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Nesneye Yönelik Programlama — Ders Anlatımı dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>58 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>2. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">58</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Nesneye_Yonelik_Programlama_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (58)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">58</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Nesneye_Yonelik_Programlama_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "C# Programlama Dilinde double türündeki bir değişkenin boyutu kaç byte’tır ?", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "8"}, {"letter": "C", "text": "16"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "2"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 2, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Yukarda verilen kod bloğu çalıştırıldığında üretilen çıktı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "17, 17, 16, 17"}, {"letter": "B", "text": "17, 18, 17, 17"}, {"letter": "C", "text": "17, 17, 17, 17"}, {"letter": "D", "text": "17, 18, 19, 18"}, {"letter": "E", "text": "17,18,16,17"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 3, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Aşağıdakilerden hangisi nesneye yönelik bir programlama dili değildir?", "options": [{"letter": "A", "text": "Objective-C"}, {"letter": "B", "text": "C++"}, {"letter": "C", "text": "C"}, {"letter": "D", "text": "Java"}, {"letter": "E", "text": "C#"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 4, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": ".Net Core geliştirme ortamında \"dotnet build\" komutu ile ilgili aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": ".Net Core’da yardım parametrelerini listeler."}, {"letter": "B", "text": ".Net Core platformu hakkında bilgi verir."}, {"letter": "C", "text": "Yeni bir proje oluştur."}, {"letter": "D", "text": "Mevcut projeyi temizler."}, {"letter": "E", "text": "Mevcut projeyi derler."}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 5, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "C# programlama dilinde verilen bir dizi hazır kütüphane kullanarak dizinin sırası tersine çevirmek istenirse Array sınıfı içerisindeki hangi metot kullanılır?", "options": [{"letter": "A", "text": "Sort"}, {"letter": "B", "text": "Reverse"}, {"letter": "C", "text": "IndexOf"}, {"letter": "D", "text": "FindAll"}, {"letter": "E", "text": "Find"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 6, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Yukarıda bir fonksiyon ve bu fonksiyon çağrısını çalıştıran ifadeler verilmiştir. Kod bloğunun tamamı çalıştırıldığında üretilen çıktı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "13"}, {"letter": "B", "text": "11"}, {"letter": "C", "text": "10"}, {"letter": "D", "text": "12"}, {"letter": "E", "text": "14"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 7, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Aşağıda verilenlerden hangisi koleksiyon türlerine örnektir?", "options": [{"letter": "A", "text": "Int"}, {"letter": "B", "text": "String"}, {"letter": "C", "text": "HashSet"}, {"letter": "D", "text": "Array"}, {"letter": "E", "text": "Class"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 8, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Yukarda verilen değişken için aşağıdaki ifadelerden hangisi doğrudur ?", "options": [{"letter": "A", "text": "Tek boyutlu bir dizidir."}, {"letter": "B", "text": "Çift boyutlu bir dizidir."}, {"letter": "C", "text": "Boyutu dinamik olarak değişebilir."}, {"letter": "D", "text": "Koleksiyon türünde bir değişkendir."}, {"letter": "E", "text": "Ondaklı değerler tutmaktadır. YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > NESNEYE YÖNELİK PROGRAMLAMA A"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 9, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Aşağıdaki verilenlerden hangisi nesneye yönelik programlamanın sağladığı faydalardan biri değildir?", "options": [{"letter": "A", "text": "Kendini tekrar etme"}, {"letter": "B", "text": "Bilgi saklama"}, {"letter": "C", "text": "Kolay hata ayıklama"}, {"letter": "D", "text": "Tekrar kullanılabilirlik"}, {"letter": "E", "text": "Modülerlik"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 10, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Yukarda verilen metot, f(9) değeri için çağrıldığında nihai sonuç değeri kaç olur?", "options": [{"letter": "A", "text": "43"}, {"letter": "B", "text": "54"}, {"letter": "C", "text": "13"}, {"letter": "D", "text": "24"}, {"letter": "E", "text": "34"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Yukarda verilen işlemler uygulandığında sonuç değeri kaç olur?", "options": [{"letter": "A", "text": "52"}, {"letter": "B", "text": "0"}, {"letter": "C", "text": "26"}, {"letter": "D", "text": "2"}, {"letter": "E", "text": "13"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 12, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "C# programlama dilinde sadece bir satır yorum satırına alınmak istenirse aşağıdakilerden hangisini kullanılır?", "options": [{"letter": "A", "text": "*/"}, {"letter": "B", "text": "\""}, {"letter": "C", "text": "/*"}, {"letter": "D", "text": "#"}, {"letter": "E", "text": "//"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 13, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "C# programlama dilinde yer alan \"Yapı (Struct) Kavramı\" için aşağıda verilen ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Nesne türetilebilir."}, {"letter": "B", "text": "Yapıcı (constructor) tanımlanabilir."}, {"letter": "C", "text": "Yıkıcı (destructor) tanımlanabilir."}, {"letter": "D", "text": "Metot tanımlanabilir."}, {"letter": "E", "text": "Değer türündedirler."}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 14, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "I – Sınıﬂar (class) referans türündedirler II – Yapılar (struct) değer türündedirler. III – Sınıf (class) ve yapı (struct) arasında bir fark yoktur. C# programlama dilinde sınıf (class) ve yapı (struct) ile ilgili yukarıda verilen ifadelerden hangisi ya da hangileri doğrudur?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "Yalnız II"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "Yalnız I"}, {"letter": "E", "text": "I,II,III"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 15, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": ".Net Core platformu için kullanılan çapraz platform (cross platform) ifadesi hangi anlama gelmektedir?", "options": [{"letter": "A", "text": "Kodlar kendi içinde çaprazlanır."}, {"letter": "B", "text": "Sadece Windows işletim sisteminde çalışır."}, {"letter": "C", "text": "Sadece macOS işletim sistmeinde çalışır."}, {"letter": "D", "text": "Linux işletim sistemini desteklemez."}, {"letter": "E", "text": "Birden fazla platformu destekler."}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 16, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "Aşağıda verilen metot tanımlarından hangisi yanlıştır?", "options": [{"letter": "A", "text": "int topla(double a, double b)"}, {"letter": "B", "text": "void topla(int a, int b)"}, {"letter": "C", "text": "int topla(ﬂoat a, ﬂoat b)"}, {"letter": "D", "text": "int +topla(int a, int b)"}, {"letter": "E", "text": "int topla(int a, int b)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 17, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "C# programlama dilinde bir sınıf tanımlamak için aşağıdaki anahtar kelimelerden hangisi kullanılır?", "options": [{"letter": "A", "text": "object"}, {"letter": "B", "text": "class"}, {"letter": "C", "text": "using"}, {"letter": "D", "text": "interface"}, {"letter": "E", "text": "namespace YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > NESNEYE YÖNELİK PROGRAMLAMA A"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 18, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "C# Programlama Dilinde bir sınıftan yeni bir nesne türetmek isteniyorsa hangi anahtar kelime kullanılır?", "options": [{"letter": "A", "text": "class"}, {"letter": "B", "text": "struct"}, {"letter": "C", "text": "start"}, {"letter": "D", "text": "new"}, {"letter": "E", "text": "static"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 19, "tag": "2023 -2024 - Vize - Nesneye Yönelik Programlama", "text": "C# programlama dilinde aşağıdaki verilen değişken tanımlarından hangisi yanlıştır?", "options": [{"letter": "A", "text": "uint yas;"}, {"letter": "B", "text": "bool isaret;"}, {"letter": "C", "text": "string soyad;"}, {"letter": "D", "text": "long 0boyut;"}, {"letter": "E", "text": "int ad; 1 B 2 C 3 C 4 E 5 B 6 A 7 C 8 B 9 A 10 E 11 A 12 E 13 C 14 A 15 D 16 E 17 D 18 B 19 D 20 D YAYINLANMIŞ DOKÜMAN 3 Test Bitti"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 20, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "C#'ta bileşim gerçekleştirmek için kullanılan yöntemler aşağıdakilerin hangisinde doğru verilmiştir ?", "options": [{"letter": "A", "text": "Arayüzler ya da çok biçimlilik ile bileşim ilişkisi oluşturulabilir."}, {"letter": "B", "text": "Yalnızca bir sınıf içerisinde, başka bir sınıfın örneğini oluşturarak bileşim ilişkisi gerçekleştirilebilir."}, {"letter": "C", "text": "Bir sınıf içerisinde, başka bir sınıfın örneğini oluşturarak ya da ara yüzleri kullanarak bileşim ilişkisi gerçekleştirilebilir."}, {"letter": "D", "text": "Yalnızca çok biçimlilik özelliği kullanılarak bileşim ilişkisi oluşturulabilir."}, {"letter": "E", "text": "Yalnızca ara yüzleri kullanılarak bileşim ilişkisi gerçekleştirilebilir."}], "correct": "C", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 21, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "Belirli bir işi yerine getirmek amacıyla bir isim altında toplanmış ve programın herhangi bir yerinden çağırılıp çalıştırılabilen kod bloklarına nesneye yönelik programlamada verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Metot"}, {"letter": "B", "text": "Fonksiyon"}, {"letter": "C", "text": "Döngü Bloğu"}, {"letter": "D", "text": "Değişken"}, {"letter": "E", "text": "if Bloğu"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 22, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "Kalıtım I.", "options": [{"letter": "A", "text": "Yalnız IV"}, {"letter": "B", "text": "I, II ve IV"}, {"letter": "C", "text": "Yalnız II"}, {"letter": "D", "text": "I ve IV"}, {"letter": "E", "text": "II ve III"}], "correct": "D", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 23, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "C# dilinde \"this\" anahtar sözcüğü aşağıdaki durumlardan hangisinde kullanılır ?", "options": [{"letter": "A", "text": "Sınıfın yıkıcı metodunu çağırmak için"}, {"letter": "B", "text": "Sınıfın tüm statik üyelerine erişmek için"}, {"letter": "C", "text": "Sınıfın soyut metotlarına erişmek için"}, {"letter": "D", "text": "Aynı isimde yerel ve sınıf değişkenleri olduğunda sınıf değişkenine erişmek için"}, {"letter": "E", "text": "Başka bir sınıfın üyelerine erişmek için CEVAPLI C#'ta \"this\" anahtar sözcüğü hangi durumlarda kullanılabilir? Sadece ana sınıflarda kullanılabilir, türetilmiş sınıflarda kullanılamaz Yapıcı metotlar ve özel metotlar içinde Yalnızca static metotlar içinde Sadece sınıf içindeki yapıcı metotlar içinde Tüm sınıf üyeleri içinde Metot Aşırı Yükleme II. Operatör Aşırı Yükleme III. Sanal Metotlar IV. Yukarıdakilerden hangisini veya hangilerini kullanarak çalışma zamanı çok biçimliliğine örnek teşkil edebilecek bir yapı oluşturulabilir? Aşağıdaki hangi operatörün aşırı yüklenmesinde, zıt anlamlı operatör ile her ikisinin de aynı anda yüklenmiş olması zorunluluğu yoktur? NESNEYE YÖNELİK PROGRAMLAMA A P355875.G14309 13-01-2026 16:34:25"}], "correct": "D", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 24, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme, NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "Bir sınıf birden fazla arayüzü uygulayarak Nesneye Yönelik Programlamanın aşağıdaki hangi özelliğinin yerine geçebilir?", "options": [{"letter": "A", "text": "Sarmalama"}, {"letter": "B", "text": "Çok Biçimlilik"}, {"letter": "C", "text": "Kapsülleme"}, {"letter": "D", "text": "Soyutlama"}, {"letter": "E", "text": "Çoklu Kalıtım"}], "correct": "E", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 25, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "Nesneye yönelik programlamada, karmaşıklığı gizleyerek programlama sürecini daha anlaşılır ve yönetilebilir hale getiren kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Soyutlama (Abstraction)"}, {"letter": "B", "text": "Çok Biçimlilik (Polymorphism)"}, {"letter": "C", "text": "Kapsülleme (Encapsulation)"}, {"letter": "D", "text": "Kalıtım (Inheritance)"}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 26, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "Yukarıdaki kod parçası çalıştırıldığında ekran çıktısı aşağıdakilerden hangisi olur?", "options": [{"letter": "A", "text": "x = 6 y = 11 z = 16 w = 20 f = 4,8"}, {"letter": "B", "text": "x = 6 y = 10 z = 17 w = 20 f = 4,8"}, {"letter": "C", "text": "x = 6 y = 9 z = 17 w = 21 f = 5,8"}, {"letter": "D", "text": "x = 5 y = 10 z = 18 w = 20 f = 4,8"}, {"letter": "E", "text": "x = 6 y = 10 z = 17 w = 20 f = 3,8"}], "correct": "B", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek B'dir."}, {"num": 27, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme, NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "C#'da bir sınıfın çoklu kalıtım yöntemi ile özelliklerini miras alabileceği maksimum üst sınıf sayısı kaçtır?", "options": [{"letter": "A", "text": "Sonsuz"}, {"letter": "B", "text": "4"}, {"letter": "C", "text": "1"}, {"letter": "D", "text": "12"}, {"letter": "E", "text": "2"}], "correct": "C", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 28, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme, NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "Diğer sınıflar için bir temel oluşturan ve abstract anahtar sözcüğü ile işaretlenmiş üye yöntemleri, özellikleri veya olayları içeren sınıflara verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Türetilmiş Sınıf"}, {"letter": "B", "text": "Üst Sınıf"}, {"letter": "C", "text": "Soyut Sınıf"}, {"letter": "D", "text": "Ana Sınıf"}, {"letter": "E", "text": "Temel Sınıf"}], "correct": "C", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 29, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "Yukarıdaki C# kodu çalıştırıldığında çıktısı ne olacaktır?", "options": [{"letter": "A", "text": "Canlı nefes alıyor. İnsan nefes alıyor."}, {"letter": "B", "text": "Hata: Virtual metod base sınıfta bulunmuyor."}, {"letter": "C", "text": "Hata: Canli sınıfı override edilmediği için çalıştırılamaz."}, {"letter": "D", "text": "Canlı nefes alıyor."}, {"letter": "E", "text": "İnsan nefes alıyor. CEVAPLI Aşağıdakilerden hangisi bir yazılımın kalitesini oluşturan unsurlardan biri değildir? using System; class Canli { public virtual void NefesAl() { Console.WriteLine(\"Canlı nefes alıyor.\"); } } class Insan : Canli { public override void NefesAl() { Console.WriteLine(\"İnsan nefes alıyor.\"); } } class Program { static void Main() { Canli c = new Insan(); c.NefesAl(); } } NESNEYE YÖNELİK PROGRAMLAMA A P355875.G14309 13-01-2026 16:34:25"}], "correct": "E", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 30, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "Yorumlayıcı mantığına benzer şekilde kodun belli bir bölümünü makine koduna çevirip çalıştıran, diğer satırları ise daha sonra makine koduna dönüştüren JIT yapısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Normal JIT"}, {"letter": "B", "text": "Eco-JIT"}, {"letter": "C", "text": "Pre-JIT"}, {"letter": "D", "text": "General JIT"}, {"letter": "E", "text": "Pro-JIT"}], "correct": "B", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek B'dir."}, {"num": 31, "tag": "Nesneye Yönelik Prog 2025-2026 Bütünleme", "text": "Yukarıdaki kod parçası hakkında aşağıdaki seçeneklerde verilen açıklamalardan hangisi doğrudur?", "options": [{"letter": "A", "text": "Ucak, Jet sınıfından yaratılmış bir nesnedir."}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek B'dir."}, {"num": 32, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "C# programlama dilinde aşağıda verilen ifadelerden hangisi döngü işlemi gerçekleştirmek için kullanılmaz?", "options": [{"letter": "A", "text": "switch"}, {"letter": "B", "text": "while"}, {"letter": "C", "text": "foreach"}, {"letter": "D", "text": "do while"}, {"letter": "E", "text": "for"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 33, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Bir sınıf birden fazla arabirim kullanmak isterse, arabirimlerin ayrımında kullanılan ayraç hangisi olmalıdır?", "options": [{"letter": "A", "text": "; (noktalı virgül)"}, {"letter": "B", "text": ", (virgül)"}, {"letter": "C", "text": ". (nokta)"}, {"letter": "D", "text": "# (diyez)"}, {"letter": "E", "text": ":: (iki nokta)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 34, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Bir nesnenin önceki durumunun kaydedilmesine ve geri yüklenmesine olanak sağlayan davranışsal tasarım deseni aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yineleyici (Iterator)"}, {"letter": "B", "text": "Komut (Command)"}, {"letter": "C", "text": "Sorumluluklar Zinciri (Chain of Responsibility)"}, {"letter": "D", "text": "Arabulucu (Mediator)"}, {"letter": "E", "text": "Hatırlayıcı (Memento)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 35, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Yukarıda bir faaliyet diyagramında kullanılan görsel nesne verilmiştir. Bu görsel nesnenin fonksiyonu aşağıdakilerden hangisinde verilmiştir?", "options": [{"letter": "A", "text": "Faaliyet diyagramının başlangıç noktasını belirtir."}, {"letter": "B", "text": "Faaliyet akışı esnasında karar ve ayrışma mekanizmasını belirtir."}, {"letter": "C", "text": "Faaliyetin ismini belirtir."}, {"letter": "D", "text": "Faaliyet diyagramının bitiş noktasını belirtir."}, {"letter": "E", "text": "Faaliyetin tamamlandığını belirtir."}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 36, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "\"..... , farklı arabirimlere sahip nesnelerin iş birliği yapmasına izin veren yapısal bir tasarım modelidir.\" ifadesinde boş bırakılan yere aşağıdakilerden hangisi gelmelidir?", "options": [{"letter": "A", "text": "Fabrika (Factory)"}, {"letter": "B", "text": "Arabirim (Interface)"}, {"letter": "C", "text": "Cephe (Facade)"}, {"letter": "D", "text": "Vekil (Proxy)"}, {"letter": "E", "text": "Adaptör (Adapter)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 37, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Karmaşık sistemlerde ortaya çıkan ve genellikle birden fazla fabrika desenine ihtiyaç duyduğumuz durumlarda başvurduğumuz tasarım deseni hangisidir?", "options": [{"letter": "A", "text": "Vekil (broxy)"}, {"letter": "B", "text": "Yapıcı (Builder)"}, {"letter": "C", "text": "Soyut fabrika (abstract factory)"}, {"letter": "D", "text": "Tekil (singleton)"}, {"letter": "E", "text": "Fabrika (factory)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 38, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "C# Programlama Dili için yukarıda tanımı verilen kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yapı"}, {"letter": "B", "text": "Sınıf"}, {"letter": "C", "text": "Nesne"}, {"letter": "D", "text": "Çok Biçimlilik"}, {"letter": "E", "text": "Arabirim"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 39, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "“Bir temel sınıftan türetilen sınıﬂar, temel sınıﬂarın yerine geçebilmelidir.” Yukarıda açıklaması verilen SOLID tasarım prensibi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kaynak Kod Yönetim Prensibi"}, {"letter": "B", "text": "Tek Sorumluluk Prensibi (Single Responsibility Principle)"}, {"letter": "C", "text": "Açık/Kapalı Prensibi (Open/Close Principle)"}, {"letter": "D", "text": "Arabirim Ayırma Prensibi (Interface Segregation Principle)"}, {"letter": "E", "text": "Liskov İkame Prensibi (Liskov Substitution Principle)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 40, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "I- Vekil (Proxy) II- Adaptör (Adapter) III-Tekil (Singleton) Yukarıda verilenlerden hangisi ya da hangileri yapısal tasarım desenidir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "II ve III"}, {"letter": "C", "text": "I ve III"}, {"letter": "D", "text": "Yalnız II"}, {"letter": "E", "text": "Yalnız I YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > NESNEYE YÖNELİK PROGRAMLAMA B"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 41, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Sınıﬂarın davranışlarını, sınıﬂarı değiştirmeden genişletebilmemizi sağlayan tasarım prensibi hangisidir?", "options": [{"letter": "A", "text": "Tek Sorumluluk Prensibi (Single Responsibility Principle)"}, {"letter": "B", "text": "Bağımlılığı Tersine Çevirme Prensibi (Dependency Inversion Principle)"}, {"letter": "C", "text": "Liskov İkame Prensibi (Liskov Substitution Principle)"}, {"letter": "D", "text": "Açık/Kapalı Prensibi (Open/Close Principle)"}, {"letter": "E", "text": "Arabirim Ayırma Prensibi (Interface Segregation Principle)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 42, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Aşağıda verilen tanımlardan hangisi string türünde tek boyutlu bir dizi tanımıdır?", "options": [{"letter": "A", "text": "var dizi = new int[5];"}, {"letter": "B", "text": "string[] dizi = new string[5];"}, {"letter": "C", "text": "int[ , ] dizi = {{2, 3}, {4, 5}};"}, {"letter": "D", "text": "string[,] dizi = new string[5,5];"}, {"letter": "E", "text": "int[ , , ] dizi = { {{1}, {2}},{{1}, {2}}, {{1}, {2}}};"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 43, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "C# programlama dilinde aşağıdaki verilen veri türlerinden hangisi referans türündedir?", "options": [{"letter": "A", "text": "string"}, {"letter": "B", "text": "int"}, {"letter": "C", "text": "long"}, {"letter": "D", "text": "short"}, {"letter": "E", "text": "double"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 44, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "C# Programlama Dilinde kontrollü bir bağlamda ifade çalıştırmak istiyorsak hangi anahtar kelimeyi kullanırız?", "options": [{"letter": "A", "text": "class"}, {"letter": "B", "text": "checked"}, {"letter": "C", "text": "for"}, {"letter": "D", "text": "interface"}, {"letter": "E", "text": "struct"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 45, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "C# dilinde sıfıra bölme işlemi sırasında oluşan hata aşağıdakilerden hangisinde verilmiştir?", "options": [{"letter": "A", "text": "DivideByZeroException"}, {"letter": "B", "text": "StackOverﬂowException"}, {"letter": "C", "text": "EntryPointNotFoundException"}, {"letter": "D", "text": "EndOfStreamException"}, {"letter": "E", "text": "ApplicationException"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Aşağıda verilenlerden hangisi C# programlama dili için yazılmış olan Ogrenci sınıfına ait geçerli bir yıkıcı tanımıdır?", "options": [{"letter": "A", "text": "*Ogrenci(){}"}, {"letter": "B", "text": "+Ogrenci(){}"}, {"letter": "C", "text": "~Ogrenci(){}"}, {"letter": "D", "text": "Ogrenci() {}"}, {"letter": "E", "text": "=Ogrenci(){}"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 47, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Aşağıda verilen Tasarım Desenlerinden hangisi Oluşturucu (Creation) sınıfına ait değildir?", "options": [{"letter": "A", "text": "Soyut Fabrika (Abstract Factory)"}, {"letter": "B", "text": "Yapıcı (Builder)"}, {"letter": "C", "text": "Fabrika (Factory)"}, {"letter": "D", "text": "Vekil (Proxy)"}, {"letter": "E", "text": "Tekil (Singleton)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 48, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Yukarda verilen örnek metot tanımı için aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Dönüş değeri double türündedir."}, {"letter": "B", "text": "i opsiyonel bir parametredir."}, {"letter": "C", "text": "b zorunlu bir parametredir."}, {"letter": "D", "text": "i zorunlu bir parametredir."}, {"letter": "E", "text": "a zorunlu bir parametredir."}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 49, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Aşağıda verilen tasarım desenlerinden hangisi Davranışsal Tasarım deseni grubuna aittir?", "options": [{"letter": "A", "text": "Fabrika (Factory)"}, {"letter": "B", "text": "Cephe (Facade)"}, {"letter": "C", "text": "Arabirim (Interface)"}, {"letter": "D", "text": "Komut (Command)"}, {"letter": "E", "text": "Vekil (Proxy)"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 50, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "C# programalma dili için verilen erişim denetleyicilerinin türetilmiş bir sınıfta erişim ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "private olan üyeler sadece kendi sınıfından erişilir."}, {"letter": "B", "text": "protected olan üyeler kendisi ve sadece türetilen sınıﬂarda erişilir."}, {"letter": "C", "text": "private olan üyeler her yerden erişilir."}, {"letter": "D", "text": "public olan üyeler kendisi ve türetilmiş sınıﬂarda ve türetilmiş sınıﬂarın public arayüzleriden erişilebilir."}, {"letter": "E", "text": "Özellikler ve metotlar public olan tanımlanabilir. YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > NESNEYE YÖNELİK PROGRAMLAMA B"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 51, "tag": "Nesneye Yönelik Programlama Bütünleme 2023-2024", "text": "Aşağıda verilenlerden hangisi Birleşik Modelleme Dili (UML) standardına ait bir diyagram türü değildir?", "options": [{"letter": "A", "text": "Sıra Diyagramı"}, {"letter": "B", "text": "Kullanım Senaryosu Diyagramı"}, {"letter": "C", "text": "Statik Kod Analiz Diyagramı"}, {"letter": "D", "text": "Faaliyet Diyagramı"}, {"letter": "E", "text": "Bileşen Diyagramı 1 A 2 B 3 E 4 B 5 E 6 C 7 E 8 E 9 A 10 D 11 B 12 A 13 B 14 A 15 C 16 D 17 D 18 D 19 C 20 C YAYINLANMIŞ DOKÜMAN 3 Test Bitti"}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 52, "tag": "NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "Aşağıdakilerden hangisi \"private\" olarak tanımlanan bir sınıf üyesine erişimin nasıl sağlandığını açıklar?", "options": [{"letter": "A", "text": "Yalnızca diğer sınıflardan erişilebilir."}, {"letter": "B", "text": "Erişim belirteci kullanmadan doğrudan erişilir."}, {"letter": "C", "text": "Herhangi bir yerden erişilebilir, erişim belirteci fark etmez."}, {"letter": "D", "text": "Sadece aynı sınıf içinden erişilebilir."}, {"letter": "E", "text": "Sadece alt sınıf içinden erişilebilir."}], "correct": "D", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 53, "tag": "NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "Aşağıdakilerden hangisi bir yazılımın kullanıcı gözüyle kaliteli olduğunu gösteren kriterlerden biri değildir?", "options": [{"letter": "A", "text": "Yazılım, sistem kaynaklarını gerektiği ölçüde kullanmalıdır."}, {"letter": "B", "text": "Yazılım mümkün olduğunca az hata ile istenen sonucu gerektiği hızda sunabilmelidir."}, {"letter": "C", "text": "Yazılımın modülleri yeni projelerde tekrar kullanılabilmelidir."}, {"letter": "D", "text": "Yazılım kullanılabilir olmalıdır."}, {"letter": "E", "text": "Yazılım hem stabil çalışmalı hem de içerisindeki verilerin güvenliğini sağlayabilmelidir."}], "correct": "C", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 54, "tag": "NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "C# dilinde operatör aşırı yükleme ile ilgili aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bir operatör aşırı yüklendiğinde, operatörün işlevselliği belirli bir sınıfın özel gereksinimlerine uyacak şekilde özelleştirilebilir."}, {"letter": "B", "text": "Bir operatör yalnızca bir sınıfın içerisinde değil, aynı zamanda bir metodun içinde de aşırı yüklenebilir."}, {"letter": "C", "text": "Operatör aşırı yükleme, yalnızca yerleşik (built-in) veri tipleri üzerinde çalışabilir ve kullanıcı tanımlı veri tiplerine uygulanamaz."}, {"letter": "D", "text": "Operatör aşırı yükleme, yalnızca matematiksel operatörlerle sınırlıdır ve diğer operatör türlerini kapsamaz."}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek A'dir."}, {"num": 55, "tag": "NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "C#'ta soyutlamayı oluşturan iki ana bileşen aşağıdaki seçeneklerin hangisinde doğru verilmiştir?", "options": [{"letter": "A", "text": "Soyut Sınıflar - Kalıtım"}, {"letter": "B", "text": "Arayüzler - Kalıtım"}, {"letter": "C", "text": "Soyut Sınıflar - Modelleme"}, {"letter": "D", "text": "Soyut Sınıflar - Arayüzler"}, {"letter": "E", "text": "Arayüzler - Modelleme"}], "correct": "D", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek D'dir."}, {"num": 56, "tag": "NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "Aşağıdakilerden hangisi değerlerin kendileri yerine bellekteki konumlarına işaret eden veri türlerine bir örnek olabilir?", "options": [{"letter": "A", "text": "float"}, {"letter": "B", "text": "int"}, {"letter": "C", "text": "string"}, {"letter": "D", "text": "byte"}, {"letter": "E", "text": "bool"}], "correct": "C", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek C'dir."}, {"num": 57, "tag": "NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": "Özellik ve metotlarının başka sınıflar tarafından miras alınması engellenmiş sınıflara verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Mükemmel Sınıf"}, {"letter": "B", "text": "Sarmalama"}, {"letter": "C", "text": "Yok Sayılan Sınıf"}, {"letter": "D", "text": "Kapsülleme"}, {"letter": "E", "text": "Mühürlü Sınıf"}], "correct": "E", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek E'dir."}, {"num": 58, "tag": "NESNEYE YÖNELİK PROGRAMLAMA 2025-2026 FİNAL", "text": ".NET destekli dillerde ilgili tiplerin, sınıfların, yapıların, arayüzlerin ve diğer öğelerin gruplandığı konteyner yapıya verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Assembly"}, {"letter": "B", "text": "Domain Name"}, {"letter": "C", "text": "Common Type System"}, {"letter": "D", "text": "Application Domain"}, {"letter": "E", "text": "Namespace"}], "correct": "E", "explanation": "AUZEF Nesneye Yonelik Programlama müfredatı uyarınca doğru seçenek E'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

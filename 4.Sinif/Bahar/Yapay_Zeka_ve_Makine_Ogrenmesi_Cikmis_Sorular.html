@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka ve Makine Öğrenmesi (AYBS8012) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 4. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Yapay Zeka ve Makine Öğrenmesi (AYBS8012) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">4. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Yapay Zeka ve Makine Öğrenmesi (AYBS8012) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Yapay Zeka ve Makine Öğrenmesi (AYBS8012) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Yapay Zeka ve Makine Öğrenmesi (AYBS8012) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>56 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>4. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">56</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Yapay_Zeka_ve_Makine_Ogrenmesi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (56)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">56</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Yapay_Zeka_ve_Makine_Ogrenmesi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Aşağıdakilerden hangisi bias nöronunun yapay sinir ağlarında üstlendiği işlevlerden biridir?", "options": [{"letter": "A", "text": "Nöronun çıktısını sabitlemek."}, {"letter": "B", "text": "Tüm ağırlıkları sıfırlayarak eğitimi kolaylaştırmak."}, {"letter": "C", "text": "Aktivasyon fonksiyonunu devre dışı bırakmak."}, {"letter": "D", "text": "Nöronlar arası bağlantıyı ortadan kaldırmak."}, {"letter": "E", "text": "Bir nöron çıktısının bir tür esneklikle ayarlanmasını sağlamak ve modelin öğrenme kapasitesini artırmasına yardımcı olmak."}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 2, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Aşağıdakilerden hangisi karar ağacında yaprak (leaf) düğümün doğru bir tanımıdır?", "options": [{"letter": "A", "text": "Kök düğüm ile yaprak düğüm arasındaki bağlantıyı sağlayan yoldur."}, {"letter": "B", "text": "Ağacın en üstünde yer alan ve tüm karar sürecini başlatan düğümdür."}, {"letter": "C", "text": "Sınıflandırma ya da regresyon sonucunu temsil eden ve alt düğümü olmayan son düğümdür."}, {"letter": "D", "text": "Veri setini, bir niteliğe göre bölen ve en az bir alt düğüme sahip olan düğümdür."}, {"letter": "E", "text": "Veri setindeki belirli bir özelliğe göre testlerin yapıldığı düğümdür."}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 3, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Yukarıda verilen bilgilere göre bu niteliğin belirsizliğini ölçmek için kullanılan Entropi değeri nasıl hesaplanır?", "options": [{"letter": "A", "text": "2 5 log2 2 5 −3 5 log2 3 5"}, {"letter": "B", "text": "2 5 log2 2 5 * 3 5 log2 3 5"}, {"letter": "C", "text": "3 5 log2 3 5 −2 5 log2 2 5"}, {"letter": "D", "text": "2 5 log10 2 5 + 3 5 log10 3 5"}, {"letter": "E", "text": "−2 5 log2 2 5 −3 5 log2 3 5 CEVAPLI Bir nitelikte yer alan eksik verinin tamamlanması amacıyla aşağıdaki hangi Python fonksiyonu kullanılabilir? Bir perakende şirketi, müşterileri harcama alışkanlıklarına göre sınıflandırmak için yukarıdaki Python kodunu kullanarak bir k­En Yakın Komşu (k­NN) modeli oluşturmuştur. Kodda kullanılan n_neighbors=5 ve metric=\"euclidean\" parametrelerini aşağıdaki açıklamalardan hangisi en doğru biçimde ifade eder? Model yalnızca sayısal verilerle çalışabilir ve k değeri dinamik olarak belirlenir. Model, sınıfı bilinmeyen bir müşteri için yalnızca en uzak 5 komşuya bakar. Model, eğitimde kullanılan 5 gözlemi rastgele seçerek sınıfı tahmin eder. Model, test verisindeki bir müşteriye en yakın 5 komşunun Öklid uzaklığına göre sınıf tahmini yapar. Model, 5 farklı sınıf arasında tahmin yapabilir ve Manhattan uzaklığını temel alır. Aşağıda \"Satın Alma Durumu\" niteliğine ait sınıf dağılımı verilmiştir: from sklearn.neighbors import KNeighborsClassifier knn_modeli = KNeighborsClassifier(n_neighbors=5, metric=\"euclidean\") knn_modeli.fit(X_egitim, y_musteriSinifi) Satın Alma Durumu Evet Evet Hayır Hayır Hayır MAKİNE ÖĞRENMESİ B P355543.G12260 20-06-2025 11:57:33"}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 4, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Aşağıdaki ifadelerden hangisi derin öğrenme (deep learning) kavramının temel özelliklerinden biri değildir?", "options": [{"letter": "A", "text": "Derin öğrenme temsili öğrenmeye olanak tanır."}, {"letter": "B", "text": "Derin öğrenme modellerinde veriler katmanlı yapılar aracılığıyla temsil edilir."}, {"letter": "C", "text": "Derin öğrenme, bilgisayarların deneyimlerden öğrenmesini sağlar."}, {"letter": "D", "text": "Derin öğrenme modelleri, yalnızca az sayıda katmandan oluşur."}, {"letter": "E", "text": "Derin öğrenme, karmaşık kavramları daha basit olanlardan oluşturarak öğrenir."}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 5, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Bir sınıflandırma problemi için k-En Yakın Komşu (k-NN) algoritması kullanılmıştır. Test örneğinin sınıf etiketi bilinmemektedir. Aşağıda bu test örneğine en yakın k = 5 komşunun sınıf etiketleri verilmiştir: Komşu 1: A Komşu 2: B Komşu 3: A Komşu 4: C Komşu 5: A Çoğunluk oylaması (", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": "Sınıf A'ya atanır."}, {"letter": "C", "text": "Sınıf C'ye atanır."}, {"letter": "D", "text": ""}, {"letter": "E", "text": "Sınıf B'ye atanır."}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 6, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Bir araştırmacı, bir sınıflandırma modelini değerlendirmek istemektedir. Bu nedenle her katlamada sınıf dağılımını koruyacak şekilde 5 katlı bir çapraz geçerleme yapmak istemektedir. Buna göre, aşağıdaki Python kod bloklarından hangisi bu işlemin doğru bir şekilde gerçekleştirilmesini sağlar?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 7, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Aşağıdakilerden hangisi bir sınıflandırma modelinin test performansını değerlendirmek için kullanılamaz?", "options": [{"letter": "A", "text": "Kesinlik"}, {"letter": "B", "text": "Silhouette katsayısı"}, {"letter": "C", "text": "Doğruluk"}, {"letter": "D", "text": "Duyarlılık"}, {"letter": "E", "text": "Hata oranı from sklearn.model_selection import cross_val_score scores = cross_val_score(model=0.5, X, y) from sklearn.model_selection import ShuffleSplit ss = ShuffleSplit(n_splits=5, test_size=0.5) from sklearn.model_selection import StratifiedKFold skf = StratifiedKFold(n_splits=5, shuffle=True) CEVAPLI Bir hastanede, tespit edilen kitlelerin iyi huylu veya kötü huylu olma durumları, Naive Bayes algoritması kullanılarak sınıflandırılmıştır. Buna göre, hem modelin tahmini (predicted) hem de gerçek sınıfı (true) \"kötü huylu\" (kotu) olan örneklerin sayısı kaçtır? Aşağıdakilerden hangisi Naive Bayes sınıflandırma algoritmasının temel varsayımlarından biridir? from sklearn.model_selection import KFold kf = KFold(n_splits=10, shuffle=True) from sklearn.model_selection import train_test_split X_train, X_test = train_test_split(X, test_size=0.5) MAKİNE ÖĞRENMESİ B P355543.G12260 20-06-2025 11:57:33"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 8, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Bir doğrusal regresyon modelinin başarısının değerlendirilmesinde modelin veriyi ne kadar iyi açıkladığı dikkate alınmaktadır. Bu amaçla sıklıkla kullanılan ölçülerden biri ... değeridir. Bu ölçü, regresyon modeli tarafından açıklanan toplam değişkenliğin oranı ile tanımlanmaktadır. Yukarıda ... ile verilen boşluğa aşağıdaki seçeneklerden hangisi getirilebilir?", "options": [{"letter": "A", "text": "Silhouette"}, {"letter": "B", "text": "R2"}, {"letter": "C", "text": "Doğruluk"}, {"letter": "D", "text": "𝛽 katsayısı"}, {"letter": "E", "text": "RMSE"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 9, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Aşağıdakilerden hangisi yapay sinir ağları ile kullanılan drop­out tekniğinin bir özelliğidir?", "options": [{"letter": "A", "text": "Eğitim sırasında bazı nöronların geçici olarak devre dışı bırakılmasını sağlar."}, {"letter": "B", "text": "Tüm nöronların her eğitim adımında aktif olmasını sağlar."}, {"letter": "C", "text": "Test verilerine göre ağı her seferinde yeniden eğitir."}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 10, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "agirlik (kg cinsinden) (", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Aşağıdakilerden hangisi Python programlama dilinde veri görselleştirme üzerine özelleşmiş kütüphanelerden biridir?", "options": [{"letter": "A", "text": "Scikit-learn"}, {"letter": "B", "text": "Keras"}, {"letter": "C", "text": "Matplotlib"}, {"letter": "D", "text": "Tensorflow"}, {"letter": "E", "text": "NumPy CEVAPLI Eğitim verilerini daha büyük hale getirir. Ağırlıkların her zaman sabit kalmasını sağlar. Aşağıdaki problemlerden hangisi pekiştirmeli öğrenme (reinforcement learning) stratejisine örnek olarak gösterilebilir? Otonom bir aracın trafik ışıklarına ve yol koşullarına göre doğru zamanda durması veya ilerlemesi. Bir web sitesine gelen ziyaretçilerin etkileşim düzeyine göre kullanıcı segmentlerine ayrılması. Emlak verilerine dayanarak bir dairenin piyasa fiyatının tahmin edilmesi. Bir müşterinin kredi puanı ve gelir düzeyine göre kredi başvurusunun onaylanıp onaylanmayacağının tahmin edilmesi. Müşteri yorumlarının pozitif, negatif veya nötr olarak sınıflandırılması. Bir otomobil üreticisi, araçların yakıt tüketimini (litre/100km) tahmin etmek amacıyla çoklu doğrusal regresyon modeli kurmuştur. Sabit değer için elde edilen beta katsayısı şu şekildedir:𝛽0 = 2.5 Bağımlı değişken yakıt tüketimi (tüketim) olup, bağımsız değişkenler ve bu değişkenler için elde edilen beta katsayıları şöyledir: motorHacmi (litre cinsinden) (𝛽1 = 1.2) 𝛽2 = 0.003) silindirSayisi (adet) (𝛽3 = 0.8) Verilen katsayılar doğrultusunda aşağıdaki seçeneklerden hangisi bu modelin doğru regresyon denklemidir? tuketim = 2.5 + 1.2 × motorHacmi + 0.003 × agirlik + 0.8 × silindirSayisi silindirSayisi = 2.5 + 0.8 × motorHacmi + 1.2 × agirlik + 0.003 × tuketim tuketim = 2.5 × 1.2 + motorHacmi × 0.003 + agirlik * 0.8 + silindirSayisi tuketim = 2.5 + 1.2 × motorHacmi + 0.8 × agirlik + 0.003 × silindirSayisi tuketim = 2.5 * 0.003 + motorHacmi * 1.2 + agirlik * 0.8 + silindirSayisi Aşağıdakilerden hangisi k­En Yakın Komşu (k­NN) algoritması ile sınıflandırma işlemi gerçekleştirilirken izlenen temel adımlardan biri değildir? Sınıf etiketi bilinmeyen örnek ile tüm eğitim verisi arasındaki uzaklıklar hesaplanır. Komşular arasında en fazla tekrar eden sınıf etiketi tahmin olarak atanır. Uzaklık hesaplamasında Öklid, Manhattan gibi çeşitli fonksiyonlar kullanılabilir. MAKİNE ÖĞRENMESİ B P355543.G12260 20-06-2025 11:57:33"}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 12, "tag": "MAKİNE ÖĞRENMESİ 2024-2025 BÜTÜNLEME", "text": "Danışmansız öğrenme kapsamında yapılan kümeleme analizleriyle ilgili aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Kümeleme analizleri, yalnızca kategorik veri içeren veri setlerine uygulanabilir."}, {"letter": "B", "text": "Kümeleme algoritmaları, yalnızca danışmanlı öğrenme (supervised learning) algoritmalarından biridir."}, {"letter": "C", "text": "Kümeleme algoritmaları, veri noktalarını benzerlik ve uzaklıklarına göre gruplandırmak amacıyla kullanılır."}, {"letter": "D", "text": "Kümeleme analizlerinde sınıf etiketleri (hedef nitelik) mutlaka kullanılmalıdır."}, {"letter": "E", "text": "Kümeleme analizleri, yalnızca görselleştirme amacıyla kullanılır ve analiz sonuçları veri madenciliğinde kullanılmaz. CEVAPLI"}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 13, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Aşağıdaki tabloda bazı hastalara ait Ateş durumu ve Teşhis bilgileri verilmiştir. Yukarıdaki tabloya göre; Zatürre olduğu bilinen bir hastanın ateşinin var olma (koşullu) olasılığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "3/4"}, {"letter": "B", "text": "1/3"}, {"letter": "C", "text": "2/3"}, {"letter": "D", "text": "1/2"}, {"letter": "E", "text": "4/6"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 14, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Yukarıda verilen Python kodunda bir veri seti eğitim ve test veri setlerine ayrılmaktadır. Buna göre veri setinin eğitim ve test oranı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "%80 eğitim – %20 test"}, {"letter": "B", "text": "%50 eğitim – %50 test"}, {"letter": "C", "text": "%70 eğitim – %30 test"}, {"letter": "D", "text": "%25 eğitim – %75 test"}, {"letter": "E", "text": "%75 eğitim – %25 test Ateş Teşhis Var Zatürre Yok Zatürre Var Zatürre Var Soğuk Algınlığı Yok Soğuk Algınlığı Var Zatürre CEVAPLI Bir doğrusal regresyon analizi sonucunda aşağıdaki model özeti elde edilmiştir: Bağımlı değişken: evFiyati Bağımsız değişken: metrekare R² = 1.000 Adj. R² = 1.000 Intercept (Sabit terim) katsayısı = -100 (p < 0.001) metrekare değişkeni katsayısı = 5 (p < 0.001) Buna göre aşağıdaki ifadelerden hangisi doğrudur? metrekare değişkeni istatistiksel olarak anlamsızdır. Metrekare 1 birim arttığında ev fiyatı ortalama 5 birim azalır. Modelin açıklama gücü düşüktür. Regresyon denklemi y = −100 − 5x şeklindedir. Regresyon denklemi y = −100 + 5x şeklindedir. Aşağıdakilerden hangisi k­En Yakın Komşu (k­NN) algoritması ile ilgili yanlış bir ifadedir? Hem sınıflandırma hem de boyut indirgeme problemlerinin çözümünde kullanılabilmektedir. k-NN algoritmasında sınıf tahmini çoğunluk oylaması ile yapılabilir. k-NN danışmanlı öğrenme algoritmaları arasında yer alır. k-NN algoritmasında sınıf tahmini ağırlıklı oylama ile yapılabilir. k-NN algoritması bir tembel öğrenme algoritması olarak da bilinmektedir. X_egitim, X_test, y_egitim, y_test = train_test_split( X, y, test_size=0.25, random_state=123 ) MAKİNE ÖĞRENMESİ A P355875.G20436 04-06-2026 16:44:09"}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 15, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Regresyon analizinde genel olarak, veriye iyi uyum sağlayan modeller için ........ değeri 1’e yakındır; modelin açıklama gücü zayıfsa bu değer sıfıra yakındır. Yukarıdaki boşluğa aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "R2 değeri"}, {"letter": "B", "text": "p-değeri"}, {"letter": "C", "text": "Ortalama mutlak hata (MAE)"}, {"letter": "D", "text": "Standart hata"}, {"letter": "E", "text": "Varyans"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 16, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Bir banka, müşterilerinin kredi geri ödeme durumunu tahmin etmek amacıyla bir makine öğrenmesi modeli geliştirilmiştir. Bu süreçte 10000 müşteriye ait geçmiş kredi ve finansal işlem verileri toplanmıştır. k-en yakın komşu algoritması veriye uygulanarak model performansı doğruluk (accuracy) ve kesinlik (precision) ile değerlendirilmiştir. Analizler Python programlama dili kullanılarak gerçekleştirilmiştir. Buna göre aşağıdakilerden hangisi makine öğrenmesi için dikkate alınan temel unsurlar arasında yer almaz?", "options": [{"letter": "A", "text": "Model performansının değerlendirilmesi"}, {"letter": "B", "text": "Kullanılan öğrenme algoritması"}, {"letter": "C", "text": "Modelin çözmesi beklenen görev"}, {"letter": "D", "text": "Analizde tercih edilen programlama dili"}, {"letter": "E", "text": "Öğrenmeyi sağlayan veri (deneyim) CEVAPLI Hastalardaki kitle mevcudiyetinin Naive Bayes algoritması kullanılarak \"var\" veya \"yok\" olarak sınıflandırılması amaçlanmıştır. Yukarıdaki grafiğe göre, gerçekte kitle bulunan ancak model tarafından “kitle yok” şeklinde sınıflandırılan örnek sayısı kaçtır? Bir yapay sinir ağı nöronunda net girdi değeri aşağıdaki gibi hesaplanmıştır: net = -2 Bu nöronda aktivasyon fonksiyonu olarak ReLU (Rectified Linear Unit) kullanılmaktadır. Buna göre nöronun çıktı değeri aşağıdakilerden hangisidir? MAKİNE ÖĞRENMESİ A P355875.G20436 04-06-2026 16:44:09"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 17, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Yukarıda verilen kutu grafiği (boxplot), bir sınıfa ait sınav puanlarının dağılımını göstermektedir. Buna göre aşağıdaki ifadelerden hangisi bu grafikten", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 18, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Naive Bayes algoritması kullanılarak egzersizSuresi = Yüksek ve kolesterol = Orta özelliklerine sahip bir bireyin hangi risk grubuna ait olduğu tahmin edilmek istenmektedir. Analiz sonucunda aşağıdaki olasılık değerleri elde edilmiştir: P(risk=R1 ∣ egzersizSuresi=Yüksek, kolesterol=Orta)=0.15 P(risk=R2 ∣ egzersizSuresi=Yüksek, kolesterol=Orta)=0.52 P(risk=R3 ∣ egzersizSuresi=Yüksek, kolesterol=Orta)=0.23 P(risk=R4 ∣ egzersizSuresi=Yüksek, kolesterol=Orta)=0.10 P(risk=R5 ∣ egzersizSuresi=Yüksek, kolesterol=Orta)=0.05 Yukarıda verilenlere göre Naive Bayes modeline göre bireyin tahmin edilen risk grubu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "R4"}, {"letter": "B", "text": "R1"}, {"letter": "C", "text": "R5"}, {"letter": "D", "text": "R3"}, {"letter": "E", "text": "R2"}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 19, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Bir veri setinin başlangıç entropisi 0.95 olarak hesaplanmıştır. Aşağıdaki tabloda beş farklı nitelik için bölünme sonrası elde edilen entropi değerleri verilmiştir. Karar ağacı için nitelik seçim ölçütü olarak bilgi kazancı (information gain) kullanıldığına göre karar ağacının ilk bölünmesinde hangi nitelik seçilir?", "options": [{"letter": "A", "text": "Nem"}, {"letter": "B", "text": "Sıcaklık"}, {"letter": "C", "text": "Bulutluluk"}, {"letter": "D", "text": "Hava Durumu"}, {"letter": "E", "text": "Rüzgâr"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 20, "tag": "Yapay Zeka ve Makine Öğrenmesi  - 2025-2026 - Bütünleme - Bahar", "text": "Yapay sinir ağlarında kullanılan geriye yayılım (back-propagation algorithm) algoritması; ileri yayılım (forward propagation) ve geri yayılım (backward propagation) olmak üzere iki temel aşamadan oluşur. Buna göre ileri yayılım ve geri yayılım aşamaları ile ilgili aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Geri yayılım aşamasında hata değeri ağın çıktısından başlayarak geriye doğru yayılır."}, {"letter": "B", "text": "İleri yayılım aşamasında hesaplanan hata değeri kullanılarak doğrudan ağın tüm ağırlıkları aynı miktarda güncellenir."}, {"letter": "C", "text": "Geri yayılım aşamasında hesaplanan gradyan değerleri kullanılarak ağdaki ağırlıklar güncellenir."}, {"letter": "D", "text": "İleri yayılım aşamasında girdi verileri ağdaki nöronlar boyunca ileri yönde iletilir ve ağ bir çıktı üretir."}, {"letter": "E", "text": "İleri yayılım aşamasında elde edilen çıktı, gerçek çıktı ile karşılaştırılarak bir kayıp (loss) değeri hesaplanır. CEVAPLI"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 21, "tag": "Yapay Zeka ve Makine Öğrenmesi - 2025-2026 - Vize - Bahar", "text": "Bir veri setinde Gelir değişkeninin bireylerin Eğitim Düzeyi gruplarına göre nasıl değiştiğinin incelenmesi amaçlanmaktadır. Bu analizde hem dağılımın yapısını hem de aykırı değerlerin görülmesi istenmektedir. Buna göre aşağıdaki grafik türlerinden hangisi bu inceleme için en uygun görselleştirme yöntemidir?", "options": [{"letter": "A", "text": "Sütun grafiği (Bar chart)"}, {"letter": "B", "text": "Kutu grafiği (Box plot)"}, {"letter": "C", "text": "Çizgi grafiği (Line plot)"}, {"letter": "D", "text": "Isı haritası (Heatmap)"}, {"letter": "E", "text": "Pasta grafiği (Pie chart)"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 22, "tag": "Yapay Zeka ve Makine Öğrenmesi - 2025-2026 - Vize - Bahar", "text": "Mitchell, makine öğrenmesini “Eğer bir bilgisayar programının G görevlerinde P ile ölçülen performansı, deneyim D ile artıyorsa, o bilgisayar programının bazı G görevlerinin sınıflarına ve performans ölçüsü P’ye göre deneyim D’den öğrendiği söylenmektedir” olarak tanımlamıştır. Buna göre aşağıdakilerden hangisi makine öğrenmesi sürecinde “deneyim (experience)” kavramını en doğru şekilde açıklamaktadır?", "options": [{"letter": "A", "text": "Modelin öğrenmesini sağlayan ve veri aracılığıyla elde edilen bilgi birikimi."}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 23, "tag": "Yapay Zeka ve Makine Öğrenmesi - 2025-2026 - Vize - Bahar", "text": "Yukarıda verilen tabloya göre model tarafından hatalı olarak Hasta şeklinde sınıflandırılan Sağlıklı bireylerin sayısı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "10"}, {"letter": "B", "text": "32"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "35"}, {"letter": "E", "text": "55"}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 24, "tag": "Yapay Zeka ve Makine Öğrenmesi - 2025-2026 - Vize - Bahar", "text": "Yukarıdaki kutu grafiği kullanılarak veri dağılımı hakkında çeşitli çıkarımlar yapılabilmektedir. Buna göre aşağıdaki bilgilerden", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 25, "tag": "Yapay Zeka ve Makine Öğrenmesi - 2025-2026 - Vize - Bahar", "text": "Yukarıdaki Python kod bloğuna göre aşağıdaki ifadelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "init=\"random\" ifadesi küme sayısına rastgele karar verilmesini sağlar."}, {"letter": "B", "text": "model.labels_ ifadesi küme merkezlerinin koordinatlarını döndürür."}, {"letter": "C", "text": "Model, veri setini 4 kümeye ayıracak şekilde k-ortalamalar (k-Means) algoritmasını kullanır."}, {"letter": "D", "text": "random_state=123 parametresi küme sayısını otomatik olarak belirler."}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 26, "tag": "Yapay Zeka ve Makine Öğrenmesi - 2025-2026 - Vize - Bahar", "text": "4", "options": [{"letter": "B", "text": "35"}, {"letter": "C", "text": "31"}, {"letter": "D", "text": "25"}, {"letter": "E", "text": "29 from sklearn.cluster import KMeans kume_sayisi = 4 model = KMeans( n_clusters=kume_sayisi, init=\"random\", n_init=10, random_state=123 ) etiketler = model.fit_predict(veri) model.labels_ CEVAPLI fit_predict() fonksiyonu küme etiketlerinin üretiminde rol almaz. Aşağıdaki uygulamalardan hangisi anomali tespiti kullanımına örnek değildir? Müşterilerin alışveriş alışkanlıklarına göre benzer gruplara ayrılması. Ağ trafiğinde olağandışı veri hareketlerinin tespit edilmesi."}, {"letter": "E", "text": "posta sisteminde istenmeyen (spam) mesajların belirlenmesi. Üretim hattında normalden sapma gösteren sensör ölçümlerinin belirlenmesi. Daha önce hiç yurt-dışı harcaması olmayan bir kredi kartı ile farklı bir ülkeden yapılan işlemin incelenmesi. Klasik programlama ile makine öğrenmesi yaklaşımları çeşitli açılardan birbirinden ayrılmaktadır. Bu iki yaklaşım; kodlama biçimi, uyarlanabilirlik, veriye bağımlılık ve insan müdahalesi gibi özellikler bakımından farklılık göstermektedir. Buna göre aşağıdakilerden hangisi makine öğrenmesi sistemlerini klasik programlamadan ayıran temel özelliklerden biri olarak gösterilebilir? Sonuçlarının her zaman tamamen yorumlanabilir olması. Yeni durumlara uyum sağlayabilmek için yalnızca manuel kod güncellemesi gerektirmeleri. Veriden öğrenerek kalıpları (patterns) genelleştirebilme yeteneğine sahip olmaları. İnsan tarafından yazılmış açık talimatlara tamamen bağımlı olmaları. Önceden tanımlanmış kuralları değişmeden yürütmeleri. MAKİNE ÖĞRENMESİ A P787296.G19074 25-03-2026 10:45:22"}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 27, "tag": "Yapay Zeka ve Makine Öğrenmesi - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi danışmansız öğrenme yönteminin temel özelliğini doğru şekilde ifade etmektedir?", "options": [{"letter": "A", "text": "Model yalnızca sınıflandırma problemlerinde kullanılabilir."}, {"letter": "B", "text": "Veri setinde önceden etiketlenmiş hedef değişken bulunmadan benzer örnekler gruplanır."}, {"letter": "C", "text": "Veri setinde mutlaka kategorik veya nümerik bir hedef nitelik bulunur."}, {"letter": "D", "text": "Öğrenme süreci yalnızca insan tarafından belirlenen kurallara dayanır."}, {"letter": "E", "text": "Algoritma, doğru veya yanlış davranışlara göre ödül-ceza mekanizmasıyla öğrenir."}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 28, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "Keras kütüphanesi yardımı ile bir yapay sinir ağı modeli oluşturulurken, modele bir girdi katmanı eklemek için aşağıdaki seçeneklerin hangisi kullanılabilir?", "options": [{"letter": "A", "text": "model.add(InputLayer(input_shape=(X_train.shape[1],), name=\"Girdi_Katmani\"))"}, {"letter": "B", "text": "model.insert(InputLayer(input_shape=(X_train.shape[1],), name=\"Girdi_Katmani\"))"}, {"letter": "C", "text": "model.append(InputLayer(input_shape=(X_train.shape[1],), name=\"Girdi_Katmani\"))"}, {"letter": "D", "text": "model.get(InputLayer(input_shape=(X_train.shape[1],), name=\"Girdi_Katmani\"))"}, {"letter": "E", "text": "model.create(InputLayer(input_shape=(X_train.shape[1],), name=\"Girdi_Katmani\"))"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 29, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "k­En Yakın Komşu Algoritması ile Python'da çalışmak isteyen bir araştırmacı yukarıda ...... ile verilen kod satırını aşağıdaki", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 30, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "Euclidean (Öklid) I. Manhattan II. Chebyshev III. Cosine IV. Jaccard V. Adam VI.", "options": [{"letter": "A", "text": "I, II, III, IV ve V"}, {"letter": "B", "text": "I, II ve III"}, {"letter": "C", "text": "I, II, III ve IV"}, {"letter": "D", "text": "I ve VI"}, {"letter": "E", "text": "I ve II"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 31, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "Bir araştırmacı veri setinde yer alan tüm nümerik nitelikleri [0,1] aralığına ölçeklendirmek istiyor. Bunun için aşağıda verilen Python kodlarından hangisi kullanılabilir?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 32, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "Aşağıdakilerden hangisi yapay sinir ağlarında kullanılan bir öğrenme algoritmasıdır?", "options": [{"letter": "A", "text": "k-Ortalamalar Algoritması"}, {"letter": "B", "text": "k-En Yakın Komşu Algoritması"}, {"letter": "C", "text": "C5.0 Algoritması"}, {"letter": "D", "text": "Geriye Yayılım Algoritması"}, {"letter": "E", "text": "Naive Bayes Algoritması"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 33, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "ID3 I. ID4.5 II. C4.5 III. C5.0 IV. CART V.", "options": [{"letter": "A", "text": "Yalnızca III"}, {"letter": "B", "text": "I, III, IV ve V"}, {"letter": "C", "text": "I, II ve III"}, {"letter": "D", "text": "I, III ve IV"}, {"letter": "E", "text": "Yanlızca I CEVAPLI Bir e-ticaret şirketinin günlük satış gelirini açıklamaya yönelik potansiyel değişkenler, bu değişkenlere ait tahmini beta (𝛽) katsayıları ve p-değerleri aşağıdaki gibidir. Yukarıdaki tabloda yer alan beş bağımsız değişkenden hangisinin modele istatistiksel açıdan anlamlı bir katkı sağlamadığı söylenebilir? Reklam Harcaması (TL) Müşteri Memnuniyeti Web Site Trafiği (tıklama) Ortalama Sepet Tutarı (TL) Sosyal Medya Etkileşimi Yukarıda verilenlerden hangisi ya da hangileri sınıflandırma için kullanılabilen karar ağacı algoritmalarındandır? Değişken Beta Katsayısı p­değeri Reklam Harcaması (TL)"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 34, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "k­En Yakın Komşu Algoritması'nın karar aşamasında kullanılan çoğunluk oylaması (majority voting) ile ilgili aşağıda verilenlerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Sınıfı etiketi bilinmeyen x örneğine en yakın k komşunun sınıf etiketlerine bakılır. Sayıca en fazla olan sınıf etiketi atanır."}, {"letter": "B", "text": "Sınıfı etiketi bilinmeyen x örneğine en yakın k komşunun sınıf etiketlerine bakılır. Sayıca en az olan sınıf etiketi atanır."}, {"letter": "C", "text": "Sınıfı etiketi bilinmeyen x örneğine en yakın k komşu arasında ağırlığı (weight) en fazla olan sınıf etiketi atanır."}, {"letter": "D", "text": "Sınıfı etiketi bilinmeyen x örneğine en yakın k komşu arasında ağırlığı (weight) en az olan sınıf etiketi atanır."}, {"letter": "E", "text": "Sınıfı etiketi bilinmeyen x örneğine en yakın k komşu arasında her zaman en yakınındaki gözleme ait sınıf etiketi atanır."}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 35, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "Aşağıdaki seçeneklerde verilenlerden hangisi büyük dil modellerine (large language models) bir örnektir?", "options": [{"letter": "A", "text": "Turing Testi"}, {"letter": "B", "text": "IoT"}, {"letter": "C", "text": "API"}, {"letter": "D", "text": "ChatGPT"}, {"letter": "E", "text": "Deep Blue"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 36, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Final 2", "text": "Bir araştırmacı model performans değerlendirmesi aşaması için yukarıdaki Python kod bloğunu çağırıyorsa aşağıda verilen performans değerlendirme yöntemlerinden hangisini kullanmaktadır?", "options": [{"letter": "A", "text": ""}, {"letter": "B", "text": ""}, {"letter": "C", "text": ""}, {"letter": "D", "text": ""}, {"letter": "E", "text": ""}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 37, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Günümüzdeki yapay zekâ çalışmaları üretken yapay zekâ (Generative AI) olarak adlandırılmaktadır. Aşağıdakilerden hangisi üretken yapay zekâ sistemlerine örnek gösterilemez?", "options": [{"letter": "A", "text": "Bir web sitesinin kullanıcı etkileşimlerini analiz etmek için kullanılan bir veri tabanı yönetim sistemi"}, {"letter": "B", "text": "Farklı grafik ya da illüstrasyon oluşturan sistemler"}, {"letter": "C", "text": "Daha önce mevcut olmayan bir şarkı, ses efekti ya da ses kaydı oluşturan sistemler."}, {"letter": "D", "text": "Rastgele resim üreten sistemler"}, {"letter": "E", "text": "Otomatik metin oluşturan sistemler"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 38, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıdaki görevlerin hangisini k­Ortalamalar Algoritmasını kullanarak gerçekleştirmek daha uygundur?", "options": [{"letter": "A", "text": "Bir finans şirketinin belirli bir hisse senedi değerini bir sonraki gün için tahmin etmesi."}, {"letter": "B", "text": "Bir doktorun, hastaların semptom ve test sonuçları verilerine dayanarak, yeni gelen bir hastanın durumunu öngörmesi."}, {"letter": "C", "text": "Bir abonelik hizmeti sağlayıcısının, abonelerinin demografik ve kullanım geçmişi özellikleri ile müşterilerin sadık olup olmadığı durumunu gösteren nitelikleri kullanarak müşteri kaybını öngörmesi."}, {"letter": "D", "text": "Bir emlak şirketinin, evlerin konum, metrekare, oda sayısı, banyo sayısı gibi özellikleri ile fiyat bilgisine göre yeni bir evin fiyatını tahmin etmesi."}, {"letter": "E", "text": "Bir e-ticaret şirketinin, müşterilerini alışveriş alışkanlıkları (alışveriş miktarı, alınan ürün türleri vb.) göre kümelemesi."}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 39, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıdakilerden hangisi tipik bir makine öğrenmesi modeli bileşenlerden biri değildir?", "options": [{"letter": "A", "text": "Kullanılan makine öğrenmesi algoritmasına ait parametreler"}, {"letter": "B", "text": "Makine öğrenmesi algoritması"}, {"letter": "C", "text": "Veri setinde iki sürekli niteliği görselleştirmede kullanılan Python kodu"}, {"letter": "D", "text": "Nitelikler"}, {"letter": "E", "text": "Eğitim verisi"}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 40, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "k­Ortalamalar algoritması kullanılarak gerçekleştirilen kümeleme sonucunda elde edilen kümeler ve küme merkezleri yukarıdaki tabloda verilmiştir. Buna göre; örnek veri (3,6) hangi kümeye benzerlik gösterir ve atanır?", "options": [{"letter": "A", "text": "Küme 4"}, {"letter": "B", "text": "Küme 3"}, {"letter": "C", "text": "Küme 2"}, {"letter": "D", "text": "Küme 1"}, {"letter": "E", "text": "Küme 5"}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 41, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıda verilen görev türlerinden hangisi danışmansız öğrenme kapsamına girmez?", "options": [{"letter": "A", "text": "Boyut azaltma"}, {"letter": "B", "text": "Kümeleme"}, {"letter": "C", "text": "Sınıflandırma"}, {"letter": "D", "text": "Anormallik tespiti"}, {"letter": "E", "text": "Birliktelik kuralları"}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 42, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Yukarıda verilen Python kodlarını çalıştıran bir araştırmacı hangi algoritmayı ve bu algoritma için aşağıdaki hangi parametreyi kullanıyor olabilir?", "options": [{"letter": "A", "text": "k-En Yakın Komşu Algoritması, Komşu Sayısı=7"}, {"letter": "B", "text": "k-Ortalamalar Algoritması, Küme Sayısı=5"}, {"letter": "C", "text": "k-Ortalamalar Algoritması, Küme Sayısı=3"}, {"letter": "D", "text": "k-En Yakın Komşu Algoritması, Komşu Sayısı=5"}, {"letter": "E", "text": "k-Ortalamalar Algoritması, Küme Sayısı=7"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 43, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Histogramlarla ilgili aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Niteliklerin simetrik dağılıma sahip olup olmadığı görülebilir."}, {"letter": "B", "text": "Histogram iki nitelik arasındaki pozitif ve negatif yönlü ilişkileri ortaya koyar."}, {"letter": "C", "text": "Sürekli nitelikler için çizimi uygundur."}, {"letter": "D", "text": "Niteliklerin sağa ya da sola çarpık olup olmadığı görülebilir."}, {"letter": "E", "text": "Histogram üzerinde yer alan sütunlara ait hem yükseklik hem genişlik bilgi vericidir."}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 44, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıdaki seçeneklerden hangisindeki Python fonksiyonu, bir sütun grafiğinin yatay biçimde oluşturulmasını sağlar?", "options": [{"letter": "A", "text": "plt.bard()"}, {"letter": "B", "text": "plt.barh()"}, {"letter": "C", "text": "plt.barv()"}, {"letter": "D", "text": "plt.bar()"}, {"letter": "E", "text": "plt.bary()"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 45, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıdaki seçeneklerden hangisi makine öğrenmesinin temel unsurları arasında yer almaz?", "options": [{"letter": "A", "text": "Analizde kullanılan programlama dili"}, {"letter": "B", "text": "Görev"}, {"letter": "C", "text": "Algoritma"}, {"letter": "D", "text": "Deneyim (veri)"}, {"letter": "E", "text": "Performans"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıdakilerden hangisi makine öğrenmesi stratejilerinden biridir?", "options": [{"letter": "A", "text": "Ezberlemeli öğrenme"}, {"letter": "B", "text": "Danışmanlı öğrenme"}, {"letter": "C", "text": "Rastgele öğrenme"}, {"letter": "D", "text": "Eklemeli öğrenme"}, {"letter": "E", "text": "Eksiltmeli öğrenme Küme Küme Merkezi Küme 1 (0.06, 0.5) Küme 2 (2,5) Küme 3 (7,8) Küme 4 (10,15) Küme 5 (60,70) kumeSayisi=3 model = KMeans(n_clusters=5, init=\"k-mean s++\", n_init=\"auto\", random_state=7) Python MAKİNE ÖĞRENMESİ A P3.G9507 06-03-2025 13:51:25 MAKİNE ÖĞRENMESİ A P3.G9507 06-03-2025 13:51:25 CEVAPLI CEVAPLI"}], "correct": "B", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 47, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Yukarıda verilen grafiğin çizilebilmesi için aşağıdaki seçeneklerden hangisi kullanılmalıdır?", "options": [{"letter": "A", "text": "sns.histplot(data=veri, x=\"sepal_length\")"}, {"letter": "B", "text": "sns.boxplot(data=veri, x=\"sepal_length\")"}, {"letter": "C", "text": "sns.histplot(data=veri, y=\"sepal_length\")"}, {"letter": "D", "text": "sns.boxplot(data=veri, y=\"sepal_length\")"}, {"letter": "E", "text": "sns.heatmap(data=veri, y=\"sepal_length\")"}], "correct": "C", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 48, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıda verilen grafik türlerinden hangisinde bir niteliğe ait aykırı değerler görülebilir?", "options": [{"letter": "A", "text": "Kutu grafiği"}, {"letter": "B", "text": "Pasta grafiği"}, {"letter": "C", "text": "Isı haritası"}, {"letter": "D", "text": "Sütun grafiği (yatay)"}, {"letter": "E", "text": "Sütun grafiği (dikey)"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 49, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Aşağıdakilerden seçeneklerden hangisinde sıralı kategorik veriye örnek verilmiştir?", "options": [{"letter": "A", "text": "Küçük - orta - büyük"}, {"letter": "B", "text": "Sağlıklı - hasta"}, {"letter": "C", "text": "Kırmızı - beyaz - yeşil"}, {"letter": "D", "text": "Veteriner - doktor - hakim - akademisyen"}, {"letter": "E", "text": "Var - yok"}], "correct": "A", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 50, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Yukarıda verilen kontenjans tablosuna göre doğru tahmin edilen Düşük risk grubundaki müşterilerin sayısı aşağıdaki seçeneklerden hangisinde doğru biçimde verilmiştir?", "options": [{"letter": "A", "text": "3"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "15"}, {"letter": "D", "text": "10"}, {"letter": "E", "text": "5"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 51, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Tabloda kahve örneklerinin (O1, O2, O3, O4 ve O5) kahveTuru niteliği yapay (dummy) kodlama kullanılarak verilmiştir. kahveTuru niteliğinde, Americano, Cappuccino, Latte, Mocha ve Türk Kahvesi çeşitleri bulunmakta olup, örnekler verilen kahve türlerinden yalnızca birine aittir. Yukarıda verilenlere göre, Örnek 4'ün (O4) kahveTuru aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Türk Kahvesi"}, {"letter": "B", "text": "Cappuccino"}, {"letter": "C", "text": "Latte"}, {"letter": "D", "text": "Americano"}, {"letter": "E", "text": "Mocha"}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 52, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Yukarıda verilen Maaş niteliğinin kategorik hale getirilebilmesi için aşağıda verilen yöntemlerden hangisi kullanılabilir?", "options": [{"letter": "A", "text": "Yapay (dummy) kodlama"}, {"letter": "B", "text": "Veri normalizasyonu"}, {"letter": "C", "text": "Veri özetleme"}, {"letter": "D", "text": "Veri temizleme"}, {"letter": "E", "text": "Veri ayrıklaştırma"}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 53, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Bir Pandas DataFrame olarak verilen musteri adlı veri setinin özet bilgisini görüntülemek için aşağıdaki seçeneklerden hangisi kullanılabilir?", "options": [{"letter": "A", "text": "musteri.brief()"}, {"letter": "B", "text": "musteri.set()"}, {"letter": "C", "text": "musteri.desc()"}, {"letter": "D", "text": "musteri.describe()"}, {"letter": "E", "text": "musteri.get()"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 54, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Makine öğrenmesi stratejileri ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Sınıflandırma problemleri, danışmanlı öğrenmeden faydalanılarak çözülebilir."}, {"letter": "B", "text": "Ajan, çevre, eylem gibi kavramlar pekiştirmeli öğrenme ile ilişkilidir."}, {"letter": "C", "text": "Pekiştirmeli öğrenme, ödül-ceza prensibine dayalıdır."}, {"letter": "D", "text": "Bir şirket danışmansız öğrenme algoritmalarından faydalanarak müşterilerini kümelere ayırabilir."}, {"letter": "E", "text": "Danışmanlı öğrenmede veri setinde bir hedef niteliğin bulunmasına ihtiyaç duyulmaz. Türk Kahvesi Cappuccino Americano Latte O1 1 0 0 0 O2 0 1 0 0 O3 0 0 0 1 O4 0 0 0 0 O5 0 0 1 0 Maaş 20000 30000 25000 22000 40000 MAKİNE ÖĞRENMESİ A P3.G9507 06-03-2025 13:51:25 MAKİNE ÖĞRENMESİ A P3.G9507 06-03-2025 13:51:25 CEVAPLI CEVAPLI"}], "correct": "E", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 55, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "cagrilar: Bir bankanın çağrı merkezine gelen aramaların sayısı (500, 750, 1000, ...). cagrilar niteliğinin veri tipi için aşağıdaki seçeneklerden hangisi en uygundur?", "options": [{"letter": "A", "text": "Sürekli"}, {"letter": "B", "text": "Nominal"}, {"letter": "C", "text": "İkili kategorik"}, {"letter": "D", "text": "Ayrık"}, {"letter": "E", "text": "Sıralı kategorik"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 56, "tag": "YAPAY ZEKA VE MAKİNE ÖĞRENMESİ 2024-2025 Vize", "text": "Yukarıdaki tabloda kişilerin ev sahipliği durumunu gösteren evSahipligi niteliği verilmektedir. Bu nitelikteki eksik verinin (?) tamamlanmasına yönelik aşağıda verilen ifadelerden hangisi en uygundur?", "options": [{"letter": "A", "text": "Nitelikte sayıca en az ve sayıca en fazla olan kategoriler birleştirilerek eksik veri yerine atanabilir."}, {"letter": "B", "text": "Nitelikteki eksik veri tamamlanamaz, çünkü nitelik sayısal değildir."}, {"letter": "C", "text": "Nitelikteki eksik veri tamamlanamaz, gözlem tümüyle veri setinden kaldırılmalıdır."}, {"letter": "D", "text": "Nitelikteki sayıca en fazla olan kategori eksik veri yerine atanabilir."}, {"letter": "E", "text": "Nitelik yalnızca bir makine öğrenmesi algoritması kullanılarak doldurulabilir. evSahipligi Var ? Yok Var Var Yok"}], "correct": "D", "explanation": "AUZEF Yapay Zeka ve Makine Ogrenmesi müfredatı uyarınca doğru seçenek D'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

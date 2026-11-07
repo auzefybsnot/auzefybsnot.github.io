@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilişim Hukuku (AYBS6012) - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 3. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Bilişim Hukuku (AYBS6012) - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">3. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#bahar">Bahar Dönemi</a>
+            <span>/</span>
+            <strong>Bilişim Hukuku (AYBS6012) Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Bilişim Hukuku (AYBS6012) - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Bilişim Hukuku (AYBS6012) dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>111 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>3. Sınıf - Bahar Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">111</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Bilisim_Hukuku_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (111)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">111</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Bilisim_Hukuku_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "Bilisim Hukuku Vize 2025, Final 2026", "text": "Alan adı yönetmeliğinde getirilen 'ilk gelen alır' kuralının ifadesi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Alan adının hukuki bir belge ile korunmasını"}, {"letter": "B", "text": "Alan adının markayla örtüştüğü durumlarda en eski tarihli markanın söz konusu alan adını almasını"}, {"letter": "C", "text": "Alan adının tescil edilmesi zorunluluğunu"}, {"letter": "D", "text": "Alan adına dair başvurularda zamansal olarak ilk talep eden kişiye alan adının verilmesini"}, {"letter": "E", "text": "Alan adının mahkeme kararı ile tahsis edilmesini"}], "correct": "D", "explanation": "Belgesiz alan adlarında 'İlk gelen alır' kuralı geçerlidir. Bu, alan adını zamansal olarak ilk talep edene başkaca bir evrak veya belge aranmaksızın tahsis edilmesi demektir."}, {"num": 2, "tag": "Bilisim Hukuku Vize 2025", "text": "Aşağıdakilerden hangisi normalde fikri mülkiyet hukukunun konusu değildir?", "options": [{"letter": "A", "text": "Bir şiir üzerindeki telif hakları"}, {"letter": "B", "text": "Bir markayla hemen hemen aynı olan ibarenin aynı alanda kullanılması nedeniyle ortaya çıkan bir uyuşmazlığın nasıl çözülmesi gerektiği sorunu"}, {"letter": "C", "text": "Bir buluşun patent alıp alamayacağı meselesi"}, {"letter": "D", "text": "Yaratıcılığı son derece açık olan bir tasarımın tasarım olarak nasıl korunabileceği sorunu"}, {"letter": "E", "text": "Nişanlı bir şairin şiir yazması açısından artık ilham kaynağı olmaktan çıkmış nişanlısı ile olan nişanlılık ilişkisini sona erdirmesi sorunu"}], "correct": "E", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek E'dir."}, {"num": 3, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2025,Vize 2026,Banko, Vize, 2 Kez Çıktı!", "text": "İnternetteki temel süjeler ve/veya bunların sorumluluğu açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Arama motorları sadece başkasına ait içeriklere ulaşmaya imkan sağladıklarından erişim sağlayıcı sayılırlar."}, {"letter": "B", "text": "Sosyal medyada kendi resimlerini yayınlayan kişi, sadece kendi resimlerini yayınladığı için içerik sağlayıcı sayılmaz, ancak başkasının fotoğraflarını da yayınlasaydı hukuki durum farklı olurdu."}, {"letter": "C", "text": "İnternete erişmemize imkan sağlayan kişiler de (örneğin TTNet, Superonline) içerik sağlayıcı sayılırlar, çünkü nihayetinde ilgili içeriklere erişmemize imkan sağlarlar."}, {"letter": "D", "text": "Hukukumuzda yer sağlayıcılar dar anlaşılmakta olup, yer sağlayıcı sadece başkasının içeriğine depolama alanı sunan gerçek kişileri ifade eden bir kavramdır."}, {"letter": "E", "text": "İçerik sağlayıcının sorumluluğu itibariyle, kendi içeriği ile başkasına ait içeriğe verdiği bağlantı arasında kanunda ayrım yapılmış ve bunlar farklı kurallara bağlanmıştır."}], "correct": "E", "explanation": "Kanuna göre içerik sağlayıcı kendi ürettiğinden bizzat sorumludur. Ancak başkasına verdiği linkten (benimsemediği sürece) kural olarak sorumlu tutulmaz. Ayrım yapılmıştır."}, {"num": 4, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2026", "text": "Bilgisayar programlarının patent hukukunda korunması açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Buluş basamağını aşan her bilgisayar programı patent hukukunda ayrıca bir araştırma yapmaya gerek olmadan korunur."}, {"letter": "B", "text": "Patent hukukunda teknik mahiyette olan (salt bilgisayara ilişkin olmak dışında bir teknik etki yaratmak anlamında) bilgisayar programlarının korunması mümkündür, ancak bunun için bunların patent yeteneği koşullarını da sağlamaları gerekir."}, {"letter": "C", "text": "Bilgisayar programının nesne koduyla yazılmış şekli, patent hukukunda korunan kısmı ifade eder, çünkü bilgisayarda çalışabilen kısım tam da budur."}, {"letter": "D", "text": "Her türlü bilgisayar programı patent hukukunda korunur, çünkü bunlar bilgisayarlarda çalıştıkları için zaten teknik sorunları çözerler."}, {"letter": "E", "text": "Bilgisayar programları patent hukukunda korunmazlar, çünkü bunlar buluş değildirler."}], "correct": "B", "explanation": "Yazılımlar kural olarak eserdir ve telifle korunur. Ancak yazılım, dış dünyada teknik bir problemi çözüyor (örneğin cihazı yönetiyorsa) teknik mahiyette olduğu için 'bilgisayar istemli buluş' olarak patentlenebilir."}, {"num": 5, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Tek Ders Bilişim Hukuku 2024, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2024,Vize 2026,Büt 2024,Tek Ders 2024,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bilişim hukukunun asli konularından değildir?", "options": [{"letter": "A", "text": "İnternette reklam hukuku sorunları"}, {"letter": "B", "text": "Alan adları sistemi ve buna dair hukuki sorunlar"}, {"letter": "C", "text": "Bilgisayar programlarının nasıl programlanacağı"}, {"letter": "D", "text": "Elektronik sözleşmelerin kurulması"}, {"letter": "E", "text": "Sosyal medyada kişilik hakkı ihlalleri ve buna dair hukuki rejim"}], "correct": "C", "explanation": "Bir yazılımın hangi algoritmayla, hangi kod diliyle yazılacağı mühendislik/teknik bir konudur. Hukuk kuralları ve uyuşmazlıkları ile ilgilenmez."}, {"num": 6, "tag": "Bilisim Hukuku Vize 2025, Tek Ders Bilişim Hukuku 2024, Vize 2023,Vize 2024,Final 2023,Büt 2023,Tek Ders 2024,Banko, Vize, 4 Kez Çıktı!", "text": "Hukukumuzdaki alan adı sistemi açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Hukukumuzda güncel alan adı sistemine dair temel hususların ayrıntıları Alan Adları Yönetmeliğinde düzenlenmiştir."}, {"letter": "B", "text": "www.istanbul.edu.tr alan adındaki .tr ibaresi üst düzey alan adı olup jenerik üst düzey alan adını ifade etmektedir."}, {"letter": "C", "text": "Alan adı sisteminde arka planda yer alan programsal yapı hissedilmeyecek derece çok kısa bir sürede IP adresi ve alan adı eşleşmesini her iki yönde yapmaktadır."}, {"letter": "D", "text": "Özellikle işletmeler açısından, alan adları sadece bir tür adres işlevi görmezler, bunlar aynı zamanda önemli birer tanıtım aracı haline gelmişlerdir."}, {"letter": "E", "text": "Hukukumuzda alan adlarına dair sistem güncel olarak TRABİS tarafından işletilmektedir."}], "correct": "B", "explanation": "'.tr' (Türkiye) jenerik değil, 'Ülke Kodlu Üst Düzey Alan Adı'dır (ccTLD). Jenerik olanlar (gTLD) .com, .org gibi coğrafi sınır taşımayanlardır."}, {"num": 7, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2025,Vize 2026,Final 2024,Büt 2024,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi SMK m. 7 III hükmü açısından yanlıştır?", "options": [{"letter": "A", "text": "Bu hükme göre, işareti alan adı olarak kullananın buna dayanak olan ve ona öncelik sağlayan üstün bir hakka sahip olmaması gerekir."}, {"letter": "B", "text": "SMK m. 7 III hükmünün bir alan adı uyuşmazlığında uygulanabilmesi için markayla örtüşen ibarenin alan adı olarak kullanılması gerekir."}, {"letter": "C", "text": "SMK m. 7 III hükmü açısından markanın (işaretin) internette alan adı olarak internette ticari olup olmaması önemsizdir."}, {"letter": "D", "text": "Bu hüküm marka hukukuna ilişkin bir sorunu düzenlediğinden, başka alanlarda doğrudan ve birebir uygulanması mümkün değildir."}, {"letter": "E", "text": "Bu hüküm marka hukukuna ilişkindir. Bu yüzden bir alan adı uyuşmazlığında uygulanabilmesi için öncelikle ortada hukuken korunan bir markanın bulunması gerekir."}], "correct": "C", "explanation": "Markanın izinsiz kullanımına müdahale edilebilmesi için kullanımın mutlaka 'ticari etki' yaratması şarttır. Bu yüzden 'önemsizdir' ifadesi yanlıştır."}, {"num": 8, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2026,Final 2023,Tek Ders 2024,Banko", "text": "Bilgisayar programlarının FSEK kapsamında korunması itibariyle yayma hakkı açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bir bilgisayar programının yapay zeka tarafından çoğaltılması yayma hakkı kapsamına giren bir fiildir"}, {"letter": "B", "text": "Bir bilgisayara yüklü şekilde satın alınmış bir programın daha sonra bilgisayarla birlikte bir başkasına devredilmesinde kural olarak yayma hakkı açısından bir sorun bulunmaz, çünkü yayma hakkı tükenmiştir"}, {"letter": "C", "text": "Yayma hakkı ister dijital olsun isterse olmasın bütün bilgisayar programları için geçerli bir hak değildir, çünkü çoğaltma hakkıyla bu konudaki sorunlar zaten çözülmektedir"}, {"letter": "D", "text": "Bir bilgisayar programının dijital kopyasının yayılması yayma hakkıyla değil, çoğaltma hakkıyla alakalı bir konudur"}, {"letter": "E", "text": "Yayma hakkı, sadece dijital ürünler için geçerli olduğundan, bilgisayar programları açısından sadece bunlar internet üzerinden yayılır iseler bir önem taşır BİLİŞİM HUKUKU B P3.G9483 06-03-2025 13:50:18 BİLİŞİM HUKUKU B P3.G9483 06-03-2025 13:50:18 CEVAPLI CEVAPLI"}], "correct": "B", "explanation": "Hukukta 'Tükenme İlkesi' geçerlidir. İçinde yazılım olan fiziki bir bilgisayarı satın aldıysanız, satıcının o kopya üzerindeki yayma yetkisi tükenir. Cihazı ikinci el olarak satabilirsiniz."}, {"num": 9, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2024,Vize 2025,Vize 2026,Final 2024,Büt 2023,Banko, Vize, Final, 2 Kez Çıktı!", "text": "Hukukumuz açısından, hukukun diğer toplumsal düzen kurumlarından farklılığına dair aşağıdaki ibarelerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Hukuk kuralları kural olarak değiştirilemezler"}, {"letter": "B", "text": "Hukuk asıl ve ağırlıklı olarak dini kurallara bağlıdır"}, {"letter": "C", "text": "Hukuk kurallarında yaptırımlar devlet gücü ile desteklenmektedir"}, {"letter": "D", "text": "Hukuk kuralları her zaman ahlak kuralları ile birebir örtüşürler"}, {"letter": "E", "text": "Bütün hukuk kuralları her zaman yazılıdır"}], "correct": "C", "explanation": "Din ve ahlak kuralları manevi (ayıplanma vb.) yaptırımlar içerirken, hukuk kurallarının arkasında devletin zorlayıcı maddi gücü (polis, icra, mahkeme) vardır."}, {"num": 10, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2026", "text": "Bir Yargıtay kararına konu olan olayda Ankara’da nakliyat alanında çalışan A www.ankaraarasnakliyat.com.tr alan adını almış ve bunu kullanmaktadır. A’nın aras ibaresiyle örtüşen bir hukuki pozisyonu bulunmamaktadır. Aras Kargo şirketi bu yapılanın hukuka aykırı olduğunu iddia etmektedir. Bu tür bir olayda aşağıdaki şıklardan hangisi doğru şık olarak nitelenir?", "options": [{"letter": "A", "text": "Bu olayda A, her ne kadar Ankara’da nakliye işleriyle uğraşmakta ise de Aras ibaresine denk gelen bir hukuki pozisyonu olmadığından, alan adını uygun bir hukuki temele dayandıramaz."}, {"letter": "B", "text": "Bu olayda A, aynı zamanda Aras Kargo’nun bir yetkili bayisi olsa bile, bu alan adını kullanması hukuken her durumda yasaktır."}, {"letter": "C", "text": "Bu tür bir olayda alan adındaki Aras ibaresini karakteristik kısım olarak görmek yanlıştır, çünkü asıl belirleyici olan Ankara ibaresidir."}, {"letter": "D", "text": "Bu olayda ilk gelen kuralı her durumda uygulanacağından Aras Kargonun söz konusu alan adının A tarafından kullanılmasını engellemesi hukuken mümkün değildir."}, {"letter": "E", "text": "Bu olayda alan adının karakteristik kısmı “nakliye” ibaresi olduğundan, Aras Kargo bu kullanımı engelleyemez."}], "correct": "A", "explanation": "Alan adındaki ayırt edici esas unsur 'Aras'tır. A'nın şirketinin veya kendi isminin Aras ile bir bağlantısı yoksa, ünlü bir markayı alan adı içinde kullanması kötü niyetli haksız rekabettir."}, {"num": 11, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Tek Ders Bilişim Hukuku 2024, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2025,Vize 2026,Büt 2024,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi, alan adının tahsisi hakkında yürütülen ve alan adının kime verilmesinin daha doğru olacağı yönündeki tartışmanın maddi temelini oluşturur?", "options": [{"letter": "A", "text": "IP adreslerinin akılda tutulması zorluğu bu tartışmanın maddi temelidir."}, {"letter": "B", "text": "IP adreslerinin kimin tarafından verilmesinin daha doğru olacağı sorunu bu tartışmanın temelinde yatmaktadır."}, {"letter": "C", "text": "İlk gelen alır kuralıyla bütün sorunları toptan ve adil bir şekilde çözmek mümkün olduğundan bu yönde bir tartışma gereksizdir."}, {"letter": "D", "text": "Alan adının tekliği ve buna temel olabilecek hukuki pozisyonların ise duruma göre çok sayıda olması ve bunların farklı hukuki temellere dayanabilmesi (marka, isim, eser adı vs.) bu tartışmanın maddi temelini oluşturmaktadır."}, {"letter": "E", "text": "Türkiye’de alan adı sisteminin verilmesi merkezi hale getirildiğinde, bu tartışmanın ülkemiz açısından bir anlamı kalmamıştır."}], "correct": "D", "explanation": "İnternette adres (örneğin mars.com) tek iken, gerçek dünyada bu ismi kullanmaya meşru hakkı olan marka, kişi veya eser adlarının (çok sayıda hak sahibinin) olması tartışmanın temelidir."}, {"num": 12, "tag": "Bilisim Hukuku Vize 2025", "text": "Türk hukukunda bir bilgisayar programının patentlenebilir nitelikte olduğu durumlarda bu konuda patent almak için aşağıdakilerden hangi kuruma başvurulur?", "options": [{"letter": "A", "text": "İstanbul Patent"}, {"letter": "B", "text": "Türk Patent"}, {"letter": "C", "text": "Danıştay"}, {"letter": "D", "text": "ODTÜ"}, {"letter": "E", "text": "Yargıtay"}], "correct": "B", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek B'dir."}, {"num": 13, "tag": "Bilisim Hukuku Vize 2025, Tek Ders Bilişim Hukuku 2024, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2025,Büt 2024,Tek Ders 2024,Banko,Dikkat, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir bilgisayar programının FSEK kapsamında korunan unsurlarından değildir?", "options": [{"letter": "A", "text": "Programın temelinde yatan ilkeler"}, {"letter": "B", "text": "Kaynak kodu"}, {"letter": "C", "text": "Hazırlık tasarımı"}, {"letter": "D", "text": "Programın akış planı (akış diyagramı)"}, {"letter": "E", "text": "Nesne kodu"}], "correct": "A", "explanation": "⚠️ DİKKAT: Telif hukuku soyut fikirleri, algoritmaları veya matematiksel kuralları (ilkeleri) korumaz, o fikrin somutlaşmış halini (ifadeyi - kodları ve tasarımları) korur."}, {"num": 14, "tag": "Bilisim Hukuku Vize 2025, Vize 2024,Vize 2025,Final 2024,Büt 2024,Banko,Dikkat, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi Sınai Mülkiyet Kanunu kapsamında doğrudan korunan konulardan değildir?", "options": [{"letter": "A", "text": "Geleneksel ürün adları"}, {"letter": "B", "text": "Buluşlar"}, {"letter": "C", "text": "Faydalı modeller"}, {"letter": "D", "text": "Coğrafi işaretler"}, {"letter": "E", "text": "Telif hakları"}], "correct": "E", "explanation": "⚠️ DİKKAT: Şiir, müzik, tablo veya bilgisayar yazılımı gibi eserler 'Telif Hakları' şemsiyesinde 5846 Sayılı Fikir ve Sanat Eserleri Kanunu (FSEK) ile korunur. Sınai Mülkiyet Kanunu (SMK) kapsamında değildir."}, {"num": 15, "tag": "Bilisim Hukuku Vize 2025, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2025,Banko, Vize, 2 Kez Çıktı!", "text": "Alan adı sistemi açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Alan adı sisteminde arka planda yer alan programsal yapı hissedilmeyecek derece çok kısa bir sürede IP adresi ve alan adı eşleşmesini her iki yönde yapabilir."}, {"letter": "B", "text": "Alan adı sistemi, IP adreslerinin aksine akılda tutulma kolaylığı sağladığından, pratikte çok önemlidir."}, {"letter": "C", "text": "Alan adı sisteminde en üst düzey (Top Level Domain) alan adları çok sayıda olup, bunlar sadece ülke kodlarından (.tr, .de, .ch gibi) ibaret değildir."}, {"letter": "D", "text": "Hukukumuzda güncel alan adı sistemini Alan Adı Kanununu bütün ayrıntılarıyla düzenlemektedir."}, {"letter": "E", "text": "Bu sistemde birden fazla alan adı aynı IP adresine yönlendirilebilir."}], "correct": "D", "explanation": "Türk hukukunda sırf alan adlarını düzenleyen müstakil bir 'Alan Adı Kanunu' bulunmamaktadır. İşlemler 5651 sayılı kanun ve yönetmeliklerle yürütülür."}, {"num": 16, "tag": "Bilisim Hukuku Vize 2025, Tek Ders Bilişim Hukuku 2024", "text": "Aşağıdakilerden hangisi bilişim hukuku alanındaki temel kanunlarda (İnternet Kanunu, Elektronik Haberleşme Kanunu, E­Ticaret Kanunu gibi) düzenlenen süjelerden değildir?", "options": [{"letter": "A", "text": "Toplu kullanım sağlayıcı"}, {"letter": "B", "text": "İçerik sağlayıcı"}, {"letter": "C", "text": "Erişim geliştirmeyi sağlayıcı"}, {"letter": "D", "text": "Elektronik ticaret aracı hizmet sağlayıcı"}, {"letter": "E", "text": "Yer sağlayıcı"}], "correct": "C", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek C'dir."}, {"num": 17, "tag": "Bilisim Hukuku Vize 2025, Vize Bilişim Hukuku 2023 Güz, Vize, 2 Kez Çıktı!", "text": "Bilişim hukuku hakkında aşağıda verilen bilgilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Şekli hukuk, hukukun işleyişinin belirli şekillerde gerçekleşmesini zorunlu kılan bir hukuk olduğundan ve internette her şey nihayetinde yazılı yürüdüğünden, bilişim hukuku sadece bir şekli hukuk dalıdır."}, {"letter": "B", "text": "Bilişim hukuku tamamen yeni bir hukuk alanı olup, yapay zeka hukukunun bir alt dalıdır."}, {"letter": "C", "text": "Bilişim hukuku klasik bir özel hukuk dalı olup, özellikle medeni hukuk kapsamında konumlandırılabilir."}, {"letter": "D", "text": "Bilişim hukuku farklı ayrımlara göre farklı konumlandırılabilir. Bu açıdan maddi ve şekli hukuk ayrımında her iki alanda da kalan yönleri olan bir hukuk dalıdır."}, {"letter": "E", "text": "İnternette işlenen suçların yoğunluğundan da anlaşılacağı üzere bu hukuk alanının ağırlık noktası kamu hukukundadır ve bu açıdan özel hukuk ve kamu hukuku ayrımında bilişim hukuku bir kamu hukuku dalı olarak görülür. BİLİŞİM HUKUKU B P3.G9483 06-03-2025 13:50:18 BİLİŞİM HUKUKU B P3.G9483 06-03-2025 13:50:18 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "Bilişim hukuku e-sözleşmeler (maddi/özel), siber suçlar (kamu) ve elektronik delil (şekli) gibi birçok alanı içinde barındıran karma bir daldır."}, {"num": 18, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2024,Vize 2025,Vize 2026,Büt 2023,Banko, Vize 2024,Vize 2025,Vize 2026,Final 2026,Büt 2023,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir ürünün Fikir ve Sanat Eserleri Hukuku anlamında eser sayılması için gerekli koşullardan biridir?", "options": [{"letter": "A", "text": "Eserin yaratıcısının hususiyetini taşıması zorunluluğu"}, {"letter": "B", "text": "Eserin multimedya eseri olması zorunluluğu"}, {"letter": "C", "text": "Eserin cismaniyet (maddi varlık) kazanması zorunluluğu"}, {"letter": "D", "text": "Eserin yeni olması zorunluluğu"}, {"letter": "E", "text": "Eserin dijital olması zorunluluğu"}], "correct": "A", "explanation": "FSEK kapsamında bir ürünün eser sayılabilmesi için sahibinin kişiliğini, seçimlerini ve yaratıcılığını (hususiyetini) yansıtması temel şarttır."}, {"num": 19, "tag": "Bilisim Hukuku Vize 2025, Vize Bilişim Hukuku 2023 Güz", "text": "Aşağıdakilerden hangisi İnternet Kanununda tanımlanan hususlardan değildir?", "options": [{"letter": "A", "text": "Elektronik ticaret aracı hizmet sağlayıcı"}, {"letter": "B", "text": "Sosyal ağ sağlayıcı"}, {"letter": "C", "text": "Yer sağlayıcı"}, {"letter": "D", "text": "Erişim sağlayıcı"}, {"letter": "E", "text": "Toplu kullanım sağlayıcı"}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 20, "tag": "Bilisim Hukuku Vize 2025, Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2025,Vize 2026,Büt 2023,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi eser sahibinin mali veya manevi haklarından değildir?", "options": [{"letter": "A", "text": "Umuma arz yetkisi"}, {"letter": "B", "text": "Çoğaltma hakkı"}, {"letter": "C", "text": "Yayma hakkı"}, {"letter": "D", "text": "Takip hakkı"}, {"letter": "E", "text": "Umumu yönlendirme hakkı"}], "correct": "E", "explanation": "Hukuk terminolojisinde 'Umumu yönlendirme hakkı' şeklinde tanımlanmış bir eser sahibi hakkı yoktur; tamamen uydurma bir şıktır. Yayma ve Çoğaltma mali, Umuma Arz manevidir."}, {"num": 21, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Tek Ders Bilişim Hukuku 2024, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2025,Vize 2026,Büt 2024,Tek Ders 2024,Banko, Vize, 2 Kez Çıktı!", "text": "Patent hukuku açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Hukukumuzda bilgisayar programlarının asıl olarak ve sınırsız şekilde korunduğu alan patent hukukudur."}, {"letter": "B", "text": "Bu hukuk alanı Sınai Mülkiyet Kanununda düzenlenmiş temel alanlardan biridir."}, {"letter": "C", "text": "Patent hukukunda eserler yanında, faydalı modeller ve tasarımlar da aynı derecede korunurlar."}, {"letter": "D", "text": "Patent hukuku markaların korunmasını sağlayan bir hukuk alanıdır."}, {"letter": "E", "text": "Patent hukuku eser koruması (FSEK) bir bütündür, bu yüzden bir buluş aynı zamanda eser ise korunur."}], "correct": "B", "explanation": "Türkiye'de patentler, 6769 Sayılı Sınai Mülkiyet Kanunu (SMK) altında düzenlenmiştir. Bilgisayar programları asıl olarak eser sayılır (FSEK)."}, {"num": 22, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2026,Banko", "text": "Aşağıdakilerden hangisi bir alan adı uyuşmazlığı doğurmaz?", "options": [{"letter": "A", "text": "Bir kişinin alan adıyla önemli ölçüde örtüşen bir ibarenin uygun bir hukuki temel olmadan alan adı olarak kaydettirilmesi"}, {"letter": "B", "text": "Bir kişinin eserinin adıyla örtüşen ibarenin izinsiz ve haksız şekilde alan adı olarak kaydettirilmesi"}, {"letter": "C", "text": "Alan adları sisteminde ABD’lerinin tekelini kırmak gerektiğini iddia eden bir yazarın bu konudaki düşüncelerini internette yayınlaması"}, {"letter": "D", "text": "Meşhur marka ile örtülen ibarenin izinsiz ve haksız şekilde alan adı olarak tescil edilmesi"}, {"letter": "E", "text": "Süresi dolmamış bir alan adının TRABİS tarafından iptal edilmesi"}], "correct": "C", "explanation": "Yazarın fikrini beyan etmesi 'İfade Özgürlüğü' kapsamındadır, mülkiyet veya tescil çatışması barındıran bir alan adı uyuşmazlığı yaratmaz."}, {"num": 23, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2024,Vize 2025,Vize 2026,Büt 2023,Büt 2024,Tek Ders 2024,Banko, Vize, 5 Kez Çıktı!", "text": "5651 Sayılı Kanunda (kısaca İnternet Kanununda) yer alan, “İnternet ortamı üzerinden kullanıcılara sunulan her türlü bilgi veya veriyi üreten, değiştiren ve sağlayan gerçek veya tüzel kişi” şeklindeki cümle şağıdakilerden hangisini tanımlamaktadır?", "options": [{"letter": "A", "text": "Yer sağlayıcıyı"}, {"letter": "B", "text": "İçerik sağlayıcıyı"}, {"letter": "C", "text": "Erişim sağlayıcıyı"}, {"letter": "D", "text": "Sosyal medya platformunu"}, {"letter": "E", "text": "Aracı hizmet sağlayıcıyı"}], "correct": "B", "explanation": "Kanunun 2. maddesinde yer alan yasal tanımdır. İnternette okuduğunuz bir metni yazan, izlediğiniz bir videoyu çeken veya bir fotoğrafı yükleyen kişi 'İçerik Sağlayıcı'dır."}, {"num": 24, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2023,Vize 2024,Vize 2025,Vize 2026,Banko, Vize, 3 Kez Çıktı!", "text": "Normlar hiyerarşisinin anlamı aşağıdakilerden hangisinde doğru açıklanmıştır?", "options": [{"letter": "A", "text": "Bununla Devletteki en yetkili kişinin en üstün kuralları koyacağı ve bütün kurum, kuruluş ve kişilerin bu kurallara her halükarda uyması gerektiği ifade edilir."}, {"letter": "B", "text": "Normlar hiyerarşisi, idarenin temel hak ve özgürlükleri sınırlayan kararlarının kanuni bir temeli olması gerektiğini, aksi halde idarenin kararlarının geçersizliğini ifade eder."}, {"letter": "C", "text": "Bu ilke bir hukuk sistemindeki hukuk kurallarının birbiriyle olan ilişkisine dair temel bir ilkedir ve sırasıyla Anayasa’nın en üst hukuk kaynağı olduğunu, bunun altındaki diğer kuralların (hukuk sistemimiz açısından usulüne uygun şekilde kabul ediliş uluslararası anlaşmalar, kanunlar, Cumhurbaşkanlığı kararnameleri vs.) sırasıyla piramidin üstünden aşağıya doğru konumlandığı bir yapıyı ifade eder."}, {"letter": "D", "text": "Normlar hiyerarşisi adından da anlaşıldığı üzere genel kanunların özel kanunların üstünde olduğunu ifade eden bir temel ilkedir."}, {"letter": "E", "text": "Bu ilke gerçekte kuvvetler ayrılığı ilkesinin bir diğer ifadesidir ve norm koyucu kuvvetin diğer kuvvetlerin üstünde olduğunu ifade eder."}], "correct": "C", "explanation": "Hukuk kurallarının alt-üst ilişkisidir (Kelsen Piramidi). Hiçbir yönetmelik kanuna, hiçbir kanun Anayasaya aykırı olamaz. En güçlü ve en üstün kural her zaman Anayasadır."}, {"num": 25, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2024,Vize 2025,Vize 2026,Banko, Vize, 3 Kez Çıktı!", "text": "Bilgisayar programlarında eser sahipliği açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bir programcı bir programı tek başına yazarsa eser sahibi odur."}, {"letter": "B", "text": "Bir kişi birden fazla kişiyi bir araya getirerek bunların iştirak halinde programı yazmalarını sağlar ise bu şekilde meydana getirilen eser ayrılmaz bir bütün teşkil ediyorsa, program üzerindeki hakları bunları bir araya getiren kişi tarafından kullanılır"}, {"letter": "C", "text": "Bir bilgisayar programcısının sekreteri de program üzerinde birlikte eser sahibi olarak hak sahibi olur, çünkü sekreter sekreterlik görevi yaparak programcıya yardım etmiştir."}, {"letter": "D", "text": "Bir işverenin yanında programcı olarak çalışan kişi işi itibariyle bir program yazarsa işveren kanun gereği hakları kullanma yetkisine sahip olur."}, {"letter": "E", "text": "Birden fazla programcı bir programı birlikte yazmış iseler bunlar birlikte eser sahibi sayılırlar."}], "correct": "C", "explanation": "Eser sahibi olmak için o ürünün yazılımına veya mimarisine (fikri yaratım sürecine) katkıda bulunmak gerekir. Sekreterlik gibi idari destek faaliyetleri eser sahipliği hakkı doğurmaz."}, {"num": 26, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2026,Banko", "text": "Aşağıdaki aktörlerden hangisi bilişim hukukundaki temel aktörlerden değildir?", "options": [{"letter": "A", "text": "Arama motorları"}, {"letter": "B", "text": "Erişim sağlayıcılar"}, {"letter": "C", "text": "Sosyal ağ sağlayıcılar"}, {"letter": "D", "text": "Yer sağlayıcılar"}, {"letter": "E", "text": "Televizyon ve/veya radyo şirketleri"}], "correct": "E", "explanation": "Televizyon ve radyo şirketleri bilişim hukukunun değil, RTÜK mevzuatının (Medya Hukuku) konusudur."}, {"num": 27, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2023,Vize 2026,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi fikri mülkiyet hukuku alanı değildir?", "options": [{"letter": "A", "text": "Tasarım hukuku"}, {"letter": "B", "text": "Marka hukuku"}, {"letter": "C", "text": "Fikir ve sanat eserleri hukuku"}, {"letter": "D", "text": "Ürün adları ve coğrafik işaretlerin korunması"}, {"letter": "E", "text": "Faydalı bilgiler hukuku BİLİŞİM HUKUKU A P787296.G19103 25-03-2026 08:57:31 CEVAPLI"}], "correct": "E", "explanation": "Sınai Mülkiyet Kanunu'nda (SMK) 'Faydalı Model' vardır ancak hukuk sistemimizde 'Faydalı bilgiler hukuku' diye bir alan yoktur."}, {"num": 28, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize Bilişim Hukuku 2023 Güz, Vize 2026", "text": "Bir bilgisayar programının FSEK kapsamında korunabilmesi için aşağıdakilerden hangisi gerekli değildir?", "options": [{"letter": "A", "text": "Bilgisayar programının kanundaki eser kategorilerinden birine girmesi gerekir."}, {"letter": "B", "text": "Bilgisayar programının bir fikri ürün olması gerekir."}, {"letter": "C", "text": "Bilgisayar programının dışarıdan algılanabilir bir biçim kazanmış olması gerekir, bu yüzden programcı kafasında programın bütün aşamalarını tasarlanmış olsa bile henüz ortada korunabilen bir eser yoktur."}, {"letter": "D", "text": "Bilgisayar programının standardın üstünde özgün bir program olması gerekir."}, {"letter": "E", "text": "Bilgisayar programının programcının hususiyetini taşıması gerekir."}], "correct": "D", "explanation": "Bir bilgisayar programının eser sayılması için standardın üstünde dâhiyane veya çok özgün olmasına gerek yoktur, sadece kopyalanmamış olması ve sahibinin hususiyetini (özelliğini) yansıtması yeterlidir."}, {"num": 29, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar", "text": "Aşağıdakilerden hangisi Türk hukukunda geçerli olan sistem itibariyle belgeli alan adı örneğidir?", "options": [{"letter": "A", "text": ".av.tr"}, {"letter": "B", "text": ".org.tr"}, {"letter": "C", "text": ".net.tr"}, {"letter": "D", "text": ".biz.tr"}, {"letter": "E", "text": ".com.tr"}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 30, "tag": "Bilişim Hukuku - 2025-2026 - Vize - Bahar, Vize 2023,Vize 2025,Vize 2026,Banko", "text": "Hukukumuzdaki alan adı sistemi açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Türkiye’de verilen ve sonu .tr ile biten alan adları (örneğin: com.tr, edu.tr, net.tr vs.) doğrudan ICANN ve onun bir kuruluşu olan IANA tarafından verilmektedirler."}, {"letter": "B", "text": "Alan adlarına dair temel çerçeveyi düzenlemek ve uyuşmazlıkları çözmek için hukukumuzda söz konusu Yönetmelik yanında Alan Adları Kanunu da bulunmaktadır."}, {"letter": "C", "text": "Alan adlarının verilmesi ve sistemin yürütülmesi açısından hukukumuzda güncel olarak yetkili kurum ODTÜ nic.tr’dir."}, {"letter": "D", "text": "Alan Adları Yönetmeliğinde belgeli alan adları için ilk gelen ilk alır kuralı açıkça düzenlenmiştir."}, {"letter": "E", "text": "Alan Adları Yönetmeliğinde alan adları belgeli ve belgesiz alan adları diye ikiye ayrılmıştır."}], "correct": "E", "explanation": "TRABİS sisteminde alan adları kimlik veya evrak istemeyen (belgesiz) ve resmi kayıt gerektiren (belgeli) olarak ikiye ayrılır. İlk gelen alır kuralı belgesiz adresler içindir."}, {"num": 31, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Alan adı sistemi açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Alan adı sistemindeki hiyerarşik yapı (ya da ters ağaç benzetmesi), TRABİS’in organizasyon olarak en tepede yer almasını, yeni tip adlarının belirlenmesi sürecini ise kayıt kuruluşlarının takdirine bırakabilmesini ifade eder."}, {"letter": "B", "text": "Alan adı sistemi en solda en üst düzey, en sağda ise en düşük düzey olacak şekilde yapılandırılmıştır."}, {"letter": "C", "text": "Türkiye’de verilen alan adlarını (com.tr, edu.tr, net.tr vs.) ICANN ve onun bir kuruluşu olan IANA doğrudan vermektedir."}, {"letter": "D", "text": "Alan Adları Yönetmeliğine göre, belgesiz alan adlarında geçerli olan \"ilk gelen alır\" kuralı mutlak bir kural değildir. Bu yüzden bu kural ancak hukukumuzdaki diğer düzenlemelerle birlikte bir anlam ifade eder ve uygulanır."}, {"letter": "E", "text": "Alan adı sisteminde bir kişinin birden fazla alan adı edinmesi yasaktır."}], "correct": "D", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek D'dir."}, {"num": 32, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Büt 2023, Final", "text": "\"Belirli bir hukuki sonuç doğurmaya yönelik ve hukuk düzeni tarafından tanınan irade açıklaması.\" Yukarıda yer alan cümle tam olarak aşağıdakilerden hangisini tanımlamaktadır?", "options": [{"letter": "A", "text": "Hukuki işlem"}, {"letter": "B", "text": ""}, {"letter": "E", "text": "ticaret"}, {"letter": "C", "text": "Haksız fiil"}, {"letter": "D", "text": "Vekaletsiz iş görme"}, {"letter": "E", "text": "Tüketici işlemi"}], "correct": "A", "explanation": "Medeni Hukuk ve Borçlar Hukukunda, sözleşme kurmak veya hak devretmek için kişinin yaptığı geçerli irade beyanına 'Hukuki İşlem' denir."}, {"num": 33, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Final 2024,Final 2025,Büt 2023,Büt 2024,Banko, Final, 2 Kez Çıktı!", "text": "Kişisel verilerin işlenmesi süreci açısından, bu sürecin, verisi işlenen kişi penceresinden (işleme sürecinin, neyin ve kim tarafından işlendiğinin vs.) açık/belirli olmasını, bu süreçte veri üzerindeki hakimiyetinin korunmasını ve sürece dair bilgilenme imkânı verilmesini ifade eden ilke aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kişisel verilerin doğru ve gerektiğinde güncel olması ilkesi"}, {"letter": "B", "text": "Hukuka ve dürüstlük kuralına uygunluk ilkesi"}, {"letter": "C", "text": "Güvenilirlik ve gizlilik ilkesi"}, {"letter": "D", "text": "Şeffaflık ilkesi"}, {"letter": "E", "text": "Amaca bağlılık ilkesi"}], "correct": "D", "explanation": "Veri işleme süreçlerinin veri sahibi kişi için açık, bilinir ve anlaşılır olmasını; neyin kim tarafından işlendiğinin gizlenmemesini sağlayan KVKK evrensel ilkesi 'Şeffaflık İlkesi'dir."}, {"num": 34, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "İnternet ortamında çok çeşitli paylaşımlar yapılmaktadır. Örneğin bir web sitesindeki içeriğin web sitesi tarafından doğrudan hazırlanıp sunulması mümkün olduğu gibi, başka içeriklere bağlantı da verilebilir. Bu açıdan bağlantı verenin, bağlantıyı sunuş biçiminden, bağlantı sağladığı içeriği benimsediği ve kullanıcının söz konusu içeriğe ulaşmasını amaçladığı açıkça belli olması, bağlantı verenin hukuki fiilinin değerlendirilmesi açısından önemlidir. Sosyal medya üzerinden gerçekleşen paylaşımların hukuken değerlendirilmesi çerçevesinde önem taşıyacak olan bir ölçütü ifade eden yukarıdaki açıklama aşağıdakilerden hangisine karşılık gelmektedir?", "options": [{"letter": "A", "text": "Çok amaç gütme ölçütü"}, {"letter": "B", "text": "Benimseme ölçütü"}, {"letter": "C", "text": "Ulaştırma ve yakınlaştırma ölçütü"}, {"letter": "D", "text": "Dönüştürme ölçütü"}, {"letter": "E", "text": "Hedef kitle ölçütü"}], "correct": "B", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek B'dir."}, {"num": 35, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi reklam hukuku açısından önem taşıyan yasal kaynaklardan sayılmaz?", "options": [{"letter": "A", "text": "RTÜK Kanunu"}, {"letter": "B", "text": "Tüketicilerin Korunması Hakkında Kanun"}, {"letter": "C", "text": "İnternet Kanunu"}, {"letter": "D", "text": "Düzensiz Reklamları İzleme Kanunu"}, {"letter": "E", "text": ""}, {"letter": "E", "text": "Ticaret Kanunu"}], "correct": "D", "explanation": "Hukuk sistemimizde reklamları denetleyen Tüketici, RTÜK ve E-Ticaret kanunları vardır ancak 'Düzensiz Reklamları İzleme Kanunu' isminde uydurma bir kanun yoktur."}, {"num": 36, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Tek Ders Bilişim Hukuku 2024, Final 2023,Tek Ders 2024,Banko, Vize, Final, 2 Kez Çıktı!", "text": "Doğa gezisi tutkunu A, gezilerinde çektiği fotoğraflarını web sitesinde yayınlamaktadır. Bu şekilde Van gölünün bir kesitinin fotoğraflayan A, buna Van Gölü Canavarı adını vermiştir. FSEK kapsamında korunan eser olarak nitelenebilecek bu fotoğraf, internette çok sayıda paylaşılmaya ve/veya buna çok sayıda link verilmeye başlanmıştır. A, bu durumun hukuki alt yapısını öğrenmek istemektedir. Aşağıdaki şıklarda A ile ilgili verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "A’nın fotoğrafları iradesi hilafına internette yayınlanmış olsaydı, bunlara normal kullanıcıların link vermesi kural olarak hukuka uygun olurdu."}, {"letter": "B", "text": "Bu olayın soru kısmındaki kurgusu itibariyle A’nın fotoğraflarına normal link verilmesi ile frame tekniğiyle link verilmesi, umuma iletim hakkına yönelik hukuki değerlendirme açısından kural olarak önem taşıyan bir husus değildir."}, {"letter": "C", "text": "A’nın web sitesinde link vermeyi engellemeye yönelik herhangi bir teknik önlem yer almadığından, normal (ticari amaçla hareket etmeyen) internet kullanıcıları buna kural olarak serbestçe link verebilirler."}, {"letter": "D", "text": "A, söz konusu fotoğrafları herhangi bir teknik önlem ve uyarı oluşturmadan kendi web sitesine koyduğundan, hangi alandan olursa olsun normal (ticari amaçla hareket etmeyen) internet kullanıcıları her durumda, bunu indirip kendi web sitelerinde veya sosyal medya hesaplarında sorunsuz şekilde paylaşabilirler."}, {"letter": "E", "text": "A’nın fotoğrafları iradesi hilafına internete konulmuş olsaydı, ticari amaçlarla hareket edenlerin normalde bu durumu bildikleri veya bilmeleri gerektiğinden (bu yöndeki karineden) hareket etmek gerekecekti."}], "correct": "D", "explanation": "Şifre/önlem olmaması eserin telifinden vazgeçildiği anlamına gelmez. İndirip kendi hesabına tekrar yüklemek (paylaşmak) ticari amaçsız da olsa çoğaltma ve umuma iletim ihlalidir."}, {"num": 37, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Aşağıdakilerden hangisi fikri mülkiyet hukuku ile ilgili temel ilkelerden biridir?", "options": [{"letter": "A", "text": "Fikri mülkiyet hukuku yaratıcı faaliyet koruduğundan, sadece bireylerin tek başına yaptıkları, yani grup çalışması gibi unsurlar içermeyen çalışmalarını korur."}, {"letter": "B", "text": "Fikri mülkiyet hukuku sadece eşya haline gelerek maddi varlık kazanmış fikri ürünleri korur."}, {"letter": "C", "text": "Bir fikri ürünün farklı yönleri, fikri mülkiyet hukukunun birden fazla dalında aynı anda korunabilirler."}, {"letter": "D", "text": "Fikri mülkiyet hukuku sadece ticari faaliyet kapsamında kalan ve bu yönde etki yapan ürünleri korur."}, {"letter": "E", "text": "Bir fikri ürünün fikri mülkiyet hukuku kapsamında korunabilmesi için dijital hale gelmesi gereklidir. BİLİŞİM HUKUKU A P355543.G12236 26-05-2025 14:03:51 BİLİŞİM HUKUKU A P355543.G12236 26-05-2025 14:03:51 CEVAPLI CEVAPLI"}], "correct": "C", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek C'dir."}, {"num": 38, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Ceza hukuku kapsamında, kanunda suç ve cezanın belirtilmiş olmasını, suç tanımlamalarının ve ceza belirlenmesinin açık (belirli, net) olmasını ifade eden ilke aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Suçun maddi ve manevi unsuru ilkesi"}, {"letter": "B", "text": "Somut ceza ilkesi"}, {"letter": "C", "text": "Suçta ve cezada kanunilik ilkesi"}, {"letter": "D", "text": "Şeffaflık ilkesi"}, {"letter": "E", "text": "Kusura dayalı ceza ilkesi"}], "correct": "C", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek C'dir."}, {"num": 39, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Güncel olarak gerçekleşen kişilik hakkı ihlallerinden önemli bir kısmı internet ortamında gerçekleşmektedir. Aşağıdakilerden hangisi İnternet ortamında gerçekleşen tipik bir kişilik hakkı ihlalidir?", "options": [{"letter": "A", "text": "İstanbul'da Taksim meydanında yapılan bir gösterinin internet ortamında yayın yapan bir gazetede haber yapılması ve haberde, gösteriye katılan kişilerden birinin diğer göstericilerle birlikte gösteri sırasında çekilmiş fotoğrafının web sitesinde yayınlanması"}, {"letter": "B", "text": "İnternet ortamında yanıltıcı reklam yapılarak daha fazla tüketicinin etkilenmesinin sağlanması"}, {"letter": "C", "text": "Bir kişinin hassas kişisel verisinin internet ortamında izinsiz paylaşılması"}, {"letter": "D", "text": "Edebiyat fakültesinden mezun olan öğrencinin katıldığı mezuniyet töreninde kep fırlatma anında çekilmiş olan grup fotoğrafını sosyal medya hesabında paylaşması"}, {"letter": "E", "text": "Bir ticari işletmenin kendi web sitesinde de yer alan ve herkese açık olan künye bilgilerinin (işletmenin alanı, yöneticisi, adresi gibi bilgilerin) bir başkası tarafından sadece paylaşılması"}], "correct": "C", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek C'dir."}, {"num": 40, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Bilişim hukuku ilk derslerden beri ifade edildiği üzere pek çok hukuk alanıyla kesişmekte ve bu açıdan farklı yönleri bulunmaktadır. Diğer taraftan bu hukuka dair yasal düzenlemelerin genellikle teknik gelişmelere oranla biraz geriden geldiği, yani genellikle sonradan yapıldığı söylenebilir. Şu ana kadar bilişim hukuku dersinde öğrenilenler ve yukarıdaki bilgiyi de dikkate alarak bilişim ceza hukukunun diğer alanlarla ilişkisi veya diğer özellikleri açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bilişim ceza hukukunun kapsamına aldığı konuların en önde gelenlerinden biri internet üzerinden işlenen suçlardır."}, {"letter": "B", "text": "Fikir ve Sanat Eserleri Kanunun gibi bazı özel kanunlardaki cezai düzenlemeler dikkate alındığında, bilişim ceza hukukunun fikri mülkiyet yönü de bulunmaktadır."}, {"letter": "C", "text": "Bilişim ceza hukuku ceza hukukunun önemli bir parçasıdır."}, {"letter": "D", "text": "İnternetin ve buna dair hukuki rejimin gelişmesinde hukuk düzenlerinin ilk olarak yaptığı düzenlemelerin çoğunlukla bilişim suçlarıyla ilgili olduğu anlaşılmaktadır."}, {"letter": "E", "text": "Bilişim ceza hukuku, bilişim hukuku kapsamında kaldığı ölçüde özel hukukun bir parçası niteliğindedir.."}], "correct": "E", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek E'dir."}, {"num": 41, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Tek Ders Bilişim Hukuku 2024", "text": "A’nın kurduğu ve deprem konusunda bilimsel ve güncel yayınlar yapan elektronik deprem dergisi, www.depremhaberleri.com.tr alan adı altında 2012 yılından beri faaliyette bulunmaktadır. Bu arada B tarafından, 2020 yılında “deprem ve bilim” adıyla yayınlanmaya başlayan dergi, 2022 yılında www.depremhaberleri.com alan adının boş olduğunu görünce bunu kendi adına kaydettirir. A, B’nin yaptığının hukuka aykırı olduğunu, B’nın bu alan adına dayanak olan bir hukuki pozisyonunun bulunmadığını ve bu yüzden alan adını kullanılmasının bırakılması gerektiğini iddia etmektedir. Yukarıda bahsedilen alan adı uyuşmazlığı açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Uyuşmazlığa konu her iki alan adı da doğrudan Türkiye’de tescil edilen alan adlarıdır."}, {"letter": "B", "text": "Olaydaki verilere göre A’nın dergisinin adı meşhur marka haline geldiğinden, bu uyuşmazlıkta B’nin A’ya karşı herhangi bir şansı yoktur."}, {"letter": "C", "text": "A’nın elektronik dergisinin adı jenerik ibarelerden oluşmasına rağmen uzun yıllardır bu şekilde kullanıldığı ve yerleştiği hukuken korunur ve bu nedenle A, başkaları (burada B) tarafından yapılabilecek hak ihlallerine karşı hukuki yollara başvurabilir."}, {"letter": "D", "text": "A’nın iddiası doğru değildir, çünkü ilgili alan adı B tarafından alınmadan önce zaten boştadır."}, {"letter": "E", "text": "A’nın iddiası doğru değildir, çünkü bu konuda ilk gelen alır kuralı geçerlidir. İlk alan B olduğuna göre hukuken bir sorun yoktur."}], "correct": "C", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek C'dir."}, {"num": 42, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Bir bilgisayar programının fikri mülkiyet hukuku kapsamında korunabilmesi açısından aşağıdakilerden hangisi gerekli bir unsurdur?", "options": [{"letter": "A", "text": "Bir programcının her yönüyle kurguladığı ve kafasında bütün ayrıntılarını oluşturduğu program, henüz dışarıdan algılanabilir şekilde açıklanmamış/ortaya konulmamış olsa bile FSEK kapsamında korunan bir üründür."}, {"letter": "B", "text": "Bilgisayar programının muhakkak en yeni programlama dilinde yazılmış olması gerekir, çünkü ancak yeni programlar korunabilirler."}, {"letter": "C", "text": "Bilgisayar programının eser olarak korunabilmesi için her yönüyle özgün (orijinal) olması ve ortalamanın üstünü belirgin şekilde aşması gerekir."}, {"letter": "D", "text": "Bir bilgisayar programının patent hukuku kapsamında korunabilmesi için yeni olması yeterlidir, ayrıca buluş basamağını aşması gerekmez, çünkü bilgisayar programlarında bu koşul işin niteliği gereği önemsizdir."}, {"letter": "E", "text": "Bir bilgisayar programının fikir ve sanat eserleri hukukunda korunabilmesi için diğer koşullar yanında programcının hususiyetinin taşıması da gerekir."}], "correct": "E", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek E'dir."}, {"num": 43, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Final 2024,Final 2025,Banko, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bilişim hukuku kapsamında kalan bir sosyal medya hukuku sorunu değildir?", "options": [{"letter": "A", "text": "Sosyal medya hesabı sahibinin ölümü sonrasında sosyal medya hesabının mirasçılara kalıp kalmayacağı sorunu"}, {"letter": "B", "text": "Sosyal ağ sağlayıcının kendisine bildirilen yargı kararını yirmi dört saat içinde uygulamaması ve bunun hukuki sonuçları"}, {"letter": "C", "text": "İnternet fenomeninin hesabındaki yayınlarında ilgili mevzuata aykırı davranarak ilaç ve sağlık malzemeleri pazarlaması"}, {"letter": "D", "text": "Öğrencilerin bir değerlendirme platformunda öğretmenleri hakkında gerçeği tam yansıtmayan değerlendirmelerde bulunmaları"}, {"letter": "E", "text": "Sosyal medyada tanışan iki kişinin sonradan nişanlanması BİLİŞİM HUKUKU A P355543.G12236 26-05-2025 14:03:51 BİLİŞİM HUKUKU A P355543.G12236 26-05-2025 14:03:51 CEVAPLI CEVAPLI"}], "correct": "E", "explanation": "İnternette tanışıp nişanlanmak günlük bir yaşam/sosyal olaydır ve Aile Hukuku'nu ilgilendirir, çözülmesi gereken bir sosyal medya uyuşmazlığı değildir."}, {"num": 44, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Tek Ders Bilişim Hukuku 2024, Final 2023,Final 2024,Büt 2024,Tek Ders 2024,Banko, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi doğrudan bilişim hukuku kapsamına giren bir reklam hukuku sorunu doğurma potansiyeline sahip değildir?", "options": [{"letter": "A", "text": "Web sitesini başka kişilerin reklam vermesine imkan verecek şekilde yapılandırarak web sitesinde reklam verilmesini sağlamak"}, {"letter": "B", "text": "Bir reklam filmi yaptırmak/ürettirmek üzere film şirketine e-posta göndermek"}, {"letter": "C", "text": "Arama motoru üzerinden anahtar sözcük reklamı yapmak"}, {"letter": "D", "text": "Bir elektronik alışveriş platformunda, platform işletenin, platformdaki mağazalara kendi reklamının yapılmasını zorunlu kılması"}, {"letter": "E", "text": "Önceden olurunu/iznini almadan bir kişiye reklam e-postaları göndermek"}], "correct": "B", "explanation": "Bir ajansa reklam çektirmek için atılan e-posta standart bir ticari iletişim/iş görüşmesidir, doğrudan bilişim-reklam uyuşmazlığı yaratmaz."}, {"num": 45, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Hukukun türleri açısından çeşitli ayrımlar yapılır. Bu ayrımlardan biri maddi ve şekli hukuk ayrımıdır. Bunlar dışında daha pek çok ayrım bulunmaktadır. Maddi hukuku açıklayan en uygun önerme aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Uluslararası hukukta hak süjelerinin tanınmasını düzenleyen hukuk maddi hukuktur."}, {"letter": "B", "text": "Maddi hukuk kişilerin sahip olduğu hakları/hukuki pozisyonları düzenleyen, tanımlayan ve ortaya koyan hukuk dalıdır."}, {"letter": "C", "text": "Sadece kamu alanındaki hukuki ilişkilerin kurulması, ifası ve sona ermesiyle ilgilenen hukuka maddi hukuk denir."}, {"letter": "D", "text": "Hukuki uyuşmazlıkların nasıl çözüleceğini düzenleyen hukuk dalı maddi hukuktur."}, {"letter": "E", "text": "Yargı organlarını ve bunların görevlerini belirleyen/düzenleyen hukuka maddi hukuk denir."}], "correct": "B", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek B'dir."}, {"num": 46, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Final 2024,Büt 2023,Banko,Dikkat, Final, 2 Kez Çıktı!", "text": "Bilişim ceza hukukundaki koruma tedbirleri açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "5651 Sayılı Kanun’da (kısaca İnternet Kanunu) diğer bazı tedbirler yanında erişime engelleme tedbiri de öngörülmüştür."}, {"letter": "B", "text": "CMK m. 134’de öngörülen koruma tedbirlerini almaya asıl yetkili organ cumhuriyet savcısıdır."}, {"letter": "C", "text": "Ceza Muhakemeleri Kanunu m. 134 çerçevesinde bilgisayar veya bilgisayar kütüklerine el koyma işlemi sırasında, sistemdeki bütün verilerin yedeklemesi yapılır."}, {"letter": "D", "text": "5651 Sayılı Kanunda öngörülen ve ceza hukukuna dair koruma tedbiri kararları, ilgili suçun işlenmeye devam edilmesini engellemeye yöneliktirler."}, {"letter": "E", "text": "Ceza Yargılaması Hukukunda düzenlen (CMK m. 134) ve bilişim ceza hukuku kapsamına giren koruma tedbirlerinden en önde geleni bilgisayarlarda, bilgisayar programlarında ve kütüklerinde arama ve kopyalama yapma veya bunlara el koymayla ilgilidir."}], "correct": "B", "explanation": "⚠️ DİKKAT: Bilgisayarlara el koyma, erişim engeli gibi koruma tedbirlerinde 'asıl yetkili organ Hakimliktir'. BTK Başkanı sadece çok spesifik istisnalarda ve gecikmesinde sakınca bulunan hallerde yetki kullanır."}, {"num": 47, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Elektronik ticarette satıcıların alıcılara karşı pek çok yükümlülüğü bulunmaktadır. Aşağıdakilerden hangisi bu çerçevede kalan bir yükümlülüktür?", "options": [{"letter": "A", "text": "Satım sözleşmesinin konusunu oluşturan ürünü alıcıya zamanında teslim etmek"}, {"letter": "B", "text": "Satıcının ödemesi gereken vergilerini düzenli ödemesi"}, {"letter": "C", "text": "Satıcı bir platform üzerinden satış gerçekleştiriyor ise, bu platform sağlayıcıyla ilişkilerini sıkı ve iyi tutmak"}, {"letter": "D", "text": "Alıcıların elektronik imza kullanmasını teşvik etmek"}, {"letter": "E", "text": "Sattığı ürünler hakkında periyodik ve doğru kampanyalar düzenlemek"}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 48, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025", "text": "Fikir ve sanat eserleri kapsamında korunan ve internette yayınlanmış bir esere basit, frame ya da başka bir şekilde link verilmesi, asıl olarak aşağıdakilerden hangi hak açısından önem taşımaktadır?", "options": [{"letter": "A", "text": "Umuma iletim hakkı"}, {"letter": "B", "text": "Çoğaltma hakkı"}, {"letter": "C", "text": "Eserin orijinalini takip hakkı"}, {"letter": "D", "text": "Eserin bütünlüğünün korunması hakkı"}, {"letter": "E", "text": "İşleme hakkı"}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 49, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Final 2024, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi yer sağlayıcı açısından bir yükümlülüktür?", "options": [{"letter": "A", "text": "Yer sağladığı içeriğin hukuka aykırı olduğu İnternet Kanunun ilgili maddeleri çerçevesinde yürütülen bir yargı sürecinde anlaşıldığında ve bu içeriğin kaldırılmasına karar verildiğinde, kararın kendisine bildirilmesiyle birlikte söz konusu içeriği yayından çıkarmak"}, {"letter": "B", "text": "Yer sağladığı içeriklerin arama motorları tarafından arama süreçlerinde kullanılmasını engellemek"}, {"letter": "C", "text": "Yer sağladığı içeriğin doğruluğunu ve hukuka uygunluğunu denetlemek"}, {"letter": "D", "text": "Kullanıcıların hangi içeriklere girdiklerini düzenli şekilde gözlemleyerek bu verileri saklamak"}, {"letter": "E", "text": "Yer sağlanan içerikle hukuka aykırı bir faaliyet yapılıp yapılmadığını denetlemek"}], "correct": "A", "explanation": "Yer sağlayıcının (sunucunun) önceden denetleme yükümlülüğü yoktur. Yalnızca mahkeme veya yetkili merciden bildirim/karar gelirse içeriği kaldırmak zorundadır (Uyar-Kaldır)."}, {"num": 50, "tag": "BİLİŞİM HUKUKU BÜTÜNLEME SINAVI 2024-2025, Vize 2025,Final 2023,Final 2025,Banko, Final, 2 Kez Çıktı!", "text": "Tüketicilerin Korunması Hakkındaki Kanun'da (TKHK) mesafeli sözleşmeler itibariyle tüketiciye tanınan ve tüketicinin herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin kullanabileceği hak aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Sözleşmeyi dönüştürme hakkı"}, {"letter": "B", "text": "Geri alım hakkı"}, {"letter": "C", "text": "Caydırma hakkı"}, {"letter": "D", "text": "Ön bilgilendirme isteme hakkı"}, {"letter": "E", "text": "Cayma hakkı"}], "correct": "E", "explanation": "İnternetten (mesafeli) yapılan alışverişlerde tüketicinin, malı teslim aldıktan sonraki 14 gün içinde hiçbir mazeret/gerekçe belirtmeden ve ceza ödemeden ürünü iade edip parasını geri alma hakkına 'Cayma Hakkı' denir."}, {"num": 51, "tag": "Tek Ders Bilişim Hukuku 2024, Vize 2025,Final 2023,Final 2025,Tek Ders 2024,Banko, Vize, 3 Kez Çıktı!", "text": "Bilişim hukuku hakkında aşağıda verilen bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Elektronik ortamda işlenen suçlara dair hukuki rejim veya elektronik alandaki ticari faaliyetlerin vergilendirilmesi gib hususlar, tamamen ayrı hukuk alanlarının kapsamında kalan konular olduklarından, bilişim hukukunun kapsamına dahil değildirler."}, {"letter": "B", "text": ""}, {"letter": "E", "text": "ticaret, alan adları, kişisel verilerin elektronik ortamda korunması gibi hususlar bilişim hukukunun kapsamında kalan konulardır."}, {"letter": "C", "text": "Bilişim hukuku, kapsamına aldığı konular itibariyle hem özel ve hem de kamu hukukuna dahil edilebilecek yönler içermektedir."}, {"letter": "D", "text": "Bilişim hukuku kişilerin bu alana dair hukuki pozisyonlarını (haklarını) da düzenlediğinden ve/veya bunları belirlediğinden aynı zamanda bir maddi hukuktur."}, {"letter": "E", "text": "Bilişim hukuku kapsamında bazı hukuki koruma imkanlarının nasıl ve nerede ileri sürülebileceği, nasıl karar verileceği gibi hususlar da düzenlendiğinden, bu hukuk alanı, bu yönler itibariyle şekli hukuk kapsamında görülebilir."}], "correct": "A", "explanation": "Siber suçlar (Ceza) ve dijital vergiler (Vergi) bilişim hukukunun en önemli disiplinlerarası çalışma alanlarıdır. Kapsam dışı değildirler."}, {"num": 52, "tag": "Tek Ders Bilişim Hukuku 2024, Final 2026", "text": "Bilgisayar programlarının fikri mülkiyet hukuku kapsamında korunması açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bir bilgisayar programının FSEK kapsamında eser korumasından yararlanabilmesi için yeni olması gerekir."}, {"letter": "B", "text": "Bir bilgisayar programı FSEK çerçevesinde korunabilir, ama bunun birden çok programcı tarafından birlikte yazılması gerekir."}, {"letter": "C", "text": "Bir bilgisayar programı gerekli koşulları taşımak kaydıyla, duruma göre hem FSEK ve hem de SMK kapsamında korunabilir."}, {"letter": "D", "text": "Hukukumuzda bilgisayar programları patent hukukunda her durumda korunmazlar, çünkü bunlar kanunda buluş sayılmamışlardır."}, {"letter": "E", "text": "Hukukumuzda fikir ve sanat eserleri hukukunun temel kanunu olan FSEK’de bilgisayar programlarının korunması ayrıca düzenlenmemiş olup, bu durum yargı kararlarıyla benimsenerek zamanla yerleşmiştir."}], "correct": "C", "explanation": "Bilgisayar programları FSEK (telif) kapsamında eserin sahibinin hususiyetini taşıması şartıyla korunur. Ancak teknik bir problemi çözen 'bilgisayar buluşları' ek şartları sağlarsa SMK kapsamında patent (kümülatif koruma) ile de korunabilir."}, {"num": 53, "tag": "Tek Ders Bilişim Hukuku 2024", "text": "Ticaret, iş, zanaat veya bir meslekle bağlantılı olarak, bir mal veya hizmetin satışını ya da kiralanmasını sağlamak, hedef kitleyi oluşturanları bilgilendirmek veya ikna etmek amacıyla reklam verenler tarafından herhangi bir mecrada yazılı, görsel, işitsel ve benzeri yollarla gerçekleştirilen pazarlama iletişimi niteliğindeki duyurular. Yukarıda yer alan ifadede aşağıdakilerden hangisi anlatılmaktadır?", "options": [{"letter": "A", "text": "Toplu reklam"}, {"letter": "B", "text": "Ticari reklam"}, {"letter": "C", "text": "Multimedya tipi reklam"}, {"letter": "D", "text": "Duyurum niteliğindeki reklam"}, {"letter": "E", "text": "Siyasi reklam"}], "correct": "B", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek B'dir."}, {"num": 54, "tag": "Tek Ders Bilişim Hukuku 2024", "text": "\"Kişinin doğumla kazandığı bağımsız varlığını ve bütünlüğünü oluşturan; hayat, beden ve ruh tamlığı, vicdan, din, düşünce ve çalışma özgürlüğü, onuru, ismi, resmi, sırları ile aile bütünlüğü, sosyal ve duygusal değerlerinin tümü ..... oluşturur.\" Yukarıda yer alan ve bir Yargıtay kararından alınan cümledeki boş olan yere aşağıdaki şıklardan hangisi gelmelidir?", "options": [{"letter": "A", "text": "Mutlak değerleri"}, {"letter": "B", "text": "Fikri hakları"}, {"letter": "C", "text": "Temel hak ve özgürlükleri"}, {"letter": "D", "text": "Kişilik haklarını"}, {"letter": "E", "text": "Kısmi mutlak hakları"}], "correct": "D", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek D'dir."}, {"num": 55, "tag": "Tek Ders Bilişim Hukuku 2024, Vize 2025,Final 2024,Final 2025,Tek Ders 2024,Banko, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir link verme türü değildir?", "options": [{"letter": "A", "text": "İç link (inpagelink)"}, {"letter": "B", "text": "Embedding (gömülü) link"}, {"letter": "C", "text": "Frame (çerçeve) link"}, {"letter": "D", "text": "Çatı link"}, {"letter": "E", "text": "Derin link BİLİŞİM HUKUKU A P355543.G4568 19-08-2024 10:44:17 BİLİŞİM HUKUKU A P355543.G4568 19-08-2024 10:44:17 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "İnternet hukukunda iç link, derin link, frame ve gömülü (embedding) link tanımları vardır. 'Çatı link' diye teknik bir terim bulunmamaktadır."}, {"num": 56, "tag": "Tek Ders Bilişim Hukuku 2024, Vize Bilişim Hukuku 2023 Güz, Vize 2023,Büt 2024,Tek Ders 2024,Banko,Dikkat, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi çoğaltma hakkı kapsamında kalmaz?", "options": [{"letter": "A", "text": "Bir bilgisayar programını bilgisayarda çalıştırmak"}, {"letter": "B", "text": "Cep telefonunu içindeki programla beraber başkasına satmak"}, {"letter": "C", "text": "Bir bilgisayar programını sadece kısmen çoğaltmak"}, {"letter": "D", "text": "Bir bilgisayar programını internetten bilgisayarına indirmek"}, {"letter": "E", "text": "Bir bilgisayar programını bir bilgisayardan diğerine indirmek"}], "correct": "B", "explanation": "⚠️ DİKKAT: İçinde yazılım olan fiziki cihazı satmak yeni bir kopya yaratmadığı için çoğaltma değil, mülkiyet devri yani 'yayma (satış) hakkının tükenmesi' kapsamındadır."}, {"num": 57, "tag": "Tek Ders Bilişim Hukuku 2024, Final 2023,Final 2025,Büt 2024,Tek Ders 2024,Banko, Final, 3 Kez Çıktı!", "text": "Hukuki işleme dair aşağıdaki bilgilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Hukuki işlemlerin en temel görünümü sözleşmelerdir"}, {"letter": "B", "text": "Hukukumuzda hukuki işlemler iki taraflı olduklarında şekle bağlıdırlar"}, {"letter": "C", "text": "Hukuki işlemin temel unsuru, hukuki sonuç doğurmaya yönelik irade açıklamasıdır"}, {"letter": "D", "text": "Hukuki işlemlere dair temel unsurlar bilişim hukuku alanındaki sözleşmeler açısından kural olarak aynı şekilde geçerlidir"}, {"letter": "E", "text": "Bir hukuki işlemin içerdiği koşulların tamamının genel işlem koşulu şeklinde olması mümkündür"}], "correct": "B", "explanation": "Türk Borçlar Kanunu'nda temel prensip 'Şekil Serbestisi'dir. İki taraflı işlemler (sözleşmeler) kural olarak özel bir şekle (yazılı, noter vs.) bağlı olmadan, sözlü veya internet üzerinden de kurulabilir."}, {"num": 58, "tag": "Tek Ders Bilişim Hukuku 2024", "text": "Alan adı uyuşmazlıklarına da uygulanabilen Sınai Mülkiyet Kanunu m. 7 III hükmü açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Bu maddeyle aynı zamanda eser koruması ve eser sahibinin hakları düzenlendiğinden eser sahibi bu hükme dayanarak eseriyle örtüşen alan adlarını engelleme yoluna gidebilir."}, {"letter": "B", "text": "Bu hükümde patent hakkı sahibine patentine aykırı alan adlarını engelleme yetkisi verildiğinden, bu hüküm patent hakkı ve alan adı uyuşmazlıklarını da düzenlemektedir."}, {"letter": "C", "text": "Bu hükme göre bir kişinin markasıyla örtüşen işareti alan adı olarak ilk önce kaydettiren diğer kişi üstün bir hakka bulunmasa bile her durumda ve hukuka uygun şekilde alan adının sahibi olur."}, {"letter": "D", "text": "Bu hükmün bir alan adı uyuşmazlığına uygulanması için öncelikle markayla örtüşen ibarenin internet ortamında ticari etki yaratacak şekilde alan adı olarak kullanılması gerekir."}, {"letter": "E", "text": "Bu hüküm, bir kişinin isminin bir başkası tarafından alan adı olarak kaydettirilip kullanılması nedeniyle ortaya çıkan bir uyuşmazlığa da doğrudan ve birebir uygulanır. BİLİŞİM HUKUKU A P355543.G4568 19-08-2024 10:44:17 BİLİŞİM HUKUKU A P355543.G4568 19-08-2024 10:44:17 CEVAPLI CEVAPLI"}], "correct": "D", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek D'dir."}, {"num": 59, "tag": "Tek Ders Bilişim Hukuku 2024, Vize 2025,Final 2024,Final 2025,Büt 2023,Büt 2024,Tek Ders 2024,Banko, Final, 5 Kez Çıktı!", "text": "Aşağıdakilerden hangisi TCK’da “bilişim alanındaki suçlar” başlığı altında düzenlenen suçlardandır?", "options": [{"letter": "A", "text": "Banka soymak için internetten silah satın almak"}, {"letter": "B", "text": "Kaçakçılık yapmak için internet üzerinden haberleşmek"}, {"letter": "C", "text": "Banka veya kredi kartlarının kötüye kullanılması suçu"}, {"letter": "D", "text": "Bir mağazadan bilgisayar ve bilgisayar programı çalmak"}, {"letter": "E", "text": "Bir kişinin evine gizlice kamera yerleştirilip kişinin izlenmesi"}], "correct": "C", "explanation": "TCK m. 245'te yer alan 'Banka veya kredi kartlarının kötüye kullanılması suçu' doğrudan bilişim suçudur. Diğerleri özel hayatın ihlali, hırsızlık veya kaçakçılıktır."}, {"num": 60, "tag": "Tek Ders Bilişim Hukuku 2024, Final 2023,Final 2024,Büt 2024,Tek Ders 2024,Banko, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi sosyal medya ve buna dair muhtemel hukuki sorunlar kapsamında değerlendirilmez?", "options": [{"letter": "A", "text": "Sosyal hesaplarının hukuki niteliği"}, {"letter": "B", "text": "Sosyal medya fenomeninin hesabında arka planda bir markanın reklamını yapması"}, {"letter": "C", "text": "Sosyal medyada gerçekte yaşanmamış bir deneyimi yaşanmış gibi göstererek rakip firmanın ürününü kötülemek"}, {"letter": "D", "text": "Bir sosyal medya hesabında bir arkadaşının yazdığı şiirini izinsiz paylaşmak"}, {"letter": "E", "text": "İnternetten elektronik imza kullanarak bir işlem yapmak"}], "correct": "E", "explanation": "E-imza ile resmi evrak imzalamak e-devlet/e-ticaret konusudur, doğrudan sosyal medyanın platform içi etkileşim sorunlarından biri değildir."}, {"num": 61, "tag": "Tek Ders Bilişim Hukuku 2024", "text": "5651 Sayılı Kanun’da (kısaca İnternet Kanunu) yer alan ve şu cümle “İnternet ortamı üzerinden kullanıcılara sunulan her türlü bilgi veya veriyi üreten, değiştiren ve sağlayan gerçek veya tüzel kişi.” aşağıdakilerden hangisini tanımlamaktadır?", "options": [{"letter": "A", "text": "Yer sağlayıcı"}, {"letter": "B", "text": "Aracı hizmet sağlayıcı"}, {"letter": "C", "text": "Toplu kullanım sağlayıcı"}, {"letter": "D", "text": "Erişim sağlayıcı"}, {"letter": "E", "text": "İçerik sağlayıcı"}], "correct": "E", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek E'dir."}, {"num": 62, "tag": "Vize Bilişim Hukuku 2023 Güz", "text": "Aşağıdakilerden hangisi ﬁkri mülkiyet hukuku alanı değildir?", "options": [{"letter": "A", "text": "Marka hukuku"}, {"letter": "B", "text": "Fikir ve sanat eserleri hukuku"}, {"letter": "C", "text": "Faydalı bilgiler hukuku"}, {"letter": "D", "text": "Tasarım hukuku"}, {"letter": "E", "text": "Ürün adları ve coğraﬁk işaretlerin korunması YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > BİLİŞİM HUKUKU A"}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 63, "tag": "Vize Bilişim Hukuku 2023 Güz, Vize 2023, Vize, 2 Kez Çıktı!", "text": "Cemile isimli romanın yazarı ile adı Cemile olan bir kişi arasındaki www.cemile.com.tr alan adı uyuşmazlığı açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Eserin ne zaman yazıldığına bakmak gerekir, eserin yazılma tarihi, Cemile adlı kişinin doğum tarihinden daha önce ise, alan adını eser sahibi almalıdır."}, {"letter": "B", "text": "Bu tür bir uyuşmazlıkta herkesin kendine uygun bir hukuki pozisyonu bulunduğundan ve bunlar arasında kural olarak bir üstünlük, öncelik değerlendirmesi yapılamayacağından, kimin alan adını önce kaydettirdiğine bakmak gerekir."}, {"letter": "C", "text": "Eser koruması isim korumasından önce geldiğinden, bu alan adını roman yazarı almalıdır."}, {"letter": "D", "text": "Cemile ismi bayan adı olduğundan alan adını almada eser adına oranla öncelik sağlar."}, {"letter": "E", "text": "Eser koruması aynı zamanda toplumsal kültüre bir katkı yaptığından, eser sahibinin bu uyuşmazlıktaki öncelik hakkı buna dayanır."}], "correct": "A", "explanation": "İki taraf da kötü niyetli değilse ve ikisinin de ismi kullanmak için geçerli sebebi varsa 'İlk gelen alır' kuralı işletilir. İsim hakkı ile eser adı arasında mutlak bir üstünlük yoktur."}, {"num": 64, "tag": "Vize Bilişim Hukuku 2023 Güz, Vize 2023,Vize 2024,Vize 2025,Vize 2026,Final 2025,Büt 2023,Banko, Vize 2023,Vize 2024,Vize 2025,Vize 2026,Final 2025,Final 2026,Büt 2023,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi belgeli alan adı örneğidir?", "options": [{"letter": "A", "text": ".name.tr"}, {"letter": "B", "text": ".biz.tr"}, {"letter": "C", "text": ".com.tr"}, {"letter": "D", "text": ".dr.tr"}, {"letter": "E", "text": ".net.tr"}], "correct": "A", "explanation": "Mesleki suiistimali önlemek için 'dr.tr' (doktor) ve 'av.tr' (avukat) gibi alan adları sadece resmi belge (diploma/kimlik) ibrazıyla alınabilir. Diğerleri belgesizdir."}, {"num": 65, "tag": "Vize Bilişim Hukuku 2023 Güz", "text": "Aşağıdakilerden hangisi bilişim hukukuna özgü olan ve akla ilk gelen kanundur?", "options": [{"letter": "A", "text": "Türk Medeni Kanunu"}, {"letter": "B", "text": "5651 Sayılı Kanun"}, {"letter": "C", "text": "Alan Adları Kanunu"}, {"letter": "D", "text": "Türk Ceza Kanunu"}, {"letter": "E", "text": "Vatandaşlık Kanunu"}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 66, "tag": "Vize Bilişim Hukuku 2023 Güz", "text": "Aşağıdaki ﬁillerden hangisi bilgisayar programlarının FSEK kapsamında korunması açısından önem taşımaz?", "options": [{"letter": "A", "text": "Bir programcının programını ilk kez kamuya arz etmesi"}, {"letter": "B", "text": "Bir programı çoğaltmak"}, {"letter": "C", "text": "Çoğaltılmış bilgisayar programı nüshalarını yaymak"}, {"letter": "D", "text": "Bir programı işleyerek daha gelişmiş bir program haline getirmek"}, {"letter": "E", "text": "Bir bilgisayar programının hangi dilde yazıldığını kamuoyuna açıklamak. YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > BİLİŞİM HUKUKU A"}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 67, "tag": "Vize Bilişim Hukuku 2023 Güz", "text": "Normlar hiyerarşinin anlamı aşağıdakilerden hangisinde doğru açıklanmıştır?", "options": [{"letter": "A", "text": "Bununla Devletteki en yetkili kişinin en üstün kuralları koyacağı ve bütün kurum, kuruluş ve kişilerin bu kurallara her halükarda uyması gerektiği ifade edilir."}, {"letter": "B", "text": "Normlar hiyerarşisi adından da anlaşıldığı üzere genel kanunların özel kanunların üstünde olduğunu ifade eden bir temel ilkedir."}, {"letter": "C", "text": "Bu ilke bir hukuk sistemindeki hukuk kurallarının birbiriyle olan ilişkisine dair temel bir ilkedir ve sırasıyla Anayasa’nın en üst hukuk kaynağı olduğunu, bunun altındaki diğer kuralların (hukuk sistemimiz açısından usulüne uygun şekilde kabul ediliş uluslararası anlaşmalar, kanunlar, Cumhurbaşkanlığı kararnameleri vs.) sırasıyla piramidin üstünden aşağıya doğru konumlandığı bir yapıyı ifade eder."}, {"letter": "D", "text": "Normlar hiyerarşisi, idarenin temel hak ve özgürlükleri sınırlayan kararlarının kanuni bir temeli olması gerektiğini, aksi halde idarenin kararlarının geçersizliğini ifade eder."}, {"letter": "E", "text": "Bu ilke gerçekte kuvvetler ayrılığı ilkesinin bir diğer ifadesidir ve norm koyucu kuvvetin diğer kuvvetlerin üstünde olduğunu ifade eder."}], "correct": "A", "explanation": "AUZEF Bilisim Hukuku müfredatı uyarınca doğru seçenek A'dir."}, {"num": 68, "tag": "Vize 2025,Final 2023,Final 2024,Final 2025,Banko, Final, 3 Kez Çıktı!", "text": "Tüketicilerin Korunması Hakkındaki Kanun'da (TKHK'da) düzenlenen mesafeli sözleşmelerin ifası açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Bu sözleşmelerde kanunda öngörülen süreler içinde edim ifa edilmediğinde, tüketici, ancak diğer tarafa 14 günlük bir ek süre verdikten sonra sözleşmeyi sonlandırabilir."}, {"letter": "B", "text": "Satıcı edimini yerine getirmemesi durumunda tüketici sözleşmeyi feshedebilir."}, {"letter": "C", "text": "Satıcı taahhüt edilen süre içinde edimini yerine getirmelidir."}, {"letter": "D", "text": "İmkansızlaşması halinde 3 gün içinde bildirim zorunludur."}, {"letter": "E", "text": "Mal satışlarında sözleşmenin ifa süresi her halükarda 30 günü geçemez."}], "correct": "A", "explanation": "İnternetten alınan ürün süresinde teslim edilmezse, tüketici sözleşmeyi derhal feshetme hakkına sahiptir. Ek mühlet/süre verme zorunluluğu yoktur."}, {"num": 69, "tag": "Vize 2024,Vize 2025,Büt 2024,Banko, Vize, 3 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bilişim hukuku alanındaki temel kanunlarda düzenlenen süjelerden değildir?", "options": [{"letter": "A", "text": "Elektronik ticaret aracı hizmet sağlayıcı"}, {"letter": "B", "text": "İçerik sağlayıcı"}, {"letter": "C", "text": "Yer sağlayıcı"}, {"letter": "D", "text": "Toplu kullanım sağlayıcı"}, {"letter": "E", "text": "Erişim geliştirmeyi sağlayıcı"}], "correct": "E", "explanation": "Kanunlarda 'Erişim Sağlayıcı' (TTNET, Turkcell vb.) şeklinde resmi bir tanım vardır ancak 'Erişim Geliştirmeyi Sağlayıcı' isminde bir kavram veya aktör mevzuatta bulunmamaktadır."}, {"num": 70, "tag": "Vize 2023,Vize 2025,Banko, Vize 2023,Vize 2025,Final 2026,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi İnternet Kanununda (5651) tanımlanan hususlardan değildir?", "options": [{"letter": "A", "text": "Elektronik ticaret aracı hizmet sağlayıcı"}, {"letter": "B", "text": "Yer sağlayıcı"}, {"letter": "C", "text": "Toplu kullanım sağlayıcı"}, {"letter": "D", "text": "Sosyal ağ sağlayıcı"}, {"letter": "E", "text": "Erişim sağlayıcı"}], "correct": "A", "explanation": "E-ticaret aracı hizmet sağlayıcı (Pazaryerleri vb.) tanımı 5651 sayılı İnternet Kanununda değil, 6563 Sayılı Elektronik Ticaret Kanunu'nda yer alır."}, {"num": 71, "tag": "Vize 2025,Final 2023,Büt 2024,Tek Ders 2024,Banko, Vize, 2 Kez Çıktı!", "text": "A'nın kurduğu ve deprem konusunda bilimsel yayınlar yapan www.depremhaberleri.com.tr dergisi 2012'den beri faaliyettedir. B ise 'deprem ve bilim' dergisini kurup 2022'de www.depremhaberleri.com alan adını almıştır. Uyuşmazlık açısından hangisi doğrudur?", "options": [{"letter": "A", "text": "A'nın iddiası doğru değildir, alan adı boştadır."}, {"letter": "B", "text": "A'nın dergisinin adı jenerik ibarelerden oluşmasına rağmen uzun yıllardır bu şekilde kullanıldığı ve yerleştiği hukuken korunur ve hak ihlaline karşı yollara başvurabilir."}, {"letter": "C", "text": "İlk gelen alır kuralı geçerlidir, sorun yoktur."}, {"letter": "D", "text": "A'nın markası meşhur marka olmuştur, B'nin şansı yoktur."}, {"letter": "E", "text": "Her ikisi de doğrudan Türkiye'de tescillidir."}], "correct": "B", "explanation": "Jenerik kelimeler olsa da A, emek ve bilinirlik (müktesep hak) yaratmıştır. Rakip B'nin kasten okuyucuları yanıltmak için .com versiyonunu alması kötü niyetli haksız rekabet sayılır."}, {"num": 72, "tag": "Vize 2023", "text": "Aşağıdaki fiillerden hangisi bilgisayar programlarının FSEK kapsamında korunması açısından önem taşımaz?", "options": [{"letter": "A", "text": "Programı ilk kez kamuya arz etmek"}, {"letter": "B", "text": "Programı çoğaltmak"}, {"letter": "C", "text": "Çoğaltılmış nüshaları yaymak"}, {"letter": "D", "text": "Programı işleyerek daha gelişmiş hale getirmek"}, {"letter": "E", "text": "Bir bilgisayar programının hangi dilde yazıldığını kamuoyuna açıklamak"}], "correct": "E", "explanation": "Programın yazıldığı dili (C++, Java vb.) söylemek telif ihlali doğurmaz, hukuki bir tasarruf eylemi değildir. Diğerleri mali/manevi hakların kullanımıdır."}, {"num": 73, "tag": "Final 2023,Final 2024,Final 2025,Banko, Final 2023,Final 2024,Final 2025,Final 2026,Banko, Vize, 2 Kez Çıktı!", "text": "Sosyal ağ sağlayıcıların tanımlandığı kanun aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Elektronik Ticaret Kanunu"}, {"letter": "B", "text": "Sosyal Medya Kanunu"}, {"letter": "C", "text": "Türk Borçlar Kanunu"}, {"letter": "D", "text": "Evrensel Hizmet Kanunu"}, {"letter": "E", "text": "İnternet Kanunu (5651 Sayılı Kanun)"}], "correct": "E", "explanation": "Kamuoyunda Sosyal Medya Yasası olarak bilinen düzenlemeler ayrı bir yasa değildir, 5651 Sayılı İnternet Kanunu'nun içine eklenmiştir."}, {"num": 74, "tag": "Final 2023,Final 2024,Vize 2025,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi fikri mülkiyet hukuku kapsamında kalan bir hak değildir?", "options": [{"letter": "A", "text": "Bir bilgisayar programının yazılması sürecinde kaynak bulup, fotokopi yapıp çalışanlara sunan personelin işverenden ücret talep etme hakkı"}, {"letter": "B", "text": "Algoritmayı geliştiren ve uygulayan kişinin buluş sahibi olarak anılma hakkı"}, {"letter": "C", "text": "Eser sahibinin anılma hakkı"}, {"letter": "D", "text": "Yazarın eserini çoğaltma hakkı"}, {"letter": "E", "text": "Roman yazarının nüshalarına ilişkin yayma hakkı"}], "correct": "A", "explanation": "Fotokopi çekmek veya dosya taşımak fikri yaratım süreci değildir. Ücret/maaş talep edilmesi İş Hukuku'nun konusudur, telif hakkı doğurmaz."}, {"num": 75, "tag": "Final 2023,Final 2024,Banko,Dikkat, Final 2023,Final 2024,Final 2026,Banko,Dikkat, Final, 2 Kez Çıktı!", "text": "Bilişim suçları açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Klasik suçların bilişim ortamında işlenmesi de bilişim suçu sorunu oluşturur."}, {"letter": "B", "text": "FSEK gibi özel kanunlarda düzenlenmiş bilişim suçları vardır."}, {"letter": "C", "text": "Kişilik hakkı ihlalleri bilişim suçları kapsamında kalan en önemli konu olduğundan, bilişim suçları kısmen TMK'da düzenlenmiştir."}, {"letter": "D", "text": "İlk yasal düzenlemeler genellikle bilişim suçlarına ilişkindir."}, {"letter": "E", "text": "Bilişim suçlarının asıl olarak düzenlendiği kanun TCK'dır."}], "correct": "C", "explanation": "⚠️ DİKKAT: TMK (Medeni Kanun) hapis veya suç düzenlemez, tazminat ve medeni hakları düzenler. Bilişim suçlarının asıl yeri Türk Ceza Kanunu'dur (TCK)."}, {"num": 76, "tag": "Final 2024", "text": "Arama motorları üzerinden anahtar sözcük reklamcılığında negatif eşleme açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Negatif eşlemede seçilen türe göre, anahtar sözcük ile örtüşen sözcüklerde reklam gösterilmez."}, {"letter": "B", "text": "SMK m.7 negatif eşlemeyi de kapsamaktadır."}, {"letter": "C", "text": "Bu bir banner reklam türüdür."}, {"letter": "D", "text": "Anahtar sözcük ile arama sözcüğü aynı olduğunda reklam gösterilir."}, {"letter": "E", "text": "Sadece dar eşleme yapılabildiğinden hukuki sorun çıkmaz."}], "correct": "A", "explanation": "Dijital pazarlamada negatif eşleme, belirli kelimeler aratıldığında sizin reklamınızın gizlenmesini (gösterilmemesini) sağlayan özelliktir."}, {"num": 77, "tag": "Final 2024", "text": "Aşağıdakilerden hangisi arama motoru bazı reklamlara dair bir hukuki sorun olarak görülemez?", "options": [{"letter": "A", "text": "Markasıyla örtüşen işareti negatif eşleme listesine eklemeyi talep etmek"}, {"letter": "B", "text": "Sanatçının adını rızasız anahtar sözcük seçmek"}, {"letter": "C", "text": "Yazarın roman başlığını rızasız seçmek"}, {"letter": "D", "text": "Başkasının markasıyla reklam yapmak"}, {"letter": "E", "text": "Kişinin yıllar önce yaşadığı bir olumsuzluğun aramalarda öne çıkmasını engellemek için uğraşmak"}], "correct": "E", "explanation": "E şıkkı organik arama sonuçlarından haber sildirme ile yani 'Unutulma Hakkı' ile ilgilidir, anahtar sözcük reklamcılığı (AdWords) ihlali değildir."}, {"num": 78, "tag": "Vize 2024,Final 2024,Banko", "text": "Aşağıdakilerden hangisi güncel alan adı sistemimiz açısından doğrudan aktörlerden biri olarak görülebilir?", "options": [{"letter": "A", "text": "Erişim sağlayıcılar"}, {"letter": "B", "text": "İTÜ"}, {"letter": "C", "text": "Alan adı kayıt kuruluşları"}, {"letter": "D", "text": "Yer sağlayıcılar"}, {"letter": "E", "text": "Türkpatent"}], "correct": "C", "explanation": "Alan adı sisteminin (TRABİS) işleyişinde domain satışını gerçekleştiren 'Alan Adı Kayıt Kuruluşları' (Nokta AŞ, METU vb.) doğrudan aktörlerdir."}, {"num": 79, "tag": "Final 2024,Final 2025,Banko, Final, 2 Kez Çıktı!", "text": "Bilişim sistemine girme suçu (TCK m. 243) açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Sisteme yeni veri eklenmesi de şarttır."}, {"letter": "B", "text": "Taksirle de işlenebilir."}, {"letter": "C", "text": "Bu suçta bir zarar veya sonuç elde edilmesi gerekmez (burada zarar bir unsur değildir)."}, {"letter": "D", "text": "Suça iştirak mümkün değildir."}, {"letter": "E", "text": "Teşebbüse uygun bir suç değildir."}], "correct": "C", "explanation": "Sisteme izinsiz giriş yapmak tek başına bir 'soyut tehlike' suçudur. İçeride dosya silmese veya veri eklemese dahi login olduğu an suç oluşur."}, {"num": 80, "tag": "Final 2024,Final 2025,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi FSEK itibariyle programcının (eser sahibinin) kanunda düzenlenmiş mali haklarından biridir?", "options": [{"letter": "A", "text": "Programı yayma hakkı"}, {"letter": "B", "text": "Takip edilmeme hakkı"}, {"letter": "C", "text": "Programı işlettirme hakkı"}, {"letter": "D", "text": "Program hakkında patent alma hakkı"}, {"letter": "E", "text": "Programı tescil ettirme hakkı"}], "correct": "A", "explanation": "FSEK kapsamındaki 5 temel mali hak: Çoğaltma, Yayma, Temsil, İşleme ve Umuma İletim'dir. Diğer şıklar yasal mali hak değildir."}, {"num": 81, "tag": "Final 2024, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi e-ticaret hukuku açısından ele alınabilecek bir konu değildir?", "options": [{"letter": "A", "text": "İki şirketin Skype üzerinden görüşerek sözleşme yapması"}, {"letter": "B", "text": "Şirketin web sitesinde diğerinin ürünlerini kötüleyici ibareler kullanması"}, {"letter": "C", "text": "Olağan (ticari olmayan) kullanıcının son gittiği tatil görüntülerini paylaşması"}, {"letter": "D", "text": "Kredi kartıyla ödeme yapıp dolandırılması"}, {"letter": "E", "text": "Tüketicinin platformda diğer bir tüketiciye satması"}], "correct": "C", "explanation": "E-ticaret ticari işlemlerle ilgilenir. Ticari amacı olmayan bir bireyin tatil fotoğrafı yüklemesi e-ticaret konusu olamaz."}, {"num": 82, "tag": "Final 2024,Vize 2025,Banko, Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi fikri mülkiyet hukukuyla ilgili bir temel ilkeyi karşılar veya ifade eder?", "options": [{"letter": "A", "text": "Bağımlı çalışanların yarattıkları üzerinde herhangi bir haklarının olmaması"}, {"letter": "B", "text": "Bir fikri ürünün fikri mülkiyet hukukunun farklı alanlarında aynı anda birlikte korunabilmesinin mümkün olması"}, {"letter": "C", "text": "Sadece ticari önemi olanların korunması"}, {"letter": "D", "text": "Sadece ülke sınırları içinde korunması"}, {"letter": "E", "text": "Sadece eşya haline gelmiş olanların korunması"}], "correct": "B", "explanation": "Bir ürün hem FSEK (Eser) hem de SMK (Tasarım/Patent) olarak çoklu/kümülatif korumadan faydalanabilir."}, {"num": 83, "tag": "Final 2024, Final 2024,Final 2026, Vize, 2 Kez Çıktı!", "text": "Fikir ve sanat eserleri kapsamında korunan ve internette yayınlanmış bir esere link verilmesi, asıl olarak aşağıdakilerden hangi hak açısından önem taşımaktadır?", "options": [{"letter": "A", "text": "İşleme hakkı"}, {"letter": "B", "text": "Çoğaltma hakkı"}, {"letter": "C", "text": "Eserin bütünlüğünün korunması hakkı"}, {"letter": "D", "text": "Umuma iletim hakkı"}, {"letter": "E", "text": "Eserin orijinalini takip hakkı"}], "correct": "D", "explanation": "Dijital içeriklere link vermek doğrudan eserin internette kitlelere ulaştırılmasıyla ilgili olduğu için FSEK'teki 'Umuma İletim Hakkı' kapsamında değerlendirilir."}, {"num": 84, "tag": "Final 2024,Final 2025,Banko, Final 2024,Final 2025,Final 2026,Banko, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi kişisel verilerin işlenmesi açısından geçerli genel ilkelerden değildir?", "options": [{"letter": "A", "text": "Belirli, açık ve meşru amaçlarla işlenmesi"}, {"letter": "B", "text": "Şeffaflık ilkesi"}, {"letter": "C", "text": "Güvenilirlik ve gizlilik"}, {"letter": "D", "text": "Sosyal medyada açık tutulan kişisel verilerin işlenmesinin kural olarak serbestliği"}, {"letter": "E", "text": "Hukuka ve dürüstlük kuralına uygunluk"}], "correct": "D", "explanation": "Telefonunuzu kendi rızanızla sosyal medyada public (açık) yapsanız bile, şirketler bunu izinsiz alıp reklam için serbestçe işleyemez."}, {"num": 85, "tag": "Final 2024, Vize", "text": "Hukukumuz açısından kurallar hiyerarşisinde en üste yer alan hukuk kaynağı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Anayasa"}, {"letter": "B", "text": "Maddi anlamda kanunlar"}, {"letter": "C", "text": "Cumhurbaşkanlığı Kararnameleri"}, {"letter": "D", "text": "Milletlerarası andlaşmalar"}, {"letter": "E", "text": "Şekli anlamda kanunlar"}], "correct": "A", "explanation": "Normlar Hiyerarşisinde (Kelsen Piramidi) en üstte her zaman Anayasa bulunur."}, {"num": 86, "tag": "Final 2024, Vize, 2 Kez Çıktı!", "text": "Alan adına dair hukuki nitelik ve mutlak hak tartışması açısından aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Her zaman ve durumda mutlak hak sayılırlar."}, {"letter": "B", "text": "Tescil edilmekle eşya statüsünü kazandıklarından eşya olarak korunurlar."}, {"letter": "C", "text": "Gerçekte bir hak olmayıp sadece bir yükümlülük niteliğindedirler."}, {"letter": "D", "text": "Ticari değeri olanlar üzerinde tescille birlikte mutlak hak doğar."}, {"letter": "E", "text": "Alan adı duruma göre zamanla kullanım yoluyla marka haline gelebilir ve bu çerçevede bir mutlak hak olarak korunabilir."}], "correct": "E", "explanation": "Boş bir isim tescil anında mülkiyet doğurmaz. Ancak yıllarca kullanılıp tanındığında, marka ve ticari değer kimliğine bürünerek korunmaya başlar."}, {"num": 87, "tag": "Final 2024, Final 2024,Final 2026, Final, 2 Kez Çıktı!", "text": "İlgili Kanunda, 'başka bir elektronik veriye eklenen veya elektronik veriyle mantıksal bağlantısı bulunan ve kimlik doğrulama amacıyla kullanılan elektronik veri' şeklinde tanımlanan husus aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Elektronik ticaret"}, {"letter": "B", "text": "Elektronik mantık verisi"}, {"letter": "C", "text": "Elektronik kimlik"}, {"letter": "D", "text": "Elektronik imza"}, {"letter": "E", "text": "Elektronik veri bütünlüğü"}], "correct": "D", "explanation": "Soru metnindeki tırnak içindeki ifade, 5070 Sayılı Elektronik İmza Kanunu'nda yer alan Elektronik İmza'nın yasal, resmi tanımıdır."}, {"num": 88, "tag": "Büt 2023, Vize, Final", "text": "İnternet ortamında bağlantı sağladığı içeriği benimsediği ve kullanıcının söz konusu içeriğe ulaşmasını amaçladığı açıkça belli olma... ifadesi hangi ölçüte karşılık gelmektedir?", "options": [{"letter": "A", "text": "Çok amaç gütme ölçütü"}, {"letter": "B", "text": "Ulaştırma ölçütü"}, {"letter": "C", "text": "Dönüştürme ölçütü"}, {"letter": "D", "text": "Benimseme ölçütü"}, {"letter": "E", "text": "Hedef kitle ölçütü"}], "correct": "D", "explanation": "Yasadışı bir içeriğe link verirken onu destekleyen, tavsiye eden ifadelere yer vermek hukuken 'Benimseme Ölçütü' ihlalini doğurur ve kişiyi sorumlu tutar."}, {"num": 89, "tag": "Büt 2023,Tek Ders 2024,Banko, Final, 2 Kez Çıktı!", "text": "Ticaret, iş, zanaat veya bir meslekle bağlantılı olarak, bir malın satışını sağlamak, hedef kitleyi ikna etmek amacıyla gerçekleştirilen pazarlama iletişimi niteliğindeki duyurulara ne ad verilir?", "options": [{"letter": "A", "text": "Siyasi reklam"}, {"letter": "B", "text": "Toplu reklam"}, {"letter": "C", "text": "Multimedya tipi reklam"}, {"letter": "D", "text": "Ticari reklam"}, {"letter": "E", "text": "Duyurum niteliğindeki reklam"}], "correct": "D", "explanation": "TKHK kapsamında markaların ürün veya hizmet satmak için tüketiciyi ikna etmeye yönelik yaptığı her türlü yasal duyurunun teknik adı 'Ticari Reklam'dır."}, {"num": 90, "tag": "Büt 2023, Büt 2023,Final 2026", "text": "Aşağıdakilerden hangisi İnternet Kanununda özellikle yurt dışı kaynaklı sosyal ağ sağlayıcılara getirilen yükümlülüklerden değildir?", "options": [{"letter": "A", "text": "Kişilik hakkı ihlallerine dair başvurulara zamanında cevap verme"}, {"letter": "B", "text": "Küçüklere özgü ayrıştırılmış hizmet sunma tedbirleri alma"}, {"letter": "C", "text": "Temsilci bulundurma yükümlülüğü"}, {"letter": "D", "text": "Reklam kütüphanesi oluşturarak reklam raporu verme"}, {"letter": "E", "text": "En son teknikle geliştirilmiş yapay zekalı program filtreleri kullanma yükümlülüğü"}], "correct": "E", "explanation": "Kanun temsilci atamayı ve şikayetlere yanıt vermeyi zorunlu tutar ancak şirketleri 'en son yapay zekayı kullanmak zorundasın' diye devasa ve sübjektif bir teknolojik yatırıma yasal olarak mecbur kılmaz."}, {"num": 91, "tag": "Büt 2023,Büt 2024,Banko, Büt 2023,Büt 2024,Final 2026,Banko, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bir mesafeli sözleşme örneği değildir?", "options": [{"letter": "A", "text": "A'nın evindeki akıllı buzdolabının internetten otomatik süt sipariş etmesi"}, {"letter": "B", "text": "WhatsApp üzerinden görüşerek kol saati satması"}, {"letter": "C", "text": "Yapay zeka sistemlerinin programlanmaya uygun sözleşme yapmaları"}, {"letter": "D", "text": "Bilgisayarın gece uyurken program çerçevesinde sipariş vermesi"}, {"letter": "E", "text": "A'nın cep telefonunu bit pazarında B'ye yüz yüze satıp parasını alması"}], "correct": "E", "explanation": "Bit pazarında yüz yüze, fiziksel olarak yapılan satışlar 'uzaktan/mesafeli' değildir. Mesafeli sözleşme için arada internet, telefon vb. araç olmalıdır."}, {"num": 92, "tag": "Büt 2023, Vize", "text": "Menfaat teorisi, hangi tür çıkarın dikkate alındığına bakarken ikna edici değildir. Özne teorisi hukuki ilişkinin taraflarını esas alarak bir tasnif gerçekleştirir. Bu ifade hangi hukuki ayrımı anlatmaktadır?", "options": [{"letter": "A", "text": "Kamu hukuku ve özel hukuk ayrımı"}, {"letter": "B", "text": "Kamu adaleti ve sosyal"}, {"letter": "C", "text": "Maddi hukuk şekli hukuk ayrımı"}, {"letter": "D", "text": "Hukuk düzeninin karmaşık yapısı"}, {"letter": "E", "text": "Kurallar hiyerarşisi"}], "correct": "A", "explanation": "Hukuk biliminde devleti ve vatandaşı ayıran bu teoriler (Menfaat ve Özne teorisi), Kamu Hukuku ile Özel Hukuku birbirinden ayırmak için kullanılır."}, {"num": 93, "tag": "Büt 2023, Final, 2 Kez Çıktı!", "text": "Ceza hukuku kapsamında, kanunda suç ve cezanın belirtilmiş olmasını, tanımlamaların belirli/net olmasını ifade eden ilke hangisidir?", "options": [{"letter": "A", "text": "Şeffaflık İlkesi"}, {"letter": "B", "text": "Somut ceza ilkesi"}, {"letter": "C", "text": "Suçun maddi ve manevi unsuru ilkesi"}, {"letter": "D", "text": "Kusura dayalı ceza ilkesi"}, {"letter": "E", "text": "Suçta ve cezada kanunilik ilkesi"}], "correct": "E", "explanation": "Bir kişinin cezalandırılabilmesi için o eylemin ve cezasının açıkça kanunda önceden yazıyor olması şartına 'Kanunsuz Suç ve Ceza Olmaz' yani Kanunilik İlkesi denir."}, {"num": 94, "tag": "Büt 2023,Büt 2024,Banko, Final, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi reklam hukuku kapsamında geçerli ilkelerden değildir?", "options": [{"letter": "A", "text": "Reklamların karşılaştırma içermemesi"}, {"letter": "B", "text": "Genel ahlak kurallarına aykırı olmaması"}, {"letter": "C", "text": "İnsan onurunu zedelememesi"}, {"letter": "D", "text": "Örtülü reklamın yasak olması"}, {"letter": "E", "text": "Küçükleri şiddete itmemesi"}], "correct": "A", "explanation": "Hukuk sistemimizde rakiplere haksız iftira atmamak şartıyla 'karşılaştırmalı reklam' (örneğin deterjan reklamları) yapmak kanunen serbesttir."}, {"num": 95, "tag": "Büt 2024, Vize", "text": "İşletme veya kamu idaresinde yükümlü olduğu faaliyeti gereği, işverenin imkanları ile gerçekleştirilen bilgisayar programı gibi buluşlara verilen isim hangisidir?", "options": [{"letter": "A", "text": "Ortak buluş"}, {"letter": "B", "text": "Ticari buluş"}, {"letter": "C", "text": "Serbest buluş"}, {"letter": "D", "text": "Yardımsal buluş"}, {"letter": "E", "text": "Hizmet buluşu"}], "correct": "E", "explanation": "SMK'ya göre mesai saatleri içinde ve işin gereği olarak (şirketin cihazlarıyla) yapılan buluşlara yasal olarak 'Hizmet Buluşu' denir."}, {"num": 96, "tag": "Büt 2024, Büt 2024,Final 2026, Vize", "text": "Aşağıdakilerden hangisi bilişim hukukunun temel işlevlerinden biridir?", "options": [{"letter": "A", "text": "Dijital ortamların hukuki yapılanışına dair hukuki rejimi düzenlemek veya belirlemek"}, {"letter": "B", "text": "Ekonomik faaliyetlerin sürekliliğini sağlamak"}, {"letter": "C", "text": "İnternetin ekonomik yapılanmasını sağlamak"}, {"letter": "D", "text": "Sosyal medyanın yaygınlaşmasını sağlamak"}, {"letter": "E", "text": "Eğitimin düzeyinin artmasına katkı sağlamak"}], "correct": "A", "explanation": "Hukukun asıl görevi kullanım artırmak veya ekonomiyi büyütmek değil, dijital dünyadaki sınırları, hakları ve ihlal cezalarını (hukuki rejimi) belirlemektir."}, {"num": 97, "tag": "Büt 2024, Final", "text": "Aşağıdakilerden hangisi doğrudan dijital miras ve buna dair hukuki rejimle alakalı bir sorun değildir?", "options": [{"letter": "A", "text": "Alan adının mirasçılara geçip geçmeyeceği"}, {"letter": "B", "text": "Kripto paranın hukuki durumu"}, {"letter": "C", "text": "E-posta adresinin hukuki rejimi"}, {"letter": "D", "text": "Bir kişinin sosyal medya hesabında takma ad kullanması"}, {"letter": "E", "text": "Meşhur kişinin ölümü halinde hesabın durumu"}], "correct": "D", "explanation": "Yaşayan birinin internette 'nickname' kullanması kişilik hakları/anonimlik meselesidir. Ölümden sonra malvarlığının paylaşılması (miras) ile ilgisi yoktur."}, {"num": 98, "tag": "Büt 2024, Vize", "text": "Sosyal etkileşim amacıyla metin, görüntü, ses paylaşımına imkan sağlayan kişilere/platformlara ne ad verilir?", "options": [{"letter": "A", "text": "Sosyal ağ sağlayıcı"}, {"letter": "B", "text": "Toplu internet kullanım sağlayıcı"}, {"letter": "C", "text": "Erişim sağlayıcı"}, {"letter": "D", "text": "İçerik sağlayıcı"}, {"letter": "E", "text": "Yer sağlayıcı"}], "correct": "A", "explanation": "Instagram, Twitter gibi platformların 5651 sayılı kanun 2. maddesine 2020'de eklenen yasal tanımı 'Sosyal Ağ Sağlayıcı'dır."}, {"num": 99, "tag": "Büt 2024,Final 2025,Banko, Büt 2024,Final 2025,Final 2026,Banko, Final, 2 Kez Çıktı!", "text": "İnternet Kanunu m. 8/A kapsamında verilebilecek acil koruma tedbirleri açısından hangisi bir gerekçe değildir?", "options": [{"letter": "A", "text": "Suç işlenmesinin önlenmesi"}, {"letter": "B", "text": "Kişilerin can ve mal güvenliğinin korunması"}, {"letter": "C", "text": "Yaşam hakkının korunması"}, {"letter": "D", "text": "İnternet genel düzeninin sağlanması ve korunması"}, {"letter": "E", "text": "Genel sağlığın korunması"}], "correct": "D", "explanation": "Kanunda 'İnternet genel düzenini sağlama' adında çok yoruma açık, keyfi bir erişim engelleme (sansür) gerekçesi kesinlikle yer almamaktadır."}, {"num": 100, "tag": "Büt 2024, Büt 2024,Final 2026, Final, 2 Kez Çıktı!", "text": "İnternette yayınlanan bir videoda oyuncuların kullandığı yemek takımının markasının açıkça görülmesi reklam hukuku itibariyle hangisine denk gelir?", "options": [{"letter": "A", "text": "Yanıltıcı reklam"}, {"letter": "B", "text": "Ürün yerleştirme yoluyla reklam"}, {"letter": "C", "text": "Karşılaştırmalı reklam"}, {"letter": "D", "text": "Seçeneksiz reklam"}, {"letter": "E", "text": "Belirsiz reklam"}], "correct": "B", "explanation": "Dizi, film veya kliplerde senaryonun içine yedirilerek bir markanın izleyiciye gösterilmesi pazarlama hukukunda 'Ürün Yerleştirme' (Product Placement) olarak adlandırılır."}, {"num": 101, "tag": "Vize 2024", "text": "Hukuk sisteminde maddi hukuku açıklayan en uygun önerme aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Uluslararası hukukta hak süjelerini tanıyan"}, {"letter": "B", "text": "Maddi hukuk kişilerin sahip olduğu hakları/hukuki pozisyonları düzenleyen, tanımlayan ve ortaya koyan hukuk dalıdır."}, {"letter": "C", "text": "Sadece kamu hukuku alanıyla ilgilenen"}, {"letter": "D", "text": "Uyuşmazlıkların nasıl çözüleceğini düzenleyen"}, {"letter": "E", "text": "Yargı organlarını belirleyen"}], "correct": "B", "explanation": "Medeni Kanun veya Ceza Kanunu gibi hakları doğrudan var edenlere Maddi Hukuk; bu hakların ihlalinde davaların nasıl açılacağını gösteren usul kurallarına Şekli Hukuk denir."}, {"num": 102, "tag": "Final 2026", "text": "İnternetteki temel aktörlerden biri olan arama motorları üzerinden veya aracılığıyla gerçekleştirilen reklamlar, özellikle de anahtar sözcük reklamcılığı açısından pek çok kavram kullanılmaktadır. Aşağıdakilerden hangisi tipik olarak anahtar sözcük reklamcılığı kapsamında kalan kavramlardan değildir?", "options": [{"letter": "A", "text": "Negatif eşleme"}, {"letter": "B", "text": "Çapraz reklam"}, {"letter": "C", "text": "Pozitif eşleme"}, {"letter": "D", "text": "Anahtar sözcük reklamcılığı"}, {"letter": "E", "text": "Organik sonuçlar"}], "correct": "E", "explanation": "Organik sonuçlar, arama motorlarının kendi algoritmalarıyla doğal olarak listelediği sonuçlardır, bir reklam türü veya anahtar kelime satın alımı değildir."}, {"num": 103, "tag": "Final 2026", "text": "Aşağıdakilerden hangisi suçun maddi unsurunu ortaya koyan bir açıklamadır?", "options": [{"letter": "A", "text": "Bir suçu bilerek işlemek gerektiğinden, buradaki 'bilerek işlemek' maddi unsuru ifade eder."}, {"letter": "B", "text": "Kanunda suç olarak belirtilen fiil ya da fiillerin birebir ve kanunda öngörüldüğü şekilde gerçekleştirilmesi maddi unsuru ifade eder."}, {"letter": "C", "text": "Suçla bir maddiyat elde edilmesi hedeflenmiş ise buna maddi unsur denir."}, {"letter": "D", "text": "Bir fiilin suç olabilmesi için hukuka aykırılığı olması gerektiğinden, işte bu hukuka aykırılık yönüne maddi unsur denir."}, {"letter": "E", "text": "Bir suç ancak aktif bir hareketle işlenebileceğinden, maddi unsurla kastedilen bu durumdur."}], "correct": "B", "explanation": "Suçun maddi unsuru (tipiklik), kişinin gerçekleştirdiği eylemin kanunda yazılı olan suç tanımına dış dünyada birebir uymasıdır. Bilerek işlemek 'manevi unsur' ile ilgilidir."}, {"num": 104, "tag": "Final 2026", "text": "İnternette özel hayatına dair görüntüleri hukuka aykırı şekilde yayınlanan bir kişi, kişilik hakkının korunması kapsamında, aşağıdaki imkanlardan hangisinden hukuken yararlanamaz?", "options": [{"letter": "A", "text": "Görüntüleri yayınlayandan, vekaletsiz iş görme çerçevesinde elde ettiği kazancın kendisine verilmesini talep etmek"}, {"letter": "B", "text": "Görüntülerin dijital filtrelemeden/dönüştürülmeden geçirilerek olduğundan daha güzel görünmesini talep etmek"}, {"letter": "C", "text": "Görüntülerin yayından kaldırılmasını talep etmek"}, {"letter": "D", "text": "Sona ermiş saldırı açısından hukuka aykırılığın tespitini talep etmek"}, {"letter": "E", "text": "Manevi zararının giderilmesini istemek"}], "correct": "B", "explanation": "Kişilik hakları ihlal edilen kişi saldırının durdurulmasını, tespitini, tazminat ve haksız kazancın iadesini talep edebilir. Ancak hukuken 'beni daha güzel gösterin' şeklinde bir koruma/dava türü yoktur."}, {"num": 105, "tag": "Final 2026", "text": "5651 Sayılı Kanunda yer alan ve 'içerik sağlayıcı, bağlantı sağladığı başkasına ait içerikten sorumlu değildir. Ancak, sunuş biçiminden, bağlantı sağladığı içeriği benimsediği ve kullanıcının söz konusu içeriğe ulaşmasını amaçladığı açıkça belli ise genel hükümlere göre sorumludur' şeklindeki hüküm, aşağıdaki sorunlardan hangisini düzenlemektedir?", "options": [{"letter": "A", "text": "Link vermenin türleri sorunuyla bu alandaki sorumsuzluk kayıtlarının benimsenmesi sorununu"}, {"letter": "B", "text": "İnternet ortamında reklam yapan kişinin genel hükümlere göre sorumluluğu sorununu"}, {"letter": "C", "text": "Başkasının içeriğine link veren içerik sağlayıcının sorumluluğu sorununu"}, {"letter": "D", "text": "Erişim sağlayıcının genel hükümlere göre sorumluluğu sorununu"}, {"letter": "E", "text": "Yer sağlayıcının yer ve bağlantı sağladığı içerikten dolayı sorumluluğu sorununu"}], "correct": "C", "explanation": "5651 Sayılı Kanun uyarınca içerik sağlayıcının sorumluluğu düzenlenir. İçerik sağlayıcı kendi içeriğinden sorumludur ancak link verdiği (bağlantı sağladığı) başkasına ait içerikten kural olarak sorumlu tutulmaz (benimsemediği sürece)."}, {"num": 106, "tag": "Final 2026", "text": "Tüketicinin Korunmasına Dair Kanun'da mesafeli sözleşmeler için getirilmiş cayma hakkı itibariyle aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Cayma hakkını kullanabilmek için asıl olarak bir gerekçe gösterilmesi gerekir."}, {"letter": "B", "text": "Mesafeli sözleşmeler itibariyle cayma hakkının bir istisnası yoktur ve her durumda uygulanmalıdır."}, {"letter": "C", "text": "Tüketici, cayma hakkı konusunda gerektiği şekilde bilgilendirilmezse, cayma hakkını kullanmak için kanunda belirtilen cayma hakkı süresiyle bağlı değildir."}, {"letter": "D", "text": "Cayma hakkı açısından getirilmiş olan süre normalde otuz iki gündür."}, {"letter": "E", "text": "Cayma hakkının kullanıldığına dair her zaman noter üzerinden yapılması zorunlu olan bildirimin süresi içinde satıcı veya sağlayıcıya yöneltilmiş olması yeterlidir."}], "correct": "C", "explanation": "Cayma hakkı kural olarak 14 gündür ve gerekçe göstermek veya noter kullanmak gerekmez. Ancak satıcı tüketiciyi eksik bilgilendirirse, tüketici 14 günlük süreyle bağlı olmaz ve bu süre 1 yıla kadar uzar."}, {"num": 107, "tag": "Vize, 2 Kez Çıktı!", "text": "Aşağıdakilerden hangisi bilişim hukuku alanındaki temel kanunlarda tanımlanan süjelerden değildir?", "options": [{"letter": "A", "text": "Elektronik ticaret aracı hizmet sağlayıcı"}, {"letter": "B", "text": "Yer sağlayıcı"}, {"letter": "C", "text": "Toplu kullanım sağlayıcı"}, {"letter": "D", "text": "Sosyal ağ sağlayıcı"}, {"letter": "E", "text": "Erişim geliştirmeyi sağlayıcı"}], "correct": "E", "explanation": "Kanunlarda İçerik, Yer, Erişim ve Sosyal Ağ sağlayıcıları vardır ancak 'Erişim Geliştirmeyi Sağlayıcı' şeklinde bir yasal aktör yoktur."}, {"num": 108, "tag": "Vize", "text": "Fikir ve sanat eserleri hukukumuzda, hukukun uygulanması çerçevesinde ABAD kararlarının da dikkate alınması açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "ABAD kararları Türk hukuku için de doğrudan bağlayıcıdırlar ve her durumda dolaysız şekilde uygulanırlar."}, {"letter": "B", "text": "TMK m. 1 hükmüne göre mahkeme içtihatları yardımcı kaynak olarak hakime yardımcı olabilir."}, {"letter": "C", "text": "ABAD kararları umuma iletim hükümlerinin anlaşılması itibariyle Türk hukuku açısından önemlidir."}, {"letter": "D", "text": "ABAD kararları Türkiye-AB ilişkisinin düzeyi itibariyle Türk hukuku için önem taşırlar."}, {"letter": "E", "text": "Uluslararası düzenlemeler yönüyle yardımcı kaynak olarak önem taşırlar."}], "correct": "A", "explanation": "Avrupa Birliği Adalet Divanı (ABAD) kararları Türk hakimleri için çok önemli bir 'yardımcı' kaynaktır, ancak Türkiye tam üye olmadığı için mahkemeleri doğrudan ve mutlak şekilde bağlamaz."}, {"num": 109, "tag": "Final", "text": "Kişilik hakkının hukuki temeli, kapsamı ve hukuki niteliği açısından aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Kişilik hakkının korunmasına yönelik bazı imkanlar İnternet Kanununda öngörülmüştür."}, {"letter": "B", "text": "Kişinin özel hayatı kişilik değerlerinden biridir."}, {"letter": "C", "text": "Kişilik hakkı bir nispi haktır."}, {"letter": "D", "text": "Bu hakkın anayasal dayanakları bulunmaktadır."}, {"letter": "E", "text": "Temel düzenlemeler TMK'da yer almaktadır."}], "correct": "C", "explanation": "Nispi haklar (alacak vb.) sadece muhataba karşı ileri sürülebilir. Kişilik hakları ise dünyadaki herkese karşı ileri sürülebilen 'Mutlak Haklar'dır."}, {"num": 110, "tag": "Vize, Final", "text": "Avrupa Adalet Divanı (ABAD) link vermeden kaynaklı sorumluluk hususunda pek çok karar vermiştir. Hangi tespit yanlıştır?", "options": [{"letter": "A", "text": "ABAD, link verenin içeriğin hukuka aykırı olduğunu bilmesine önem atfetmektedir."}, {"letter": "B", "text": "Umuma iletim hakkının geniş anlaşılmasını benimsemektedir."}, {"letter": "C", "text": "Eserin öngörülen kitleden farklı bir yeni kitleye açılmasını esas almaktadır."}, {"letter": "D", "text": "Adalet Divanının içtihadına göre bir başkasının eserini önce kopyalayıp, sonra bunu kendi web sitesinde yayınlamak serbesttir."}, {"letter": "E", "text": "Link verenin merkezi rolü ölçütlerden biridir."}], "correct": "D", "explanation": "Başkasının eserini bilgisayara kopyalayıp kendi sitesinde tekrar yayımlamak doğrudan telif hakkı hırsızlığıdır, serbest olamaz."}, {"num": 111, "tag": "Vize, Final", "text": "Doğrudan sosyal medya üzerinden pek çok fikri hak ihlali gerçekleşmektedir. Aşağıdakilerden hangisi doğrudan bu kapsamda bir fikri hak ihlalidir?", "options": [{"letter": "A", "text": "Sosyal ağ kullanıcılarını gösteriye çağırmak üzere bildiri yayımlamak"}, {"letter": "B", "text": "Bir çizerin çizdiği karikatürünü izni olmadan hesabında yayınlaması"}, {"letter": "C", "text": "Sosyal medya şirketinin kullandığı yazılımı hacklemek"}, {"letter": "D", "text": "Sinema sanatçısının gerçek olmayan tatil haberlerini yaymak"}, {"letter": "E", "text": "Hangi filmi izlediğini sosyal medyada açıklaması"}], "correct": "B", "explanation": "Karikatür FSEK'e göre eserdir. İzni olmadan yayınlamak telif/fikri hak ihlalidir. Diğerleri hack (bilişim suçu), yalan haber (kişilik hakkı) ve ifade özgürlüğüdür."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

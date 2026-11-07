@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yöneylem Araştırması — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 3. Sınıf Dersleri</a>
+    <span class="agy-doc-title">Yöneylem Araştırması — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">3. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>Yöneylem Araştırması — Ders Anlatımı Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>Yöneylem Araştırması — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">Yöneylem Araştırması — Ders Anlatımı dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>126 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>3. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">126</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Yoneylem_Arastirmasi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (126)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">126</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Yoneylem_Arastirmasi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2022-2023 Büt, 2024-2025 Büt, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi Analitik Hiyerarşi Prosesinde gerçekleştirilen Sentezleme işleminin tanımıdır?", "options": [{"letter": "A", "text": "En küçük özdeğerin hesaplandığı adımdır."}, {"letter": "B", "text": "En büyük özdeğerin hesaplandığı adımdır."}, {"letter": "C", "text": "En büyük özdeğer ve bu özdeğere karşılık gelen özvektörün hesaplandığı ve normalize edildiği adımdır."}, {"letter": "D", "text": "En küçük özdeğer ve bu özdeğere karşılık gelen özvektörün hesaplandığı ve normalize edildiği adımdır."}, {"letter": "E", "text": "En büyük özdeğerin hesaplandığı ve normalize edildiği adımdır."}], "correct": "C", "explanation": " Sentezleme (önceliklerin/ağırlıkların hesaplanması) aşaması, ikili karşılaştırma matrisinin en büyük özdeğerinin ve ona karşılık gelen özvektörün bulunup nihai ağırlıkların elde edildiği adımdır."}, {"num": 2, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme", "text": "Verilen geçiş matrisine göre Üç adım sonraki periyotta A seçeneğinden A seçeneğine geçme olasılığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,556"}, {"letter": "B", "text": "0,583"}, {"letter": "C", "text": "0,984"}, {"letter": "D", "text": "0,417"}, {"letter": "E", "text": "0,444"}], "correct": "E", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 3, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2022-2023 Büt, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi hedef programlama modelindeki sapmaların önem dereceleri birbirinden farklı olduğunda kullanılan yaklaşımdır?", "options": [{"letter": "A", "text": "Ağırlıklandırma"}, {"letter": "B", "text": "Doğrusallık"}, {"letter": "C", "text": "Eşit önemli kabul etme"}, {"letter": "D", "text": "Önceliklendirme"}, {"letter": "E", "text": "Negatif olmama"}], "correct": "A", "explanation": " Önem derecesi katsayıları farklıysa ağırlıklandırma (katsayı atama) yapılır."}, {"num": 4, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme", "text": "Aşağıdaki ifadelerden hangisi Doğrusal Programlama Gevşetmesini açıklamaktadır?", "options": [{"letter": "A", "text": "Karar değişkenleri üzerinde tüm tamsayı veya 0-1 kısıtlarının atılarak, elde edilen doğrusal programlama problemidir."}, {"letter": "B", "text": "Karar değişkenlerinin tamamını tamsayı olması koşulu eklenerek elde edilen doğrusal programlama problemidir."}, {"letter": "C", "text": "Karar değişkenlerinin tamamının 0-1 ikili formda olması koşulu eklenerek elde edilen doğrusal programlama problemidir."}, {"letter": "D", "text": "Karar değişkenlerinin tamsayı veya 0-1 ikili formda olması koşulu eklenerek elde edilen doğrusal programlama problemidir."}, {"letter": "E", "text": "Karar değişkenlerinin negatif olması koşulu eklenerek elde edilen doğrusal programlama problemidir."}], "correct": "A", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 5, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2023-2024 Vize, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi primal bir problemin dualinin alınmasının nedenlerinden biri değildir?", "options": [{"letter": "A", "text": "Duyarlılık analizinde kullanabilmek"}, {"letter": "B", "text": "Ekonomik açıdan yorumlar yapabilmek"}, {"letter": "C", "text": "İki kısıtlı ve ikiden fazla karar değişkenli bir problemi grafik yöntem ile çözmek"}, {"letter": "D", "text": "Problemi daha basit hale dönüştürüp kolaylıkla çözmek"}, {"letter": "E", "text": "Dejenere modeli çözmek"}], "correct": "E", "explanation": " Dejenerasyon, simpleks algoritmasının kendi iç kurallarıyla çözülür, dualite alma sebebi değildir."}, {"num": 6, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, yöneylem araştırması final 2025-26 güz, 2022-2023 Büt, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi Analitik Hiyerarşi Prosesi modellerinde tutarlılık incelemesinde kullanılan kavramlardan biri değildir?", "options": [{"letter": "A", "text": "Rasgele indeksi"}, {"letter": "B", "text": "Tutarlılık oranı"}, {"letter": "C", "text": "Tutarlılık indeksi"}, {"letter": "D", "text": "Özdeğer"}, {"letter": "E", "text": "Duyarlılık"}], "correct": "E", "explanation": " AHP'de tutarlılık incelemesi için Tutarlılık İndeksi (CI), Tutarlılık Oranı (CR), Temel Özdeğer (Lambda max) ve Rasgele İndeks (RI) kullanılır. Duyarlılık analizi ise sonuçların değişen parametrelere karşı direnciyle ilgilidir."}, {"num": 7, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2022-2023 Büt, Dosya 3, 2023-2024 Büt, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi bir karar probleminde kriterlerin karara etkisinin hesaplanabilmesi için sahip olması gereken özelliktir?", "options": [{"letter": "A", "text": "Kapsayıcılık özelliği"}, {"letter": "B", "text": "Yeterlilik özelliği"}, {"letter": "C", "text": "Ölçülebilirlik özelliği"}, {"letter": "D", "text": "Geçerlilik özelliği"}, {"letter": "E", "text": "Doğrusallık özelliği"}], "correct": "C", "explanation": " Kriterin karar problemindeki ağırlığını veya etkisini nicel ya da nitel olarak matematiksel modele dâhil edebilmek için mutlaka bir ölçülebilirlik (ölçeklendirilebilme) özelliğine sahip olması gerekir."}, {"num": 8, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2022-2023 Final, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi bireyin başarısının diğer bireylerin seçimlerine dayalı olduğu ve seçimler esnasında bazı stratejik durumların matematiksel olarak davranış biçimlerini yakalamaya çalışan yöneylem araştırması yaklaşımıdır?", "options": [{"letter": "A", "text": "Benzetim"}, {"letter": "B", "text": "Karar Ağaçları"}, {"letter": "C", "text": "Oyun Teorisi"}, {"letter": "D", "text": "Analitik Hiyerarşi Prosesi"}, {"letter": "E", "text": "Markov Zinciri"}], "correct": "C", "explanation": " Birden fazla karar vericinin (oyuncunun) birbirlerinin sonucunu etkilediği stratejik etkileşim durumlarını matematiksel olarak oyun teorisi inceler."}, {"num": 9, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2022-2023 Büt, 2024-2025 Büt, 2025-2026 Büt", "text": "Aşağıdaki oyun teorisinde kullanılan kavramlardan hangisi oyuncuların strateji seçimlerinin türlü bileşiminden sonuçlanan kazanç veya kayıpları gösterir?", "options": [{"letter": "A", "text": "Beklenen Değer"}, {"letter": "B", "text": "Ödemeler Matrisi"}, {"letter": "C", "text": "Tam Strateji"}, {"letter": "D", "text": "Arı Strateji"}, {"letter": "E", "text": "Oyunlar"}], "correct": "B", "explanation": " Oyun teorisinde oyuncuların olası tüm strateji eşleşmelerinin sonuçlarını gösteren tabloya ödemeler matrisi denir."}, {"num": 10, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, yöneylem araştırması final 2025-26 güz, 2022-2023 Final, 2025 Final, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt", "text": "Aşağıdaki yöneylem araştırması konularından hangisi başlangıç durumu verildiğinde izleyen aşamada hangi olasılıkla hangi durumda olunacağını ve buna karşı oluşacak olan katkıyı ölçmek ve en iyi stratejiyi belirlemek için başvurulan analiz türüdür?", "options": [{"letter": "A", "text": "Hedef Programlama"}, {"letter": "B", "text": "Doğrusal Programlama"}, {"letter": "C", "text": "Markov Analizi"}, {"letter": "D", "text": "Tam Sayılı Programlama"}, {"letter": "E", "text": "AHP"}], "correct": "C", "explanation": " Bir sistemin içinde bulunduğu güncel durumu (başlangıç durumu) baz alarak sistemin gelecekteki durumlarda nerede olacağını olasılıksal olarak hesaplamaya yarayan yöntem Markov analizidir."}, {"num": 11, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2023-2024 Vize, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi Yöneylem Araştırmasını matematik, istatistik, mühendislik ve bilgisayar bilimi gibi farklı disiplinler arasında konumlandıran yaklaşımdır?", "options": [{"letter": "A", "text": "Bilimsel Yöntem Yaklaşımı"}, {"letter": "B", "text": "Sistem Yaklaşımı"}, {"letter": "C", "text": "Kapsayıcı Yaklaşım"}, {"letter": "D", "text": "Bütünleşik Yaklaşım"}, {"letter": "E", "text": "Disiplinlerarası Yaklaşım A B A 0,6 0,4 B 0,3 0,7 YÖNEYLEM ARAŞTIRMASI A P787296.G13852 13-01-2026 15:39:47 CEVAPLI"}], "correct": "E", "explanation": " Yöneylem araştırması, karmaşık problemleri çözmek için matematik, istatistik, mühendislik, vb. birçok farklı bilimin tekniklerini bir arada kullandığı için \"Disiplinlerarası Yaklaşım\" sergiler."}, {"num": 12, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2023-2024 Büt, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi mevcut olasılıkları kullanarak, gelecekteki durum olasılıklarını hesaplamada kullanılan modelleme ve analiz tekniği olarak tanımlanabilir?", "options": [{"letter": "A", "text": "Doğrusal Programlama"}, {"letter": "B", "text": "Markov Analizi"}, {"letter": "C", "text": "Oyun Teorisi"}, {"letter": "D", "text": "Çok Kriterli Karar Verme"}, {"letter": "E", "text": "Hedef Programlama"}], "correct": "B", "explanation": " Bir sistemin içinde bulunduğu güncel durumu baz alarak sistemin sonraki periyotlardaki / gelecekteki durumlarını istatistiksel ve olasılıksal olarak tahmin etmeye yarayan yöntem Markov analizidir."}, {"num": 13, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, yöneylem araştırması final 2025-26 güz", "text": "Depo satın alma çok nitelikli karar verme probleminde 5 alternatif değerlendirilmektedir. Daha düşük bir skora (değere) sahip alternatifin fayda maksimizasyonuna daha çok katkı sağlayacağı karar kriterleri aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Depo önü araç park alanı genişliği (m2)"}, {"letter": "B", "text": "Depo alanı (m2)"}, {"letter": "C", "text": "Depo araç yanaşma slot (kapı) adedi"}, {"letter": "D", "text": "Depo satış bedeli (milyon TL)"}, {"letter": "E", "text": "Depo hacmi (m3)"}], "correct": "D", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 14, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, yöneylem araştırması final 2025-26 güz, 2022-2023 Final, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt", "text": "Hedef programlamada kullanılan kavramlar ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Sistem kısıtları çok katı olmayıp hedeflenen değerlerden (sağ taraf değerleri) sapmaların açıklanmasıyla ortaya çıkar."}, {"letter": "B", "text": "Sistem kısıtları tam olarak sağlanması gereken ve sapmaya izin verilmeyen kısıtlardır."}, {"letter": "C", "text": "Sistem kısıtları doğrusal programlamada kullanılan kısıtlara karşılık gelir."}, {"letter": "D", "text": "Karar vericinin ulaşmayı istediği veya gerekli gördüğü hedefler, hedef programlama modeline hedef kısıtları olarak aktarılır."}, {"letter": "E", "text": "Sistem kısıtları aynı zamanda fonksiyonel kısıt olarak da adlandırılır."}], "correct": "A", "explanation": " Sistem kısıtları (hammadde limiti, makine kapasitesi vb.) katıdır ve sapma içermezler. Esneyebilen kısıtlar \"Hedef Kısıtları\"dır."}, {"num": 15, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme", "text": "Bağımsızlık I. Bağımlılık II. Homojenlik III. Yukarıda verilen kavramlardan hangisi ya da hangileri Analitik Hiyerarşi Prosesinin aksiyomlarındandır?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "I, II ve III"}, {"letter": "C", "text": "II"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "II ve III"}], "correct": "B", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 16, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, yöneylem araştırması final 2025-26 güz, 2022-2023 Final, 2023-2024 Final, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi çok kriterli karar verme süreçlerinde izlenen adımlardan biri değildir?", "options": [{"letter": "A", "text": "Alternatiflerin belirlenmesi"}, {"letter": "B", "text": "Amaç ya da amaçların belirlenmesi"}, {"letter": "C", "text": "Genel değerlendirme ve karar verme"}, {"letter": "D", "text": "Alternatif ve kriterlerin ikili karşılaştırılması"}, {"letter": "E", "text": "Kriterlerin belirlenmesi"}], "correct": "D", "explanation": " İkili karşılaştırmalar, tüm çok kriterli yöntemlerde bulunmaz; yalnızca AHP ve ANP gibi spesifik yöntemlere özgü bir adımdır."}, {"num": 17, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2025 Final, 2022-2023 Final, 2023-2024 Büt, 2025-2026 Büt", "text": "Oyun teorisinde kullanılan aşağıdaki kavramlardan hangisi her bir oyuncunun sahip olduğu eylem seçeneklerini ve kombine edilmiş kararlar dizisini ifade etmektedir?", "options": [{"letter": "A", "text": "Oyun"}, {"letter": "B", "text": "Strateji"}, {"letter": "C", "text": "Kazanç"}, {"letter": "D", "text": "Denge Noktası"}, {"letter": "E", "text": "Beklenen Değer"}], "correct": "B", "explanation": " Oyuncuların oyun boyunca uygulayacakları hamlelerin veya tercihler dizisinin önceden tasarlanmış bütününe oyun teorisinde \"Strateji\" denir."}, {"num": 18, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, Dosya 3, 2022-2023 Final, 2023-2024 Final, 2025-2026 Büt", "text": "Çok amaçlı karar verme yöntemleri içinde en sık kullanılan \"Hedef Programlama Yöntemi\" ile ilgili olarak aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Hedef programlama modeli amaç fonksiyonunda karar değişkenleri yer almaz."}, {"letter": "B", "text": "Hedef programlama modelinde birden fazla amaç için hedef değerleri belirlenir ve bu hedeflerin hepsi modele alınır."}, {"letter": "C", "text": "Doğrusal programlama modelinde tek bir amaç en iyilenmeye çalışılır."}, {"letter": "D", "text": "Hedef programlamada amaç fonksiyonu sadece maksimizasyon şeklindedir."}, {"letter": "E", "text": "Doğrusal programlamada amaç en iyi çözümü elde etmek iken, doğrusal hedef programlamada amaç mümkün olduğunca en iyi çözümü elde etmektir."}], "correct": "D", "explanation": " Hedef programlamada amaç; hedeflerden sapmaları minimize etmektir. Dolayısıyla amaç fonksiyonu her zaman minimizasyon (Min) yönlüdür."}, {"num": 19, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2023-2024 Vize, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi belirsizlik halinde karar vermede kullanılan yaklaşımlardan biri değildir?", "options": [{"letter": "A", "text": "Kötümserlik kriteri"}, {"letter": "B", "text": "Eş olasılık kriteri"}, {"letter": "C", "text": "İyimserlik kriteri"}, {"letter": "D", "text": "Sezgisel olasılık kriteri"}, {"letter": "E", "text": "Pişmanlık kriteri"}], "correct": "D", "explanation": " Belirsizlik hali, sonuçların olasılıklarının bilinmediği durumdur. Bu durumda matematiksel olarak tanımlanmış standart kriterler (Laplace, Wald, Hurwicz, Savage) kullanılır. Literatürde \"Sezgisel olasılık kriteri\" adında standart bir belirsizlik kriteri bulunmamaktadır."}, {"num": 20, "tag": "2025-2026 - YÖNEYLEM ARAŞTIRMASI - Bütünleme, 2024-2025 Vize, Dosya 2, 2025-2026 Büt", "text": "Aşağıdakilerden hangisi bir modelde kare, küp gibi üslü ifadeler ile temsil edilen değişkenlerin yer alması durumunda ihlal edilen Doğrusal Programlama varsayımıdır?", "options": [{"letter": "A", "text": "Değişkenler arasında kurulan bağıntılar doğrusal olmalıdır."}, {"letter": "B", "text": "Karar değişkenlerinin sıfır ya da pozitif olması gerekir."}, {"letter": "C", "text": "Değişkenler kantitatif olmalıdır."}, {"letter": "D", "text": "Kullanılacak kaynaklar sınırlı olmalıdır."}, {"letter": "E", "text": "Değişkenler kendi aralarında ilişkili olmalıdır."}], "correct": "A", "explanation": " Doğrusal Programlama (Linear Programming) sadece 1. dereceden denklemleri kabul eder. Kare, küp gibi üslü ifadeler doğrusallık varsayımını bozar."}, {"num": 21, "tag": "yöneylem araştırması final 2025-26 güz, 2025 Final, 2022-2023 Final, 2024-2025 Büt, 2025-2026 Final", "text": "Aşağıdakilerden hangisi oyun sınıflandırmasında kullanılan kavramlardan biri değildir?", "options": [{"letter": "A", "text": "Beklenen Oyun"}, {"letter": "B", "text": "Sıfır Toplamlı Olmayan Oyun"}, {"letter": "C", "text": "Sabit Toplamlı Olmayan Oyun"}, {"letter": "D", "text": "İki Kişilik Oyun"}, {"letter": "E", "text": "Sıfır Toplamlı Oyun"}], "correct": "A", "explanation": " Oyunlar sıfır toplamlı, sabit toplamlı, iki kişilik, n-kişilik gibi türlere ayrılır ancak \"beklenen oyun\" şeklinde bir sınıflandırma literatürde yoktur."}, {"num": 22, "tag": "yöneylem araştırması final 2025-26 güz", "text": "Markov analizinde sistemin \"t=0\" zamanında \"i\" durumunda bulunma olasılığına karşılık gelen ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Başlangıç olasılığı"}, {"letter": "B", "text": "Markov zinciri"}, {"letter": "C", "text": "Durum uzayı"}, {"letter": "D", "text": "Yutan Markov Zinciri"}, {"letter": "E", "text": "Geçiş olasılığı"}], "correct": "A", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 23, "tag": "yöneylem araştırması final 2025-26 güz, 2025 Final, 2024-2025 Büt, 2025-2026 Final", "text": "Aşağıdakilerden hangisi Laplace Karar Kriterini açıklayan ifadedir?", "options": [{"letter": "A", "text": "Belirli sayıda olayın gerçekleşme olasılıklarının bilinmediği kötümser bakış açısı ile alternatiflerin değerlendirilmesi gerektiği varsayımına dayanan karar kriteridir."}, {"letter": "B", "text": "Belirli sayıda olayın gerçekleşme olasılıklarının bilinmediği iyimser ve kötümser bakış açısının bir lambda katsayısı ile ağırlıklandırılarak alternatiflerin değerlendirilmesi gerektiği varsayımına dayanan karar kriteridir."}, {"letter": "C", "text": "Belirli sayıda olayın gerçekleşme olasılıklarının bilinmediği iyimser bakış açısı ile alternatiflerin değerlendirilmesi gerektiği varsayımına dayanan karar kriteridir."}, {"letter": "D", "text": "Belirli sayıda olayın gerçekleşme olasılıklarının bilindiği durumda kullanılan karar kriteridir."}, {"letter": "E", "text": "Belirli sayıda olayın gerçekleşme olasılıklarının bilinmediği ancak gerçekleşme olasılıklarının birbirine eşit olduğu varsayımına dayanan karar kriteridir."}], "correct": "E", "explanation": " Laplace karar kriteri (eş olasılık kriteri), doğa durumlarının olasılıkları bilinmediğinde, her bir doğa durumunun eşit olasılıkla gerçekleşeceğini varsayar."}, {"num": 24, "tag": "yöneylem araştırması final 2025-26 güz, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final", "text": "Analitik Hiyerarşi Prosesi ile incelenen bir karar probleminde 3x3 boyutlu ikili karşılaştırmalar matrisi oluşturulmuş ve λmax değeri 3,5 olarak hesaplanmıştır. Yukarıda verilen bilgiye göre Tutarlılık Indeksi (CI) değeri kaçtır?", "options": [{"letter": "A", "text": "1"}, {"letter": "B", "text": "1,25"}, {"letter": "C", "text": "0,025"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "0,25"}], "correct": "E", "explanation": " Tutarlılık İndeksi (CI) formülü: (lambda_max - n) / (n - 1) şeklindedir. Verilenler: lambda_max = 3.5, n = 3 (matris boyutu). CI = (3.5 - 3) / (3 - 1) = 0.5 / 2 = 0.25 olarak bulunur."}, {"num": 25, "tag": "yöneylem araştırması final 2025-26 güz, 2024-2025 Büt, 2025-2026 Final", "text": "Bir Hedef Programlama modelinde yer alan işgücü kullanımı tam olarak 40 saat belirlenmiştir. Buna göre aşağıdaki ifadelerden en doğrusu hangisidir?", "options": [{"letter": "A", "text": "İşgücü kullanımında hem pozitif hem de negatif yönlü sapma istenmemektedir."}, {"letter": "B", "text": "İşgücü kullanımında pozitif yönlü sapma istenmemektedir."}, {"letter": "C", "text": "İşgücü kullanımı hedef kısıtı > formunda yazılmalıdır."}, {"letter": "D", "text": "İşgücü kullanımında negatif yönlü sapma istenmemektedir."}, {"letter": "E", "text": "İşgücü kullanımı hedef kısıtı >= formunda yazılmalıdır."}], "correct": "A", "explanation": " Hedefin \"tam olarak\" (ne az ne fazla, sapmasız) tutturulması istendiğinde, hedefin altında kalınması (negatif sapma, d-) veya hedefin aşılması (pozitif sapma, d+) istenmeyen durumlardır."}, {"num": 26, "tag": "yöneylem araştırması final 2025-26 güz, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final", "text": "Doğrusal Programlama Modelinde amaç fonksiyonu, kâr ya da maliyet optimizasyonuna yönelik düzenlenmiş olabilir. Bu fonksiyona genel anlamda aşağıdakilerden hangisi ile tarif edilir?", "options": [{"letter": "A", "text": "Doğrusal Optimizasyon"}, {"letter": "B", "text": "Hedef Arama"}, {"letter": "C", "text": "Minimizasyon"}, {"letter": "D", "text": "Maksimizasyon"}, {"letter": "E", "text": "Fayda Optimizasyonu"}], "correct": "E", "explanation": " Amaç fonksiyonu, maliyeti en aza indirme veya kârı en yükseğe çıkarma çabasını matematiksel olarak modeller; bunların tamamı sistemin genel \"faydasını\" maksimize etme (Fayda Optimizasyonu) mantığına dayanır."}, {"num": 27, "tag": "yöneylem araştırması final 2025-26 güz, 2022-2023 Final, Dosya 2, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final", "text": "Aşağıdaki Analitik Hiyerarşi prosesi aksiyomlarından hangisi karşılaştırılan elemanların birbirinden çok fazla farklı olmaması gerektiğini, farklı olması durumunda yargılarda hataların ortaya çıkabileceğini ifade eder?", "options": [{"letter": "A", "text": "Homojenlik"}, {"letter": "B", "text": "Doğrusallık"}, {"letter": "C", "text": "Bağımlılık"}, {"letter": "D", "text": "İki taraflı olma"}, {"letter": "E", "text": "Bağımsızlık"}], "correct": "A", "explanation": " AHP'de birbirleriyle kıyaslanan öğelerin değer ve büyüklük olarak aynı hiyerarşik düzlemde, birbirine yakın ölçeklerde (homojen) olması gerekir."}, {"num": 28, "tag": "yöneylem araştırması final 2025-26 güz, 2022-2023 Vize, 2023-2024 Vize, 2024-2025 Büt, 2025-2026 Final", "text": "Aşağıdakilerden hangisi Yöneylem Araştırması'nın uygulama alanlarından biri değildir?", "options": [{"letter": "A", "text": "Karar destek ve uzman sistemler"}, {"letter": "B", "text": "Yatırım planlama"}, {"letter": "C", "text": "Üretim planlama"}, {"letter": "D", "text": "Bulut teknolojisi"}, {"letter": "E", "text": "Benzetim YÖNEYLEM ARAŞTIRMASI A P787296.G13240 09-12-2025 15:57:08 CEVAPLI"}], "correct": "D", "explanation": " Yöneylem Araştırması; üretim, stok, yatırım gibi karar verme problemlerinde kullanılır. \"Bulut teknolojisi\" bir optimizasyon problemi türü değildir."}, {"num": 29, "tag": "yöneylem araştırması final 2025-26 güz", "text": "Z max x1 + 2x2 + 3x3 + 4x4 4x1 + 3x2 + 4x3 - x4 ≤ 25 x1 + 2x2 + 2x3 + 3x4 ≤ 22 2x1 + 4x2 + x3 + 5x4 ≤ 32 Aşağıdakilerden hangisi primal formda verilen doğrusal programlama modelinin dual kısıtlarından biri değildir?", "options": [{"letter": "A", "text": "3u1 +2u2 +4u3 ≥ 2"}, {"letter": "B", "text": "- u1 +3u2 +5u3 ≥ 4"}, {"letter": "C", "text": "2u1 + 4u2 + u3 ≥ 3"}, {"letter": "D", "text": "4u1 +u2 +2u3 ≥ 1"}, {"letter": "E", "text": "4u1 +2u2 +u3 ≥ 3"}], "correct": "C", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 30, "tag": "yöneylem araştırması final 2025-26 güz, 2022-2023 Büt, 2024-2025 Büt, 2025-2026 Final", "text": "Aşağıdakilerden hangisi amaçlara ulaşmada alternatiflerin değerlendirilmesinde kullanılan karar bileşenleridir?", "options": [{"letter": "A", "text": "Ağırlıklar"}, {"letter": "B", "text": "Karar Verici"}, {"letter": "C", "text": "Kriter"}, {"letter": "D", "text": "Alternatif"}, {"letter": "E", "text": "Amaç"}], "correct": "C", "explanation": " Karar vermede alternatiflerin fayda/başarı durumları, amaca uygunluk seviyelerini gösteren \"kriterler\" kullanılarak ölçülür."}, {"num": 31, "tag": "yöneylem araştırması final 2025-26 güz, Dosya 2, 2024-2025 Büt, 2025-2026 Final", "text": "Bir oyunda ödemeler matrisindeki A stratejisi, B stratejisi ile karşılaştırıldığında, A stratejisinin B stratejisine bire bir karşılık gelen her değerinde daha üstün olduğu görülmüştür. Bu oyuna ilişkin aşağıda verilen ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "B stratejisi kendisinden her açıdan daha üstün bir strateji olduğu için oyuncu tarafından asla seçilmeyecektir."}, {"letter": "B", "text": "Baskınlık kuralı kullanılarak ödemeler matrisinin boyutu azaltılır."}, {"letter": "C", "text": "A stratejisi ödemeler matrisinden silinebilir."}, {"letter": "D", "text": "B stratejisi ödemeler matrisinden silinebilir."}, {"letter": "E", "text": "A stratejisine üstün (baskın) strateji denir."}], "correct": "C", "explanation": " Baskınlık (dominance) kuralında, oyuncu her zaman kendisi için daha üstün (baskın) olan stratejiyi seçer ve zayıf (baskın olunan) strateji matristen silinir. A stratejisi daha üstün (baskın) olduğuna göre silinecek olan A değil, zayıf olan B stratejisidir."}, {"num": 32, "tag": "yöneylem araştırması final 2025-26 güz, Dosya 2, 2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final", "text": "Bir Hedef Programlama modelinde yer alan kısıta ait pozitif ve negatif sapmaların olmaması istendiğinde kısıtın temsil edileceği eşitlik durumu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "≥ (Büyük Eşittir)"}, {"letter": "B", "text": "> (Büyüktür)"}, {"letter": "C", "text": "≤ (Küçük Eşittir)"}, {"letter": "D", "text": "= (Eşittir)"}, {"letter": "E", "text": "< (Küçüktür)"}], "correct": "D", "explanation": " Sapma olmaması (d+ = 0 ve d- = 0), hedefin tam olarak tutturulması anlamına gelir. Bu nedenle model kısıtı kesin eşitlik (=) ile ifade edilir."}, {"num": 33, "tag": "yöneylem araştırması final 2025-26 güz, 2022-2023 Final, 2025-2026 Vize, 2023-2024 Final, 2024-2025 Büt, 2025-2026 Final", "text": "Bir fabrikada işlerin makinelere dağıtılması probleminin çözümünde kullanılacak en uygun karar modeli aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Dinamik Programlama"}, {"letter": "B", "text": "Tamsayılı Programlama"}, {"letter": "C", "text": "Doğrusal Olmayan Programlama"}, {"letter": "D", "text": "Hedef Programlama"}, {"letter": "E", "text": "Doğrusal Programlama"}], "correct": "B", "explanation": " İşlerin makinelere atanması/dağıtılması işlemi, değişkenlerin 0 veya 1 değerini aldığı Sıfır-Bir Tamsayılı Programlama (Tamsayılı Programlamanın alt dalı) problemleridir."}, {"num": 34, "tag": "yöneylem araştırması final 2025-26 güz, 2022-2023 Final, 2023-2024 Final, 2024-2025 Büt, 2025-2026 Final", "text": "Oyun teorisinde kullanılan aşağıdaki kavramlardan hangisi her oyuncunun rasyonel olarak hareket ettikleri varsayımı altında, oyuncuların oyun bitimi sonucunda ulaştıkları noktayı ifade eder?", "options": [{"letter": "A", "text": "Beklenen değer"}, {"letter": "B", "text": "Strateji"}, {"letter": "C", "text": "Denge noktası"}, {"letter": "D", "text": "Ödemeler"}, {"letter": "E", "text": "Ödemeler matrisi"}], "correct": "C", "explanation": " Oyuncuların tek taraflı strateji değiştirerek kazançlarını artıramayacakları, rasyonel kararlar sonucu ulaşılan istikrar noktasına denge noktası (Nash dengesi) denir."}, {"num": 35, "tag": "yöneylem araştırması final 2025-26 güz, 2022-2023 Büt, 2024-2025 Büt, 2025-2026 Final", "text": "Aşağıdakilerden hangisi Markov analizinde geçiş matrisi üzerinde her bir durumdan diğer her bir duruma geçiş doğrudan veya dolaylı olarak yapılabildiğinde kullanılan kavramdır?", "options": [{"letter": "A", "text": "Sıfır toplamlı zincir"}, {"letter": "B", "text": "Ergodik zincir"}, {"letter": "C", "text": "Beklenen değer"}, {"letter": "D", "text": "Denge durumu"}, {"letter": "E", "text": "Başlangıç olasılıkları"}], "correct": "B", "explanation": " Bir Markov zincirinde, tüm durumlar birbiriyle doğrudan veya dolaylı yoldan iletişim kurabiliyorsa, bu zincir türüne \"Ergodik Zincir\" denir."}, {"num": 36, "tag": "2023-2024 Vize, 2022-2023 Büt", "text": "Aşağıdakilerden hangisi Yöneylem Araştırması'nın ilk olarak kullanıldığı alandır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Askeri faaliyetler"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": " Yöneylem Araştırması (YA), II. Dünya Savaşı sırasında İngiliz ve Amerikan ordularının sınırlı kaynakları en etkin şekilde kullanma ihtiyacından doğmuştur."}, {"num": 37, "tag": "2023-2024 Vize, 2025-2026 Büt", "text": "Aşağıdaki ifadelerden hangisi Doğrusal Programlama Gevşetmesini (Relaxation) açıklamaktadır?", "options": [{"letter": "A", "text": "Karar değişkenleri üzerinde tüm tamsayı veya 0-1 kısıtlarının atılarak, elde edilen doğrusal programlama problemidir."}, {"letter": "B", "text": "Karar değişkenleri üzerinde tüm tamsayı veya 0-1 kısıtlarının"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "A", "explanation": " \"Gevşetme\" (Relaxation), zor bir problemin kısıtlarını hafifleterek daha kolay çözülebilir bir hale getirmektir."}, {"num": 38, "tag": "2023-2024 Vize", "text": "Aşağıdakilerden hangisi Yöneylem Araştırması'nın kullandığı bilimsel yöntem aşamaları arasında sayılamaz?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Modelin tersine incelenmesi"}], "correct": "E", "explanation": " Yöneylem Araştırması süreci standart bilimsel adımları izler: Problemin tanımlanması, Modelin kurulması, vb. \"Modelin tersine incelenmesi\" diye bir adım yoktur."}, {"num": 39, "tag": "2023-2024 Vize", "text": "Aşağıdaki karar değişkeni birimlerinden hangisi kesinlikle tamsayıdır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Adet"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": " Tamsayılı programlamada değişkenlerin kesirli olamaması gerekir. \"Adet\" fiziksel doğası gereği bölünemez."}, {"num": 40, "tag": "2023-2024 Vize", "text": "(Grafik sorusu: (4,0) ve (0,3) noktalarından geçen doğru ve altı taranmış) Grafikte renklendirilmiş alanı gösteren kısıt hangisidir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "3x_1+ 4x_2 <= 12"}], "correct": "E", "explanation": " Paydalar 12'de eşitlenirse 3x1+4x2=12 elde edilir. Taralı alan doğrunun alt tarafı olduğu için eşitsizlik \"küçük eşit\" (<=) olmalıdır."}, {"num": 41, "tag": "2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize", "text": "Hangi karar probleminde her seçime ilişkin tam bir bilgi var olup ortaya çıkacak olan olayın gerçekleşme olasılığı 1'dir?", "options": [{"letter": "A", "text": "Sezgisel Karar Verme"}, {"letter": "B", "text": "Çok Kriterli Karar Verme"}, {"letter": "C", "text": "Belirlilik Halinde Karar Verme"}, {"letter": "D", "text": "Belirsizlik Halinde Karar Verme"}, {"letter": "E", "text": "Risk Halinde Karar Verme"}], "correct": "C", "explanation": " Olasılığın 1 (%100) olması, sonucun kesin olarak bilindiği anlamına gelir. Hiçbir risk veya belirsizlik içermeyen bu duruma \"Belirlilik\" denir."}, {"num": 42, "tag": "2023-2024 Vize, 2025-2026 Vize", "text": "Aşağıdakilerden hangisi karar tipleri ile ilgili olarak kullanılan sınıflandırmalardan biri değildir?", "options": [{"letter": "A", "text": "Gerçek veya simüle kararlar"}, {"letter": "B", "text": "Alt ve üst kademe kararları"}, {"letter": "C", "text": "Kişi ve grup kararları"}, {"letter": "D", "text": "Stratejik ve operasyonel kararlar"}, {"letter": "E", "text": "Belirlilik ve belirsizlik şartları altında verilen kararlar"}], "correct": "A", "explanation": " Literatürde \"Gerçek veya simüle\" diye temel bir karar sınıflandırması yoktur; simülasyon bir yöntemdir, karar tipi değildir."}, {"num": 43, "tag": "2024-2025 Vize", "text": "Aşağıdakilerden hangisi karar tiplerine ilişkin yapılan sınıflamalardan biri değildir?", "options": [{"letter": "A", "text": "Alt ve üst kademe kararları"}, {"letter": "B", "text": "Stratejik ve operasyonel kararlar"}, {"letter": "C", "text": "Kişi ve grup kararları"}, {"letter": "D", "text": "Limitli ve limitsiz kararlar"}, {"letter": "E", "text": "Programlanabilen ve programlanamayan kararlar"}], "correct": "D", "explanation": " Karar tipleri literatürde stratejik/operasyonel, kişi/grup, programlanabilen/programlanamayan gibi sınıflandırılır."}, {"num": 44, "tag": "2023-2024 Vize, 2022-2023 Final", "text": "Aşağıdakilerden hangisi karar değişkenlerinin sıfır ya da pozitif olması gerekliliğini ifade eden Doğrusal Programlama varsayımıdır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Negatif olmama"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "D", "explanation": " Matematiksel modelde X_j >= 0 ifadesi ile gösterilir. Gerçek hayatta negatif değerlerin anlamsız olduğunu ifade eder."}, {"num": 45, "tag": "2022-2023 Büt, 2023-2024 Vize, 2024-2025 Vize, 2025-2026 Vize", "text": "y=12+3x Verilen denklem sistemine göre çizilecek doğrunun Y eksenini kestiği nokta aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "12"}, {"letter": "B", "text": "0"}, {"letter": "C", "text": "1"}, {"letter": "D", "text": "4"}, {"letter": "E", "text": "3"}], "correct": "A", "explanation": " Bir doğrunun Y eksenini kestiği noktayı bulmak için denklemde x yerine 0 yazılır. y = 12 + 3(0) => y = 12."}, {"num": 46, "tag": "2023-2024 Vize", "text": "Yöneylem Araştırması incelenen problemi, içinde bulunduğu sistemin bütün unsurlarıyla... incelemeyi esas alır. Hangi özellik açıklanmaktadır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Bütünleşik yaklaşım"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": " Sistemin alt parçalarını tek tek optimize etmek yerine, parçaların birbirleriyle olan etkileşimini ve sistemin tamamını bir bütün olarak ele alma ilkesine \"Bütünleşik Yaklaşım\" denir."}, {"num": 47, "tag": "2022-2023 Final, 2023-2024 Vize", "text": "Aşağıdakilerden hangisi karar verme süreci aşamalarından biri değildir?", "options": [{"letter": "A", "text": "Duyarlılık analiz yapılması"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "A", "explanation": " Duyarlılık analizi, karar yapıldıktan sonra, parametre değişimlerinin etkisini ölçmek için yapılan ilave bir testtir, zorunlu bir adım değildir."}, {"num": 48, "tag": "2023-2024 Vize", "text": "(Grafik sorusu: (6,0) ve (0,2) noktaları, üst taraf taranmış) Kısıtları hangisidir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "2x_1+x_2 <= 12 ve 3x_1 + 6x_2 >= 12"}], "correct": "E", "explanation": " Grafikteki doğrulardan biri (6,0) ve (0,2)'den geçer."}, {"num": 49, "tag": "2023-2024 Vize, 2025-2026 Vize", "text": "Karar değişkenlerinin tamamının ikili (binary) formda olması koşulunun bulunduğu karar modeline verilen isimdir?", "options": [{"letter": "A", "text": "Saf Sıfır-Bir Tamsayılı Programlama"}, {"letter": "B", "text": "Karma Tamsayılı Programlama"}, {"letter": "C", "text": "Saf Tamsayılı Programlama"}, {"letter": "D", "text": "Doğrusal Tamsayılı Programlama"}, {"letter": "E", "text": "Karma Sıfır-Bir Tamsayılı Programlama"}], "correct": "A", "explanation": " \"Saf\" kelimesi değişkenlerin tamamını, \"Sıfır-Bir\" ise değişkenlerin sadece 0 veya 1 değerini (binary) alabileceğini belirtir."}, {"num": 50, "tag": "2023-2024 Vize", "text": "(Primal model veriliyor: Min 2x_1+x_2+6x_3...) Hangisi dual modelde yer alan kısıtlardan biri değildir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "2u_1 + u_2 + 6u_3 <= 7"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": " B şıkkındaki katsayılar (2, 1, 6) Primal Amaç Fonksiyonunun katsayılarıdır; bu değerler Dual modelin kısıtlarının sağ taraf sabitleri olmalıdır."}, {"num": 51, "tag": "2023-2024 Vize", "text": "Aşağıdakilerden hangisi bir Doğrusal Programlama Modelinde yer alan karar değişkenlerinin bazılarının tamsayı olması koşulunun bulunduğu karar modelidir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Karma Tamsayılı Programlama"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": " Modeldeki değişkenlerin bir kısmı sürekli (virgüllü), bir kısmı tamsayı ise bu modele \"Karma\" (Mixed) model denir."}, {"num": 52, "tag": "2023-2024 Vize", "text": "Aşağıda dualite ile ilgili verilen ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Primal problemde n tane karar değişkeni olduğunda, dual problemde n tane değişken olur."}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "D", "explanation": " Primal problemdeki karar değişkeni sayısı (n), dual problemdeki kısıt sayısına eşit olur."}, {"num": 53, "tag": "2022-2023 Final, 2023-2024 Vize, 2025-2026 Vize", "text": "Primal: Min x_1+x_2+6x_3, Sağ taraflar: 10, 3, 7. Dual amaç fonksiyonu nedir?", "options": [{"letter": "A", "text": "maks 10u_1+9u_2+7u_3"}, {"letter": "B", "text": "maks 10u_1+3u_2+7u_3"}, {"letter": "C", "text": "min 10u_1+3u_2+7u_3"}, {"letter": "D", "text": "maks 1u_1+1u_2+6u_3"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": " 1. Primal Min olduğu için Dual Maks olur. 2. Primal kısıtların sağ taraf değerleri Dual amaç fonksiyonunun katsayıları olur."}, {"num": 54, "tag": "2022-2023 Final, 2025 Final", "text": "Verilen geçiş matrisine göre iki adım sonraki periyotta B seçeneğinden B seçeneğine geçme olasılığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,61"}, {"letter": "B", "text": "0,444"}, {"letter": "C", "text": "0,556"}, {"letter": "D", "text": "0,984"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "A", "explanation": " B durumundan başlayıp iki adım sonra tekrar B'de olmak için iki olası yol vardır. Toplam Olasılık: 0,61"}, {"num": 55, "tag": "2022-2023 Final", "text": "Maks X_1-X_2+3X_3 (Kısıt Sağ Tarafları: 10, 2, 6). Primali verilen modelin dual amaç fonksiyonu aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "min 10u_1+2u_2 + 6u_3"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": " Primal problem \"Maksimum\" ise Dual problem \"Minimum\" olur."}, {"num": 56, "tag": "2022-2023 Final", "text": "\"Kullanılacak kriter sayısı... asgari sayıda olması gerektiği gibi azami bir sayıyı da geçmemesi beklenmektedir.\" ifadesi hangi özelliği tanımlar?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Yeterlilik"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 57, "tag": "2022-2023 Final", "text": "Aşağıdakilerden hangisi karar vericinin kontrolü altında olmayan faktörlerden olup seçimi etkileyen çevreyi yansıtır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Doğa Durumu"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 58, "tag": "2022-2023 Final, 2024-2025 Büt", "text": "Aşağıdakilerden hangisi tipik bir oyunda bulunması gereken kavramlardan biri değildir?", "options": [{"letter": "A", "text": "Strateji"}, {"letter": "B", "text": "Hakem"}, {"letter": "C", "text": "Kazanç"}, {"letter": "D", "text": "Denge durumu"}, {"letter": "E", "text": "Oyuncular"}], "correct": "B", "explanation": " Oyun teorisi modellerinde Oyuncular, Stratejiler, Kazançlar ve Denge durumu temel kavramlardır. \"Hakem\" matematiksel modelin zorunlu bir parçası değildir."}, {"num": 59, "tag": "2022-2023 Final", "text": "Aşağıdaki ifadelerden hangisi Saf Sıfır-Bir Tamsayılı Programlama modelini tanımlamaktadır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Karar probleminde yer alacak karar değişkenlerinin tamamının 0 ya da 1 değerlerinden oluşması gerektiği durumunda kullanılan modeldir."}], "correct": "E", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 60, "tag": "2022-2023 Final", "text": "Aşağıdakilerden hangisi Hedef Programlama türleri arasında sayılamaz?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Tartılı hedef programlama"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "D", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 61, "tag": "2022-2023 Final", "text": "Analitik Hiyerarşi Prosesi (AHP) ile incelenen bir karar probleminde oluşturulan karar matrisinin köşegen elemanları aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "1"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 62, "tag": "2022-2023 Final", "text": "Aşağıdakilerden hangisi tamsayılı programlama problemlerinin çözümünde kullanılan yöntemlerdendir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Dal-Sınır yöntemi"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 63, "tag": "2022-2023 Final, 2023-2024 Final", "text": "Aşağıdakilerden hangisi Çok Nitelikli Karar Verme (ÇNKV) yöntemlerinden biri değildir?", "options": [{"letter": "A", "text": "TOPSIS"}, {"letter": "B", "text": "VIKOR"}, {"letter": "C", "text": "Hedef Programlama"}, {"letter": "D", "text": "Analitik Ağ Prosesi"}, {"letter": "E", "text": "Analitik Hiyerarşi Prosesi"}], "correct": "C", "explanation": " TOPSIS, VIKOR, AHP çok nitelikli karar verme yöntemleridir. Hedef Programlama ise çok amaçlı (MODM) bir yöntemdir."}, {"num": 64, "tag": "2022-2023 Final", "text": "Aşağıdakilerden hangisi Analitik Hiyerarşi Prosesi'nde izlenen aşamalardan biri değildir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Çok amaçlı karar probleminin tasarımı"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 65, "tag": "2022-2023 Final, Dosya 2, 2022-2023 Büt, 2023-2024 Final", "text": "Aşağıdakilerden hangisi bir hedef programlama modelinde istenilen hedefin aşılması ve altında kalınması durumlarını gösteren kavramdır?", "options": [{"letter": "A", "text": "Sapma Değişkenleri"}, {"letter": "B", "text": "Hedef Kısıtları"}, {"letter": "C", "text": "Hedef"}, {"letter": "D", "text": "Sistem Kısıtları"}, {"letter": "E", "text": "Amaç"}], "correct": "A", "explanation": " İstenilen hedefin üzerine çıkılması pozitif sapma (d+), altında kalınması ise negatif sapma (d-) değişkenleri ile gösterilir."}, {"num": 66, "tag": "2022-2023 Büt, 2024-2025 Vize, 2025-2026 Vize", "text": "Aşağıdakilerden hangisi ülkemizde Yöneylem Araştırması çalışmalarına ilk olarak ev sahipliği yapan birimdir? (veya Yöneylem Araştırması faaliyetlerinin yürütüldüğü ilk kurumdur?)", "options": [{"letter": "A", "text": "Genel Kurmay Başkanlığı İlmi İstişare Müdürlüğü (Türk Silahlı Kuvvetleri)"}, {"letter": "B", "text": "Kara Harp Okulu"}, {"letter": "C", "text": "Orta Doğu Teknik Üniversitesi"}, {"letter": "D", "text": "Yöneylem Araştırması Derneği"}, {"letter": "E", "text": "TÜBİTAK"}], "correct": "A", "explanation": " Yöneylem araştırması Türkiye'de ilk defa 1950'li yıllarda Türk Silahlı Kuvvetleri bünyesindeki Genelkurmay Başkanlığı İlmi İstişare Kurulu çatısı altında ele alınmıştır."}, {"num": 67, "tag": "2022-2023 Büt, 2023-2024 Final", "text": "Aşağıdakilerden hangisi karar probleminde incelenen alternatiflerin sonlu sayıda olduğu ve açıkça tanımlandığı kesikli durumlarda kullanılabilecek yöntemlerden birisi değildir (veya birisidir)?", "options": [{"letter": "A", "text": "MABAC"}, {"letter": "B", "text": "EDAS"}, {"letter": "C", "text": "ARAS"}, {"letter": "D", "text": "MARCOS"}, {"letter": "E", "text": "SEMOPS / AHP"}], "correct": "E", "explanation": " AHP, TOPSIS, MABAC vb. çok nitelikli (kesikli) karar verme yöntemleridir. SEMOPS ise sürekli (Çok Amaçlı Karar Verme - MODM) uzayda kullanılan bir yöntemdir."}, {"num": 68, "tag": "2022-2023 Büt", "text": "Aşağıdakilerden hangisi tamsayılı programlama (TP) türlerinden biri değildir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Doğrusal TP"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 69, "tag": "2022-2023 Büt", "text": "Aşağıdaki doğrusal programlama varsayımlarından hangisi tamsayılı programlama modelleri ile çelişmektedir?", "options": [{"letter": "A", "text": "Bölünebilirlik"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "A", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 70, "tag": "2022-2023 Büt, 2023-2024 Final", "text": "Verilen geçiş matrisine göre iki adım sonraki periyotta A seçeneğinden A seçeneğine geçme olasılığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "1,00"}, {"letter": "B", "text": "0,61"}, {"letter": "C", "text": "0,52"}, {"letter": "D", "text": "0,48"}, {"letter": "E", "text": "0,39"}], "correct": "D", "explanation": " İki adımda A'dan A'ya geçiş için iki yol vardır: (A->A->A = 0.6 * 0.6 = 0.36) ve (A->B->A = 0.4 * 0.3 = 0.12). Toplamları 0.36 + 0.12 = 0.48 olur."}, {"num": 71, "tag": "2022-2023 Büt, 2025 Final, 2023-2024 Büt", "text": "Aşağıdakilerden hangisi Oyun Teorisi incelenen bir oyunun analiz edilmesi için karar vericinin sahip olması gereken bilgilerden biri değildir?", "options": [{"letter": "A", "text": "Her bir oyuncu için hangi eylemlerin mevcut olduğu"}, {"letter": "B", "text": "Her bir oyuncunun duygu durumu"}, {"letter": "C", "text": "Oyuncuların kimler olduğu"}, {"letter": "D", "text": "Her bir oyuncunun her bir sonuç için ne kadar değer belirlediği"}, {"letter": "E", "text": "Her bir oyuncunun ne bildiği"}], "correct": "B", "explanation": " Oyun teorisi; oyuncuların rasyonel varlıklar olduğunu varsayar. Anlık hissiyatlar \"duygu durumu\" analize dâhil edilen bir bilgi faktörü değildir."}, {"num": 72, "tag": "2022-2023 Büt", "text": "Aşağıdaki Belirsizlik Halinde Karar Verme yaklaşımlarından hangisi iyimserlik ve kötümserlik kriterlerinin belirli bir ağırlıklandırma ile bütünleşik kullanılması esasına dayanır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Hurwicz Kriteri"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "D", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 73, "tag": "2022-2023 Büt, 2023-2024 Final", "text": "Aşağıdakilerden hangisi bir karar ağaçlarında karar düğümlerini göstermek üzere kullanılan semboldür? (veya doğa durumlarını...)", "options": [{"letter": "A", "text": "Kare"}, {"letter": "B", "text": "Dörtgen"}, {"letter": "C", "text": "Çember yada Daire"}, {"letter": "D", "text": "Beşgen"}, {"letter": "E", "text": "Üçgen"}], "correct": "A", "explanation": " Karar ağaçlarında karar düğümleri kare ile, olasılıklara bağlı şans (doğa durumu) düğümleri ise daire/çember ile gösterilir."}, {"num": 74, "tag": "2022-2023 Büt, 2023-2024 Final", "text": "Aşağıdakilerden hangisi bir Hedef Programlama modelinde sağ taraf sabitlerinden sapmalara müsaade eden kısıt türüdür?", "options": [{"letter": "A", "text": "Doğrusal kısıtlar"}, {"letter": "B", "text": "Sistem kısıtları"}, {"letter": "C", "text": "İşlevsel kısıtlar"}, {"letter": "D", "text": "Hedef kısıtları"}, {"letter": "E", "text": "Fonksiyonel kısıtlar"}], "correct": "D", "explanation": " Hedef programlamada kesin ve esnemeyen kısıtlara \"sistem kısıtları\", sapmalara müsaade eden esnek kısıtlara ise \"hedef kısıtları\" denir."}, {"num": 75, "tag": "2022-2023 Büt", "text": "Primali verilen modelin dual kısıtlarından biri değildir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "2u_1 + 1u_2 + 6u_3 <= 10"}], "correct": "E", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 76, "tag": "2025 Final, 2023-2024 Büt", "text": "Aşağıdaki kavramlardan hangisi Analitik Hiyerarşi Prosesi yönteminin temelini oluşturmaktadır?", "options": [{"letter": "A", "text": "Doğrusallık"}, {"letter": "B", "text": "Alternatifler"}, {"letter": "C", "text": "Kriterler"}, {"letter": "D", "text": "Çok amaçlılık"}, {"letter": "E", "text": "İkili karşılaştırmalar"}], "correct": "E", "explanation": " Thomas L. Saaty tarafından geliştirilen AHP'nin çekirdeğinde, karar vericinin alternatifleri ve kriterleri ikişer ikişer (ikili) şekilde birbirleriyle kıyaslayarak (1-9 ölçeğiyle) matrisler oluşturması yatar."}, {"num": 77, "tag": "2025 Final", "text": "Bir hedef programlama modelinde, aylık işgücü kullanımının en fazla 400 saat olarak belirlendiği bir hedefe ilişkin çözüm sonucunda, aylık işgücü kullanımının 450 saat olarak gerçekleşmiş olduğu görülmüştür. Bu ifadeye göre hangisi kesinlikle doğrudur?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Pozitif sapma değişkeni değeri 50'dir."}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "B", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 78, "tag": "2025 Final, 2025-2026 Büt", "text": "Verilen geçiş matrisine göre 3 adım sonraki periyotta A seçeneğinden A seçeneğine geçme olasılığı aşağıdakilerden hangisidir? (Matris: A->A: 0.6, A->B: 0.4, B->A: 0.3, B->B: 0.7)", "options": [{"letter": "A", "text": "0,556"}, {"letter": "B", "text": "0,583"}, {"letter": "C", "text": "0,984"}, {"letter": "D", "text": "0,417"}, {"letter": "E", "text": "0,444"}], "correct": "E", "explanation": " Matrisin kendiyle 3 kere çarpılması sonucu A satırı A sütunu elemanıdır."}, {"num": 79, "tag": "2025 Final", "text": "I. Analitik Hiyerarşi Prosesi (AHP) II. TOPSIS III. Hedef Programlama. Hangileri Çok Amaçlı Karar Verme (MODM) yöntemleri arasında sayılabilir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Yalnız III"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 80, "tag": "2025 Final", "text": "AHP'de tutarlılık kontrolünde kullanılan parametrelerden hangisi belirli bir formülasyonu olmaksızın tablo değerinin okunması ile belirlenmektedir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Rasgele İndeksi RI"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "C", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 81, "tag": "2025 Final, 2024-2025 Büt, 2025-2026 Final, 2025-2026 Büt", "text": "Tedarikçi seçim sürecinde (veya Depo satın alma probleminde) kullanılan kriterlerden hangisi maliyet yönlü olup daha düşük bir skora sahip olduğunda daha yüksek bir fayda sağlar?", "options": [{"letter": "A", "text": "Depo önü araç park alanı genişliği (m2)"}, {"letter": "B", "text": "Depo alanı (m2)"}, {"letter": "C", "text": "Depo araç yanaşma slot (kapı) adedi"}, {"letter": "D", "text": "Depo satış bedeli (milyon TL)"}, {"letter": "E", "text": "Depo hacmi (m3)"}], "correct": "D", "explanation": " Alan, hacim, kapı sayısı gibi özelliklerin büyük olması istenirken, maliyet veya fiyatı temsil eden \"satış bedeli\"nin düşük olması istenir."}, {"num": 82, "tag": "2025 Final", "text": "Bir dual modelin kısıtlarının katsayılarına eşittir?", "options": [{"letter": "A", "text": "Primal problemin kısıtlarının katsayılarının oluşturduğu matrisin transpozu"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "A", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 83, "tag": "2025 Final", "text": "(Grafik Sorusu: Z_min=5x+4y) Amaç fonksiyonuna göre optimal çözüm noktası hangisidir?", "options": [{"letter": "A", "text": "I"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Diğer Seçenek"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "A", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 84, "tag": "2025 Final", "text": "Bir işletmenin üretim hattı için Hedef Programlama modelinde depolama alanının 500m^2'yi aşmaması istenmektedir. Hedef kısıtı nasıl yazılır?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "<= 500"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "D", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 85, "tag": "2025 Final", "text": "Tamsayılı Programlama çözüm yöntemlerinden hangisinde... çözümün tamsayı olmaması durumunda en yakın tamsayıya indirgenir?", "options": [{"letter": "A", "text": "Diğer Seçenek"}, {"letter": "B", "text": "Diğer Seçenek"}, {"letter": "C", "text": "Diğer Seçenek"}, {"letter": "D", "text": "Yuvarlama Yöntemi"}, {"letter": "E", "text": "Diğer Seçenek"}], "correct": "D", "explanation": "AUZEF Yoneylem Arastirmasi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 86, "tag": "2024-2025 Vize, 2025-2026 Vize", "text": "Z min 2x1+3x2+2x3+4x4+3x5 (Tüm kısıtlar >=) ... Aşağıdakilerden hangisi primal formda verilen doğrusal programlama modelinin dualidir?", "options": [{"letter": "A", "text": "Z max 6u1+7u2+8u3 (bazı kısıtlar >=)"}, {"letter": "B", "text": "Z min 6u1+7u2+8u3 (tüm kısıtlar >=)"}, {"letter": "C", "text": "Z min 16u1+..."}, {"letter": "D", "text": "Z max 6u1+7u2+8u3 (tüm kısıtlar >=)"}, {"letter": "E", "text": "Z max 6u1+7u2+8u3 (tüm kısıtlar <=)"}], "correct": "E", "explanation": " Primal model minimizasyon (Min) yönlü ve kısıtları büyük eşit (>=) ise, dual model maksimizasyon (Max) yönlü ve kısıtları küçük eşit (<=) olmalıdır."}, {"num": 87, "tag": "2024-2025 Vize", "text": "Bir işletmenin üç yatırım seçeneğinden net bugünkü değerini en fazla kılan yatırımı seçmeyi amaçladığı bir karar problemi aşağıdaki Tam Sayılı Programlama modellerinden hangisine uygundur?", "options": [{"letter": "A", "text": "Dinamik Tamsayılı Progralama"}, {"letter": "B", "text": "Sıfır-Bir Tamsayılı Programlama"}, {"letter": "C", "text": "Kompleks Tamsayılı Programlama"}, {"letter": "D", "text": "Karma Sıfır-Bir Tamsayılı Programlama"}, {"letter": "E", "text": "Karma Tamsayılı Programlama"}], "correct": "B", "explanation": " Bir yatırımın seçilip seçilmemesi durumu (evet=1, hayır=0) ikili kararları gerektirir."}, {"num": 88, "tag": "2024-2025 Vize, 2025-2026 Vize", "text": "min Z=8x1+7x2+x3+11x4 (Tüm kısıtlar >=) Yukarıda primal formda verilen doğrusal programlama modelinin duali için aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Negatif olmama kısıtı dahil toplam 5 kısıtı vardır."}, {"letter": "B", "text": "Karar değişkeni sayısı 3'tür."}, {"letter": "C", "text": "Negatif olmama kısıtı dışındaki tüm kısıtlar \"<\" yönlüdür."}, {"letter": "D", "text": "Sınırlandırılmamış kısıtları mevcuttur."}, {"letter": "E", "text": "Amaç fonksiyonu maksimizasyon yönlüdür."}], "correct": "D", "explanation": " Primal modeldeki değişkenlerin hepsi pozitif tanımlı (xj >= 0) olduğu için, dual modelin kısıtları kesin yönlüdür (<=). Dolayısıyla sınırlandırılmamış (serbest) kısıt veya değişken bulunmaz."}, {"num": 89, "tag": "2024-2025 Vize", "text": "Aşağıdaki Belirsizlik Halinde Karar Verme yaklaşımlarından hangisi seçimlerden kaynaklı oluşan fırsat maliyetlerini dikkate alan yaklaşımdır?", "options": [{"letter": "A", "text": "İyimserlik Kriteri"}, {"letter": "B", "text": "Kötümserlik Kriteri"}, {"letter": "C", "text": "Pişmanlık Kriteri"}, {"letter": "D", "text": "Eş Olasılık Kriteri"}, {"letter": "E", "text": "Hurwicz Kriteri"}], "correct": "C", "explanation": " Pişmanlık (Savage) Kriteri, en iyi kararı vermemiş olmaktan kaynaklanan fırsat kayıplarını bir pişmanlık matrisi oluşturarak minimize etmeyi hedefler."}, {"num": 90, "tag": "2024-2025 Vize, 2025-2026 Vize", "text": "Bir fabrikada üretilen 2 farklı ürünün belirli kısıtlar altında optimal üretim miktarlarını belirlemek üzere incelenen karar problemi aşağıdakilerden hangisi olamaz?", "options": [{"letter": "A", "text": "Karma Tamsayılı Programlama Problemi"}, {"letter": "B", "text": "Saf Sıfır-Bir Tamsayılı Programlama Problemi"}, {"letter": "C", "text": "Doğrusal Programlama Problemi"}, {"letter": "D", "text": "Tamsayılı Programlama Problemi"}, {"letter": "E", "text": "Saf Tamsayılı Programlama Problemi"}], "correct": "B", "explanation": " Üretim miktarları genellikle tamsayı (adet) veya kesirli (kg, litre) değerler alabilir. Ancak sadece 0 veya 1 (hiç üretme veya sadece 1 birim üret) değerini alan \"Saf Sıfır-Bir\" modeli, üretim miktarı belirleme problemine uygun değildir."}, {"num": 91, "tag": "2024-2025 Vize, 2025-2026 Vize", "text": "Yukarıda verilen Doğrusal Programlama modeline ait grafikte aşağıdaki kısıtlardan hangisi yer almaz? (Kritik x1 noktaları: 1, 4, 5)", "options": [{"letter": "A", "text": "x2<=6"}, {"letter": "B", "text": "x1>=6"}, {"letter": "C", "text": "x1>=1"}, {"letter": "D", "text": "-x1+2x2>=6"}, {"letter": "E", "text": "x1+2x2>=12"}], "correct": "B", "explanation": " Grafikte x1 ekseni üzerindeki kritik noktalar 1, 4, 5 şeklindedir. x1 ekseninde 6 noktasını kesen ve oradan büyük olan bir kısıt doğrusu (x1 >= 6) grafikte bulunmamaktadır."}, {"num": 92, "tag": "2024-2025 Vize, 2025-2026 Final", "text": "Z max x1+2x2+3x3+4x4 (3 adet <= kısıt var) ... Aşağıdakilerden hangisi primal formda verilen doğrusal programlama modelinin dual kısıtlarından biri değildir?", "options": [{"letter": "A", "text": "4u1+2u2+u3 >= 3"}, {"letter": "B", "text": "4u1+u2+2u3 >= 1"}, {"letter": "C", "text": "3u1+2u2+4u3 >= 2"}, {"letter": "D", "text": "-u1+3u2+5u3 >= 4"}, {"letter": "E", "text": "2u1+4u2+u3 >= 3"}], "correct": "E", "explanation": " Dual kısıtlar, primal modelin sütunlarındaki katsayıların transpozu alınarak oluşturulur."}, {"num": 93, "tag": "2024-2025 Vize", "text": "Z max 2x1+5x2 (x1+3x2<=6, 2x1+5x2<=10, x1+x2>=2) ... Aşağıdakilerden hangisi Primal formda verilen Doğrusal Programlama modelinin dualidir?", "options": [{"letter": "A", "text": "Z min 6u1+10u2-2u3 (u1+2u2-u3>=2, 3u1+5u2-u3>=5)"}, {"letter": "B", "text": "Z max..."}, {"letter": "C", "text": "Z max..."}, {"letter": "D", "text": "Z min 6u1+10u2+2u3..."}, {"letter": "E", "text": "Z min 16u1..."}], "correct": "A", "explanation": " Maksimizasyon modelinin duali minimizasyondur."}, {"num": 94, "tag": "2024-2025 Vize, 2025-2026 Vize, 2023-2024 Final", "text": "Aşağıdakilerden hangisi yöneylem araştırmasında kullanılan modellerden biri değildir?", "options": [{"letter": "A", "text": "Hedef Programlama"}, {"letter": "B", "text": "Karar Analizi"}, {"letter": "C", "text": "Doğrusal Programlama"}, {"letter": "D", "text": "Simülasyon"}, {"letter": "E", "text": "Zaman Serileri Analizi"}], "correct": "E", "explanation": " Yöneylem Araştırması optimizasyon ve karar modelleri kullanır. Zaman Serileri Analizi ise daha çok istatistik ve ekonometrinin çalışma alanıdır."}, {"num": 95, "tag": "2024-2025 Vize", "text": "Aşağıdaki hangisi bir doğrusal programlama modelinde değişkenlerin kesirli/ondalıklı değerler almasına izin verilmediği durumda kullanılan yöntemdir?", "options": [{"letter": "A", "text": "Tam Sayılı Programlama"}, {"letter": "B", "text": "Doğrusal Olmayan Programlama"}, {"letter": "C", "text": "Dinamik Programlama"}, {"letter": "D", "text": "Hedef Programlama"}, {"letter": "E", "text": "Kuadratik Programlama"}], "correct": "A", "explanation": " Değişkenlerin doğası gereği bölünemediği (insan, makine sayısı vb.) durumlarda sürekli (kesirli) çözümler yerine tamsayılar arayan yaklaşıma Tam Sayılı Programlama denir."}, {"num": 96, "tag": "2024-2025 Vize, 2025-2026 Vize", "text": "Aşağıdakilerden hangisi Doğrusal Programlama modelinde yer alan Zmaks 3x1+2x2 amaç fonksiyonun eğimidir?", "options": [{"letter": "A", "text": "2/3"}, {"letter": "B", "text": "-2/3"}, {"letter": "C", "text": "3/2"}, {"letter": "D", "text": "-3"}, {"letter": "E", "text": "-3/2"}], "correct": "E", "explanation": " 3x1 + 2x2 = C doğrusunun eğimini bulmak için x2 yalnız bırakılır: 2x2 = -3x1 + C => x2 = (-3/2)x1 + C/2. Eğimi m = -3/2'dir."}, {"num": 97, "tag": "2024-2025 Vize, 2025-2026 Vize", "text": "Aşağıdakilerden hangisi Sıfır-Bir Tamsayılı Programlama problemine örnek gösterilemez?", "options": [{"letter": "A", "text": "Satış bölgelerine kişilerin tayini"}, {"letter": "B", "text": "İşlerin kişilere atanması"}, {"letter": "C", "text": "Araçların depolarla eşleştirilmesi"}, {"letter": "D", "text": "Kişilerin makinelere atanması"}, {"letter": "E", "text": "Satış miktarlarının belirlenmesi"}], "correct": "E", "explanation": " Atama, eşleştirme ve tayin problemleri karar değişkenlerinin 0 veya 1 değerini aldığı modellere uygundur. Ancak satış miktarları sürekli veya genel tamsayılardan oluşur, 0-1 şeklinde değerlendirilemez."}, {"num": 98, "tag": "2025-2026 Vize", "text": "Aşağıdakilerden hangisi gerçek hayattan kaynaklanan ve çoğunlukla sınırlı kaynakların paylaştırıldığı deterministik ve olasılıklı problemlerin modellenmesi ve optimal kararın verilmesi ile ilgilenen bilimsel yöntemler bütünüdür?", "options": [{"letter": "A", "text": "Yöneylem Araştırması"}, {"letter": "B", "text": "Ekonometri"}, {"letter": "C", "text": "Nitel Araştırma"}, {"letter": "D", "text": "İktisat"}, {"letter": "E", "text": "Pazarlama"}], "correct": "A", "explanation": " Yöneylem Araştırması, gerçek hayattaki karmaşık problemlerin bilimsel ve matematiksel yöntemlerle modellenerek optimum (en iyi) çözümün bulunmasını sağlayan disiplindir."}, {"num": 99, "tag": "2025-2026 Vize", "text": "Yukarıda verilen Doğrusal Programlama modeline ait grafikte renkli alanı oluşturan kısıt seti aşağıdakilerden hangisidir? (Eksen kesişimleri x1: 2, 4 ve x2: 4, 6)", "options": [{"letter": "A", "text": "3x1+2x2<=4, 2x1+x2>=12"}, {"letter": "B", "text": "2x1+3x2>=4, 2x1+x2>=12"}, {"letter": "C", "text": "3x1+2x2<=12, x1+2x2>=4"}, {"letter": "D", "text": "2x1+3x2<=12, 2x1+x2>=4"}, {"letter": "E", "text": "3x1+2x2<=12, 2x1+x2>4"}], "correct": "E", "explanation": " Grafikteki iki doğrunun eksenleri kestiği noktalar (4,0)-(0,6) ve (2,0)-(0,4)'tür. Bunların denklemleri sırasıyla 3x1+2x2=12 ve 2x1+x2=4'tür."}, {"num": 100, "tag": "2025-2026 Vize", "text": "Aşağıdakilerden hangisi Yöneylem Araştırmasının ülkemizde ilk dönem çalışmalarında kullanılan ismidir?", "options": [{"letter": "A", "text": "Sistem Analizi"}, {"letter": "B", "text": "Yönetim Araştırmaları"}, {"letter": "C", "text": "Harekât Araştırması"}, {"letter": "D", "text": "Faaliyet Araştırmaları"}, {"letter": "E", "text": "Simülasyon Analizi"}], "correct": "C", "explanation": " Yöneylem Araştırması (Operations Research), Türkiye'ye ilk girdiğinde askeri kökenli olmasının da etkisiyle \"Harekât Araştırması\" olarak isimlendirilmiştir."}, {"num": 101, "tag": "2022-2023 Final, 2025-2026 Vize", "text": "Aşağıdakilerden hangisi amaçların gerçekleştirilmesi yönünde alternatifler arasından birini seçme işidir?", "options": [{"letter": "A", "text": "Eleme"}, {"letter": "B", "text": "Rassal Seçim"}, {"letter": "C", "text": "Çözümleme"}, {"letter": "D", "text": "Karar Verme"}, {"letter": "E", "text": "Sıralama"}], "correct": "D", "explanation": " Belirli bir amaca veya amaçlar bütününe ulaşmak için mevcut alternatifler (seçenekler) arasından en uygun olanını seçme sürecine \"Karar Verme\" denir."}, {"num": 102, "tag": "Genel Sınav Havuzu, 2022-2023 Final, 2023-2024 Final, 2024-2025 Büt", "text": "Markov analizinde kullanılan aşağıdaki kavramlardan hangisi bir sistemin olası tüm durumlarını içeren kümeyi ifade etmektedir?", "options": [{"letter": "A", "text": "Durum"}, {"letter": "B", "text": "Stokastik süreç"}, {"letter": "C", "text": "Başlangıç olasılıkları"}, {"letter": "D", "text": "Durum uzayı"}, {"letter": "E", "text": "Ergodik matris"}], "correct": "D", "explanation": " Bir sistemde gerçekleşebilecek tüm olası durumların oluşturduğu kümeye durum uzayı adı verilir."}, {"num": 103, "tag": "Genel Sınav Havuzu, 2023-2024 Final", "text": "Analitik Hiyerarşi Prosesi'nde karar vericinin karşılaştırmalarının tutarlı olup olmadığının göstergesi olarak hesaplanan Tutarlık Oranı (CR) aşağıdaki hangi değerin üzerinde olmamalıdır?", "options": [{"letter": "A", "text": "0,20"}, {"letter": "B", "text": "0,25"}, {"letter": "C", "text": "1"}, {"letter": "D", "text": "0,10"}, {"letter": "E", "text": "0,15"}], "correct": "D", "explanation": " AHP'de tutarlılık oranının (CR) 0.10 (%10) veya daha küçük olması, yapılan ikili karşılaştırmaların tutarlı kabul edilmesi için yeterlidir."}, {"num": 104, "tag": "2023-2024 Final", "text": "Dualite ile ilgili aşağıdaki ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Tüm primal modellerin dualleri alınarak grafik yöntem ile çözülebilir."}, {"letter": "B", "text": "Dual problemin değişkenlerinin değerleri bulunduğu zaman, primal problemle olan ilişkisi yorumlanabilir."}, {"letter": "C", "text": "Bir dual problemin duali alınırsa, tekrar primal problem elde edilir."}, {"letter": "D", "text": "Dualite kavramı kullanılarak duyarlılık analizinde işlemlerde kolaylık sağlanabilir."}, {"letter": "E", "text": "Doğrusal programlama problemlerinde önemli bir yere sahip olan duyarlılık analizinde dualite kavramı yer bulmaktadır."}], "correct": "A", "explanation": " Grafik yöntem sadece iki (istisnai durumda üç) değişkenli problemler için çizilebilir."}, {"num": 105, "tag": "2023-2024 Final", "text": "Aşağıdakilerden hangisi yukarıda verilen doğrusal programlama modeli grafik gösteriminde gri renkli uygun çözüm alanının sınırlarını temsil etmektedir?", "options": [{"letter": "A", "text": "AOBC"}, {"letter": "B", "text": "AOCB"}, {"letter": "C", "text": "OBAC"}, {"letter": "D", "text": "OBCA"}, {"letter": "E", "text": "YOXB"}], "correct": "B", "explanation": " Orijinden (O) başlayıp sırasıyla A, C ve B köşe noktalarını çevreleyen kapalı çokgen alanı (AOCB) çözüm uzayını temsil eder."}, {"num": 106, "tag": "2023-2024 Final", "text": "Aşağıdaki Çok Nitelikli Karar Verme yöntemlerinden hangisi kriter ve alternatiflerin ikili karşılaştırmalar esasına göre analiz edildiği yöntemdir?", "options": [{"letter": "A", "text": "COPRAS"}, {"letter": "B", "text": "AHP"}, {"letter": "C", "text": "VIKOR"}, {"letter": "D", "text": "TOPSIS"}, {"letter": "E", "text": "PROMETHEE"}], "correct": "B", "explanation": " Analitik Hiyerarşi Prosesi (AHP) yönteminin temeli, kriterlerin ve alternatiflerin Saaty'nin 1-9 ölçeği kullanılarak ikili karşılaştırma matrisleri ile değerlendirilmesidir."}, {"num": 107, "tag": "2023-2024 Final", "text": "Verilen geçiş matrisine göre bir sonraki periyotta A seçeneğinden B seçeneğine geçme olasılığı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,60"}, {"letter": "B", "text": "0,40"}, {"letter": "C", "text": "1,00"}, {"letter": "D", "text": "0,70"}, {"letter": "E", "text": "0,30"}], "correct": "B", "explanation": " Matriste A satırı ve B sütununun kesiştiği değer, bir adımdaki (sonraki periyottaki) A'dan B'ye geçiş olasılığıdır ve tabloda 0,4 olarak verilmiştir."}, {"num": 108, "tag": "2023-2024 Büt", "text": "Aşağıdakilerden hangisi bir oyunun tepe noktasını gösteren kavramdır?", "options": [{"letter": "A", "text": "Başabaş noktası"}, {"letter": "B", "text": "Dengeleme noktası"}, {"letter": "C", "text": "Beklenen Değer"}, {"letter": "D", "text": "Eyer noktası"}, {"letter": "E", "text": "Eğer noktası"}], "correct": "D", "explanation": " Oyun teorisinde, bir oyuncunun maksimin değeri ile diğer oyuncunun minimaks değerinin birbirine eşit olduğu denge noktasına \"Eyer (Tepe) Noktası\" denir."}, {"num": 109, "tag": "2023-2024 Büt", "text": "Aşağıdaki olaylardan hangisi yöneylem araştırmasının başlangıcına dayanak gösterilen olaydır?", "options": [{"letter": "A", "text": "Fransız İhtilali"}, {"letter": "B", "text": "Rönesans"}, {"letter": "C", "text": "Ekim (Sovyet) Devrimi"}, {"letter": "D", "text": "İkinci Dünya Savaşı"}, {"letter": "E", "text": "Sanayi Devrimi"}], "correct": "D", "explanation": " Yöneylem Araştırması, İkinci Dünya Savaşı sırasında kısıtlı askeri kaynakların en verimli şekilde kullanılabilmesi için yürüttüğü çalışmalarla (harekât araştırması) başlamıştır."}, {"num": 110, "tag": "2023-2024 Büt, 2024-2025 Büt, 2025-2026 Final", "text": "Markov analizinde sistemin \"t=0\" (veya \"f=0\") zamanında \"i\" durumunda bulunma olasılığına karşılık gelen ifade aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Markov zinciri"}, {"letter": "B", "text": "Başlangıç olasılığı"}, {"letter": "C", "text": "Durum uzayı"}, {"letter": "D", "text": "Geçiş olasılığı"}, {"letter": "E", "text": "Yutan Markov Zinciri"}], "correct": "B", "explanation": " Markov analizinde t=0 (sıfırıncı an veya başlangıç anı), sürecin başladığı andır. Bu andaki duruma ilişkin ihtimallere başlangıç (initial) olasılıkları denir."}, {"num": 111, "tag": "2023-2024 Büt, 2024-2025 Büt", "text": "I. Doğrusal olmama II. Oransallık III. Toplanabilirlik Yukarıda verilen kavramlardan hangisi ya da hangileri Hedef Programlamanın varsayımlarından değildir?", "options": [{"letter": "A", "text": "I ve II"}, {"letter": "B", "text": "I ve III"}, {"letter": "C", "text": "I, II ve III"}, {"letter": "D", "text": "II ve III"}, {"letter": "E", "text": "Yalnız I"}], "correct": "E", "explanation": " Hedef Programlama, Doğrusal Programlamanın bir uzantısıdır. Dolayısıyla orantısallık (doğrusallık) ve toplanabilirlik varsayımları geçerlidir. \"Doğrusal olmama\" bu varsayımlara aykırıdır."}, {"num": 112, "tag": "2023-2024 Büt", "text": "Aşağıdakilerden hangisi \"Bir iş veya sorun hakkında düşünülerek verilen kesin yargı\" anlamına gelen kavramdır?", "options": [{"letter": "A", "text": "Olay"}, {"letter": "B", "text": "Kriter"}, {"letter": "C", "text": "Alternatif"}, {"letter": "D", "text": "Hedef"}, {"letter": "E", "text": "Karar"}], "correct": "E", "explanation": " Alternatifler arasından bir değerlendirme (düşünme) süreci sonucunda varılan kesin yargı ve seçime \"Karar\" adı verilir."}, {"num": 113, "tag": "Dosya 2, 2023-2024 Büt", "text": "Aşağıda Hedef Programlama Modelleri ile ilgili verilen ifadelerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "Negatif sapma değişkenleri 0 ya da negatif değerler alır."}, {"letter": "B", "text": "Hedef Programlama Modelinde yer alan sistem kısıtları tam olarak sağlanması gereken ve sapmaya izin verilmeyen kısıtlardır."}, {"letter": "C", "text": "Hedef programlamada amaç istenmeyen sapmaların minimize edilmesidir."}, {"letter": "D", "text": "Negatif ve pozitif sapma değişkenlerinden biri daima sıfır değerini alır."}, {"letter": "E", "text": "Pozitif sapma değişkenleri 0 ya da pozitif değerler alır."}], "correct": "A", "explanation": " Doğrusal programlama varsayımları gereği tüm karar ve sapma değişkenleri pozitif tanımlıdır. Negatif sapma (d-) mutlak bir değer olduğu için kendisi negatif bir sayı olamaz (d- >= 0)."}, {"num": 114, "tag": "2023-2024 Büt, 2024-2025 Büt", "text": "Aşağıdaki ifadelerden hangisi Markov özelliğini tanımlar?", "options": [{"letter": "A", "text": "Bir durumdan diğer duruma geçişin sistemin daha önceki durumlarına bağlı olması"}, {"letter": "B", "text": "Bir sistemin aynı anda iki durumda olamaması"}, {"letter": "C", "text": "Durumlar arası geçiş için geçiş olasılıklarının bulunmaması"}, {"letter": "D", "text": "Sonraki durumların belirlenebilmesi için halihazırdaki durum haricinde daha önceki durumların bilinmesine gerek olmaması"}, {"letter": "E", "text": "Bir sistemin olası tüm durumlarını içeren durum uzayına sahip olması"}], "correct": "D", "explanation": " Markov zincirlerinin en temel özelliği \"hafızasızlık\" (memoryless) özelliğidir. Gelecekteki durum, geçmişe değil sadece şu anki (mevcut) duruma bağlıdır."}, {"num": 115, "tag": "2023-2024 Büt", "text": "maks X1-X2+3X3 (kısıtlar: X1+X2+X3<=5, 2X1-X2-X3<=3, 2X1-2X2-3X3<=4) Aşağıdakilerden hangisi verilen primal modelin dual amaç fonksiyonudur?", "options": [{"letter": "A", "text": "min 5U1+3U2+4U3"}, {"letter": "B", "text": "min 5U1-3U2+4U3"}, {"letter": "C", "text": "maks 5U1-3U2+4U2"}, {"letter": "D", "text": "min U1-U2+3U3"}, {"letter": "E", "text": "maks 5U1+3U2+4U3"}], "correct": "A", "explanation": " Primal model maksimizasyon olduğu için duali minimizasyon (min) olur. Primal kısıtların sağ taraf sabitleri (5, 3 ve 4), dual modelin amaç fonksiyonundaki katsayılar (5U1, 3U2, 4U3) haline gelir."}, {"num": 116, "tag": "Dosya 3, 2023-2024 Büt", "text": "Aşağıdakilerden hangisi çok kriterli karar verme yöntemleri kullanılarak alınan bir kararın incelenmesinde kullanılan analizdir?", "options": [{"letter": "A", "text": "Verimlilik analizi"}, {"letter": "B", "text": "Etkinlik analizi"}, {"letter": "C", "text": "Duyarlılık analizi"}, {"letter": "D", "text": "Geçerlilik analizi"}, {"letter": "E", "text": "Güvenirlik analizi"}], "correct": "C", "explanation": " Karar modelinin çözülmesinin ardından, parametrelerde yapılacak ufak değişikliklerin sonucun istikrarını ne derece değiştirdiğini (kararın direncini) ölçmek için \"Duyarlılık Analizi\" yapılır."}, {"num": 117, "tag": "2022-2023 Büt, 2024-2025 Vize, 2023-2024 Büt", "text": "Aşağıdakilerden hangisi bölünebilirlik varsayımını karşılamayan değişkenlerden oluşan bir karar modelinin çözümünde kullanılan yöntemdir?", "options": [{"letter": "A", "text": "Doğrusal Olmayan Programlama"}, {"letter": "B", "text": "Hedef Programlama"}, {"letter": "C", "text": "Tam Sayılı Programlama"}, {"letter": "D", "text": "Doğrusal Programlama"}, {"letter": "E", "text": "Dinamik Programlama"}], "correct": "C", "explanation": " Karar değişkenlerinin niteliği gereği virgüllü / kesirli (bölünebilir) değerler alamadığı (1.5 insan olamaz) durumlarda Doğrusal Programlamaya ek olarak tamsayı kısıtı getiren Tam Sayılı Programlama kullanılır."}, {"num": 118, "tag": "2024-2025 Büt", "text": "I. Ölçütler II. Doğa Durumu Olasılıkları III. Düğümler IV. Karar noktaları Yukarıda verilen öğelerden hangisi ya da hangileri karar ağacı üzerinde gösterilmektedir?", "options": [{"letter": "A", "text": "II, III ve IV"}, {"letter": "B", "text": "I, II ve III"}, {"letter": "C", "text": "II ve IV"}, {"letter": "D", "text": "I, III ve IV"}, {"letter": "E", "text": "I, II ve IV"}], "correct": "A", "explanation": " Karar ağaçlarında karar noktaları (kare düğümler), doğa durumu olasılıkları (daire düğümler/şans düğümleri) ve düğümler arası dallar bulunur. Ölçütler ise ÇNKV (Çok Nitelikli Karar Verme) modellerine ait bir kavramdır."}, {"num": 119, "tag": "2024-2025 Büt", "text": "x1, x2, x3 karar değişkenlerinden oluşan bir modelde yer alan aşağıdaki kısıtlardan hangisi modelin tam sayılı programlama modeli olarak anılması için yeterli değildir?", "options": [{"letter": "A", "text": "x1, x2>=0, x3 tamsayı"}, {"letter": "B", "text": "x1, x2 tamsayı, x3=0 yada 1"}, {"letter": "C", "text": "x1, x2, x3>=0"}, {"letter": "D", "text": "x1, x2, x3 tamsayı"}, {"letter": "E", "text": "x1, x2, x3=0 yada 1"}], "correct": "C", "explanation": " x1, x2, x3 >= 0 kısıtı yalnızca negatif olmama varsayımıdır ve Doğrusal Programlama modelleri için geçerlidir. Tamsayılı model olabilmesi için değişkenlerin tamsayı (veya 0-1) olması gerektiği özel olarak belirtilmelidir."}, {"num": 120, "tag": "2024-2025 Büt", "text": "Aşağıdakilerden hangisi bir Çok Kriterli Karar Verme probleminde kriterlerin önem derecelerini ifade eden kavramdır?", "options": [{"letter": "A", "text": "Maliyet"}, {"letter": "B", "text": "Fayda"}, {"letter": "C", "text": "Ön değerlendirme"}, {"letter": "D", "text": "Uzunluk"}, {"letter": "E", "text": "Ağırlık"}], "correct": "E", "explanation": " Çok kriterli karar verme (ÇNKV) yöntemlerinde, kriterlerin birbirlerine göre sahip oldukları nispi (göreceli) önem derecelerine \"Ağırlık\" denir (örneğin AHP ile bulunan kriter ağırlıkları)."}, {"num": 121, "tag": "2024-2025 Büt", "text": "Z max 2x1+4x2+3x3+x4 (kısıtlar: 1x1+2x2+5x3+3x4<=8, 2x1+1x2+4x3+2x4<=9, 3x1+3x2+2x3+5x4<=21, 4x1+4x2+x3+3x4<=18) Aşağıdakilerden hangisi primal formda verilen Doğrusal Programlama modelinin dualine ait amaç fonksiyonudur?", "options": [{"letter": "A", "text": "Z min 2y1+4y2+3y3+y4"}, {"letter": "B", "text": "Z min 8y1+9y2+21y3+18y4"}, {"letter": "C", "text": "Z min y1+2y2+3y3+4y4"}, {"letter": "D", "text": "Z min 3y1+2y2+5y3+3y4"}, {"letter": "E", "text": "Z min 5y1+4y2+2y3+y4"}], "correct": "B", "explanation": " Primal maksimizasyon (max) olduğu için dual minimizasyon (min) olur. Primal kısıtların sağ taraf sabitleri (8, 9, 21, 18), dual amaç fonksiyonunun katsayıları (y değişkenleriyle birlikte) haline gelir."}, {"num": 122, "tag": "2024-2025 Büt", "text": "Aşağıdakilerden hangisi \"bir oyunda amaçlarını optimize etmeye çalışan kişi ya da kurumlar\" olarak tanımlanmaktadır?", "options": [{"letter": "A", "text": "Oyuncular"}, {"letter": "B", "text": "Yönetim"}, {"letter": "C", "text": "Ödemeler"}, {"letter": "D", "text": "Kazanç"}, {"letter": "E", "text": "Strateji"}], "correct": "A", "explanation": " Oyun teorisinde kararlar vererek kazancını maksimize etmeye veya kaybını minimize etmeye çalışan rasyonel karar vericilere \"oyuncu\" denir."}, {"num": 123, "tag": "2024-2025 Büt", "text": "3x+2y<=12 kısıtı kartezyen düzlemde gösterildiği durumda doğrunun y eksenini kestiği nokta aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "12"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "4"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "6"}], "correct": "E", "explanation": " Bir doğrunun y eksenini kestiği noktayı bulmak için x'e 0 (sıfır) değeri verilir. 3(0) + 2y = 12 denkleminden 2y = 12 ve y = 6 sonucu elde edilir."}, {"num": 124, "tag": "2025 Final, 2024-2025 Büt", "text": "Bir hedef programlama modelinde, X hammaddesi kullanımının en fazla 300 birim olarak belirlendiği bir hedefe ilişkin çözüm sonucunda, X hammaddesi kullanımının 320 birim olarak gerçekleşmiş olduğu saptanmıştır. Hedef Programlama modelinin çözümüne göre aşağıdakilerden hangisi kesinlikle doğrudur?", "options": [{"letter": "A", "text": "Pozitif yönlü sapma 20 birimdir."}, {"letter": "B", "text": "Negatif yönlü sapma -20 birimdir."}, {"letter": "C", "text": "Negatif yönlü sapma 20 birimdir."}, {"letter": "D", "text": "Pozitif yönlü sapma -20 birimdir."}, {"letter": "E", "text": "Pozitif yönlü sapma değeri O'dır."}], "correct": "A", "explanation": " Hedeflenen 300 birim, gerçekleşen ise 320 birimdir. 320 - 300 = +20 birimlik bir hedef aşımı vardır ve bu durum pozitif sapma (d+) ile ifade edilir."}, {"num": 125, "tag": "2024-2025 Büt, 2025-2026 Büt", "text": "I. Bağımsızlık II. Bağımlılık III. Homojenlik Yukarıda verilen kavramlardan hangisi ya da hangileri Analitik Hiyerarşi Prosesinin aksiyomlarındandır?", "options": [{"letter": "A", "text": "I ve III"}, {"letter": "B", "text": "I, II ve III"}, {"letter": "C", "text": "II"}, {"letter": "D", "text": "I ve II"}, {"letter": "E", "text": "II ve III"}], "correct": "A", "explanation": " AHP'nin temel aksiyomları arasında Bağımsızlık (kriterlerin ve alternatiflerin yapı içinde bağımsız değerlendirilmesi) ve Homojenlik (karşılaştırılan elemanların büyüklüklerinin aşırı orantısız olmaması) bulunur."}, {"num": 126, "tag": "2024-2025 Büt", "text": "Aşağıdakiler Yöneylem Araştırmasında kullanılan tekniklerden hangisi optimizasyon tekniklerinden herhangi birisiyle çözülemeyecek kadar karmaşık yapıdaki modellerde, optimal çözüm yerine yaklaşık bir çözüm elde etmek için geliştirilmiş teknikleri ifade etmektedir?", "options": [{"letter": "A", "text": "Analitik Teknikler"}, {"letter": "B", "text": "Sayısal Teknikler"}, {"letter": "C", "text": "Sezgisel Teknikler"}, {"letter": "D", "text": "Olasılıksal Teknikler"}, {"letter": "E", "text": "Oyun Teorisi"}], "correct": "C", "explanation": " Klasik optimizasyon yöntemlerinin (matematiksel analitik) çözemeyeceği kadar karmaşık/büyük problemlerde, kabul edilebilir makul bir sürede \"yeterince iyi\" veya \"yaklaşık\" çözüm veren yöntemlere \"Sezgisel (Heuristic) Teknikler\" denir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>

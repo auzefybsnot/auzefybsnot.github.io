@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="tr" data-device="desktop" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İşletme Yönetimi — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz | AUZEF YBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --paper: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --ink: #0f172a;
+            --ink-dim: #475569;
+            --ink-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --blue: #2563eb;
+            --blue-light: #eff6ff;
+            --blue-border: #bfdbfe;
+            --ok: #16a34a;
+            --ok-light: #f0fdf4;
+            --ok-border: #bbf7d0;
+            --warn: #ea580c;
+            --warn-light: #fff7ed;
+            --err: #dc2626;
+            --err-light: #fef2f2;
+            --err-border: #fecaca;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --paper: #0b1120;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --ink: #f8fafc;
+            --ink-dim: #cbd5e1;
+            --ink-muted: #64748b;
+            --border: #334155;
+            --border-hover: #475569;
+            --blue: #38bdf8;
+            --blue-light: #082f49;
+            --blue-border: #0369a1;
+            --ok: #4ade80;
+            --ok-light: #052e16;
+            --ok-border: #166534;
+            --err: #f87171;
+            --err-light: #450a0a;
+            --err-border: #991b1b;
+        }
+
+        /* DEVICE PROFILES */
+        html[data-device="mobile"] { font-size: 14px; }
+        html[data-device="mobile"] .page-wrap { padding: 10px; max-width: 100%; }
+        
+        html[data-device="eink-6-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #222222 !important;
+            --ink-muted: #444444 !important;
+            --border: #000000 !important;
+            --blue: #000000 !important;
+            --blue-light: #ffffff !important;
+            --ok: #000000 !important;
+            --ok-light: #ffffff !important;
+            --err: #000000 !important;
+            --err-light: #ffffff !important;
+            font-size: 16px;
+        }
+        html[data-device="eink-6-bw"] * {
+            box-shadow: none !important;
+            border-color: #000 !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        html[data-device="eink-10-bw"] {
+            --paper: #ffffff !important;
+            --surface: #ffffff !important;
+            --ink: #000000 !important;
+            --ink-dim: #111111 !important;
+            --ink-muted: #333333 !important;
+            --border: #000000 !important;
+            font-size: 15px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .page-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--ink-dim);
+            flex-wrap: wrap;
+        }
+        .breadcrumbs a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .select-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .theme-btn {
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* HERO HEADER */
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--blue-border);
+        }
+        .hero h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        .hero-desc {
+            color: var(--ink-dim);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* STICKY SCOREBAR */
+        .sticky-toolbar {
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .score-badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+        .badge-correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+        .badge-wrong { background: var(--err-light); color: var(--err); border: 1px solid var(--err-border); }
+        .badge-left { background: var(--paper); color: var(--ink-dim); border: 1px solid var(--border); }
+        .badge-score { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--surface-hover); }
+        .btn-primary {
+            background: var(--blue);
+            color: #ffffff !important;
+            border-color: var(--blue);
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-pdf {
+            background: #be123c;
+            color: #ffffff !important;
+            border-color: #be123c;
+        }
+
+        /* SEARCH AND FILTER */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-dim);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* QUESTION CARDS */
+        .q-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: border-color 0.2s;
+            position: relative;
+        }
+        .q-card.status-correct { border-left: 5px solid var(--ok); }
+        .q-card.status-wrong { border-left: 5px solid var(--err); }
+
+        .q-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .q-num {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .q-tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: var(--paper);
+            color: var(--ink-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+        }
+
+        .q-body {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .q-media {
+            margin: 14px 0;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .q-media img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        .q-code {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0 16px 0;
+            border: 1px solid #334155;
+        }
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+        .q-table th, .q-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .q-table th {
+            background: var(--paper);
+            font-weight: 800;
+        }
+
+        /* OPTIONS LIST */
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            line-height: 1.5;
+        }
+        .opt-item:hover:not(.locked) {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+        }
+        .opt-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        /* OPTION STATES */
+        .opt-item.selected-correct {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            color: var(--ok) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-correct .opt-letter {
+            background: var(--ok);
+            color: white;
+            border-color: var(--ok);
+        }
+        .opt-item.selected-wrong {
+            background: var(--err-light) !important;
+            border-color: var(--err) !important;
+            color: var(--err) !important;
+            font-weight: 700;
+        }
+        .opt-item.selected-wrong .opt-letter {
+            background: var(--err);
+            color: white;
+            border-color: var(--err);
+        }
+        .opt-item.is-correct-answer {
+            background: var(--ok-light) !important;
+            border-color: var(--ok) !important;
+            border-style: dashed;
+        }
+
+        /* EXPLANATION ACCORDION */
+        .exp-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        .exp-header {
+            font-weight: 800;
+            color: var(--blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--blue);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .toggle-exp-btn:hover { text-decoration: underline; }
+
+        /* FOOTER SUMMARY */
+        .quiz-summary-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: var(--shadow-md);
+        }
+        .summary-score-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin: 10px 0;
+        }
+        .summary-details {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .summary-stat-box {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--paper);
+            border: 1px solid var(--border);
+        }
+        .summary-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .summary-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 20px 16px; }
+            .hero h1 { font-size: 1.4rem; }
+            .sticky-toolbar { flex-direction: column; align-items: stretch; }
+            .score-badges { justify-content: space-between; }
+            .toolbar-actions { justify-content: space-between; }
+            .q-card { padding: 16px; }
+        }
+    
+    </style>
+</head>
+<body>
+
+<!-- AGY Universal Device & View Modes Bar -->
+<header class="agy-top-bar" id="agyTopBar">
+  <div class="agy-bar-left">
+    <a href="../index.html" class="agy-back-btn" title="Ders Listesine Dön">← 1. Sınıf Dersleri</a>
+    <span class="agy-doc-title">İşletme Yönetimi — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</span>
+  </div>
+  <div class="agy-bar-right">
+    <div class="agy-dev-menu-wrap">
+      <button class="agy-btn" id="agyDevBtn" onclick="agyToggleDevMenu()" title="Cihaz Görünümünü Değiştir">📱 Mod</button>
+      <div class="agy-dev-menu" id="agyDevMenu">
+        <div class="agy-dev-menu-head">Görünüm Profili</div>
+        <button class="agy-dev-opt" onclick="agySetDevice('desktop')">💻 Masaüstü / Web</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('phone')">📱 Akıllı Telefon</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-bw')">📖 6" E-Okuyucu (S/B)</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-6-color')">🎨 6" Renkli E-Okuyucu</button>
+        <button class="agy-dev-opt" onclick="agySetDevice('eink-10-bw')">📑 10.3" Tablet / E-Note</button>
+      </div>
+    </div>
+    <button class="agy-btn" id="agyThBtn" onclick="agyToggleTheme()" title="Karanlık/Aydınlık Tema">🌓</button>
+  </div>
+</header>
+
+
+<div class="page-wrap">
+
+    <!-- BREADCRUMBS & PROFILE SWITCHER -->
+    <nav class="top-nav">
+        <div class="breadcrumbs">
+            <a href="../../index.html">🏠 Ana Sayfa</a>
+            <span>/</span>
+            <a href="../index.html">1. Sınıf</a>
+            <span>/</span>
+            <a href="../index.html#guz">Güz Dönemi</a>
+            <span>/</span>
+            <strong>İşletme Yönetimi — Ders Anlatımı Quiz</strong>
+        </div>
+        <div class="nav-controls">
+            <select class="select-pill" id="deviceSwitcher" onchange="setDeviceProfile(this.value)">
+                <option value="web">🖥️ Web / Masaüstü</option>
+                <option value="mobile">📱 Mobil Görünüm</option>
+                <option value="eink-6-bw">📖 6" E-Ink S/B</option>
+                <option value="eink-10-bw">📋 10.3" Digital Paper S/B</option>
+                <option value="eink-10-color">🎨 10.3" Renkli E-Ink</option>
+            </select>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Koyu/Açık Tema Değiştir">🌓 Tema</button>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-badge">🎯 AUZEF YBS Çıkmış Sınav Soruları</div>
+        <h1>İşletme Yönetimi — Ders Anlatımı - Çıkmış Sorular & İnteraktif Quiz</h1>
+        <p class="hero-desc">İşletme Yönetimi — Ders Anlatımı dersine ait AUZEF geçmiş dönem vize, final ve bütünleme sınav soruları. Cevap şıklarını işaretleyerek kendinizi test edebilir, anında doğru/yanlış analizi yapabilir ve detaylı soru çözümlerini inceleyebilirsiniz.</p>
+        <div class="hero-meta">
+            <span>📝 Soru Sayısı: <strong>69 Soru</strong></span>
+            <span>🎓 Müfredat: <strong>1. Sınıf - Güz Dönemi</strong></span>
+            <span>⚡ Mod: <strong>İnteraktif Deneme Sınavı</strong></span>
+        </div>
+    </header>
+
+    <!-- STICKY SCOREBAR -->
+    <div class="sticky-toolbar">
+        <div class="score-badges">
+            <span class="badge badge-correct">✅ Doğru: <strong id="cntCorrect">0</strong></span>
+            <span class="badge badge-wrong">❌ Yanlış: <strong id="cntWrong">0</strong></span>
+            <span class="badge badge-left">⏳ Kalan: <strong id="cntLeft">69</strong></span>
+            <span class="badge badge-score">📊 Başarı: <strong id="pctScore">%0</strong></span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn" onclick="toggleAllExplanations()">👁️ Tüm Açıklamalar</button>
+            <button class="btn" onclick="resetQuiz()">🔄 Sıfırla</button>
+            <a href="Isletme_Yonetimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="filter-row">
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Soru metni veya kavram ara..." oninput="handleSearch()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="setFilter('all', this)">Tümü (69)</button>
+            <button class="filter-pill" onclick="setFilter('unanswered', this)">Çözülmedi</button>
+            <button class="filter-pill" onclick="setFilter('wrong', this)">Yanlışlar</button>
+            <button class="filter-pill" onclick="setFilter('correct', this)">Doğrular</button>
+        </div>
+    </div>
+
+    <!-- QUESTIONS LIST -->
+    <main class="q-list" id="questionsContainer"></main>
+
+    <!-- FOOTER SUMMARY -->
+    <section class="quiz-summary-card" id="quizSummary">
+        <h2>Sınav Tamamlama Durumu</h2>
+        <div class="summary-score-large" id="largeScore">%0</div>
+        <div class="summary-details">
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumCorrect" style="color: var(--ok);">0</div>
+                <div class="summary-stat-lbl">Doğru Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumWrong" style="color: var(--err);">0</div>
+                <div class="summary-stat-lbl">Yanlış Sayısı</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumEmpty" style="color: var(--ink-dim);">69</div>
+                <div class="summary-stat-lbl">Boş / Kalan</div>
+            </div>
+            <div class="summary-stat-box">
+                <div class="summary-stat-val" id="sumNet" style="color: var(--blue);">0.0</div>
+                <div class="summary-stat-lbl">Tahmini Net (4 Yanlış 1 Doğru)</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="resetQuiz()">🔄 Sınavı Yeniden Başlat</button>
+            <a href="Isletme_Yonetimi_Ders_Anlatimi.html" class="btn btn-pdf">📖 Ders Anlatımına Git</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+const QUESTIONS = [{"num": 1, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "Aşağıdakilerden hangisi endüstriyel bir alıcıdır?", "options": [{"letter": "A", "text": "Ürünü satın alan ve kullanan A kişisi"}, {"letter": "B", "text": "Ürünü X firmasından satın alan ve arkadaşına satan Y kişisi"}, {"letter": "C", "text": "Ürünü F firmasından üretiminde kullanmak üzere satın alan G firması"}, {"letter": "D", "text": "Ürünü satın alan ve bir başkasına kullanması için veren B kişisi"}, {"letter": "E", "text": "Ürünü C firmasından satın alan D kişisi"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 2, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme, İşletme Yönetimi Bütünleme 2023-2024", "text": "Aşağıdakilerden hangisi kooperatif türlerinden biri değildir?", "options": [{"letter": "A", "text": "Tüketim kooperatifi"}, {"letter": "B", "text": "Seyahat kooperatifi"}, {"letter": "C", "text": "Yapı kooperatifi"}, {"letter": "D", "text": "Üretim kooperatifi"}, {"letter": "E", "text": "Tarım-satış kooperatifi"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 3, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "Fizyolojik ihtiyaçlar Maslow’un ihtiyaçlar hiyerarşisinde kaçıncı seviyede yer almaktadır?", "options": [{"letter": "A", "text": "2"}, {"letter": "B", "text": "5"}, {"letter": "C", "text": "3"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "4"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 4, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "000 ton ve teorik kapasitesi 30.000 ton ise bu işletmenin kapasite durumu ile ilgili aşağıdakilerden hangisi doğrudur?", "options": [{"letter": "A", "text": "Atıl kapasite-5.000 ton"}, {"letter": "B", "text": "Aşırı kapasite-10.000 ton"}, {"letter": "C", "text": "Kapasite kullanım oranı= %80"}, {"letter": "D", "text": "Aşırı kapasite-5.000 ton"}, {"letter": "E", "text": "Atıl kapasite-10.000 ton"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 5, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "....., satışçının satış yapmak amacıyla bir veya daha çok sayıda potansiyel alıcıyla yüz yüze görüşmesidir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "Dağıtım"}, {"letter": "B", "text": "Reklam"}, {"letter": "C", "text": "Kişisel satış"}, {"letter": "D", "text": "Broşür"}, {"letter": "E", "text": "Afiş"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 6, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "İşletmeciliğin tarihsel gelişiminde, insan davranışı, kişilerarası ilişkiler, grup davranışları, algılama, tutumlar, motivasyon, liderlik vb. konuları ilk araştıran yaklaşım aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Neoklasik yaklaşım"}, {"letter": "B", "text": "Durumsallık yaklaşımı"}, {"letter": "C", "text": "Bürokratik yönetim yaklaşımı"}, {"letter": "D", "text": "Bilimsel yönetim yaklaşımı"}, {"letter": "E", "text": "Yönetim süreci yaklaşımı"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 7, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "”Toplam talebi karşılamak için ortaya konan tüm mal ve hizmetlerdir” ifadesi aşağıdakilerden hangisinin tanımıdır?", "options": [{"letter": "A", "text": "Toplam arz"}, {"letter": "B", "text": "Toplam üretim"}, {"letter": "C", "text": "Toplam tüketim"}, {"letter": "D", "text": "Toplam kâr"}, {"letter": "E", "text": "Toplam girdi"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 8, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme, İşletme Yönetimi Bütünleme 2023-2024", "text": "Bina, gemi, köprü ve yol yapımı, uçak, uzay aracı üretimi aşağıdaki üretim sistemlerinden hangisine örnektir?", "options": [{"letter": "A", "text": "Süreç üretimi"}, {"letter": "B", "text": "Standart üretim"}, {"letter": "C", "text": "Seri üretim"}, {"letter": "D", "text": "Devamlı üretim"}, {"letter": "E", "text": "Birim üretim"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 9, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme, işletme yönetimi 2025 final, İşletme Yönetimi Bütünleme 2023-2024", "text": "Aşağıdakilerden hangisi reklamın amaçları arasında sayılamaz?", "options": [{"letter": "A", "text": "Yeni mamulü pazara sunmak veya yeni pazar bölümlerine girmek"}, {"letter": "B", "text": "Dar bir kitlenin kullandığı malı geniş kitlelerin kullanmasını sağlamak"}, {"letter": "C", "text": "Firma imajı ve marka bağlılığı oluşturmak"}, {"letter": "D", "text": "Malın kalitesini arttırmak"}, {"letter": "E", "text": "Firmayı ve malın özelliklerini anlatarak satış personeline yardımcı olmak"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 10, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "Toptan ve perakende ticaret yapan işletmeler aşağıdaki gruplardan hangisine dâhildir?", "options": [{"letter": "A", "text": "Ticaret işletmeleri"}, {"letter": "B", "text": "Mal üreten işletmeler"}, {"letter": "C", "text": "Hizmet üreten işletmeler"}, {"letter": "D", "text": "Küresel işletmeler"}, {"letter": "E", "text": "Endüstriyel işletmeler"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 11, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "Aşağıdakilerden hangisi \"yönetimin ikiz fonksiyonları\" olarak nitelendirilir?", "options": [{"letter": "A", "text": "Yürütme-denetim"}, {"letter": "B", "text": "Planlama-denetim"}, {"letter": "C", "text": "Koordinasyon-planlama"}, {"letter": "D", "text": "Planlama-örgütleme"}, {"letter": "E", "text": "Yürütme-koordinasyon"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 12, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "Tek bir ülke sınırları içinde üretim ve pazarlama faaliyetinde bulunan işletmeler aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Uluslararası işletmeler"}, {"letter": "B", "text": "Ulusal işletmeler"}, {"letter": "C", "text": "Global işletmeler"}, {"letter": "D", "text": "Küresel işletmeler"}, {"letter": "E", "text": "Çok uluslu işletmeler İŞLETME YÖNETİMİ A P355875.G13789 05-01-2026 08:50:31 CEVAPLI"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 13, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme, İşletme Yönetimi Bütünleme 2023-2024", "text": "İşletmenin faaliyetleri sonucunda oluşan kârın, gerek kanun tarafından gerekse işletme yönetiminin kararıyla dağıtılmayarak işletme sermayesine eklenmesi yani işletmenin kendi kendine finansman sağlaması, aşağıdakilerden hangisi ile ifade edilmektedir?", "options": [{"letter": "A", "text": "Dış kaynaklarla finansman"}, {"letter": "B", "text": "Borç ile finansman"}, {"letter": "C", "text": "İç kaynaklarla finansman"}, {"letter": "D", "text": "Kredilendirme"}, {"letter": "E", "text": "Otofinansman"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 14, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "Aşağıdakilerden hangisi finansman kaynaklarının saptanması ile ilgili yapılan çalışmalar arasında sayılamaz?", "options": [{"letter": "A", "text": "Nakit girişlerinin tespiti"}, {"letter": "B", "text": "Personel ihtiyaçlarının tespiti"}, {"letter": "C", "text": "Nakit çıkışlarının tespiti"}, {"letter": "D", "text": "Nakit ihtiyaçlarının tespiti"}, {"letter": "E", "text": "Kredi maliyetlerinin tespiti"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 15, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "\"Gerçekleşen performans/Hedeflenen performans\" olarak ifade edilen kavram aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Yeterlilik"}, {"letter": "B", "text": "Kârlılık"}, {"letter": "C", "text": "Üretkenlik"}, {"letter": "D", "text": "Etkinlik"}, {"letter": "E", "text": "Verimlilik"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 16, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme, işletme yönetimi 2025 final", "text": "\"İnsan elinin değmediği üretim sistemi olup bu tarz üretim sistemlerinde, mallar fabrikaya girişlerinden mamul hâlde çıkışlarına kadar belirli yollar izler.\" ifadesinde açıklanan üretim sistemi aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Seri üretim"}, {"letter": "B", "text": "Yalın üretim"}, {"letter": "C", "text": "Birim üretim"}, {"letter": "D", "text": "Parti üretim"}, {"letter": "E", "text": "Süreç üretimi"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 17, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "Bir işletme 2023 yılı için 400.000 adet üretim miktarı hedeflemiş, fakat yıl sonuna kadar toplam 200.000 adet üretim yapabilmiştir. Bu verilere göre bu işletmenin etkinlik oranı yüzde kaçtır?", "options": [{"letter": "A", "text": "%75"}, {"letter": "B", "text": "%150"}, {"letter": "C", "text": "%35"}, {"letter": "D", "text": "%25"}, {"letter": "E", "text": "%50"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 18, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme", "text": "“Yasalarla belirtilmeyen fakat bir işletmeden toplumun beklediği davranışlar” işletmenin hangi sorumluluk alanı kapsamındadır?", "options": [{"letter": "A", "text": "Etik açıdan sorumluluk"}, {"letter": "B", "text": "Hukuksal sorumluluk"}, {"letter": "C", "text": "Gönüllü sorumluluk"}, {"letter": "D", "text": "İşletme içi sorumluluk"}, {"letter": "E", "text": "Ekonomik sorumluluk"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 19, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme, işletme yönetimi 2025 final", "text": "Aşağıdakilerden hangisi işletmelerin fizibilite etütlerinden biri değildir?", "options": [{"letter": "A", "text": "Teknik etüt"}, {"letter": "B", "text": "Yasal etüt"}, {"letter": "C", "text": "Sosyal etüt"}, {"letter": "D", "text": "Finansal etüt"}, {"letter": "E", "text": "Ekonomik etüt"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 20, "tag": "2025 -2026 - İŞLETME YÖNETİMİ - Bütünleme, İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "“Çevrelerinden bağımsız şekilde hareket eden, diğer sistemlerden hiçbir şekilde etkilenmeyen ve onları da hiçbir şekilde etkilemeyen sistemler” aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Stratejik sistemler"}, {"letter": "B", "text": "Açık sistemler"}, {"letter": "C", "text": "Kapalı sistemler"}, {"letter": "D", "text": "Kompleks sistemler"}, {"letter": "E", "text": "Enerji sistemleri"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 21, "tag": "işletme yönetimi 2025 final", "text": "Aşağıdakilerden hangisi pazarlama karmasının unsurlarından biri değildir?", "options": [{"letter": "A", "text": "Tutundurma"}, {"letter": "B", "text": "Mamul"}, {"letter": "C", "text": "Fiyat"}, {"letter": "D", "text": "Kalite"}, {"letter": "E", "text": "Dağıtım"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 22, "tag": "işletme yönetimi 2025 final", "text": "Ekonomik faaliyetler sonucu üretilen mal ve hizmetlerin insan ihtiyaçlarını tatmin etme özelliğine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Performans"}, {"letter": "B", "text": "Fayda"}, {"letter": "C", "text": "Verimlilik"}, {"letter": "D", "text": "Kalite"}, {"letter": "E", "text": "Tüketim"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 23, "tag": "işletme yönetimi 2025 final", "text": "Aralarında belirli ilişkiler bulunan parçalardan oluşan, birbirleriyle ilişkili elemanlar topluluğuna ……….. denir. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "makro çevre"}, {"letter": "B", "text": "şirket"}, {"letter": "C", "text": "bölüm"}, {"letter": "D", "text": "sistem"}, {"letter": "E", "text": "bilgi işlem"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 24, "tag": "işletme yönetimi 2025 final", "text": "Bir işletmenin uzun süreli finansman kaynakları aşağıdaki şıklardan hangisinde doğru olarak ifade edilmiştir?", "options": [{"letter": "A", "text": "Uzun süreli borçlar"}, {"letter": "B", "text": "Kısa süreli borçlar"}, {"letter": "C", "text": "Dönen varlıklar"}, {"letter": "D", "text": "Avans ödemeleri"}, {"letter": "E", "text": "Özsermaye ve uzun süreli borçlar"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 25, "tag": "işletme yönetimi 2025 final, İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Aşağıdakilerden hangisi bir işletmenin etik sorumluluğa aykırı hareketlerine örnek olarak verilebilir?", "options": [{"letter": "A", "text": "Malın kötü yönlerini müşterisinden gizlememek"}, {"letter": "B", "text": "Sözlerine sadık kalmak"}, {"letter": "C", "text": "Malın fiyatı arttığı zaman satmak üzere stoklamak"}, {"letter": "D", "text": "Anlaşmalarına sadık kalmak"}, {"letter": "E", "text": "Sattığı malın niteliklerini tam olarak söylemek"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 26, "tag": "işletme yönetimi 2025 final", "text": "Amaçların rehber olma niteliği aşağıdaki durumlardan hangisinde geçerli değildir?", "options": [{"letter": "A", "text": "Faaliyet programlarının hazırlanması ve uygulanması"}, {"letter": "B", "text": "Politikaların belirlenmesi"}, {"letter": "C", "text": "Vergilerin ödenmesi"}, {"letter": "D", "text": "Yöneticilerin davranışlarına yön verilmesi"}, {"letter": "E", "text": "Kaynakların seçilmesi"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 27, "tag": "işletme yönetimi 2025 final", "text": "“………………….., karşılanacak istek ve ihtiyaçları olan, satın alma gücü bulunan ve harcama isteği olan kişi veya kuruluşlardan oluşur.” Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "İşletme"}, {"letter": "B", "text": "Holding"}, {"letter": "C", "text": "Pazar"}, {"letter": "D", "text": "Endüstri"}, {"letter": "E", "text": "Sektör"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 28, "tag": "işletme yönetimi 2025 final", "text": "K işletmesi 2024 yılında toplam 40.000 TL maliyetle 5.000 adet mal üretip adedini 12 TL’ye satmıştır. İşletmenin kullandığı sermaye miktarı 40.000 TL ise özsermayenin kârlılığı oranı yüzde (%) kaç olur?", "options": [{"letter": "A", "text": "%40"}, {"letter": "B", "text": "%100"}, {"letter": "C", "text": "%50"}, {"letter": "D", "text": "%25"}, {"letter": "E", "text": "%10"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 29, "tag": "işletme yönetimi 2025 final", "text": "Weber’e göre meşruiyetini kişinin kişisel özellik, beceri ve yeteneklerinden alan otorite türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Kişisel Otorite"}, {"letter": "B", "text": "Rasyonel (Akılcı) Otorite"}, {"letter": "C", "text": "Klasik Otorite"}, {"letter": "D", "text": "Karizmatik Otorite"}, {"letter": "E", "text": "Geleneksel Otorite İŞLETME YÖNETİMİ A P787296.G13177 09-12-2025 15:47:09 CEVAPLI"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 30, "tag": "işletme yönetimi 2025 final", "text": "Bürokratik örgüt yapısını etkinlik açısından ideal bir örgüt yapısı olarak tasvir eden yönetim düşünürü kimdir?", "options": [{"letter": "A", "text": "Max Weber"}, {"letter": "B", "text": "Henri Fayol"}, {"letter": "C", "text": "Chris Argyris"}, {"letter": "D", "text": "Frederick Taylor"}, {"letter": "E", "text": "Elton Mayo"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 31, "tag": "işletme yönetimi 2025 final", "text": "Bir petrol rafinerisinin petrol kaynaklarına yakın kurulması, kuruluş yeri seçiminde önemli olan aşağıdaki faktörlerden hangisi ile ilgilidir?", "options": [{"letter": "A", "text": "Pazara yakınlık"}, {"letter": "B", "text": "Ham maddeye yakınlık"}, {"letter": "C", "text": "İş gücüne yakınlık"}, {"letter": "D", "text": "Teknolojiye yakınlık"}, {"letter": "E", "text": "Su kaynaklarına yakınlık"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 32, "tag": "işletme yönetimi 2025 final", "text": "İşletmeler pazar alanlarına göre sınıflandırıldığında aşağıdakilerden hangisi bu sınıflamada yer almaz?", "options": [{"letter": "A", "text": "Özel işletmeler"}, {"letter": "B", "text": "Ulusal işletmeler"}, {"letter": "C", "text": "Çok uluslu işletmeler"}, {"letter": "D", "text": "Uluslararası işletmeler"}, {"letter": "E", "text": "Küresel işletmeler"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 33, "tag": "işletme yönetimi 2025 final", "text": "Aşağıdakilerden hangisi finansal tablolardan biri değildir?", "options": [{"letter": "A", "text": "Fon akım tablosu"}, {"letter": "B", "text": "Üretim programı"}, {"letter": "C", "text": "Dağıtılmayan kârlar tablosu"}, {"letter": "D", "text": "Gelir tablosu"}, {"letter": "E", "text": "Bilanço"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 34, "tag": "işletme yönetimi 2025 final", "text": "Herhangi bir mal veya hizmetin üretiminden satışına kadar farklı aşamalarda faaliyette bulunan firmalar arasında gerçekleştirilen birleşmeler aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Dikey birleşmeler"}, {"letter": "B", "text": "Yatay birleşmeler"}, {"letter": "C", "text": "Karma birleşmeler"}, {"letter": "D", "text": "Aynı merkezli birleşmeler"}, {"letter": "E", "text": "Çapraz birleşmeler"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 35, "tag": "işletme yönetimi 2025 final", "text": "İşletmelerin özel, kamu, karma işletmeler ve yabancı sermayeli işletmeler olarak ayrıldığı işletme sınıflandırması ölçütü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Faaliyet konularına göre işletmeler"}, {"letter": "B", "text": "Sermaye sahipliğine göre işletmeler"}, {"letter": "C", "text": "Üretilen mal ve hizmetin cinsine göre işletmeler"}, {"letter": "D", "text": "Pazar alanlarına göre işletmeler"}, {"letter": "E", "text": "Hukuki durumlarına göre işletmeler"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 36, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Kısa süreli ﬁnansman, genel olarak kaç yıla kadar olan bir dönem içinde geri ödenmesi gereken kaynaklarla sağlanan ﬁnansmandır?", "options": [{"letter": "A", "text": "5"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "4"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "1"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 37, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "“Çalışanların sosyal haklarını elde etmek için kurdukları ve onlar adına sözleşme yapan örgütler” tanımı aşağıdakilerden hangisini ifade etmektedir?", "options": [{"letter": "A", "text": "Sendikalar"}, {"letter": "B", "text": "Müşteriler"}, {"letter": "C", "text": "Tüketiciler"}, {"letter": "D", "text": "Aracı kuruluşlar"}, {"letter": "E", "text": "Rakipler"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 38, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Çalışanların çabalarının birleştirilmesi, zaman bakımından ayarlanması, ortak amaca ulaşmak için faaliyetlerin birbiri ardına gelmesine ne ad verilmektedir?", "options": [{"letter": "A", "text": "Yürütme"}, {"letter": "B", "text": "Planlama"}, {"letter": "C", "text": "Denetim"}, {"letter": "D", "text": "Koordinasyon"}, {"letter": "E", "text": "Örgütleme"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 39, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Bir mal veya hizmeti üretildiği yerden tüketileceği yere götürmek için gerekli tüm çabalar, pazarlama karmasının hangi unsurunu oluşturmaktadır?", "options": [{"letter": "A", "text": "Dağıtım"}, {"letter": "B", "text": "Tutundurma"}, {"letter": "C", "text": "Denetim"}, {"letter": "D", "text": "Mamul"}, {"letter": "E", "text": "Fiyat"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 40, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "C işletmesi 2021 yılında toplam 10.000 TL maliyetle 2.000 adet mal üretip her birimini 10 TL’ye satmıştır. Bu dönemde işletmenin elde ettiği kâr ne kadardır?", "options": [{"letter": "A", "text": "10.000 TL"}, {"letter": "B", "text": "1.000 TL"}, {"letter": "C", "text": "1.500 TL"}, {"letter": "D", "text": "5.000 TL"}, {"letter": "E", "text": ""}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 41, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Weber’e göre meşruiyetini akıl ve kurallardan alan otorite türü aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Geleneksel otorite"}, {"letter": "B", "text": "Karizmatik otorite"}, {"letter": "C", "text": "Klasik otorite"}, {"letter": "D", "text": "Rasyonel otorite"}, {"letter": "E", "text": "Kişisel otorite"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 42, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Bir işletmede yönetici olarak çalışan kişi aşağıdaki iş gücü türlerinden hangisi olarak sınıﬂandırılabilir?", "options": [{"letter": "A", "text": "Yedek iş gücü"}, {"letter": "B", "text": "Bedensel iş gücü"}, {"letter": "C", "text": "Durumsal iş gücü"}, {"letter": "D", "text": "Fiziksel iş gücü"}, {"letter": "E", "text": "Zihinsel iş gücü"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 43, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Aşağıdakilerden hangisi yatırım giderleri arasında sınıﬂandırılamaz?", "options": [{"letter": "A", "text": "Kurumlar vergisi"}, {"letter": "B", "text": "Makine ve teçhizat bedeli"}, {"letter": "C", "text": "Arsa bedeli"}, {"letter": "D", "text": "Patent giderleri"}, {"letter": "E", "text": "Etüt ve proje giderleri"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 44, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Hizmet işletmeleri ile çabuk bozulan mal üreten işletmeler genellikle ..... yerlerde kurulur. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "enerji kaynaklarına yakın"}, {"letter": "B", "text": "iş gücüne yakın"}, {"letter": "C", "text": "teknolojiye yakın"}, {"letter": "D", "text": "pazara yakın"}, {"letter": "E", "text": "su kaynaklarına yakın YAYINLANMIŞ DOKÜMAN 1 Diğer sayfaya geçiniz > İŞLETME YÖNETİMİ A"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 45, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Her işletme ve yönetim sorunu için sadece bir doğru çözüm olduğu ilkesini reddeden yönetim yaklaşımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bilimsel yönetim yaklaşımı"}, {"letter": "B", "text": "Davranışsal yaklaşım"}, {"letter": "C", "text": "Bürokratik yönetim yaklaşımı"}, {"letter": "D", "text": "Durumsallık yaklaşımı"}, {"letter": "E", "text": "Yönetim süreci yaklaşımı"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 46, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "KOSGEB’in tanımına göre küçük işletmelerde çalışan sayısı kaç kişiden az olmalıdır?", "options": [{"letter": "A", "text": "30"}, {"letter": "B", "text": "50"}, {"letter": "C", "text": "20"}, {"letter": "D", "text": "40"}, {"letter": "E", "text": "10"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 47, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "İhtiyaçları gidermeye yarayacak ekonomik mal ve hizmetler elde etmek için gerçekleştirilen ekonomik olaylara ne ad verilmektedir?", "options": [{"letter": "A", "text": "İstihdam"}, {"letter": "B", "text": "Üretim"}, {"letter": "C", "text": "Tüketim"}, {"letter": "D", "text": "Girişim"}, {"letter": "E", "text": "Fayda"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 48, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Kurulması düşünülen işletme ile ilgili devlet teşviklerinin ve alınması gereken izinlerin araştırılması hangi tür araştırma kapsamına girmektedir?", "options": [{"letter": "A", "text": "Finansal araştırmalar"}, {"letter": "B", "text": "Pazar araştırmaları"}, {"letter": "C", "text": "Hukuki araştırmalar"}, {"letter": "D", "text": "Ekonomik araştırmalar"}, {"letter": "E", "text": "Teknik araştırmalar"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 49, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "A işletmesi 15.000 TL maliyetle 5.000 adet mal üretmiştir. İşletmenin ürettiği mamullerin birim satış ﬁyatı 6 TL'dir. A işletmesinin ekonomik verimliliği aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "0,5"}, {"letter": "B", "text": "1,5"}, {"letter": "C", "text": "2"}, {"letter": "D", "text": "2,5"}, {"letter": "E", "text": "1"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 50, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Oteller, sinemalar, restoranlar ve kuru temizlemeciler ..... işletmeleri olarak sınıﬂandırılırlar. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "ticaret"}, {"letter": "B", "text": "sanayi"}, {"letter": "C", "text": "hizmet"}, {"letter": "D", "text": "endüstri"}, {"letter": "E", "text": "tüketim"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 51, "tag": "İşletme Yönetimi Bütünleme 2023-2024", "text": "Toplumsal inançlar, gelenekler, görenekler, değer yargıları gibi unsurlar işletmenin hangi çevre koşulları içinde sınıﬂandırılır?", "options": [{"letter": "A", "text": "Ekonomik çevre"}, {"letter": "B", "text": "Sosyokültürel çevre"}, {"letter": "C", "text": "Teknolojik çevre"}, {"letter": "D", "text": "Politik çevre"}, {"letter": "E", "text": "Küresel çevre YAYINLANMIŞ DOKÜMAN 2 Diğer sayfaya geçiniz > İŞLETME YÖNETİMİ A 1 E 2 A 3 D 4 A 5 E 6 A 7 D 8 E 9 A 10 D 11 E 12 D 13 B 14 B 15 B 16 C 17 C 18 C 19 C 20 B YAYINLANMIŞ DOKÜMAN 3 Test Bitti"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 52, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "İşletmenin faaliyetlerini tüm yasa ve yönetmelikler çerçevesinde icra etmesine verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Gönüllü sorumluluk"}, {"letter": "B", "text": "İşletme içi sorumluluk"}, {"letter": "C", "text": "Etik açıdan sorumluluk"}, {"letter": "D", "text": "Ekonomik sorumluluk"}, {"letter": "E", "text": "Hukuksal sorumluluk"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 53, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "\"İşletme organizasyonunun bir sosyal sistem olduğu ve bu sistemin en önemli unsurunun da insan olduğu\" bulgusuna dayanan yönetim yaklaşımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Neoklasik yaklaşım"}, {"letter": "B", "text": "Durumsallık yaklaşımı"}, {"letter": "C", "text": "Sistem yaklaşımı"}, {"letter": "D", "text": "Bilimsel yönetim yaklaşımı"}, {"letter": "E", "text": "Bürokratik yönetim yaklaşımı"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 54, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "000 TL", "options": [{"letter": "D", "text": "250.000 TL"}, {"letter": "E", "text": ""}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 55, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Bir işletme, birim maliyeti 100 liradan 10.000 adet mamül üretmiştir. İşletmenin ürettiği mamüllerin birim satış fiyatı ise 150 TL'dir. Bütün mamüller satıldığı takdirde bu işletmenin ekonomik verimliliği kaçtır?", "options": [{"letter": "A", "text": "2,5"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "0,75"}, {"letter": "D", "text": "1"}, {"letter": "E", "text": "1,5"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 56, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Z işletmesi toplam 15.000 TL maliyetle 3.000 adet mal üretip her birimini 8 TL’ye satmıştır. İşletmenin kullandığı sermaye miktarı 18.000 TL ise özsermayenin kârlılığı oranı yüzde (%) kaç olur?", "options": [{"letter": "A", "text": "%20"}, {"letter": "B", "text": "%50"}, {"letter": "C", "text": "%30"}, {"letter": "D", "text": "%60"}, {"letter": "E", "text": "%70"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 57, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Bir toplumda düzeni sağlamak amacıyla yürürlükte bulunan yasalar, tüzük ve yönetmeliklerle, yazılı olan ve olmayan diğer kurallar bütününe verilen ad aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Düzen"}, {"letter": "B", "text": "Gelenek"}, {"letter": "C", "text": "Töre"}, {"letter": "D", "text": "Felsefe"}, {"letter": "E", "text": "Hukuk"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 58, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "İşletmenin genel amaçları arasında bir ..... arayışı söz konusudur. Yukarıdaki cümlede boş bırakılan yere aşağıdakilerden hangisi getirilmelidir?", "options": [{"letter": "A", "text": "uyum"}, {"letter": "B", "text": "entropi"}, {"letter": "C", "text": "denge"}, {"letter": "D", "text": "sinerji"}, {"letter": "E", "text": "sistem"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 59, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Sosyal davranışlar, sosyal gruplar arasındaki ilişkiler ve toplumsal düzen konularına odaklanan bilim dalı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Bilim felsefesi"}, {"letter": "B", "text": "Matematik"}, {"letter": "C", "text": "Psikoloji"}, {"letter": "D", "text": "Filoloji"}, {"letter": "E", "text": "Sosyoloji"}], "correct": "E", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek E'dir."}, {"num": 60, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Yazın üretilen bir meyvenin bütün yıl boyunca tüketilebilmesi aşağıdaki fayda yaratma türlerinden hangisine girer?", "options": [{"letter": "A", "text": "Zaman değişikliği ile fayda yaratma"}, {"letter": "B", "text": "Yer değişikliği ile fayda yaratma"}, {"letter": "C", "text": "Mülkiyet değişikliği ile fayda yaratma"}, {"letter": "D", "text": "Şekil değişikliği ile fayda yaratma"}, {"letter": "E", "text": "Mekân değişikliği ile fayda yaratma"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 61, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Bir fabrikada işçi olarak çalışan kişi aşağıdaki emek türlerinden hangisine örnek olarak verilebilir?", "options": [{"letter": "A", "text": "Bedensel emek"}, {"letter": "B", "text": "Tinsel emek"}, {"letter": "C", "text": "Düşünsel emek"}, {"letter": "D", "text": "Zihinsel emek"}, {"letter": "E", "text": "Durumsal emek İŞLETME YÖNETİMİ A P3.G5969 03-11-2024 19:48:58 İŞLETME YÖNETİMİ A P3.G5969 03-11-2024 19:48:58 CEVAPLI CEVAPLI"}], "correct": "A", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek A'dir."}, {"num": 62, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Faiz oranları, para arzı, işsizlik, dış ticaret, ödemeler, bütçe açığı, enerji kaynakları ve maliyetleri gibi konular işletmenin hangi çevre koşulları içinde sınıflandırılır?", "options": [{"letter": "A", "text": "Politik çevre"}, {"letter": "B", "text": "Sosyal çevre"}, {"letter": "C", "text": "Ekonomik çevre"}, {"letter": "D", "text": "Kültürel çevre"}, {"letter": "E", "text": "Teknolojik çevre"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 63, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "“İşgörenler ırk, cinsiyet, etnik köken, özürlülük, cinsel tercih vb. nedenlerden dolayı farklı muameleye tabi tutulamaz.\" ifadesi SA 8000 Standardının hangi temel ilkesi ile ilgilidir?", "options": [{"letter": "A", "text": "Disiplin uygulamaları"}, {"letter": "B", "text": "Ayırımcılık"}, {"letter": "C", "text": "Yönetim sistemleri"}, {"letter": "D", "text": "Sağlık ve güvenlik"}, {"letter": "E", "text": "Maaş ve ücretler"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 64, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Dış çevrenin özellikleri ile organizasyon yapısı arasındaki uyum paralelinde bazı işletmelerin ayakta kalmaya devam edeceğini, bazılarının ise yok olacağını savunan post modern yönetim yaklaşımı aşağıdakilerden hangisidir?", "options": [{"letter": "A", "text": "Vekalet yaklaşımı"}, {"letter": "B", "text": "Kaynak bağımlılığı yaklaşımı"}, {"letter": "C", "text": "Bilgi işleme yaklaşımı"}, {"letter": "D", "text": "Popülasyon ekolojisi yaklaşımı"}, {"letter": "E", "text": "Klasik yaklaşım"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 65, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Aşağıdaki yaklaşımlardan hangisi Frederick Taylor tarafından geliştirilmiştir?", "options": [{"letter": "A", "text": "Durumsallık yaklaşımı"}, {"letter": "B", "text": "Neoklasik yönetim yaklaşımı"}, {"letter": "C", "text": "Bilimsel yönetim yaklaşımı"}, {"letter": "D", "text": "Bürokratik yönetim yaklaşımı"}, {"letter": "E", "text": "Yönetim süreci yaklaşımı"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 66, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Abraham Maslow, insan ihtiyaçlarını kaç kategoriye ayırmıştır?", "options": [{"letter": "A", "text": "4"}, {"letter": "B", "text": "2"}, {"letter": "C", "text": "5"}, {"letter": "D", "text": "3"}, {"letter": "E", "text": "6"}], "correct": "C", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek C'dir."}, {"num": 67, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "“Genel ve Sınai Yönetim\" adlı eser aşağıdaki yönetim bilimcilerden hangisine aittir?", "options": [{"letter": "A", "text": "Frederick Taylor"}, {"letter": "B", "text": "Mary Parker Follett"}, {"letter": "C", "text": "Max Weber"}, {"letter": "D", "text": "Henri Fayol"}, {"letter": "E", "text": "Elton Mayo"}], "correct": "D", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek D'dir."}, {"num": 68, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "İşletmenin özellikleri ile ilgili aşağıdakilerden hangisi yanlıştır?", "options": [{"letter": "A", "text": "İşletme ekonomik bir birimdir."}, {"letter": "B", "text": "İşletme kâr amacı gütmez."}, {"letter": "C", "text": "İşletme teknik bir birimdir."}, {"letter": "D", "text": "İşletmenin amacı insanların ihtiyaçlarını karşılayacak mal ve/veya hizmetler üretmektir/satmaktır."}, {"letter": "E", "text": "İşletme toplumsal bir işbirliği sistemidir."}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}, {"num": 69, "tag": "İŞLETME YÖNETİMİ-2024-VİZE-A", "text": "Ülkedeki nüfusun miktarı ve yoğunluğu, yaş yapısı, coğrafi dağılımı, gelir dağılımı, eğitim düzeyi vb. özellikler işletmenin hangi çevre koşulları içinde sınıflandırılır?", "options": [{"letter": "A", "text": "Ekonomik çevre"}, {"letter": "B", "text": "Demografik çevre"}, {"letter": "C", "text": "Teknolojik çevre"}, {"letter": "D", "text": "Sosyokültürel çevre"}, {"letter": "E", "text": "Politik çevre"}], "correct": "B", "explanation": "AUZEF Isletme Yonetimi müfredatı uyarınca doğru seçenek B'dir."}];
+
+// State
+let userAnswers = {}; // idx -> { selected, isCorrect }
+let currentFilter = 'all'; // all, unanswered, wrong, correct
+let allExplanationsOpen = false;
+
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    QUESTIONS.forEach((q, idx) => {
+        // Filter check
+        const ans = userAnswers[idx];
+        if (currentFilter === 'unanswered' && ans !== undefined) return;
+        if (currentFilter === 'wrong' && (!ans || ans.isCorrect)) return;
+        if (currentFilter === 'correct' && (!ans || !ans.isCorrect)) return;
+
+        // Search check
+        if (query) {
+            const inText = q.text.toLowerCase().includes(query);
+            const inExp = q.explanation ? q.explanation.toLowerCase().includes(query) : false;
+            const inOpts = q.options.some(o => o.text.toLowerCase().includes(query));
+            if (!inText && !inExp && !inOpts) return;
+        }
+
+        const card = document.createElement('article');
+        card.className = 'q-card';
+        card.id = `q-${idx}`;
+
+        if (ans) {
+            card.classList.add(ans.isCorrect ? 'status-correct' : 'status-wrong');
+        }
+
+        // Header
+        let statusBadge = '<span class="q-tag">Çözülmedi</span>';
+        if (ans) {
+            statusBadge = ans.isCorrect ? 
+                '<span class="q-tag" style="color: var(--ok); border-color: var(--ok-border); font-weight:800;">✅ DOĞRU</span>' : 
+                '<span class="q-tag" style="color: var(--err); border-color: var(--err-border); font-weight:800;">❌ YANLIŞ</span>';
+        }
+
+        let extraContent = '';
+        if (q.code) {
+            extraContent += `<pre class="q-code"><code>${escapeHtml(q.code)}</code></pre>`;
+        }
+        if (q.tableHtml) {
+            extraContent += q.tableHtml;
+        }
+        if (q.image) {
+            extraContent += `<div class="q-media"><img src="${q.image}" alt="Soru Görseli"></div>`;
+        }
+
+        // Options
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            let optClass = 'opt-item';
+            if (ans) {
+                optClass += ' locked';
+                if (opt.letter === ans.selected) {
+                    optClass += ans.isCorrect ? ' selected-correct' : ' selected-wrong';
+                }
+                if (!ans.isCorrect && opt.letter === q.correct) {
+                    optClass += ' is-correct-answer';
+                }
+            }
+
+            optsHtml += `
+                <div class="${optClass}" onclick="selectOption(${idx}, '${opt.letter}')">
+                    <span class="opt-letter">${opt.letter}</span>
+                    <span class="opt-text">${escapeHtml(opt.text)}</span>
+                </div>
+            `;
+        });
+
+        // Explanation
+        const isExpVisible = allExplanationsOpen || (ans && !ans.isCorrect);
+        const expDisplay = isExpVisible ? 'block' : 'none';
+
+        card.innerHTML = `
+            <div class="q-header">
+                <div class="q-num">Soru ${idx + 1} <span style="font-size:0.8rem; color:var(--ink-muted);">/ ${QUESTIONS.length}</span></div>
+                <div>${statusBadge} <span class="q-tag">${q.tag || 'Sınav Sorusu'}</span></div>
+            </div>
+            <div class="q-body">${escapeHtml(q.text)}</div>
+            ${extraContent}
+            <div class="opt-list">${optsHtml}</div>
+            <div>
+                <button class="toggle-exp-btn" onclick="toggleExplanation(${idx})">
+                    💡 ${expDisplay === 'block' ? 'Açıklamayı Gizle' : 'Çözüm ve Açıklamayı Göster'}
+                </button>
+                <div class="exp-box" id="exp-${idx}" style="display: ${expDisplay};">
+                    <div class="exp-header">💡 Detaylı Soru Çözümü:</div>
+                    <div>${q.explanation}</div>
+                    <div style="margin-top:8px; font-weight:800; color:var(--ok);">Doğru Seçenek: ${q.correct}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    updateScoreboard();
+}
+
+function selectOption(qIdx, letter) {
+    if (userAnswers[qIdx] !== undefined) return; // Already answered
+
+    const q = QUESTIONS[qIdx];
+    const isCorrect = (letter === q.correct);
+
+    userAnswers[qIdx] = {
+        selected: letter,
+        isCorrect: isCorrect
+    };
+
+    renderQuestions();
+}
+
+function toggleExplanation(qIdx) {
+    const el = document.getElementById(`exp-${qIdx}`);
+    if (!el) return;
+    const isVisible = el.style.display === 'block';
+    el.style.display = isVisible ? 'none' : 'block';
+    const btn = el.previousElementSibling;
+    if (btn) {
+        btn.innerHTML = isVisible ? '💡 Çözüm ve Açıklamayı Göster' : '💡 Açıklamayı Gizle';
+    }
+}
+
+function toggleAllExplanations() {
+    allExplanationsOpen = !allExplanationsOpen;
+    renderQuestions();
+}
+
+function updateScoreboard() {
+    const total = QUESTIONS.length;
+    let correct = 0;
+    let wrong = 0;
+
+    Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+    });
+
+    const left = total - (correct + wrong);
+    const answered = correct + wrong;
+    const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    const net = Math.max(0, (correct - (wrong / 4))).toFixed(2);
+
+    document.getElementById('cntCorrect').textContent = correct;
+    document.getElementById('cntWrong').textContent = wrong;
+    document.getElementById('cntLeft').textContent = left;
+    document.getElementById('pctScore').textContent = `%${pct}`;
+
+    document.getElementById('sumCorrect').textContent = correct;
+    document.getElementById('sumWrong').textContent = wrong;
+    document.getElementById('sumEmpty').textContent = left;
+    document.getElementById('sumNet').textContent = net;
+    document.getElementById('largeScore').textContent = `%${pct}`;
+}
+
+function resetQuiz() {
+    if (Object.keys(userAnswers).length > 0) {
+        if (!confirm('Tüm yanıtlarınız sıfırlanacak. Baştan başlamak istediğinize emin misiniz?')) return;
+    }
+    userAnswers = {};
+    allExplanationsOpen = false;
+    renderQuestions();
+}
+
+function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderQuestions();
+}
+
+function handleSearch() {
+    renderQuestions();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+}
+
+// DEVICE PROFILE ADAPTATION
+function setDeviceProfile(profile) {
+    document.documentElement.setAttribute('data-device', profile);
+    localStorage.setItem('auzef_device_profile', profile);
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const target = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', target);
+    localStorage.setItem('auzef_theme', target);
+}
+
+// AUTO INIT
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('auzef_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const savedProfile = localStorage.getItem('auzef_device_profile');
+    if (savedProfile) {
+        document.documentElement.setAttribute('data-device', savedProfile);
+        const sel = document.getElementById('deviceSwitcher');
+        if (sel) sel.value = savedProfile;
+    }
+
+    renderQuestions();
+});
+</script>
+
+<script id="agy-device-controller">
+function agyToggleDevMenu() {
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.toggle('show');
+}
+function agySetDevice(dev, save=true) {
+  document.documentElement.setAttribute('data-device', dev);
+  document.querySelectorAll('.agy-dev-opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick').includes(dev));
+  });
+  const m = document.getElementById('agyDevMenu');
+  if(m) m.classList.remove('show');
+  if(save) localStorage.setItem('agy_device', dev);
+}
+function agyToggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agy_theme', next);
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.agy-dev-menu-wrap');
+  if(wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('agyDevMenu');
+    if(m) m.classList.remove('show');
+  }
+});
+(function agyInit() {
+  const savedDev = localStorage.getItem('agy_device') || 'desktop';
+  const savedThm = localStorage.getItem('agy_theme') || 'light';
+  agySetDevice(savedDev, false);
+  document.documentElement.setAttribute('data-theme', savedThm);
+})();
+</script>
+
+</body>
+</html>
