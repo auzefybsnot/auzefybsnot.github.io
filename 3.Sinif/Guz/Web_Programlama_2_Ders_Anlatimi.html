@@ -574,6 +574,16 @@ ul.o li.ok::after {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow);
 }
+
+/* agy-mobile-fix */
+@media (max-width: 768px) {
+  html, body { max-width: 100%; overflow-x: hidden; }
+  .top-bar-inner, .agy-top-bar, .topbar-inner { flex-wrap: wrap !important; gap: 8px !important; }
+  .bar-left, .sel { max-width: 100% !important; min-width: 0 !important; }
+  .data-table, .compare-table { display: block; overflow-x: auto; max-width: 100%; }
+  pre, .formula-box, .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+}
+
 </style>
 </head>
 <body>
@@ -618,11 +628,50 @@ ul.o li.ok::after {
 <article class="unit-article">
   <h2>1. Ünite: İnternet ve Web Teknolojileri Temel Kavramlar</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> İstemci taraflı (Client-Side) ve Sunucu taraflı (Server-Side) web programlama mimarilerini, web çatılarını (Web Frameworks), Microsoft .NET ekosisteminin tarihsel evrimini (.NET Framework, .NET Core, ASP.NET Core) ve çok katmanlı yazılım mimari desenlerini (N-Tier, Microservices, MVC) eksiksiz kavramaktır.
+    <strong>Ünitenin Amacı:</strong> İnternet ve World Wide Web (WWW) kavramlarının tarihsel gelişimini (Web 1.0, Web 2.0, Web 3.0), İstemci (Front-End / Client-Side) ve Sunucu (Back-End / Server-Side) programlama yaklaşımlarını, Web Framework kavramını, Microsoft .NET ekosisteminin evrimini (.NET Framework, .NET Core, .NET 5+ ve ASP.NET Core) ve temel yazılım mimari modellerini (MVC, Katmanlı, Mikroservis vb.) kapsamlı biçimde kavramaktır.
   </div>
 
   <section>
-    <h3>1.1. İstemci (Client-Side) vs. Sunucu (Server-Side) Mimarisi</h3>
+    <h3>1.1. İnternet, Web Kavramları ve Web'in Tarihsel Evrimi</h3>
+    <p><strong>İnternet</strong>, dünya çapında birbirine bağlı cihazların oluşturduğu küresel bir ağ sistemidir ve temel görevi veriyi bir noktadan başka bir noktaya taşımaktır. Kökeni 1965 yılında askeri bir proje olan <strong>ARPANET</strong>'e dayanır ve ağ üzerindeki haberleşme <strong>TCP/IP</strong> (Transmission Control Protocol / Internet Protocol) protokolü üzerinden gerçekleşir.</p>
+    <p><strong>Web (World Wide Web - WWW)</strong> ise internet altyapısı üzerinden erişilen metin sayfaları, görseller, ses ve video dosyaları gibi bilgi topluluğudur. Ağ üzerindeki web kaynaklarının görüntülenmesi ve istemci-sunucu iletişimi, Tim Berners-Lee tarafından CERN'de tanımlanan <strong>HTTP (HyperText Transfer Protocol)</strong> protokolü ve <strong>HTML (HyperText Markup Language)</strong> dili aracılığıyla web tarayıcıları (Mosaic, Chrome, Edge, Firefox vb.) üzerinden gerçekleştirilir.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Dönem</th>
+          <th>Aşama</th>
+          <th>Temel Karakteristik</th>
+          <th>Teknolojiler ve Örnekler</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1990'lar</strong></td>
+          <td><strong>Web 1.0</strong> (Salt Okunur Web)</td>
+          <td>Kullanıcıların yorum veya geri bildirim yapamadığı, yalnızca sunulan bilgiyi okuyabildiği statik ve tek yönlü web ortamıdır.</td>
+          <td>Statik HTML sayfaları, sınırlı etkileşim.</td>
+        </tr>
+        <tr>
+          <td><strong>2000'ler</strong></td>
+          <td><strong>Web 2.0</strong> (Katılımcı / Sosyal Web)</td>
+          <td>Kullanıcı katılımını, iş birliğini ve içerik üretimini teşvik eden dinamik ve çift yönlü etkileşim dönemidir.</td>
+          <td>İstemcide AJAX, JS kütüphaneleri; sunucuda PHP, Python, Ruby, Java (J2EE), .NET Framework; Facebook, YouTube, Wiki.</td>
+        </tr>
+        <tr>
+          <td><strong>2010 ve Sonrası</strong></td>
+          <td><strong>Web 3.0</strong> (Semantik Web)</td>
+          <td>"Okuma-yazma-yürütme" yaklaşımıyla verilerin Yapay Zekâ ve Makine Öğrenimi ile yorumlanarak kişiye özgü içerik sunulduğu akıllı web dönemidir.</td>
+          <td>Semantik veri, Yapay Zekâ, Bulut API'ler; Apple Siri, Google Bulut API.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>1.2. Web Framework Kavramı, Front-End ve Back-End Geliştirme</h3>
+    <p><strong>Web Framework (Web Çerçevesi)</strong>, yazılım ve web geliştiriciler için önceden yazılmış bileşenler, kod parçacıkları ve uygulama şablonları sunan hazır araç ve kaynak bütünüdür. Framework kullanılmadan da web programlama yapılabilir; ancak çerçeveler tekrarlayan kod yazımını önler, zamandan tasarruf sağlar, güvenlik yamaları sunar ve ORM aracılığıyla veritabanı entegrasyonunu kolaylaştırır.</p>
+
     <table class="data-table">
       <thead>
         <tr>
@@ -634,53 +683,94 @@ ul.o li.ok::after {
       <tbody>
         <tr>
           <td><strong>Çalıştığı Ortam</strong></td>
-          <td>Kullanıcının web tarayıcısı (Chrome, Edge, Safari vb.)</td>
-          <td>Uzak web sunucusu (IIS, Kestrel, Nginx, Apache)</td>
+          <td>Kullanıcının web tarayıcısı (Chrome, Edge, Firefox, Safari)</td>
+          <td>Uzak web sunucusu (Kestrel, IIS, Nginx, Apache)</td>
         </tr>
         <tr>
-          <td><strong>Kullanılan Teknolojiler</strong></td>
-          <td>HTML5, CSS3, JavaScript (TypeScript, React, Vue, Angular)</td>
-          <td>C# (ASP.NET Core), Java (Spring), Python (Django), PHP, Node.js</td>
+          <td><strong>Temel Teknolojiler</strong></td>
+          <td>HTML (<code>.html</code> - iskelet), CSS (<code>.css</code> - stil), JavaScript (<code>.js</code> - dinamizm); Bootstrap, React, Vue, Angular</td>
+          <td>C# (ASP.NET Core), Java (Spring), Python (Django, Flask), PHP (Laravel, CodeIgniter), Node.js</td>
         </tr>
         <tr>
-          <td><strong>Temel Görevi</strong></td>
-          <td>Kullanıcı arayüzünü (UI) render etmek, buton tıklamalarını yönetmek, girdi doğrulama</td>
-          <td>İş mantığını (Business Logic) çalıştırmak, veritabanına (SQL) erişmek, güvenlik ve kimlik doğrulama</td>
+          <td><strong>Sorumluluk Alanı</strong></td>
+          <td>Kullanıcı arayüzü (UI), duyarlı (responsive) tasarım, tarayıcı etkileşimleri ve asenkron AJAX çağrıları</td>
+          <td>İş mantığı (Business Logic), veritabanı işlemleri (ORM), URL yönlendirme, form doğrulama, kimlik denetimi ve Web API</td>
         </tr>
         <tr>
-          <td><strong>Kaynak Kod Güvenliği</strong></td>
-          <td>Kodlar açıktır; "Kaynağı Görüntüle" ile herkes görebilir</td>
-          <td>Kodlar gizlidir ve derlenmiştir (DLL); kullanıcı asla kaynak kodu göremez</td>
+          <td><strong>Kod Gizliliği</strong></td>
+          <td>Kodlar tarayıcıya iner; kullanıcı "Kaynağı Görüntüle" ile görebilir.</td>
+          <td>Kodlar sunucuda çalışır ve derlenir; kullanıcı yalnızca üretilen HTML/CSS/JS çıktısını görür.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <strong>Sunucu Taraflı Çerçeve ve Dil Eşleşmeleri:</strong> <strong>ASP.NET Core</strong> (C#), <strong>Spring</strong> (Java), <strong>Laravel</strong> ve <strong>CodeIgniter</strong> (PHP), <strong>Django</strong> ve <strong>Flask</strong> (Python). Hem ön yüz hem arka yüz geliştirebilen uzmanlara <strong>Full-Stack Geliştirici</strong> denir.
+    </div>
+  </section>
+
+  <section>
+    <h3>1.3. .NET Ekosisteminin Evrimi: .NET Framework, .NET Core ve ASP.NET Core</h3>
+    <p><strong>.NET Framework (2002–2019)</strong>, Microsoft tarafından geliştirilen, 25'ten fazla dili (C#, VB.NET, F#) destekleyen ancak yalnızca Windows işletim sisteminde çalışan geleneksel yazılım çatısıdır (son sürüm 4.8). Temel sınıf kütüphaneleri mantıksal olarak <strong>isim alanları (namespace)</strong> altında gruplanır (örn. <code>using System;</code>, <code>using System.IO;</code>) ve Java'daki paket (package) yapısına karşılık gelir.</p>
+    <p><strong>.NET Core (2016–Günümüz)</strong> ise sıfırdan tasarlanan, açık kaynaklı ve platform bağımsız yeni nesil .NET platformudur. 1.0, 1.1, 2.0, 2.1, 2.2, 3.0 ve 3.1 sürümlerinin ardından, .NET Framework 4.x ile karışmaması için <strong>4.x sürümü atlanmış</strong> ve Kasım 2020'de tüm .NET platformlarını tek çatı altında birleştiren <strong>.NET 5</strong> (devamında .NET 6, 7, 8) yayımlanmıştır.</p>
+
+    <h4>ASP.NET Core'un Temel Avantajları ve Yenilikleri:</h4>
+    <ol>
+      <li><strong>Çapraz Platform (Cross-Platform):</strong> Windows, Linux ve macOS üzerinde çalışır; IIS, Kestrel, Apache veya Nginx sunucularında barındırılabilir.</li>
+      <li><strong>Açık Kaynak Kod Esnekliği:</strong> Kaynak kodları Microsoft tarafından GitHub üzerinde açık olarak yayımlanır ve ücretsizdir.</li>
+      <li><strong>Yüksek Performans ve Bulut Uyumu:</strong> Hafiftir, bellek kullanımı düşüktür ve bulut maliyetlerini azaltır; <code>async/await</code> desteğiyle yüksek eşzamanlılık sağlar.</li>
+      <li><strong>Mikroservis Mimarisi Uyumu:</strong> Bağımsız geliştirilip dağıtılabilen modüler servisler için idealdir.</li>
+      <li><strong>Birleşik Web Modeli ve Dahili DI:</strong> Klasik .NET Framework'teki Web Forms yerine <strong>Razor Pages</strong> ve <strong>Blazor</strong> gelmiş; <strong>ASP.NET Core MVC</strong> ve <strong>Web API</strong> tek çatı altında birleştirilmiştir. Ayrıca yerleşik <strong>Dependency Injection (DI)</strong>, <strong>SignalR</strong> ve <strong>gRPC</strong> desteği sunar.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h3>1.4. Yazılım Mimari Modelleri (Software Architectural Patterns)</h3>
+    <p>Mimari modeller, yazılım sistemlerinin yapısal bileşimini ve bileşenler arası etkileşim kurallarını belirleyen, geniş kapsamlı ve yeniden kullanılabilir çözümlerdir:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Mimari Model</th>
+          <th>Yapısı ve Kullanım Amacı</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>MVC (Model-View-Controller)</strong></td>
+          <td>Uygulamayı Model (veri/iş mantığı), View (görünüm) ve Controller (denetleyici) olarak üç mantıksal bileşene ayırır; sunum katmanını iş mantığından ayırır.</td>
+        </tr>
+        <tr>
+          <td><strong>Layered (Katmanlı / N-Tier)</strong></td>
+          <td>Her katmanın bir üst katmana hizmet verdiği hiyerarşik yapıdır (Presentation, Application, Business Logic, Data Access).</td>
+        </tr>
+        <tr>
+          <td><strong>Client-Server (İstemci-Sunucu)</strong></td>
+          <td>Birden çok istemcinin isteklerini dinleyen ve hizmet sağlayan merkezi bir sunucudan oluşur.</td>
+        </tr>
+        <tr>
+          <td><strong>Monolitik vs. Mikroservis</strong></td>
+          <td>Monolitik mimaride tüm modüller tek blokta derlenirken; Mikroservis mimarisinde bağımsız dağıtılan küçük iş servisleri REST/gRPC ile haberleşir.</td>
+        </tr>
+        <tr>
+          <td><strong>Diğer Mimari Desenler</strong></td>
+          <td><strong>Master-Slave</strong> (çok iş parçacıklı paralel iş dağıtımı), <strong>Peer-to-Peer</strong> (eşler arası: DNS, BitTorrent), <strong>Event-Bus</strong> (olay kanalı üzerinden asenkron mesajlaşma), <strong>Blackboard</strong> (ortak veri yapısı), <strong>Interpreter</strong> (JS gibi betik yorumlama), <strong>Broker</strong> (dağıtık bileşen koordinasyonu).</td>
         </tr>
       </tbody>
     </table>
   </section>
 
   <section>
-    <h3>1.2. .NET Ekosisteminin Evrimi: .NET Framework vs. .NET Core vs. ASP.NET Core</h3>
-    <ul>
-      <li><strong>.NET Framework (2002-2019):</strong> Yalnızca Windows işletim sisteminde çalışan, monolitik ve Windows API'lerine bağımlı geleneksel Microsoft çatısıdır.</li>
-      <li><strong>.NET Core (2016 - Günümüz):</strong> Microsoft'un tamamen sıfırdan yazdığı, <strong>Platformlar Arası (Cross-Platform: Windows, Linux, macOS)</strong>, açık kaynak kodlu, yüksek performanslı ve modüler çatı.</li>
-      <li><strong>ASP.NET Core:</strong> Modern bulut tabanlı ve internete bağlı web uygulamaları geliştirmek için tasarlanmış yüksek performanslı web çatısıdır. Dahili olarak Kestrel web sunucusu ve Bağımlılık Enjeksiyonu (Dependency Injection - DI) motoru ile gelir.</li>
-    </ul>
-
-    <h4>ASP.NET Core'un Temel Avantajları:</h4>
-    <ol>
-      <li><strong>Çoklu Platform (Cross-Platform):</strong> Geliştirilen uygulama Linux Docker konteynerlerinde veya macOS üzerinde sorunsuz çalışır.</li>
-      <li><strong>Aşırı Hız ve Hafiflik:</strong> TechEmpower bağımsız kıyaslama testlerinde dünyanın en hızlı web framework'leri arasındadır.</li>
-      <li><strong>Yerleşik Bağımlılık Enjeksiyonu (Built-in Dependency Injection):</strong> Harici kütüphaneye gerek kalmadan gevşek bağlı (loosely-coupled) mimari sağlar.</li>
-      <li><strong>Asenkron Programlama Desteği:</strong> <code>async/await</code> mimarisi ile sunucu iş parçacıkları (thread) bloke olmadan saniyede on binlerce eşzamanlı isteği karşılar.</li>
-    </ol>
-  </section>
-
-  <section>
-    <h3>1.3. Yazılım Mimari Modelleri (Architectural Patterns)</h3>
-    <ul>
-      <li><strong>Monolitik Mimari:</strong> Tüm katmanların (arayüz, iş mantığı, veri erişimi) tek bir proje ve tek bir derlenebilir blok halinde çalıştığı geleneksel modeldir. Küçük projeler için hızlıdır ancak proje büyüdükçe bakımı zorlaşır.</li>
-      <li><strong>N-Katmanlı (N-Tier) Mimari:</strong> Uygulamanın Sunum Katmanı (Presentation), İş Mantığı Katmanı (Business/BLL) ve Veri Erişim Katmanı (Data Access/DAL) olarak ayrılmasıdır.</li>
-      <li><strong>Mikroservis Mimarisi (Microservices):</strong> Uygulamanın bağımsız olarak geliştirilen, dağıtılan ve ölçeklenen küçük servisler (Auth servisi, Sipariş servisi, Ödeme servisi) halinde REST API'lerle haberleşmesidir.</li>
-      <li><strong>MVC (Model-View-Controller) Modeli:</strong> Arayüz ile iş mantığını birbirinden ayıran temel web tasarım desenidir.</li>
-    </ol>
+    <h3>Sınav İpuçları ve Kritik Noktalar</h3>
+    <div class="exam-note">
+      <strong>Sınavlarda Sık Sorulan Sorular:</strong>
+      <ol>
+        <li><em>Web 1.0, Web 2.0 ve Web 3.0 farkı nedir?</em> -&gt; Web 1.0 <strong>salt okunur</strong>, Web 2.0 <strong>katılımcı/sosyal</strong>, Web 3.0 <strong>semantik ve kişiye özgü</strong> webdir (Web 4.0 kitapta yoktur).</li>
+        <li><em>.NET Core sürüm tuzakları nelerdir?</em> -&gt; <strong>.NET Core 4.x yoktur</strong>; 3.1'den doğrudan <strong>.NET 5</strong>'e geçilmiştir. Yalnızca Windows'ta çalışan <strong>.NET Framework</strong>'tür; .NET Core çapraz platform ve açık kaynaktır.</li>
+        <li><em>Framework-Dil eşleşmelerinde en sık sorulan çeldirici hangisidir?</em> -&gt; <strong>CodeIgniter</strong> JavaScript değil, bir <strong>PHP</strong> çerçevesidir.</li>
+        <li><em>Stil dosyalarının uzantısı ve istemci/sunucu ayrımı?</em> -&gt; Stiller <code>.css</code> dosyalarında saklanır; HTML, CSS ve JavaScript <strong>istemci taraflı</strong>, PHP, C#, Java ve Python <strong>sunucu taraflı</strong>dır.</li>
+      </ol>
+    </div>
   </section>
 </article>
 
@@ -718,77 +808,184 @@ ul.o li.ok::after {
 <article class="unit-article">
   <h2>2. Ünite: MVC Yapısı ve ASP.NET Core ile MVC Kullanımı</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Model-View-Controller mimarisinin üç temel ayağını, HTTP isteklerinin Controller ve Action metotları tarafından karşılanmasını, Program.cs dosyasındaki Middleware (Ara Yazılım) hattını ve URL Yönlendirme (Routing) mekanizmasını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> ASP.NET Core MVC geliştirme ortamını ve Solution Explorer klasör hiyerarşisini tanımak; Model-View-Controller mimarisinin görev dağılımını, MVC istek yaşam döngüsünü, <code>Startup.cs</code> / <code>Program.cs</code> içindeki Middleware (Ara Yazılım) boru hattını, Controller/Action kurallarını ve Routing (URL Yönlendirme) mekanizmasını eksiksiz öğrenmektir.
   </div>
 
   <section>
-    <h3>2.1. MVC Mimarisi: Model, View, Controller</h3>
-    <div class="card">
-      <h4>1. Model:</h4>
-      <p>Uygulamanın verilerini ve iş kurallarını temsil eden C# sınıflarıdır (POCO - Plain Old CLR Objects). Veritabanındaki tabloların nesne tabanlı karşılıklarıdır (Örn: <code>Product.cs</code>, <code>Customer.cs</code>).</p>
-    </div>
+    <h3>2.1. Geliştirme Ortamı ve ASP.NET Core MVC Proje Yapısı</h3>
+    <p>Microsoft, ASP.NET Core uygulamaları için tam donanımlı <strong>Visual Studio</strong> (öğrenme amaçlı ücretsiz sürüm: <strong>Visual Studio Community</strong>) ve hafif alternatif olarak Visual Studio Code sunar. Veritabanı işlemleri için kurulumda <strong>SQL Server Express LocalDB</strong> bileşeni seçilir. Proje <strong>F5</strong> tuşu veya araç çubuğundaki yeşil ok ile çalıştırıldığında, yerel geliştirme sunucusu (IIS Express / Kestrel) varsayılan olarak <strong>rastgele bir port numarası</strong> atar (Project &gt; Properties &gt; Debug bölümünden değiştirilebilir).</p>
 
-    <div class="card">
-      <h4>2. View:</h4>
-      <p>Kullanıcının gördüğü HTML çıktısıdır. ASP.NET Core'da <code>.cshtml</code> uzantılı Razor dosyalarıdır. Controller tarafından gönderilen modeli alır ve kullanıcıya render eder.</p>
-    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Klasör / Dosya</th>
+          <th>Görevi ve İçeriği</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>&lt;ProjeAdı&gt;.csproj</code></td>
+          <td>Proje ayarlarını, hedef .NET sürümünü ve NuGet paket referanslarını tutan XML tabanlı proje dosyasıdır.</td>
+        </tr>
+        <tr>
+          <td><code>Dependencies</code></td>
+          <td>Projenin bağlı olduğu kod çözümleyicileri (Analyzers), çerçeveleri (Frameworks) ve NuGet paketlerini (Packages) listeler.</td>
+        </tr>
+        <tr>
+          <td><code>Properties/launchSettings.json</code></td>
+          <td>Hata ayıklama profilleri, ortam değişkenleri (<code>ASPNETCORE_ENVIRONMENT</code>) ve uygulama portlarını tanımlar.</td>
+        </tr>
+        <tr>
+          <td><code>wwwroot/</code></td>
+          <td>Web uygulamasına ait CSS, JavaScript, resim ve simgeler gibi tüm <strong>statik dosyaların</strong> barındırıldığı kök klasördür.</td>
+        </tr>
+        <tr>
+          <td><code>Models/</code>, <code>Controllers/</code>, <code>Views/</code></td>
+          <td>Model ve Controller sınıfları <code>.cs</code> uzantılıdır; View ve Layout dosyaları <code>.cshtml</code> (Razor) uzantılıdır.</td>
+        </tr>
+        <tr>
+          <td><code>Program.cs</code> / <code>Startup.cs</code></td>
+          <td>Uygulamanın giriş noktası, DI servis kayıtları, Middleware (ara yazılım) hattı ve Routing yapılandırması burada yer alır.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-    <div class="card">
-      <h4>3. Controller:</h4>
-      <p>Kullanıcıdan gelen HTTP isteklerini karşılayan, modeli çağırıp işleyen ve hangi View'in döneceğine karar veren yönetici sınıftır. <code>Microsoft.AspNetCore.Mvc.Controller</code> temel sınıfından türer.</p>
+  <section>
+    <h3>2.2. Startup.cs / Program.cs ve Middleware (Ara Yazılım) Hattı</h3>
+    <p>ASP.NET Core uygulamasında gelen her HTTP isteği (Request) ve dönen yanıt (Response), <strong>Middleware (Ara Yazılım)</strong> adı verilen sıralı yazılım bileşenlerinden oluşan bir boru hattından (<strong>Application Pipeline</strong>) geçer. .NET 5 dönemini anlatan ders kitabında yapılandırma iki dosyada bölünmüştür: <code>Program.cs</code> host'u başlatırken, <code>Startup.cs</code> içinde <code>ConfigureServices()</code> metodu servisleri (Dependency Injection) ekler ve <code>Configure()</code> metodu Middleware sırasını kurar.</p>
+    <p>.NET 6, 7 ve 8+ sürümlerinde ise <code>Startup.cs</code> kaldırılmış, her iki aşama tek bir <code>Program.cs</code> dosyasında (Minimal Hosting Model) birleştirilmiştir:</p>
+
+    <pre><code>var builder = WebApplication.CreateBuilder(args);
+
+// 1. Builder (Servis Kaydı / eski ConfigureServices) Aşaması:
+builder.Services.AddControllersWithViews(); // MVC servislerini DI konteynerine ekler
+
+var app = builder.Build();
+
+// 2. Middleware Pipeline (eski Configure) Aşaması - SIRA KRİTİKTİR:
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection(); // HTTP isteklerini HTTPS'e yönlendirir
+app.UseStaticFiles();      // wwwroot altındaki CSS/JS/resim dosyalarını sunar
+app.UseRouting();          // Gelen URL'yi rota tablosuyla eşleştirir
+app.UseAuthentication();   // Kimlik doğrulama (kimsin?)
+app.UseAuthorization();    // Yetkilendirme (yetkin var mı?)
+
+// 3. Varsayılan Rota (Endpoint) Tanımı:
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();</code></pre>
+
+    <div class="highlight-box">
+      <strong>Sınav Notu (Middleware Sırası):</strong> İstek boru hattında bileşenlerin eklenme sırası çalışma sırasını belirler. Örneğin statik dosyalar (<code>UseStaticFiles</code>) yönlendirmeden önce kısa devre yaptırılarak performans kazanılır; <code>UseRouting()</code> ise mutlaka <code>UseAuthorization()</code> ve <code>MapControllerRoute()</code> öncesinde çağrılmalıdır.
     </div>
   </section>
 
   <section>
-    <h3>2.2. Controller ve Action Metotları</h3>
-    <p>Controller içindeki dışarıdan HTTP ile çağrılabilen public metotlara <strong>Action Metodu</strong> denir. Action metotları genellikle <code>IActionResult</code> arayüzünü döner.</p>
+    <h3>2.3. MVC Bileşenleri ve Yaşam Döngüsü (Lifecycle)</h3>
+    <p>MVC deseni sorumlulukları üç bağımsız bileşene ayırarak sürdürülebilir ve test edilebilir kod üretir:</p>
+    <ul>
+      <li><strong>Model (<code>.cs</code>):</strong> Uygulamanın verilerini, durumunu ve iş mantığını (business logic) temsil eden C# sınıflarıdır (Örn: <code>Ogrenci.cs</code>, <code>Product.cs</code>).</li>
+      <li><strong>View (<code>.cshtml</code>):</strong> Kullanıcı arabirimini (HTML) oluşturmaktan sorumludur. Razor View Engine ile C# verilerini HTML'e dönüştürür; minimum mantıksal işlem içermelidir.</li>
+      <li><strong>Controller (<code>.cs</code>):</strong> MVC yapısında kullanıcıdan gelen HTTP isteklerini karşılayan <strong>ilk giriş noktasıdır</strong>. <code>Microsoft.AspNetCore.Mvc.Controller</code> sınıfından miras alır, Model ile çalışır ve kullanıcıya hangi View'in (veya sonucun) döneceğine karar verir.</li>
+    </ul>
+    <p><strong>MVC Yaşam Döngüsü:</strong> İstemci HTTP isteği gönderir &rarr; Web sunucusu (IIS/Kestrel) isteği alır &rarr; Routing mekanizması URL'yi çözer &rarr; İlgili Controller ve Action metodu çalıştırılır &rarr; Model verileri işlenir &rarr; Uygun View Razor motorunca HTML'e çevrilir ve HTTP yanıtı olarak tarayıcıya döndürülür.</p>
+  </section>
 
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-using Microsoft.AspNetCore.Mvc;
+  <section>
+    <h3>2.4. Controller, Action Metotları ve URL Yönlendirme (Routing)</h3>
+    <p>ASP.NET Core'da tüm Controller sınıfları <code>Controllers</code> klasörü altında tanımlanır ve adları mutlaka <strong>"Controller"</strong> son ekiyle biter (örn. <code>OgrenciController</code>); ancak URL'de bu son ek yazılmaz. Controller sınıfı içerisindeki dışarıdan HTTP ile çağrılabilen <strong><code>public</code></strong> metotlara <strong>Action Metodu</strong> denir.</p>
+    <p><strong>Önemli Kural:</strong> Action metotlar mutlaka <code>public</code> olmalıdır; <strong><code>static</code></strong> ve <strong>aşırı yüklenmiş (overloaded)</strong> metotlar action metot olamazlar. Action metotları esnek dönüş tipleri için genellikle <code>IActionResult</code> (veya <code>ActionResult</code>) döner: <code>View()</code> (<code>ViewResult</code>), <code>Json()</code> (<code>JsonResult</code>), <code>Content()</code> (<code>ContentResult</code>), <code>Redirect()</code>, <code>NotFound()</code>, <code>File()</code>.</p>
+
+    <pre><code>using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace WebApp.Controllers
 {
     public class UrunController : Controller
     {
-        // GET: /Urun/Index
+        // Convention Route: GET /Urun veya /Urun/Index
         public IActionResult Index()
         {
-            var urunler = new List<string> { "Laptop", "Mouse", "Klavye" };
-            return View(urunler); // Views/Urun/Index.cshtml dosyasını render eder
+            var urunler = new List&lt;string&gt; { "Laptop", "Mouse", "Klavye" };
+            return View(urunler); // Views/Urun/Index.cshtml dosyasını döndürür
         }
 
-        // GET: /Urun/Detay/5
+        // Convention Route: GET /Urun/Detay/5
         public IActionResult Detay(int id)
         {
-            if (id <= 0) return NotFound(); // 404
+            if (id &lt;= 0) return NotFound(); // HTTP 404
             return View();
         }
+
+        // Attribute Routing Örneği: GET /katalog/ozel/12
+        [Route("katalog/ozel/{kod:int}")]
+        public IActionResult OzelUrun(int kod)
+        {
+            return Content($"Ürün Kodu: {kod}", "text/plain");
+        }
     }
-}
-</pre>
-    </div>
+}</code></pre>
+
+    <h4>Varsayılan URL Kalıbı (Convention-Based Routing):</h4>
+    <p>Varsayılan rota şablonu <code>"{controller=Home}/{action=Index}/{id?}"</code> biçimindedir. URL'de değer belirtilmezse varsayılan Controller <strong>HomeController</strong>, varsayılan Action <strong>Index</strong> olur; <code>id?</code> ise opsiyonel parametredir.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Gelen URL</th>
+          <th>Controller</th>
+          <th>Action</th>
+          <th>id Parametresi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>http://localhost:3000/</code> veya <code>/Home</code></td>
+          <td><code>HomeController</code></td>
+          <td><code>Index</code></td>
+          <td><code>null</code></td>
+        </tr>
+        <tr>
+          <td><code>http://localhost:3000/Ogrenci</code></td>
+          <td><code>OgrenciController</code></td>
+          <td><code>Index</code></td>
+          <td><code>null</code></td>
+        </tr>
+        <tr>
+          <td><code>http://localhost:3000/Ogrenci/OgrGetir</code></td>
+          <td><code>OgrenciController</code></td>
+          <td><code>OgrGetir</code></td>
+          <td><code>null</code></td>
+        </tr>
+        <tr>
+          <td><code>http://localhost:3000/Ogrenci/Index/100</code></td>
+          <td><code>OgrenciController</code></td>
+          <td><code>Index</code></td>
+          <td><code>100</code></td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 
   <section>
-    <h3>2.3. Program.cs ve Middleware (Ara Yazılım) Hattı</h3>
-    <p>.NET 6/7/8 ile birlikte <code>Startup.cs</code> dosyası kaldırılarak tüm yapılandırma <code>Program.cs</code> dosyasında birleştirilmiştir.</p>
-    <ul>
-      <li><strong>Builder Aşaması (Servisler):</strong> <code>builder.Services.AddControllersWithViews();</code> ile MVC servisleri Dependency Injection konteynerine eklenir.</li>
-      <li><strong>App Aşaması (Middleware Pipeline):</strong> İsteklerin geçtiği boru hattıdır:
-        <ol>
-          <li><code>app.UseHttpsRedirection();</code> (HTTP'den HTTPS'e yönlendirir)</li>
-          <li><code>app.UseStaticFiles();</code> (wwwroot altındaki CSS, JS, resim dosyalarını sunar)</li>
-          <li><code>app.UseRouting();</code> (URL yönlendirmesini eşler)</li>
-          <li><code>app.UseAuthorization();</code> (Yetkilendirme kontrolü)</li>
-          <li><code>app.MapControllerRoute(...);</code> (Varsayılan rota şablonunu belirler)</li>
-        </ol>
-      </li>
-    </ul>
-
-    <h4>Varsayılan Rota (Default Route):</h4>
-    <p><code>"{{controller=Home}}/{{action=Index}}/{{id?}}"</code></p>
-    <p>Eğer URL'de hiçbir şey yazılmazsa Controller = <strong>Home</strong>, Action = <strong>Index</strong>, id ise opsiyoneldir (<code>?</code>).</p>
+    <h3>Sınav İpuçları ve Kritik Noktalar</h3>
+    <div class="exam-note">
+      <strong>Sınavlarda Sık Sorulan Sorular:</strong>
+      <ol>
+        <li><em>Varsayılan rota sıralaması nedir?</em> -&gt; <strong>Controller / Action / Parametre</strong> (<code>{controller=Home}/{action=Index}/{id?}</code>).</li>
+        <li><em>Model, Controller ve View dosyalarının uzantıları nelerdir?</em> -&gt; Model ve Controller C# sınıfı olduğu için <strong><code>.cs</code></strong>; View ve Layout ise <strong><code>.cshtml</code></strong> uzantılıdır.</li>
+        <li><em>Action metotlar için hangi kısıtlama geçerlidir?</em> -&gt; Yalnızca <strong><code>public</code></strong> metotlar action olabilir; <code>private</code>, <code>static</code> veya aşırı yüklenmiş metotlar action olamaz.</li>
+        <li><em>Statik dosyalar nerede tutulur ve port nasıl seçilir?</em> -&gt; CSS/JS/resimler <code>wwwroot</code> klasöründe durur; IIS Express varsayılan olarak <strong>rastgele</strong> port seçer.</li>
+      </ol>
+    </div>
   </section>
 </article>
 
@@ -837,56 +1034,136 @@ namespace WebApp.Controllers
 <article class="unit-article">
   <h2>3. Ünite: Layout Kavramı ve Razor View Engine</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> HTML ile C# kodlarını kusursuz harmanlayan Razor sözdizimini (@), ortak site şablonunu oluşturan Layout (_Layout.cshtml) mimarisini, @RenderBody() ve @RenderSection() direktiflerini, _ViewStart ve _ViewImports dosyalarını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Tüm sayfalarda tutarlı ve tekrar kullanılabilir arayüz sağlayan Layout (<code>_Layout.cshtml</code>) mimarisini, <code>@RenderBody()</code>, <code>@RenderSection()</code>, <code>_ViewStart.cshtml</code>, <code>_ViewImports.cshtml</code>, Partial View ve ViewComponent yapılarını, ayrıca HTML içine C# kodları gömmeyi sağlayan Razor View Engine sözdizimini, koşullu ifadeleri ve döngüleri kavramaktır.
   </div>
 
   <section>
-    <h3>3.1. Razor View Engine ve '@' Sözdizimi</h3>
-    <p>Razor; C# kodlarının HTML sayfaları içerisine akıcı ve okunabilir biçimde gömülmesini sağlayan şablon motorudur. <code>@</code> karakteri ile C# kod bloğuna geçilir:</p>
+    <h3>3.1. Layout Mimarisi (_Layout.cshtml, _ViewStart ve _ViewImports)</h3>
+    <p>Web uygulamalarında üst menü (header / nav), sol menü, alt bilgi (footer) ve ortak CSS/JavaScript (Bootstrap, jQuery) referansları sayfalar boyunca sabit kalır. Kod tekrarını önleyen ve bakımı kolaylaştıran bu ortak şablon yapısına <strong>Layout</strong> denir. Bir Layout oluşturulurken yapılması gereken ilk şey <strong>Layout şablonuna karar vermektir</strong>.</p>
+    <p>Layout dosyası da bir Razor görünümü olduğu için uzantısı <strong><code>.cshtml</code></strong>'dir ve projedeki tüm view'lerle paylaşıldığı için <strong><code>Views/Shared/_Layout.cshtml</code></strong> konumunda yer alır. Bir Layout dosyasında HTML iskeleti, menüler, CSS/JS kütüphane referansları bulunabilir; ancak <strong>Model sınıfı tanımları kesinlikle bulunmaz</strong>.</p>
+
     <ul>
-      <li>Tek satırlı ifade: <code>&lt;p&gt;Bugünün Tarihi: @DateTime.Now.ToString("dd.MM.yyyy")&lt;/p&gt;</code></li>
-      <li>Çok satırlı C# kod bloğu:
-<pre style="margin:6px 0; font-family:var(--font-mono); color:var(--text);">
-@{
-    var mesaj = "AUZEF Web Programlama 2";
-    int saat = DateTime.Now.Hour;
-}
-</pre>
-      </li>
-      <li>Koşul ve Döngüler:
-<pre style="margin:6px 0; font-family:var(--font-mono); color:var(--text);">
-@if (saat < 12) {
-    &lt;span&gt;Günaydın!&lt;/span&gt;
-} else {
-    &lt;span&gt;İyi günler!&lt;/span&gt;
-}
-</pre>
-      </li>
+      <li><strong><code>@RenderBody()</code>:</strong> Layout içerisinde çağrılan asıl içerik görünümünün (ör. <code>Home/Index.cshtml</code>) HTML çıktısının yerleştirileceği zorunlu alandır. Her Layout'ta tam olarak bir tane bulunur.</li>
+      <li><strong><code>@RenderSection("Scripts", required: false)</code>:</strong> Yalnızca belirli sayfalara özgü script veya stil bloklarının (<code>@section Scripts { ... }</code>) şablonun belirli bir yerine enjekte edilmesini sağlar.</li>
+      <li><strong><code>_ViewStart.cshtml</code>:</strong> <code>Views</code> klasörünün kökünde bulunur. Her View render edilmeden önce otomatik çalışarak tüm sayfalarda geçerli olacak varsayılan Layout'u belirler (<code>@{ Layout = "_Layout"; }</code>). Tekil bir sayfada kapatmak için <code>Layout = null;</code> yazılır.</li>
+      <li><strong><code>_ViewImports.cshtml</code>:</strong> Tüm View'lerde kullanılacak ortak <code>@using</code> ad alanlarını ve <code>@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers</code> direktifini merkezi olarak tanımlar.</li>
     </ul>
+
+    <pre><code>&lt;!-- Views/Shared/_Layout.cshtml temel iskeleti --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="tr"&gt;
+&lt;head&gt;
+    &lt;title&gt;@ViewData["Title"] - AUZEF MVC&lt;/title&gt;
+    &lt;link rel="stylesheet" href="~/css/site.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;&lt;nav&gt;Ortak Üst Menü&lt;/nav&gt;&lt;/header&gt;
+    &lt;main&gt;
+        @RenderBody() &lt;!-- İçerik View'i buraya basılır --&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;Ortak Alt Bilgi&lt;/footer&gt;
+    @await RenderSectionAsync("Scripts", required: false)
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+    <h4>Partial View ve ViewComponent ile Modüler Tasarım:</h4>
+    <p>Layout dışında sayfa içi tekrar eden parçalar iki mekanizma ile modülerleştirilir: <strong>Partial View</strong> (<code>Views/Shared/_MenuPartial.cshtml</code>), yalnızca HTML/Razor parçasını <code>&lt;partial name="_MenuPartial" /&gt;</code> veya <code>@await Html.PartialAsync("_MenuPartial")</code> ile çağırır; kendi bağımsız veri sorgusu yoktur. <strong>ViewComponent</strong> ise kendi C# sınıfına (<code>ViewComponent</code> sınıfından türeyen ve <code>InvokeAsync()</code> metodu içeren) ve kendi <code>Default.cshtml</code> görünümüne sahip mini bir Controller gibidir (sepet özeti, dinamik kategori menüsü vb.) ve <code>@await Component.InvokeAsync("SepetOzet")</code> ile çağrılır.</p>
   </section>
 
   <section>
-    <h3>3.2. Layout Mimarisi (_Layout.cshtml) ve Direktifler</h3>
-    <p>Bir web sitesindeki tüm sayfalarda ortak olan üst menü (header), alt bilgi (footer), stil dosyaları ve script etiketleri tek bir dosyada, <strong>_Layout.cshtml</strong> içinde tanımlanır.</p>
-    
-    <h4>1. @RenderBody() Direktifi:</h4>
-    <p>Layout dosyasının tam ortasında yer alan ve çağrılan spesifik View'in (örneğin Home/Index.cshtml) HTML içeriğinin basılacağı yeri belirten <strong>ZORUNLU</strong> yer tutucudur. Her Layout dosyasında tam olarak bir adet <code>@RenderBody()</code> bulunmalıdır.</p>
+    <h3>3.2. Razor View Engine ve '@' Sözdizimi</h3>
+    <p>.NET Framework dönemindeki Aspx ve Spark motorları ASP.NET Core'da yerini varsayılan görünüm motoru olan <strong>Razor View Engine</strong>'e bırakmıştır. Razor, <code>.cshtml</code> dosyalarındaki HTML ile C# kodlarını sunucuda işleyerek (parse) tarayıcıya saf HTML çıktısı üretir. HTML'den C# koduna geçiş <strong><code>@</code></strong> sembolü ile yapılır.</p>
 
-    <h4>2. @RenderSection("Scripts", required: false) Direktifi:</h4>
-    <p>Yalnızca belirli sayfalara özel JavaScript veya CSS dosyalarının şablonun belirli bir bölgesine (genellikle sayfa sonuna) enjekte edilmesini sağlar.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Yapı</th>
+          <th>Sözdizimi</th>
+          <th>Açıklama ve Dikkat Edilecek Nokta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tek Satır İfade</strong></td>
+          <td><code>@DateTime.Now.ToString()</code></td>
+          <td><code>@</code> işaretinden hemen sonraki C# ifadesi değerlendirilir ve değeri HTML'e yazılır.</td>
+        </tr>
+        <tr>
+          <td><strong>Açık (Explicit) İfade</strong></td>
+          <td><code>@(x + y)</code> vs <code>@x + y</code></td>
+          <td><code>@x + y</code> yazılırsa Razor sadece <code>@x</code>'i C# sayar, <code>+ y</code>'yi düz metin basar! Hesaplama için <code>@(x + y)</code> şarttır.</td>
+        </tr>
+        <tr>
+          <td><strong>Çok Satırlı Kod Bloğu</strong></td>
+          <td><code>@{ var x = 7; ... }</code></td>
+          <td>Değişken tanımlama, atama ve çok satırlı C# işlemleri için <code>@{ ... }</code> bloğu kullanılır.</td>
+        </tr>
+        <tr>
+          <td><strong>C# İçine HTML / Metin</strong></td>
+          <td><code>&lt;p&gt;...&lt;/p&gt;</code> veya <code>@: metin</code></td>
+          <td>C# kod bloğu içinde HTML etiketi doğrudan veya etiketsiz düz metin <code>@:</code> operatörü ile yazılır.</td>
+        </tr>
+        <tr>
+          <td><strong>Yorum / Açıklama</strong></td>
+          <td><code>@* Razor yorumu *@</code></td>
+          <td><code>@* ... *@</code> sunucuda atılır, sayfa kaynağında görünmez. <code>&lt;!-- ... --&gt;</code> HTML yorumudur (kaynakta görünür); <code>//</code> ve <code>/* */</code> sadece <code>@{ }</code> içinde geçerlidir.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-    <h4>3. _ViewStart.cshtml Dosyası:</h4>
-    <p>Views klasörünün kökünde yer alır. Tüm View'ler çalışmadan önce ilk bu dosya tetiklenir ve varsayılan Layout şablonunu belirler:</p>
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono);">
-@{{
-    Layout = "_Layout";
-}}
-</pre>
+  <section>
+    <h3>3.3. Razor İçinde Koşullu İfadeler ve Döngüler</h3>
+    <p><code>.cshtml</code> görünümlerinde C# söz dizimine uygun biçimde <code>if / else if / else</code>, <code>switch-case</code> karar yapıları ile <code>for</code>, <code>foreach</code>, <code>while</code> ve <code>do-while</code> döngüleri doğrudan kullanılabilir:</p>
+
+    <pre><code>@{
+    var fiyat = 40;
+    string[] ogrenciler = { "Semra", "Hasan", "Tuncay", "Mehmet" };
+}
+
+@* Koşullu İfade *@
+@if (fiyat &gt;= 100)
+{
+    &lt;p&gt;Fiyat Yüksek&lt;/p&gt;
+}
+else if (fiyat &gt; 30 &amp;&amp; fiyat &lt; 50)
+{
+    &lt;p&gt;Fiyat Normal&lt;/p&gt;
+}
+else
+{
+    &lt;p&gt;Fiyat Düşük&lt;/p&gt;
+}
+
+@* Döngüler: for (indisli) ve foreach (indissiz güvenli gezinme) *@
+&lt;ul&gt;
+@for (int i = 0; i &lt; ogrenciler.Length - 1; i++)
+{
+    &lt;li&gt;@ogrenciler[i]&lt;/li&gt; &lt;!-- 0, 1, 2 indisleri: 3 isim basar --&gt;
+}
+&lt;/ul&gt;
+
+@foreach (var ogr in ogrenciler)
+{
+    &lt;span&gt;@ogr &lt;/span&gt;
+}</code></pre>
+
+    <div class="highlight-box">
+      <strong>Döngü Farkları ve Kontrol Anahtarları:</strong> <code>while</code> döngüsünde koşul başlangıçta kontrol edilir (koşul baştan yanlışsa, ör. <code>for (int i = 5; i &lt; 4; i++)</code>, ekrana hiçbir şey basılmaz). <code>do-while</code> döngüsünde ise koşul sonda sınandığından gövde <strong>en az bir kez</strong> mutlaka çalışır. Döngüyü tamamen sonlandırmak için <code>break</code>, yalnızca o turu atlayıp sonraki iterasyona geçmek için <code>continue</code> kullanılır.
     </div>
+  </section>
 
-    <h4>4. _ViewImports.cshtml Dosyası:</h4>
-    <p>Tüm View'lerde kullanılacak ortak using namespace'lerini ve Tag Helper kütüphanelerini tanımlar (Örn: <code>@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers</code>).</p>
+  <section>
+    <h3>Sınav İpuçları ve Kritik Noktalar</h3>
+    <div class="exam-note">
+      <strong>Sınavlarda Sık Sorulan Sorular:</strong>
+      <ol>
+        <li><em>Varsayılan Layout adı ve klasörü nedir?</em> -&gt; <strong><code>_Layout.cshtml</code></strong> (başında alt çizgi vardır) ve <strong><code>Views/Shared</code></strong> klasöründe yer alır.</li>
+        <li><em>Tüm view'lerde ortak Layout tanımlaması nerede yapılır?</em> -&gt; <strong><code>_ViewStart.cshtml</code></strong> dosyasında (<code>@{ Layout = "_Layout"; }</code>).</li>
+        <li><em>Razor yorum bloğu ve C# kod bloğu nasıl yazılır?</em> -&gt; Yorum için <strong><code>@* açıklama *@</code></strong>, çok satırlı C# için <strong><code>@{ ... }</code></strong>, geçiş için <strong><code>@</code></strong> kullanılır.</li>
+        <li><em>Çıktı sorularında tuzak:</em> -&gt; <code>@x + y</code> ifadesinde <code>+ y</code> düz metin basılır; <code>&lt;div&gt;</code> üreten Razor döngüleri <strong>View</strong> içinde yazılır.</li>
+      </ol>
+    </div>
   </section>
 </article>
 
@@ -928,11 +1205,55 @@ namespace WebApp.Controllers
 <article class="unit-article">
   <h2>4. Ünite: Form İşlemleri ve Model Bağlama (Model Binding)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> HTTP GET ve POST metotları arasındaki farkları, HTML formlarından sunucuya veri gönderme mekanizmasını, Model Binding'in form alanlarını C# sınıflarına otomatik eşleme sürecini ve veri kaynağı özniteliklerini ([FromForm], [FromQuery], [FromRoute]) öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Kullanıcı ile sunucu arasındaki temel etkileşim aracı olan HTML formlarının yapısını ve form elemanlarını (<code>input</code>, <code>select</code>, <code>textarea</code>), HTTP GET ve POST yöntemleri arasındaki farkları, Controller içinde manuel veri okumayı (<code>Request.Query</code> / <code>Request.Form</code>), Model Binding mekanizmasını, kaynak özniteliklerini ve DataAnnotations doğrulama temellerini kavramaktır.
   </div>
 
   <section>
-    <h3>4.1. HTTP GET vs. HTTP POST</h3>
+    <h3>4.1. HTML Form Yapısı ve Form Elemanları</h3>
+    <p>Web formları <code>&lt;form action="..." method="..."&gt; ... &lt;/form&gt;</code> etiketleri arasında tanımlanır ve View (<code>.cshtml</code>) dosyaları içinde yer alır. Bir formdaki verinin sunucuya gidebilmesi için her elemanın mutlaka bir <strong><code>name</code></strong> niteliğine sahip olması gerekir; sunucuya veriler <code>name=değer</code> çiftleri olarak iletilir.</p>
+    <ul>
+      <li><strong><code>action</code> niteliği:</strong> Formun gönderileceği hedef URL'yi belirtir (örn. <code>\Ogrenci\Kaydet</code>). Tanımlanmazsa varsayılan olarak <strong>formun tanımlı olduğu aynı sayfaya</strong> gönderilir.</li>
+      <li><strong><code>method</code> niteliği:</strong> Gönderim yöntemini (<code>GET</code> veya <code>POST</code>) belirler. Saf HTML <code>&lt;form&gt;</code> etiketinde <code>method</code> yazılmazsa varsayılan yöntem <strong>GET</strong>'tir. (Not: Ünite 6'da göreceğiniz Form Tag Helper <code>&lt;form asp-action="..."&gt;</code> ise varsayılan olarak <strong>POST</strong> kullanır.)</li>
+    </ul>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Form Elemanı / Tip</th>
+          <th>Kullanım Amacı ve Sınav Detayı</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>&lt;input type="text"&gt;</code></td>
+          <td>Tek satırlı metin girişidir. <code>&lt;input&gt;</code> etiketinde <code>type</code> niteliği yazılmazsa varsayılan tip <strong><code>text</code></strong>'tir.</td>
+        </tr>
+        <tr>
+          <td><code>&lt;input type="radio"&gt;</code></td>
+          <td>Aynı <code>name</code> değerine sahip birçok seçenek arasından <strong>yalnızca bir tek seçenek</strong> seçtirmek için kullanılır.</td>
+        </tr>
+        <tr>
+          <td><code>&lt;input type="checkbox"&gt;</code></td>
+          <td>Sunulan seçenekler içerisinden <strong>birden fazla seçim</strong> yapılabilmesini sağlayan onay kutusudur.</td>
+        </tr>
+        <tr>
+          <td><code>&lt;input type="hidden"&gt;</code></td>
+          <td>Sayfada kullanıcıya görünmeyen gizli veriler taşır; ancak "Kaynağı Görüntüle" ile görülebilir ve Postman vb. ile manipüle edilebilir.</td>
+        </tr>
+        <tr>
+          <td><code>&lt;input type="submit"&gt;</code></td>
+          <td>Form içerisindeki verileri belirlenen <code>action</code> adresine göndermeyi tetikleyen butondur.</td>
+        </tr>
+        <tr>
+          <td><code>&lt;select&gt;</code> ve <code>&lt;textarea&gt;</code></td>
+          <td><code>&lt;select&gt;&lt;option&gt;</code> açılır liste oluşturur; <code>&lt;textarea rows="..." cols="..."&gt;</code> çok satırlı metin girişi sağlar.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>4.2. HTTP GET vs. HTTP POST ve Manuel Veri Okuma</h3>
     <table class="data-table">
       <thead>
         <tr>
@@ -944,62 +1265,103 @@ namespace WebApp.Controllers
       <tbody>
         <tr>
           <td><strong>Verinin Taşındığı Yer</strong></td>
-          <td>URL QueryString içinde (Örn: <code>/Arama?kelime=kitap&sayfa=1</code>)</td>
-          <td>HTTP İstek Gövdesi (Request Body) içinde gizli taşınır</td>
+          <td>URL'nin sonundaki Query String içinde (<code>/Haber/Detay?HbrId=100&amp;sayfa=2</code>)</td>
+          <td>HTTP İstek Gövdesi (Request Body) içinde taşınır; URL'de görünmez.</td>
         </tr>
         <tr>
-          <td><strong>Görünürlük ve Güvenlik</strong></td>
-          <td>Veri adres çubuğunda açıktır; şifre ve kredi kartı için ASLA kullanılmaz</td>
-          <td>Adres çubuğunda görünmez; güvenli ve gizlidir</td>
+          <td><strong>Güvenlik ve Gizlilik</strong></td>
+          <td>Adres çubuğunda açıktır, tarayıcı geçmişinde kalır ve kullanıcıca değiştirilebilir (manipüle edilebilir).</td>
+          <td>URL'de ve geçmişte görünmez; şifre ve hassas form verileri için tercih edilir.</td>
         </tr>
         <tr>
-          <td><strong>Veri Boyutu Kısıtı</strong></td>
-          <td>URL uzunluk kısıtı vardır (yaklaşık 2048 karakter)</td>
-          <td>Boyut sınırı pratik olarak yoktur (dosya ve resim yüklenebilir)</td>
+          <td><strong>Boyut ve Dosya Yükleme</strong></td>
+          <td>URL uzunluk sınırı vardır (maksimum ~2048 karakter); dosya yüklenemez.</td>
+          <td>Pratik boyut sınırı yoktur; resim ve dosya yükleme (upload) yapılabilir.</td>
         </tr>
         <tr>
-          <td><strong>Kullanım Amacı</strong></td>
-          <td>Sunucudan veri sorgulamak, listelemek, aramak</td>
-          <td>Sunucuda veri oluşturmak, güncellemek, kaydetmek</td>
+          <td><strong>Controller Özniteliği</strong></td>
+          <td><code>[HttpGet]</code> (Action metotlarında varsayılan HTTP fiilidir)</td>
+          <td><code>[HttpPost]</code> (Tarayıcı adres çubuğundan GET ile çağrılırsa <strong>HTTP 405</strong> hatası verir!)</td>
+        </tr>
+        <tr>
+          <td><strong>Manuel Okuma Yöntemi</strong></td>
+          <td><code>HttpContext.Request.Query["name_degeri"]</code></td>
+          <td><code>HttpContext.Request.Form["name_degeri"]</code></td>
         </tr>
       </tbody>
     </table>
+
+    <div class="highlight-box">
+      <strong>Dikkat Edilecek Nokta:</strong> Manuel veri okurken <code>Response</code> değil <strong><code>Request</code></strong> nesnesi kullanılır ve köşeli parantez içine <code>input</code>'un <code>type</code> değeri değil <strong><code>name</code></strong> değeri yazılır! Örneğin <code>&lt;input name="ad" type="text"&gt;</code> GET ile gönderildiğinde <code>HttpContext.Request.Query["ad"]</code> ile okunur.
+    </div>
   </section>
 
   <section>
-    <h3>4.2. Model Bağlama (Model Binding) Mekanizması</h3>
-    <p>ASP.NET Core Model Bağlama mekanizması; HTTP isteğiyle gelen heterojen verileri (QueryString, Form girdileri, Route verileri) otomatik olarak Action metodunun parametrelerine veya karmaşık bir C# model nesnesine dönüştürür.</p>
+    <h3>4.3. Model Bağlama (Model Binding), Kaynak Öznitelikleri ve Doğrulama</h3>
+    <p><strong>Model Binding (Model Bağlama)</strong>, HTTP isteğinden (Route, QueryString, Form Body, Header) gelen ad/değer çiftlerini geliştiricinin manuel <code>Request.Form</code>/<code>Request.Query</code> kodu yazmasına gerek kalmadan otomatik olarak Action metodunun basit parametrelerine veya karmaşık bir Model nesnesine dönüştürme işlemidir.</p>
+    <p>Eşleşme, form elemanının/parametrenin <strong>adı (<code>name</code>)</strong> ile Model sınıfının <strong>public özelliklerinin (<code>{ get; set; }</code> properties)</strong> adının uyuşmasıyla (büyük/küçük harf duyarsız) gerçekleşir. <strong>Metotlar model bağlamaya katılmaz.</strong> Formda karşılığı gönderilmeyen özellikler ise veri tipinin varsayılan değerini alır (ör. <code>int</code> için <code>0</code>, <code>string</code> için <code>null</code>).</p>
 
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-// Model Sınıfı
-public class UyeModel {
-    public string Ad { get; set; }
-    public string Email { get; set; }
-    public int Yas { get; set; }
+    <pre><code>using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+
+// 1. Model Sınıfı (DataAnnotations Doğrulama Kuralları ile)
+public class Ogrenci
+{
+    [Required(ErrorMessage = "Öğrenci adı zorunludur.")]
+    [StringLength(50, MinimumLength = 2)]
+    public string OgrAd { get; set; }
+
+    [Required(ErrorMessage = "Soyad zorunludur.")]
+    public string OgrSoyad { get; set; }
+
+    public string OgrNo { get; set; }
+
+    [Range(18, 65, ErrorMessage = "Yaş 18-65 aralığında olmalıdır.")]
+    public int OgrYas { get; set; }
 }
 
-// Controller Action
-[HttpPost]
-public IActionResult Kaydet(UyeModel uye) {
-    // Model Binding formdaki name="Ad", name="Email", name="Yas" 
-    // alanlarını otomatik olarak UyeModel nesnesinin içine doldurur!
-    if (ModelState.IsValid) {
-        // veritabanına kaydet
+// 2. Controller Action'ları
+public class OgrenciController : Controller
+{
+    // GET: /Ogrenci/Kaydet/5?ders=Web2
+    [HttpGet]
+    public IActionResult Detay([FromRoute] int? id, [FromQuery] string ders)
+    {
+        return Content($"ID: {id}, Ders: {ders}");
+    }
+
+    // POST: Formdaki name="OgrAd", name="OgrSoyad" alanları ogr nesnesine bağlanır
+    [HttpPost]
+    public IActionResult Kaydet([FromForm] Ogrenci ogr)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(ogr); // Doğrulama hatası varsa formu hatalarla geri göster
+        }
         return RedirectToAction("Index");
     }
-    return View(uye);
-}
-</pre>
-    </div>
+}</code></pre>
 
-    <h4>Model Bağlama Veri Kaynağı Öznitelikleri:</h4>
+    <h4>Model Bağlama Kaynak Öznitelikleri (Binding Sources):</h4>
     <ul>
-      <li><code>[FromQuery]</code>: Verinin URL QueryString'den alınacağını belirtir.</li>
-      <li><code>[FromRoute]</code>: Verinin URL rota yolundan (Route data, örn: <code>/Urun/Detay/{id}</code>) alınacağını belirtir.</li>
-      <li><code>[FromForm]</code>: Verinin HTML Form POST gövdesinden alınacağını belirtir.</li>
-      <li><code>[FromBody]</code>: Verinin JSON veya XML olarak HTTP gövdesinden (API çağrılarında) okunacağını belirtir.</li>
+      <li><strong><code>[FromRoute]</code>:</strong> Veriyi yalnızca URL rota segmentlerinden alır (ör. <code>/Home/Kaydet/5</code> içindeki <code>id</code>).</li>
+      <li><strong><code>[FromQuery]</code>:</strong> Veriyi yalnızca URL QueryString'den (<code>?ogrAd=Hasan</code>) alır.</li>
+      <li><strong><code>[FromForm]</code>:</strong> Veriyi HTML Form POST gövdesinden (<code>application/x-www-form-urlencoded</code> veya <code>multipart/form-data</code>) alır.</li>
+      <li><strong><code>[FromBody]</code>:</strong> Veriyi JSON/XML formatındaki istek gövdesinden (özellikle Web API'lerde) okur.</li>
     </ul>
+  </section>
+
+  <section>
+    <h3>Sınav İpuçları ve Kritik Noktalar</h3>
+    <div class="exam-note">
+      <strong>Sınavlarda Sık Sorulan Sorular:</strong>
+      <ol>
+        <li><em>Saf HTML <code>&lt;form&gt;</code> etiketinde <code>action</code> ve <code>method</code> yazılmazsa ne olur?</em> -&gt; Action boşsa <strong>formun tanımlı olduğu sayfaya</strong>; method boşsa varsayılan olarak <strong>GET</strong> ile gönderilir.</li>
+        <li><em>GET ve POST ile gelen form verisi Controller'da manuel nasıl alınır?</em> -&gt; GET için <code>HttpContext.Request.Query["name"]</code>, POST için <code>HttpContext.Request.Form["name"]</code>.</li>
+        <li><em>Model bağlamada bir sınıfın hangi üyeleri bağlanabilir?</em> -&gt; Yalnızca <code>{ get; set; }</code> tanımlı <strong>özellikler (properties)</strong> bağlanır; metotlar bağlanmaz.</li>
+        <li><em><code>[HttpPost]</code> action'ı adres çubuğundan çağrılırsa ne olur?</em> -&gt; Tarayıcı GET isteği attığı için <strong>HTTP 405 Method Not Allowed</strong> hatası oluşur.</li>
+      </ol>
+    </div>
   </section>
 </article>
 
@@ -1039,11 +1401,94 @@ public IActionResult Kaydet(UyeModel uye) {
 <article class="unit-article">
   <h2>5. Ünite: Durum Yönetimi (State Management) ve View'e Veri Aktarımı</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> HTTP protokolünün durumsuz (stateless) doğasını, Controller'dan View'e veri taşıyan ViewData, ViewBag ve TempData nesnelerinin yaşam döngülerini, Session ve Çerez (Cookie) durum yönetimini ve tekrar kullanılabilir ViewComponent mimarisini öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> HTTP protokolünün durumsuz (stateless) yapısını ve bu yapıyı aşmak için kullanılan İstemci Taraflı (Query String, Hidden Fields, HTTP Cookies) ve Sunucu Taraflı (Session) durum yönetimi tekniklerini; ayrıca Controller'dan View'e veri taşımada kullanılan <code>ViewBag</code>, <code>ViewData</code>, <code>TempData</code> ve güçlü tipli <code>ViewModel</code> (<code>@model</code>) yaklaşımlarını kavramaktır.
   </div>
 
   <section>
-    <h3>5.1. ViewData vs. ViewBag vs. TempData Büyük Karşılaştırma Tablosu</h3>
+    <h3>5.1. Durum Yönetimi: Stateless Protokoller, İstemci vs. Sunucu</h3>
+    <p>Ağ protokolleri <strong>Durumsuz (Stateless: HTTP, UDP, DNS)</strong> ve <strong>Durum Bilgili (Stateful: FTP, TCP, SMTP)</strong> olmak üzere ikiye ayrılır. HTTP durumsuz bir protokoldür; yani sunucu, gelen her isteği öncekilerden tamamen bağımsız ve ilk kez geliyormuş gibi değerlendirir. Kullanıcı girişi, sepet bilgisi veya tema tercihi gibi verilerin sayfalar arası korunabilmesi için <strong>Durum Yönetimi (State Management)</strong> teknikleri kullanılır.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Teknik</th>
+          <th>Taraf</th>
+          <th>Saklandığı Yer ve Sınır</th>
+          <th>Güvenlik ve İdeal Kullanım</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Query String</strong></td>
+          <td>İstemci</td>
+          <td>URL sonu (<code>?user=ali&amp;limit=10</code>); <code>&amp;</code> ile ayrılır, ~2048 karakter sınırı.</td>
+          <td>Adres çubuğunda görünür ve değiştirilebilir; sayfalama, arama filtreleri için kullanılır.</td>
+        </tr>
+        <tr>
+          <td><strong>Hidden Fields</strong></td>
+          <td>İstemci</td>
+          <td>Form içi <code>&lt;input type="hidden" name="UserId" value="10"&gt;</code></td>
+          <td>Sayfa kaynağını görüntüle ile okunur, Postman ile değiştirilebilir; sunucuda tekrar doğrulanmalıdır.</td>
+        </tr>
+        <tr>
+          <td><strong>HTTP Cookies (Çerez)</strong></td>
+          <td>İstemci</td>
+          <td>Kullanıcı bilgisayarında metin dosyası; tarayıcı limiti <strong>4096 bayt</strong>.</td>
+          <td>Kullanıcı silebilir/değiştirebilir! <strong>Renk, tema, dil tercihi</strong> gibi hassas olmayan veriler tutulur (şifre, yetki, DB bilgisi konmaz).</td>
+        </tr>
+        <tr>
+          <td><strong>Session (Oturum)</strong></td>
+          <td>Sunucu</td>
+          <td>Sunucu belleği/DB; istemcide yalnızca şifreli <strong>Session ID</strong> çerezi durur. Varsayılan zaman aşımı <strong>20 dk</strong>.</td>
+          <td>Güvenli ve performanslıdır; <strong>kullanıcı adı, yetki seviyesi</strong> gibi oturum boyunca korunacak hassas veriler için idealdir.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>5.2. Cookie (Çerez) ve Session (Oturum) Uygulaması</h3>
+    <p>ASP.NET Core MVC'de hem Cookie hem de Session işlemleri için Controller veya View'e mutlaka <strong><code>Microsoft.AspNetCore.Http</code></strong> namespace'i eklenmelidir. Kitapta (.NET 5) Session'ı etkinleştirmek için <code>Startup.cs</code> içindeki <code>ConfigureServices</code> metoduna <code>services.AddSession();</code> ve <code>Configure</code> metoduna <code>app.UseSession();</code> eklenir (modern .NET 6/7/8+'da aynı iki çağrı <code>Program.cs</code> içindedir).</p>
+
+    <pre><code>using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+
+public class HomeController : Controller
+{
+    public IActionResult TercihVeOturum()
+    {
+        // 1. COOKIE YAZMA (Response üzerinden Append edilir!)
+        var cookieOpt = new CookieOptions
+        {
+            Expires = DateTime.Now.AddMinutes(10),
+            HttpOnly = true
+        };
+        HttpContext.Response.Cookies.Append("tema", "pixel", cookieOpt);
+
+        // 2. COOKIE OKUMA (Request üzerinden okunur!)
+        string tema = HttpContext.Request.Cookies["tema"];
+
+        // 3. SESSION YAZMA ve OKUMA (ISession: SetString, SetInt32, GetString, GetInt32)
+        HttpContext.Session.SetString("SessionUser", "can");
+        HttpContext.Session.SetInt32("YetkiSeviyesi", 1);
+
+        // Karmaşık nesneler JSON'a serileştirilerek saklanır (System.Text.Json)
+        var sepet = new List&lt;string&gt; { "Kitap", "Kalem" };
+        HttpContext.Session.SetString("Sepet", JsonSerializer.Serialize(sepet));
+
+        string aktifKullanici = HttpContext.Session.GetString("SessionUser");
+        return View();
+    }
+}</code></pre>
+
+    <div class="highlight-box">
+      <strong>Cookie ve Session Sınav Tuzakları:</strong> Çerez oluşturmak için <code>Request</code> değil <strong><code>HttpContext.Response.Cookies.Append("ad", "değer")</code></strong> kullanılır (Core'da <code>Add</code> metodu yoktur). Session ise tarayıcılar arasında paylaşılmaz; farklı tarayıcıdan bağlanıldığında yeni bir Session başlatılır.
+    </div>
+  </section>
+
+  <section>
+    <h3>5.3. Controller'dan View'e Veri Aktarımı: ViewData, ViewBag, TempData, ViewModel</h3>
     <table class="data-table">
       <thead>
         <tr>
@@ -1051,52 +1496,73 @@ public IActionResult Kaydet(UyeModel uye) {
           <th>ViewData</th>
           <th>ViewBag</th>
           <th>TempData</th>
+          <th>ViewModel (<code>@model</code>)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><strong>Veri Tipi</strong></td>
           <td><code>ViewDataDictionary</code> (Anahtar-değer sözlüğü)</td>
-          <td><code>dynamic</code> nesne (C# 4.0 DLR)</td>
-          <td><code>ITempDataDictionary</code> (Oturum tabanlı)</td>
+          <td><code>dynamic</code> (C# dinamik özelliği; ViewData'yı sarmalar)</td>
+          <td><code>ITempDataDictionary</code> (Session/Cookie sağlayıcılı)</td>
+          <td>Güçlü tipli C# sınıfı (POCO / Composite ViewModel)</td>
         </tr>
         <tr>
           <td><strong>Sözdizimi</strong></td>
-          <td><code>ViewData["Baslik"] = "Kitap";</code></td>
-          <td><code>ViewBag.Baslik = "Kitap";</code></td>
-          <td><code>TempData["Mesaj"] = "Kayıt başarılı";</code></td>
+          <td><code>ViewData["Msg"] = "Merhaba";</code></td>
+          <td><code>ViewBag.Msg = "Merhaba";</code></td>
+          <td><code>TempData["Msg"] = "Başarılı";</code></td>
+          <td>Controller: <code>return View(ogr);</code><br>View: <code>@model Ogrenci</code> &rarr; <code>@Model.OgrAd</code></td>
         </tr>
         <tr>
-          <td><strong>Tür Dönüşümü (Casting)</strong></td>
-          <td>Okurken <strong>Tür Dönüşümü (Cast) ZORUNLUDUR</strong></td>
-          <td>Dinamik olduğu için Tür Dönüşümü <strong>GEREKMEZ</strong></td>
-          <td>Karmaşık nesnelerde Cast veya JSON serileştirme gerekir</td>
+          <td><strong>Tip Dönüşümü (Cast)</strong></td>
+          <td>Okurken <strong>Cast zorunludur</strong>: <code>(string)ViewData["Msg"]</code></td>
+          <td>Dinamik olduğu için Cast gerekmez.</td>
+          <td>Okurken Cast gerekir: <code>(int)TempData["No"]</code></td>
+          <td>Gerekmez; tam IntelliSense ve derleme zamanı denetimi sağlar.</td>
         </tr>
         <tr>
-          <td><strong>Yaşam Döngüsü (Ömrü)</strong></td>
-          <td><strong>YALNIZCA MEVCUT İSTEK (Request)</strong> süresince yaşar. Yönlendirmede (Redirect) kaybolur!</td>
-          <td><strong>YALNIZCA MEVCUT İSTEK</strong> süresince yaşar. Yönlendirmede (Redirect) kaybolur!</td>
-          <td><strong>BİR SONRAKİ İSTEĞE KADAR (RedirectToAction)</strong> yaşar! Okunduktan sonra otomatik silinir.</td>
-        </tr>
-        <tr>
-          <td><strong>İdeal Kullanım</strong></td>
-          <td>Basit metin aktarımı</td>
-          <td>Hızlı prototipleme ve View başlıkları</td>
-          <td>Form sonrası başarı/hata bildirim mesajları (Flash messages)</td>
+          <td><strong>Yaşam Döngüsü</strong></td>
+          <td>Yalnızca <strong>mevcut istek</strong> boyunca yaşar; <code>Redirect</code> sonrası <code>null</code> olur.</td>
+          <td>Yalnızca <strong>mevcut istek</strong> boyunca yaşar; <code>Redirect</code> sonrası <code>null</code> olur.</td>
+          <td>Mevcut istek ve <strong>bir sonraki istek (<code>RedirectToAction</code>)</strong> boyunca yaşar; okununca silinir.</td>
+          <td>Mevcut View render sürecine model olarak aktarılır.</td>
         </tr>
       </tbody>
     </table>
 
-    <div class="note-box">
-      <strong>TempData Koruma Yöntemleri:</strong>
-      <p>TempData bir kez okunduğunda normalde silinir. Ancak <code>TempData.Keep("Mesaj");</code> veya <code>TempData.Peek("Mesaj");</code> kullanılırsa veri bir sonraki istek için de korunur.</p>
-    </div>
+    <pre><code>// RedirectToAction Sonrası Yaşam Döngüsü Farkı
+public IActionResult Index()
+{
+    ViewBag.Msg1 = "ViewBag mesaj";
+    ViewData["Msg2"] = "ViewData mesaj";
+    TempData["Msg3"] = "TempData mesaj";
+    return RedirectToAction("MsjGoster"); // 2. HTTP İsteği tetiklenir!
+}
+
+public IActionResult MsjGoster()
+{
+    // MsjGoster.cshtml içinde yalnızca TempData["Msg3"] görünür;
+    // ViewBag.Msg1 ve ViewData["Msg2"] NULL olur!
+    // TempData'yı bir sonraki istek için de korumak istersek:
+    // TempData.Keep("Msg3"); veya TempData.Peek("Msg3");
+    return View();
+}</code></pre>
+
+    <p><strong><code>@model</code> vs. <code>@Model</code> Ayrımı ve ViewModel:</strong> View dosyasının en üstündeki küçük harfli <strong><code>@model Ogrenci</code></strong>, görünümün beklediği veri türünü bildiren yönergedir; gövdedeki büyük harfli <strong><code>@Model</code></strong> ise Controller'dan gönderilen nesneye erişilen değişkendir. Birden fazla model sınıfının tek ekranda gösterilmesi gerektiğinde ise bu sınıfları özellik olarak barındıran birleştirilmiş bir <strong>ViewModel</strong> sınıfı oluşturulur.</p>
   </section>
 
   <section>
-    <h3>5.2. ViewComponent Mimarisi</h3>
-    <p>Eski ASP.NET'teki "User Control" veya "Partial View"lerin çok daha gelişmiş halidir. Partial View'den farkı: <strong>Kendi Controller benzeri C# kod sınıfına ve kendi iş mantığına sahip olmasıdır</strong>.</p>
-    <p><em>Örnek Kullanım:</em> Bir e-ticaret sitesinde her sayfanın köşesinde yer alan "Alışveriş Sepeti Özeti", dinamik kategori menüsü, son okunan yazılar. <code>InvokeAsync</code> metoduyla çağrılır.</p>
+    <h3>Sınav İpuçları ve Kritik Noktalar</h3>
+    <div class="exam-note">
+      <strong>Sınavlarda Sık Sorulan Sorular:</strong>
+      <ol>
+        <li><em>Hangi ağ protokolleri durumsuzdur (stateless)?</em> -&gt; <strong>HTTP, UDP, DNS</strong> durumsuz; <strong>FTP, TCP, SMTP</strong> durum bilgilidir.</li>
+        <li><em>Cookie ve Session için zorunlu namespace ve kurulum?</em> -&gt; <strong><code>Microsoft.AspNetCore.Http</code></strong>. Kitap kurulumunda <code>Startup.cs</code>'te <code>services.AddSession();</code> ve <code>app.UseSession();</code> yazılır.</li>
+        <li><em>Kullanıcı yetkisi nerede tutulmalı, renk tercihi nerede tutulmalı?</em> -&gt; Yetki ve hassas veriler sunucuda <strong>Session</strong>'da; renk/tema gibi zararsız tercihler istemcide <strong>Cookie</strong>'de tutulur.</li>
+        <li><em><code>RedirectToAction</code> sonrası hangisi hayatta kalır?</em> -&gt; Yalnızca <strong><code>TempData</code></strong>; <code>ViewBag</code> ve <code>ViewData</code> ikinci istekte <code>null</code> olur.</li>
+      </ol>
+    </div>
   </section>
 </article>
 

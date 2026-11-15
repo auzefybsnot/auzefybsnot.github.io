@@ -585,7 +585,20 @@ ul.o li.ok::after {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow);
 }
+
+/* agy-mobile-fix */
+@media (max-width: 768px) {
+  html, body { max-width: 100%; overflow-x: hidden; }
+  .top-bar-inner, .agy-top-bar, .topbar-inner { flex-wrap: wrap !important; gap: 8px !important; }
+  .bar-left, .sel { max-width: 100% !important; min-width: 0 !important; }
+  .data-table, .compare-table { display: block; overflow-x: auto; max-width: 100%; }
+  pre, .formula-box, .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+}
+
 </style>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer="" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 
@@ -633,97 +646,201 @@ ul.o li.ok::after {
 <article class="unit-article">
   <h2>1. Ünite: Veri Yapılarına Giriş, C++ Ortamı, Bellek ve Algoritma Analizi</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Veri yapılarının bilgisayar bilimlerindeki hayati rolünü, C++ geliştirme ortamı ve derleme adımlarını (MinGW, g++), dinamik bellek yönetimini (Stack vs. Heap, Pointer'lar, new ve delete operatörleri), bellek sızıntısını (Memory Leak) ve algoritmaların zaman ve alan verimliliğini ölçen Asimptotik Notasyonları (Big-O, Omega, Teta) eksiksiz öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Veri (data), enformasyon (information) ve bilgi (knowledge) kavramlarını ayırt etmek; temel, bileşik ve soyut veri tiplerini tanımak; C++ derleme ortamını (MinGW, GCC, Visual Studio), statik ve dinamik bellek yönetimini (Stack vs. Heap, işaretçiler, <code>new</code>/<code>delete</code>, <code>sizeof</code>, tür dönüşümleri) ve algoritma karmaşıklığını (Big-O, $\Omega$, $\Theta$) eksiksiz kavramaktır.
   </div>
 
   <section>
-    <h3>1.1. Veri Yapısı (Data Structure) Nedir?</h3>
-    <p>Veri yapısı; bilgisayar belleğindeki (RAM) verilerin düzenli, etkili ve amaca uygun biçimde organize edilmesini, depolanmasını ve işlenmesini sağlayan matematiksel ve mantıksal modeller bütünüdür. Bir algoritmanın hızı ve sistemin kaynak kullanımı, seçilen veri yapısının doğruluğuna doğrudan bağlıdır.</p>
-    
-    <p>Niklaus Wirth'in ünlü formülü: <strong>Algoritmalar + Veri Yapıları = Programlar</strong>.</p>
-  </section>
+    <h3>1.1. Temel Kavramlar: Veri, Enformasyon ve Bilgi</h3>
+    <p>Bilgisayar bilimlerinde verinin anlamlı hâle gelmesi üç aşamalı bir <strong>Bilgi Edinim Piramidi</strong> (alt katmandan üste: <em>Veri &rarr; Enformasyon &rarr; Bilgi</em>) ile açıklanır:</p>
+    <ul>
+      <li><strong>Veri (Data):</strong> Herhangi bir gözlem, ölçüm, olay veya işlem sonucunda elde edilen <em>ham ve işlenmemiş</em> gerçeklerdir. Tek başına anlam ifade etmez. (Örnek: <code>85, 90, 78</code> sınav puanları, market barkodları, ham sıcaklık ölçümleri.)</li>
+      <li><strong>Enformasyon (Information):</strong> Verinin belirli bir bağlam içinde düzenlenmiş, özetlenmiş ve anlamlandırılmış hâlidir. Karar verme süreçlerinde kullanılır. (Örnek: <em>"Sınav ortalaması: 84,3"</em> veya <em>"Dünkü ortalama oda sıcaklığı 22,6 &deg;C idi."</em>)</li>
+      <li><strong>Bilgi (Knowledge):</strong> Enformasyonun deneyim, yorum ve kurallarla harmanlanarak <em>eyleme dönüştürülebilen</em> çıktısıdır. Stratejik kararlar ve problem çözme için kullanılır. (Örnek: <em>"Sınav ortalaması 85'in üzerindeyse ek destek gerekmez."</em>)</li>
+    </ul>
 
-  <section>
-    <h3>1.2. Bellek Mimarisi: Stack (Yığın) vs. Heap (Öbek)</h3>
     <table class="data-table">
       <thead>
         <tr>
           <th>Özellik</th>
-          <th>Stack (Yığın Bellek)</th>
-          <th>Heap (Öbek Bellek / Dinamik Alan)</th>
+          <th>Veri (Data)</th>
+          <th>Enformasyon (Information)</th>
+          <th>Bilgi (Knowledge)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Yönetim Şekli</strong></td>
-          <td>İşletim sistemi ve derleyici tarafından otomatik yönetilir</td>
-          <td>Programcı tarafından manuel (kodla) yönetilir</td>
+          <td><strong>Tanım</strong></td>
+          <td>Ham, işlenmemiş gerçekler</td>
+          <td>Verinin anlamlı bağlamda düzenlenmiş hâli</td>
+          <td>Enformasyonun deneyim ve yorumla eyleme dönüştürülmüş hâli</td>
         </tr>
         <tr>
-          <td><strong>Erişim Hızı</strong></td>
-          <td>Çok hızlıdır (CPU kayıtçısına ve L1/L2 önbelleğe yakındır)</td>
-          <td>Daha yavaştır (işaretçi yönlendirmesi gerektirir)</td>
+          <td><strong>Anlam</strong></td>
+          <td>Tek başına anlam ifade etmez</td>
+          <td>Anlamlıdır, bağlam içinde anlaşılır</td>
+          <td>Anlamlıdır, eyleme ve karara dönüştürülebilir</td>
         </tr>
         <tr>
-          <td><strong>Boyut Esnekliği</strong></td>
-          <td>Sabittir, derleme anında belirlenir; taşabilir (Stack Overflow)</td>
-          <td>Dinamiktir, çalışma anında (runtime) büyüyüp küçülebilir</td>
+          <td><strong>Kaynak</strong></td>
+          <td>Gözlem, ölçüm, işlem</td>
+          <td>Verinin işlenmesi ve bağlamlandırılması</td>
+          <td>Enformasyonun deneyim, yorum ve kurallarla harmanlanması</td>
         </tr>
         <tr>
-          <td><strong>C++ Operatörleri</strong></td>
-          <td>Yerel değişkenler (örn: <code>int x = 10;</code>)</td>
-          <td><code>new</code> (tahsis) ve <code>delete</code> (serbest bırakma)</td>
-        </tr>
-        <tr>
-          <td><strong>Hata Riski</strong></td>
-          <td>Kapsam (scope) dışına çıkıldığında otomatik temizlenir</td>
-          <td><code>delete</code> edilmezse <strong>Bellek Sızıntısı (Memory Leak)</strong> olur!</td>
+          <td><strong>Örnek</strong></td>
+          <td>85, 90, 78</td>
+          <td>Sınav ortalaması: 84,3</td>
+          <td>"Ortalama 85 üzerindeyse ek destek gerekmez."</td>
         </tr>
       </tbody>
     </table>
+
+    <h4>Veri Yapısı (Data Structure) Nedir?</h4>
+    <p>Veri yapıları, verilerin bilgisayar belleğinde (RAM) düzenli, verimli ve anlamlı biçimde saklanmasını, yönetilmesini ve erişilmesini sağlayan özel organizasyonlardır. Niklaus Wirth'in özlü ifadesiyle: <strong>Algoritmalar + Veri Yapıları = Programlar</strong>. Doğru veri yapısı seçimi sayesinde verilere hızlı erişilir, arama/ekleme/silme/güncelleme işlemleri kolaylaşır ve bellek kullanımı optimize edilir.</p>
   </section>
 
   <section>
-    <h3>1.3. C++ ile İşaretçiler (Pointers) ve Dinamik Bellek Yönetimi</h3>
-    <p>İşaretçi (pointer), bellekte başka bir değişkenin adresini (hexadecimal adres değerini) tutan özel bir değişkendir.</p>
+    <h3>1.2. C++ Programlama Dili, Derleme Süreci ve Temel Girdi/Çıktı</h3>
+    <p>C++ derleyicisi, yazılan C++ kaynak kodunu (<code>.cpp</code>) bilgisayarın doğrudan çalıştırabileceği makine diline çevirir. Yaygın derleyici ve IDE'ler: <strong>GCC</strong> (Linux/macOS), <strong>MinGW</strong> (Windows için GCC tabanlı), <strong>Microsoft Visual Studio</strong>, <strong>Code::Blocks</strong> ve <strong>CLion</strong>.</p>
+    <p>Komut satırından MinGW/GCC ile derleme ve çalıştırma adımları:</p>
+    <pre><code>g++ hello.cpp -o hello.exe
+./hello.exe   // veya Windows'ta: hello.exe</code></pre>
+
+    <p>C++ dilinde kullanıcıdan veri almak için <code>cin &gt;&gt;</code>, ekrana çıktı yazmak için <code>cout &lt;&lt;</code> (C dilinde sırasıyla <code>scanf()</code> ve <code>printf()</code>, başlık dosyası <code>&lt;stdio.h&gt;</code>) kullanılır. Yeni satır için <code>\n</code> veya <code>endl</code>, sekme için <code>\t</code>, ses için <code>\a</code>, geri silme için <code>\b</code> kontrol karakterleri; yorum satırları için <code>//</code> (tek satır) veya <code>/* ... */</code> (çok satır) kullanılır.</p>
+    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int yas;
+    cout &lt;&lt; "Yaşınızı giriniz: ";
+    cin &gt;&gt; yas;
+    cout &lt;&lt; "Girdiğiniz yaş: " &lt;&lt; yas &lt;&lt; endl;
+    return 0;
+}</code></pre>
+  </section>
+
+  <section>
+    <h3>1.3. Veri Tipleri: Temel, Bileşik ve Soyut Veri Tipleri</h3>
+    <p>Programlama dillerinde veri tipleri üç ana grupta incelenir:</p>
+    <h4>A. Temel (Basit) Veri Tipleri</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Veri Tipi</th>
+          <th>Açıklama</th>
+          <th>Bellek (byte)</th>
+          <th>Değer Aralığı (32-bit)</th>
+          <th>Örnek</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>int</code></td><td>Tam sayı (<code>long</code>, <code>unsigned</code> belirteçleriyle genişler)</td><td>4</td><td>$-2{,}147{,}483{,}648 \sim 2{,}147{,}483{,}647$</td><td><code>int yas = 20;</code></td></tr>
+        <tr><td><code>float</code></td><td>Tek duyarlıklı ondalıklı sayı</td><td>4</td><td>$\pm 3.4\times 10^{-38} \sim \pm 3.4\times 10^{38}$</td><td><code>float pi = 3.14f;</code></td></tr>
+        <tr><td><code>double</code></td><td>Çift duyarlıklı (daha hassas) ondalıklı sayı</td><td>8</td><td>$\pm 1.7\times 10^{-308} \sim \pm 1.7\times 10^{308}$</td><td><code>double e = 2.71828;</code></td></tr>
+        <tr><td><code>char</code></td><td>Tek ASCII karakteri</td><td>1</td><td>$0 \sim 255$ (veya $-128 \sim 127$)</td><td><code>char harf = 'A';</code></td></tr>
+        <tr><td><code>bool</code></td><td>Mantıksal değer</td><td>1</td><td><code>true</code> / <code>false</code></td><td><code>bool aktif = true;</code></td></tr>
+      </tbody>
+    </table>
+    <p>Bir veri tipinin veya değişkenin bellekte kapladığı bayt miktarını ölçmek için <code>sizeof</code> operatörü kullanılır (örn: <code>sizeof(int)</code>, <code>sizeof(double)</code>).</p>
+
+    <h4>B. Bileşik Veri Tipleri</h4>
+    <p>Birden fazla temel veri tipinin bir araya gelmesiyle oluşurlar: <code>string</code> (karakter dizisi), <code>array</code> (aynı türden ardışık veriler: <code>int notlar[3] = {85, 90, 78};</code>) ve <code>struct</code> (farklı türden verileri bir arada tutan yapı).</p>
+    <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Ogrenci {
+    string ad;
+    int yas;
+    float ortalama;
+};
+
+int main() {
+    Ogrenci ogr1;
+    ogr1.ad = "Ayşe";
+    ogr1.yas = 21;
+    ogr1.ortalama = 87.5f;
+    cout &lt;&lt; "Ad: " &lt;&lt; ogr1.ad &lt;&lt; ", Yaş: " &lt;&lt; ogr1.yas &lt;&lt; ", Ortalama: " &lt;&lt; ogr1.ortalama &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+    <h4>C. Soyut Veri Tipleri (ADT - Abstract Data Types)</h4>
+    <p>Verinin bellekte fiziksel olarak nasıl saklandığını gizleyip yalnızca kurallarını ve işlemlerini (arayüzünü) tanımlayan modellerdir: <strong>Bağlı Liste (Linked List)</strong> (dinamik boyut, düğüm zinciri), <strong>Yığın (Stack)</strong> (LIFO — fonksiyon çağrıları, parantez denetimi), <strong>Kuyruk (Queue)</strong> (FIFO — yazıcı kuyruğu, görev sıralama).</p>
+
+    <h4>D. Değişkenler, Sabitler ve Tür Dönüşümleri (Type Casting)</h4>
     <ul>
-      <li><code>&</code> operatörü: Bir değişkenin bellek adresini verir (Referans operatörü).</li>
-      <li><code>*</code> operatörü: İşaretçinin gösterdiği adresteki değere erişmeyi sağlar (Dereference operatörü).</li>
+      <li>Değişken adları harf, rakam ve alt çizgi (<code>_</code>) içerebilir; rakamla başlayamaz, büyük/küçük harfe duyarlıdır ve <code>int</code>, <code>for</code> gibi anahtar kelimeler ad olamaz. Sabitler <code>const</code> anahtar kelimesiyle tanımlanır (<code>const float PI = 3.14159f;</code>).</li>
+      <li><strong>Otomatik (Implicit) Dönüşüm:</strong> Küçükten büyüğe veri tipine geçişte derleyici otomatik yapar (<code>int a = 10; float b = a;</code>).</li>
+      <li><strong>Açık (Explicit) Dönüşüm:</strong> Büyükten küçüğe geçişte veri kaybı olabileceği için programcı tarafından belirtilir (<code>float c = 3.7f; int d = (int)c;</code> &rarr; $d = 3$).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>1.4. Bellek Yönetimi: Statik (Stack) vs. Dinamik (Heap) ve İşaretçiler</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Özellik</th>
+          <th>Statik Bellek (Stack / Yığın)</th>
+          <th>Dinamik Bellek (Heap / Öbek)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Ayrılma Zamanı</strong></td><td>Derleme zamanı (Compile-time)</td><td>Çalışma zamanı (Runtime)</td></tr>
+        <tr><td><strong>Yönetim</strong></td><td>Derleyici / İşletim sistemi otomatik yönetir</td><td>Programcı tarafından manuel yönetilir</td></tr>
+        <tr><td><strong>Erişim Hızı</strong></td><td>Çok hızlı (CPU önbelleğine yakın)</td><td>İşaretçi yönlendirmesi nedeniyle görece yavaş</td></tr>
+        <tr><td><strong>C++ Örneği</strong></td><td><code>int x = 10;</code></td><td><code>int* p = new int;</code> ve <code>delete p;</code></td></tr>
+        <tr><td><strong>Hata Riski</strong></td><td>Boyut aşımında <em>Stack Overflow</em></td><td><code>delete</code> unutulursa <strong>Bellek Sızıntısı (Memory Leak)</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>İşaretçi (Pointer)</strong>, başka bir değişkenin bellek adresini tutan değişkendir. <code>&amp;</code> operatörü değişkenin adresini verir; <code>*</code> operatörü ise işaretçinin gösterdiği adresteki değere erişir (dereference).</p>
+    <pre><code>int sayi = 42;
+int* ptr = &amp;sayi;                 // ptr, sayi değişkeninin adresini tutar
+cout &lt;&lt; *ptr;                     // 42 yazdırır
+
+// Heap üzerinde dinamik bellek tahsisi ve serbest bırakma:
+int* p = new int;
+*p = 10;
+delete p;                         // Tekil bellek iadesi
+
+int* dinamikDizi = new int[100];  // 100 elemanlık dinamik dizi
+delete[] dinamikDizi;             // Dizi belleğinin iadesi
+dinamikDizi = nullptr;            // Dangling pointer (başıboş işaretçi) önlenir</code></pre>
+  </section>
+
+  <section>
+    <h3>1.5. Algoritma Analizi ve Asimptotik Notasyon (Big-O)</h3>
+    <p>Bir algoritmanın çalışma süresinin veya bellek kullanımının girdi büyüklüğü $n$'e bağlı olarak nasıl büyüdüğünü ölçen donanımdan bağımsız analiz yöntemidir:</p>
+    <ul>
+      <li><strong>Big-O ($O$):</strong> En kötü durum (Worst Case) üst sınırını verir.</li>
+      <li><strong>Omega ($\Omega$):</strong> En iyi durum (Best Case) alt sınırını verir.</li>
+      <li><strong>Teta ($\Theta$):</strong> Alt ve üst sınırın çakıştığı tam/sıkı sınırı gösterir.</li>
     </ul>
 
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-int sayi = 42;
-int* ptr = &sayi; // ptr, sayi değişkeninin adresini tutar
-cout << *ptr;     // 42 yazdırır (adresteki değer)
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Veri Yapısı</th>
+          <th>Ekleme</th>
+          <th>Silme</th>
+          <th>Arama</th>
+          <th>Bellek Kullanımı</th>
+          <th>Tipik Kullanım Alanı</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Dizi (Array)</strong></td><td>$O(1)$ / $O(n)$</td><td>$O(n)$</td><td>$O(n)$</td><td>Sabit</td><td>Sabit boyutlu veriler, hızlı indis erişimi</td></tr>
+        <tr><td><strong>Bağlı Liste</strong></td><td>$O(1)$ (başta)</td><td>$O(1)$ (başta)</td><td>$O(n)$</td><td>Dinamik</td><td>Dinamik veri yönetimi</td></tr>
+        <tr><td><strong>Yığın (Stack)</strong></td><td>$O(1)$</td><td>$O(1)$</td><td>$O(n)$</td><td>Dinamik / Sabit</td><td>Fonksiyon çağrıları, geri alma</td></tr>
+        <tr><td><strong>Kuyruk (Queue)</strong></td><td>$O(1)$</td><td>$O(1)$</td><td>$O(n)$</td><td>Dinamik / Sabit</td><td>Görev sıralama, yazıcı kuyruğu</td></tr>
+        <tr><td><strong>Hash Tablosu</strong></td><td>$O(1)$ (ort.)</td><td>$O(1)$ (ort.)</td><td>$O(1)$ (ort.)</td><td>Dinamik</td><td>Çok hızlı anahtar-değer arama</td></tr>
+      </tbody>
+    </table>
 
-// Dinamik Bellek Tahsisi (Heap):
-int* dinamikDizi = new int[100]; // Heap'te 100 elemanlık alan açıldı
-// ... işlemler ...
-delete[] dinamikDizi;            // Bellek işletim sistemine iade edildi!
-dinamikDizi = nullptr;           // Dangling pointer (başıboş işaretçi) önlendi
-</pre>
+    <div class="exam-note">
+      <strong>Sınav İpucu:</strong> Hızlıdan yavaşa temel karmaşıklık sıralaması: $O(1) &lt; O(\log n) &lt; O(n) &lt; O(n \log n) &lt; O(n^2) &lt; O(2^n)$. C++'ta <code>new</code> ile ayrılan tekil bellek <code>delete</code> ile, <code>new[]</code> ile ayrılan dizi ise mutlaka <code>delete[]</code> ile serbest bırakılmalıdır.
     </div>
-  </section>
-
-  <section>
-    <h3>1.4. Algoritma Analizi ve Asimptotik Notasyon (Big-O)</h3>
-    <p>Bir algoritmanın donanımdan, işlemci hızından ve programlama dilinden bağımsız olarak girdi boyutu ($n$) büyüdükçe işlem sayısının ve bellek kullanımının nasıl arttığını inceleyen matematiksel analizdir.</p>
-    <ul>
-      <li><strong>Big-O ($O$):</strong> Algoritmanın <strong>EN KÖTÜ DURUM (Worst Case)</strong> üst sınırını gösterir. Mühendislikte standart gösterimdir.</li>
-      <li><strong>Omega ($\Omega$):</strong> Algoritmanın <strong>EN İYİ DURUM (Best Case)</strong> alt sınırını gösterir.</li>
-      <li><strong>Teta ($\Theta$):</strong> Algoritmanın alt ve üst sınırlarının çakıştığı <strong>TAM / ORTALAMA DURUM</strong>u gösterir.</li>
-    </ul>
-
-    <h4>Temel Zaman Karmaşıklığı Sınıfları (Hızlıdan Yavaşa):</h4>
-    <ol>
-      <li><strong>$O(1)$ - Sabit Zaman:</strong> Girdi boyutu ne olursa olsun işlem süresi sabittir (Örn: Dizi elemanına indisle erişim: <code>dizi[5]</code>, yığına eleman ekleme).</li>
-      <li><strong>$O(\log n)$ - Logaritmik Zaman:</strong> Her adımda problem yarı yarıya küçülür (Örn: İkili Arama - Binary Search). Çok hızlıdır.</li>
-      <li><strong>$O(n)$ - Doğrusal Zaman:</strong> Süre girdi boyutuyla doğru orantılı artar (Örn: Doğrusal arama, tek yönlü bağlı listede gezinme).</li>
-      <li><strong>$O(n \log n)$ - Doğrusal Logaritmik:</strong> En etkili karşılaştırmalı sıralama algoritmaları (Örn: Merge Sort, Heap Sort, Quick Sort ortalama).</li>
-      <li><strong>$O(n^2)$ - Karesel Zaman:</strong> İç içe iki döngü (Örn: Bubble Sort, Selection Sort, Insertion Sort).</li>
-      <li><strong>$O(2^n)$ - Üssel Zaman:</strong> Verimsiz kaba kuvvet (brute-force) algoritmaları (Örn: Klasik özyinelemeli Fibonacci, Hanoi Kuleleri).</li>
-    </ol>
   </section>
 </article>
 
@@ -973,37 +1090,151 @@ dinamikDizi = nullptr;           // Dangling pointer (başıboş işaretçi) ön
 <article class="unit-article">
   <h2>2. Ünite: Tek Yönlü Bağlı Listeler (Singly Linked List)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Dizilerin statik bellek kısıtlarını ortadan kaldıran dinamik Bağlı Liste (Linked List) mantığını, tek yönlü düğüm (Node) mimarisini, head işaretçisini ve C++ dilinde struct/class ile tek yönlü bağlı liste modellemesini öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Bağlı liste kavramını, düğüm (node) ve işaretçi (pointer) mimarisini, dizilerle karşılaştırmasını, dinamik bellek yönetimini (<code>new</code>/<code>delete</code> ve bellek sızıntısı önleme) ve C++ ile tek yönlü bağlı liste oluşturma, başa/sona ekleme, silme ve dolaşma (traversal) uygulamalarını öğrenmektir.
   </div>
 
   <section>
-    <h3>2.1. Bağlı Liste Nedir ve Neden İhtiyaç Duyulur?</h3>
-    <p>Diziler bellekte bitişik (ardışık) alan tahsisine ihtiyaç duyar; boyutları sabittir ve dizi dolduğunda genişletmek maliyetlidir. Ayrıca dizinin arasına eleman eklemek veya aradan silmek için elemanların sağa veya sola kaydırılması ($O(n)$) gerekir.</p>
-    <p><strong>Bağlı Liste (Linked List):</strong> Bellekte ardışık olmak zorunda olmayan, her biri bir veri ve bir sonraki düğümün bellek adresini tutan <em>düğümlerden (node)</em> oluşan dinamik bir veri yapısıdır.</p>
+    <h3>2.1. Bağlı Liste Nedir? Avantajları ve Dezavantajları</h3>
+    <p><strong>Bağlı Liste (Linked List):</strong> Veri elemanlarının (düğüm/node) bellekte <em>ardışık olmayan (dağınık)</em> konumlarda saklandığı, her düğümün kendi verisinin yanında bir sonraki düğümün bellek adresini (işaretçisini) tuttuğu dinamik bir veri yapısıdır.</p>
+
+    <div class="highlight-box">
+      <strong>Temel Avantajlar:</strong> Dinamik boyutludur (çalışma anında büyüyüp küçülür), başta ve sonda ekleme/silme işaretçi güncellemesiyle $O(1)$ karmaşıklıkta yapılabilir (tail tutuluyorsa), ardışık bellek bloğu gerektirmez (fragmentasyon sorunu yoktur) ve yalnızca kullanılan elemanlar kadar bellek ayırır.<br>
+      <strong>Temel Dezavantajlar:</strong> Rastgele erişim yoktur ($i$. elemana ulaşmak için baştan itibaren dolaşmak gerekir: $O(n)$), her düğümde ek işaretçi alanı (4/8 byte) harcanır, kodlaması diziye göre daha karmaşıktır ve bellek adresleri dağınık olduğu için CPU önbellek (cache) verimi düşüktür.
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Özellik</th>
+          <th>Dizi (Array)</th>
+          <th>Tek Yönlü Bağlı Liste (Linked List)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Bellek Yerleşimi</strong></td><td>Ardışık (bitişik)</td><td>Dağınık (işaretçilerle bağlı)</td></tr>
+        <tr><td><strong>Boyut</strong></td><td>Sabit (statik dizide)</td><td>Dinamik (çalışma anında büyür/küçülür)</td></tr>
+        <tr><td><strong>Erişim</strong></td><td>Rastgele erişim $O(1)$</td><td>Sıralı erişim $O(n)$</td></tr>
+        <tr><td><strong>Ekleme / Silme</strong></td><td>Ortada kaydırma nedeniyle $O(n)$</td><td>Baştan $O(1)$, işaretçiyle kolay</td></tr>
+        <tr><td><strong>Ekstra Alan</strong></td><td>Yok (yalnızca veri)</td><td>Her düğümde <code>next</code> işaretçisi</td></tr>
+        <tr><td><strong>Önbellek (Cache) Verimi</strong></td><td>Yüksek</td><td>Düşük</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section>
-    <h3>2.2. Düğüm (Node) Yapısı ve C++ Kod Modeli</h3>
-    <p>Tek yönlü bağlı listenin her bir düğümü iki temel bileşenden oluşur:</p>
-    <ol>
-      <li><strong>Veri Alanı (Data):</strong> Düğümün sakladığı asıl bilgi (sayı, metin, nesne).</li>
-      <li><strong>İşaretçi Alanı (Next Pointer):</strong> Bir sonraki düğümün bellek adresini tutan işaretçi. Listenin son düğümünün <code>next</code> işaretçisi <code>nullptr</code> değerini gösterir.</li>
-    </ol>
+    <h3>2.2. Düğüm (Node) Yapısı ve İşaretçi (Pointer) Kullanımı</h3>
+    <p>Tek yönlü bağlı listenin her düğümü iki temel bölümden oluşur:</p>
+    <ul>
+      <li><strong>Veri (<code>data</code>):</strong> Saklanacak bilgi (<code>int</code>, <code>string</code>, <code>struct</code> vb.).</li>
+      <li><strong>İşaretçi (<code>next</code>):</strong> Bir sonraki düğümün bellek adresi.</li>
+    </ul>
+    <p>Listenin ilk düğümü <code>head</code> (baş) işaretçisiyle tutulur. Hiçbir elemanı olmayan boş listede <code>head == nullptr</code> (veya <code>NULL</code>) olur. Listenin son düğümünün <code>next</code> işaretçisi daima <code>nullptr</code>/<code>NULL</code> değerini gösterir.</p>
+    <pre><code>struct Node {
+    int data;    // Veri kısmı
+    Node* next;  // Sonraki düğümün adresi
+};</code></pre>
+  </section>
 
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-// C++ Düğüm (Node) Yapısı
+  <section>
+    <h3>2.3. Dinamik Bellek Yönetimi ve Gerçek Hayat Kullanım Alanları</h3>
+    <p>Bağlı listelerde düğümler C++'ta <code>new</code> operatörü (C dilinde <code>malloc()</code>) ile heap bellekten tahsis edilir ve işi bitince mutlaka <code>delete</code> (C'de <code>free()</code>) ile serbest bırakılır. Tahsis edilen düğümün serbest bırakılmaması <strong>bellek sızıntısına (memory leak)</strong> yol açar; uzun süre çalışan sistemlerde bellek tükenir ve program çökebilir. Modern C++'ta (C++11+) <code>std::unique_ptr</code> ve <code>std::shared_ptr</code> akıllı işaretçileriyle bu risk azaltılabilir.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kullanım Alanı</th>
+          <th>Açıklama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>İşletim Sistemleri</strong></td><td>Proses yönetimi, görev sıralama, dosya sistemleri (Linux inode yapısı)</td></tr>
+        <tr><td><strong>Metin Editörleri</strong></td><td>Satır ve karakterlerin dinamik yönetimi, geri alma (undo-redo)</td></tr>
+        <tr><td><strong>Tarayıcı Geçmişi</strong></td><td>Sayfalar arası geri/ileri gezinme (çift yönlü bağlı liste ile)</td></tr>
+        <tr><td><strong>Dinamik Bellek Yönetimi</strong></td><td>Serbest bellek bloklarının takibi</td></tr>
+        <tr><td><strong>Veritabanı ve Ağ</strong></td><td>Kayıtların dinamik eklenip silinmesi, ağ paket yönlendirme</td></tr>
+        <tr><td><strong>Polinom Hesaplama</strong></td><td>Polinom terimlerinin dinamik olarak saklanması</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>2.4. C++ Uygulamaları: Oluşturma, Dolaşma (Traversal), Ekleme ve Silme</h3>
+    <p>Aşağıda adım adım 3 düğümlü temel liste oluşturma, <code>temp = temp-&gt;next</code> ile listeyi dolaşarak yazdırma, sona ekleme, değer silme ve belleği temizleme fonksiyonları verilmiştir:</p>
+    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
 struct Node {
-    int data;           // Saklanan veri
-    Node* next;         // Bir sonraki düğümün adresi
-
-    // Yapıcı (Constructor)
-    Node(int val) : data(val), next(nullptr) {}
+    int data;
+    Node* next;
 };
 
-// Listenin Başlangıç İşaretçisi
-Node* head = nullptr; // Başlangıçta liste boş
-</pre>
+// Listenin sonuna eleman ekleyen fonksiyon
+void sonaEkle(Node*&amp; head, int veri) {
+    Node* yeni = new Node();
+    yeni-&gt;data = veri;
+    yeni-&gt;next = nullptr;
+    if (head == nullptr) {
+        head = yeni;
+    } else {
+        Node* temp = head;
+        while (temp-&gt;next != nullptr) {
+            temp = temp-&gt;next;
+        }
+        temp-&gt;next = yeni;
+    }
+}
+
+// Listeyi baştan sona dolaşarak (traversal) yazdıran fonksiyon
+void listeYazdir(Node* head) {
+    Node* temp = head;
+    while (temp != nullptr) {
+        cout &lt;&lt; temp-&gt;data &lt;&lt; " ";
+        temp = temp-&gt;next;   // Bir sonraki düğüme geçiş (traversal adımı)
+    }
+    cout &lt;&lt; endl;
+}
+
+// Belirli bir değere sahip düğümü silen fonksiyon
+void elemanSil(Node*&amp; head, int silinecek) {
+    Node* temp = head;
+    Node* onceki = nullptr;
+    while (temp != nullptr &amp;&amp; temp-&gt;data != silinecek) {
+        onceki = temp;
+        temp = temp-&gt;next;
+    }
+    if (temp == nullptr) return;       // Eleman bulunamadı
+    if (onceki == nullptr) {           // İlk düğüm siliniyor
+        head = temp-&gt;next;
+    } else {
+        onceki-&gt;next = temp-&gt;next;
+    }
+    delete temp;
+}
+
+// Tüm düğümleri bellekten temizleme
+void bellekTemizle(Node*&amp; head) {
+    Node* temp = head;
+    while (temp != nullptr) {
+        Node* sil = temp;
+        temp = temp-&gt;next;
+        delete sil;
+    }
+    head = nullptr;
+}</code></pre>
+
+    <h4>Adım Adım İzleme (Trace): <code>10 &rarr; 20 &rarr; 30 &rarr; nullptr</code></h4>
+    <ol>
+      <li><code>head = nullptr</code> iken <code>sonaEkle(head, 10)</code> çağrılır: <code>head</code> 10'u gösterir.</li>
+      <li><code>sonaEkle(head, 20)</code>: <code>temp</code> 10'da durur, <code>10-&gt;next = 20</code> olur.</li>
+      <li><code>sonaEkle(head, 30)</code>: <code>temp</code> 10 &rarr; 20 ilerler, <code>20-&gt;next = 30</code> olur.</li>
+      <li><code>elemanSil(head, 20)</code>: <code>onceki = 10</code>, <code>temp = 20</code> bulunur; <code>10-&gt;next = 30</code> bağlanır ve 20 <code>delete</code> edilir. Liste: <code>10 &rarr; 30 &rarr; nullptr</code>.</li>
+    </ol>
+
+    <div class="exam-note">
+      <strong>Sık Yapılan Hatalar ve Sınav Notu:</strong><br>
+      1) <strong>Null Pointer Hatası:</strong> <code>temp == nullptr</code> iken <code>temp-&gt;next</code> veya <code>temp-&gt;data</code> erişimi programı çökertir.<br>
+      2) <strong>Çift Serbest Bırakma (Double Free):</strong> Aynı düğümü iki kez <code>delete</code> etmek tanımsız davranışa yol açar.<br>
+      3) <strong>C vs C++:</strong> C dilinde bellek ayırma <code>malloc()</code>, serbest bırakma <code>free()</code> ile; C++'ta <code>new</code> ve <code>delete</code> ile yapılır.
     </div>
   </section>
 </article>
@@ -1236,63 +1467,133 @@ Node* head = nullptr; // Başlangıçta liste boş
 <article class="unit-article">
   <h2>3. Ünite: Tek Yönlü Bağlı Listelerde Temel İşlemler</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Tek yönlü bağlı listelerde başa ekleme, sona ekleme, araya ekleme, baştan/sondan/aradan düğüm silme, arama ve yazdırma işlemlerinin adım adım algoritmasını ve C++ kodlarını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Tek yönlü bağlı listelerde baştan, sondan ve aradan eleman silme işlemlerini özel durumlarıyla (boş liste, tek elemanlı liste, baş düğüm) öğrenmek; doğrusal arama ($O(n)$) ve 3 işaretçili (<code>prev</code>, <code>curr</code>, <code>next</code>) yerinde tersine çevirme algoritmasını C++ kodlarıyla kavramaktır.
   </div>
 
   <section>
-    <h3>3.1. Ekleme İşlemleri ve Zaman Karmaşıklığı</h3>
+    <h3>3.1. Eleman Silme İşlemleri (Baştan, Sondan, Aradan)</h3>
+    <p>Tek yönlü bağlı listede silme işlemi düğümün konumuna göre üç durumda incelenir. Her üç durumda da bellek sızıntısını önlemek için silinen düğüm mutlaka <code>delete</code> ile serbest bırakılmalıdır.</p>
 
-    <div class="card">
-      <h4>1. Başa Ekleme (Prepend / Insert at Beginning) - $O(1)$</h4>
-      <p>Yeni bir düğüm oluşturulur, yeni düğümün <code>next</code> işaretçisi mevcut <code>head</code>'i gösterir ve <code>head</code> yeni düğüme kaydırılır. Kaydırma gerektirmez, daima sabit sürede ($O(1)$) çalışır.</p>
-      <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-void basaEkle(Node*& head, int val) {
-    Node* yeniDugum = new Node(val);
-    yeniDugum->next = head;
-    head = yeniDugum;
-}
-</pre>
-      </div>
-    </div>
+    <h4>1. Baştan Eleman Silme — $O(1)$</h4>
+    <ol>
+      <li>Önce koruyucu kontrol yapılır: <code>if (head == nullptr) return;</code> (liste boşsa işlem yapılmaz).</li>
+      <li>Geçici bir işaretçiyle (<code>Node* sil = head;</code>) mevcut baş düğüm tutulur.</li>
+      <li><code>head</code> bir sonraki düğüme kaydırılır: <code>head = head-&gt;next;</code>.</li>
+      <li>Eski baş düğüm <code>delete sil;</code> ile serbest bırakılır.</li>
+    </ol>
+    <pre><code>void bastanSil(Node*&amp; head) {
+    if (head == nullptr) return; // Koruyucu kontrol: liste boş
+    Node* sil = head;
+    head = head-&gt;next;
+    delete sil;
+}</code></pre>
 
-    <div class="card">
-      <h4>2. Sona Ekleme (Append / Insert at End) - $O(n)$</h4>
-      <p>Yeni düğüm oluşturulur (next = nullptr). Liste boşsa head olur. Doluysa baştan başlanarak <code>temp->next == nullptr</code> olana kadar liste taranır ($O(n)$) ve son düğümün next'ine yeni düğüm bağlanır.</p>
-      <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-void sonaEkle(Node*& head, int val) {
-    Node* yeniDugum = new Node(val);
-    if (head == nullptr) {
-        head = yeniDugum;
+    <h4>2. Sondan Eleman Silme — $O(n)$</h4>
+    <ol>
+      <li>Liste boşsa (<code>head == nullptr</code>) çıkılır.</li>
+      <li><strong>Özel Durum (Tek Elemanlı Liste):</strong> Eğer <code>head-&gt;next == nullptr</code> ise <code>delete head; head = nullptr;</code> yapılır. (Bu kontrol unutulursa <code>temp-&gt;next-&gt;next</code> erişimi çöker!)</li>
+      <li>Birden fazla düğüm varsa sondan bir önceki düğüme (<code>temp-&gt;next-&gt;next != nullptr</code>) kadar ilerlenir.</li>
+      <li>Son düğüm <code>delete temp-&gt;next;</code> ile silinir ve <code>temp-&gt;next = nullptr;</code> yapılır.</li>
+    </ol>
+    <pre><code>void sondanSil(Node*&amp; head) {
+    if (head == nullptr) return;        // Liste boş
+    if (head-&gt;next == nullptr) {        // Tek elemanlı liste özel durumu
+        delete head;
+        head = nullptr;
         return;
     }
     Node* temp = head;
-    while (temp->next != nullptr) {
-        temp = temp->next;
+    while (temp-&gt;next-&gt;next != nullptr) {
+        temp = temp-&gt;next;
     }
-    temp->next = yeniDugum;
-}
-</pre>
-      </div>
-    </div>
+    delete temp-&gt;next;
+    temp-&gt;next = nullptr;
+}</code></pre>
+
+    <h4>3. Aradan (Belirli Değerle) Eleman Silme — $O(n)$</h4>
+    <p>Önce boş liste ve aranan değerin başta olma durumu (<code>head-&gt;data == deger &rarr; bastanSil(head)</code>) kontrol edilir. Ardından <code>temp-&gt;next != nullptr &amp;&amp; temp-&gt;next-&gt;data != deger</code> döngüsüyle silinecek düğümün bir öncesine gelinir; eleman varsa <code>temp-&gt;next = sil-&gt;next; delete sil;</code> uygulanır.</p>
+    <pre><code>void aradanSil(Node*&amp; head, int deger) {
+    if (head == nullptr) return;
+    if (head-&gt;data == deger) {          // Silinecek eleman başta ise
+        bastanSil(head);
+        return;
+    }
+    Node* temp = head;
+    while (temp-&gt;next != nullptr &amp;&amp; temp-&gt;next-&gt;data != deger) {
+        temp = temp-&gt;next;
+    }
+    if (temp-&gt;next == nullptr) return;  // Değer listede yok
+    Node* sil = temp-&gt;next;
+    temp-&gt;next = sil-&gt;next;
+    delete sil;
+}</code></pre>
   </section>
 
   <section>
-    <h3>3.2. Silme İşlemleri ve Bellek İadesi (delete)</h3>
-    <div class="card">
-      <h4>Baştan Silme - $O(1)$</h4>
-      <p>Head işaretçisi geçici bir işaretçiye alınır, head bir sonraki düğüme (<code>head->next</code>) kaydırılır ve eski düğüm <code>delete</code> ile bellekten silinir.</p>
-      <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-void bastanSil(Node*& head) {
-    if (head == nullptr) return;
-    Node* silinecek = head;
-    head = head->next;
-    delete silinecek;
-}
-</pre>
-      </div>
+    <h3>3.2. Bağlı Listede Doğrusal Arama ($O(n)$)</h3>
+    <p>Bağlı listelerde rastgele erişim (indisle doğrudan atlama) olmadığından arama işlemi baştan sona düğümler tek tek gezilerek yapılır. Aranan değer bulunursa düğüm adresi, bulunamazsa <code>nullptr</code> döndürülür.</p>
+    <pre><code>Node* ara(Node* head, int deger) {
+    Node* temp = head;
+    while (temp != nullptr) {
+        if (temp-&gt;data == deger)
+            return temp;    // Bulundu
+        temp = temp-&gt;next;
+    }
+    return nullptr;         // Bulunamadı
+}</code></pre>
+  </section>
+
+  <section>
+    <h3>3.3. Bağlı Listeyi Tersine Çevirme (Reverse) — $O(n)$ Zaman, $O(1)$ Ek Bellek</h3>
+    <p>Her düğümün <code>next</code> işaretçisi bir önceki düğümü gösterecek biçimde yön değiştirir. Bu işlemde <strong>3 işaretçi</strong> kullanılır: <code>prev</code> (başlangıçta <code>nullptr</code>), <code>curr</code> (başlangıçta <code>head</code>) ve <code>next</code> (<code>nullptr</code>).</p>
+    <pre><code>void tersCevir(Node*&amp; head) {
+    Node* prev = nullptr;
+    Node* curr = head;
+    Node* next = nullptr;
+    while (curr != nullptr) {
+        next = curr-&gt;next;  // 1. Sonraki adresi kaybetmemek için sakla
+        curr-&gt;next = prev;  // 2. Bağlantı yönünü ters çevir
+        prev = curr;        // 3. prev'i bir adım ilerlet
+        curr = next;        // 4. curr'ı bir adım ilerlet
+    }
+    head = prev;            // Döngü bitince prev eski son (yeni baş) düğümdür!
+}</code></pre>
+
+    <h4>İzleme Örneği (Trace): <code>10 &rarr; 20 &rarr; 30 &rarr; nullptr</code></h4>
+    <ul>
+      <li>Başlangıç: <code>prev = nullptr</code>, <code>curr = 10</code></li>
+      <li>Adım 1: <code>next = 20</code>, <code>10-&gt;next = nullptr</code>, <code>prev = 10</code>, <code>curr = 20</code></li>
+      <li>Adım 2: <code>next = 30</code>, <code>20-&gt;next = 10</code>, <code>prev = 20</code>, <code>curr = 30</code></li>
+      <li>Adım 3: <code>next = nullptr</code>, <code>30-&gt;next = 20</code>, <code>prev = 30</code>, <code>curr = nullptr</code></li>
+      <li>Bitiş: <code>head = prev</code> &rarr; <code>30 &rarr; 20 &rarr; 10 &rarr; nullptr</code>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>3.4. Temel İşlemlerin Zaman Karmaşıklığı Özeti</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>İşlem</th>
+          <th>Ortalama Zaman Karmaşıklığı</th>
+          <th>Not</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Baştan ekleme</td><td>$O(1)$</td><td>Yalnızca <code>head</code> ve yeni düğüm güncellenir</td></tr>
+        <tr><td>Sondan ekleme</td><td>$O(n)$</td><td><code>tail</code> işaretçisi tutulmazsa baştan sona gidilir</td></tr>
+        <tr><td>Baştan silme</td><td>$O(1)$</td><td><code>head = head-&gt;next</code> ve <code>delete</code></td></tr>
+        <tr><td>Sondan silme</td><td>$O(n)$</td><td>Sondan bir önceki düğüme kadar dolaşılır</td></tr>
+        <tr><td>Aradan silme</td><td>$O(n)$</td><td>Önceki düğüm aranır</td></tr>
+        <tr><td>Arama (Lineer)</td><td>$O(n)$</td><td>Rastgele erişim yok, sıralı tarama yapılır</td></tr>
+        <tr><td>Tersine çevirme</td><td>$O(n)$</td><td>Ek bellek karmaşıklığı $O(1)$ (3 işaretçi)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-note">
+      <strong>Sınav Tuzakları:</strong><br>
+      &bull; Tersine çevirmede <code>curr-&gt;next = prev</code> yapmadan önce <code>next = curr-&gt;next</code> ile sonraki adresi saklamazsanız listenin devamı kaybolur.<br>
+      &bull; Döngü bittiğinde <code>curr == nullptr</code> olur; yeni <code>head</code> olarak <code>prev</code> atanmalıdır (eski son düğüm).
     </div>
   </section>
 </article>
@@ -1453,31 +1754,147 @@ void bastanSil(Node*& head) {
 <article class="unit-article">
   <h2>4. Ünite: Çift Yönlü Bağlı Listeler (Doubly Linked List)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Hem ileriye hem geriye doğru gezinmeye imkân veren Çift Yönlü Bağlı Liste mimarisini, prev ve next işaretçi dinamiklerini, head ve tail kontrolünü öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Her düğümde hem önceki (<code>prev</code>) hem sonraki (<code>next</code>) düğümün adresini tutan Çift Yönlü Bağlı Liste mimarisini, tek yönlü listelerden farklarını, avantaj-dezavantajlarını, kullanım alanlarını ve C++ ile oluşturma, başa/sona ekleme, ileri ve geri yazdırma işlemlerini öğrenmektir.
   </div>
 
   <section>
-    <h3>4.1. Çift Yönlü Bağlı Liste Mimarisi</h3>
-    <p>Tek yönlü listede bir düğümden geriye dönmek imkânsızdır. <strong>Çift Yönlü Bağlı Liste (Doubly Linked List)</strong>'te ise her düğüm iki işaretçi barındırır:</p>
+    <h3>4.1. Çift Yönlü Bağlı Liste Nedir?</h3>
+    <p><strong>Çift Yönlü Bağlı Liste (Doubly Linked List):</strong> Her düğümün kendi verisinin yanında hem bir önceki düğümün adresini (<code>prev</code>) hem de bir sonraki düğümün adresini (<code>next</code>) tuttuğu dinamik veri yapısıdır. Bu sayede listede hem baştan sona (ileri) hem sondan başa (geri) dolaşım mümkündür.</p>
+
     <ul>
-      <li><code>next</code>: Bir sonraki düğümün adresini tutar.</li>
-      <li><code>prev</code>: Bir önceki düğümün adresini tutar.</li>
+      <li><strong><code>prev</code>:</strong> Bir önceki düğümü gösterir. İlk düğümün (<code>head</code>) <code>prev</code> işaretçisi varsayılan olarak <code>nullptr</code> (<code>NULL</code>)'dır.</li>
+      <li><strong><code>data</code>:</strong> Düğümde saklanan veri alanıdır.</li>
+      <li><strong><code>next</code>:</strong> Bir sonraki düğümü gösterir. Son düğümün (<code>tail</code>) <code>next</code> işaretçisi varsayılan olarak <code>nullptr</code> (<code>NULL</code>)'dır.</li>
     </ul>
 
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-// C++ Çift Yönlü Düğüm (Doubly Node)
-struct DoublyNode {
-    int data;
-    DoublyNode* prev;
-    DoublyNode* next;
-
-    DoublyNode(int val) : data(val), prev(nullptr), next(nullptr) {}
-};
-</pre>
+    <div class="highlight-box">
+      <strong>Tek Düğümlü Liste Durumu:</strong> Çift yönlü bağlı listede yalnızca 1 düğüm varsa, o tek düğümün hem <code>prev</code> hem de <code>next</code> işaretçisi <code>nullptr</code> değerini gösterir.
     </div>
-    <p><strong>Avantajı:</strong> İki yönlü arama ve silme kolaylığı sağlar.<br>
-    <strong>Dezavantajı:</strong> Her düğümde fazladan bir işaretçi (4 veya 8 byte) yer kaplar ve ekleme/silme anında güncellenmesi gereken işaretçi sayısı 4'e çıkar.</p>
+
+    <pre><code>struct DNode {
+    int data;      // Saklanan veri
+    DNode* prev;   // Önceki düğümün adresi
+    DNode* next;   // Sonraki düğümün adresi
+};</code></pre>
+  </section>
+
+  <section>
+    <h3>4.2. Tek Yönlü ve Çift Yönlü Bağlı Liste Karşılaştırması</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Özellik</th>
+          <th>Tek Yönlü Bağlı Liste</th>
+          <th>Çift Yönlü Bağlı Liste</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Düğümdeki İşaretçi Sayısı</strong></td><td>1 (yalnızca <code>next</code>)</td><td>2 (<code>prev</code> ve <code>next</code>)</td></tr>
+        <tr><td><strong>Geriye Doğru Dolaşma</strong></td><td>Yok (yalnızca ileri)</td><td>Var (hem ileri hem geri)</td></tr>
+        <tr><td><strong>Bellek Kullanımı</strong></td><td>Daha az</td><td>Daha fazla (ekstra <code>prev</code> pointer alanı)</td></tr>
+        <tr><td><strong>Silme / Ekleme Esnekliği</strong></td><td>Sadece ileri bakarak</td><td>Hem ileri hem geri kolay (önceki düğüme doğrudan erişim)</td></tr>
+        <tr><td><strong>Kod Karmaşıklığı</strong></td><td>Daha basit</td><td>Daha karmaşık (hem <code>prev</code> hem <code>next</code> güncellenir)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>4.3. Avantajları, Dezavantajları ve Kullanım Alanları</h3>
+    <ul>
+      <li><strong>Avantajları:</strong> Çift yönlü dolaşım (ileri-geri), düğüm adresi bilindiğinde $O(1)$ sürede kolay silme/ekleme (önceki düğüm <code>prev</code> ile doğrudan erişilebilir), geriye doğru arama, Deque ve LRU Cache gibi yapılara tam uyum.</li>
+      <li><strong>Dezavantajları:</strong> Her düğümde ekstra <code>prev</code> işaretçisi nedeniyle daha fazla bellek kullanımı, ekleme/silmede hem <code>prev</code> hem <code>next</code> güncellendiği için artan kod karmaşıklığı ve işaretçi bozulma riski.</li>
+    </ul>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kullanım Alanı</th>
+          <th>Açıklama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Tarayıcı Geçmişi</strong></td><td>Web sayfaları arasında geri ve ileri gezinme</td></tr>
+        <tr><td><strong>Metin Editörleri</strong></td><td>Satır/karakter yönetimi, geri al / yinele (undo / redo)</td></tr>
+        <tr><td><strong>İşletim Sistemleri</strong></td><td>Proses yönetimi, görev sıralama, dosya sistemleri</td></tr>
+        <tr><td><strong>Deque ve LRU Cache</strong></td><td>Hem baştan hem sondan hızlı ekleme ve silme</td></tr>
+        <tr><td><strong>Medya Oynatıcılar</strong></td><td>Önceki / sonraki şarkı veya video geçişleri</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>4.4. C++ Uygulamaları: Başa/Sona Ekleme ve İleri/Geri Yazdırma</h3>
+    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+struct DNode {
+    int data;
+    DNode* prev;
+    DNode* next;
+};
+
+// Listenin başına eleman ekleme - O(1)
+void basaEkle(DNode*&amp; head, int veri) {
+    DNode* yeni = new DNode();
+    yeni-&gt;data = veri;
+    yeni-&gt;prev = nullptr;
+    yeni-&gt;next = head;
+    if (head != nullptr)
+        head-&gt;prev = yeni;
+    head = yeni;
+}
+
+// Listenin sonuna eleman ekleme - O(n) (tail yoksa)
+void sonaEkle(DNode*&amp; head, int veri) {
+    DNode* yeni = new DNode();
+    yeni-&gt;data = veri;
+    yeni-&gt;next = nullptr;
+    if (head == nullptr) {
+        yeni-&gt;prev = nullptr;
+        head = yeni;
+        return;
+    }
+    DNode* temp = head;
+    while (temp-&gt;next != nullptr)
+        temp = temp-&gt;next;
+    temp-&gt;next = yeni;
+    yeni-&gt;prev = temp;
+}
+
+// Baştan sona yazdırma
+void listeYazdir(DNode* head) {
+    DNode* temp = head;
+    while (temp != nullptr) {
+        cout &lt;&lt; temp-&gt;data &lt;&lt; " ";
+        temp = temp-&gt;next;
+    }
+    cout &lt;&lt; endl;
+}
+
+// Sondan başa (tersten) yazdırma
+void terstenYazdir(DNode* head) {
+    if (head == nullptr) return;
+    DNode* temp = head;
+    while (temp-&gt;next != nullptr)   // Önce son düğüme git
+        temp = temp-&gt;next;
+    while (temp != nullptr) {       // prev ile geriye doğru dolaş
+        cout &lt;&lt; temp-&gt;data &lt;&lt; " ";
+        temp = temp-&gt;prev;
+    }
+    cout &lt;&lt; endl;
+}
+
+void bellekTemizle(DNode*&amp; head) {
+    while (head != nullptr) {
+        DNode* sil = head;
+        head = head-&gt;next;
+        delete sil;
+    }
+}</code></pre>
+
+    <div class="exam-note">
+      <strong>Sınav Notu:</strong> Çift yönlü bağlı listede <code>terstenYazdir()</code> fonksiyonu önce <code>while (temp-&gt;next != nullptr)</code> ile son düğüme ilerler, ardından <code>temp = temp-&gt;prev</code> ile başa kadar geri döner. Ekleme işlemlerinde liste boşken (<code>head == nullptr</code>) <code>head-&gt;prev</code> erişimi yapılmamalıdır.
+    </div>
   </section>
 </article>
 
@@ -1673,28 +2090,116 @@ struct DoublyNode {
 <article class="unit-article">
   <h2>5. Ünite: Çift Yönlü Bağlı Listelerde İşlemler</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Çift yönlü bağlı listelerde başa, sona ve araya düğüm ekleme adımlarını, düğüm silerken prev ve next köprülerinin doğru bağlanmasını ve bellek güvenliğini C++ kodlarıyla öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Çift yönlü bağlı listelerde baştan, sondan ve aradan düğüm silme adımlarını, her iki yöndeki işaretçilerin (<code>prev</code> ve <code>next</code>) güvenli güncellenmesini, arama işlemini ve <code>prev</code>/<code>next</code> takasına dayalı tersine çevirme (reverse) algoritmasını öğrenmektir.
   </div>
 
   <section>
-    <h3>5.1. Çift Yönlü Listede Ekleme ve Silme Mantığı</h3>
-    <div class="card">
-      <h4>Başa Ekleme Adımları:</h4>
-      <ol>
-        <li>Yeni düğüm oluşturulur (<code>yeniDugum->next = head</code>, <code>yeniDugum->prev = nullptr</code>).</li>
-        <li>Eğer liste boş değilse, eski head düğümünün prev işaretçisi yeni düğümü gösterir: <code>head->prev = yeniDugum</code>.</li>
-        <li><code>head = yeniDugum</code> yapılarak liste başı güncellenir.</li>
-      </ol>
-    </div>
+    <h3>5.1. Çift Yönlü Bağlı Listeden Eleman Silme</h3>
+    <p>Silme işlemlerinde listenin bütünlüğünü korumak için hem <code>prev</code> hem de <code>next</code> bağlantıları eksiksiz güncellenmeli, boş liste ve tek elemanlı liste sınır durumları kontrol edilmelidir.</p>
 
-    <div class="card">
-      <h4>Aradan Düğüm Silme Adımları:</h4>
-      <p>Silinecek düğüm <code>curr</code> ise:</p>
-      <ul>
-        <li>Önceki düğümün next'i, sonraki düğümü gösterir: <code>curr->prev->next = curr->next</code>.</li>
-        <li>Sonraki düğümün prev'i, önceki düğümü gösterir: <code>curr->next->prev = curr->prev</code>.</li>
-        <li>Ardından düğüm bellekten silinir: <code>delete curr</code>.</li>
-      </ul>
+    <h4>1. Baştan Eleman Silme — $O(1)$</h4>
+    <ul>
+      <li>Liste boşsa (<code>head == nullptr</code>) çıkılır.</li>
+      <li><code>sil = head;</code> tutulur ve <code>head = head-&gt;next;</code> yapılır.</li>
+      <li>Yeni <code>head</code> <code>nullptr</code> değilse <code>head-&gt;prev = nullptr;</code> ayarlanır, ardından <code>delete sil;</code> çağrılır.</li>
+    </ul>
+    <pre><code>void bastanSil(DNode*&amp; head) {
+    if (head == nullptr) return;
+    DNode* sil = head;
+    head = head-&gt;next;
+    if (head != nullptr)
+        head-&gt;prev = nullptr;
+    delete sil;
+}</code></pre>
+
+    <h4>2. Sondan Eleman Silme — $O(n)$ (<code>tail</code> tutulursa $O(1)$)</h4>
+    <ul>
+      <li>Liste boşsa çıkılır; tek eleman varsa (<code>head-&gt;next == nullptr</code>) <code>delete head; head = nullptr;</code> yapılır.</li>
+      <li>Birden fazla eleman varsa <code>while (temp-&gt;next != nullptr)</code> ile son düğüme gelinir.</li>
+      <li><code>temp-&gt;prev-&gt;next = nullptr;</code> ile sondan bir önceki düğümün bağlantısı kesilir ve <code>delete temp;</code> ile son düğüm silinir.</li>
+    </ul>
+    <pre><code>void sondanSil(DNode*&amp; head) {
+    if (head == nullptr) return;
+    if (head-&gt;next == nullptr) {
+        delete head;
+        head = nullptr;
+        return;
+    }
+    DNode* temp = head;
+    while (temp-&gt;next != nullptr)
+        temp = temp-&gt;next;
+    temp-&gt;prev-&gt;next = nullptr;
+    delete temp;
+}</code></pre>
+
+    <h4>3. Aradan (Belirli Değerle) Eleman Silme — $O(n)$</h4>
+    <p>Aranan düğüm <code>temp</code> bulunduğunda, eğer baştaki düğümse (<code>temp == head</code>) <code>bastanSil(head)</code> çağrılır. Aksi durumda komşular birbirine doğrudan bağlanır:</p>
+    <pre><code>void aradanSil(DNode*&amp; head, int deger) {
+    if (head == nullptr) return;
+    DNode* temp = head;
+    while (temp != nullptr &amp;&amp; temp-&gt;data != deger)
+        temp = temp-&gt;next;
+    if (temp == nullptr) return;            // Değer bulunamadı
+    if (temp == head) {                     // Baştaki düğüm siliniyor
+        bastanSil(head);
+        return;
+    }
+    if (temp-&gt;next != nullptr)
+        temp-&gt;next-&gt;prev = temp-&gt;prev;
+    if (temp-&gt;prev != nullptr)
+        temp-&gt;prev-&gt;next = temp-&gt;next;
+    delete temp;
+}</code></pre>
+  </section>
+
+  <section>
+    <h3>5.2. Arama ve Listeyi Tersine Çevirme (Reverse)</h3>
+    <p><strong>Arama (<code>ara</code>):</strong> Baş düğümden itibaren <code>temp-&gt;next</code> ile ilerlenir; bulunursa düğümün adresi, bulunamazsa <code>nullptr</code> döner ($O(n)$).</p>
+    <p><strong>Tersine Çevirme (<code>tersCevir</code>):</strong> Çift yönlü bağlı listeyi tersine çevirmek için her düğümdeki <code>prev</code> ve <code>next</code> işaretçileri birbiriyle takas (swap) edilir! Dikkat: Takastan sonra bir sonraki düğüme geçmek için artık <code>curr = curr-&gt;prev</code> (eski <code>next</code>) kullanılır. Döngü sonunda <code>head = temp-&gt;prev</code> (eski son düğüm) olarak güncellenir.</p>
+    <pre><code>DNode* ara(DNode* head, int deger) {
+    DNode* temp = head;
+    while (temp != nullptr) {
+        if (temp-&gt;data == deger) return temp;
+        temp = temp-&gt;next;
+    }
+    return nullptr;
+}
+
+void tersCevir(DNode*&amp; head) {
+    DNode* temp = nullptr;
+    DNode* curr = head;
+    while (curr != nullptr) {
+        temp = curr-&gt;prev;
+        curr-&gt;prev = curr-&gt;next;
+        curr-&gt;next = temp;
+        curr = curr-&gt;prev;  // prev ile next takas edildiği için ileri hareket prev'dedir
+    }
+    if (temp != nullptr)
+        head = temp-&gt;prev;  // Eski son düğüm yeni head olur
+}</code></pre>
+  </section>
+
+  <section>
+    <h3>5.3. Zaman Karmaşıklığı Analizi</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>İşlem</th>
+          <th>Ortalama Zaman Karmaşıklığı</th>
+          <th><code>tail</code> İşaretçisi Varsa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Baştan ekleme / silme</td><td>$O(1)$</td><td>$O(1)$</td></tr>
+        <tr><td>Sondan ekleme / silme</td><td>$O(n)$</td><td>$O(1)$</td></tr>
+        <tr><td>Aradan silme</td><td>$O(n)$</td><td>$O(n)$ (konum aranıyorsa)</td></tr>
+        <tr><td>Arama</td><td>$O(n)$</td><td>$O(n)$</td></tr>
+        <tr><td>Tersine çevirme</td><td>$O(n)$ (Ek alan: $O(1)$)</td><td>$O(n)$</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-note">
+      <strong>Sınav İpucu:</strong> Çift yönlü bağlı listede baştan silmede yeni <code>head-&gt;prev = nullptr</code> yapılır; sondan silmede ise sondan bir önceki düğümün (<code>temp-&gt;prev</code>) <code>next</code> işaretçisi <code>nullptr</code> yapılır. <code>tail</code> işaretçisi tutulursa sondan ekleme ve silme $O(n)$'den $O(1)$'e düşer.
     </div>
   </section>
 </article>
@@ -1837,24 +2342,122 @@ struct DoublyNode {
 <article class="unit-article">
   <h2>6. Ünite: Dairesel Bağlı Listeler (Circular Linked List)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Son düğümün ilk düğümü işaret ettiği Dairesel Bağlı Liste yapısını, tek ve çift yönlü dairesel çeşitlerini, sonsuz döngüden kaçınma algoritmalarını ve İşletim Sistemlerinde Round-Robin işlemci zamanlama uygulamalarını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Son düğümün <code>next</code> işaretçisinin <code>nullptr</code> yerine yeniden baş düğümü (<code>head</code>) gösterdiği Dairesel Bağlı Liste mimarisini, Round-Robin zamanlama ve tampon (buffer) gibi gerçek hayat uygulamalarını, tek/çift yönlü listelerle farklarını ve sonsuz döngüyü önleyen <code>do-while</code> C++ implementasyonunu öğrenmektir.
   </div>
 
   <section>
-    <h3>6.1. Dairesel Bağlı Liste Mimarisi</h3>
-    <p>Standart bağlı listelerde son düğümün <code>next</code> işaretçisi <code>nullptr</code> göstererek listeyi sonlandırır. <strong>Dairesel Bağlı Listede (Circular Linked List)</strong> ise son düğümün next işaretçisi <strong>LİSTENİN İLK DÜĞÜMÜNÜ (HEAD)</strong> gösterir.</p>
+    <h3>6.1. Dairesel Bağlı Liste Nedir? Yapısı ve Bağlantı Mantığı</h3>
+    <p><strong>Dairesel Bağlı Liste (Circular Linked List):</strong> Listenin son düğümünün <code>next</code> işaretçisinin <code>nullptr</code> yerine tekrar listenin başındaki düğümü (<code>head</code>) göstermesiyle oluşan döngüsel bir veri yapısıdır. Bu sayede listenin herhangi bir düğümünden başlanarak tüm elemanlar kesintisiz biçimde dolaşılabilir.</p>
+
     <ul>
-      <li>Listede hiçbir düğümün <code>next</code> işaretçisi <code>nullptr</code> DEĞİLDİR!</li>
-      <li>Listede sürekli bir döngü vardır.</li>
-      <li><strong>Kritik Uyarı (Sonsuz Döngü):</strong> Ekrana yazdırma veya arama döngüsü yazılırken <code>while (temp != nullptr)</code> koşulu kullanılırsa program <strong>SONSUZ DÖNGÜYE</strong> girer ve kilitlenir! Doğru döngü koşulu: <code>do { ... } while (temp != head);</code> olmalıdır.</li>
+      <li>Dolu bir dairesel bağlı listede <strong>hiçbir düğümün <code>next</code> işaretçisi <code>nullptr</code> değildir</strong>.</li>
+      <li>Listedeki tek bir düğüm varsa, o düğümün <code>next</code> işaretçisi kendisini gösterir: <code>yeni-&gt;next = head;</code>.</li>
+      <li><strong>Çift Yönlü Dairesel Bağlı Listede</strong> ise ek olarak ilk düğümün <code>prev</code>'i son düğümü, son düğümün <code>next</code>'i ise ilk düğümü gösterir.</li>
     </ul>
 
-    <h4>Uygulama Alanları:</h4>
+    <pre><code>struct CNode {
+    int data;      // Saklanan veri
+    CNode* next;   // Sonraki düğümün adresi (son düğümde head'i gösterir)
+};</code></pre>
+  </section>
+
+  <section>
+    <h3>6.2. Avantajları, Dezavantajları ve Kullanım Alanları</h3>
     <ul>
-      <li>İşletim sistemlerinde CPU'nun zaman paylaşımlı olarak süreçlere sırayla hak tanıdığı <strong>Round-Robin (Dönüşümlü) Zamanlama Algoritması</strong>.</li>
-      <li>Müzik çalarlarda "Listeyi Sürekli Çal / Tekrarla" (Repeat All) özelliği.</li>
-      <li>Çok oyunculu masa oyunlarında oyuncu sırasının dairesel dönmesi.</li>
+      <li><strong>Avantajları:</strong> Döngüsel ve kesintisiz dolaşım (sona gelince otomatik başa dönüş), herhangi bir düğümden başlayarak tüm listeyi gezebilme, Round-Robin algoritmaları ve sabit boyutlu dairesel tampon (buffer) yönetimi için ideal yapı.</li>
+      <li><strong>Dezavantajları:</strong> Son düğümün <code>head</code> kontrolü nedeniyle kod karmaşıklığı artar, yanlış döngü koşulunda <strong>sonsuz döngü riski</strong> oluşur ve baş/son düğüm belirlenmesi ekstra özen gerektirir.</li>
     </ul>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Uygulama Alanı</th>
+          <th>Açıklama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>CPU Zamanlayıcı (Round-Robin)</strong></td><td>İşletim sistemlerinde süreçlere eşit zaman dilimleriyle adil CPU paylaştırma</td></tr>
+        <tr><td><strong>Çok Oyunculu Oyunlar</strong></td><td>Oyuncu sırasının son oyuncudan sonra otomatik ilk oyuncuya dönmesi</td></tr>
+        <tr><td><strong>Müzik / Video Oynatıcılar</strong></td><td>Oynatma listesinin (playlist) "Tümünü Tekrarla" modunda döngüsel çalınması</td></tr>
+        <tr><td><strong>Veri Akışı ve Buffer Yönetimi</strong></td><td>Sabit boyutlu, sürekli dönen tampon (ring buffer) yapıları</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Bağlı Liste Türlerinin Karşılaştırması</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Özellik</th>
+          <th>Tek Yönlü</th>
+          <th>Çift Yönlü</th>
+          <th>Dairesel Tek Yönlü</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Düğümdeki İşaretçi</strong></td><td>1 (<code>next</code>)</td><td>2 (<code>prev</code>, <code>next</code>)</td><td>1 (<code>next</code>)</td></tr>
+        <tr><td><strong>Geriye Dolaşma</strong></td><td>Yok</td><td>Var</td><td>Yok (çift yönlü daireselde var)</td></tr>
+        <tr><td><strong>Döngüsel Yapı</strong></td><td>Yok (son <code>nullptr</code>)</td><td>Yok (uçlar <code>nullptr</code>)</td><td>Var (son &rarr; <code>head</code>)</td></tr>
+        <tr><td><strong>Kod Karmaşıklığı</strong></td><td>Düşük</td><td>Orta</td><td>Orta (sonsuz döngü kontrolü gerekir)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>6.3. C++ Uygulaması: Ekleme, <code>do-while</code> ile Yazdırma ve Bellek Temizliği</h3>
+    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+struct CNode {
+    int data;
+    CNode* next;
+};
+
+// Dairesel bağlı listenin sonuna eleman ekleme
+void sonaEkle(CNode*&amp; head, int veri) {
+    CNode* yeni = new CNode();
+    yeni-&gt;data = veri;
+    if (head == nullptr) {          // Liste boşsa özel durum
+        head = yeni;
+        yeni-&gt;next = head;          // Kendini gösterir
+        return;
+    }
+    CNode* temp = head;
+    while (temp-&gt;next != head)      // Son düğümü bul
+        temp = temp-&gt;next;
+    temp-&gt;next = yeni;
+    yeni-&gt;next = head;              // Yeni son düğüm başa bağlanır
+}
+
+// Dairesel bağlı listeyi yazdırma (do-while ile sonsuz döngü önlenir)
+void listeYazdir(CNode* head) {
+    if (head == nullptr) {
+        cout &lt;&lt; "Liste bos." &lt;&lt; endl;
+        return;
+    }
+    CNode* temp = head;
+    do {
+        cout &lt;&lt; temp-&gt;data &lt;&lt; " ";
+        temp = temp-&gt;next;
+    } while (temp != head);         // Başa dönüldüğünde dur!
+    cout &lt;&lt; endl;
+}
+
+// Tüm düğümleri bellekten temizleme
+void bellekTemizle(CNode*&amp; head) {
+    if (head == nullptr) return;
+    CNode* temp = head-&gt;next;
+    while (temp != head) {
+        CNode* sil = temp;
+        temp = temp-&gt;next;
+        delete sil;
+    }
+    delete head;
+    head = nullptr;
+}</code></pre>
+
+    <div class="exam-note">
+      <strong>Kritik Sınav Uyarısı (Sonsuz Döngü):</strong> Dairesel bağlı listede <code>while (temp != nullptr)</code> yazmak programı <strong>sonsuz döngüye</strong> sokar! Yazdırma ve arama işlemlerinde ilk düğümü atlamadan durabilmek için <code>do { ... } while (temp != head);</code> yapısı (öncesinde <code>if (head == nullptr)</code> kontrolüyle) kullanılmalıdır.
+    </div>
   </section>
 </article>
 
@@ -2122,22 +2725,90 @@ struct DoublyNode {
 <article class="unit-article">
   <h2>7. Ünite: Dizi Veri Yapısı (Arrays) ve Bellek Modeli</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Bellekte ardışık yerleşen Dizi (Array) mimarisini, indisleme adres hesaplama formülünü, çok boyutlu dizileri, statik vs dinamik dizileri ve Dizi vs Bağlı Liste karşılaştırma tablosunu öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Aynı türden verileri bellekte ardışık olarak saklayan Dizi (Array) yapısını, $O(1)$ rastgele erişim sağlayan adres hesaplama formülünü, statik ve dinamik dizileri (<code>new[]</code>/<code>delete[]</code>, <code>std::vector</code>), çok boyutlu matrisleri ve diziler üzerinde Doğrusal/İkili Arama ile temel sıralama algoritmalarını öğrenmektir.
   </div>
 
   <section>
-    <h3>7.1. Dizilerin Bellek Modeli ve Adres Hesaplama Formülü</h3>
-    <p>Dizi, <strong>aynı türden</strong> elemanların bellekte <strong>kesintisiz ve ardışık (contiguous)</strong> olarak saklandığı en temel veri yapısıdır.</p>
-    
+    <h3>7.1. Dizi Tanımı, Bellek Modeli ve Adres Formülü</h3>
+    <p><strong>Dizi (Array):</strong> Aynı türden verilerin bilgisayar belleğinde <em>kesintisiz ve ardışık (contiguous)</em> adreslerde saklandığı doğrusal veri yapısıdır. İndeksleme <code>0</code>'dan başlar ve son eleman <code>boyut - 1</code> indeksindedir.</p>
+
     <div class="formula-box">
-      <strong>Doğrudan Erişim Adres Formülü:</strong>
-      $$	ext{Adres}(A[i]) = 	ext{Başlangıç Adresi (Base)} + (i 	imes 	ext{Eleman Boyutu (Byte)})$$
+      <strong>Doğrudan Erişim (Random Access) Adres Formülü:</strong>
+      $$\text{Adres}(A[i]) = \text{Başlangıç Adresi (Base)} + (i \times \text{Eleman Boyutu (Byte)})$$
     </div>
-    <p>Bu formül sayesinde derleyici dizinin boyutundan bağımsız olarak herhangi bir $i$. elemana <strong>$O(1)$ SABİT ZAMANDA</strong> doğrudan erişir!</p>
+
+    <p>Bu formül sayesinde $i$. elemanın bellek adresi tek bir aritmetik işlemle hesaplanır; bu nedenle dizilerde herhangi bir elemana doğrudan erişim daima <strong>$O(1)$ sabit zaman</strong> alır.</p>
+
+    <ul>
+      <li><strong>Avantajları:</strong> $O(1)$ rastgele erişim, basit tanımlama ve kullanım, ardışık bellek yerleşimi sayesinde yüksek CPU önbellek (cache) verimi, ek işaretçi maliyeti (overhead) olmaması.</li>
+      <li><strong>Dezavantajları:</strong> Statik dizilerde sabit boyut, ortadan ekleme ve silmede eleman kaydırma nedeniyle $O(n)$ maliyet, gereğinden büyük tanımlanırsa bellek israfı, yalnızca aynı türden veri saklama kısıtı.</li>
+    </ul>
   </section>
 
   <section>
-    <h3>7.2. Dizi vs. Bağlı Liste Büyük Karşılaştırma Tablosu</h3>
+    <h3>7.2. Statik ve Dinamik Diziler, Boyut Hesaplama ve Matrisler</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Özellik</th>
+          <th>Statik Dizi (<code>int d[5];</code>)</th>
+          <th>Dinamik Dizi (<code>new int[n]</code>)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Boyut Esnekliği</strong></td><td>Sabittir, sonradan değiştirilemez</td><td>Esnektir, çalışma zamanında belirlenir</td></tr>
+        <tr><td><strong>Tanımlanma Zamanı</strong></td><td>Derleme zamanında (Compile-time)</td><td>Çalışma zamanında (Runtime)</td></tr>
+        <tr><td><strong>Bellek Yönetimi</strong></td><td>Otomatik (Stack)</td><td>Programcıya ait (<code>new[]</code> / <code>delete[]</code>)</td></tr>
+        <tr><td><strong>Boyut Bulma</strong></td><td><code>sizeof(dizi) / sizeof(dizi[0])</code></td><td>Boyut ayrı bir <code>n</code> değişkeninde tutulur</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Çok Boyutlu Diziler (Matrisler)</h4>
+    <p>Dizilerin dizisi biçiminde tanımlanan iki boyutlu diziler (<code>int matris[satir][sutun]</code>); görüntü işleme (piksel matrisleri), oyun haritaları ve lineer cebir (matris çarpımı, determinant) uygulamalarında kullanılır. Modern C++'ta boyut yönetimini otomatikleştirmek için <code>std::vector</code> tercih edilir.</p>
+    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 1. Statik dizi ve sizeof ile eleman sayısı
+    int dizi[5] = {10, 20, 30, 40, 50};
+    int boyut = sizeof(dizi) / sizeof(dizi[0]); // 20 / 4 = 5
+    cout &lt;&lt; "dizi[2] = " &lt;&lt; dizi[2] &lt;&lt; endl;   // 30 (O(1) erişim)
+
+    // 2. Dinamik dizi oluşturma ve bellek iadesi
+    int n = 4;
+    int* din = new int[n];
+    for (int i = 0; i &lt; n; i++) din[i] = (i + 1) * 10;
+    delete[] din;
+
+    // 3. 2x3 Matris
+    int matris[2][3] = { {1, 2, 3}, {4, 5, 6} };
+    cout &lt;&lt; "matris[1][2] = " &lt;&lt; matris[1][2] &lt;&lt; endl; // 6
+    return 0;
+}</code></pre>
+  </section>
+
+  <section>
+    <h3>7.3. Dizilerde Arama (Linear &amp; Binary Search) ve Sıralamaya Giriş</h3>
+    <p><strong>Doğrusal Arama (Linear Search):</strong> Sıralı veya sırasız dizilerde elemanları baştan sona kontrol eder; zaman karmaşıklığı $O(n)$'dir.<br>
+    <strong>İkili Arama (Binary Search):</strong> Yalnızca <em>sıralı</em> dizilerde çalışır; her adımda ortadaki elemanla karşılaştırma yaparak arama uzayını yarıya indirir ve <strong>$O(\log n)$</strong> zamanda sonuca ulaşır.</p>
+    <pre><code>int linearSearch(int dizi[], int n, int aranan) {
+    for (int i = 0; i &lt; n; i++)
+        if (dizi[i] == aranan) return i;
+    return -1;
+}
+
+int binarySearch(int dizi[], int n, int aranan) {
+    int sol = 0, sag = n - 1;
+    while (sol &lt;= sag) {
+        int orta = (sol + sag) / 2;
+        if (dizi[orta] == aranan) return orta;
+        else if (dizi[orta] &lt; aranan) sol = orta + 1;
+        else sag = orta - 1;
+    }
+    return -1;
+}</code></pre>
+
+    <h4>Dizi vs. Bağlı Liste Büyük Karşılaştırması</h4>
     <table class="data-table">
       <thead>
         <tr>
@@ -2147,33 +2818,16 @@ struct DoublyNode {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><strong>Bellek Yerleşimi</strong></td>
-          <td>Ardışık (Bitişik) bloklar halinde</td>
-          <td>Belleğin dağınık noktalarında düğümler halinde</td>
-        </tr>
-        <tr>
-          <td><strong>Rastgele Erişim (İndisle)</strong></td>
-          <td><strong style="color:var(--success);">$O(1)$ Anında Erişim</strong></td>
-          <td><strong style="color:var(--danger);">$O(n)$ Baştan itibaren adım adım</strong></td>
-        </tr>
-        <tr>
-          <td><strong>Başa Ekleme / Silme</strong></td>
-          <td>$O(n)$ (Tüm elemanlar sağa/sola kaydırılır)</td>
-          <td><strong style="color:var(--success);">$O(1)$ Sadece pointer yönlendirilir</strong></td>
-        </tr>
-        <tr>
-          <td><strong>Boyut Değişimi</strong></td>
-          <td>Sabittir (Dinamik dizide yeniden tahsis gerekir)</td>
-          <td>Tamamen dinamiktir, anında büyüyüp küçülür</td>
-        </tr>
-        <tr>
-          <td><strong>Bellek Verimliliği</strong></td>
-          <td>Yalnızca veriyi saklar, işaretçi maliyeti yoktur</td>
-          <td>Her düğüm için fazladan pointer alanı (4/8 byte) harcar</td>
-        </tr>
+        <tr><td><strong>Bellek Yerleşimi</strong></td><td>Ardışık (Bitişik)</td><td>Dağınık (Düğümler hâlinde)</td></tr>
+        <tr><td><strong>Rastgele Erişim</strong></td><td>$O(1)$ Anında Erişim</td><td>$O(n)$ Sıralı Dolaşım</td></tr>
+        <tr><td><strong>Başa Ekleme / Silme</strong></td><td>$O(n)$ (Kaydırma gerekir)</td><td>$O(1)$ (Pointer güncelleme)</td></tr>
+        <tr><td><strong>Ekstra Bellek</strong></td><td>Yok</td><td>Her düğümde pointer alanı</td></tr>
       </tbody>
     </table>
+
+    <div class="exam-note">
+      <strong>Sınav Notu:</strong> Dizi sınırlarının dışına (<code>0</code> ile <code>boyut - 1</code> aralığı dışına) erişmek <strong>bellek taşmasına (buffer overflow)</strong> yol açar. İkili arama (Binary Search) için dizinin mutlaka <strong>sıralı</strong> olması şarttır.
+    </div>
   </section>
 </article>
 
@@ -2441,57 +3095,113 @@ struct DoublyNode {
 <article class="unit-article">
   <h2>8. Ünite: Yığın Veri Yapısı (Stack - LIFO)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Son Giren İlk Çıkar (LIFO) prensibine dayalı Yığın (Stack) veri yapısını, temel operasyonlarını (Push, Pop, Peek, IsEmpty), dizi ve bağlı liste ile gerçekleme modellerini, fonksiyon çağrı yığınını (Call Stack), parantez dengeleme kontrolünü ve Infix-to-Postfix dönüşüm algoritmalarını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Yalnızca tek uçtan (tepe/top) ekleme ve çıkarma yapılan Son Giren İlk Çıkar (LIFO) prensipli Yığın (Stack) veri yapısını, temel işlemlerini (<code>push</code>, <code>pop</code>, <code>peek</code>), Overflow/Underflow kontrollerini, dizi ve bağlı liste implementasyonlarını, Call Stack ve Infix-to-Postfix uygulamalarını öğrenmektir.
   </div>
 
   <section>
-    <h3>8.1. Yığın (Stack) Mimarisi ve LIFO İlkesi</h3>
-    <p>Yığın; eleman ekleme ve çıkarma işlemlerinin yalnızca tek bir uçtan, yani <strong>TEPE (TOP)</strong> noktasından yapıldığı doğrusal bir veri yapısıdır. İlkesi <strong>LIFO (Last In First Out - Son Giren İlk Çıkar)</strong>'dur.</p>
-    <p><em>Günlük Hayattan Benzetmeler:</em> Üst üste dizilmiş yemek tabakları (en son konan tabak ilk alınır), şarjördeki mermiler, tarayıcının "Geri" (Back) butonu.</p>
-
-    <h4>Temel Stack Operasyonları ($O(1)$ Zaman Karmaşıklığı):</h4>
+    <h3>8.1. Yığın Nedir? LIFO Prensibi ve Temel Operasyonlar</h3>
+    <p><strong>Yığın (Stack):</strong> Eleman ekleme ve çıkarma işlemlerinin yalnızca <strong>tepe (top)</strong> adı verilen tek bir uçtan yapıldığı, <strong>LIFO (Last In, First Out — Son Giren İlk Çıkar)</strong> prensibiyle çalışan doğrusal bir soyut veri yapısıdır. İlk eklenen eleman en altta kaldığından en son çıkarılır.</p>
     <ul>
-      <li><code>push(val)</code>: Yığının tepesine yeni bir eleman ekler. Yığın doluysa <em>Stack Overflow</em> hatası oluşur.</li>
-      <li><code>pop()</code>: Yığının tepesindeki en son eklenen elemanı çıkarır ve bellekten siler. Yığın boşsa <em>Stack Underflow</em> hatası oluşur.</li>
-      <li><code>peek() / top()</code>: Tepedeki elemanın değerini silmeden görüntüler.</li>
-      <li><code>isEmpty()</code>: Yığının boş olup olmadığını kontrol eder (bool).</li>
+      <li><strong><code>push(eleman)</code>:</strong> Yığının en üstüne yeni eleman ekler ($O(1)$). Dizi tabanlı yığında kapasite doluysa (<code>top == kapasite - 1</code>) <strong>Stack Overflow</strong> hatası oluşur.</li>
+      <li><strong><code>pop()</code>:</strong> Yığının en üstündeki elemanı çıkarır ve döndürür ($O(1)$). Yığın boşsa (<code>top == -1</code> veya <code>top == nullptr</code>) <strong>Stack Underflow</strong> hatası oluşur.</li>
+      <li><strong><code>peek()</code> / <code>top()</code>:</strong> En üstteki elemanı yığından çıkarmadan görüntüler ($O(1)$).</li>
     </ul>
+  </section>
 
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-// Dizi ile Basit Stack Gerçeklemesi
-class Stack {
-private:
-    int topIndex;
-    int kapasite;
-    int* dizi;
-public:
-    Stack(int cap) : kapasite(cap), topIndex(-1) {
-        dizi = new int[kapasite];
-    }
-    void push(int val) {
-        if (topIndex == kapasite - 1) { cout << "Stack Overflow!"; return; }
-        dizi[++topIndex] = val;
-    }
-    int pop() {
-        if (topIndex == -1) { cout << "Stack Underflow!"; return -1; }
-        return dizi[topIndex--];
-    }
-    int peek() { return dizi[topIndex]; }
-    bool isEmpty() { return topIndex == -1; }
-};
-</pre>
+  <section>
+    <h3>8.2. Kullanım Alanları ve Infix &rarr; Postfix Dönüşümü</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kullanım Alanı</th>
+          <th>Açıklama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Fonksiyon Çağrı Yığını (Call Stack)</strong></td><td>Programda çağrılan fonksiyonların dönüş adresleri ve yerel değişkenleri yığında tutulur; en son çağrılan ilk biter.</td></tr>
+        <tr><td><strong>Geri Alma (Undo / Redo)</strong></td><td>Metin editörlerinde yapılan son işlemin geri alınması (Ctrl+Z).</td></tr>
+        <tr><td><strong>Parantez Dengeleme</strong></td><td>Derleyicilerde <code>{ [ ( ) ] }</code> parantezlerinin doğru kapanıp kapanmadığının kontrolü.</td></tr>
+        <tr><td><strong>İfade Dönüşümleri</strong></td><td>Matematiksel ifadelerin Infix'ten ($A+B$) Postfix ($A B +$) veya Prefix ($+ A B$) biçime çevrilmesi ve hesaplanması.</td></tr>
+        <tr><td><strong>Web Tarayıcı Geçmişi</strong></td><td>Ziyaret edilen sayfalarda Geri (Back) butonu ile bir önceki sayfaya dönüş.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <strong>Adım Adım İzleme — Infix &rarr; Postfix: <code>(A + B) * C</code></strong><br>
+      1) <code>(</code> yığına atılır: Yığın = <code>[(]</code><br>
+      2) <code>A</code> çıktıya yazılır: Çıktı = <code>A</code><br>
+      3) <code>+</code> yığına atılır: Yığın = <code>[(, +]</code><br>
+      4) <code>B</code> çıktıya yazılır: Çıktı = <code>A B</code><br>
+      5) <code>)</code> gelince <code>(</code>'e kadar pop edilir: Çıktı = <code>A B +</code>, Yığın = <code>[]</code><br>
+      6) <code>*</code> yığına atılır, <code>C</code> çıktıya yazılır, sonda yığın boşaltılır &rarr; Sonuç: <strong><code>A B + C *</code></strong>.
     </div>
   </section>
 
   <section>
-    <h3>8.2. Yığının Bilgisayar Bilimlerindeki Kritik Uygulama Alanları</h3>
-    <ol>
-      <li><strong>Fonksiyon Çağrı Yığını (Call Stack):</strong> İşletim sistemi ve derleyici, iç içe çağrılan fonksiyonların dönüş adreslerini ve yerel değişkenlerini bellekte bir yığında saklar.</li>
-      <li><strong>Parantez Eşleme ve Dengeleme (Syntax Checking):</strong> Derleyiciler süslü parantezlerin <code>{ [ ( ) ] }</code> doğru kapanıp kapanmadığını yığınla kontrol eder: Açılan parantez yığına atılır (push), kapanan parantez geldiğinde yığından çekilip (pop) eşleşme test edilir.</li>
-      <li><strong>Geri Al (Undo / Redo) Mekanizmaları:</strong> Metin editörlerindeki Ctrl+Z işlemleri.</li>
-      <li><strong>Aritmetik İfadelerin Dönüştürülmesi:</strong> İnsanların okuduğu <em>Infix</em> ($A + B$) ifadelerin, bilgisayarın tek geçişte parantezsiz hesaplayabileceği <em>Postfix</em> ($A B +$) veya <em>Prefix</em> ($+ A B$) ifadelere dönüştürülmesi ve değerlendirilmesi.</li>
-    </ol>
+    <h3>8.3. Dizi ve Bağlı Liste ile Stack İmplementasyonu (C++)</h3>
+    <p>Sabit boyutlu ve çok hızlı yığınlar için <strong>dizi</strong> (taşma riski vardır), boyut sınırı olmayan dinamik yığınlar için <strong>bağlı liste</strong> (her düğümde ekstra işaretçi alanı harcar) tercih edilir. Modern C++'ta hazır <code>std::stack</code> sınıfı da kullanılabilir.</p>
+
+    <h4>A. Dizi ile Statik Stack</h4>
+    <pre><code>void push(int stack[], int&amp; top, int eleman, int kapasite) {
+    if (top == kapasite - 1) {
+        cout &lt;&lt; "Stack overflow!" &lt;&lt; endl;
+        return;
+    }
+    stack[++top] = eleman;
+}
+
+int pop(int stack[], int&amp; top) {
+    if (top == -1) {
+        cout &lt;&lt; "Stack underflow!" &lt;&lt; endl;
+        return -1;
+    }
+    return stack[top--];
+}
+
+int peek(int stack[], int top) {
+    if (top == -1) {
+        cout &lt;&lt; "Stack is empty!" &lt;&lt; endl;
+        return -1;
+    }
+    return stack[top];
+}</code></pre>
+
+    <h4>B. Bağlı Liste ile Dinamik Stack</h4>
+    <pre><code>struct Node {
+    int data;
+    Node* next;
+};
+
+void push(Node*&amp; top, int eleman) {
+    Node* yeni = new Node();
+    yeni-&gt;data = eleman;
+    yeni-&gt;next = top;       // Yeni düğüm eski tepeyi gösterir
+    top = yeni;             // Tepe güncellenir (O(1))
+}
+
+int pop(Node*&amp; top) {
+    if (top == nullptr) {
+        cout &lt;&lt; "Stack underflow!" &lt;&lt; endl;
+        return -1;
+    }
+    int veri = top-&gt;data;
+    Node* sil = top;
+    top = top-&gt;next;
+    delete sil;             // Bellek sızıntısını önlemek için serbest bırak
+    return veri;
+}
+
+int peek(Node* top) {
+    if (top == nullptr) {
+        cout &lt;&lt; "Stack is empty!" &lt;&lt; endl;
+        return -1;
+    }
+    return top-&gt;data;
+}</code></pre>
+
+    <div class="exam-note">
+      <strong>Sınav İpucu:</strong> Dizi tabanlı yığında başlangıçta <code>top = -1</code>'dir. Eleman eklenirken önce artırılır (<code>stack[++top]</code>), çıkarılırken önce okunur sonra azaltılır (<code>stack[top--]</code>). Bağlı liste yığınında her <code>new</code> için <code>pop</code> ve temizlik sırasında mutlaka <code>delete</code> çağrılmalıdır.
+    </div>
   </section>
 </article>
 
@@ -2723,47 +3433,114 @@ public:
 <article class="unit-article">
   <h2>9. Ünite: Kuyruk Veri Yapısı (Queue - FIFO)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> İlk Giren İlk Çıkar (FIFO) kuralıyla çalışan Kuyruk (Queue) mimarisini, temel işlemlerini (Enqueue, Dequeue), dizideki "Kuyruk Kayması" problemini ve modülo (%) aritmetiğine dayanan Dairesel Kuyruk (Circular Queue) çözümünü, Öncelikli Kuyruk (Priority Queue) kavramını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> İlk Giren İlk Çıkar (FIFO) prensibiyle çalışan Kuyruk (Queue) veri yapısını, temel işlemlerini (<code>enqueue</code>, <code>dequeue</code>), doğrusal dizi kuyruğundaki sahte doluluk problemini ve modülo (%) aritmetikli Dairesel Kuyruk çözümünü, Deque ile Priority Queue türlerini ve bağlı liste implementasyonunu öğrenmektir.
   </div>
 
   <section>
-    <h3>9.1. Kuyruk Mimarisi ve FIFO İlkesi</h3>
-    <p>Kuyruk; eleman eklemenin bir uçtan (<strong>REAR / TAIL / ARKA</strong>), eleman çıkarmanın ise diğer uçtan (<strong>FRONT / HEAD / ÖN</strong>) yapıldığı doğrusal veri yapısıdır. İlkesi <strong>FIFO (First In First Out - İlk Giren İlk Çıkar)</strong>'dur.</p>
-    <p><em>Benzetmeler:</em> Banka veznesi sırası, fırındaki ekmek sırası, yazıcıya (printer) gönderilen evrakların basım sırası.</p>
-
-    <h4>Temel Kuyruk Operasyonları ($O(1)$ Zaman Karmaşıklığı):</h4>
+    <h3>9.1. Kuyruk Nedir? FIFO Prensibi ve Kullanım Alanları</h3>
+    <p><strong>Kuyruk (Queue):</strong> Ekleme işleminin arka uçtan (<strong>rear / tail</strong>), çıkarma işleminin ise ön uçtan (<strong>front / head</strong>) yapıldığı, <strong>FIFO (First In, First Out — İlk Giren İlk Çıkar)</strong> prensibiyle çalışan doğrusal veri yapısıdır.</p>
     <ul>
-      <li><code>enqueue(val)</code>: Kuyruğun arkasına (rear) yeni eleman ekler.</li>
-      <li><code>dequeue()</code>: Kuyruğun en önündeki (front) ilk gelen elemanı çıkarır.</li>
-      <li><code>front() / peek()</code>: En öndeki elemanın değerini silmeden görüntüler.</li>
-      <li><code>isEmpty()</code>: Kuyrukta eleman olup olmadığını kontrol eder.</li>
+      <li><strong><code>enqueue(eleman)</code>:</strong> Kuyruğun sonuna (rear/tail) eleman ekler ($O(1)$). Dizi kapasitesi dolmuşsa <em>Queue Overflow</em> oluşur.</li>
+      <li><strong><code>dequeue()</code>:</strong> Kuyruğun başındaki (front/head) ilk eklenen elemanı çıkarır ve döndürür ($O(1)$). Kuyruk boşsa <em>Queue Underflow</em> oluşur.</li>
     </ul>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kullanım Alanı</th>
+          <th>Açıklama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>CPU Zamanlayıcı</strong></td><td>İşletim sisteminde süreçlerin (process) sırayla işlenmesi</td></tr>
+        <tr><td><strong>Yazıcı (Printer) Kuyruğu</strong></td><td>Yazdırma işlerinin gönderilme sırasıyla basılması</td></tr>
+        <tr><td><strong>Ağ Paket Kuyruğu</strong></td><td>Yönlendiriciye gelen veri paketlerinin sıralı işlenmesi</td></tr>
+        <tr><td><strong>Müşteri Hizmetleri</strong></td><td>Banka, çağrı merkezi ve bilet gişesi sıraları</td></tr>
+        <tr><td><strong>BFS Algoritması</strong></td><td>Graf ve ağaçlarda Genişlik Öncelikli Arama (Breadth-First Search)</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section>
-    <h3>9.2. Kuyruk Kayması Problemi ve Dairesel Kuyruk (Circular Queue)</h3>
-    <p>Dizi tabanlı doğrusal kuyruklarda eleman çıkarıldıkça (dequeue) <code>front</code> indisi sağa doğru ilerler. Kuyruğun ön tarafında boşluklar oluştuğu halde, <code>rear</code> dizinin sonuna ulaştığında kuyruk "dolu" gibi görünür. Buna <strong>Kuyruk Kayması (Sahte Doluluk)</strong> denir.</p>
-
-    <div class="card">
-      <h4>Modülo (%) Aritmetiği ile Dairesel Kuyruk Çözümü:</h4>
-      <p>Dizinin sonu ile başı birleştirilmiş gibi dairesel bir döngü kurulur. İndisler dizi boyutunu aşınca başa döner:</p>
-      $$	ext{rear} = (	ext{rear} + 1) \pmod{	ext{KAPASİTE}}$$
-      $$	ext{front} = (	ext{front} + 1) \pmod{	ext{KAPASİTE}}$$
-    </div>
+    <h3>9.2. Kuyruk Türleri: Doğrusal, Dairesel, Çift Uçlu (Deque) ve Öncelikli (Priority Queue)</h3>
+    <ul>
+      <li><strong>Dairesel Kuyruk (Circular Queue):</strong> Doğrusal dizi kuyruğunda elemanlar çıkarıldıkça <code>head/front</code> sağa kayar ve dizinin ön kısmı boş kaldığı hâlde <code>tail/rear == KAPASİTE - 1</code> olduğunda kuyruk dolu sanılır (<em>Kuyruk Kayması / Sahte Doluluk</em>). Dairesel kuyruk modülo aritmetiğiyle bu boş alanı yeniden değerlendirir.</li>
+      <li><strong>Çift Uçlu Kuyruk (Deque - Double Ended Queue):</strong> Ekleme ve çıkarma işlemlerinin <em>hem baştan hem sondan</em> yapılabildiği esnek kuyruk türüdür (palindrom kontrolü, kayan pencere, iş çalma).</li>
+      <li><strong>Öncelikli Kuyruk (Priority Queue):</strong> Her elemanın bir öncelik değeri vardır; geliştirilen kurala göre çıkarma işlemi geliş sırasına değil <em>en yüksek öncelikli elemana</em> göre yapılır (CPU scheduling, Dijkstra algoritması, acil servis triyajı).</li>
+    </ul>
 
     <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-// Dairesel Kuyrukta Eleman Ekleme (Enqueue)
-void enqueue(int val) {
+      <strong>Modülo (%) Aritmetiği ile Dairesel Kuyruk İndis Güncelleme Formülleri:</strong>
+      $$\text{rear} = (\text{rear} + 1) \pmod{\text{KAPASİTE}}$$
+      $$\text{front} = (\text{front} + 1) \pmod{\text{KAPASİTE}}$$
+    </div>
+  </section>
+
+  <section>
+    <h3>9.3. Dizi, Dairesel Kuyruk ve Bağlı Liste İmplementasyonları (C++)</h3>
+    <h4>A. Dizi ile Doğrusal ve Dairesel Kuyruk</h4>
+    <pre><code>// Doğrusal Dizi Kuyruğu (head = 0, tail = -1)
+void enqueue(int queue[], int&amp; tail, int eleman, int kapasite) {
+    if (tail == kapasite - 1) {
+        cout &lt;&lt; "Queue overflow!" &lt;&lt; endl;
+        return;
+    }
+    queue[++tail] = eleman;
+}
+
+int dequeue(int queue[], int&amp; head, int tail) {
+    if (head &gt; tail) {
+        cout &lt;&lt; "Queue underflow!" &lt;&lt; endl;
+        return -1;
+    }
+    return queue[head++];
+}
+
+// Dairesel Kuyrukta Ekleme (front = -1, rear = -1 başlangıçlı)
+void circularEnqueue(int dizi[], int&amp; front, int&amp; rear, int val, int KAPASITE) {
     if ((rear + 1) % KAPASITE == front) {
-        cout << "Dairesel Kuyruk Dolu!";
+        cout &lt;&lt; "Dairesel Kuyruk Dolu!" &lt;&lt; endl;
         return;
     }
     if (front == -1) front = 0;
     rear = (rear + 1) % KAPASITE;
     dizi[rear] = val;
+}</code></pre>
+
+    <h4>B. Bağlı Liste ile Dinamik Kuyruk (<code>head</code> ve <code>tail</code>)</h4>
+    <pre><code>struct Node {
+    int data;
+    Node* next;
+};
+
+void enqueue(Node*&amp; head, Node*&amp; tail, int eleman) {
+    Node* yeni = new Node();
+    yeni-&gt;data = eleman;
+    yeni-&gt;next = nullptr;
+    if (tail == nullptr) {          // Kuyruk boşsa head ve tail aynı düğümü gösterir
+        head = tail = yeni;
+    } else {
+        tail-&gt;next = yeni;
+        tail = yeni;
+    }
 }
-</pre>
+
+int dequeue(Node*&amp; head, Node*&amp; tail) {
+    if (head == nullptr) {
+        cout &lt;&lt; "Queue underflow!" &lt;&lt; endl;
+        return -1;
+    }
+    int veri = head-&gt;data;
+    Node* sil = head;
+    head = head-&gt;next;
+    if (head == nullptr)            // Son eleman da çıkarıldıysa tail sıfırlanır!
+        tail = nullptr;
+    delete sil;
+    return veri;
+}</code></pre>
+
+    <div class="exam-note">
+      <strong>Sınav Notu:</strong> Bağlı liste kuyruğunda son eleman çıkarıldığında (<code>head == nullptr</code> olduğunda) <code>tail = nullptr;</code> yapılmazsa <code>tail</code> silinmiş bellek adresini gösteren bir <em>dangling pointer</em> hâline gelir. Modern C++ STL sınıfları: <code>std::queue</code>, <code>std::deque</code>, <code>std::priority_queue</code>.
     </div>
   </section>
 </article>
@@ -2996,64 +3773,109 @@ void enqueue(int val) {
 <article class="unit-article">
   <h2>10. Ünite: Özyineleme (Recursion) ve Çağrı Yığını Mimarisi</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Bir fonksiyonun kendi kendini çağırması anlamına gelen Özyineleme (Recursion) tekniğini, Taban Koşul (Base Case) ve Özyinelemeli Adım (Recursive Step) zorunluluğunu, Çağrı Yığınının (Call Stack) bellek davranışını, Stack Overflow hatasını ve İterasyon vs. Rekürsiyon karşılaştırmasını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Bir fonksiyonun kendini doğrudan veya dolaylı olarak çağırmasına dayanan Özyineleme (Recursion) tekniğini, Temel Durum (Base Case) ve Özyinelemeli Durum (Recursive Case) zorunluluğunu, Çağrı Yığınının (Call Stack) bellek davranışını, Faktöriyel ve Fibonacci (naive vs. iteratif/memoization) performans karşılaştırmasını öğrenmektir.
   </div>
 
   <section>
-    <h3>10.1. Özyinelemenin Anatomisi</h3>
-    <p>Özyinelemeli bir fonksiyonun doğru çalışabilmesi için iki temel unsuru eksiksiz barındırması <strong>ZORUNLUDUR</strong>:</p>
+    <h3>10.1. Özyineleme Nedir? Temel ve Özyinelemeli Durum</h3>
+    <p><strong>Özyineleme (Recursion):</strong> Bir fonksiyonun bir problemi daha küçük alt problemlere bölerek kendisini doğrudan veya dolaylı olarak çağırmasıdır. Her özyinelemeli fonksiyonun iki zorunlu parçası vardır:</p>
     <ol>
-      <li><strong>Taban Koşul (Base Case / Durma Noktası):</strong> Fonksiyonun kendi kendini çağırmayı sonlandırıp geriye somut bir değer döndürdüğü en basit durumdur. Taban koşul yazılmazsa veya ulaşılamazsa fonksiyon sonsuz özyinelemeye girer ve bellek tükenerek <strong>Stack Overflow</strong> çöker!</li>
-      <li><strong>Özyinelemeli Adım (Recursive Step):</strong> Fonksiyonun her çağrıda problemi taban koşula bir adım daha yaklaştıracak şekilde küçülterek kendini tekrar çağırmasıdır.</li>
+      <li><strong>Temel Durum (Base Case):</strong> Özyinelemenin sona erdiği, fonksiyonun kendini çağırmadan doğrudan sonuç döndürdüğü durma koşuludur. Temel durum eksik veya hatalıysa fonksiyon sonsuz döngüye girer ve çağrı yığını dolarak <strong>Stack Overflow</strong> hatasıyla çöker.</li>
+      <li><strong>Özyinelemeli Durum (Recursive Case):</strong> Fonksiyonun problemi temel duruma yaklaştıracak biçimde küçülterek kendisini yeniden çağırdığı kısımdır.</li>
     </ol>
 
     <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-// Özyinelemeli Faktöriyel Fonksiyonu: n! = n * (n-1)!
-int faktoriyel(int n) {
-    // 1. Taban Koşul (Base Case)
-    if (n <= 1) return 1;
-
-    // 2. Özyinelemeli Adım (Recursive Step)
-    return n * faktoriyel(n - 1);
-}
-</pre>
+      <strong>Matematiksel Özyinelemeli Tanımlar:</strong>
+      $$n! = \begin{cases} 1, & n = 0 \\ n \cdot (n-1)!, & n &gt; 0 \end{cases} \qquad\qquad F(n) = \begin{cases} 0, & n = 0 \\ 1, & n = 1 \\ F(n-1) + F(n-2), & n \ge 2 \end{cases}$$
     </div>
   </section>
 
   <section>
-    <h3>10.2. İterasyon (Döngü) vs. Özyineleme (Rekürsiyon)</h3>
+    <h3>10.2. Avantajları, Dezavantajları ve Kullanım Alanları</h3>
+    <ul>
+      <li><strong>Avantajları:</strong> Karmaşık ve kendini tekrar eden problemleri sadeleştirir, daha az ve okunaklı kod üretir, matematiksel tanımları ve hiyerarşik yapıları doğal olarak modeller.</li>
+      <li><strong>Dezavantajları:</strong> Her çağrıda <em>Call Stack</em>'te yeni bir aktivasyon çerçevesi açıldığı için fazla bellek tüketir (derin özyinelemede <em>Stack Overflow</em> riski), fonksiyon çağrı maliyeti nedeniyle iterasyona göre daha yavaş olabilir ve hata ayıklaması zordur.</li>
+    </ul>
+
     <table class="data-table">
       <thead>
         <tr>
-          <th>Kriter</th>
-          <th>İterasyon (Döngü: for, while)</th>
-          <th>Özyineleme (Rekürsiyon)</th>
+          <th>Problem Türü</th>
+          <th>Örnek Uygulamalar</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><strong>Sonlandırma</strong></td>
-          <td>Döngü koşulunun false olmasıyla biter</td>
-          <td>Taban koşula (base case) ulaşılınca biter</td>
-        </tr>
-        <tr>
-          <td><strong>Bellek Kullanımı</strong></td>
-          <td>Sabit bellek $O(1)$; sadece döngü sayacı tutulur</td>
-          <td>$O(n)$ bellek; her çağrı için Call Stack'te yeni bir aktivasyon çerçevesi açılır</td>
-        </tr>
-        <tr>
-          <td><strong>Hız ve Performans</strong></td>
-          <td>Çok hızlıdır, fonksiyon çağrı ek yükü (overhead) yoktur</td>
-          <td>Çağrı ve dönüş ek yükü nedeniyle iterasyondan daha yavaştır</td>
-        </tr>
-        <tr>
-          <td><strong>Kod Okunabilirliği</strong></td>
-          <td>Ağaç ve graf gibi hiyerarşik yapılarda karmaşıklaşır</td>
-          <td>Ağaç gezintisi, böl-ve-yönet algoritmalarında son derece zarif ve kısadır</td>
-        </tr>
+        <tr><td><strong>Matematiksel Hesaplamalar</strong></td><td>Faktöriyel, Fibonacci, üs alma ($b^p$), kombinasyon, permütasyon</td></tr>
+        <tr><td><strong>Veri Yapıları</strong></td><td>Ağaç ve graf gezintileri (DFS, Preorder, Inorder, Postorder)</td></tr>
+        <tr><td><strong>Böl ve Yönet (Divide &amp; Conquer)</strong></td><td>Merge Sort, Quick Sort, Binary Search</td></tr>
+        <tr><td><strong>Backtracking &amp; Yapay Zekâ</strong></td><td>Sudoku, Sekiz Kraliçe (N-Queens), labirent çözme, oyun hamle ağaçları</td></tr>
       </tbody>
     </table>
+  </section>
+
+  <section>
+    <h3>10.3. C++ Uygulamaları: Faktöriyel ve Fibonacci (Özyinelemeli vs. İteratif)</h3>
+    <pre><code>// 1. Özyinelemeli ve İteratif Faktöriyel - İkisi de O(n) zaman
+int faktoriyel(int n) {
+    if (n == 0) return 1;                   // Temel durum (Base case)
+    return n * faktoriyel(n - 1);           // Özyinelemeli durum
+}
+
+int faktoriyelIteratif(int n) {
+    int sonuc = 1;
+    for (int i = 1; i &lt;= n; i++) sonuc *= i;
+    return sonuc;
+}
+
+// 2. Özyinelemeli Fibonacci - Naive O(2^n) zaman!
+int fibonacci(int n) {
+    if (n == 0) return 0;
+    else if (n == 1) return 1;
+    else return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+// 3. İteratif Fibonacci - O(n) zaman, O(1) bellek
+int fibonacciIteratif(int n) {
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    int a = 0, b = 1, c;
+    for (int i = 2; i &lt;= n; i++) {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    return b;
+}</code></pre>
+
+    <h4>Call Stack İzleme (Trace): <code>faktoriyel(4)</code></h4>
+    <p><code>faktoriyel(4)</code> &rarr; <code>4 * faktoriyel(3)</code> &rarr; <code>3 * faktoriyel(2)</code> &rarr; <code>2 * faktoriyel(1)</code> &rarr; <code>1 * faktoriyel(0)</code> [<code>1</code> döner] &rarr; geri sarma: <code>1*1=1</code>, <code>2*1=2</code>, <code>3*2=6</code>, <code>4*6=24</code>.</p>
+  </section>
+
+  <section>
+    <h3>10.4. Özyineleme vs. İterasyon Performans Karşılaştırması</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Problem / Kriter</th>
+          <th>Yöntem</th>
+          <th>Zaman Karmaşıklığı</th>
+          <th>Ek Bellek (Space)</th>
+          <th>Not</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Faktöriyel</td><td>Özyineleme</td><td>$O(n)$</td><td>$O(n)$ (Call Stack)</td><td>Derin $n$'de Stack Overflow riski</td></tr>
+        <tr><td>Faktöriyel</td><td>İterasyon</td><td>$O(n)$</td><td>$O(1)$</td><td>Daha az bellek, daha hızlı</td></tr>
+        <tr><td>Fibonacci</td><td>Özyineleme (Naive)</td><td>$O(2^n)$ (Çok yavaş)</td><td>$O(n)$</td><td>Aynı alt problemler tekrar hesaplanır</td></tr>
+        <tr><td>Fibonacci</td><td>İterasyon / Memoization</td><td>$O(n)$</td><td>$O(1)$ / $O(n)$</td><td>Dinamik programlama ile optimize edilir</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-note">
+      <strong>İleri Düzey ve Sınav Notu:</strong><br>
+      &bull; Özyinelemeli çağrı fonksiyonun <em>en son işlemi</em> ise buna <strong>Tail Recursion</strong> denir; modern derleyiciler bunu otomatik döngüye dönüştürerek (Tail Call Optimization) yığın kullanımını $O(1)$'e indirebilir.<br>
+      &bull; Naive özyinelemeli Fibonacci'nin zaman karmaşıklığı üsseldir: <strong>$O(2^n)$</strong>.
+    </div>
   </section>
 </article>
 
@@ -3321,39 +4143,133 @@ int faktoriyel(int n) {
 <article class="unit-article">
   <h2>11. Ünite: Ağaç Veri Yapısı (Trees) ve İkili Arama Ağacı (BST)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Doğrusal olmayan (hiyerarşik) Ağaç veri yapısını, düğüm, kök, yaprak, derinlik ve yükseklik kavramlarını, İkili Ağaç (Binary Tree) türlerini ve arama işlemlerini $O(\log n)$'e indiren İkili Arama Ağacı (Binary Search Tree - BST) kuralını, ekleme ve silme mantığını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Doğrusal olmayan hiyerarşik Ağaç (Tree) veri yapısını ve temel terminolojisini (kök, yaprak, derece, derinlik, yükseklik, seviye), ikili ağaç (Binary Tree) özelliklerini, İkili Arama Ağacı (BST) kuralını, ekleme/arama/silme işlemlerini, dengesizleşme sorununu ve C++ ile BST gerçeklemesini öğrenmektir.
   </div>
 
   <section>
-    <h3>11.1. Temel Ağaç Kavramları</h3>
-    <ul>
-      <li><strong>Kök (Root):</strong> Ağacın en tepesinde yer alan, kendisinden önce ebeveyni olmayan başlangıç düğümüdür (Her ağaçta yalnızca 1 kök vardır).</li>
-      <li><strong>Düğüm (Node):</strong> Veri ve alt düğümlerine işaretçiler tutan her bir elemandır.</li>
-      <li><strong>Ebeveyn (Parent) & Çocuk (Child):</strong> Bir düğümün doğrudan bağlı olduğu üst düğüm ebeveyn, alt düğümleri çocuktur.</li>
-      <li><strong>Kardeş (Sibling):</strong> Aynı ebeveyne bağlı olan düğümlerdir.</li>
-      <li><strong>Yaprak (Leaf / Dış Düğüm):</strong> Hiçbir çocuğu olmayan en alttaki uç düğümlerdir.</li>
-      <li><strong>Yükseklik (Height):</strong> Kök düğümden en uzaktaki yaprağa kadar olan en uzun yoldaki kenar (dal) sayısıdır.</li>
-      <li><strong>İkili Ağaç (Binary Tree):</strong> Her düğümün <strong>EN FAZLA İKİ ÇOCUĞA</strong> (Sol Çocuk ve Sağ Çocuk) sahip olabildiği ağaç türüdür.</li>
-    </ul>
+    <h3>11.1. Ağaç Nedir? Temel Terminoloji ve İkili Ağaç Kuralları</h3>
+    <p><strong>Ağaç (Tree):</strong> Düğümlerden (node) oluşan, <em>döngü içermeyen (acyclic)</em> hiyerarşik bir veri yapısıdır. Kök (root) düğüm hariç her düğümün tam olarak bir ebeveyni (parent) vardır. $N$ düğümlü her ağaçta (ve ikili ağaçta) tam olarak <strong>$N - 1$ kenar (dal)</strong> bulunur.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kavram</th>
+          <th>Tanım</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Kök (Root)</strong></td><td>Ağacın en üstündeki başlangıç düğümüdür; ebeveyni yoktur.</td></tr>
+        <tr><td><strong>Düğüm (Node)</strong></td><td>Veri ve alt düğümlere (çocuklara) işaretçiler tutan yapı taşıdır.</td></tr>
+        <tr><td><strong>Yaprak (Leaf)</strong></td><td>Alt düğümü (çocuğu) olmayan en alttaki uç düğümdür (derecesi 0).</td></tr>
+        <tr><td><strong>Alt Ağaç (Subtree)</strong></td><td>Bir düğüm ve onun altında yer alan tüm düğümlerden oluşan ağaçtır.</td></tr>
+        <tr><td><strong>Ebeveyn / Çocuk / Kardeş</strong></td><td>Bir düğümün doğrudan üstündeki ebeveyn, altındakiler çocuk, aynı ebeveyne bağlılar kardeştir (sibling).</td></tr>
+        <tr><td><strong>Derinlik (Depth)</strong></td><td>Kökten ilgili düğüme kadar olan kenar sayısı (kökün derinliği 0'dır).</td></tr>
+        <tr><td><strong>Yükseklik (Height)</strong></td><td>Bir düğümden en derin yaprağa kadar olan kenar sayısıdır.</td></tr>
+        <tr><td><strong>Seviye (Level)</strong></td><td>Kök 0. seviye olmak üzere, düğümün kökten uzaklığıdır.</td></tr>
+        <tr><td><strong>Derece (Degree)</strong></td><td>Bir düğümün sahip olduğu çocuk sayısıdır.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <strong>Özel Ağaç Özellikleri (Sınavlarda Sık Sorulur):</strong><br>
+      &bull; <strong>İkili Ağaç (Binary Tree):</strong> Her düğümün en fazla 2 çocuğu (<code>left</code> ve <code>right</code>) olabilir; her düğüm 3 bileşen içerir (<code>data</code>, <code>left</code>, <code>right</code>).<br>
+      &bull; <strong>Tam İkili Ağaç (Full Binary Tree):</strong> Her düğüm 0 veya 2 çocuğa sahiptir. $L$ yaprağı olan tam ikili ağaçta toplam $2L - 1$ düğüm vardır (örneğin 8 yapraklı bir tam ikili ağaçta $2(8) - 1 = 15$ düğüm bulunur).<br>
+      &bull; <strong>Huffman / Trie Ağaçları:</strong> Karakterlere değişken uzunluklu ikili kodlar atamak (veri sıkıştırma) ve sözlük/otomatik tamamlama için kullanılır.
+    </div>
   </section>
 
   <section>
-    <h3>11.2. İkili Arama Ağacı (BST - Binary Search Tree) Kuralı</h3>
-    <div class="card">
-      <h4 style="color:var(--primary);">BST'nin Değişmez Temel Kuralı:</h4>
-      <p style="font-size:16px; font-weight:700;">
-        Herhangi bir düğüm için:<br>
-        1. SOL alt ağaçtaki TÜM değerler kök düğümün değerinden <strong>KÜÇÜK</strong> olmalıdır.<br>
-        2. SAĞ alt ağaçtaki TÜM değerler kök düğümün değerinden <strong>BÜYÜK</strong> olmalıdır.
-      </p>
+    <h3>11.2. İkili Arama Ağacı (BST - Binary Search Tree)</h3>
+    <p><strong>İkili Arama Ağacı (BST):</strong> Her düğüm için; <strong>sol alt ağaçtaki tüm değerlerin düğümden küçük</strong>, <strong>sağ alt ağaçtaki tüm değerlerin düğümden büyük</strong> olduğu özel ikili ağaç türüdür.</p>
+
+    <div class="formula-box">
+      <strong>BST Değişmez Kuralı:</strong>
+      $$\forall x \in \text{SolAltAğaç}(\text{kök}):\; x &lt; \text{kök.data} \qquad\text{ve}\qquad \forall y \in \text{SağAltAğaç}(\text{kök}):\; y &gt; \text{kök.data}$$
     </div>
 
-    <h4>BST'de Düğüm Silme İşleminin 3 Durumu:</h4>
-    <ol>
-      <li><strong>Durum 1 (Yaprak Düğüm Silme):</strong> Düğümün çocuğu yoktur. Doğrudan bellekten silinir ve ebeveyninin ilgili işaretçisi <code>nullptr</code> yapılır.</li>
-      <li><strong>Durum 2 (Tek Çocuklu Düğüm Silme):</strong> Silinen düğümün yerine doğrudan kendi tek çocuğu bağlanır.</li>
-      <li><strong>Durum 3 (İki Çocuklu Düğüm Silme - En Kritik Durum):</strong> Düğümün yerine ya <em>Sol alt ağacın EN BÜYÜK elemanı</em> ya da <em>Sağ alt ağacın EN KÜÇÜK elemanı (Inorder Successor)</em> kopyalanır ve kopyalanan o düğüm silinir. Böylece BST kuralı korunur!</li>
-    </ol>
+    <ul>
+      <li><strong>Ekleme (Insert) ve Arama (Search):</strong> Kökten başlanır; değer mevcut düğümden küçükse sola, büyükse sağa ilerlenir.</li>
+      <li><strong>Zaman Karmaşıklığı:</strong> Dengeli bir BST'de arama, ekleme ve silme ortalama <strong>$O(\log n)$</strong>'dir. Yüksekliği $h$ olan bir BST'de en derindeki elemanı aramak için en fazla $h + 1$ düğüm kontrol edilir.</li>
+      <li><strong>Dengesizleşme Sorunu:</strong> Veriler sıralı eklenirse (örn: 10, 20, 30, 40...) ağaç tek taraflı bir bağlı listeye (çubuk) dönüşür ve karmaşıklık <strong>$O(n)$</strong>'e düşer. Bunu önlemek için <em>AVL</em> ve <em>Red-Black Tree</em> gibi kendiliğinden dengelenen ağaçlar kullanılır.</li>
+      <li><strong>BST'de Silme'nin 3 Durumu:</strong> (1) <em>Yaprak düğüm</em> doğrudan silinir. (2) <em>Tek çocuklu düğüm</em> yerine kendi tek çocuğu bağlanır. (3) <em>İki çocuklu düğüm</em> yerine sol alt ağacın en büyüğü veya sağ alt ağacın en küçüğü (<em>Inorder Successor</em>) taşınır ve kopyalanan düğüm silinir.</li>
+    </ul>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kullanım Alanı</th>
+          <th>Açıklama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Veritabanı İndeksleme</strong></td><td>B+ ağaçları, AVL ve Red-Black Tree ile hızlı arama ve sıralama</td></tr>
+        <tr><td><strong>Dosya Sistemleri</strong></td><td>Klasör ve alt dosya hiyerarşisi</td></tr>
+        <tr><td><strong>Yapay Zekâ ve Oyunlar</strong></td><td>Karar ağaçları ve hamle ağaçları</td></tr>
+        <tr><td><strong>Sözlükler &amp; Ağ Yönlendirme</strong></td><td>Trie ile otomatik tamamlama, routing tabloları</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>11.3. C++ ile İkili Arama Ağacı (BST) Uygulaması</h3>
+    <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+Node* yeniDugum(int veri) {
+    Node* dugum = new Node();
+    dugum-&gt;data = veri;
+    dugum-&gt;left = dugum-&gt;right = nullptr;
+    return dugum;
+}
+
+// BST'ye eleman ekleme
+Node* ekle(Node* kok, int veri) {
+    if (kok == nullptr)
+        return yeniDugum(veri);
+    if (veri &lt; kok-&gt;data)
+        kok-&gt;left = ekle(kok-&gt;left, veri);
+    else if (veri &gt; kok-&gt;data)
+        kok-&gt;right = ekle(kok-&gt;right, veri);
+    return kok;
+}
+
+// BST'de eleman arama - Ortalama O(log n), En kötü O(n)
+Node* ara(Node* kok, int anahtar) {
+    if (kok == nullptr || kok-&gt;data == anahtar)
+        return kok;
+    if (anahtar &lt; kok-&gt;data)
+        return ara(kok-&gt;left, anahtar);
+    else
+        return ara(kok-&gt;right, anahtar);
+}
+
+// Inorder gezinti (BST'de küçükten büyüğe sıralı çıktı verir)
+void inorder(Node* kok) {
+    if (kok != nullptr) {
+        inorder(kok-&gt;left);
+        cout &lt;&lt; kok-&gt;data &lt;&lt; " ";
+        inorder(kok-&gt;right);
+    }
+}
+
+// Postorder ile ağacı bellekten temizleme
+void bellekTemizle(Node* kok) {
+    if (kok != nullptr) {
+        bellekTemizle(kok-&gt;left);
+        bellekTemizle(kok-&gt;right);
+        delete kok;
+    }
+}</code></pre>
+
+    <div class="exam-note">
+      <strong>Modern C++ ve Sınav Notu:</strong> C++ STL'deki <code>std::set</code> ve <code>std::map</code> konteynerleri arka planda genellikle dengeli ikili arama ağacı (Red-Black Tree) kullanır. Aynı değerin BST'ye tekrar eklenip eklenmeyeceği tasarıma bağlıdır (yukarıdaki standart örnekte yinelenen değerler eklenmez).
+    </div>
   </section>
 </article>
 
@@ -3621,59 +4537,121 @@ int faktoriyel(int n) {
 <article class="unit-article">
   <h2>12. Ünite: Ağaçlarda Gezinti Yöntemleri (Tree Traversal)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Bir ikili ağaçtaki tüm düğümleri tek tek ziyaret etmek için kullanılan üç Derinlik Öncelikli Gezinti (DFS: Preorder, Inorder, Postorder) ve Genişlik Öncelikli Gezinti (BFS / Seviye Seviye) algoritmalarını C++ kodları ve sınav sorularıyla öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> İkili ağaçlardaki tüm düğümleri belirli bir sırayla ziyaret eden üç temel Derinlik Öncelikli Gezinti yöntemini (<strong>Preorder</strong>, <strong>Inorder</strong>, <strong>Postorder</strong>) ve Level-Order (BFS) gezintiyi, her birinin kullanım alanlarını, zaman ($O(n)$) ve alan ($O(\log n)$ / $O(n)$) karmaşıklıklarını, özyinelemeli ve yığın (stack) tabanlı iteratif C++ kodlarını öğrenmektir.
   </div>
 
   <section>
-    <h3>12.1. Derinlik Öncelikli Gezinti (DFS - Depth First Search)</h3>
-    <p>Özyineleme mantığıyla çalışan ve kök düğümün ne zaman ziyaret edildiğine göre isimlendirilen 3 temel yöntem vardır:</p>
+    <h3>12.1. Üç Temel Gezinti Türü (DFS) ve Level-Order (BFS)</h3>
+    <p><strong>Ağaçta Gezinti (Traversal):</strong> Ağaçtaki her düğümün tam olarak bir kez, belirli bir düzene göre ziyaret edilmesidir. Kök düğümün ne zaman ziyaret edildiğine göre üç temel DFS yöntemi vardır:</p>
+    <ul>
+      <li><strong>1. Preorder (Öncelikli — Kök, Sol, Sağ):</strong> Önce kök ziyaret edilir, sonra sol alt ağaç, en son sağ alt ağaç gezilir. <em>Kullanım alanları:</em> Ağacın kopyalanması (klonlama), ifade ağaçlarından <strong>Prefix (ön ek)</strong> gösterim üretme, dosya/dizin yapısını öncelikli gezme.</li>
+      <li><strong>2. Inorder (İçsel — Sol, Kök, Sağ):</strong> Önce sol alt ağaç, sonra kök, en son sağ alt ağaç gezilir. <em>Kullanım alanları:</em> <strong>BST'de verileri küçükten büyüğe sıralı elde etme</strong>, ifade ağaçlarından <strong>Infix (ara ek)</strong> gösterim üretme.</li>
+      <li><strong>3. Postorder (Sonradan — Sol, Sağ, Kök):</strong> Önce sol alt ağaç, sonra sağ alt ağaç, en son kök gezilir. <em>Kullanım alanları:</em> <strong>Düğüm silme ve belleği temizleme</strong> (çocuklar silinmeden ebeveyn silinmez), ifade ağaçlarından <strong>Postfix (son ek)</strong> gösterim üretme, alt klasörleri önce silme.</li>
+      <li><strong>4. Level-Order (Seviye Seviye — BFS):</strong> Ağacı kökten başlayarak seviye seviye, soldan sağa doğru bir <strong>Kuyruk (Queue)</strong> yardımıyla gezer.</li>
+    </ul>
 
-    <div class="card">
-      <h4>1. Preorder Gezinti (Öncelikli Sıralama: KÖK &rarr; SOL &rarr; SAĞ)</h4>
-      <p>Önce geçerli düğüm (kök) ziyaret edilir, ardından sol alt ağaç, en son sağ alt ağaç taranır. Ağacın kopyasını veya serileştirilmiş (serialized) halini oluştururken kullanılır.</p>
-      <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Gezinti Türü</th>
+          <th>Ziyaret Sırası</th>
+          <th>Temel Uygulama Alanları</th>
+          <th>BST'de Sonuç</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Preorder</strong></td><td>Kök &rarr; Sol &rarr; Sağ</td><td>Ağaç kopyalama, Prefix gösterim</td><td>Kökten başlar</td></tr>
+        <tr><td><strong>Inorder</strong></td><td>Sol &rarr; Kök &rarr; Sağ</td><td>BST sıralama, Infix gösterim</td><td><strong>Küçükten büyüğe sıralı</strong></td></tr>
+        <tr><td><strong>Postorder</strong></td><td>Sol &rarr; Sağ &rarr; Kök</td><td>Bellek temizleme (silme), Postfix gösterim</td><td>Kök en son işlenir</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <strong>Adım Adım Gezinti İzleme (Trace):</strong> Kökü <code>50</code>, sol çocuğu <code>30</code> (çocukları <code>20, 40</code>), sağ çocuğu <code>70</code> (çocukları <code>60, 80</code>) olan BST için:<br>
+      &bull; <strong>Preorder (Kök-Sol-Sağ):</strong> <code>50, 30, 20, 40, 70, 60, 80</code><br>
+      &bull; <strong>Inorder (Sol-Kök-Sağ):</strong> <code>20, 30, 40, 50, 60, 70, 80</code> (<em>Sıralı!</em>)<br>
+      &bull; <strong>Postorder (Sol-Sağ-Kök):</strong> <code>20, 40, 30, 60, 80, 70, 50</code>
+    </div>
+  </section>
+
+  <section>
+    <h3>12.2. Zaman ve Alan (Bellek) Karmaşıklığı Analizi</h3>
+    <p>$n$ düğümlü bir ağaçta her üç gezinti yöntemi de her düğümü tam olarak bir kez ziyaret ettiğinden <strong>Zaman Karmaşıklığı</strong> her durumda <strong>$O(n)$</strong>'dir. <strong>Alan Karmaşıklığı</strong> ise özyinelemedeki maksimum çağrı yığını derinliğine (veya iteratif yöntemdeki yardımcı yığın boyutuna), yani <strong>ağacın yüksekliğine ($h$)</strong> bağlıdır:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Gezinti Türü</th>
+          <th>Zaman Karmaşıklığı</th>
+          <th>Alan Karmaşıklığı (Dengeli Ağaç)</th>
+          <th>Alan Karmaşıklığı (Dengesiz / Çubuk Ağaç)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Preorder</td><td>$O(n)$</td><td>$O(\log n)$</td><td>$O(n)$</td></tr>
+        <tr><td>Inorder</td><td>$O(n)$</td><td>$O(\log n)$</td><td>$O(n)$</td></tr>
+        <tr><td>Postorder</td><td>$O(n)$</td><td>$O(\log n)$</td><td>$O(n)$</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>12.3. C++ Uygulaması: Özyinelemeli ve Yığın (Stack) ile İteratif Gezinti</h3>
+    <p>Çok derin veya dengesiz ağaçlarda özyinelemenin yol açabileceği <em>Stack Overflow</em> riskinden kaçınmak için <code>std::stack</code> kullanarak iteratif gezinti uygulanabilir:</p>
+    <pre><code>#include &lt;iostream&gt;
+#include &lt;stack&gt;
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
 void preorder(Node* root) {
-    if (root == nullptr) return;
-    cout << root->data << " "; // 1. Kök
-    preorder(root->left);       // 2. Sol
-    preorder(root->right);      // 3. Sağ
+    if (root != nullptr) {
+        cout &lt;&lt; root-&gt;data &lt;&lt; " ";  // 1. Kök
+        preorder(root-&gt;left);       // 2. Sol
+        preorder(root-&gt;right);      // 3. Sağ
+    }
 }
-</pre>
-      </div>
-    </div>
 
-    <div class="card">
-      <h4>2. Inorder Gezinti (İçsel Sıralama: SOL &rarr; KÖK &rarr; SAĞ)</h4>
-      <p>Önce sol alt ağaç, sonra kök, sonra sağ alt ağaç gezilir.</p>
-      <div class="note-box">
-        <strong>HAYATİ İLKE (Sınav Sorusu):</strong> Bir İkili Arama Ağacı (BST) <strong>INORDER</strong> yöntemiyle gezildiğinde, düğüm değerleri <strong>KÜÇÜKTEN BÜYÜĞE DOĞRU SIRALI (SORTED)</strong> olarak ekrana yazdırılır!
-      </div>
-      <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
 void inorder(Node* root) {
-    if (root == nullptr) return;
-    inorder(root->left);        // 1. Sol
-    cout << root->data << " "; // 2. Kök (Küçükten büyüğe sıralı!)
-    inorder(root->right);       // 3. Sağ
+    if (root != nullptr) {
+        inorder(root-&gt;left);        // 1. Sol
+        cout &lt;&lt; root-&gt;data &lt;&lt; " ";  // 2. Kök
+        inorder(root-&gt;right);       // 3. Sağ
+    }
 }
-</pre>
-      </div>
-    </div>
 
-    <div class="card">
-      <h4>3. Postorder Gezinti (Sonradan Sıralama: SOL &rarr; SAĞ &rarr; KÖK)</h4>
-      <p>Önce sol alt ağaç, sonra sağ alt ağaç, en son kök düğüm işlenir. Alt düğümleri silmeden kökü silemeyeceğimiz için <strong>ağacı bellekten tamamen silerken (delete)</strong> veya matematiksel işlem ağaçlarını (Postfix) değerlendirirken kullanılır.</p>
-      <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
 void postorder(Node* root) {
-    if (root == nullptr) return;
-    postorder(root->left);      // 1. Sol
-    postorder(root->right);     // 2. Sağ
-    cout << root->data << " "; // 3. Kök
+    if (root != nullptr) {
+        postorder(root-&gt;left);      // 1. Sol
+        postorder(root-&gt;right);     // 2. Sağ
+        cout &lt;&lt; root-&gt;data &lt;&lt; " ";  // 3. Kök
+    }
 }
-</pre>
-      </div>
+
+// Stack kullanarak İteratif Inorder Gezinti
+void inorderIterative(Node* root) {
+    stack&lt;Node*&gt; s;
+    Node* curr = root;
+    while (curr != nullptr || !s.empty()) {
+        while (curr != nullptr) {
+            s.push(curr);
+            curr = curr-&gt;left;      // En sola kadar in
+        }
+        curr = s.top();
+        s.pop();
+        cout &lt;&lt; curr-&gt;data &lt;&lt; " ";  // Kökü yazdır
+        curr = curr-&gt;right;         // Sağ alt ağaca geç
+    }
+}</code></pre>
+
+    <div class="exam-note">
+      <strong>Sınav Notları:</strong><br>
+      &bull; İteratif derinlik öncelikli gezintide yardımcı veri yapısı olarak <strong>Yığın (Stack)</strong>, seviye seviye (Level-Order / BFS) gezintide ise <strong>Kuyruk (Queue)</strong> kullanılır.<br>
+      &bull; Ağacı bellekten tamamen silmek için en uygun gezinti yöntemi <strong>Postorder</strong>'dır (önce alt düğümler, en son kök silinir).
     </div>
   </section>
 </article>
@@ -3780,53 +4758,114 @@ void postorder(Node* root) {
 <article class="unit-article">
   <h2>13. Ünite: Sıralama Algoritmaları I (Bubble, Selection, Insertion Sort)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Karşılaştırmalı temel sıralama algoritmaları olan Kabarcık Sıralama (Bubble Sort), Seçmeli Sıralama (Selection Sort) ve Eklemeli Sıralama (Insertion Sort) mantığını, adım adım geçişlerini, $O(n^2)$ zaman karmaşıklıklarını ve C++ kodlarını öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Sıralama (sorting) kavramını, kararlılık (stability) ve yerinde çalışma (in-place) ölçütlerini, üç temel karşılaştırmalı sıralama algoritması olan <strong>Bubble Sort</strong>, <strong>Selection Sort</strong> ve <strong>Insertion Sort</strong>'un adım adım çalışma mantığını, zaman/alan karmaşıklıklarını ve C++ implementasyonlarını öğrenmektir.
   </div>
 
   <section>
-    <h3>13.1. Kabarcık Sıralama (Bubble Sort)</h3>
-    <p>Dizideki komşu elemanları sırayla karşılaştırarak yanlış sırada olanları takas eden (swap) algoritmadır. Büyük elemanlar her turda bir kabarcık gibi dizinin sonuna doğru yükselir.</p>
+    <h3>13.1. Sıralama Nedir? Temel Sınıflandırma Kriterleri</h3>
+    <p><strong>Sıralama (Sorting):</strong> Bir veri kümesindeki elemanların belirli bir düzene (genellikle artan veya azalan) göre yeniden düzenlenmesidir. Sıralı veri üzerinde ikili arama (Binary Search) $O(\log n)$ sürede yapılabilir ve istatistiksel analiz/raporlama kolaylaşır.</p>
     <ul>
-      <li>En Kötü Durum (Ters Sıralı Dizi): $O(n^2)$</li>
-      <li>En İyi Durum (Zaten Sıralı Dizi, bayrak kontrollü): $O(n)$</li>
-      <li>Kararlıdır (Stable: Eşit elemanların göreli sırası bozulmaz).</li>
+      <li><strong>Kararlı (Stable):</strong> Sıralama öncesinde aynı anahtara (değere) sahip elemanların göreli sırası sıralama sonrasında da korunur. Örneğin <code>(5,7), (3,6), (1,9), (9,1), (1,3)</code> çiftleri ilk elemana göre kararlı sıralanırsa <code>(1,9)</code>, <code>(1,3)</code>'ten önce kalır.</li>
+      <li><strong>Yerinde (In-place):</strong> Sıralama için dizi boyutuna bağlı büyük ek bellek kullanmaz, yalnızca $O(1)$ ek bellek harcar.</li>
     </ul>
+  </section>
 
-    <div class="formula-box">
-<pre style="margin:0; font-family:var(--font-mono); color:var(--text);">
-void bubbleSort(int arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        bool takasOldu = false;
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                swap(arr[j], arr[j + 1]);
-                takasOldu = true;
+  <section>
+    <h3>13.2. Bubble Sort, Selection Sort ve Insertion Sort</h3>
+
+    <h4>1. Kabarcık Sıralama (Bubble Sort)</h4>
+    <p>Bitişik (komşu) elemanları karşılaştırır ve yanlış sıradaysa takas (swap) eder. Her geçişte en büyük eleman sona "kabarcık" gibi taşınır. <code>swapped</code> bayrağı kullanılırsa, zaten sıralı bir dizide ilk geçişte takas olmadığı için erken çıkış yapar ve en iyi durumda <strong>$O(n)$</strong> sürede biter. <strong>Kararlı</strong> ve <strong>yerindedir</strong>.</p>
+    <div class="highlight-box">
+      <strong>Bubble Sort Adımları — <code>[5, 2, 9, 1, 5]</code>:</strong><br>
+      &bull; 1. Geçiş: <code>[2, 5, 1, 5, 9]</code> (en büyük 9 sona oturdu)<br>
+      &bull; 2. Geçiş: <code>[2, 1, 5, 5, 9]</code><br>
+      &bull; 3. Geçiş: <code>[1, 2, 5, 5, 9]</code> &rarr; 4. geçişte takas olmaz, erken çıkış!
+    </div>
+
+    <h4>2. Seçmeli Sıralama (Selection Sort)</h4>
+    <p>Her adımda sıralanmamış kalan kısmın <strong>en küçük</strong> elemanını bulur ve sıralanmamış kısmın başındaki elemanla yer değiştirir. En iyi, ortalama ve en kötü durumda daima <strong>$O(n^2)$</strong> karmaşıklığa sahiptir (erken çıkış yoktur). $n$ elemanlı bir dizide en fazla <strong>$n - 1$</strong> takas yapar. Yerindedir ancak uzun mesafeli takaslar nedeniyle <strong>genellikle kararlı değildir</strong>.</p>
+    <div class="highlight-box">
+      <strong>Selection Sort Adımları — <code>[5, 2, 9, 1, 5]</code>:</strong><br>
+      &bull; 1. Adım (en küçük 1 &harr; 5): <code>[1, 2, 9, 5, 5]</code><br>
+      &bull; 2. Adım (en küçük 2 yerinde): <code>[1, 2, 9, 5, 5]</code><br>
+      &bull; 3. Adım (en küçük 5 &harr; 9): <code>[1, 2, 5, 9, 5]</code><br>
+      &bull; 4. Adım (en küçük 5 &harr; 9): <code>[1, 2, 5, 5, 9]</code>
+    </div>
+
+    <h4>3. Eklemeli Sıralama (Insertion Sort)</h4>
+    <p>Diziyi sıralı (sol) ve sırasız (sağ) iki parçaya ayırır; sırasız kısımdan aldığı her elemanı (<code>key</code>), sol taraftaki sıralı kısımda kendisinden büyük elemanları sağa kaydırarak uygun konumuna ekler (iskambil kartlarını dizmeye benzer). En iyi durumda (sıralı veya neredeyse sıralı dizide) <strong>$O(n)$</strong>, ortalama/en kötü durumda $O(n^2)$ çalışır. <strong>Kararlı</strong> ve <strong>yerindedir</strong>; küçük veri setlerinde çok etkilidir.</p>
+    <div class="highlight-box">
+      <strong>Insertion Sort Adımları — <code>[5, 2, 9, 1, 5]</code>:</strong><br>
+      &bull; 1. Adım (2, 5'in önüne): <code>[2, 5, 9, 1, 5]</code><br>
+      &bull; 2. Adım (9 yerinde): <code>[2, 5, 9, 1, 5]</code><br>
+      &bull; 3. Adım (1 en başa): <code>[1, 2, 5, 9, 5]</code><br>
+      &bull; 4. Adım (5, 9'un önüne): <code>[1, 2, 5, 5, 9]</code>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Algoritma</th>
+          <th>En İyi Durum</th>
+          <th>Ortalama Durum</th>
+          <th>En Kötü Durum</th>
+          <th>Ekstra Alan</th>
+          <th>Kararlı mı?</th>
+          <th>Yerinde mi?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Bubble Sort</strong></td><td>$O(n)$ (sıralıysa)</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>Evet</td><td>Evet</td></tr>
+        <tr><td><strong>Selection Sort</strong></td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>Hayır</td><td>Evet</td></tr>
+        <tr><td><strong>Insertion Sort</strong></td><td>$O(n)$ (sıralıysa)</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>Evet</td><td>Evet</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>13.3. C++ Uygulamaları</h3>
+    <pre><code>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+void bubbleSort(int dizi[], int n) {
+    for (int i = 0; i &lt; n - 1; i++) {
+        bool swapped = false;
+        for (int j = 0; j &lt; n - i - 1; j++) {
+            if (dizi[j] &gt; dizi[j + 1]) {
+                swap(dizi[j], dizi[j + 1]);
+                swapped = true;
             }
         }
-        if (!takasOldu) break; // Dizi sıralıysa erken çıkış: O(n)
+        if (!swapped) break;        // Erken çıkış -&gt; sıralı dizide O(n)
     }
 }
-</pre>
+
+void selectionSort(int dizi[], int n) {
+    for (int i = 0; i &lt; n - 1; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j &lt; n; j++)
+            if (dizi[j] &lt; dizi[min_idx])
+                min_idx = j;
+        swap(dizi[i], dizi[min_idx]);
+    }
+}
+
+void insertionSort(int dizi[], int n) {
+    for (int i = 1; i &lt; n; i++) {
+        int key = dizi[i];
+        int j = i - 1;
+        while (j &gt;= 0 &amp;&amp; dizi[j] &gt; key) {
+            dizi[j + 1] = dizi[j];
+            j--;
+        }
+        dizi[j + 1] = key;
+    }
+}</code></pre>
+
+    <div class="exam-note">
+      <strong>Sınav İpucu:</strong> Üç temel $O(n^2)$ algoritma arasında <strong>Bubble Sort</strong> ve <strong>Insertion Sort</strong> kararlıdır (stable) ve sıralı dizide $O(n)$ çalışır; <strong>Selection Sort</strong> ise dizi sıralı olsa bile tüm kalan elemanları taradığı için her durumda $O(n^2)$'dir ve genellikle kararlı değildir. Büyük veri setlerinde C++ STL'deki <code>std::sort</code> (Introsort) tercih edilir.
     </div>
-  </section>
-
-  <section>
-    <h3>13.2. Seçmeli Sıralama (Selection Sort)</h3>
-    <p>Dizinin sıralanmamış kısmındaki <strong>EN KÜÇÜK (MİNİMUM) ELEMANI BULUP</strong> sıralanmamış kısmın en başındaki elemanla yer değiştiren algoritmadır.</p>
-    <ul>
-      <li>Zaman Karmaşıklığı: Dizi sıralı olsa da ters sıralı olsa da <strong>HER ZAMAN $O(n^2)$</strong>'dir. Erken çıkış yapamaz.</li>
-      <li>Avantajı: Takas (swap) sayısı minimumdur (en fazla $n-1$ kez takas yapar; bellek yazma maliyeti yüksek olan donanımlarda tercih edilir).</li>
-    </ul>
-  </section>
-
-  <section>
-    <h3>13.3. Eklemeli Sıralama (Insertion Sort)</h3>
-    <p>Eldeki oyun kartlarını dizer gibi çalışır. Sıradaki elemanı alır ve sol taraftaki zaten sıralanmış olan alt dizi içinde ait olduğu doğru konuma araya ekler.</p>
-    <ul>
-      <li>En Kötü Durum: $O(n^2)$</li>
-      <li>En İyi Durum (Neredeyse Sıralı Dizi): <strong>$O(n)$</strong> (Çok hızlı çalışır).</li>
-      <li>Küçük boyutlu dizilerde ($n < 30$) karmaşık algoritmalardan bile daha az sabit ek yük ile çok hızlıdır.</li>
-    </ul>
   </section>
 </article>
 
@@ -4058,28 +5097,74 @@ void bubbleSort(int arr[], int n) {
 <article class="unit-article">
   <h2>14. Ünite: Sıralama Algoritmalarının Karşılaştırılması (Merge Sort, Quick Sort)</h2>
   <div class="unit-lead">
-    <strong>Ünitenin Amacı:</strong> Böl ve Yönet (Divide and Conquer) felsefesiyle çalışan gelişmiş sıralama algoritmalarını; Birleştirmeli Sıralama (Merge Sort) ve Hızlı Sıralama (Quick Sort) mekanizmalarını, zaman/alan karmaşıklıklarını ve 5 temel sıralama algoritmasının büyük karşılaştırma tablosunu öğrenmektir.
+    <strong>Ünitenin Amacı:</strong> Böl ve Yönet (Divide and Conquer) stratejisiyle çalışan gelişmiş <strong>Merge Sort</strong> ve <strong>Quick Sort</strong> algoritmalarının çalışma mekanizmalarını ve C++ kodlarını kavramak; Bubble, Selection, Insertion, Merge, Quick ve Heap Sort algoritmalarını zaman, bellek, kararlılık ve yerinde çalışma ölçütlerine göre karşılaştırarak doğru senaryo seçimini yapmaktır.
   </div>
 
   <section>
-    <h3>14.1. Birleştirmeli Sıralama (Merge Sort - Böl ve Yönet)</h3>
-    <p>Diziyi tek bir eleman kalana kadar sürekli iki eşit yarıya böler (Divide), ardından sıralı parçaları ikili ikili karşılaştırarak birleştirir (Conquer & Merge).</p>
-    <ul>
-      <li>Zaman Karmaşıklığı: En iyi, ortalama ve en kötü durumda <strong>DAİMA $O(n \log n)$</strong>'dir. Son derece kararlı ve garantili bir performansa sahiptir.</li>
-      <li><strong>Kritik Dezavantajı:</strong> Birleştirme işlemi için orijinal dizi kadar ek yardımcı bellek alanına ihtiyaç duyar (<strong>Alan Karmaşıklığı: $O(n)$</strong>).</li>
-      <li>Kararlıdır (Stable). Bağlı listelerin sıralanmasında mükemmeldir.</li>
-    </ul>
+    <h3>14.1. Karmaşık Sıralama Algoritmaları: Merge Sort, Quick Sort ve Heap Sort</h3>
+
+    <h4>1. Birleştirmeli Sıralama (Merge Sort)</h4>
+    <p><strong>Böl ve Yönet (Divide and Conquer)</strong> yaklaşımını kullanır: Dizi tek eleman kalana dek sürekli ikiye bölünür, ardından sıralı alt diziler karşılaştırılarak birleştirilir (<code>merge</code>). En iyi, ortalama ve en kötü durumda daima <strong>$O(n \log n)$</strong> zaman karmaşıklığı garantiler. <strong>Kararlıdır (stable)</strong> ve büyük veri setleriyle <em>harici (diskte) sıralama</em> için idealdir; ancak birleştirme için <strong>$O(n)$ ek bellek</strong> gerektirdiğinden <strong>in-place değildir</strong>.</p>
+
+    <h4>2. Hızlı Sıralama (Quick Sort)</h4>
+    <p>Diziden bir <strong>pivot</strong> eleman seçilir; <code>partition</code> işlemiyle pivot'tan küçük elemanlar sola, büyük elemanlar sağa yerleştirilir ve alt diziler özyinelemeli olarak sıralanır. Ortalama durumda <strong>$O(n \log n)$</strong> hızla pratikte en hızlı algoritmalardandır ve <strong>yerinde (in-place)</strong> çalışır (özyineleme derinliği için ortalama <strong>$O(\log n)$</strong> yığın belleği kullanır). Ancak kötü pivot seçilirse (ör. zaten sıralı dizide uç eleman pivot seçilirse) en kötü durumda <strong>$O(n^2)$</strong> olur; <strong>kararlı değildir</strong>. Bunu önlemek için rastgele pivot veya <em>median-of-three</em> önerilir.</p>
+
+    <h4>3. Yığın Sıralaması (Heap Sort)</h4>
+    <p>Temelinde <em>Öncelikli Kuyruk (Priority Queue / Binary Heap)</em> yapısı kullanarak Selection Sort mantığını hızlandıran algoritmadır. Ekstra dizi kullanmadan (<strong>$O(1)$</strong> bellek, in-place) en iyi, ortalama ve en kötü durumda <strong>$O(n \log n)$</strong> performans sunar; kestirilebilir çalışma süresi nedeniyle gerçek zamanlı sistemlerde tercih edilir, fakat <strong>kararlı değildir</strong>.</p>
   </section>
 
   <section>
-    <h3>14.2. Hızlı Sıralama (Quick Sort)</h3>
-    <p>Diziden bir referans eleman (<strong>PIVOT</strong>) seçer. Diziyi pivot'tan küçükler sola, büyükler sağa gelecek şekilde ikiye böler (Partition) ve bu işlemi özyinelemeli olarak sürdürür.</p>
-    <ul>
-      <li>Ortalama Zaman Karmaşıklığı: <strong>$O(n \log n)$</strong>. Pratikte en hızlı çalışan algoritmadır (önbellek dostudur).</li>
-      <li><strong>En Kötü Durum (Worst Case):</strong> Pivot seçiminde daima en küçük veya en büyük eleman seçilirse (örneğin sıralı bir dizide ilk eleman pivot seçilirse) karmaşıklık <strong>$O(n^2)$</strong>'ye düşer!</li>
-      <li>Alan Karmaşıklığı: Ek dizi gerektirmez, yerinde (in-place) sıralar: $O(\log n)$ yığın belleği.</li>
-      <li>Kararlı DEĞİLDİR (Unstable).</li>
-    </ul>
+    <h3>14.2. C++ Uygulamaları: Merge Sort ve Quick Sort</h3>
+    <pre><code>// 1. MERGE SORT (Böl ve Birleştir)
+void merge(int dizi[], int sol, int orta, int sag) {
+    int n1 = orta - sol + 1;
+    int n2 = sag - orta;
+    int* L = new int[n1];
+    int* R = new int[n2];
+    for (int i = 0; i &lt; n1; i++) L[i] = dizi[sol + i];
+    for (int j = 0; j &lt; n2; j++) R[j] = dizi[orta + 1 + j];
+
+    int i = 0, j = 0, k = sol;
+    while (i &lt; n1 &amp;&amp; j &lt; n2) {
+        if (L[i] &lt;= R[j]) dizi[k++] = L[i++];
+        else              dizi[k++] = R[j++];
+    }
+    while (i &lt; n1) dizi[k++] = L[i++];
+    while (j &lt; n2) dizi[k++] = R[j++];
+    delete[] L;
+    delete[] R;
+}
+
+void mergeSort(int dizi[], int sol, int sag) {
+    if (sol &lt; sag) {
+        int orta = sol + (sag - sol) / 2;
+        mergeSort(dizi, sol, orta);
+        mergeSort(dizi, orta + 1, sag);
+        merge(dizi, sol, orta, sag);
+    }
+}
+
+// 2. QUICK SORT (Pivot ve Partition)
+int partition(int dizi[], int low, int high) {
+    int pivot = dizi[high];
+    int i = low - 1;
+    for (int j = low; j &lt; high; j++) {
+        if (dizi[j] &lt; pivot) {
+            i++;
+            swap(dizi[i], dizi[j]);
+        }
+    }
+    swap(dizi[i + 1], dizi[high]);
+    return i + 1;
+}
+
+void quickSort(int dizi[], int low, int high) {
+    if (low &lt; high) {
+        int pi = partition(dizi, low, high);
+        quickSort(dizi, low, pi - 1);
+        quickSort(dizi, pi + 1, high);
+    }
+}</code></pre>
   </section>
 
   <section>
@@ -4088,56 +5173,45 @@ void bubbleSort(int arr[], int n) {
       <thead>
         <tr>
           <th>Algoritma</th>
-          <th>En İyi Zaman</th>
-          <th>Ortalama Zaman</th>
-          <th>En Kötü Zaman</th>
-          <th>Alan (Ek Bellek)</th>
-          <th>Kararlı mı? (Stable)</th>
+          <th>En İyi Durum</th>
+          <th>Ortalama Durum</th>
+          <th>En Kötü Durum</th>
+          <th>Bellek Karmaşıklığı</th>
+          <th>Kararlılık</th>
+          <th>Yerinde (In-place)</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><strong>Bubble Sort</strong></td>
-          <td>$O(n)$</td>
-          <td>$O(n^2)$</td>
-          <td>$O(n^2)$</td>
-          <td>$O(1)$</td>
-          <td>Evet</td>
-        </tr>
-        <tr>
-          <td><strong>Selection Sort</strong></td>
-          <td>$O(n^2)$</td>
-          <td>$O(n^2)$</td>
-          <td>$O(n^2)$</td>
-          <td>$O(1)$</td>
-          <td>Hayır</td>
-        </tr>
-        <tr>
-          <td><strong>Insertion Sort</strong></td>
-          <td>$O(n)$</td>
-          <td>$O(n^2)$</td>
-          <td>$O(n^2)$</td>
-          <td>$O(1)$</td>
-          <td>Evet</td>
-        </tr>
-        <tr>
-          <td><strong>Merge Sort</strong></td>
-          <td><strong style="color:var(--success);">$O(n \log n)$</strong></td>
-          <td><strong style="color:var(--success);">$O(n \log n)$</strong></td>
-          <td><strong style="color:var(--success);">$O(n \log n)$</strong></td>
-          <td><strong style="color:var(--danger);">$O(n)$ (Ek dizi)</strong></td>
-          <td>Evet</td>
-        </tr>
-        <tr>
-          <td><strong>Quick Sort</strong></td>
-          <td><strong style="color:var(--success);">$O(n \log n)$</strong></td>
-          <td><strong style="color:var(--success);">$O(n \log n)$</strong></td>
-          <td><strong style="color:var(--danger);">$O(n^2)$ (Kötü pivot)</strong></td>
-          <td>$O(\log n)$ (Yığın)</td>
-          <td>Hayır</td>
-        </tr>
+        <tr><td><strong>Bubble Sort</strong></td><td>$O(n)$</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>Evet</td><td>Evet</td></tr>
+        <tr><td><strong>Selection Sort</strong></td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>Hayır</td><td>Evet</td></tr>
+        <tr><td><strong>Insertion Sort</strong></td><td>$O(n)$</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>Evet</td><td>Evet</td></tr>
+        <tr><td><strong>Merge Sort</strong></td><td>$O(n \log n)$</td><td>$O(n \log n)$</td><td>$O(n \log n)$</td><td><strong style="color:var(--danger);">$O(n)$ (Ek dizi)</strong></td><td>Evet</td><td>Hayır</td></tr>
+        <tr><td><strong>Quick Sort</strong></td><td>$O(n \log n)$</td><td>$O(n \log n)$</td><td><strong style="color:var(--danger);">$O(n^2)$ (Kötü pivot)</strong></td><td>$O(\log n)$ (Yığın)</td><td>Hayır</td><td>Evet</td></tr>
+        <tr><td><strong>Heap Sort</strong></td><td>$O(n \log n)$</td><td>$O(n \log n)$</td><td>$O(n \log n)$</td><td>$O(1)$</td><td>Hayır</td><td>Evet</td></tr>
       </tbody>
     </table>
+
+    <h4>Gerçek Hayat Senaryolarına Göre Algoritma Seçimi</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Senaryo</th>
+          <th>Tercih Edilen Algoritma</th>
+          <th>Gerekçe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Küçük veya neredeyse sıralı dizi</td><td><strong>Insertion Sort</strong></td><td>$O(n)$ performans, düşük ek yük, kararlılık</td></tr>
+        <tr><td>Büyük veri ve kararlılık zorunlu</td><td><strong>Merge Sort</strong></td><td>Garanti $O(n \log n)$ ve kararlı (stable)</td></tr>
+        <tr><td>Büyük veri ve bellek kısıtlı</td><td><strong>Quick Sort / Heap Sort</strong></td><td>$O(n \log n)$ ortalama hız, yerinde (in-place)</td></tr>
+        <tr><td>Harici (disk üzerinde) sıralama</td><td><strong>Merge Sort</strong></td><td>Parçalı (chunked) birleştirme ve kararlılık</td></tr>
+        <tr><td>Gerçek zamanlı (real-time) sistem</td><td><strong>Heap Sort</strong></td><td>Her durumda garanti $O(n \log n)$ ve $O(1)$ alan</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-note">
+      <strong>Sınav İpucu:</strong> Modern C++ STL'deki <code>std::sort</code> fonksiyonu, tek bir algoritma yerine <strong>Introsort</strong> (Quick Sort + Heap Sort + Insertion Sort hibriti) kullanır: Quick Sort ile hızlı başlar, özyineleme derinliği aşılırsa $O(n^2)$ riskine karşı Heap Sort'a geçer, küçük alt dizilerde ($n &lt; 16/30$) Insertion Sort'a döner.
+    </div>
   </section>
 </article>
 
